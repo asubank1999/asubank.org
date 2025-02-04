@@ -1,0 +1,286 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Light Mode: General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5; /* Light grey background */
+    color: #1c1e21; /* Dark text color */
+}
+
+header {
+    background-color: #1ea804; /* Facebook blue */
+    color: #ffffff;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* Navigation Styling */
+nav ul {
+    padding: 0;
+    list-style: none;
+    background: #1ea804; /* Facebook blue */
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Consistent spacing */
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a,
+nav ul li button {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background 0.3s ease, transform 0.3s ease;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+nav ul li a:hover,
+nav ul li button:hover {
+    background: #1ea204; /* Darker blue for hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Dark Mode: General Styles */
+body.dark-mode {
+    background-color: #000000; /* Dark gray background */
+    color: #e4e6eb; /* Light gray text color */
+}
+
+body.dark-mode header,
+body.dark-mode footer {
+    background-color: #000000; /* Darker gray for header and footer */
+    color: #ffffff;
+}
+
+body.dark-mode nav ul {
+    background-color: #000000; /* Darker gray for nav */
+}
+
+body.dark-mode nav ul li a,
+body.dark-mode nav ul li button {
+    color: #e4e6eb; /* Light gray text color */
+}
+
+body.dark-mode nav ul li a:hover,
+body.dark-mode nav ul li button:hover {
+    background-color: #3a3b3c; /* Darker gray for hover */
+}
+
+/* Subject Grid Styles */
+
+.subject-card {
+    width: 90%;
+    max-width: 400px; /* Adjust as needed */
+    margin: 15px auto; /* Center the card */
+}
+
+.subject-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px;
+}
+
+.subject-card {
+    background: #ffffff;
+    margin: 16px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.3s;
+    text-align: center;
+    position: relative;
+}
+
+.subject-card:hover {
+    transform: scale(1.05); /* Subtle hover effect */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.subject-card a {
+    text-decoration: none;
+    color: #1877f2; /* Facebook blue */
+    display: block;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.subject-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333333; /* Dark grey text */
+    transition: color 0.3s ease;
+}
+
+.subject-card:hover h3 {
+    color: #000000; /* Darker text on hover */
+}
+
+/* Dark Mode: Subject Card */
+body.dark-mode .subject-card {
+    background-color: #3a3b3c; /* Dark gray card background */
+    color: #e4e6eb; /* Light gray text color */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Softer shadow */
+}
+
+body.dark-mode .subject-card h3 {
+    color: #e4e6eb; /* Light gray text */
+}
+
+
+.subject-card-content {
+    position: relative;
+    z-index: 2; /* Ensure content is above the glow effect */
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #1877f2; /* Facebook blue */
+    color: #ffffff;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.2em;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    nav ul li a,
+    nav ul li button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+
+    .subject-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .subject-card {
+        width: 90%;
+        max-width: 400px;
+    }
+
+    footer {
+        padding: 10px;
+    }
+}
+.subject-card {
+    background: #f9f9f9; /* Light gray background */
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Inner shadow */
+    transition: box-shadow 0.3s, transform 0.3s;
+    position: relative;
+    text-align: center;
+}
+
+.subject-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Outer shadow on hover */
+    transform: scale(1.02); /* Slight scale effect */
+}
+
+.subject-card-content {
+    position: relative;
+}
+
+.subject-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333333;
+}
+
+.subject-card a {
+    color: #007bff;
+}
+
+.subject-card a:hover {
+    text-decoration: underline;
+}
+
+
+.subject-card {
+    text-decoration: none; /* Remove underline by default */
+}
+
+.subject-card a:hover {
+    text-decoration: none; /* Ensure no underline on hover */
+}
+
+.subject-card {
+    padding: 20px;
+    margin: 20px;
+}
+
+.subject-card a {
+    padding: 30px;
+}
+
+.subject-card a {
+    display: block;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.subject-card {
+    border-radius: 23px;  /* Edge Circle */
+}
+
+.subject-card:hover {
+    border-color: #007bff;
+    transform: scale(1.02);
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+.subject-card {
+    background: linear-gradient(45deg, #004d00, #00c853);
+    background-size: 200% 200%;
+    animation: gradientAnimation 1s ease infinite;
+}
+

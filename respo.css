@@ -1,0 +1,181 @@
+/* Content */
+.subject-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column by default */
+    gap: 20px; /* Space between grid items */
+    margin: 20px 0;
+    padding: 0 10px;
+}
+
+.subject-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+    max-width: 100%; /* Ensure it doesn't exceed screen width */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    margin: 0 auto; /* Center the card */
+    word-wrap: break-word; /* Ensure text doesn't overflow */
+}
+
+/* Add spacing between cards */
+.subject-card:not(:last-child) {
+    margin-bottom: 30px; /* Adjust this value to increase/decrease spacing */
+}
+
+.subject-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* Ensure link takes up entire card */
+}
+
+.subject-card h3 {
+    margin: 10px 0;
+    font-size: 1.4rem;
+    color: #1b2838;
+}
+
+/* Media Queries for Responsive Design */
+@media (min-width: 600px) {
+    .subject-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for larger screens */
+    }
+}
+
+@media (min-width: 768px) {
+    .subject-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns for tablet screens */
+    }
+}
+
+@media (min-width: 1024px) {
+    .subject-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns for desktops */
+    }
+}
+
+@media (max-width: 375px) {
+    nav ul li a {
+        padding: 6px 10px; /* Adjust navigation padding for smaller screens */
+    }
+}
+
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px; /* Small padding on the sides */
+    box-sizing: border-box;
+}
+
+/* Header */
+header {
+    background: #35424a;
+    color: #ffffff;
+    padding: 15px 0;
+    text-align: center;
+}
+
+/* Navigation */
+nav ul {
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    background: #35424a;
+}
+
+nav ul li {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Content */
+.subject-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column by default */
+    gap: 20px;
+    margin: 20px 0;
+    padding: 0 10px;
+}
+
+.subject-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+    max-width: 90%; /* Ensure it doesn't exceed screen width */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    margin: 0 auto; /* Center the card */
+    word-wrap: break-word; /* Ensure text doesn't overflow */
+}
+
+.subject-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* Ensure link takes up entire card */
+}
+
+.subject-card h3 {
+    margin: 10px 0;
+    font-size: 1.4rem;
+    color: #1b2838;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px 0;
+    background: #35424a;
+    color: #ffffff;
+}
+
+/* Media Queries for Responsive Design */
+@media (min-width: 600px) {
+    .subject-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for larger screens */
+    }
+}
+
+@media (min-width: 768px) {
+    .subject-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns for tablet screens */
+    }
+}
+
+@media (min-width: 1024px) {
+    .subject-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns for desktops */
+    }
+}
+
+@media (max-width: 375px) {
+    nav ul li a {
+        padding: 6px 10px; /* Adjust navigation padding for smaller screens */
+    }
+}

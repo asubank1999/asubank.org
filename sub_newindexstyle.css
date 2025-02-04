@@ -1,0 +1,88 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Make the page static size for mobile */
+body {
+    width: 100vw;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Subject Card Styles */
+.subject-card {
+    position: relative;
+    background-color: #1e1e1e; /* Base background color for contrast */
+    color: #fff; /* Text color for readability */
+    border-radius: 12px;
+    padding: 16px; /* Adjusted padding for better content fitting */
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.8); /* Subtle neon glow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover */
+    margin: 10px; /* Space around cards */
+    overflow: hidden; /* Prevent content overflow */
+    font-size: 1rem; /* Base font size */
+}
+
+/* Hover Effect for Mobile (tap to interact) */
+.subject-card:active {
+    box-shadow: 0 0 15px rgba(0, 255, 0, 1.0); /* Enhanced glow on tap */
+    transform: scale(1.05); /* Slightly enlarge on tap */
+}
+
+/* Holographic Effect for Background Animation */
+.subject-card.holographic {
+    background: linear-gradient(135deg, #ff0081, #ff8c00, #ff8c00, #1f9fff);
+    background-size: 400% 400%;
+    animation: holographic 10s ease infinite;
+}
+
+@keyframes holographic {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Apply Pulse Animation on Subject Cards */
+.subject-card.pulse {
+    animation: pulse 1.5s infinite;
+}
+
+/* Neon Glow Effect on Hover */
+.subject-card.neon:hover {
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); /* Green glow effect */
+    border-color: var(--card-text-color-light);
+}
+
+/* Link Styles */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+    .subject-card {
+        width: 90%; /* Adjust card width for mobile */
+        margin: 10px auto; /* Center cards with auto margins */
+        font-size: 0.9rem; /* Slightly smaller font for smaller screens */
+    }
+}

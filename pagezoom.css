@@ -1,0 +1,5 @@
+body {
+    transform: scale(1.0);
+    transform-origin: 0 0; /* Ensure scaling starts from the top-left corner */
+}
+

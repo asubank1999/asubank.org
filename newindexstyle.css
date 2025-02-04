@@ -1,0 +1,162 @@
+/* Pulse animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.subject-card {
+    position: relative;
+    overflow: hidden;
+    background-color: #1e1e1e; /* Dark background for contrast */
+    color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: box-shadow 0.4s, transform 0.4s, border-color 0.4s;
+    border: 2px solid var(--card-background-color-light);
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.8); /* Neon glow */
+    animation: pulse 1.5s infinite; /* Pulse animation on hover */
+}
+
+.subject-card:hover {
+    box-shadow: 0 0 15px rgba(0, 255, 0, 1.0); /* Enhanced neon glow on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    border-color: var(--card-text-color-light); /* Glow effect on border */
+    animation: colorShift 4s infinite; /* Animated color shifts */
+}
+
+@keyframes colorShift {
+    0% { background-color: #ff6b6b; }
+    50% { background-color: #f0a202; }
+    100% { background-color: #ff6b6b; }
+}
+
+@keyframes holographic {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+}
+
+.subject-card {
+    background: linear-gradient(360deg, rgba(71,30,165,0.25), rgba(100, 255, 0, 0.057), rgba(100, 25, 198, 0.07), rgba(25, 25, 225, 0.047));
+    backdrop-filter: blur(2px);
+    border: 2px solid rgba(255, 255, 255, 1.2);
+    background-size: 400% 500%;
+    animation: holographic 8s ease infinite;
+}
+
+.subject-card:hover {
+    transform: scale(1.05); /* Enlarge on hover */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+/* Blur and darken effect on hover */
+.subject-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.5s ease, filter 0.5s ease;
+    filter: blur(0px);
+    z-index: 1;
+}
+
+.subject-card:hover::before {
+    opacity: 1;
+    filter: blur(8px);
+}
+
+.subject-card > * {
+    position: relative;
+    z-index: 2; /* Ensure content is above the overlay */
+}
+
+/* Banner Styles */
+.banner {
+    position: relative;
+    width: 100%;
+    height: 150px; /* Adjust the height as needed */
+    background-image: url('IMG_0569.JPG'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(2px); /* Adds blur effect */
+    background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for better text visibility */
+}
+
+.banner-content {
+    position: relative;
+    text-align: center;
+    color: #ffffff; /* White text color */
+    z-index: 1;
+}
+
+.banner-logo {
+    max-width: 100px; /* Adjust the logo size as needed */
+    margin-bottom: 15px;
+}
+
+.banner h1 {
+    font-size: 1.1em; /* Adjust text size as needed */
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Smaller Modern Button Styles */
+.modern-button {
+    display: inline-block;
+    padding: 8px 50px; /* Adjust padding for a more compact button */
+    font-size: 1em; /* Adjust font size */
+    color: #ffffff;
+    background-color: #4CAF50; /* Green background */
+    border: none;
+    border-radius: 5px; /* Slightly larger border radius */
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Smaller shadow */
+    transition: background-color 0.3s, transform 0.3s;
+    cursor: pointer;
+}
+
+.modern-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: translateY(-2px); /* Smaller lift effect on hover */
+}
+
+.modern-button span {
+    font-size: 0.85em; /* Slightly smaller font size for secondary text */
+    color: #e0e0e0; /* Light grey text for the "Click here" part */
+    font-weight: normal;
+}
+
+.modern-button:active {
+    background-color: #3e8e41; /* Even darker green on click */
+    transform: translateY(1px); /* Slight push down effect on click */
+}

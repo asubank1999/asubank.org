@@ -1,0 +1,160 @@
+/* General Styles for Navigation */
+nav ul {
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    background: #1877f2; /* Facebook blue for light mode */
+    display: flex;
+    flex-direction: column; /* Stack items vertically for mobile */
+    margin: 0;
+}
+
+nav ul li {
+    margin: 5px 0;
+}
+
+nav ul li a {
+    color: #ffffff; /* White text color */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 15px 20px;
+    border-radius: 5px;
+    display: block; /* Ensure links take up full width */
+    transition: background 0.3s ease, transform 0.3s ease;
+    text-align: center; /* Center align text */
+}
+
+nav ul li a:hover, nav ul li a:focus {
+    background: #165eab; /* Darker shade of blue for hover effect */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Dark Mode Styles for Navigation */
+body.dark-mode nav ul {
+    background: #242526; /* Darker gray for navigation background */
+}
+
+body.dark-mode nav ul li a {
+    color: #e4e6eb; /* Light gray text color */
+}
+
+body.dark-mode nav ul li a:hover, body.dark-mode nav ul li a:focus {
+    background: #3a3b3c; /* Darker gray for hover effect */
+}
+
+/* Light Mode */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5; /* Light grey background */
+    color: #1c1e21; /* Dark text color */
+}
+
+header {
+    background: #1877f2; /* Facebook blue */
+    color: #ffffff;
+    padding: 15px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px; /* Adjusted for mobile */
+}
+
+nav ul {
+    padding: 0;
+    list-style: none;
+    background: #1877f2; /* Facebook blue */
+}
+
+nav ul li {
+    margin: 5px 0;
+}
+
+nav ul li a, nav ul li button {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    display: block; /* Ensure full width on mobile */
+    text-align: center;
+}
+
+nav ul li button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.subject-grid {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 10px;
+}
+
+.subject-card {
+    background: #ffffff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    text-align: center;
+}
+
+.subject-card:hover {
+    transform: scale(1.03); /* Slightly reduce scale for a subtler effect */
+}
+
+.subject-card a {
+    text-decoration: none;
+    color: #1877f2; /* Facebook blue */
+    font-size: 18px; /* Adjust font size for mobile */
+}
+
+.subject-card h3 {
+    margin: 0;
+    font-size: 20px; /* Adjusted for mobile */
+}
+
+footer {
+    text-align: center;
+    padding: 15px 0;
+    background: #1877f2; /* Facebook blue */
+    color: #ffffff;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #18191a; /* Dark gray background */
+    color: #e4e6eb; /* Light gray text color */
+}
+
+body.dark-mode header,
+body.dark-mode footer {
+    background: #242526; /* Darker gray for header and footer */
+}
+
+body.dark-mode nav ul {
+    background: #242526; /* Darker gray for nav */
+}
+
+body.dark-mode .subject-card {
+    background: #3a3b3c; /* Dark gray for card background */
+    color: #e4e6eb; /* Light gray text color */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .subject-card a {
+    color: #1877f2; /* Facebook blue for links */
+}
+
+body.dark-mode .subject-card h3 {
+    color: #e4e6eb; /* Light gray for headings */
+}

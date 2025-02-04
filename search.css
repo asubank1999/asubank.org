@@ -1,0 +1,74 @@
+/* Search Container Styling */
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+
+/* Search Input Field Styling */
+.search-container input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+}
+
+/* Search Button Styling */
+.search-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    margin-left: 10px;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: white;
+}
+
+.search-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Search Results Container */
+.search-results {
+    max-height: 500px; /* Set a maximum height to make the container scrollable */
+    overflow-y: auto; /* Allows vertical scrolling */
+    margin: 20px auto; /* Center the container */
+    width: 90%; /* Adjust the width for mobile devices */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+/* Individual Search Result Item */
+.search-result-item {
+    padding: 10px;
+    margin: 10px 0;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+/* Navigation Buttons */
+.search-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.search-navigation button {
+    padding: 10px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: white;
+}
+
+.search-navigation button:hover {
+    background-color: #0056b3;
+}
