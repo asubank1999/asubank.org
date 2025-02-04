@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resizable Real-Time HTML & CSS Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 1.2em;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .editor-container {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical; /* Enables resizing vertically */
+            border: none;
+            outline: none;
+            padding: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+
+        #html-editor {
+            min-height: 100px;
+            max-height: 50%; /* Prevents excessive growth */
+        }
+
+        #css-editor {
+            min-height: 100px;
+            max-height: 50%; /* Prevents excessive growth */
+        }
+
+        iframe {
+            width: 50%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        .editor-label {
+            font-size: 0.9em;
+            font-weight: bold;
+            background-color: #f4f4f4;
+            padding: 5px 15px;
+            border-bottom: 1px solid #ccc;
+            margin: 0;
+            color: #333;
+        }
+
+        .resizable-area {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <header>Resizable Real-Time HTML & CSS Editor</header>
+    <main>
+        <div class="editor-container">
+            <div class="resizable-area">
+                <div class="editor-label">HTML Editor</div>
+                <textarea id="html-editor" placeholder="Write your HTML here...">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sample</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>Insert your CSS in the box below to style this HTML.</p>
+</body>
+</html>
+                </textarea>
+            </div>
+            <div class="resizable-area">
+                <div class="editor-label">CSS Editor</div>
+                <textarea id="css-editor" placeholder="Write your CSS here...">
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+    color: #333;
+    text-align: center;
+    padding: 50px;
+}
+
+h1 {
+    color: #4caf50;
+}
+
+p {
+    font-size: 1.2em;
+}
+                </textarea>
+            </div>
+        </div>
+        <iframe id="preview"></iframe>
+    </main>
+
+    <script>
+        const htmlEditor = document.getElementById('html-editor');
+        const cssEditor = document.getElementById('css-editor');
+        const preview = document.getElementById('preview');
+
+        function updatePreview() {
+            const htmlContent = htmlEditor.value;
+            const cssContent = `<style>${cssEditor.value}</style>`;
+            preview.srcdoc = htmlContent + cssContent;
+        }
+
+        htmlEditor.addEventListener('input', updatePreview);
+        cssEditor.addEventListener('input', updatePreview);
+
+        // Initialize the preview with default content
+        updatePreview();
+    </script>
+</body>
+</html>

@@ -1,1 +1,506 @@
-Test
+<!DOCTYPE html>
+<html lang="en">
+  <style> 
+    .link-box {
+      background-color: #FFD700;
+      color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+    }
+    .link-box a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .link-box a:hover {
+      color: #FF8C00;
+    }
+  </style>
+
+    <style>
+        /* Popup container */
+        .popup {
+            position: fixed;
+            top: 70px;
+            right: 190px;
+            max-width: 320px;
+            padding: 15px;
+            background-color: #f9ed69; /* Yellow background for 'info' look */
+            color: #42245F;
+            border: 5px solid #e5c100; /* Border for a clearer outline */
+            box-shadow: 0 4px 8px rgba(255, 255, 0, 2.2);
+            border-radius: 2px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Dismiss button */
+        .close-btn {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 78px;
+            font-weight: bold;
+            cursor: pointer;
+            float: right;
+        }
+
+        /* Show popup */
+        .show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="popup" id="announcementPopup">
+        <button class="close-btn" onclick="closePopup()">×</button>
+        <p>Welcome :)</p>
+    </div>
+
+    <script>
+        // Show popup function
+        function showPopup() {
+            const popup = document.getElementById('announcementPopup');
+            popup.classList.add('show');
+
+            // Automatically hide the popup after 5 seconds
+            setTimeout(() => {
+                closePopup();
+            }, 2000);
+        }
+
+        // Close popup function
+        function closePopup() {
+            const popup = document.getElementById('announcementPopup');
+            popup.classList.remove('show');
+        }
+
+        // Display popup when the page loads
+        window.onload = showPopup;
+    </script>
+
+    <script>
+        // Show popup function
+        function showPopup() {
+            const popup = document.getElementById('announcementPopup');
+            popup.classList.add('show');
+
+            // Automatically hide the popup after 3 seconds
+            setTimeout(() => {
+                closePopup();
+            }, 2000);
+        }
+
+        // Close popup function
+        function closePopup() {
+            const popup = document.getElementById('announcementPopup');
+            popup.classList.remove('show');
+        }
+
+        // Display popup when the page loads
+        window.onload = showPopup;
+    </script>
+    <!-- Favicon for ICO format -->
+    <link rel="icon" href="/ASU_Jordan_logo-removebg-preview.png" type="ASU_Jordan_logo-removebg-preview.png">
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.body.style.transform = "scale(2.1)";
+    document.body.style.transformOrigin = "0 0";
+    document.body.style.width = "46.77%";  // Adjusted for correct scaling
+    document.body.style.height = "76.67%"; // Adjusted for correct scaling
+    document.body.style.overflow = "auto"; // Allow scrolling
+  });
+</script>
+	<link rel="stylesheet" href="newindexstyle.css">
+	<link rel="stylesheet" href="cliqstyles.css">
+	<link rel="stylesheet" href="unread_notification.css">
+<head>
+    <meta charset="UTF-8">
+    <title>ASU Document Library</title>
+    <style>
+        .copy-btn {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .copy-btn:hover {
+            background-color: #45a049;
+        }
+
+        #message {
+            margin-top: 10px;
+            color: green;
+        }
+    </style>
+    <style>
+        :root {
+            --background-color-light: #f7f5fc; /* Light green */
+            --background-color-dark: #000000;
+            --text-color-light: #333;
+            --text-color-dark: #e0e0e0;
+            --card-background-color-light: #e8f5e9; /* Lighter green */
+            --card-background-color-dark: #1e1e1e;
+            --card-text-color-light: #333;
+            --card-text-color-dark: #e0e0e0;
+            --card-box-shadow-light: 0 4px 8px rgba(0, 128, 0, 0.2);
+            --card-box-shadow-dark: 4 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: var(--background-color-light);
+            color: var(--text-color-light);
+            transition: background-color 0.8s, color 0.8s;
+        }
+
+        body.dark-mode {
+            background-color: var(--background-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        header {
+            text-align: center;
+            padding: 30px;
+        }
+
+        header h1 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav ul li a, nav ul li button {
+            color: white;
+            text-decoration: none;
+            font-size: 0.3em;
+            padding: 10px 25px;
+            border-radius: 52px;
+            background-color: rgba(69,230,159,255);
+            transition: background-color 2.3s;
+        }
+
+        nav ul li a:hover, nav ul li button:hover {
+            background-color: rgba(255, 225, 5, 5.2);
+        }
+
+        .subject-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            gap: 70px; /* More space between cards */
+        }
+
+        .subject-card {
+            background-color: var(--card-background-color-light);
+            color: var(--card-text-color-light);
+            padding: 20px;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 350px; /* Static width for card */
+            box-shadow: var(--card-box-shadow-light);
+            transition: background-color 5.3s, color 0.3s, box-shadow 0.3s;
+            text-align: center;
+            position: relative;
+            text-decoration: none; /* Remove underline */
+        }
+
+        .subject-card h3 {
+            margin: 0;
+            font-size: 1.0em;  /* subjects text size */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between text and image */
+        }
+
+        .subject-card img {
+            vertical-align: middle;
+            width: 26px; /* Smaller image size */
+            height: 26px;
+        }
+
+        .subject-card:hover {
+            box-shadow: var(--card-box-shadow-dark); /* Darker shadow on hover */
+        }
+
+        body.dark-mode .subject-card {
+            background-color: var(--card-background-color-dark);
+            color: var(--card-text-color-dark);
+            box-shadow: var(--card-box-shadow-dark);
+        }
+        
+        .university-logo {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .custom-link {
+            font-size: 1.2em; /* all in one lib link */
+            color: inherit;
+            text-decoration: none; /* Remove underline */
+        }
+
+        .custom-link:hover {
+            text-decoration: none; /* Underline on hover */
+        }
+		
+    </style>
+</head>
+<body>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Merriweather', serif;
+    }
+</style>
+
+<header>
+<!-- Banner HTML -->
+<div class="banner">
+    <div class="banner-content">
+        <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU Logo" class="banner-logo">
+        <h1>𝐀𝐒𝐔 𝐄𝐥𝐞𝐜𝐭𝐫𝐨𝐧𝐢𝐜 𝐋𝐢𝐛𝐫𝐚𝐫𝐲 𝐇𝐮𝐛</h1>
+    </div>
+</div>
+	<body>
+</body>
+    <nav>
+        <ul>
+            <li><a href="index_desktop">Version 2.0</a></li>
+            <li><a href="uni_tos">Terms of Service</a></li>
+            <li><button id="mode-toggle">🌙  ☀</button></li>
+
+        </ul>
+    </nav>
+</header>
+    <style>
+        a.custom-link {
+            text-decoration: none; /* Removes underline */
+            color: inherit; /* Sets text color to red */
+            font-weight: bold; /* Makes text bold */
+        }
+        a.custom-link:hover {
+            text-decoration: none; /* Optional: underline on hover */
+        }
+    </style>
+<main>
+    <div class="subject-grid">
+    <style>
+        body {
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .fade-text {
+            font-size: 1em;
+            font-weight: bold;
+            animation: fadeEffect 1s infinite;
+        }
+
+        @keyframes fadeEffect {
+            0% { opacity: 0; }
+            25% { opacity: 1; }
+            75% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+		a {
+    text-decoration: none;
+}
+
+    </style>
+
+</head>
+<body>
+    <div class="fade-text">
+        <a href="https://drive.google.com/file/d/1wfPIE57s_B-tkasGEmlyRx6yJX31czBi/view?usp=sharing" target="_blank"><font color=cyan>التقويم الجامعي 2025/2024</font color></a>
+    </div>
+<a href="important_unread" class="subject-card subject-card-v2">
+  <h3>📬<font color=red>ASU-BANK IMPORTANT MESSAGE ⚠</font color></h3>
+</a>
+<body>
+<a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="led-button" target="_blank">
+  <span class="led-button-text">Join WhatsApp Community</span>
+  <span class="led-button-glow"></span>
+  <span class="led-button-pulse"></span>
+</a>
+<body>
+
+</body>
+    <a href="agreement-page" class="subject-card">
+        <h3><img src="pin.png" alt="Website Icon" width="20" height="20">RECENT UPLOADS 📥</h3>
+    </a>
+    <a href="asu_date_asu" class="subject-card">
+        <h3><img src="pin.png" alt="Website Icon" width="20" height="20">University Calender 📅</h3>
+    </a>
+    <a href="FinalExamcheduleEnglish" class="subject-card">
+        <h3><img src="pin.png" alt="Website Icon" width="20" height="20">English Final Calender 📅</h3>
+    </a>
+    <a href="https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing" class="subject-card" target="_blank">
+        <h3><img src="pin.png" alt="Website Icon" width="20" height="20">Study Plans الخطة الدراسية 📚</h3>
+    </a>
+    <a href="https://docs.google.com/document/d/1cr6YKp_nz0pE429--RQ-0XPG0sQ-YD8d/edit?usp=sharing&ouid=104694302290138277389&rtpof=true&sd=true" class="subject-card study-plans" target="_blank">
+        <h3>مواعيد المواصلات _ الباصات 🚌</h3>
+    </a>
+    <a href="placement" class="subject-card">
+        <h3>PLACEMENT TESTS امتحانات المستوى 📝</h3>
+    </a>
+    <a href="presentations" class="subject-card">
+        <h3>PRESENTATIONS 📂</h3>
+    </a>
+    <a href="english" class="subject-card">
+        <h3>ENGLISH LITERATURE / TRANSLATION 📚</h3>
+    </a>
+    <a href="others" class="subject-card">
+        <h3>ELECTIVE COURSES / OTHER 📜</h3>
+    </a>
+    <a href="unarranged" class="subject-card">
+        <h3>UnArranged - Others 🔍</h3>
+    </a>
+    <a href="it" class="subject-card">
+        <h3>INFORMATION TECHNOLOGY 💻</h3>
+    </a>
+    <a href="business" class="subject-card">
+        <h3>BUSINESS الأعمال 💼</h3>
+    </a>
+    <a href="engineering" class="subject-card">
+        <h3>ENGINEERING الهندسة ⚙️</h3>
+    </a>
+    <a href="demography" class="subject-card">
+         <h3>DEMOGRAPHY 📊</h3>
+     </a>
+    <a href="biology" class="subject-card">
+        <h3>BIOLOGY 🧬</h3>
+    </a>
+    <a href="biochemistry" class="subject-card">
+        <h3>BIOCHEMISTRY 🧪</h3>
+    </a>
+    <a href="physiology" class="subject-card">
+        <h3>PHYSIOLOGY 🧬</h3>
+    </a>
+    <a href="lab_related" class="subject-card">
+        <h3>LABS MATERIALS المختبرات ⚗️</h3>
+    </a>
+    <a href="mostwanted" class="subject-card">
+        <h3>MOST WANTED FILES  الأكثر طلبا 📂</h3>
+    </a>
+    <a href="pharmacy" class="subject-card">
+        <h3>PHARMACY 🏥</h3>
+    </a>
+    <a href="special" class="subject-card">
+        <h3>REQUESTED DATA (ارفع ملفك) 📥</h3>
+    </a>
+    <a href="summaries" class="subject-card">
+        <h3>SUMMARIES الملخصات 📚</h3>
+    </a>
+    <a href="calculus" class="subject-card">
+        <h3>ALL CALCULUS 🧮</h3>
+    </a>
+    <a href="medical" class="subject-card">
+        <h3>HEALTH SCIENCES 🏥</h3>
+    </a>
+    <a href="mathematics" class="subject-card">
+        <h3>MATHEMATICS AND STATISTICS 📊</h3>
+    </a>
+    <a href="artshumanities" class="subject-card">
+        <h3>ARTS AND HUMANITIES 🎨</h3>
+    </a>
+    <a href="chemical" class="subject-card">
+        <h3>CHEMICAL ENGINEERING ⚙️</h3>
+    </a>
+    <a href="electrical" class="subject-card">
+        <h3>ELECTRICAL ENGINEERING ⚡</h3>
+    </a>
+    <a href="industrial" class="subject-card">
+        <h3>INDUSTRIAL ENGINEERING ⚙️</h3>
+    </a>
+    <a href="dentistry" class="subject-card">
+        <h3>DENTISTRY 🦷</h3>
+    </a>
+    <a href="nursing" class="subject-card">
+        <h3>NURSING 🏥</h3>
+    </a>
+    <a href="hanafi" class="subject-card">
+        <h3>SHARIAH الشريعة 🕌</h3>
+    </a>
+    <a href="arabicliterature" class="subject-card">
+        <h3>ARABIC LITERATURE الأدب العربي 📚</h3>
+    </a>
+</div>
+</main>
+
+<script>
+    document.getElementById('mode-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('theme') === 'dark' || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-mode');
+        }
+    });
+</script>
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Disables right-click context menu
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault(); // Disables copy action
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault(); // Disables paste action
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disables common keyboard shortcuts
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        function copyText() {
+            // Get the text field
+            const copyText = document.getElementById("textToCopy");
+            // Select the text
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                // Display a success message
+                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
+            }).catch(err => {
+                // Display an error message
+                console.error('Could not copy text: ', err);
+                document.getElementById("message").textContent = "Failed to copy text.";
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service</title>
+    <link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/x-icon">
+    <link rel="stylesheet" href="respo.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .info-box, .warning-box {
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: var(--box-background);
+            border-left: 6px solid var(--box-border);
+        }
+        .info-box {
+            --box-border: #2196F3;
+        }
+        .warning-box {
+            --box-border: #ffecb5;
+        }
+        .tos-container {
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+        .tos-header {
+            margin-bottom: 40px;
+        }
+        .switch-button, .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        .switch-button {
+            background-color: #007bff;
+        }
+        .switch-button:hover {
+            background-color: #0056b3;
+        }
+        .button {
+            background-color: #4CAF50;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        /* Light Mode */
+        :root {
+            --background-color: #ffffff;
+            --text-color: #000000;
+            --box-background: #e7f3fe;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --box-background: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tos-container">
+    <img src="ASU_Jordan_logo-removebg-preview.png" alt="Website Icon" width="80" height="80">
+    <h1 class="tos-header">Terms of Service</h1>
+
+    <button class="button" onclick="window.location.href='https://asubank.xyz'">Go Back to the Main Menu</button>
+    <button class="switch-button" onclick="switchToArabic()">الانتقال إلى النسخة العربية</button>
+    <button class="switch-button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+    <script>
+        function switchToArabic() {
+            window.location.href = 'uni_tos_ar'; // Ensure this path is correct
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+
+    <div class="info-box">
+        We aren't responsible for you having the provided course materials. If you don't know what this site is for, I advise you to leave unless you understand what you're viewing.
+    </div>
+
+    <div class="warning-box">
+        <strong>PLEASE NOTE:</strong><br>
+        MAKE SURE YOUR DOCTOR TEACHES THE SAME INFORMATION WE PROVIDE. DO NOT USE OR VIEW IT OTHERWISE. IT IS YOUR RESPONSIBILITY TO VERIFY OUR DATA SOURCES.
+    </div>
+
+    <div class="info-box">
+        <strong>CAN'T FIND WHAT YOU'RE LOOKING FOR?</strong><br>
+        Please wait until it's uploaded. If you find it, contact the admin ASAP via WhatsApp at necro144@yahoo.com.
+    </div>
+
+    <div class="info-box">
+        These questions typically differ from those on the exams; therefore, it is essential to thoroughly study the book and related materials.
+    </div>
+
+    <div class="warning-box">
+        The owner of this website is not responsible for your exam marks or your comments about this website. This project was made to help others find what they need in one place. If you need anything, you can contact me on WhatsApp. Have a good day.
+    </div>
+
+    <div class="info-box">
+        THE PREPARATION OF THE PROJECT MIGHT TAKE SOME TIME TO BE READY.
+    </div>
+
+    <div class="warning-box">
+        THIS PROJECT WAS CREATED TO HELP STUDENTS FIND WHAT THEY NEED. I DO NOT OWN ANY OF THE DATA PROVIDED.
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 University Test Banks made by Student QUSAI (English Literature)</p>
+</footer>
+
+<script>
+    // Disable right-click context menu
+    window.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    // Disable Ctrl+U shortcut
+    window.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+        }
+    });
+
+    // Disable all keyboard shortcuts
+    window.addEventListener('keydown', function(e) {
+        e.preventDefault();
+    });
+</script>
+</body>
+</html>

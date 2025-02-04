@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.body.style.transform = "scale(2.1)";
+    document.body.style.transformOrigin = "0 0";
+    document.body.style.width = "46.77%";  // Adjusted for correct scaling
+    document.body.style.height = "76.67%"; // Adjusted for correct scaling
+    document.body.style.overflow = "auto"; // Allow scrolling
+  });
+</script>
+    <script>
+        // Disable right-click context menu
+        document.addEventListener("contextmenu", function(event) {
+            event.preventDefault();
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            height: 2000px; /* Added height for scrolling */
+        }
+
+        /* Style for the Move to Top button */
+        .move-to-top {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            padding: 10px 15px;
+            background-color: #007BFF; /* Bootstrap primary color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .move-to-top:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Prevent common keyboard shortcuts
+            document.addEventListener("keydown", function(event) {
+                const shortcuts = [
+                    { key: "F12" }, // F12 - Developer Tools
+                    { key: "I" },   // Ctrl + I - Inspect Element
+                    { key: "J" },   // Ctrl + J - Console
+                    { key: "U" },   // Ctrl + U - View Source
+                    { key: "C" },   // Ctrl + C - Copy
+                    { key: "V" },   // Ctrl + V - Paste
+                    { key: "X" },   // Ctrl + X - Cut
+                    { key: "S" },   // Ctrl + S - Save
+                    { key: "P" },   // Ctrl + P - Print
+                    { key: "A" },   // Ctrl + A - Select All
+                    { key: "R" },   // Ctrl + R - Refresh
+                    { key: "T" },   // Ctrl + T - New Tab
+                ];
+
+                if (event.ctrlKey || event.metaKey) { // Mac uses Command key
+                    for (let shortcut of shortcuts) {
+                        if (event.key.toUpperCase() === shortcut.key) {
+                            event.preventDefault(); // Prevent default action
+                            console.log(`Shortcut ${shortcut.key} disabled.`);
+                        }
+                    }
+                }
+
+                // Prevent right-click context menu
+                if (event.button === 2) {
+                    event.preventDefault();
+                }
+            });
+
+            // Prevent right-click context menu
+            document.addEventListener("contextmenu", function(event) {
+                event.preventDefault(); // Disable context menu
+            });
+    </script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU Document Library</title>
+    <link rel="icon" href="/ASU_Jordan_logo-removebg-preview.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="up_styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="banner">
+                <div class="banner-content">
+                    <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU Logo" class="banner-logo">
+                    <h1>ASU Electronic Library Hub</h1>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index_desktop">Desktop View</a></li>
+                    <li><a href="https://my.asu.edu.jo" target="_blank">MY ASU</a></li>
+                    <li><button id="mode-toggle">🌙 ☀️</button></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="fade-text">
+            <a href="https://drive.google.com/file/d/1wfPIE57s_B-tkasGEmlyRx6yJX31czBi/view?usp=sharing" target="_blank">التقويم الجامعي 2025/2024</a>
+        </div>
+
+        <main class="subject-grid">
+		
+			<a href="agreement-page" class="subject-card recent-uploads">
+			<h3><img src="pin.png" alt="Website Icon" width="20" height="20">RECENT UPLOADS</h3>
+			</a>
+			<a href="latest_updates" class="subject-card recent-uploads">
+			<h3><img src="pin.png" alt="Website Icon" width="20" height="20">LATEST UPDATES</h3>
+			</a>
+			<a href="https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing" class="subject-card study-plans" target="_blank">
+			<h3><img src="pin.png" alt="Website Icon" width="20" height="20">Study Plans الخطة الدراسية</h3>
+			</a>
+			<a href="https://docs.google.com/document/d/1cr6YKp_nz0pE429--RQ-0XPG0sQ-YD8d/edit?usp=sharing&ouid=104694302290138277389&rtpof=true&sd=true" class="subject-card study-plans" target="_blank">
+			<h3>مواعيد المواصلات _ الباصات</h3>
+			</a>
+            <a href="presentations" class="subject-card">
+                <h3>PRESENTATIONS</h3>
+            </a>
+            <a href="english" class="subject-card">
+                <h3>ENGLISH DEPARTMENT</h3>
+            </a>
+            <a href="others" class="subject-card">
+                <h3>OTHER COURSES/ELECTIVE</h3>
+            </a>
+			<a href="unarranged" class="subject-card">
+            <h3>UnArranged - Others</h3>
+			</a>
+            <a href="it" class="subject-card">
+                <h3>INFORMATION TECHNOLOGY</h3>
+            </a>
+            <a href="business" class="subject-card">
+                <h3>BUSINESS</h3>
+            </a>
+            <a href="biology" class="subject-card">
+                <h3>BIOLOGY</h3>
+            </a>
+			<a href="biochemistry" class="subject-card">
+				<h3>BIOCHEMISTRY</h3>
+			</a>
+			<a href="physiology" class="subject-card">
+				<h3>PHYSIOLOGY</h3>
+			</a>
+            <a href="engineering" class="subject-card">
+                <h3>ENGINEERING</h3>
+            </a>
+            <a href="demography" class="subject-card">
+                <h3>DEMOGRAPHY</h3>
+            </a>
+            <a href="placement" class="subject-card">
+                <h3>PLACEMENT TESTS</h3>
+            </a>
+            <a href="lab_related" class="subject-card">
+                <h3>LABS MATERIALS</h3>
+            </a>
+            <a href="mostwanted" class="subject-card">
+                <h3>MOST WANTED FILES</h3>
+            </a>
+            <a href="pharmacy" class="subject-card">
+                <h3>PHARMACY</h3>
+            </a>
+            <a href="special" class="subject-card">
+                <h3>REQUESTED DATA (ارفع ملفك)</h3>
+            </a>
+            <a href="summaries" class="subject-card">
+                <h3>SUMMARIES الملخصات</h3>
+            </a>
+            <a href="calculus" class="subject-card">
+                <h3>ALL CALCULUS</h3>
+            </a>
+            <a href="medical" class="subject-card">
+                <h3>HEALTH SCIENCES</h3>
+            </a>
+            <a href="mathematics" class="subject-card">
+                <h3>MATHEMATICS AND STATISTICS</h3>
+            </a>
+            <a href="artshumanities" class="subject-card">
+                <h3>ARTS AND HUMANITIES</h3>
+            </a>
+            <a href="chemical" class="subject-card">
+                <h3>CHEMICAL ENGINEERING</h3>
+            </a>
+            <a href="electrical" class="subject-card">
+                <h3>ELECTRICAL ENGINEERING</h3>
+            </a>
+            <a href="industrial" class="subject-card">
+                <h3>INDUSTRIAL ENGINEERING</h3>
+            </a>
+            <a href="dentistry" class="subject-card">
+                <h3>DENTISTRY</h3>
+            </a>
+            <a href="nursing" class="subject-card">
+                <h3>NURSING</h3>
+            </a>
+            <a href="hanafi" class="subject-card">
+                <h3>SHARIAH</h3>
+            </a>
+            <a href="arabicliterature" class="subject-card">
+                <h3>ARABIC LITERATURE</h3>
+            </a>
+            <a href="modern_index_passworded3" class="subject-card">
+                <h3>Admin Files</h3>
+            </a>
+            <a href="https://www.icloud.com/shortcuts/724fef86a1ca454c8bbcdf861ee38dc6" class="subject-card study-plans">
+                <h3>Add iOS Shortcut</h3>
+            </a>
+        </main>
+    </div>
+
+    <script src="up_scripts.js"></script>
+</body>
+</html>

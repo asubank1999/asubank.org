@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ASU Document Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-color-light: #f0f0f0;
+            --background-color-dark: #121212;
+            --text-color-light: #333333;
+            --text-color-dark: #e0e0e0;
+            --card-background-color-light: #ffffff;
+            --card-background-color-dark: #1e1e1e;
+            --card-text-color-light: #333333;
+            --card-text-color-dark: #e0e0e0;
+            --card-box-shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --card-box-shadow-dark: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --accent-color: #007bff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: var(--background-color-light);
+            color: var(--text-color-light);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: var(--background-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        header {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin: 0;
+        }
+
+        nav {
+            background-color: #0056b3;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 10px;
+        }
+
+        nav ul li a, nav ul li button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1em;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover, nav ul li button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .subject-card {
+            background-color: var(--card-background-color-light);
+            color: var(--card-text-color-light);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--card-box-shadow-light);
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        body.dark-mode .subject-card {
+            background-color: var(--card-background-color-dark);
+            color: var(--card-text-color-dark);
+            box-shadow: var(--card-box-shadow-dark);
+        }
+
+        .subject-card h3 {
+            margin: 0;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .subject-card img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .banner {
+            background-color: #0056b3;
+            padding: 10px 0;
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-logo {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .modern-button {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .modern-button:hover {
+            background-color: #128C7E;
+        }
+
+        .fade-text {
+            font-size: 1em;
+            font-weight: bold;
+            animation: fadeEffect 2s infinite;
+        }
+
+        @keyframes fadeEffect {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="banner">
+            <div class="banner-content">
+                <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU Logo" class="banner-logo">
+                <h1>Faculties Courses list</h1>
+            </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="android_index_desktop">HOME</a></li>
+        </ul>
+    </nav>
+    <main>
+
+        <div class="subject-grid">
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_arts.jsp" class="subject-card" target="_blank">
+                <h3>Arts and Humanities</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_fineArts.jsp" class="subject-card" target="_blank">
+                <h3>Fine Arts and Design</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_science.jsp" class="subject-card" target="_blank">
+                <h3>Sciences</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_comp.jsp" class="subject-card" target="_blank">
+                <h3>Information Technology</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_eng.jsp" class="subject-card" target="_blank">
+                <h3>Engineering</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_law.jsp" class="subject-card" target="_blank">
+                <h3>Law</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_pha.jsp" class="subject-card" target="_blank">
+                <h3>Pharmacy</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_eng.jsp" class="subject-card" target="_blank">
+                <h3>Business</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_Sharia.jsp" class="subject-card" target="_blank">
+                <h3>Shariah and Islamic Studies</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_medicSciences.jsp" class="subject-card" target="_blank">
+                <h3>Allied Medical Sciences</h3>
+            </a>
+            <a href="https://bio.asu.edu.jo/bio/courses_/course_Dentistry.jsp" class="subject-card" target="_blank">
+                <h3>Dentistry</h3>
+            </a>
+        </div>
+    </main>
+
+
+    <script>
+        document.getElementById('mode-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark' || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

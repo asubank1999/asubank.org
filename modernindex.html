@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive meta tag -->
+    <title>ASU Document Library</title>
+    <link rel="stylesheet" href="newindexstyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.body.style.transform = "scale(2.1)";
+    document.body.style.transformOrigin = "0 0";
+    document.body.style.width = "46.77%";  // Adjusted for correct scaling
+    document.body.style.height = "76.67%"; // Adjusted for correct scaling
+    document.body.style.overflow = "auto"; // Allow scrolling
+  });
+</script>
+
+    <style>
+        :root {
+            --background-color-light: #f0f8e2; /* Light green */
+            --background-color-dark: #000000;
+            --text-color-light: #333;
+            --text-color-dark: #e0e0e0;
+            --card-background-color-light: #e8f5e9; /* Lighter green */
+            --card-background-color-dark: #1e1e1e;
+            --card-text-color-light: #333;
+            --card-text-color-dark: #e0e0e0;
+            --card-box-shadow-light: 0 4px 8px rgba(0, 128, 0, 0.2);
+            --card-box-shadow-dark: 4px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Universal reset for consistent styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            margin: 0;
+            background-color: var(--background-color-light);
+            color: var(--text-color-light);
+            transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        body.dark-mode {
+            background-color: var(--background-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        nav ul li {
+            margin: 5px 0;
+        }
+
+        nav ul li a,
+        nav ul li button {
+            color: inherit;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: transparent;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover,
+        nav ul li button:hover {
+            background-color: rgba(100, 255, 5, 0.2);
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .subject-card {
+            background-color: var(--card-background-color-light);
+            color: var(--card-text-color-light);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--card-box-shadow-light);
+            text-align: center;
+            transition: background-color 0.5s, box-shadow 0.3s;
+            text-decoration: none;
+        }
+
+        .subject-card h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .subject-card img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .subject-card:hover {
+            box-shadow: var(--card-box-shadow-dark);
+        }
+
+        body.dark-mode .subject-card {
+            background-color: var(--card-background-color-dark);
+            color: var(--card-text-color-dark);
+            box-shadow: var(--card-box-shadow-dark);
+        }
+
+        .banner {
+            background: #e0ffe0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .banner img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .modern-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #25D366; /* WhatsApp green */
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .modern-button:hover {
+            background-color: #128C7E; /* Darker WhatsApp green */
+        }
+
+        /* Responsive typography for smaller devices */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .subject-card h3 {
+                font-size: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- Banner HTML -->
+        <div class="banner">
+            <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU Logo" class="banner-logo">
+            <h1>𝔸𝕊𝕌 𝕃𝕚𝕓𝕣𝕒𝕣𝕪</h1>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="allinoneexplained">LIBRARY</a></li>
+                <li><a href="subjects">RECENT</a></li>
+                <li><a href="updates">UPDATES</a></li>
+                <li><a href="mostwanted">CRITICAL</a></li>
+                <li><button id="mode-toggle">DARK/LIGHT</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="subject-grid">
+        <a href="subjects" class="subject-card">
+            <h3>ALL | RECENT</h3>
+         </a>
+         <a href="https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing" class="subject-card" target="_blank">
+            <h3><img src="new.gif" alt="New">Study Plans الخطة الدراسية</h3>
+        </a>
+        <a href="https://drive.google.com/file/d/1wfPIE57s_B-tkasGEmlyRx6yJX31czBi/view?usp=sharing" class="subject-card" target="_blank">
+            <h3><img src="new.gif" alt="New">University Calendar 2025 تقويم الجامعة</h3>
+        </a>
+        <a href="placement" class="subject-card">
+            <h3><img src="new.gif" alt="Website Icon" width="40" height="20">PLACEMENT TESTS امتحانات المستوى</h3>
+        </a>
+        <a href="https://www.asu.edu.jo/ar/Students-Portal/Pages/PlacementResults.aspx" class="subject-card" target="_blank">
+            <h3>PLACEMENT RESULTS نتائج المستوى (رقمك الجامعي)</h3>
+        </a>
+        <a href="lab_related" class="subject-card">
+            <h3>LABS MATERIALS مواد المختبرات</h3>
+        </a>
+        <a href="mostwanted" class="subject-card">
+            <h3>MOST WANTED FILES الملفات الأكثر طلبا</h3>
+        </a>
+        <a href="it" class="subject-card">
+            <h3>INFORMATION TECHNOLOGY</h3>
+        </a>
+        <a href="engineering" class="subject-card">
+            <h3>ENGINEERING الهندسة</h3>
+        </a>
+        <a href="special" class="subject-card">
+            <h3>STUDENTS DATA ملفات الطلبه</h3>
+        </a>
+        <a href="others" class="subject-card">
+            <h3>ELECTIVE COURSES مواد اختياري او متطلب</h3>
+        </a>
+        <a href="presentations" class="subject-card">
+            <h3>PRESENTATIONS</h3>
+        </a>
+        <a href="summaries" class="subject-card">
+            <h3>SUMMARIES الملخصات</h3>
+        </a>
+        <a href="calculus" class="subject-card">
+            <h3>ALL CALCULUS</h3>
+        </a>
+        <a href="medical" class="subject-card">
+            <h3>HEALTH SCIENCES</h3>
+        </a>
+        <a href="mathematics" class="subject-card">
+            <h3>MATHEMATICS AND STATISTICS</h3>
+        </a>
+        <a href="artshumanities" class="subject-card">
+            <h3>ARTS AND HUMANITIES</h3>
+        </a>
+        <a href="chemical" class="subject-card">
+            <h3>CHEMICAL ENGINEERING</h3>
+        </a>
+        <a href="business" class="subject-card">
+            <h3>BUSINESS</h3>
+        </a>
+        <a href="electrical" class="subject-card">
+            <h3>ELECTRICAL ENGINEERING</h3>
+        </a>
+        <a href="industrial" class="subject-card">
+            <h3>INDUSTRIAL ENGINEERING</h3>
+        </a>
+        <a href="dentistry" class="subject-card">
+            <h3>DENTISTRY</h3>
+        </a>
+        <a href="nursing" class="subject-card">
+            <h3>NURSING</h3>
+        </a>
+        <a href="pharmacy" class="subject-card">
+            <h3>PHARMACY</h3>
+        </a>
+        <a href="hanafi" class="subject-card">
+            <h3>FACULTY OF SHARIA</h3>
+        </a>
+        <a href="arabicliterature" class="subject-card">
+            <h3>ARABIC LITERATURE</h3>
+        </a>
+    </div>
+</main>
+
+
+    <script>
+        // Toggle dark mode
+        document.getElementById('mode-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Load dark mode preference from local storage
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+
+        // Disable right-click and copy-paste
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => e.preventDefault());
+        document.addEventListener('paste', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && ['c', 'v', 'x', 'u', 'a'].includes(e.key)) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

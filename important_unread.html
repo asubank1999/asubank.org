@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unread Messages</title>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #000;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .unread-message {
+        background: linear-gradient(to bottom right, #1a1a1a, #330033);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(100, 0, 100, 0.5);
+        max-width: 80%;
+        text-align: center;
+    }
+
+    .unread-message p {
+        margin: 0;
+        color: #e0e0e0;
+        line-height: 1.6;
+    }
+
+    .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 10px;
+        transition: color 0.3s ease;
+    }
+
+    .back-button:hover {
+        color: #ff4757;
+    }
+
+    @media (max-width: 600px) {
+        .unread-message {
+            max-width: 95%;
+            padding: 15px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-button">&#8592; Back</a>
+
+<div class="unread-message">
+    <p>
+        Hey, we're looking for student volunteers to share any materials that could help out friends, first-semester university students, or just anyone! PDFs, worksheets, test banks, any data - we want it all! Drop them in the WhatsApp Community requests group ASAP!
+    </p>
+    <p>
+        نحن نبحث عن طلاب متطوعين لتقديم أي مواد قد تسهم في مساعدة الأصدقاء، طلاب السنة الأولى بالجامعة، أو أي شخص آخر. نحن نرحب بالملفات المنسقة، أوراق العمل، بنوك الاختبارات، وأي بيانات - نقبل جميعها. يرجى إرسالها إلى مجموعة طلبات المجتمع على واتساب بأسرع وقت ممكن.
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <style>
+    /* Stylish link design */
+    .back-link {
+      display: inline-block;
+      background-color: #4CAF50; /* Green background */
+      color: white;             /* White text */
+      text-decoration: none;    /* Remove underline */
+      font-size: 18px;          /* Adjust font size */
+      font-weight: bold;        /* Make text bold */
+      padding: 10px 20px;       /* Add padding */
+      border-radius: 25px;      /* Rounded corners */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+      transition: all 0.3s ease; /* Smooth transition effect */
+    }
+
+    /* Hover effect */
+    .back-link:hover {
+      background-color: #45a049; /* Darker green on hover */
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Enhance shadow on hover */
+      transform: translateY(-3px); /* Slight lift on hover */
+    }
+  </style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>العد التنازلي للأحداث</title>
+
+  <link rel="stylesheet" href="asu_date_style.css">
+</head>
+<body>
+  <header>
+    <h1>العد التنازلي للأحداث الجامعية</h1>
+  </header>
+  <main>
+    <section id="events-table">
+      <h2>جدول الأحداث</h2>
+<body><center>
+  <a href="index" class="back-link">ASU Bank👈🏽 </a>
+</body></center>
+      <table>
+        <thead>
+          <tr>
+            <th>التاريخ</th>
+            <th>اليوم</th>
+            <th>الحدث</th>
+            <th>العد التنازلي</th>
+          </tr>
+        </thead>
+        <tbody id="events-body">
+          <!-- Event rows will be dynamically added here -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <footer>
+    <p>جميع الحقوق محفوظة &copy; 2025</p>
+  </footer>
+  <script src="asu_date_script.js"></script>
+</body>
+<script>
+    document.getElementById('mode-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('theme') === 'dark' || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-mode');
+        }
+    });
+</script>
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Disables right-click context menu
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault(); // Disables copy action
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault(); // Disables paste action
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disables common keyboard shortcuts
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        function copyText() {
+            // Get the text field
+            const copyText = document.getElementById("textToCopy");
+            // Select the text
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                // Display a success message
+                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
+            }).catch(err => {
+                // Display an error message
+                console.error('Could not copy text: ', err);
+                document.getElementById("message").textContent = "Failed to copy text.";
+            });
+        }
+    </script>
+
+</html>

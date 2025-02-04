@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Generate random width and height based on screen type
+    let screenWidth = window.innerWidth;
+    
+    // Define ranges for mobile and widescreen adjustments
+    let widthRangeMobile = [40, 60];  // Mobile width range (40% to 60%)
+    let widthRangeWide = [60, 100];   // Widescreen width range (60% to 100%)
+    
+    let heightRangeMobile = [50, 80]; // Mobile height range (50% to 80%)
+    let heightRangeWide = [70, 90];   // Widescreen height range (70% to 90%)
+
+    // Decide which range to use based on the screen width
+    let widthPercentage, heightPercentage;
+
+    if (screenWidth <= 768) {  // Assume mobile if the screen width is 768px or less
+      widthPercentage = Math.random() * (widthRangeMobile[1] - widthRangeMobile[0]) + widthRangeMobile[0];
+      heightPercentage = Math.random() * (heightRangeMobile[1] - heightRangeMobile[0]) + heightRangeMobile[0];
+    } else {  // Assume widescreen otherwise
+      widthPercentage = Math.random() * (widthRangeWide[1] - widthRangeWide[0]) + widthRangeWide[0];
+      heightPercentage = Math.random() * (heightRangeWide[1] - heightRangeWide[0]) + heightRangeWide[0];
+    }
+
+    // Random scale factor between 0.5 and 1 (scaling down for mobile, keeping natural size for widescreen)
+    let scaleFactor = Math.random() * (1 - 0.5) + 0.5;
+
+    // Apply the styles
+    document.body.style.transform = `1.5`;
+    document.body.style.transformOrigin = "0 0";
+    document.body.style.width = `95%`;
+    document.body.style.height = `95%`;
+    document.body.style.overflow = "auto"; // Allow scrolling
+  });
+</script>
+
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Exam Timings with Countdown</title>
+    <style>
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Subject</th>
+                <th>Room</th>
+                <th>Instructor</th>
+                <th>Countdown Timer</th> <!-- Added countdown column -->
+            </tr>
+        </thead>
+        <tbody id="exam-table">
+            <!-- Exam rows will be populated dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        const exams = [
+            { day: "Wednesday", date: "2025-01-22", time: "11:00", subject: "Introduction to Cultural Interaction", room: "IT Lab", instructor: "Dr. Esraa Qudah" },
+            { day: "Wednesday", date: "2025-01-22", time: "12:00", subject: "English Language Preparatory Program", room: "IT Lab", instructor: "Dr. Nevin Zayed" },
+            { day: "Thursday", date: "2025-01-23", time: "09:00", subject: "Simultaneous and Consecutive Interpretation 1", room: "9173", instructor: "Dr. Zakaria Al-Mohasees" },
+            { day: "Thursday", date: "2025-01-23", time: "12:00", subject: "Simultaneous and Consecutive Interpretation 2", room: "9173", instructor: "Dr. Mohamed Al-Taher" },
+            { day: "Sunday", date: "2025-01-26", time: "09:00", subject: "Translation Criticism", room: "9266", instructor: "Dr. Ahmed Haider" },
+            { day: "Sunday", date: "2025-01-26", time: "12:00", subject: "Applied Grammar 1", room: "9266", instructor: "Mr. Youssef Hamdan" },
+            { day: "Sunday", date: "2025-01-26", time: "12:00", subject: "Applied Grammar 2", room: "9273", instructor: "Mr. Youssef Hamdan" },
+            { day: "Monday", date: "2025-01-27", time: "09:00", subject: "World Literature", room: "9267", instructor: "Dr. Malek Al-Khawaldeh" },
+            { day: "Monday", date: "2025-01-27", time: "12:00", subject: "Writing 1", room: "9267", instructor: "Dr. Duaa Rizq" },
+            { day: "Monday", date: "2025-01-27", time: "12:00", subject: "Writing 2", room: "9269", instructor: "Dr. Duaa Rizq" },
+            { day: "Monday", date: "2025-01-27", time: "12:00", subject: "Legal Translation 2", room: "9270", instructor: "Dr. Mohamed Al-Taher" },
+            { day: "Monday", date: "2025-01-27", time: "12:00", subject: "Phonetics and Phonology", room: "9266", instructor: "Dr. Abdullah Al-Momani" },
+            { day: "Monday", date: "2025-01-27", time: "12:00", subject: "Romantic Literature", room: "9269", instructor: "Dr. Inas Ababneh" },
+            { day: "Tuesday", date: "2025-01-28", time: "09:00", subject: "Introduction to Translation Theory", room: "9266", instructor: "Dr. Ahmed Haider" },
+            { day: "Tuesday", date: "2025-01-28", time: "12:00", subject: "Pronunciation 2", room: "9234", instructor: "Dr. Dina Al-Hammouri" },
+            { day: "Tuesday", date: "2025-01-28", time: "12:00", subject: "Pronunciation 1", room: "9270", instructor: "Dr. Esraa Qudah" },
+            { day: "Tuesday", date: "2025-01-28", time: "12:00", subject: "Journalistic Translation 1", room: "9273", instructor: "Dr. Zakaria Al-Mohasees" },
+            { day: "Tuesday", date: "2025-01-28", time: "12:00", subject: "Drama 1", room: "9269", instructor: "Dr. Malek Al-Khawaldeh" },
+            { day: "Wednesday", date: "2025-01-29", time: "09:00", subject: "Morphology", room: "9266", instructor: "Dr. Abdullah Al-Momani" },
+            { day: "Wednesday", date: "2025-01-29", time: "09:00", subject: "Short Story", room: "9233", instructor: "Dr. Malek Al-Khawaldeh" },
+            { day: "Wednesday", date: "2025-01-29", time: "09:00", subject: "Reading 1", room: "9268", instructor: "Dr. Nevin Zayed" },
+            { day: "Thursday", date: "2025-01-30", time: "09:00", subject: "Reading 2", room: "9268", instructor: "Dr. Nevin Zayed" },
+            { day: "Thursday", date: "2025-01-30", time: "12:00", subject: "Scientific Research Methods", room: "9267", instructor: "Dr. Dina Al-Hammouri" },
+            { day: "Thursday", date: "2025-01-30", time: "12:00", subject: "Scientific Translation", room: "9266", instructor: "Dr. Mohamed Al-Taher" },
+            { day: "Thursday", date: "2025-01-30", time: "12:00", subject: "American Literature 1", room: "9173", instructor: "Dr. Inas Ababneh" },
+            { day: "Thursday", date: "2025-01-30", time: "09:00", subject: "Comparative Linguistics", room: "9271", instructor: "Prof. Mohamed Farghal" },
+            { day: "Sunday", date: "2025-02-02", time: "09:00", subject: "General Translation 2", room: "10344", instructor: "Dr. Duaa Rizq" },
+            { day: "Sunday", date: "2025-02-02", time: "09:00", subject: "Study Skills", room: "9266", instructor: "Dr. Dina Al-Hammouri" },
+            { day: "Sunday", date: "2025-02-02", time: "09:00", subject: "Literary Criticism", room: "9070", instructor: "Dr. Inas Ababneh" },
+            { day: "Sunday", date: "2025-02-02", time: "12:00", subject: "Literary Translation", room: "9267", instructor: "Dr. Esraa Qudah" },
+            { day: "Monday", date: "2025-02-03", time: "12:00", subject: "Legal Translation 1", room: "9270", instructor: "Dr. Zakaria Al-Mohasees" },
+            { day: "Monday", date: "2025-02-03", time: "12:00", subject: "Machine Translation", room: "9165", instructor: "Mr. Youssef Hamdan" },
+            { day: "Monday", date: "2025-02-03", time: "12:00", subject: "English Literature 1", room: "9273", instructor: "Dr. Malek Al-Khawaldeh" },
+            { day: "Monday", date: "2025-02-03", time: "12:00", subject: "Comparative Discourse Analysis", room: "9267", instructor: "Prof. Mohamed Farghal" },
+            { day: "Tuesday", date: "2025-02-04", time: "12:00", subject: "Translation of Religious Texts", room: "9270", instructor: "Dr. Mohamed Al-Taher" },
+            { day: "Tuesday", date: "2025-02-04", time: "12:00", subject: "Shakespeare", room: "9268", instructor: "Dr. Inas Ababneh" },
+            { day: "Wednesday", date: "2025-02-05", time: "09:00", subject: "Semantics", room: "9270", instructor: "Dr. Dina Al-Hammouri" }
+        ];
+
+        const tableBody = document.getElementById("exam-table");
+
+        function formatCountdown(targetDate) {
+            const now = new Date();
+            const diff = targetDate - now;
+            if (diff <= 0) return "Exam is ongoing or completed.";
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            return `${days} days, ${hours} hours, ${minutes} minutes`;
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            exams.forEach(exam => {
+                // Use the correct format for creating a Date object
+                const examTime = new Date(`${exam.date}T${exam.time}:00`);
+                const countdown = formatCountdown(examTime);
+                document.getElementById(exam.subject).innerText = countdown; // Update countdown for each exam
+            });
+        }
+
+        exams.forEach(exam => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${exam.day}</td>
+                <td>${exam.date}</td>
+                <td>${exam.time}</td>
+                <td>${exam.subject}</td>
+                <td>${exam.room}</td>
+                <td>${exam.instructor}</td>
+                <td id="${exam.subject}">${formatCountdown(new Date(`${exam.date}T${exam.time}:00`))}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        setInterval(updateCountdown, 1000); // Update every second
+    </script>
+</body>
+</html>
