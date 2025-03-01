@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.body.style.transform = "scale(2.0)";
+    document.body.style.transformOrigin = "0 0";
+    document.body.style.width = "46.77%";  // Adjusted for correct scaling
+    document.body.style.height = "76.67%"; // Adjusted for correct scaling
+    document.body.style.overflow = "auto"; // Allow scrolling
+  });
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +38,8 @@
             --table-border: #ddd;
             --table-hover: #f2f2f2;
             --adjusted-bg: #ffcccb;
+            --button-bg: #4CAF50;
+            --button-text: #ffffff;
         }
 
         [data-theme="dark"] {
@@ -39,6 +50,8 @@
             --table-border: #333;
             --table-hover: #333;
             --adjusted-bg: #ff6666;
+            --button-bg: #4CAF50;
+            --button-text: #ffffff;
         }
 
         /* Table Styles */
@@ -74,6 +87,26 @@
             font-weight: bold;
         }
 
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #45a049;
+        }
+
         /* Dark Mode Toggle */
         .theme-toggle {
             position: fixed;
@@ -95,10 +128,18 @@
             th, td {
                 padding: 8px;
             }
+
+            .back-button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
         }
     </style>
 </head>
 <body>
+
+<!-- Back Button -->
+<a href="index.html" class="back-button">← Back</a>
 
 <!-- Dark Mode Toggle Button -->
 <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
