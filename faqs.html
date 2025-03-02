@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASU Test Banks - FAQs</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      color: #007bff;
+    }
+    .faq-item {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+    body.dark-mode .faq-item {
+      background-color: #2d2d2d;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .faq-item h3 {
+      margin-bottom: 10px;
+      color: #007bff;
+      font-size: 1.25rem;
+    }
+    .faq-item p {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+    .mode-switch {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .mode-switch:hover {
+      background-color: #0056b3;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: none;
+      transition: background-color 0.3s;
+    }
+    .back-to-top:hover {
+      background-color: #0056b3;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .faq-item h3 {
+        font-size: 1.1rem;
+      }
+      .faq-item p {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="mode-switch" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <a href="index" class="back-button">Return to Homepage</a>
+    <h1>Frequently Asked Questions (FAQs)</h1>
+    <div class="faq-item">
+      <h3>What is ASU Test Banks?</h3>
+      <p>ASU Test Banks is a comprehensive online resource for students and educators, offering an extensive collection of test banks, PDFs, and quizzes.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How can I access the test banks?</h3>
+      <p>You don't need to create an account to access the test banks. Simply visit the website and browse the available resources.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Are the test banks free to use?</h3>
+      <p>Yes, all resources on ASU Test Banks are completely free to use.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I contribute my own test banks or quizzes?</h3>
+      <p>Yes, ASU Test Banks encourages contributions from students and educators. You can upload your own test banks or quizzes by following the submission guidelines on the website.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is ASU Test Banks mobile-friendly?</h3>
+      <p>Yes, the website is designed to be fully responsive and mobile-friendly, ensuring a seamless experience on all devices.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is there an iOS app for ASU Test Banks?</h3>
+      <p>There might be an iOS app in the future if students are willing to donate to support its development. Stay tuned for updates!</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is there an Android app for ASU Test Banks?</h3>
+      <p>An Android app might be developed, but there is no specific ETA at the moment. Check the website for updates.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do I switch between dark and light mode?</h3>
+      <p>You can toggle between dark and light mode using the "Toggle Dark Mode" button located at the top right corner of the page.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What if I can't find a specific test bank?</h3>
+      <p>If you can't find what you're looking for, contact us via our WhatsApp group, and we'll assist you.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I share the resources with others?</h3>
+      <p>Yes, you can share the resources by sending them the website link. Please avoid distributing downloaded files directly.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is my personal information safe on ASU Test Banks?</h3>
+      <p>Yes, your privacy is important to us. If you contribute materials like med/final exams or quizzes, your name and university ID number will be hidden to protect your identity.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I use ASU Test Banks on multiple devices?</h3>
+      <p>Yes, you can access the website and its resources from any device with an internet connection.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How often are new resources added?</h3>
+      <p>New resources are added regularly. Check the website frequently or join our WhatsApp group for updates.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What formats are the test banks available in?</h3>
+      <p>Most test banks are available in PDF format, but other formats may also be available depending on the resource.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do I contact support?</h3>
+      <p>You can contact support through the WhatsApp group linked on the website.</p>
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+  <script>
+    // Dark Mode Toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    // Back to Top Button
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Show/Hide Back to Top Button
+    window.onscroll = function () {
+      const backToTopButton = document.querySelector('.back-to-top');
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    };
+
+    // Disable Right-Click and Keyboard Shortcuts
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('keydown', (e) => {
+      // Disable Ctrl+C, Ctrl+X, Ctrl+A, Ctrl+S, Ctrl+V
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'x' || e.key === 'a' || e.key === 's' || e.key === 'v')) {
+        e.preventDefault();
+      }
+      // Disable F12 (Developer Tools)
+      if (e.key === 'F12') {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
