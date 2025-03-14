@@ -1,0 +1,122 @@
+/* General Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.light-mode {
+  background-color: #f4f4f4;
+  color: #000000;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #333;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+main {
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: #ff6f61;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background-color: #444;
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
+  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+  width: 90%;
+  max-width: 600px; /* Wider cards */
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  background-color: #555;
+}
+
+.card:active {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card h2 {
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  color: #ff6f61;
+}
+
+.card p {
+  font-size: 1.1em;
+  margin: 0;
+  color: #cccccc;
+}
+
+/* Light Mode Styles */
+body.light-mode .card {
+  background-color: #e0e0e0;
+  color: #000000;
+}
+
+body.light-mode .card:hover {
+  background-color: #d0d0d0;
+}
+
+body.light-mode header {
+  background-color: #f0f0f0;
+}
+
+body.light-mode .back-button {
+  color: #000000;
+}
+
+body.light-mode .theme-toggle {
+  color: #000000;
+}
+
+body.light-mode .card h2 {
+  color: #ff6f61;
+}
+
+body.light-mode .card p {
+  color: #666666;
+}

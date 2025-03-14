@@ -14,100 +14,139 @@
       color: #333;
       transition: background-color 0.3s, color 0.3s;
     }
+
     body.dark-mode {
       background-color: #1a1a1a;
       color: #e0e0e0;
     }
+
     .container {
       max-width: 800px;
-      margin: 0 auto;
+      margin: 80px auto 20px;
       padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      animation: fadeIn 1s ease-in-out forwards;
     }
+
+    body.dark-mode .container {
+      background-color: #2d2d2d;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     h1 {
       text-align: center;
       margin-bottom: 20px;
       font-size: 2.5rem;
       color: #007bff;
     }
+
     .faq-item {
       margin-bottom: 20px;
       padding: 15px;
-      background-color: #ffffff;
+      background-color: #f8f9fa;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s, box-shadow 0.3s;
     }
+
     body.dark-mode .faq-item {
-      background-color: #2d2d2d;
+      background-color: #3a3a3a;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
+
     .faq-item h3 {
       margin-bottom: 10px;
       color: #007bff;
       font-size: 1.25rem;
     }
+
     .faq-item p {
       margin: 0;
       font-size: 1rem;
       line-height: 1.5;
     }
-    .back-button {
-      display: inline-block;
-      margin-bottom: 20px;
+
+    /* Back to Home and Theme Toggle Buttons */
+    .back-button, .theme-toggle {
+      position: fixed;
       padding: 10px 20px;
       background-color: #007bff;
       color: #ffffff;
       text-decoration: none;
       border-radius: 5px;
-      font-size: 1rem;
-      transition: background-color 0.3s;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      z-index: 1000;
     }
-    .back-button:hover {
-      background-color: #0056b3;
+
+    .back-button {
+      top: 20px;
+      left: 20px;
     }
-    .mode-switch {
-      position: fixed;
+
+    .theme-toggle {
       top: 20px;
       right: 20px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #ffffff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.3s;
     }
-    .mode-switch:hover {
+
+    .back-button:hover, .theme-toggle:hover {
       background-color: #0056b3;
+      transform: scale(1.05);
     }
-    .back-to-top {
+
+    /* Scroll to Top and Bottom Buttons */
+    .scroll-button {
       position: fixed;
       bottom: 20px;
       right: 20px;
       padding: 10px;
-      background-color: #007bff;
-      color: #ffffff;
+      background-color: #6c5ce7;
+      color: #fff;
       border: none;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 1.5rem;
-      display: none;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s, transform 0.2s;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
     }
-    .back-to-top:hover {
-      background-color: #0056b3;
+
+    .scroll-button:hover {
+      background-color: #5a4acf;
+      transform: scale(1.1);
     }
+
+    .scroll-button.bottom {
+      bottom: 70px;
+    }
+
+    /* Responsive Design */
     @media (max-width: 600px) {
       .container {
-        padding: 10px;
+        padding: 15px;
       }
+
       h1 {
         font-size: 2rem;
       }
+
       .faq-item h3 {
         font-size: 1.1rem;
       }
+
       .faq-item p {
         font-size: 0.9rem;
       }
@@ -115,10 +154,18 @@
   </style>
 </head>
 <body>
+  <!-- Back to Home and Theme Toggle Buttons -->
+  <a href="index" class="back-button">Back to Home</a>
+  <button class="theme-toggle" onclick="toggleDarkMode()">Switch to Dark Mode</button>
+
+  <!-- Scroll to Top and Bottom Buttons -->
+  <button class="scroll-button" onclick="scrollToTop()">↑</button>
+  <button class="scroll-button bottom" onclick="scrollToBottom()">↓</button>
+
+  <!-- Main Content -->
   <div class="container">
-    <button class="mode-switch" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-    <a href="index" class="back-button">Return to Homepage</a>
     <h1>Frequently Asked Questions (FAQs)</h1>
+
     <div class="faq-item">
       <h3>What is ASU Test Banks?</h3>
       <p>ASU Test Banks is a comprehensive online resource for students and educators, offering an extensive collection of test banks, PDFs, and quizzes.</p>
@@ -149,7 +196,7 @@
     </div>
     <div class="faq-item">
       <h3>How do I switch between dark and light mode?</h3>
-      <p>You can toggle between dark and light mode using the "Toggle Dark Mode" button located at the top right corner of the page.</p>
+      <p>You can toggle between dark and light mode using the "Switch to Dark Mode" button located at the top right corner of the page.</p>
     </div>
     <div class="faq-item">
       <h3>What if I can't find a specific test bank?</h3>
@@ -181,29 +228,28 @@
     </div>
   </div>
 
-  <!-- Back to Top Button -->
-  <button class="back-to-top" onclick="scrollToTop()">↑</button>
-
   <script>
-    // Dark Mode Toggle
+    // Function to toggle light/dark mode
     function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        themeToggle.textContent = 'Switch to Light Mode';
+      } else {
+        themeToggle.textContent = 'Switch to Dark Mode';
+      }
     }
 
-    // Back to Top Button
+    // Function to scroll to top
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Show/Hide Back to Top Button
-    window.onscroll = function () {
-      const backToTopButton = document.querySelector('.back-to-top');
-      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        backToTopButton.style.display = 'block';
-      } else {
-        backToTopButton.style.display = 'none';
-      }
-    };
+    // Function to scroll to bottom
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
 
     // Disable Right-Click and Keyboard Shortcuts
     document.addEventListener('contextmenu', (e) => e.preventDefault());

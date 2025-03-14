@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University WhatsApp Links</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background-color: #1a1a1a;
+      color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 80px auto 20px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      border-radius: 8px;
+      transition: background-color 0.3s, color 0.3s;
+      opacity: 0;
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    body.dark-mode .container {
+      background-color: #2c2c2c;
+      color: #f4f4f4;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #6c5ce7;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 30px;
+      color: #6c5ce7;
+    }
+
+    h3 {
+      font-size: 20px;
+      margin-top: 20px;
+      color: #007BFF;
+    }
+
+    .whatsapp-link {
+      display: block;
+      padding: 12px;
+      margin: 10px 0;
+      text-align: center;
+      background-color: #6c5ce7;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .whatsapp-link:hover {
+      background-color: #5a4acf;
+      transform: scale(1.02);
+    }
+
+    .back-button, .theme-toggle {
+      position: fixed;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      z-index: 1000;
+    }
+
+    .back-button {
+      top: 20px;
+      left: 20px;
+    }
+
+    .theme-toggle {
+      top: 20px;
+      right: 20px;
+    }
+
+    .back-button:hover, .theme-toggle:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    .disclaimer {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-left: 4px solid #007BFF;
+      border-radius: 5px;
+      font-size: 14px;
+      color: #555;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode .disclaimer {
+      background-color: #555;
+      color: #f4f4f4;
+    }
+
+    .disclaimer a {
+      color: #007BFF;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .disclaimer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Scroll to Top and Bottom Buttons */
+    .scroll-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: #6c5ce7;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+    }
+
+    .scroll-button:hover {
+      background-color: #5a4acf;
+      transform: scale(1.1);
+    }
+
+    .scroll-button.bottom {
+      bottom: 70px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      h3 {
+        font-size: 18px;
+      }
+
+      .whatsapp-link, .back-button, .theme-toggle {
+        font-size: 14px;
+      }
+
+      .disclaimer {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Back to Home and Theme Toggle Buttons -->
+  <a href="index.html" class="back-button">Back to Home</a>
+  <button class="theme-toggle" onclick="toggleTheme()">Switch to Dark Mode</button>
+
+  <!-- Scroll to Top and Bottom Buttons -->
+  <button class="scroll-button" onclick="scrollToTop()">↑</button>
+  <button class="scroll-button bottom" onclick="scrollToBottom()">↓</button>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>University WhatsApp Links</h1>
+
+    <!-- Clinical Nutrition and Dietetics Section -->
+    <h2>Clinical Nutrition and Dietetics</h2>
+    <h3>First Year</h3>
+    <a href="https://chat.whatsapp.com/EArT9uav9K561KPY0YxEwp" class="whatsapp-link">Biostatistics</a>
+    <a href="https://chat.whatsapp.com/FvWjkA193am6lQCoxu5hkq" class="whatsapp-link">Organic Chemistry</a>
+    <a href="https://chat.whatsapp.com/IjWxJ6VvyjQKrhtEq63J6a" class="whatsapp-link">Fundamentals of Nutrition</a>
+    <a href="https://chat.whatsapp.com/GnxSXWUq15uJXiDhWQH97u" class="whatsapp-link">Fundamentals of Food Science</a>
+    <a href="https://chat.whatsapp.com/GIhfDBt27SqD1dgLX0M7ad" class="whatsapp-link">Physiology</a>
+    <a href="https://chat.whatsapp.com/J4FvhuNSTYxDV4ffx12Vyv" class="whatsapp-link">Medical Terminology</a>
+    <a href="https://chat.whatsapp.com/CtHCkorWStKFbSEoaS811m" class="whatsapp-link">Biochemistry</a>
+
+    <h3>Second Year</h3>
+    <a href="https://chat.whatsapp.com/IAj0S67eU3dGwYLOW2oDf1" class="whatsapp-link">Food Safety and Health</a>
+    <a href="https://chat.whatsapp.com/J15CqS9tlYPI7k9QkHgGVp" class="whatsapp-link">Nutrition Through Life Stages (1)</a>
+    <a href="https://chat.whatsapp.com/CaBNusC5Wpu3bHMLV10Drk" class="whatsapp-link">Meal Planning and Diets</a>
+    <a href="https://chat.whatsapp.com/CZmV2dBkyClFLxwQsdJa3F" class="whatsapp-link">Meal Planning and Diets (Practical)</a>
+
+    <h3>Third Year</h3>
+    <a href="https://chat.whatsapp.com/LhooTgTYKpb5rJIXwC3FOA" class="whatsapp-link">Clinical Nutrition Therapy (2)</a>
+    <a href="https://chat.whatsapp.com/DMqE7rC0D4PLSgHED69bYz" class="whatsapp-link">Clinical Nutrition Therapy (2) (Practical)</a>
+    <a href="https://chat.whatsapp.com/FCqyTgtnV2pBfczCVV5ySo" class="whatsapp-link">Food Preparation</a>
+    <a href="https://chat.whatsapp.com/EtI2xIQKzDDLXXpC7M61fR" class="whatsapp-link">Food Preparation (Practical)</a>
+    <a href="https://chat.whatsapp.com/C31XbXx0vNx9uL2ZigtyIQ" class="whatsapp-link">Nutritional Education and Counseling</a>
+
+    <h3>Fourth Year</h3>
+    <a href="https://chat.whatsapp.com/E9QLlyVYmJRI6URo1kVmAP" class="whatsapp-link">Food Quality Control and Management</a>
+    <a href="https://chat.whatsapp.com/HgumYYtBhSuLWiOcyzL4Bt" class="whatsapp-link">Nutrition and Immunity</a>
+    <a href="https://chat.whatsapp.com/DNgboFbjjgkLJ2Qh1erziG" class="whatsapp-link">Sports Nutrition</a>
+    <a href="https://chat.whatsapp.com/CZHzePqvLbQAtJ7RwWQVLJ" class="whatsapp-link">Clinical Nutrition Graduation Project</a>
+    <a href="https://chat.whatsapp.com/HFSIzS9ZCoPAd0usbGLvmc" class="whatsapp-link">Nutrition Therapy for Cancer Patients</a>
+    <a href="https://chat.whatsapp.com/HPbBv2Nm0AaEuPJo3qZwTc" class="whatsapp-link">Functional Foods</a>
+
+    <!-- Physical Therapy Section -->
+    <h2>Physical Therapy</h2>
+    <h3>Third Year</h3>
+    <a href="https://chat.whatsapp.com/C9nPRynzZzt6SUOEvrf9hl" class="whatsapp-link">Musculoskeletal Physical Therapy (2)</a>
+    <a href="https://chat.whatsapp.com/Gsz59h2xW9yF306pij4x63" class="whatsapp-link">Musculoskeletal Physical Therapy (2) (Practical)</a>
+    <a href="https://chat.whatsapp.com/EBJdpbqyeN4KK0YDDRM8Yk" class="whatsapp-link">Neuromuscular Physical Therapy (2)</a>
+    <a href="https://chat.whatsapp.com/KWjWtgHG6sbAqNHIyZjBHg" class="whatsapp-link">Neuromuscular Physical Therapy (2) (Practical)</a>
+    <a href="https://chat.whatsapp.com/F9zyXwiZxcqKNqqtgP9HoP" class="whatsapp-link">Cardiopulmonary Physical Therapy (2)</a>
+    <a href="https://chat.whatsapp.com/ICZQHwu5RP6AaFQ0cj3YdI" class="whatsapp-link">Cardiopulmonary Physical Therapy (2) (Practical)</a>
+    <a href="https://chat.whatsapp.com/IRCX2bIFnCk1IqXcKtwGI2" class="whatsapp-link">Geriatric Physical Therapy</a>
+    <a href="https://chat.whatsapp.com/HtBiox83LwZ2RhldseoZWe" class="whatsapp-link">Introduction to Clinical Training</a>
+    <a href="https://chat.whatsapp.com/DxAdZ5WvlcnDdAkHp9mgnK" class="whatsapp-link">Prosthetics and Assistive Devices</a>
+
+    <h3>Second Year</h3>
+    <a href="https://chat.whatsapp.com/HRGImW1e3sx6aCpFmQjoAB" class="whatsapp-link">Neuroscience (Section 1)</a>
+    <a href="https://chat.whatsapp.com/G9KbQWVmCDX7x4kXlQsozB" class="whatsapp-link">Neuroscience (Section 2)</a>
+    <a href="https://chat.whatsapp.com/LPQpqHLmG9VCowBrS5SiOJ" class="whatsapp-link">Biomechanics (Section 1)</a>
+    <a href="https://chat.whatsapp.com/KyQe3hPL3fdJ7NG5fsjsVY" class="whatsapp-link">Biomechanics (Section 2)</a>
+    <a href="https://chat.whatsapp.com/Chpac7kNFH40p924QSxNbr" class="whatsapp-link">Physical and Electrical Therapy (Section 1)</a>
+    <a href="https://chat.whatsapp.com/Ghr1r6odOZeLXYj47grBN4" class="whatsapp-link">Physical and Electrical Therapy (Section 2)</a>
+    <a href="https://chat.whatsapp.com/Cz0Ni94zBZUAO3NGfN1TPz" class="whatsapp-link">Physical and Electrical Therapy (Practical)</a>
+    <a href="https://chat.whatsapp.com/L5nsnqrg7mY1eFuUSgzh2K" class="whatsapp-link">Musculoskeletal System Evaluation</a>
+    <a href="https://chat.whatsapp.com/EiCb3v8SYxFIfyfnNLhKO1" class="whatsapp-link">Musculoskeletal System Evaluation (Practical)</a>
+    <a href="https://chat.whatsapp.com/LQCLect0qnz9wX1mkI9Sjr" class="whatsapp-link">Physical Therapy in Surgical Cases and Burns (Section 1)</a>
+    <a href="https://chat.whatsapp.com/IithZ1SktHrI6O8JF0MIth" class="whatsapp-link">Physical Therapy in Surgical Cases and Burns (Section 2)</a>
+
+    <h3>Additional Courses</h3>
+    <a href="https://chat.whatsapp.com/FhRKPp91cBA8XvjswncP89" class="whatsapp-link">Principles and Ethics (Section 1)</a>
+    <a href="https://chat.whatsapp.com/EXK89qhymU278D1hQVqXos" class="whatsapp-link">Principles and Ethics (Section 2)</a>
+    <a href="https://chat.whatsapp.com/LH7xttgKv5OAKSBEkRElKa" class="whatsapp-link">Anatomy (Section 1)</a>
+    <a href="https://chat.whatsapp.com/GFZH3p4APa48RjKBcOeCYC" class="whatsapp-link">Anatomy (Section 2)</a>
+    <a href="https://chat.whatsapp.com/BW5iPlUGHt8HlpkgL6fh1y" class="whatsapp-link">Anatomy (Section 3)</a>
+    <a href="https://chat.whatsapp.com/IHFSZe8P3mu6uwiR3bGrcy" class="whatsapp-link">Anatomy (Section 4)</a>
+    <a href="https://chat.whatsapp.com/GIhfDBt27SqD1dgLX0M7ad" class="whatsapp-link">Physiology (All Sections)</a>
+    <a href="https://chat.whatsapp.com/DbBxBFQe1ri6GC1XAB9GGq" class="whatsapp-link">Pharmacology for Physical Therapy</a>
+    <a href="https://chat.whatsapp.com/FMyx3Hl9BrKFmNa9sQl0JS" class="whatsapp-link">Psychology for Medical Sciences</a>
+
+    <!-- Business School Section -->
+    <h2>Business School</h2>
+    <a href="https://chat.whatsapp.com/JmzQUKEbm7pBdbBRnbAvid" class="whatsapp-link">Business School Students Group</a>
+
+    <!-- Linguistics Section -->
+    <h2>Linguistics</h2>
+    <a href="https://chat.whatsapp.com/Diihku5b8Z06DCXZfLKVKz" class="whatsapp-link">Comparative Linguistics - Dr. Farghal</a>
+    <a href="https://chat.whatsapp.com/JtfzyuarOJS6F6TxXzfrdr" class="whatsapp-link">Contrastive Discourse Analysis - Dr. Farghal</a>
+
+    <!-- Computer Science Section -->
+    <h2>Computer Science</h2>
+    <a href="https://chat.whatsapp.com/DDRN4vkegzhEYTadtodJoT" class="whatsapp-link">C.S | ASU</a>
+
+    <!-- University Students and ASU Library -->
+    <h2>University Students</h2>
+    <a href="https://chat.whatsapp.com/Ipe11O8CpCCKrpUcTIqlQp" class="whatsapp-link">University Students Group 2</a>
+
+    <h2>ASU Library</h2>
+    <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="whatsapp-link">ASU Electronic Library Hub</a>
+
+    <!-- Disclaimer Section -->
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> By joining any of the WhatsApp groups listed above, you acknowledge that you are solely responsible for your actions. The university and the website's administrators are not responsible for any actions or consequences that may arise from your participation in these groups. These group links are listed as public. If you wish to have your link removed, please contact us directly via the <a href="mailto:necro144@yahoo.com">Requests Group</a>, and we will remove it within 24 hours.
+    </div>
+  </div>
+
+  <script>
+    // Function to toggle light/dark mode
+    function toggleTheme() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        themeToggle.textContent = 'Switch to Light Mode';
+      } else {
+        themeToggle.textContent = 'Switch to Dark Mode';
+      }
+    }
+
+    // Function to scroll to top
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Function to scroll to bottom
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

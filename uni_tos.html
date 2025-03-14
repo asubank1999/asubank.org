@@ -5,98 +5,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms of Service</title>
     <link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/x-icon">
-    <link rel="stylesheet" href="respo.css">
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .info-box, .warning-box {
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 20px;
-            background-color: var(--box-background);
-            border-left: 6px solid var(--box-border);
-        }
-        .info-box {
-            --box-border: #2196F3;
-        }
-        .warning-box {
-            --box-border: #ffecb5;
-        }
-        .tos-container {
-            max-width: 800px;
-            margin: auto;
-            text-align: center;
-        }
-        .tos-header {
-            margin-bottom: 40px;
-        }
-        .switch-button, .button {
-            padding: 10px 20px;
-            font-size: 16px;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-        }
-        .switch-button {
-            background-color: #007bff;
-        }
-        .switch-button:hover {
-            background-color: #0056b3;
-        }
-        .button {
-            background-color: #4CAF50;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-        footer {
-            margin-top: 40px;
-            font-size: 14px;
-        }
-
-        /* Light Mode */
+        /* Global Styles */
         :root {
             --background-color: #ffffff;
             --text-color: #000000;
             --box-background: #e7f3fe;
+            --primary-color: #007bff;
+            --secondary-color: #4CAF50;
+            --warning-color: #ffecb5;
+            --border-radius: 8px;
+            --spacing: 20px;
+            --max-width: 800px;
         }
 
-        /* Dark Mode */
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: var(--spacing);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.6;
+        }
+
         body.dark-mode {
             --background-color: #121212;
             --text-color: #e0e0e0;
             --box-background: #333;
+            --warning-color: #ffcc80;
+        }
+
+        /* Container */
+        .tos-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Header */
+        .tos-header {
+            margin-bottom: 40px;
+        }
+
+        .tos-header img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: var(--spacing);
+        }
+
+        .tos-header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing);
+            margin-bottom: var(--spacing);
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .button.primary {
+            background-color: var(--primary-color);
+        }
+
+        .button.primary:hover {
+            background-color: #0056b3;
+        }
+
+        .button.secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .button.secondary:hover {
+            background-color: #45a049;
+        }
+
+        .button.warning {
+            background-color: var(--warning-color);
+            color: #000;
+        }
+
+        .button.warning:hover {
+            background-color: #ffcc80;
+        }
+
+        /* Info and Warning Boxes */
+        .info-box, .warning-box {
+            border-radius: var(--border-radius);
+            padding: var(--spacing);
+            margin-bottom: var(--spacing);
+            background-color: var(--box-background);
+            border-left: 6px solid;
+            text-align: left;
+        }
+
+        .info-box {
+            border-color: var(--primary-color);
+        }
+
+        .warning-box {
+            border-color: var(--warning-color);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            font-size: 0.875rem;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tos-header h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="tos-container">
-    <img src="ASU_Jordan_logo-removebg-preview.png" alt="Website Icon" width="80" height="80">
-    <h1 class="tos-header">Terms of Service</h1>
+    <div class="tos-header">
+        <img src="ASU_Jordan_logo-removebg-preview.png" alt="Website Icon">
+        <h1>Terms of Service</h1>
+    </div>
 
-    <button class="button" onclick="window.location.href='https://asubank.xyz'">Go Back to the Main Menu</button>
-    <button class="switch-button" onclick="switchToArabic()">الانتقال إلى النسخة العربية</button>
-    <button class="switch-button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-
-    <script>
-        function switchToArabic() {
-            window.location.href = 'uni_tos_ar'; // Ensure this path is correct
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-        }
-    </script>
+    <div class="button-group">
+        <a href="https://asubank.xyz" class="button primary">Go Back to Main Menu</a>
+        <button class="button secondary" onclick="switchToArabic()">الانتقال إلى النسخة العربية</button>
+        <button class="button warning" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    </div>
 
     <div class="info-box">
         We aren't responsible for you having the provided course materials. If you don't know what this site is for, I advise you to leave unless you understand what you're viewing.
@@ -109,7 +168,7 @@
 
     <div class="info-box">
         <strong>CAN'T FIND WHAT YOU'RE LOOKING FOR?</strong><br>
-        Please wait until it's uploaded. If you find it, contact the admin ASAP via WhatsApp at necro144@yahoo.com.
+        Please wait until it's uploaded. If you find it, contact the admin ASAP via WhatsApp at necro144@yahoo.com Or necro144@yahoo.com.
     </div>
 
     <div class="info-box">
@@ -118,10 +177,6 @@
 
     <div class="warning-box">
         The owner of this website is not responsible for your exam marks or your comments about this website. This project was made to help others find what they need in one place. If you need anything, you can contact me on WhatsApp. Have a good day.
-    </div>
-
-    <div class="info-box">
-        THE PREPARATION OF THE PROJECT MIGHT TAKE SOME TIME TO BE READY.
     </div>
 
     <div class="warning-box">
@@ -134,22 +189,21 @@
 </footer>
 
 <script>
-    // Disable right-click context menu
-    window.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-    });
+    function switchToArabic() {
+        window.location.href = 'uni_tos_ar'; // Ensure this path is correct
+    }
 
-    // Disable Ctrl+U shortcut
-    window.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.key === 'u') {
-            e.preventDefault();
-        }
-    });
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        // Save user preference in localStorage
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+    }
 
-    // Disable all keyboard shortcuts
-    window.addEventListener('keydown', function(e) {
-        e.preventDefault();
-    });
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
 </script>
 </body>
 </html>
