@@ -1,5 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    function adjustScale() {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const contentWidth = document.body.scrollWidth;
+      const contentHeight = document.body.scrollHeight;
+      
+      // Calculate the scale factor that fits both width and height
+      const scaleX = viewportWidth / contentWidth;
+      const scaleY = viewportHeight / contentHeight;
+      const scale = Math.min(scaleX, scaleY);
+      
+      // Apply the scaling
+      document.body.style.transform = "scale(" + scale + ")";
+      document.body.style.transformOrigin = "0 0";
+      document.body.style.width = (100 / scale) + "%";
+      document.body.style.height = (100 / scale) + "%";
+      document.body.style.overflow = "auto"; // Prevent scrolling
+    }
+    
+    // Run on load and if window resizes
+    adjustScale();
+    window.addEventListener('resize', adjustScale);
+  });
+</script>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
