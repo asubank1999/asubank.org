@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU Hub Agreement</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --gray-color: #6b7280;
+            --light-gray: #e5e7eb;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            width: 90%;
+            max-width: 420px;
+            margin: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid var(--light-gray);
+            background-color: #f8fafc;
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            font-size: 1.05rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(16, 185, 129, 0.2);
+            transform: scale(1.02);
+        }
+        
+        .nav-links a::before {
+            content: "🔗";
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            border: 2px solid var(--light-gray);
+            color: #374151;
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--gray-color);
+            background-color: #f9fafb;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .created-by {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--gray-color);
+            padding: 1rem 0;
+            border-top: 1px solid var(--light-gray);
+            background-color: #f8fafc;
+        }
+        
+        .warning-box {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+        }
+        
+        .warning-icon {
+            color: var(--warning-color);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        /* Loading/Redirecting styles */
+        .redirect-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .redirect-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .redirect-content {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .redirect-overlay.active .redirect-content {
+            transform: translateY(0);
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .redirect-text {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #f3f3f3;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="card animate__animated animate__fadeInUp">
+        <div class="card-header">
+            <div class="nav-links">
+                <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank">WhatsApp Group Link</a>
+            </div>
+        </div>
+        <div class="card-content">
+            <p style="font-weight: 700; margin-bottom: 1.25rem; font-size: 1.25rem; color: #111827;">
+                Important Notice
+            </p>
+            
+            <div class="warning-box">
+                <span class="warning-icon">⚠️</span>
+                <p style="margin: 0; font-size: 0.95rem;">
+                    This is a private resource. By proceeding, you acknowledge that these materials are <strong>not</strong> a reliable source for academic study.
+                </p>
+            </div>
+            
+            <p style="margin: 1.5rem 0; font-size: 0.95rem; line-height: 1.5; color: #4b5563;">
+                Please ensure you understand this disclaimer before continuing.
+            </p>
+        </div>
+        <div class="card-footer">
+            <button id="disagreeBtn" class="btn btn-outline" onclick="handleDisagree()">
+                <span>✖</span> I refuse
+            </button>
+            <button id="agreeBtn" class="btn btn-primary pulse" onclick="handleAgree()">
+                <span>✔</span> I Understand & Agree
+            </button>
+        </div>
+        <div class="created-by">
+            Created with ❤️ by Qusai
+        </div>
+    </div>
+
+    <!-- Redirect Overlay -->
+    <div class="redirect-overlay" id="redirectOverlay">
+        <div class="redirect-content">
+            <div class="loader"></div>
+            <div class="redirect-text">Preparing your content...</div>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Add interaction effects
+            const disagreeBtn = document.getElementById('disagreeBtn');
+            const agreeBtn = document.getElementById('agreeBtn');
+            
+            disagreeBtn.addEventListener('click', function(e) {
+                e.target.classList.add('animate__animated', 'animate__shakeX');
+                setTimeout(() => {
+                    e.target.classList.remove('animate__animated', 'animate__shakeX');
+                }, 1000);
+            });
+            
+            agreeBtn.addEventListener('mouseenter', function() {
+                this.classList.add('animate__animated', 'animate__pulse');
+            });
+            
+            agreeBtn.addEventListener('mouseleave', function() {
+                this.classList.remove('animate__animated', 'animate__pulse');
+            });
+        });
+
+        function handleAgree() {
+            // Show redirect overlay
+            const overlay = document.getElementById('redirectOverlay');
+            const progressBar = document.getElementById('progressBar');
+            overlay.classList.add('active');
+            
+            // Animate progress bar
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                progressBar.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    window.location.href = "subjects_mobile";
+                }
+            }, 50);
+        }
+
+        function handleDisagree() {
+            // Add confirmation
+            if (confirm('Are you sure you want to leave? You won\'t be able to access the materials.')) {
+                // Show redirect overlay for refusal too
+                const overlay = document.getElementById('redirectOverlay');
+                overlay.classList.add('active');
+                
+                setTimeout(() => {
+                    window.location.href = "refuasal_page_android";
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Disables right-click context menu
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault(); // Disables copy action
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault(); // Disables paste action
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disables common keyboard shortcuts
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        function copyText() {
+            // Get the text field
+            const copyText = document.getElementById("textToCopy");
+            // Select the text
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                // Display a success message
+                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
+            }).catch(err => {
+                // Display an error message
+                console.error('Could not copy text: ', err);
+                document.getElementById("message").textContent = "Failed to copy text.";
+            });
+        }
+    </script>
+
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    function adjustScale() {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const contentWidth = document.body.scrollWidth;
+      const contentHeight = document.body.scrollHeight;
+      
+      // Calculate the scale factor that fits both width and height
+      const scaleX = viewportWidth / contentWidth;
+      const scaleY = viewportHeight / contentHeight;
+      const scale = Math.min(scaleX, scaleY);
+      
+      // Apply the scaling
+      document.body.style.transform = "scale(" + scale + ")";
+      document.body.style.transformOrigin = "0 0";
+      document.body.style.width = (100 / scale) + "%";
+      document.body.style.height = (100 / scale) + "%";
+      document.body.style.overflow = "auto"; // Prevent scrolling
+    }
+    
+    // Run on load and if window resizes
+    adjustScale();
+    window.addEventListener('resize', adjustScale);
+  });
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU Hub Agreement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-hover: #3a56d4;
+            --danger: #ef233c;
+            --danger-hover: #d90429;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-100);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--gray-800);
+            transition: all 0.3s ease;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            width: 90%;
+            max-width: 420px;
+            overflow: hidden;
+            transform: scale(0.95);
+            opacity: 0;
+            animation: cardEntrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        
+        @keyframes cardEntrance {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .logo {
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-content h3 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        
+        .card-content p {
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--gray-600);
+        }
+        
+        .card-footer {
+            display: flex;
+            gap: 1rem;
+            padding: 0 1.5rem 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            border: 1px solid var(--gray-200);
+            color: var(--gray-800);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--gray-100);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 35, 60, 0.25);
+        }
+        
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 35, 60, 0.3);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.3);
+        }
+        
+        .created-by {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            padding: 1rem 0;
+            border-top: 1px solid var(--gray-200);
+            margin: 0 1.5rem;
+        }
+        
+        .whatsapp-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            background-color: #25D366;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .whatsapp-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+        
+        /* Confirmation overlay */
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .confirmation-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .confirmation-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .confirmation-overlay.active .confirmation-card {
+            transform: scale(1);
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Loading animation styles */
+        .center-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background: #262626;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+
+        .loader-circle-9 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: transparent;
+            border: 3px solid #3c3c3c;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 70px;
+            font-family: sans-serif;
+            font-size: 12px;
+            color: #00eaff;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .loader-circle-9:before {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top: 3px solid #00eaff;
+            border-right: 3px solid #00eaff;
+            border-radius: 50%;
+            animation: animateC 2s linear infinite;
+        }
+
+        .loader-circle-9 span {
+            display: block;
+            position: absolute;
+            top: calc(50% - 2px);
+            left: 50%;
+            width: 50%;
+            height: 4px;
+            background: transparent;
+            transform-origin: left;
+            animation: animate 2s linear infinite;
+        }
+
+        .loader-circle-9 span:before {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00eaff;
+            top: -6px;
+            right: -8px;
+            box-shadow: 0 0 20px #00eaff;
+        }
+
+        @keyframes animateC {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes animate {
+            0% {
+                transform: rotate(45deg);
+            }
+            100% {
+                transform: rotate(405deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading animation -->
+    <div class="center-body" id="loadingAnimation">
+        <div class="loader-circle-9">
+            Loading<span></span>
+        </div>
+    </div>
+
+    <div class="card" style="display: none;">
+        <div class="card-header">
+            <div class="logo">ASU Hub</div>
+            <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank" class="whatsapp-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-6.29-13.38c-5.297 0-9.598 4.302-9.598 9.6 0 2.117.693 4.078 1.87 5.662L2.23 20.8l1.517-.437a9.568 9.568 0 0 0 4.57 1.166c5.297 0 9.6-4.301 9.6-9.599 0-5.298-4.303-9.6-9.6-9.6" fill="currentColor"/>
+                </svg>
+                WhatsApp Community
+            </a>
+        </div>
+        <div class="card-content">
+            <h3>Important Notice</h3>
+            <p>By proceeding, you acknowledge that the materials provided here are <strong>not verified academic resources</strong> and should not be considered a reliable source for your studies.</p>
+            <p>Use them at your own discretion.</p>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-outline" onclick="showConfirmation('decline')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Decline
+            </button>
+            <button class="btn btn-primary" onclick="showConfirmation('agree')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                I Understand
+            </button>
+        </div>
+        <div class="created-by">
+            Created with ❤️ by Qusai
+        </div>
+    </div>
+
+    <!-- Confirmation Overlay -->
+    <div class="confirmation-overlay" id="confirmationOverlay">
+        <div class="confirmation-card">
+            <h3 id="confirmationTitle">Are you sure?</h3>
+            <p id="confirmationMessage">You're about to leave this page.</p>
+            <div class="confirmation-buttons">
+                <button class="btn btn-outline" onclick="hideConfirmation()">Cancel</button>
+                <button class="btn" id="confirmActionBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show loading animation initially
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading animation and show content after a delay
+            setTimeout(function() {
+                document.getElementById('loadingAnimation').style.display = 'none';
+                document.querySelector('.card').style.display = 'block';
+            }, 1500); // 1.5 seconds delay
+            
+            // Remove the scaling transformation from your original code
+            // as it's now handled by CSS animations
+        });
+
+        // Show confirmation dialog
+        function showConfirmation(action) {
+            const overlay = document.getElementById('confirmationOverlay');
+            const title = document.getElementById('confirmationTitle');
+            const message = document.getElementById('confirmationMessage');
+            const confirmBtn = document.getElementById('confirmActionBtn');
+            
+            if (action === 'agree') {
+                title.textContent = "Proceed to Materials";
+                message.textContent = "You acknowledge these are unofficial resources. Continue?";
+                confirmBtn.className = "btn btn-primary";
+                confirmBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 13l4 4L19 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg> Continue`;
+                confirmBtn.onclick = function() {
+                    window.location.href = "subjects_desktop";
+                };
+            } else {
+                title.textContent = "Leave Page?";
+                message.textContent = "You'll be redirected away from this content.";
+                confirmBtn.className = "btn btn-danger";
+                confirmBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6l12 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg> Leave`;
+                confirmBtn.onclick = function() {
+                    window.location.href = "about:blank";
+                    setTimeout(() => { window.close(); }, 100);
+                };
+            }
+            
+            overlay.classList.add('active');
+        }
+        
+        // Hide confirmation dialog
+        function hideConfirmation() {
+            document.getElementById('confirmationOverlay').classList.remove('active');
+        }
+    </script>
+</body>
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Disables right-click context menu
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault(); // Disables copy action
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault(); // Disables paste action
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disables common keyboard shortcuts
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        function copyText() {
+            // Get the text field
+            const copyText = document.getElementById("textToCopy");
+            // Select the text
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                // Display a success message
+                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
+            }).catch(err => {
+                // Display an error message
+                console.error('Could not copy text: ', err);
+                document.getElementById("message").textContent = "Failed to copy text.";
+            });
+        }
+    </script>
+
+</html>

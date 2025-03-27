@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU - Select Experience</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">
+    <style>
+        :root {
+            --asu-maroon: #8C1D40;
+            --asu-gold: #FFC627;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--dark-gray);
+            padding: 2rem;
+        }
+        
+        .back-btn {
+            align-self: flex-start;
+            margin-bottom: 1.5rem;
+            text-decoration: none;
+            color: var(--asu-maroon);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .back-btn:hover {
+            transform: translateX(-5px);
+            color: var(--asu-gold);
+        }
+        
+        .back-btn svg {
+            margin-right: 8px;
+            transition: var(--transition);
+        }
+        
+        .back-btn:hover svg {
+            transform: translateX(-3px);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: var(--transition);
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .container:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+        
+        .header {
+            background: var(--asu-maroon);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .options-container {
+                flex-direction: row;
+                gap: 2rem;
+            }
+        }
+        
+        .option-card {
+            flex: 1;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            text-decoration: none;
+            color: var(--dark-gray);
+            background: white;
+            border: 1px solid #e0e0e0;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            .option-card {
+                margin-bottom: 0;
+            }
+        }
+        
+        .option-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--asu-gold);
+        }
+        
+        .option-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--asu-maroon);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+        
+        .option-card:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        .option-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--asu-maroon);
+        }
+        
+        .option-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--asu-maroon);
+        }
+        
+        .option-card p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--asu-maroon);
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: 2px solid var(--asu-maroon);
+        }
+        
+        .option-card:hover .btn {
+            background: var(--asu-gold);
+            color: var(--asu-maroon);
+            border-color: var(--asu-gold);
+        }
+        
+        .mobile-card:hover {
+            border-color: var(--asu-maroon);
+        }
+        
+        .desktop-card:hover {
+            border-color: var(--asu-gold);
+        }
+        
+        .mobile-card .btn {
+            background: var(--asu-maroon);
+            border-color: var(--asu-maroon);
+        }
+        
+        .desktop-card .btn {
+            background: var(--asu-gold);
+            color: var(--asu-maroon);
+            border-color: var(--asu-gold);
+        }
+        
+        .mobile-card:hover::after {
+            background: var(--asu-maroon);
+        }
+        
+        .desktop-card:hover::after {
+            background: var(--asu-gold);
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .container {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .option-card {
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .mobile-card {
+            animation-delay: 0.2s;
+        }
+        
+        .desktop-card {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Home
+    </a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Select Your Experience</h1>
+            <p>Choose the version that works best for your device</p>
+        </div>
+        
+        <div class="options-container">
+            <a href="agreement-page_mobile.html" class="option-card mobile-card">
+                <div class="option-icon">📱</div>
+                <h2>Mobile Version</h2>
+                <p>Optimized for touch devices with simplified navigation. Perfect for smartphones and tablets on the go.</p>
+                <div class="btn">Select Mobile</div>
+            </a>
+            
+            <a href="agreement-page_desktop.html" class="option-card desktop-card">
+                <div class="option-icon">💻</div>
+                <h2>Desktop Version</h2>
+                <p>Full-featured experience with all capabilities. Ideal for larger screens with keyboard and mouse.</p>
+                <div class="btn">Select Desktop</div>
+            </a>
+        </div>
+    </div>
+</body>
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Disables right-click context menu
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault(); // Disables copy action
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault(); // Disables paste action
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disables common keyboard shortcuts
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        function copyText() {
+            // Get the text field
+            const copyText = document.getElementById("textToCopy");
+            // Select the text
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                // Display a success message
+                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
+            }).catch(err => {
+                // Display an error message
+                console.error('Could not copy text: ', err);
+                document.getElementById("message").textContent = "Failed to copy text.";
+            });
+        }
+    </script>
+
+</html>
