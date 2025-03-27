@@ -3,27 +3,57 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     function adjustScale() {
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const contentWidth = document.body.scrollWidth;
-      const contentHeight = document.body.scrollHeight;
+      const viewport = {
+        width: Math.min(window.innerWidth, document.documentElement.clientWidth),
+        height: Math.min(window.innerHeight, document.documentElement.clientHeight)
+      };
       
-      // Calculate the scale factor that fits both width and height
-      const scaleX = viewportWidth / contentWidth;
-      const scaleY = viewportHeight / contentHeight;
-      const scale = Math.min(scaleX, scaleY);
+      // Minimum scale to prevent content from becoming too small
+      const minScale = 0.5; // Adjust based on your content needs
+      const maxScale = 1.0; // Don't scale larger than 100%
       
-      // Apply the scaling
-      document.body.style.transform = "scale(" + scale + ")";
-      document.body.style.transformOrigin = "0 0";
-      document.body.style.width = (100 / scale) + "%";
-      document.body.style.height = (100 / scale) + "%";
-      document.body.style.overflow = "auto"; // Prevent scrolling
+      // Get the content dimensions (including padding but excluding margins)
+      const content = document.documentElement;
+      const contentWidth = content.scrollWidth;
+      const contentHeight = content.scrollHeight;
+      
+      // Calculate scale factors
+      const scaleX = viewport.width / contentWidth;
+      const scaleY = viewport.height / contentHeight;
+      let scale = Math.min(scaleX, scaleY);
+      
+      // Apply constraints
+      scale = Math.max(minScale, Math.min(scale, maxScale));
+      
+      // Apply the scaling with better cross-browser support
+      document.documentElement.style.transform = `scale(${scale})`;
+      document.documentElement.style.transformOrigin = '0 0';
+      document.documentElement.style.width = `${100 / scale}%`;
+      document.documentElement.style.height = `${100 / scale}%`;
+      
+      // Handle viewport meta tag for mobile devices
+      const viewportMeta = document.querySelector('meta[name="viewport"]') || 
+                          document.createElement('meta');
+      viewportMeta.name = 'viewport';
+      viewportMeta.content = `width=device-width, initial-scale=${scale}, minimum-scale=${minScale}, maximum-scale=${maxScale}, user-scalable=yes`;
+      if (!document.querySelector('meta[name="viewport"]')) {
+        document.head.appendChild(viewportMeta);
+      }
     }
     
-    // Run on load and if window resizes
+    // Run immediately and on orientation changes/resize
     adjustScale();
+    
+    // Use both resize and orientationchange for better mobile support
     window.addEventListener('resize', adjustScale);
+    window.addEventListener('orientationchange', adjustScale);
+    
+    // Add a slight delay for Android devices that fire resize late
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(adjustScale, 100);
+    });
   });
 </script>
 
