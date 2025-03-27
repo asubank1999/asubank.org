@@ -2,61 +2,55 @@
 <html lang="en">
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    function adjustScale() {
-      const viewport = {
-        width: Math.min(window.innerWidth, document.documentElement.clientWidth),
-        height: Math.min(window.innerHeight, document.documentElement.clientHeight)
-      };
+    // First, disable the default viewport scaling
+    const viewportMeta = document.querySelector('meta[name="viewport"]');
+    viewportMeta.content = "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no";
+    
+    // Function to calculate and apply proper scaling
+    function scalePage() {
+      const card = document.querySelector('.card');
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
       
-      // Minimum scale to prevent content from becoming too small
-      const minScale = 0.5; // Adjust based on your content needs
-      const maxScale = 1.0; // Don't scale larger than 100%
+      // Your card's original max-width (from CSS)
+      const cardMaxWidth = 420;
       
-      // Get the content dimensions (including padding but excluding margins)
-      const content = document.documentElement;
-      const contentWidth = content.scrollWidth;
-      const contentHeight = content.scrollHeight;
+      // Calculate scale based on window width (with 5% padding)
+      let scale = Math.min(
+        (windowWidth * 0.95) / cardMaxWidth,
+        (windowHeight * 0.95) / (windowHeight * 0.9) // Approximate card height ratio
+      );
       
-      // Calculate scale factors
-      const scaleX = viewport.width / contentWidth;
-      const scaleY = viewport.height / contentHeight;
-      let scale = Math.min(scaleX, scaleY);
+      // Limit scale between 0.8 and 1.0
+      scale = Math.min(Math.max(scale, 0.8), 1.0);
       
-      // Apply constraints
-      scale = Math.max(minScale, Math.min(scale, maxScale));
-      
-      // Apply the scaling with better cross-browser support
+      // Apply scaling to the entire page
       document.documentElement.style.transform = `scale(${scale})`;
-      document.documentElement.style.transformOrigin = '0 0';
-      document.documentElement.style.width = `${100 / scale}%`;
-      document.documentElement.style.height = `${100 / scale}%`;
+      document.documentElement.style.transformOrigin = 'center top';
+      document.documentElement.style.width = `${100/scale}%`;
+      document.documentElement.style.height = `${100/scale}%`;
+      document.documentElement.style.overflow = 'hidden';
       
-      // Handle viewport meta tag for mobile devices
-      const viewportMeta = document.querySelector('meta[name="viewport"]') || 
-                          document.createElement('meta');
-      viewportMeta.name = 'viewport';
-      viewportMeta.content = `width=device-width, initial-scale=${scale}, minimum-scale=${minScale}, maximum-scale=${maxScale}, user-scalable=yes`;
-      if (!document.querySelector('meta[name="viewport"]')) {
-        document.head.appendChild(viewportMeta);
-      }
+      // Center the content
+      document.body.style.display = 'flex';
+      document.body.style.justifyContent = 'center';
+      document.body.style.alignItems = 'center';
+      document.body.style.minHeight = `${windowHeight}px`;
     }
     
-    // Run immediately and on orientation changes/resize
-    adjustScale();
+    // Run on load and resize
+    scalePage();
+    window.addEventListener('resize', scalePage);
+    window.addEventListener('orientationchange', scalePage);
     
-    // Use both resize and orientationchange for better mobile support
-    window.addEventListener('resize', adjustScale);
-    window.addEventListener('orientationchange', adjustScale);
-    
-    // Add a slight delay for Android devices that fire resize late
-    let resizeTimeout;
+    // Android resize delay fix
+    let resizeTimer;
     window.addEventListener('resize', function() {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(adjustScale, 100);
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(scalePage, 100);
     });
   });
 </script>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
