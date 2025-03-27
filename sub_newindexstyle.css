@@ -1,3 +1,4 @@
+
 /* General Reset */
 * {
     margin: 0;
@@ -85,4 +86,83 @@ a {
         margin: 10px auto; /* Center cards with auto margins */
         font-size: 0.9rem; /* Slightly smaller font for smaller screens */
     }
+}
+.unread-message {
+  width: 100%;
+  max-width: 600px;
+  margin: 1rem auto;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+}
+
+.message-preview {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.badge {
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-size: 0.8rem;
+}
+
+.chevron {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.full-message {
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  background: white;
+  color: #333;
+  line-height: 1.6;
+}
+
+.full-message p {
+  margin: 1rem;
+}
+
+.dismiss-btn {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.5rem 1.5rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dismiss-btn:hover {
+  background: #2980b9;
+}
+
+/* Expanded state */
+.unread-message.active .full-message {
+  max-height: 500px;
+  padding: 1rem;
+}
+
+.unread-message.active .chevron {
+  transform: rotate(180deg);
 }

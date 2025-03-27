@@ -1,127 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    document.body.style.transform = "scale(2.1)";
-    document.body.style.transformOrigin = "0 0";
-    document.body.style.width = "46.77%";  // Adjusted for correct scaling
-    document.body.style.height = "76.67%"; // Adjusted for correct scaling
-    document.body.style.overflow = "auto"; // Allow scrolling
-  });
-</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASU Hub Agreement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4361ee;
+            --primary-hover: #3a56d4;
+            --danger: #ef233c;
+            --danger-hover: #d90429;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-100);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 20vh;
-            font-size: 16px;
+            min-height: 100vh;
+            color: var(--gray-800);
+            transition: all 0.3s ease;
         }
+        
         .card {
             background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             width: 90%;
-            max-width: 400px;
-            margin: 10px; /* Reduced margin */
+            max-width: 420px;
+            overflow: hidden;
+            transform: scale(0.95);
+            opacity: 0;
+            animation: cardEntrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
+        
+        @keyframes cardEntrance {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
         .card-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0.75rem 1rem; /* Reduced padding */
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .logo {
-            font-weight: bold;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem; /* Reduced margin */
-        }
-        .nav-links {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem; /* Reduced gap */
-        }
-        .nav-links a {
-            text-decoration: none;
-            font-size: 1rem; /* Adjusted font size */
-            padding: 0.3rem 0.8rem; /* Adjusted padding */
-            border-radius: 4px;
-        }
-        .card-content {
-            padding: 1rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
             text-align: center;
         }
+        
+        .logo {
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-content h3 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        
+        .card-content p {
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--gray-600);
+        }
+        
         .card-footer {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem; /* Reduced gap */
-            padding: 1rem;
+            gap: 1rem;
+            padding: 0 1.5rem 1.5rem;
         }
+        
         .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem; /* Adjusted font size */
+            font-size: 1rem;
+            font-weight: 500;
             width: 100%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
+        
         .btn-outline {
             background-color: white;
-            border: 2px solid #d1d5db;
-            color: #374151;
+            border: 1px solid var(--gray-200);
+            color: var(--gray-800);
         }
-        .btn-primary {
-            background-color: #3b82f6;
+        
+        .btn-outline:hover {
+            background-color: var(--gray-100);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
             border: none;
             color: white;
+            box-shadow: 0 4px 12px rgba(239, 35, 60, 0.25);
         }
+        
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 35, 60, 0.3);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.3);
+        }
+        
         .created-by {
             text-align: center;
-            font-size: 0.9rem; /* Reduced font size */
-            color: #6b7280;
-            padding: 0.5rem 0; /* Reduced padding */
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            padding: 1rem 0;
+            border-top: 1px solid var(--gray-200);
+            margin: 0 1.5rem;
+        }
+        
+        .whatsapp-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            background-color: #25D366;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .whatsapp-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+        
+        /* Confirmation overlay */
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .confirmation-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .confirmation-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .confirmation-overlay.active .confirmation-card {
+            transform: scale(1);
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
     </style>
 </head>
 <body>
     <div class="card">
         <div class="card-header">
-            <div class="nav-links">
-                <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" style="color: #10b981;">WhatsApp Group Link</a>
-            </div>
+            <div class="logo">ASU Hub</div>
+            <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="whatsapp-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-6.29-13.38c-5.297 0-9.598 4.302-9.598 9.6 0 2.117.693 4.078 1.87 5.662L2.23 20.8l1.517-.437a9.568 9.568 0 0 0 4.57 1.166c5.297 0 9.6-4.301 9.6-9.599 0-5.298-4.303-9.6-9.6-9.6" fill="currentColor"/>
+                </svg>
+                WhatsApp Community
+            </a>
         </div>
         <div class="card-content">
-            <p style="font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">This is a private page</p>
-            <p style="margin-bottom: 1rem; font-size: 1rem; line-height: 1.4;">
-                Please do NOT click 'agree' unless you accept the fact that the materials you will see are NOT a reliable source for your study.
-            </p>
+            <h3>Important Notice</h3>
+            <p>By proceeding, you acknowledge that the materials provided here are <strong>not verified academic resources</strong> and should not be considered a reliable source for your studies.</p>
+            <p>Use them at your own discretion.</p>
         </div>
         <div class="card-footer">
-            <button class="btn btn-outline" onclick="handleDisagree()">I refuse</button>
-            <button class="btn btn-primary" onclick="handleAgree()">Agree</button>
+            <button class="btn btn-outline" onclick="showConfirmation('decline')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Decline
+            </button>
+            <button class="btn btn-primary" onclick="showConfirmation('agree')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                I Understand
+            </button>
         </div>
         <div class="created-by">
-            Created with ❤️ by Qusai.
+            Created with ❤️ by Qusai
+        </div>
+    </div>
+
+    <!-- Confirmation Overlay -->
+    <div class="confirmation-overlay" id="confirmationOverlay">
+        <div class="confirmation-card">
+            <h3 id="confirmationTitle">Are you sure?</h3>
+            <p id="confirmationMessage">You're about to leave this page.</p>
+            <div class="confirmation-buttons">
+                <button class="btn btn-outline" onclick="hideConfirmation()">Cancel</button>
+                <button class="btn" id="confirmActionBtn">Confirm</button>
+            </div>
         </div>
     </div>
 
     <script>
-        function handleAgree() {
-            window.location.href = "subjects";
+        // Show confirmation dialog
+        function showConfirmation(action) {
+            const overlay = document.getElementById('confirmationOverlay');
+            const title = document.getElementById('confirmationTitle');
+            const message = document.getElementById('confirmationMessage');
+            const confirmBtn = document.getElementById('confirmActionBtn');
+            
+            if (action === 'agree') {
+                title.textContent = "Proceed to Materials";
+                message.textContent = "You acknowledge these are unofficial resources. Continue?";
+                confirmBtn.className = "btn btn-primary";
+                confirmBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 13l4 4L19 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg> Continue`;
+                confirmBtn.onclick = function() {
+                    window.location.href = "subjects";
+                };
+            } else {
+                title.textContent = "Leave Page?";
+                message.textContent = "You'll be redirected away from this content.";
+                confirmBtn.className = "btn btn-danger";
+                confirmBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6l12 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg> Leave`;
+                confirmBtn.onclick = function() {
+                    window.location.href = "about:blank";
+                    setTimeout(() => { window.close(); }, 100);
+                };
+            }
+            
+            overlay.classList.add('active');
         }
-
-        function handleDisagree() {
-            window.location.href = "refuasal_page";
+        
+        // Hide confirmation dialog
+        function hideConfirmation() {
+            document.getElementById('confirmationOverlay').classList.remove('active');
         }
+        
+        // Animate card on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remove the scaling transformation from your original code
+            // as it's now handled by CSS animations
+        });
     </script>
 </body>
 </html>

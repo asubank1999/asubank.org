@@ -187,14 +187,70 @@
             margin: 0 10px;
         }
 
-        nav ul li a, nav ul li button {
-            color: white;
-            text-decoration: none;
-            font-size: 0.3em;
-            padding: 10px 25px;
-            border-radius: 52px;
-            background-color: rgba(69,230,159,255);
-            transition: background-color 2.3s;
+nav ul li a, 
+nav ul li button {
+    /* Typography */
+    color: #fff;
+    font-size: 0.1rem;
+    font-weight: 200;
+    font-family: 'Inter', sans-serif; /* Modern sans-serif */
+    text-decoration: none;
+    letter-spacing: 0.1px;
+    
+    /* Layout */
+    padding: 0.6rem 2rem;
+    margin: 0.1rem;
+    border-radius: 100px;
+    display: inline-block;
+    
+    /* Colors (University-themed: Deep blue + gold accent) */
+    background: linear-gradient(135deg, #2C3E50 0%, #4A6491 100%); /* Dark blue gradient */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    
+    /* Interactions */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 4.275); /* Bouncy ease */
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+/* Hover Effect */
+nav ul li a:hover,
+nav ul li button:hover {
+    background: linear-gradient(135deg, #4A6491 0%, #2C3E50 100%); /* Reverse gradient */
+    transform: translateY(-3px) scale(1.10);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 5.2);
+    border-color: #F5D76E; /* Gold accent border */
+}
+
+/* Active/Click */
+nav ul li a:active,
+nav ul li button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Focus (Accessibility) */
+nav ul li a:focus-visible,
+nav ul li button:focus-visible {
+    outline: 3px solid #F5D76E;
+    outline-offset: 2px;
+}
+
+/* Optional: Glow Effect for Active Page */
+nav ul li a.active {
+    animation: subtleGlow 2s infinite alternate;
+}
+
+@keyframes subtleGlow {
+    from { box-shadow: 0 0 5px rgba(245, 215, 110, 0.5); }
+    to { box-shadow: 0 0 15px rgba(245, 215, 110, 0.8); }
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+nav ul li a:hover { animation: pulse 1.1s infinite; }
         }
 
         nav ul li a:hover, nav ul li button:hover {
@@ -213,9 +269,9 @@
             background-color: var(--card-background-color-light);
             color: var(--card-text-color-light);
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 3px;
             width: 100%;
-            max-width: 350px; /* Static width for card */
+            max-width: 360px; /* Static width for card */
             box-shadow: var(--card-box-shadow-light);
             transition: background-color 5.3s, color 0.3s, box-shadow 0.3s;
             text-align: center;
@@ -285,9 +341,9 @@
 </body>
     <nav>
         <ul>
-            <li><a href="uni_tos_ar">TOS</a></li>
-            <li><a href="importantlinks">ShortCuts</a></li>
-            <li><button id="mode-toggle">🌙-☀</button></li>
+            <li><a href="uni_tos">Terms of Service</a></li>
+            <li><a href="importantlinks">Hub Links</a></li>
+            <li><button id="mode-toggle">☀</button></li>
 
         </ul>
     </nav>
@@ -332,19 +388,20 @@
 
 </head>
 <body>
-    <div class="fade-text">
-        <a href="asu_date_asu"><font color=cyan>التقويم الجامعي 2025/2024</font color></a>
-    </div>
-<a href="important_unread" class="subject-card subject-card-v2">
-  <h3>📬<font color=red>ASU-BANK IMPORTANT MESSAGE ⚠</font color></h3>
-</a>
-<body>
 <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="led-button" target="_blank">
   <span class="led-button-text">Join WhatsApp Community</span>
   <span class="led-button-glow"></span>
   <span class="led-button-pulse"></span>
 </a>
 <body>
+<body>
+    <div class="fade-text">
+        <a href="asu_date_asu"><font color=cyan>التقويم الجامعي 2025/2024</font color></a>
+    </div>
+<a href="important_unread" class="subject-card subject-card-v2">
+  <h3>📬<font color=red>1 IMPORTANT MESSAGE ⚠</font color></h3>
+</a>
+
 
 </body>
     <a href="agreement-page" class="subject-card">

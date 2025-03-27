@@ -47,10 +47,11 @@
 </div>
 
     <script src="search.js"></script>
+    <script src="importantmessage.js"></script>
 </body>
     <style>
         :root {
-            --background-color-light: #f0f8e2; /* Light green */
+            --background-color-light: #ffffff; /* White*/
             --background-color-dark: #000000;
             --text-color-light: #333;
             --text-color-dark: #e0e0e0;
@@ -67,7 +68,7 @@
             margin: 0;
             background-color: var(--background-color-light);
             color: var(--text-color-light);
-            transition: background-color 5.3s, color 5.3s;
+            transition: background-color 1.3s, color 1.3s;
         }
 
         body.dark-mode {
@@ -256,13 +257,18 @@
 
 <h5>WhatsApp necro144@yahoo.com</h5>
 
-    <div class="alert-box"><center>
-            Hey, we're looking for student volunteers to share any materials that could help out friends, first-semester university students, or just anyone! PDFs, worksheets, test banks, any data - we want it all! Drop them in the WhatsApp Community requests group ASAP!
-<p></p>
-نحن نبحث عن طلاب متطوعين لتقديم أي مواد قد تسهم في مساعدة الأصدقاء، طلاب السنة الأولى بالجامعة، أو أي شخص آخر. نحن نرحب بالملفات المنسقة، أوراق العمل، بنوك الاختبارات، وأي بيانات - نقبل جميعها. يرجى إرسالها إلى مجموعة طلبات المجتمع على واتساب بأسرع وقت ممكن.
-</center>
-    </div>
-
+<div class="unread-message" onclick="toggleMessage()">
+  <div class="message-preview">
+    <span class="badge">1</span>
+    <span class="text">Important unread message</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="full-message">
+    <p>Hey, we're looking for student volunteers to share any materials that could help out friends, first-semester university students, or just anyone! PDFs, worksheets, test banks, any data - we want it all! Drop them in the WhatsApp Community requests group ASAP!</p>
+    <p>نحن نبحث عن طلاب متطوعين لتقديم أي مواد قد تسهم في مساعدة الأصدقاء، طلاب السنة الأولى بالجامعة، أو أي شخص آخر. نحن نرحب بالملفات المنسقة، أوراق العمل، بنوك الاختبارات، وأي بيانات - نقبل جميعها. يرجى إرسالها إلى مجموعة طلبات المجتمع على واتساب بأسرع وقت ممكن.</p>
+    <button class="dismiss-btn" onclick="dismissMessage(event)">Got it!</button>
+  </div>
+</div>
 
             <div class="subject-card">
                 <a href="https://web.asu.edu.jo/CalculateAvg/" target="_blank">
@@ -270,11 +276,142 @@
                 </a>
             </div>
 			<div class="subject-card">
-				<a href="ramadan_timetable" target="_blank">
+				<a href="ramadan_timetable">
 			<h3><img src="pin.png" alt="Website Icon" width="40" height="20">Adjusted Lecture Timetable Ramadan 2024/2025</h3>
     </a>
 </div>
 Newly added subjects
+Update 26/MAR/2025 (Ram26)
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/1PZXe147is-WdZsIyuNGBlZXaQzVH_jlV?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Anatomy and physiology Week 4 LAB</h3>
+    </a>
+</div>
+<div class="subject-card">
+    <a href="https://www.youtube.com/playlist?list=PLiyA1DIKrQFmSsfNgqlWhQn8YCFZlsXMX" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">شرح لمادة أمن شبكات</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/1V4fehjuMW7I0VHBbNEZpi0HVSn9C2ZDA?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">English 101 Notes</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/file/d/1Ejq3v89N0jT9i7lWSk21atCOltpB9VeJ/view?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">اسئلة امن شبكات.pdf</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/file/d/1Mu083GQMyeytnNZHTSFZeFX4VfdP_733/view?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">امن الشبكات-ميد-20222.pdf</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/1t62S-9QgpPjEpE1XkcfK4-HJg8Y_QQs4?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Folder Cyber Security</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/file/d/1RMLWo6IFe3Uiz6yK4bVMfLa5aqd21-6_/view?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Analytical Chemistry Manual 2022-2023_250304_203354</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/1vMHxp0k1-1nytukQSe6qX02L9OrDWdvB?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">علم التشريح والأنسجة Folder</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/1P5JpaIA6UJDvhXV9iHw72fQ0Igl4BCf_?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 Organic Chemistry</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/1_23u-ONtut-oZQ04QI-aDd8hX4-seEyD?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 Anatomy and physiology علم التشريح وظائف الاعضاء</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/1-BT5Nabhjv1Cm7xaVWdyIiuuBPH8iFLm?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 اللغويات المقارنة Contrastive Linguistics Prof.Farghal</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/1NKJm0MJ7he-87wdwwx-EkDuk9GJgobXv?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 تحليل الخطاب التقابلي Contrastive Discourse Analysis Prof.Farghal</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/15PW7tgLYWlbTK6S_xRjnDXy6vMmcYydf?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 Analytical Chemistry الكيمياء التحليلية</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/file/d/1G_ycDBlAxuCXC_wEnujzDJdmvHp0uG4Y/view?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 Quiz Notes Analytical Chemistry الكيمياء التحليلية</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/file/d/1rw4PSmcZx5I1UdTOtrtowqTTd53rE7J3/view?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">تلخيص مادة التحليل العددي كامل.pdf</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/file/d/1JhY2M5jhjMBhrykSxS_gP8A2JF2IQuof/view?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 اللغويات المقارنة Contrastive Linguistics Lecture Summary</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/15PW7tgLYWlbTK6S_xRjnDXy6vMmcYydf?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 Analytical Chemistry الكيمياء التحليلية Notes</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/drive/folders/10ZOOc_r3wbF3AB-z4W-hi6oaszO1QbQY?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 Organic Chem 2025 Semester Materials</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://drive.google.com/file/d/1D_eQH2N2o1hf7RoyrOkjEwTObgfh9SBF/view?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">Week 4 Part 3 The conducting system of the heart</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://quizlet.com/1022651427/flashcards?funnelUUID=81b8152b-74b4-4388-902c-6c0d6b6111a1" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">تلخيص ثالث شابتر داتا بيز(آخر واحد بصم)</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://quizlet.com/1018738467/flashcards?funnelUUID=d48064fd-5a96-491a-aad3-8f7c9c4f936d" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">تلخيص اول شابتر داتا بيز</h3>
+    </a>
+</div>
+
+<div class="subject-card">
+    <a href="https://quizlet.com/1018740570/flashcards?funnelUUID=4637e9b5-d0d6-453f-8d70-35ac85d590dd" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">تلخيص ثاني شابتر داتا بيز</h3>
+    </a>
+</div>
 Update 20/MAR/2025 (Ram20)
 
 <div class="subject-card">
