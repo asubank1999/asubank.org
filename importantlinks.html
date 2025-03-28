@@ -187,6 +187,7 @@
     .card:nth-child(3) { animation-delay: 0.3s; }
     .card:nth-child(4) { animation-delay: 0.4s; }
     .card:nth-child(5) { animation-delay: 0.5s; }
+    .card:nth-child(6) { animation-delay: 0.6s; }
 
     /* Dark mode styles */
     body.dark-mode {
@@ -243,6 +244,10 @@
         <h2>University Calendar 2024/2025</h2>
         <p>Access important dates, deadlines, and events for the academic year.</p>
       </a>
+      <a href="discord_fileupload.html" class="card">
+        <h2>ASU Upload Portal+</h2>
+        <p>Upload your materials and resources to share with the university community.</p>
+      </a>
     </div>
   </main>
 
@@ -286,10 +291,46 @@
       });
     });
   </script>
-  
-  
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Disables right-click context menu
+        });
 
+        document.addEventListener('copy', function(e) {
+            e.preventDefault(); // Disables copy action
+        });
 
-  
+        document.addEventListener('paste', function(e) {
+            e.preventDefault(); // Disables paste action
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disables common keyboard shortcuts
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        function copyText() {
+            // Get the text field
+            const copyText = document.getElementById("textToCopy");
+            // Select the text
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                // Display a success message
+                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
+            }).catch(err => {
+                // Display an error message
+                console.error('Could not copy text: ', err);
+                document.getElementById("message").textContent = "Failed to copy text.";
+            });
+        }
+    </script>
+
 </body>
 </html>
