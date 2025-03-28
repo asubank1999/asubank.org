@@ -5456,57 +5456,65 @@ Update 6-JAN-2025
     </main>
 
 <script>
-    // Dark mode toggle
-    const modeToggle = document.getElementById('mode-toggle');
-    if (modeToggle) {
-        modeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        });
-
-        // Check for saved dark mode preference
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-        }
-    }
-
-    // Search functionality
-    const searchButton = document.getElementById('search-button');
-    const searchInput = document.getElementById('search-input');
-    
-    if (searchButton && searchInput) {
-        const performSearch = () => {
-            const query = searchInput.value.trim().toLowerCase();
-            const cards = document.querySelectorAll('.subject-card');
-            const notFoundMessage = document.getElementById('not-found-message');
-            const querySpan = document.querySelector('.not-found-message .query');
-            let found = false;
-
-            if (!query) {
-                cards.forEach(card => card.style.display = '');
-                notFoundMessage?.classList.remove('show');
-                return;
-            }
-
-            cards.forEach(card => {
-                const matches = card.textContent.toLowerCase().includes(query);
-                card.style.display = matches ? '' : 'none';
-                found = found || matches;
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Dark mode toggle
+        const modeToggle = document.getElementById('mode-toggle');
+        if (modeToggle) {
+            modeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
             });
 
-            if (notFoundMessage && querySpan) {
-                if (!found) {
-                    querySpan.textContent = query;
-                    notFoundMessage.classList.add('show');
-                } else {
-                    notFoundMessage.classList.remove('show');
+            // Initialize dark mode
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        }
+
+        // Search functionality
+        const searchButton = document.getElementById('search-button');
+        const searchInput = document.getElementById('search-input');
+        
+        if (searchButton && searchInput) {
+            function performSearch() {
+                try {
+                    const query = searchInput.value.trim().toLowerCase();
+                    const cards = document.querySelectorAll('.subject-card');
+                    const notFoundMessage = document.getElementById('not-found-message');
+                    let found = false;
+
+                    // Show all if empty query
+                    if (!query) {
+                        cards.forEach(card => card.style.display = '');
+                        if (notFoundMessage) notFoundMessage.style.display = 'none';
+                        return;
+                    }
+
+                    // Search through cards
+                    cards.forEach(card => {
+                        const matches = card.textContent.toLowerCase().includes(query);
+                        card.style.display = matches ? '' : 'none';
+                        found = found || matches;
+                    });
+
+                    // Show not found message if needed
+                    if (notFoundMessage) {
+                        const querySpan = notFoundMessage.querySelector('.query');
+                        if (querySpan) querySpan.textContent = query;
+                        notFoundMessage.style.display = found ? 'none' : 'block';
+                    }
+                } catch (error) {
+                    console.error('Search error:', error);
                 }
             }
-        };
 
-        searchButton.addEventListener('click', performSearch);
-        searchInput.addEventListener('keypress', e => e.key === 'Enter' && performSearch());
-    }
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+        }
+    });
 </script>
 </body>
 </html>
