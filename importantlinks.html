@@ -288,46 +288,7 @@
   </script>
   
   
-    <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault(); // Disables right-click context menu
-        });
 
-        document.addEventListener('copy', function(e) {
-            e.preventDefault(); // Disables copy action
-        });
-
-        document.addEventListener('paste', function(e) {
-            e.preventDefault(); // Disables paste action
-        });
-
-        document.addEventListener('keydown', function(e) {
-            // Disables common keyboard shortcuts
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
-                e.preventDefault();
-            }
-        });
-    </script>
-
-    <script>
-        function copyText() {
-            // Get the text field
-            const copyText = document.getElementById("textToCopy");
-            // Select the text
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // For mobile devices
-
-            // Copy the text inside the text field
-            navigator.clipboard.writeText(copyText.value).then(() => {
-                // Display a success message
-                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
-            }).catch(err => {
-                // Display an error message
-                console.error('Could not copy text: ', err);
-                document.getElementById("message").textContent = "Failed to copy text.";
-            });
-        }
-    </script>
 
   
 </body>
