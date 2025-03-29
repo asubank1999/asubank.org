@@ -16,6 +16,7 @@
             --border: #e9ecef;
             --shadow: rgba(0, 0, 0, 0.05);
             --success: #4cc9f0;
+            --error: #f72585;
             
             /* Dark mode vars */
             --dark-primary: #4895ef;
@@ -25,6 +26,7 @@
             --dark-card-bg: #1e1e1e;
             --dark-border: #2d2d2d;
             --dark-shadow: rgba(0, 0, 0, 0.2);
+            --dark-error: #ff4d6d;
         }
 
         * {
@@ -266,9 +268,15 @@
 
         .checkbox-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
             margin: 30px 0;
+            gap: 12px;
+            flex-direction: column;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
             gap: 12px;
         }
 
@@ -286,6 +294,17 @@
         .checkbox-container label {
             cursor: pointer;
             user-select: none;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .dark-mode .error-message {
+            color: var(--dark-error);
         }
 
         .upload-btn {
@@ -331,6 +350,18 @@
         .dark-mode .upload-btn:disabled {
             background-color: #2d2d2d;
             color: #6c757d;
+        }
+
+        .scroll-notice {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 10px;
+            font-style: italic;
+            display: none;
+        }
+
+        .dark-mode .scroll-notice {
+            color: var(--dark-text-light);
         }
 
         @media (max-width: 768px) {
@@ -380,7 +411,7 @@
 <body>
     <div class="portal-container">
         <div class="header">
-            <button class="back-btn" onclick="window.location.href='index'">
+            <button class="back-btn" onclick="window.location.href='importantlinks'">
                 <i class="fas fa-arrow-left"></i>
                 Back
             </button>
@@ -406,7 +437,7 @@
             </ul>
         </div>
         
-        <div class="tos-container">
+        <div class="tos-container" id="termsContainer">
             <h3><i class="fas fa-gavel"></i> Terms of Service</h3>
             <ol>
                 <li>By uploading materials, you confirm you have the rights to share this content.</li>
@@ -417,15 +448,27 @@
                 <li>We reserve the right to modify these terms at any time.</li>
                 <li>Uploaded materials may be accessible to other users as determined by the administrators.</li>
                 <li>You are responsible for maintaining backups of your original files.</li>
+                <li>Uploading copyrighted material without permission is strictly prohibited.</li>
+                <li>Violation of these terms may result in account suspension or termination.</li>
+                <li>We are not responsible for any loss or corruption of uploaded files.</li>
+                <li>You agree not to upload malicious or harmful content of any kind.</li>
             </ol>
         </div>
         
         <div class="checkbox-container">
-            <input type="checkbox" id="agreeTos">
-            <label for="agreeTos">I have read and agree to the Terms of Service</label>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="agreeTos">
+                <label for="agreeTos">I have read and agree to the Terms of Service</label>
+            </div>
+            <div class="error-message" id="errorMessage">
+                You must read and accept the Terms of Service to proceed.
+            </div>
+            <div class="scroll-notice" id="scrollNotice">
+                Please scroll through all the terms before accepting.
+            </div>
         </div>
         
-        <a href="https://script.google.com/macros/s/AKfycbydRfgKnKWdwbhHyy-8X3VaQilZkISrSlK4_dP55ak/dev" class="upload-btn" id="uploadLink" disabled>
+        <a href="https://script.google.com/macros/s/AKfycbypXgZNCa0A6g2iqzdE8Z2ug6NrAJ4mK2wR6nLDLt8F03j0R06utTC2pXfykiM-wisl/exec" class="upload-btn" id="uploadLink" disabled>
             <i class="fas fa-upload"></i> Proceed to Upload
         </a>
     </div>
@@ -460,59 +503,58 @@
         // TOS agreement functionality
         const checkbox = document.getElementById('agreeTos');
         const uploadLink = document.getElementById('uploadLink');
+        const termsContainer = document.getElementById('termsContainer');
+        const errorMessage = document.getElementById('errorMessage');
+        const scrollNotice = document.getElementById('scrollNotice');
         
-        checkbox.addEventListener('change', function() {
-            uploadLink.disabled = !this.checked;
+        // Track if user has scrolled through the terms
+        let hasScrolled = false;
+        
+        // Check if user has scrolled to the bottom of the terms
+        termsContainer.addEventListener('scroll', function() {
+            const { scrollTop, scrollHeight, clientHeight } = this;
+            const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+            
+            if (isAtBottom) {
+                hasScrolled = true;
+                scrollNotice.style.display = 'none';
+            } else if (!hasScrolled) {
+                scrollNotice.style.display = 'block';
+            }
         });
         
-        // Prevent clicking when disabled
+        checkbox.addEventListener('change', function() {
+            if (this.checked && !hasScrolled) {
+                errorMessage.textContent = 'Please scroll through all the terms before accepting.';
+                errorMessage.style.display = 'block';
+                scrollNotice.style.display = 'block';
+                this.checked = false;
+                return;
+            }
+            
+            if (this.checked) {
+                uploadLink.disabled = false;
+                errorMessage.style.display = 'none';
+                scrollNotice.style.display = 'none';
+            } else {
+                uploadLink.disabled = true;
+            }
+        });
+        
+        // Prevent clicking when disabled and show error message
         uploadLink.addEventListener('click', function(e) {
             if (this.disabled) {
                 e.preventDefault();
-                alert('Please agree to the Terms of Service before proceeding.');
+                errorMessage.style.display = 'block';
+                
+                if (!checkbox.checked) {
+                    errorMessage.textContent = 'You must accept the Terms of Service to proceed.';
+                }
+                
+                // Scroll to the checkbox for visibility
+                checkbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
     </script>
-	    <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault(); // Disables right-click context menu
-        });
-
-        document.addEventListener('copy', function(e) {
-            e.preventDefault(); // Disables copy action
-        });
-
-        document.addEventListener('paste', function(e) {
-            e.preventDefault(); // Disables paste action
-        });
-
-        document.addEventListener('keydown', function(e) {
-            // Disables common keyboard shortcuts
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
-                e.preventDefault();
-            }
-        });
-    </script>
-
-    <script>
-        function copyText() {
-            // Get the text field
-            const copyText = document.getElementById("textToCopy");
-            // Select the text
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // For mobile devices
-
-            // Copy the text inside the text field
-            navigator.clipboard.writeText(copyText.value).then(() => {
-                // Display a success message
-                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
-            }).catch(err => {
-                // Display an error message
-                console.error('Could not copy text: ', err);
-                document.getElementById("message").textContent = "Failed to copy text.";
-            });
-        }
-    </script>
-
 </body>
 </html>
