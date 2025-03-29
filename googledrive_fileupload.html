@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Upload Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --text: #2b2d42;
+            --text-light: #8d99ae;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #e9ecef;
+            --shadow: rgba(0, 0, 0, 0.05);
+            --success: #4cc9f0;
+            
+            /* Dark mode vars */
+            --dark-primary: #4895ef;
+            --dark-text: #f8f9fa;
+            --dark-text-light: #adb5bd;
+            --dark-bg: #121212;
+            --dark-card-bg: #1e1e1e;
+            --dark-border: #2d2d2d;
+            --dark-shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .portal-container {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px var(--shadow);
+            width: 100%;
+            max-width: 640px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .dark-mode .portal-container {
+            background-color: var(--dark-card-bg);
+            box-shadow: 0 10px 30px var(--dark-shadow);
+            border-color: var(--dark-border);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .dark-mode .back-btn {
+            color: var(--dark-primary);
+        }
+
+        .back-btn:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .dark-mode .back-btn:hover {
+            background-color: rgba(72, 149, 239, 0.1);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .dark-mode .theme-toggle {
+            color: var(--dark-text-light);
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), #3f37c9);
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 25px;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .dark-mode .logo {
+            background: linear-gradient(135deg, var(--dark-primary), #4895ef);
+        }
+
+        h1 {
+            color: var(--text);
+            margin-bottom: 16px;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .dark-mode h1 {
+            color: var(--dark-text);
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dark-mode .subtitle {
+            color: var(--dark-text-light);
+        }
+
+        .file-requirements {
+            background-color: rgba(67, 97, 238, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .dark-mode .file-requirements {
+            background-color: rgba(72, 149, 239, 0.1);
+            border-left-color: var(--dark-primary);
+        }
+
+        .file-requirements h4 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dark-mode .file-requirements h4 {
+            color: var(--dark-primary);
+        }
+
+        .file-requirements ul {
+            list-style: none;
+            padding-left: 5px;
+        }
+
+        .file-requirements li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .file-requirements li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+        }
+
+        .dark-mode .file-requirements li::before {
+            color: var(--dark-primary);
+        }
+
+        .tos-container {
+            background-color: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            border: 1px solid var(--border);
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .dark-mode .tos-container {
+            background-color: var(--dark-bg);
+            border-color: var(--dark-border);
+        }
+
+        .tos-container h3 {
+            color: var(--text);
+            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dark-mode .tos-container h3 {
+            color: var(--dark-text);
+        }
+
+        .tos-container ol {
+            padding-left: 24px;
+            color: var(--text-light);
+        }
+
+        .dark-mode .tos-container ol {
+            color: var(--dark-text-light);
+        }
+
+        .tos-container li {
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 12px;
+        }
+
+        .checkbox-container input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .dark-mode .checkbox-container input {
+            accent-color: var(--dark-primary);
+        }
+
+        .checkbox-container label {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .upload-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        .dark-mode .upload-btn {
+            background-color: var(--dark-primary);
+            box-shadow: 0 4px 12px rgba(72, 149, 239, 0.3);
+        }
+
+        .upload-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.4);
+        }
+
+        .dark-mode .upload-btn:hover {
+            background-color: #3a7bc8;
+        }
+
+        .upload-btn:disabled {
+            background-color: #e9ecef;
+            color: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .dark-mode .upload-btn:disabled {
+            background-color: #2d2d2d;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .portal-container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .logo {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .subtitle {
+                max-width: 100%;
+            }
+        }
+
+        /* Custom scrollbar */
+        .tos-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tos-container::-webkit-scrollbar-track {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        .dark-mode .tos-container::-webkit-scrollbar-track {
+            background: var(--dark-border);
+        }
+
+        .tos-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .dark-mode .tos-container::-webkit-scrollbar-thumb {
+            background: var(--dark-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <div class="header">
+            <button class="back-btn" onclick="window.location.href='index'">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </button>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <div class="logo">
+            <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        
+        <h1>Material Upload Portal</h1>
+        <p class="subtitle">Please carefully review the information below before uploading your materials</p>
+        
+        <div class="file-requirements">
+            <h4><i class="fas fa-file-alt"></i> File Requirements</h4>
+            <ul>
+                <li>Accepted formats: PDF, DOCX, PPTX, JPG, PNG</li>
+                <li>Maximum file size: 25MB</li>
+                <li>Name your files clearly (e.g., "Assignment1_JohnDoe.pdf")</li>
+                <li>Only upload materials you have permission to share</li>
+            </ul>
+        </div>
+        
+        <div class="tos-container">
+            <h3><i class="fas fa-gavel"></i> Terms of Service</h3>
+            <ol>
+                <li>By uploading materials, you confirm you have the rights to share this content.</li>
+                <li>Uploaded materials must comply with all applicable laws and institutional policies.</li>
+                <li>Do not upload confidential or sensitive personal information.</li>
+                <li>Materials will be reviewed and may be removed if they violate these terms.</li>
+                <li>You retain ownership of your materials but grant us a license to use them for educational purposes.</li>
+                <li>We reserve the right to modify these terms at any time.</li>
+                <li>Uploaded materials may be accessible to other users as determined by the administrators.</li>
+                <li>You are responsible for maintaining backups of your original files.</li>
+            </ol>
+        </div>
+        
+        <div class="checkbox-container">
+            <input type="checkbox" id="agreeTos">
+            <label for="agreeTos">I have read and agree to the Terms of Service</label>
+        </div>
+        
+        <a href="https://script.google.com/macros/s/AKfycbydRfgKnKWdwbhHyy-8X3VaQilZkISrSlK4_dP55ak/dev" class="upload-btn" id="uploadLink" disabled>
+            <i class="fas fa-upload"></i> Proceed to Upload
+        </a>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or use preferred color scheme
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            body.classList.add('dark-mode');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // TOS agreement functionality
+        const checkbox = document.getElementById('agreeTos');
+        const uploadLink = document.getElementById('uploadLink');
+        
+        checkbox.addEventListener('change', function() {
+            uploadLink.disabled = !this.checked;
+        });
+        
+        // Prevent clicking when disabled
+        uploadLink.addEventListener('click', function(e) {
+            if (this.disabled) {
+                e.preventDefault();
+                alert('Please agree to the Terms of Service before proceeding.');
+            }
+        });
+    </script>
+	    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Disables right-click context menu
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault(); // Disables copy action
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault(); // Disables paste action
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disables common keyboard shortcuts
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        function copyText() {
+            // Get the text field
+            const copyText = document.getElementById("textToCopy");
+            // Select the text
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                // Display a success message
+                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
+            }).catch(err => {
+                // Display an error message
+                console.error('Could not copy text: ', err);
+                document.getElementById("message").textContent = "Failed to copy text.";
+            });
+        }
+    </script>
+
+</body>
+</html>

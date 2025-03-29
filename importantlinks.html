@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Resources</title>
+  <title>Student Resources Portal</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #131B30;
-      --secondary: #FAA002;
-      --light-bg: #F8F9FA;
-      --card-bg: #FFFFFF;
-      --text-dark: #2D3748;
-      --text-light: #4A5568;
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4cc9f0;
+      --light-bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-dark: #2b2d42;
+      --text-light: #8d99ae;
       --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --gradient: linear-gradient(135deg, #4361ee 0%, #3f37c9 50%, #4cc9f0 100%);
     }
 
     body {
@@ -31,11 +34,24 @@
       justify-content: space-between;
       align-items: center;
       padding: 1.5rem 2rem;
-      background-color: var(--primary);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: var(--gradient);
+      box-shadow: 0 4px 20px rgba(67, 97, 238, 0.15);
       position: sticky;
       top: 0;
       z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: white;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
     }
 
     .back-button {
@@ -46,77 +62,89 @@
       align-items: center;
       gap: 0.5rem;
       transition: var(--transition);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.1);
     }
 
     .back-button:hover {
-      color: var(--secondary);
-      transform: translateX(-5px);
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateX(-3px);
     }
 
     .theme-toggle {
-      background: none;
+      background: rgba(255, 255, 255, 0.1);
       border: none;
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       cursor: pointer;
       transition: var(--transition);
-      padding: 0.5rem;
+      padding: 0.6rem;
       border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .theme-toggle:hover {
-      color: var(--secondary);
+      background: rgba(255, 255, 255, 0.2);
       transform: rotate(30deg);
     }
 
     main {
       padding: 2rem;
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
     }
 
     h1 {
       color: var(--primary);
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
       text-align: center;
       position: relative;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    h1::after {
-      content: '';
-      display: block;
-      width: 100px;
-      height: 4px;
-      background: var(--secondary);
-      margin: 0.5rem auto 0;
-      border-radius: 2px;
+    .subtitle {
+      text-align: center;
+      color: var(--text-light);
+      margin-bottom: 3rem;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .card-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
       margin-top: 2rem;
     }
 
     .card {
       background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 1.8rem;
+      border-radius: 16px;
+      padding: 2rem;
       text-decoration: none;
       color: var(--text-dark);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
       transition: var(--transition);
-      border-left: 4px solid transparent;
+      border: 1px solid rgba(67, 97, 238, 0.1);
       position: relative;
       overflow: hidden;
     }
 
     .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      border-left-color: var(--secondary);
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(67, 97, 238, 0.15);
+      border-color: rgba(67, 97, 238, 0.3);
     }
 
     .card::before {
@@ -125,34 +153,48 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 4px;
-      background: var(--primary);
+      height: 5px;
+      background: var(--gradient);
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.3s ease;
+      transition: transform 0.5s ease;
     }
 
     .card:hover::before {
       transform: scaleX(1);
     }
 
+    .card-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .card:hover .card-icon {
+      color: var(--accent);
+      transform: scale(1.1);
+    }
+
     .card h2 {
       color: var(--primary);
       margin-bottom: 1rem;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       position: relative;
       display: inline-block;
+      font-weight: 600;
     }
 
     .card h2::after {
       content: '';
       position: absolute;
-      bottom: -5px;
+      bottom: -8px;
       left: 0;
       width: 40px;
       height: 3px;
-      background: var(--secondary);
+      background: var(--accent);
       transition: var(--transition);
+      border-radius: 3px;
     }
 
     .card:hover h2::after {
@@ -161,15 +203,29 @@
 
     .card p {
       color: var(--text-light);
-      line-height: 1.6;
+      line-height: 1.7;
       margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
     }
 
     /* Animation */
     @keyframes fadeInUp {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
       }
       to {
         opacity: 1;
@@ -188,15 +244,26 @@
     .card:nth-child(4) { animation-delay: 0.4s; }
     .card:nth-child(5) { animation-delay: 0.5s; }
     .card:nth-child(6) { animation-delay: 0.6s; }
+    .card:nth-child(7) { animation-delay: 0.7s; }
+    .card:nth-child(8) { animation-delay: 0.8s; }
 
     /* Dark mode styles */
     body.dark-mode {
-      --primary: #FAA002;
-      --secondary: #131B30;
-      --light-bg: #1A202C;
-      --card-bg: #2D3748;
-      --text-dark: #F7FAFC;
-      --text-light: #CBD5E0;
+      --primary: #4cc9f0;
+      --secondary: #4895ef;
+      --accent: #4361ee;
+      --light-bg: #121212;
+      --card-bg: #1e1e1e;
+      --text-dark: #f8f9fa;
+      --text-light: #adb5bd;
+    }
+
+    body.dark-mode .card {
+      border-color: rgba(76, 201, 240, 0.1);
+    }
+
+    body.dark-mode .card:hover {
+      border-color: rgba(76, 201, 240, 0.3);
     }
 
     @media (max-width: 768px) {
@@ -205,51 +272,134 @@
       }
       
       h1 {
-        font-size: 2rem;
+        font-size: 2.2rem;
       }
+      
+      header {
+        padding: 1rem;
+      }
+    }
+
+    /* Floating action button */
+    .fab {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: var(--gradient);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 25px rgba(67, 97, 238, 0.3);
+      cursor: pointer;
+      z-index: 50;
+      transition: var(--transition);
+    }
+
+    .fab:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 12px 30px rgba(67, 97, 238, 0.4);
     }
   </style>
 </head>
 <body>
   <header>
-    <a href="index" class="back-button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 12H5M12 19l-7-7 7-7"/>
-      </svg>
-      Back
-    </a>
-    <button id="theme-toggle" class="theme-toggle">🌓</button>
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i>
+      <span>ASU Resources</span>
+    </div>
+    <div>
+      <a href="index" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        Back
+      </a>
+      <button id="theme-toggle" class="theme-toggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
   </header>
 
   <main>
-    <h1>Student Resources</h1>
+    <h1>Student Resources Portal</h1>
+    <p class="subtitle">Access all university resources, materials, and tools in one centralized platform for seamless academic experience.</p>
+    
     <div class="card-container">
       <a href="colleges_hall" class="card">
-        <h2>Halls</h2>
-        <p>Find information about university halls and accommodations.</p>
+        <div class="card-icon">
+          <i class="fas fa-building"></i>
+        </div>
+        <h2>University Halls</h2>
+        <p>Find comprehensive information about all university halls, accommodations, and housing options available for students.</p>
       </a>
+      
       <a href="faqs" class="card">
+        <div class="card-icon">
+          <i class="fas fa-question-circle"></i>
+        </div>
         <h2>FAQs</h2>
-        <p>Get answers to frequently asked questions about university life.</p>
+        <p>Get instant answers to frequently asked questions about university life, academics, and student services.</p>
       </a>
+      
       <a href="uni_tos" class="card">
-        <h2>TOS</h2>
-        <p>Read the university's terms of service and policies.</p>
+        <div class="card-icon">
+          <i class="fas fa-file-contract"></i>
+        </div>
+        <h2>Terms of Service</h2>
+        <p>Review the university's official policies, terms of service, and academic regulations.</p>
       </a>
+      
       <a href="groups" class="card">
+        <div class="card-icon">
+          <i class="fas fa-comments"></i>
+        </div>
         <h2>WhatsApp Groups</h2>
-        <p>Join university WhatsApp groups for discussions and updates.</p>
+        <p>Connect with fellow students through official and unofficial WhatsApp groups for your courses and programs.</p>
       </a>
+      
       <a href="asu_date_asu" class="card">
-        <h2>University Calendar 2024/2025</h2>
-        <p>Access important dates, deadlines, and events for the academic year.</p>
+        <div class="card-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h2>Academic Calendar</h2>
+        <p>Access the complete 2024/2025 academic calendar with all important dates, deadlines, and events.</p>
       </a>
-      <a href="discord_fileupload.html" class="card">
-        <h2>ASU Upload Portal+</h2>
-        <p>Upload your materials and resources to share with the university community.</p>
+      
+      <a href="discord_fileupload" class="card">
+        <div class="card-icon">
+          <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <h2>ASU Upload Portal</h2>
+        <p>Share your academic materials and resources with the university community through our secure upload portal.</p>
+        <span class="badge">Fast</span>
+      </a>
+      
+      <a href="googledrive_fileupload" class="card">
+        <div class="card-icon">
+          <i class="fas fa-infinity"></i>
+        </div>
+        <h2>Unlimited Uploads</h2>
+        <p>Alternative upload portal with no file size restrictions. Upload multiple large files simultaneously.</p>
+        <span class="badge">No Limits</span>
+      </a>
+      
+      <a href="https://drive.google.com/drive/folders/1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB?usp=drive_link" class="card" target="_blank">
+        <div class="card-icon">
+          <i class="fas fa-archive"></i>
+        </div>
+        <h2>Uploaded Content</h2>
+        <p>Instantly access all materials uploaded by students and faculty. New uploads appear here in real-time.</p>
+        <span class="badge">Live Updates</span>
       </a>
     </div>
   </main>
+
+  <div class="fab" title="Quick Help">
+    <i class="fas fa-question"></i>
+  </div>
 
   <script>
     // Theme toggle functionality
@@ -260,6 +410,7 @@
     const currentTheme = localStorage.getItem('theme');
     if (currentTheme) {
       body.classList.add(currentTheme);
+      updateThemeIcon();
     }
     
     themeToggle.addEventListener('click', () => {
@@ -269,13 +420,18 @@
       const theme = body.classList.contains('dark-mode') ? 'dark-mode' : '';
       localStorage.setItem('theme', theme);
       
-      // Change emoji based on theme
-      themeToggle.textContent = body.classList.contains('dark-mode') ? '🌔' : '🌓';
+      updateThemeIcon();
     });
     
-    // Set initial emoji based on theme
-    if (body.classList.contains('dark-mode')) {
-      themeToggle.textContent = '🌔';
+    function updateThemeIcon() {
+      const icon = themeToggle.querySelector('i');
+      if (body.classList.contains('dark-mode')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      }
     }
     
     // Card hover effect enhancement
@@ -290,47 +446,32 @@
         card.style.setProperty('--mouse-y', `${y}px`);
       });
     });
+
+    // FAB button functionality
+    const fab = document.querySelector('.fab');
+    fab.addEventListener('click', () => {
+      window.location.href = 'faqs';
+    });
   </script>
-    <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault(); // Disables right-click context menu
-        });
+  
+  <script>
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
 
-        document.addEventListener('copy', function(e) {
-            e.preventDefault(); // Disables copy action
-        });
+    document.addEventListener('copy', function(e) {
+      e.preventDefault();
+    });
 
-        document.addEventListener('paste', function(e) {
-            e.preventDefault(); // Disables paste action
-        });
+    document.addEventListener('paste', function(e) {
+      e.preventDefault();
+    });
 
-        document.addEventListener('keydown', function(e) {
-            // Disables common keyboard shortcuts
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
-                e.preventDefault();
-            }
-        });
-    </script>
-
-    <script>
-        function copyText() {
-            // Get the text field
-            const copyText = document.getElementById("textToCopy");
-            // Select the text
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // For mobile devices
-
-            // Copy the text inside the text field
-            navigator.clipboard.writeText(copyText.value).then(() => {
-                // Display a success message
-                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
-            }).catch(err => {
-                // Display an error message
-                console.error('Could not copy text: ', err);
-                document.getElementById("message").textContent = "Failed to copy text.";
-            });
-        }
-    </script>
-
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+        e.preventDefault();
+      }
+    });
+  </script>
 </body>
 </html>
