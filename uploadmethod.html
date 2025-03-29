@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Method Selection</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --accent-color: #00ffaa;
+            --accent-secondary: #ff00aa;
+            --card-bg: #1e1e1e;
+            --shadow-color: rgba(0, 255, 170, 0.3);
+            --hover-brightness: 1.2;
+        }
+
+        .light-mode {
+            --bg-color: #f5f5f5;
+            --text-color: #333333;
+            --accent-color: #0077cc;
+            --accent-secondary: #cc0077;
+            --card-bg: #ffffff;
+            --shadow-color: rgba(0, 119, 204, 0.2);
+            --hover-brightness: 1.05;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--shadow-color);
+            margin: 0;
+        }
+
+        .mode-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--accent-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-toggle:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .options-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .option-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 45%;
+            text-align: center;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow-color);
+            border-color: var(--accent-color);
+            filter: brightness(var(--hover-brightness));
+        }
+
+        .option-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-secondary);
+        }
+
+        .option-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .option-desc {
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .option-btn {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            background: var(--accent-secondary);
+            transform: scale(1.05);
+        }
+
+        .back-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .file-types {
+            font-size: 0.9rem;
+            color: var(--accent-secondary);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Choose Your Upload Method</h1>
+            <button class="mode-toggle" id="modeToggle">Light Mode</button>
+        </header>
+
+        <div class="options-container">
+            <div class="option-card" onclick="window.location.href='discord_fileupload.html'">
+                <div class="option-icon">📄</div>
+                <h2 class="option-title">Structured Submission</h2>
+                <p class="option-desc">
+                    For formal assignments that require review and processing. 
+                    This method ensures proper formatting and organization.
+                </p>
+                <div class="file-types">PDF, DOCX only</div>
+                <button class="option-btn">Select This Method</button>
+            </div>
+
+            <div class="option-card" onclick="window.location.href='googledrive_fileupload.html'">
+                <div class="option-icon">⚡</div>
+                <h2 class="option-title">Instant Upload</h2>
+                <p class="option-desc">
+                    For large files or quick submissions that don't require formatting checks. 
+                    Files are available immediately after upload.
+                </p>
+                <div class="file-types">All file types supported</div>
+                <button class="option-btn">Select This Method</button>
+            </div>
+        </div>
+
+        <div class="back-buttons">
+            <button class="back-btn" onclick="window.location.href='subjects_desktop_02.html'">Back to Subjects</button>
+            <button class="back-btn" onclick="window.location.href='index.html'">Back to Home</button>
+        </div>
+    </div>
+
+    <script>
+        const modeToggle = document.getElementById('modeToggle');
+        
+        modeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            
+            if (document.body.classList.contains('light-mode')) {
+                modeToggle.textContent = 'Dark Mode';
+            } else {
+                modeToggle.textContent = 'Light Mode';
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+            modeToggle.textContent = 'Dark Mode';
+        }
+
+        // Save theme preference
+        modeToggle.addEventListener('click', () => {
+            if (document.body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+</body>
+</html>
