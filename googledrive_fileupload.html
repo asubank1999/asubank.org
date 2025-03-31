@@ -7,68 +7,65 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --text: #2b2d42;
-            --text-light: #8d99ae;
-            --bg: #f8f9fa;
+            --primary: #2a9d8f;
+            --secondary: #e76f51;
+            --text: #264653;
+            --text-light: #6b7280;
+            --bg: #f1f5f9;
             --card-bg: #ffffff;
-            --border: #e9ecef;
-            --shadow: rgba(0, 0, 0, 0.05);
-            --success: #4cc9f0;
-            --error: #f72585;
-            
-            /* Dark mode vars */
-            --dark-primary: #4895ef;
-            --dark-text: #f8f9fa;
-            --dark-text-light: #adb5bd;
-            --dark-bg: #121212;
-            --dark-card-bg: #1e1e1e;
-            --dark-border: #2d2d2d;
-            --dark-shadow: rgba(0, 0, 0, 0.2);
-            --dark-error: #ff4d6d;
+            --border: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --success: #34d399;
+            --error: #f87171;
+
+            /* Dark mode */
+            --dark-primary: #2ab7a9;
+            --dark-secondary: #f28482;
+            --dark-text: #e5e7eb;
+            --dark-text-light: #d1d5db;
+            --dark-bg: #111827;
+            --dark-card-bg: #1f2937;
+            --dark-border: #374151;
+            --dark-shadow: rgba(0, 0, 0, 0.3);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: 'Segoe UI', -apple-system, sans-serif;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg);
+            background: linear-gradient(135deg, var(--bg), #e2e8f0);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            line-height: 1.6;
+            padding: 30px;
         }
 
-        body.dark-mode {
-            background-color: var(--dark-bg);
+        .dark-mode {
+            background: linear-gradient(135deg, var(--dark-bg), #1f2937);
             color: var(--dark-text);
         }
 
         .portal-container {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px var(--shadow);
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px var(--shadow);
             width: 100%;
-            max-width: 640px;
+            max-width: 720px;
             padding: 40px;
             position: relative;
-            overflow: hidden;
             border: 1px solid var(--border);
         }
 
         .dark-mode .portal-container {
-            background-color: var(--dark-card-bg);
-            box-shadow: 0 10px 30px var(--dark-shadow);
+            background: var(--dark-card-bg);
             border-color: var(--dark-border);
+            box-shadow: 0 15px 40px var(--dark-shadow);
         }
 
         .header {
@@ -78,483 +75,390 @@
             margin-bottom: 30px;
         }
 
-        .back-btn {
+        .action-btn {
             background: none;
             border: none;
             color: var(--primary);
             font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             cursor: pointer;
-            padding: 8px 12px;
+            padding: 10px;
             border-radius: 8px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
-        .dark-mode .back-btn {
+        .dark-mode .action-btn {
             color: var(--dark-primary);
         }
 
-        .back-btn:hover {
-            background-color: rgba(67, 97, 238, 0.1);
+        .action-btn:hover {
+            background: rgba(42, 157, 143, 0.1);
         }
 
-        .dark-mode .back-btn:hover {
-            background-color: rgba(72, 149, 239, 0.1);
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: var(--text-light);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: all 0.2s ease;
-        }
-
-        .dark-mode .theme-toggle {
-            color: var(--dark-text-light);
-        }
-
-        .theme-toggle:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .dark-mode .theme-toggle:hover {
-            background-color: rgba(255, 255, 255, 0.05);
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
         .logo {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary), #3f37c9);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
             color: white;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0 auto 25px;
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+            font-size: 36px;
+            box-shadow: 0 8px 20px rgba(42, 157, 143, 0.3);
         }
 
         .dark-mode .logo {
-            background: linear-gradient(135deg, var(--dark-primary), #4895ef);
+            background: var(--dark-primary);
         }
 
         h1 {
-            color: var(--text);
-            margin-bottom: 16px;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             text-align: center;
-        }
-
-        .dark-mode h1 {
-            color: var(--dark-text);
+            margin-bottom: 15px;
         }
 
         .subtitle {
             color: var(--text-light);
-            margin-bottom: 30px;
             text-align: center;
-            max-width: 80%;
-            margin-left: auto;
-            margin-right: auto;
+            margin-bottom: 30px;
         }
 
-        .dark-mode .subtitle {
-            color: var(--dark-text-light);
-        }
-
-        .file-requirements {
-            background-color: rgba(67, 97, 238, 0.05);
-            border-left: 4px solid var(--primary);
-            padding: 16px;
-            margin: 25px 0;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .dark-mode .file-requirements {
-            background-color: rgba(72, 149, 239, 0.1);
-            border-left-color: var(--dark-primary);
-        }
-
-        .file-requirements h4 {
-            color: var(--primary);
-            margin-bottom: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .dark-mode .file-requirements h4 {
-            color: var(--dark-primary);
-        }
-
-        .file-requirements ul {
-            list-style: none;
-            padding-left: 5px;
-        }
-
-        .file-requirements li {
-            margin-bottom: 8px;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .file-requirements li::before {
-            content: "•";
-            color: var(--primary);
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-        }
-
-        .dark-mode .file-requirements li::before {
-            color: var(--dark-primary);
-        }
-
-        .tos-container {
-            background-color: var(--bg);
+        .info-section {
+            background: rgba(42, 157, 143, 0.05);
             border-radius: 12px;
             padding: 20px;
-            margin: 30px 0;
-            border: 1px solid var(--border);
-            max-height: 200px;
-            overflow-y: auto;
-            scrollbar-width: thin;
+            margin-bottom: 30px;
         }
 
-        .dark-mode .tos-container {
-            background-color: var(--dark-bg);
-            border-color: var(--dark-border);
+        .dark-mode .info-section {
+            background: rgba(42, 183, 169, 0.1);
         }
 
-        .tos-container h3 {
-            color: var(--text);
-            margin-bottom: 16px;
+        .info-section h4 {
+            color: var(--primary);
             font-size: 18px;
-            font-weight: 600;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .dark-mode .tos-container h3 {
+        .info-section ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .info-section li {
+            margin-bottom: 10px;
+            position: relative;
+            color: var(--text);
+        }
+
+        .dark-mode .info-section li {
             color: var(--dark-text);
         }
 
-        .tos-container ol {
-            padding-left: 24px;
+        .info-section li:before {
+            content: "✓";
+            color: var(--primary);
+            position: absolute;
+            left: -20px;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary);
+        }
+
+        .tos-section {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+
+        .dark-mode .tos-section {
+            background: var(--dark-bg);
+            border-color: var(--dark-border);
+        }
+
+        .tos-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .dark-mode .tos-section h3 {
+            color: var(--dark-primary);
+        }
+
+        .tos-section ul {
+            list-style: none;
+            padding-left: 0;
             color: var(--text-light);
         }
 
-        .dark-mode .tos-container ol {
+        .dark-mode .tos-section ul {
             color: var(--dark-text-light);
         }
 
-        .tos-container li {
-            margin-bottom: 12px;
-            padding-left: 8px;
+        .tos-section li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
         }
 
-        .checkbox-container {
-            display: flex;
-            align-items: flex-start;
-            margin: 30px 0;
-            gap: 12px;
-            flex-direction: column;
+        .tos-section li:before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
         }
 
-        .checkbox-wrapper {
+        .dark-mode .tos-section li:before {
+            color: var(--dark-primary);
+        }
+
+        .agreement-section {
+            margin-bottom: 30px;
+        }
+
+        .checkbox-group {
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 10px;
         }
 
-        .checkbox-container input {
+        .checkbox-group input {
             width: 20px;
             height: 20px;
             accent-color: var(--primary);
             cursor: pointer;
         }
 
-        .dark-mode .checkbox-container input {
-            accent-color: var(--dark-primary);
+        .checkbox-group label {
+            color: var(--text);
         }
 
-        .checkbox-container label {
-            cursor: pointer;
-            user-select: none;
+        .dark-mode .checkbox-group label {
+            color: var(--dark-text);
         }
 
-        .error-message {
+        .error-msg {
             color: var(--error);
             font-size: 14px;
-            margin-top: 5px;
             display: none;
         }
 
-        .dark-mode .error-message {
-            color: var(--dark-error);
-        }
-
-        .upload-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
-        }
-
-        .dark-mode .upload-btn {
-            background-color: var(--dark-primary);
-            box-shadow: 0 4px 12px rgba(72, 149, 239, 0.3);
-        }
-
-        .upload-btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.4);
-        }
-
-        .dark-mode .upload-btn:hover {
-            background-color: #3a7bc8;
-        }
-
-        .upload-btn:disabled {
-            background-color: #e9ecef;
-            color: #adb5bd;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .dark-mode .upload-btn:disabled {
-            background-color: #2d2d2d;
-            color: #6c757d;
-        }
-
-        .scroll-notice {
-            font-size: 14px;
+        .scroll-hint {
             color: var(--text-light);
-            margin-top: 10px;
+            font-size: 14px;
             font-style: italic;
             display: none;
         }
 
-        .dark-mode .scroll-notice {
+        .dark-mode .scroll-hint {
             color: var(--dark-text-light);
+        }
+
+        .upload-button {
+            display: block;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(42, 157, 143, 0.3);
+            pointer-events: none; /* Initially unclickable */
+            opacity: 0.6;
+        }
+
+        .upload-button.active {
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        .dark-mode .upload-button {
+            background: var(--dark-primary);
+        }
+
+        .upload-button:hover:not(:disabled).active {
+            background: #21867a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(42, 157, 143, 0.4);
+        }
+
+        .upload-button:disabled {
+            background: var(--border);
+            color: var(--text-light);
+            cursor: not-allowed;
+            box-shadow: none;
+            pointer-events: none;
+            opacity: 0.6;
         }
 
         @media (max-width: 768px) {
             .portal-container {
-                padding: 30px 20px;
+                padding: 25px;
             }
-            
             h1 {
-                font-size: 24px;
+                font-size: 26px;
             }
-            
             .logo {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
             }
-            
-            .subtitle {
-                max-width: 100%;
-            }
-        }
-
-        /* Custom scrollbar */
-        .tos-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .tos-container::-webkit-scrollbar-track {
-            background: var(--border);
-            border-radius: 10px;
-        }
-
-        .dark-mode .tos-container::-webkit-scrollbar-track {
-            background: var(--dark-border);
-        }
-
-        .tos-container::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-
-        .dark-mode .tos-container::-webkit-scrollbar-thumb {
-            background: var(--dark-primary);
         }
     </style>
 </head>
 <body>
     <div class="portal-container">
         <div class="header">
-            <button class="back-btn" onclick="window.location.href='importantlinks'">
-                <i class="fas fa-arrow-left"></i>
-                Back
+            <button class="action-btn" onclick="window.location.href='importantlinks'">
+                <i class="fas fa-arrow-left"></i> Back
             </button>
-            <button class="theme-toggle" id="themeToggle">
+            <button class="action-btn" id="themeToggle">
                 <i class="fas fa-moon"></i>
             </button>
         </div>
 
-        <div class="logo">
-            <i class="fas fa-cloud-upload-alt"></i>
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
         </div>
-        
-        <h1>Material Upload Portal</h1>
-        <p class="subtitle">Please carefully review the information below before uploading your materials</p>
-        
-        <div class="file-requirements">
-            <h4><i class="fas fa-file-alt"></i> File Requirements</h4>
+
+        <h1>Upload Your Materials</h1>
+        <p class="subtitle">Share your educational resources with the ASU community</p>
+
+        <div class="info-section">
+            <h4><i class="fas fa-info-circle"></i> Upload Information</h4>
             <ul>
                 <li>Accepted formats: PDF, DOCX, PPTX, JPG, PNG</li>
                 <li>Maximum file size: 25MB</li>
-                <li>Name your files clearly (e.g., "Assignment1_JohnDoe.pdf")</li>
-                <li>Only upload materials you have permission to share</li>
+                <li>Files appear in <a href="https://drive.google.com/drive/folders/1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB?usp=drive_link" target="_blank">ASU Bank Public Uploads</a></li>
+                <li>Name files clearly (e.g., "Assignment1_JohnDoe.pdf")</li>
             </ul>
         </div>
-        
-        <div class="tos-container" id="termsContainer">
+
+        <div class="tos-section" id="termsSection">
             <h3><i class="fas fa-gavel"></i> Terms of Service</h3>
-            <ol>
-                <li>By uploading materials, you confirm you have the rights to share this content.</li>
-                <li>Uploaded materials must comply with all applicable laws and institutional policies.</li>
-                <li>Do not upload confidential or sensitive personal information.</li>
-                <li>Materials will be reviewed and may be removed if they violate these terms.</li>
-                <li>You retain ownership of your materials but grant us a license to use them for educational purposes.</li>
-                <li>We reserve the right to modify these terms at any time.</li>
-                <li>Uploaded materials may be accessible to other users as determined by the administrators.</li>
-                <li>You are responsible for maintaining backups of your original files.</li>
-                <li>Uploading copyrighted material without permission is strictly prohibited.</li>
-                <li>Violation of these terms may result in account suspension or termination.</li>
-                <li>We are not responsible for any loss or corruption of uploaded files.</li>
-                <li>You agree not to upload malicious or harmful content of any kind.</li>
-            </ol>
+            <ul>
+                <li>You have rights to share the content</li>
+                <li>No illegal or sensitive materials</li>
+                <li>Files may be removed if they violate rules</li>
+                <li>Files moved to Recent Uploads page</li>
+                <li>No copyrighted content without permission</li>
+            </ul>
         </div>
-        
-        <div class="checkbox-container">
-            <div class="checkbox-wrapper">
-                <input type="checkbox" id="agreeTos">
-                <label for="agreeTos">I have read and agree to the Terms of Service</label>
+
+        <div class="agreement-section">
+            <div class="checkbox-group">
+                <input type="checkbox" id="termsAgree">
+                <label for="termsAgree">I agree to the Terms of Service</label>
             </div>
-            <div class="error-message" id="errorMessage">
-                You must read and accept the Terms of Service to proceed.
-            </div>
-            <div class="scroll-notice" id="scrollNotice">
-                Please scroll through all the terms before accepting.
-            </div>
+            <div class="error-msg" id="errorMsg">Please review and accept the terms</div>
+            <div class="scroll-hint" id="scrollHint">Scroll through terms to proceed</div>
         </div>
-        
-        <a href="https://script.google.com/macros/s/AKfycbypXgZNCa0A6g2iqzdE8Z2ug6NrAJ4mK2wR6nLDLt8F03j0R06utTC2pXfykiM-wisl/exec" target="_blank" class="upload-btn" id="uploadLink" disabled>
+
+        <a href="https://script.google.com/macros/s/AKfycbypXgZNCa0A6g2iqzdE8Z2ug6NrAJ4mK2wR6nLDLt8F03j0R06utTC2pXfykiM-wisl/exec" target="_blank" class="upload-button" id="uploadBtn">
             <i class="fas fa-upload"></i> Proceed to Upload
         </a>
     </div>
 
     <script>
-        // Theme toggle functionality
+        // Theme toggle
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
-        
-        // Check for saved theme preference or use preferred color scheme
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
+
         if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
             body.classList.add('dark-mode');
             icon.classList.replace('fa-moon', 'fa-sun');
         }
-        
+
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                icon.classList.replace('fa-moon', 'fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-                localStorage.setItem('theme', 'light');
-            }
+            icon.classList.replace(body.classList.contains('dark-mode') ? 'fa-moon' : 'fa-sun', 
+                                 body.classList.contains('dark-mode') ? 'fa-sun' : 'fa-moon');
+            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
         });
-        
-        // TOS agreement functionality
-        const checkbox = document.getElementById('agreeTos');
-        const uploadLink = document.getElementById('uploadLink');
-        const termsContainer = document.getElementById('termsContainer');
-        const errorMessage = document.getElementById('errorMessage');
-        const scrollNotice = document.getElementById('scrollNotice');
-        
-        // Track if user has scrolled through the terms
+
+        // Terms agreement
+        const checkbox = document.getElementById('termsAgree');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const termsSection = document.getElementById('termsSection');
+        const errorMsg = document.getElementById('errorMsg');
+        const scrollHint = document.getElementById('scrollHint');
         let hasScrolled = false;
-        
-        // Check if user has scrolled to the bottom of the terms
-        termsContainer.addEventListener('scroll', function() {
-            const { scrollTop, scrollHeight, clientHeight } = this;
-            const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
-            
-            if (isAtBottom) {
+
+        termsSection.addEventListener('scroll', () => {
+            const isBottom = termsSection.scrollTop + termsSection.clientHeight >= termsSection.scrollHeight - 5;
+            if (isBottom) {
                 hasScrolled = true;
-                scrollNotice.style.display = 'none';
-            } else if (!hasScrolled) {
-                scrollNotice.style.display = 'block';
+                scrollHint.style.display = 'none';
             }
         });
-        
-        checkbox.addEventListener('change', function() {
-            if (this.checked && !hasScrolled) {
-                errorMessage.textContent = 'Please scroll through all the terms before accepting.';
-                errorMessage.style.display = 'block';
-                scrollNotice.style.display = 'block';
-                this.checked = false;
+
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked && !hasScrolled) {
+                checkbox.checked = false;
+                errorMsg.style.display = 'block';
+                scrollHint.style.display = 'block';
+                termsSection.scrollIntoView({ behavior: 'smooth' });
                 return;
             }
-            
-            if (this.checked) {
-                uploadLink.disabled = false;
-                errorMessage.style.display = 'none';
-                scrollNotice.style.display = 'none';
+
+            if (checkbox.checked) {
+                uploadBtn.classList.add('active');
+                uploadBtn.disabled = false;
+                errorMsg.style.display = 'none';
+                scrollHint.style.display = 'none';
             } else {
-                uploadLink.disabled = true;
+                uploadBtn.classList.remove('active');
+                uploadBtn.disabled = true;
+                errorMsg.style.display = 'block';
             }
         });
-        
-        // Prevent clicking when disabled and show error message
-        uploadLink.addEventListener('click', function(e) {
-            if (this.disabled) {
+
+        uploadBtn.addEventListener('click', (e) => {
+            if (!uploadBtn.classList.contains('active')) {
                 e.preventDefault();
-                errorMessage.style.display = 'block';
-                
-                if (!checkbox.checked) {
-                    errorMessage.textContent = 'You must accept the Terms of Service to proceed.';
-                }
-                
-                // Scroll to the checkbox for visibility
-                checkbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                errorMsg.style.display = 'block';
+                checkbox.scrollIntoView({ behavior: 'smooth' });
+            } else if (confirm('Files will appear in Public Uploads and be processed. Proceed?')) {
+                // Upload proceeds
+            } else {
+                e.preventDefault();
             }
         });
+
+        // Initial state
+        scrollHint.style.display = 'block';
+        uploadBtn.disabled = true;
     </script>
 </body>
 </html>

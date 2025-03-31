@@ -391,6 +391,42 @@
             margin-top: 3rem;
         }
 
+        /* Additional info box */
+        .additional-info {
+            background-color: var(--primary-extra-light);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--warning);
+        }
+
+        .additional-info h3 {
+            color: var(--primary-dark);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .additional-info p {
+            margin-bottom: 1rem;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .additional-info a {
+            color: var(--primary-dark);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .additional-info a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -512,8 +548,14 @@
                 <h3>How to contribute:</h3>
                 <p>Share your study materials or volunteer documents to help fellow students. Accepted formats: PDF, DOCX, JPG, PNG (Max 8MB).</p>
             </div>
-        <p>Processing time depends on upload volume and student demand. Check back regularly for updates!</p>
-        
+
+            <div class="additional-info">
+                <h3>⏳ Important Upload Information</h3>
+                <p>This upload method may take time to be reviewed and processed before appearing in recent uploads. For faster availability, consider using our alternative upload method.</p>
+                <p><strong>Recommended for:</strong> PDF and DOCX files primarily. Other formats may take longer to process.</p>
+                <p><strong>For immediate availability:</strong> <a href="googledrive_fileupload">Use our faster Google Drive upload method</a> which makes files available to everyone immediately after upload.</p>
+                <p>Once reviewed and processed, your uploads will appear in <a href="confirm_device">recent uploads</a>.</p>
+            </div>
 
             <div class="file-upload" id="dropArea">
                 <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg">
@@ -547,7 +589,7 @@
     </main>
 
     <footer class="footer">
-        <p>ASUBANK Student Resources • Helping students succeed since 2023</p>
+        <p>Note: Please make sure to read and agree to our Terms of Service before proceeding</p>
     </footer>
 
     <script>
@@ -759,26 +801,67 @@
             statusEl.style.display = 'none';
         }
     </script>
-    <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault(); // Disables right-click context menu
-        });
+<script>
+// Anti-keyboard shortcuts and code inspection script
+document.addEventListener('DOMContentLoaded', function() {
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
 
-        document.addEventListener('copy', function(e) {
-            e.preventDefault(); // Disables copy action
-        });
+    // Disable keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+            (e.ctrlKey && e.key === 'u')) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    });
 
-        document.addEventListener('paste', function(e) {
-            e.preventDefault(); // Disables paste action
-        });
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
 
-        document.addEventListener('keydown', function(e) {
-            // Disables common keyboard shortcuts
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
-                e.preventDefault();
-            }
-        });
-    </script>
+    // Blur elements when tabbing (prevents keyboard navigation)
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'Tab') {
+            document.activeElement.blur();
+        }
+    });
+
+    // Prevent drag-and-drop
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Periodic check for dev tools (works in some browsers)
+    function checkDevTools() {
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        
+        if (heightThreshold || widthThreshold) {
+            // Dev tools might be open
+            document.body.innerHTML = '<h1 style="text-align:center;padding:50px;">Developer tools are not allowed on this page</h1>';
+            window.location.reload();
+        }
+    }
+    setInterval(checkDevTools, 1000);
+
+    // Override console methods
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
+    console.info = function() {};
+    console.debug = function() {};
+});
+</script>
 
     <script>
         function copyText() {

@@ -10,6 +10,7 @@
             --text-color: #e0e0e0;
             --accent-color: #00ffaa;
             --accent-secondary: #ff00aa;
+            --accent-tertiary: #aa00ff;
             --card-bg: #1e1e1e;
             --shadow-color: rgba(0, 255, 170, 0.3);
             --hover-brightness: 1.2;
@@ -20,6 +21,7 @@
             --text-color: #333333;
             --accent-color: #0077cc;
             --accent-secondary: #cc0077;
+            --accent-tertiary: #7700cc;
             --card-bg: #ffffff;
             --shadow-color: rgba(0, 119, 204, 0.2);
             --hover-brightness: 1.05;
@@ -32,10 +34,12 @@
             margin: 0;
             padding: 0;
             transition: all 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -70,7 +74,8 @@
 
         .options-container {
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 2rem;
             margin-top: 3rem;
         }
@@ -79,12 +84,15 @@
             background: var(--card-bg);
             border-radius: 15px;
             padding: 2rem;
-            width: 45%;
+            width: 300px;
+            min-height: 350px;
             text-align: center;
             box-shadow: 0 5px 15px var(--shadow-color);
             transition: all 0.3s ease;
             border: 1px solid transparent;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
 
         .option-card:hover {
@@ -100,15 +108,24 @@
             color: var(--accent-secondary);
         }
 
+        .bank-icon {
+            color: var(--accent-tertiary);
+        }
+
         .option-title {
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: var(--accent-color);
         }
 
+        .bank-title {
+            color: var(--accent-tertiary);
+        }
+
         .option-desc {
             margin-bottom: 1.5rem;
             line-height: 1.5;
+            flex-grow: 1;
         }
 
         .option-btn {
@@ -120,11 +137,20 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .bank-btn {
+            background: var(--accent-tertiary);
         }
 
         .option-btn:hover {
             background: var(--accent-secondary);
             transform: scale(1.05);
+        }
+
+        .bank-btn:hover {
+            background: #cc00ff;
         }
 
         .back-buttons {
@@ -152,6 +178,18 @@
             font-size: 0.9rem;
             color: var(--accent-secondary);
             margin-top: 0.5rem;
+        }
+
+        .bank-file-types {
+            color: var(--accent-tertiary);
+        }
+
+        .security-note {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-color);
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -184,41 +222,153 @@
                 <div class="file-types">All file types supported</div>
                 <button class="option-btn">Select This Method</button>
             </div>
+
+            <div class="option-card" onclick="window.open('https://drive.google.com/drive/folders/1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB?usp=drive_link', '_blank')">
+                <div class="option-icon bank-icon">🏦</div>
+                <h2 class="option-title bank-title">ASU Bank</h2>
+                <p class="option-desc">
+                    Access the shared repository of all student-uploaded materials. 
+                    Browse and download resources contributed by your peers.
+                </p>
+                <div class="file-types bank-file-types">View shared resources</div>
+                <button class="option-btn bank-btn">Open ASU Bank</button>
+            </div>
         </div>
 
         <div class="back-buttons">
             <button class="back-btn" onclick="window.location.href='subjects_desktop_02.html'">Back to Subjects</button>
             <button class="back-btn" onclick="window.location.href='index.html'">Back to Home</button>
         </div>
+
+        <div class="security-note">
+            Note: Please make sure to read and agree to our Terms of Service before proceeding
+        </div>
     </div>
 
     <script>
-        const modeToggle = document.getElementById('modeToggle');
-        
-        modeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
+        // Enhanced security and theme toggling
+        (function() {
+            // Theme management
+            const modeToggle = document.getElementById('modeToggle');
             
-            if (document.body.classList.contains('light-mode')) {
-                modeToggle.textContent = 'Dark Mode';
-            } else {
-                modeToggle.textContent = 'Light Mode';
+            function applyTheme() {
+                if (localStorage.getItem('theme') === 'light') {
+                    document.body.classList.add('light-mode');
+                    modeToggle.textContent = 'Dark Mode';
+                } else {
+                    document.body.classList.remove('light-mode');
+                    modeToggle.textContent = 'Light Mode';
+                }
             }
-        });
 
-        // Check for saved theme preference
-        if (localStorage.getItem('theme') === 'light') {
-            document.body.classList.add('light-mode');
-            modeToggle.textContent = 'Dark Mode';
-        }
+            modeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                localStorage.setItem('theme', 
+                    document.body.classList.contains('light-mode') ? 'light' : 'dark');
+                applyTheme();
+            });
 
-        // Save theme preference
-        modeToggle.addEventListener('click', () => {
-            if (document.body.classList.contains('light-mode')) {
-                localStorage.setItem('theme', 'light');
-            } else {
-                localStorage.setItem('theme', 'dark');
+            applyTheme();
+
+            // Enhanced security measures
+            function disableInspection() {
+                // Prevent context menu
+                document.addEventListener('contextmenu', e => e.preventDefault());
+
+                // Disable keyboard shortcuts
+                const blockedKeys = new Set(['F12', 'I', 'J', 'C', 'U']);
+                document.addEventListener('keydown', e => {
+                    if (blockedKeys.has(e.key) || 
+                        (e.ctrlKey && e.shiftKey && blockedKeys.has(e.key)) ||
+                        (e.ctrlKey && e.key === 'u')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showSecurityAlert();
+                    }
+                });
+
+                // Disable text selection
+                document.addEventListener('selectstart', e => e.preventDefault());
+
+                // Disable drag-and-drop
+                document.addEventListener('dragstart', e => e.preventDefault());
+
+                // Disable image saving
+                document.addEventListener('mousedown', e => {
+                    if (e.target.tagName === 'IMG') e.preventDefault();
+                });
+
+                // Console protection
+                Object.defineProperty(window, 'console', {
+                    value: {
+                        log: () => {},
+                        warn: () => {},
+                        error: () => {},
+                        info: () => {},
+                        debug: () => {},
+                        clear: () => {},
+                        table: () => {}
+                    },
+                    writable: false
+                });
+
+                // DevTools detection
+                let devToolsOpen = false;
+                const devToolsChecker = setInterval(() => {
+                    const before = new Date().getTime();
+                    (function() {})();
+                    const after = new Date().getTime();
+                    if (after - before > 100) {
+                        devToolsOpen = true;
+                        clearInterval(devToolsChecker);
+                        showSecurityAlert();
+                    }
+                }, 1000);
             }
-        });
+
+            function showSecurityAlert() {
+                document.body.innerHTML = `
+                    <div style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: #121212;
+                        color: #ff0000;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                        font-family: Arial, sans-serif;
+                        z-index: 9999;
+                        text-align: center;
+                        padding: 20px;
+                    ">
+                        <h1 style="font-size: 2rem; margin-bottom: 1rem;">Security Violation Detected</h1>
+                        <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                            Developer tools and inspection are not permitted on this page.
+                        </p>
+                        <p style="font-size: 1rem;">
+                            The page will reload in <span id="countdown">5</span> seconds...
+                        </p>
+                    </div>
+                `;
+
+                let seconds = 5;
+                const countdown = setInterval(() => {
+                    seconds--;
+                    document.getElementById('countdown').textContent = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(countdown);
+                        window.location.reload();
+                    }
+                }, 1000);
+            }
+
+            // Initialize security measures
+            disableInspection();
+        })();
     </script>
 </body>
 </html>

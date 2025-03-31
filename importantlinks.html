@@ -349,7 +349,7 @@
           <i class="fas fa-file-contract"></i>
         </div>
         <h2>Terms of Service</h2>
-        <p>Review the university's official policies, terms of service, and academic regulations.</p>
+        <p>Review the site's official policies, terms of service, and website's academic regulations.</p>
       </a>
       
       <a href="groups" class="card">
@@ -454,24 +454,65 @@
     });
   </script>
   
-  <script>
+<script>
+// Anti-keyboard shortcuts and code inspection script
+document.addEventListener('DOMContentLoaded', function() {
+    // Disable right-click context menu
     document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
-
-    document.addEventListener('copy', function(e) {
-      e.preventDefault();
-    });
-
-    document.addEventListener('paste', function(e) {
-      e.preventDefault();
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
         e.preventDefault();
-      }
+        return false;
     });
-  </script>
-</body>
+
+    // Disable keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+            (e.ctrlKey && e.key === 'u')) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Blur elements when tabbing (prevents keyboard navigation)
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'Tab') {
+            document.activeElement.blur();
+        }
+    });
+
+    // Prevent drag-and-drop
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Periodic check for dev tools (works in some browsers)
+    function checkDevTools() {
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        
+        if (heightThreshold || widthThreshold) {
+            // Dev tools might be open
+            document.body.innerHTML = '<h1 style="text-align:center;padding:50px;">Developer tools are not allowed on this page</h1>';
+            window.location.reload();
+        }
+    }
+    setInterval(checkDevTools, 1000);
+
+    // Override console methods
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
+    console.info = function() {};
+    console.debug = function() {};
+});
+</script></body>
 </html>

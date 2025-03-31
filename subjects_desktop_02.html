@@ -413,9 +413,17 @@ body.dark-mode header {
             <!-- Sample cards - these would be dynamically generated in a real app -->
             <div class="subject-card">
                 <a href="https://web.asu.edu.jo/CalculateAvg/" target="_blank">
-                    <h3><img src="pin.png" alt="Website Icon" width="20" height="20">حساب المعدل التراكمي والفصلي المتوقع</h3>
+                    <h3><img src="pin.png" alt="Website Icon" width="20" height="20">ASU/GPA Calculation</h3>
                 </a>
             </div>
+Update 31/MAR/2025 »»
+
+			<div class="subject-card">
+    <a href="https://drive.google.com/file/d/1OY9hSBy2iefZMWW_hfNgTZq_S0YLJmzR/view?usp=drive_link" target="_blank">
+        <h3><img src="new.gif" alt="Website Icon" width="40" height="20">English 101 ASU Summary</h3>
+    </a>
+</div>
+
 Update 26/MAR/2025 (Ram26) »»
 
 <div class="subject-card">
@@ -5514,5 +5522,73 @@ Update 6-JAN-2025
         }
     });
 </script>
+
+
+<script>
+// Anti-keyboard shortcuts and code inspection script
+document.addEventListener('DOMContentLoaded', function() {
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+            (e.ctrlKey && e.key === 'u')) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Blur elements when tabbing (prevents keyboard navigation)
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'Tab') {
+            document.activeElement.blur();
+        }
+    });
+
+    // Prevent drag-and-drop
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Periodic check for dev tools (works in some browsers)
+    function checkDevTools() {
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        
+        if (heightThreshold || widthThreshold) {
+            // Dev tools might be open
+            document.body.innerHTML = '<h1 style="text-align:center;padding:50px;">Developer tools are not allowed on this page</h1>';
+            window.location.reload();
+        }
+    }
+    setInterval(checkDevTools, 1000);
+
+    // Override console methods
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
+    console.info = function() {};
+    console.debug = function() {};
+});
+</script>
+
+
+
+
+
 </body>
 </html>

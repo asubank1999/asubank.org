@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    document.body.style.transform = "scale(0.99";
-    document.body.style.overflow = "auto"; // Allow scrolling
-  });
-</script>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASU Hub Agreement</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>ASU Hub Disclaimer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4361ee;
             --primary-hover: #3a56d4;
             --danger: #ef233c;
             --danger-hover: #d90429;
+            --success: #2ecc71;
+            --success-hover: #27ae60;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
             --gray-600: #4b5563;
             --gray-800: #1f2937;
         }
@@ -34,7 +30,15 @@
             align-items: center;
             min-height: 100vh;
             color: var(--gray-800);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
         }
         
         .card {
@@ -44,67 +48,81 @@
             width: 90%;
             max-width: 420px;
             overflow: hidden;
-            transform: scale(0.95);
+            transform: translateY(20px) scale(0.98);
             opacity: 0;
-            animation: cardEntrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: cardEntrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
         }
         
         @keyframes cardEntrance {
             to {
-                transform: scale(1);
+                transform: translateY(0) scale(1);
                 opacity: 1;
             }
         }
         
         .card-header {
-            padding: 1.5rem;
+            padding: 1.75rem;
             background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
             color: white;
             text-align: center;
+            position: relative;
         }
         
         .logo {
-            font-weight: 600;
-            font-size: 1.5rem;
-            margin-bottom: 0.25rem;
+            font-weight: 700;
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
         }
         
         .card-content {
-            padding: 1.5rem;
+            padding: 2rem 1.75rem;
             text-align: center;
         }
         
         .card-content h3 {
-            font-weight: 600;
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            font-size: 1.375rem;
+            color: var(--gray-800);
         }
         
         .card-content p {
             margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-            line-height: 1.6;
+            font-size: 1rem;
+            line-height: 1.7;
             color: var(--gray-600);
+        }
+        
+        .card-content strong {
+            color: var(--gray-800);
+            font-weight: 600;
         }
         
         .card-footer {
             display: flex;
             gap: 1rem;
-            padding: 0 1.5rem 1.5rem;
+            padding: 0 1.75rem 1.75rem;
         }
         
         .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            padding: 0.875rem 1.5rem;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 600;
             width: 100%;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            border: none;
+            outline: none;
+        }
+        
+        .btn:focus {
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
         }
         
         .btn-outline {
@@ -116,11 +134,11 @@
         .btn-outline:hover {
             background-color: var(--gray-100);
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
         
         .btn-danger {
             background-color: var(--danger);
-            border: none;
             color: white;
             box-shadow: 0 4px 12px rgba(239, 35, 60, 0.25);
         }
@@ -133,7 +151,6 @@
         
         .btn-primary {
             background-color: var(--primary);
-            border: none;
             color: white;
             box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
         }
@@ -144,32 +161,47 @@
             box-shadow: 0 6px 16px rgba(67, 97, 238, 0.3);
         }
         
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.25);
+        }
+        
+        .btn-success:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(46, 204, 113, 0.3);
+        }
+        
         .created-by {
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.875rem;
             color: var(--gray-600);
-            padding: 1rem 0;
+            padding: 1.25rem 0;
             border-top: 1px solid var(--gray-200);
-            margin: 0 1.5rem;
+            margin: 0 1.75rem;
+            opacity: 0.8;
         }
         
         .whatsapp-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 0.5rem 1rem;
+            padding: 0.625rem 1.25rem;
             background-color: #25D366;
             color: white;
             border-radius: 8px;
             text-decoration: none;
-            font-weight: 500;
-            margin-top: 1rem;
-            transition: all 0.2s ease;
+            font-weight: 600;
+            margin-top: 0.75rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
         }
         
         .whatsapp-link:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            background-color: #22C35E;
         }
         
         /* Confirmation overlay */
@@ -187,17 +219,20 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
         }
         
         .confirmation-card {
             background: white;
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             border-radius: 16px;
             max-width: 400px;
             width: 90%;
             text-align: center;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
         
         .confirmation-overlay.active {
@@ -207,12 +242,39 @@
         
         .confirmation-overlay.active .confirmation-card {
             transform: scale(1);
+            opacity: 1;
         }
         
         .confirmation-buttons {
             display: flex;
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .confirmation-card h3 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.375rem;
+            color: var(--gray-800);
+        }
+        
+        .confirmation-card p {
+            margin-bottom: 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--gray-600);
+        }
+        
+        .warning-icon {
+            color: var(--danger);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .check-icon {
+            color: var(--success);
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -224,13 +286,13 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-6.29-13.38c-5.297 0-9.598 4.302-9.598 9.6 0 2.117.693 4.078 1.87 5.662L2.23 20.8l1.517-.437a9.568 9.568 0 0 0 4.57 1.166c5.297 0 9.6-4.301 9.6-9.599 0-5.298-4.303-9.6-9.6-9.6" fill="currentColor"/>
                 </svg>
-                WhatsApp Community
+                Join Our WhatsApp Community
             </a>
         </div>
         <div class="card-content">
-            <h3>Important Notice</h3>
-            <p>By proceeding, you acknowledge that the materials provided here are <strong>not verified academic resources</strong> and should not be considered a reliable source for your studies.</p>
-            <p>Use them at your own discretion.</p>
+            <h3>Important Disclaimer</h3>
+            <p>Before accessing these materials, please understand that <strong>these resources are not officially verified or endorsed by the university</strong>.</p>
+            <p>The content provided here is shared by students and may contain inaccuracies. <strong>Always cross-reference with official course materials</strong> and use these resources at your own discretion.</p>
         </div>
         <div class="card-footer">
             <button class="btn btn-outline" onclick="showConfirmation('decline')">
@@ -241,7 +303,7 @@
             </button>
             <button class="btn btn-primary" onclick="showConfirmation('agree')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5 13l4 4L19 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 I Understand
             </button>
@@ -254,6 +316,11 @@
     <!-- Confirmation Overlay -->
     <div class="confirmation-overlay" id="confirmationOverlay">
         <div class="confirmation-card">
+            <div id="confirmationIcon" class="warning-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <h3 id="confirmationTitle">Are you sure?</h3>
             <p id="confirmationMessage">You're about to leave this page.</p>
             <div class="confirmation-buttons">
@@ -270,20 +337,25 @@
             const title = document.getElementById('confirmationTitle');
             const message = document.getElementById('confirmationMessage');
             const confirmBtn = document.getElementById('confirmActionBtn');
+            const icon = document.getElementById('confirmationIcon');
             
             if (action === 'agree') {
                 title.textContent = "Proceed to Materials";
-                message.textContent = "You acknowledge these are unofficial resources. Continue?";
-                confirmBtn.className = "btn btn-primary";
+                message.textContent = "You acknowledge these are unofficial student-shared resources and may contain inaccuracies. Continue?";
+                confirmBtn.className = "btn btn-success";
                 confirmBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5 13l4 4L19 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg> Continue`;
                 confirmBtn.onclick = function() {
                     window.location.href = "subjects";
                 };
+                icon.innerHTML = `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>`;
+                icon.className = "check-icon";
             } else {
-                title.textContent = "Leave Page?";
-                message.textContent = "You'll be redirected away from this content.";
+                title.textContent = "Leave ASU Hub?";
+                message.textContent = "You'll be redirected away from these resources. Are you sure you want to leave?";
                 confirmBtn.className = "btn btn-danger";
                 confirmBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 18L18 6M6 6l12 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -292,6 +364,10 @@
                     window.location.href = "about:blank";
                     setTimeout(() => { window.close(); }, 100);
                 };
+                icon.innerHTML = `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>`;
+                icon.className = "warning-icon";
             }
             
             overlay.classList.add('active');
@@ -302,11 +378,73 @@
             document.getElementById('confirmationOverlay').classList.remove('active');
         }
         
-        // Animate card on load
+        // Smooth body fade in
         document.addEventListener('DOMContentLoaded', function() {
-            // Remove the scaling transformation from your original code
-            // as it's now handled by CSS animations
+            document.body.style.overflow = "auto";
         });
     </script>
+	
+<script>
+// Anti-keyboard shortcuts and code inspection script
+document.addEventListener('DOMContentLoaded', function() {
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+            (e.ctrlKey && e.key === 'u')) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Blur elements when tabbing (prevents keyboard navigation)
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'Tab') {
+            document.activeElement.blur();
+        }
+    });
+
+    // Prevent drag-and-drop
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Periodic check for dev tools (works in some browsers)
+    function checkDevTools() {
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        
+        if (heightThreshold || widthThreshold) {
+            // Dev tools might be open
+            document.body.innerHTML = '<h1 style="text-align:center;padding:50px;">Developer tools are not allowed on this page</h1>';
+            window.location.reload();
+        }
+    }
+    setInterval(checkDevTools, 1000);
+
+    // Override console methods
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
+    console.info = function() {};
+    console.debug = function() {};
+});
+</script>
+	
 </body>
 </html>
