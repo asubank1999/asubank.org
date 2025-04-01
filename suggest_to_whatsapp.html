@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU Test Bank | Share Materials</title>
+    <style>
+        :root {
+            --primary: #8C1D40; /* ASU maroon */
+            --secondary: #FFC627; /* ASU gold */
+            --text: #333333;
+            --background: #F5F5F5;
+            --card-bg: #FFFFFF;
+            --border: #E0E0E0;
+            --shadow: rgba(0,0,0,0.1);
+            --status-bg: #E8F5E9;
+            --status-text: #1B5E20;
+        }
+
+        [data-theme="dark"] {
+            --primary: #FFC627;
+            --secondary: #8C1D40;
+            --text: #E0E0E0;
+            --background: #121212;
+            --card-bg: #1E1E1E;
+            --border: #333333;
+            --shadow: rgba(0,0,0,0.3);
+            --status-bg: #1B5E20;
+            --status-text: #E8F5E9;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 8px;
+            margin-top: 30px;
+            font-size: 1.4rem;
+        }
+        
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+        }
+        
+        .rules {
+            background-color: var(--background);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .rules li {
+            margin-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 16px;
+            transition: border 0.3s;
+            min-height: 150px;
+            resize: vertical;
+            background-color: var(--card-bg);
+            color: var(--text);
+        }
+        
+        textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(140, 29, 64, 0.2);
+        }
+        
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+        
+        #status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .success {
+            background-color: var(--status-bg);
+            color: var(--status-text);
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .instructions {
+            background-color: var(--background);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .submit-btn {
+                max-width: 100%;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ASU Test Bank Portal</h1>
+            <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">🌙</span>
+                <span id="themeText">Dark Mode</span>
+            </button>
+        </header>
+        
+        <div class="card">
+            <h2>Share Study Materials</h2>
+            <p>Help your fellow students by contributing to our test bank collection!</p>
+            
+            <div class="instructions">
+                <h3>What to Share:</h3>
+                <ul>
+                    <li>Past exams or quizzes (with solutions if possible)</li>
+                    <li>Study guides or cheat sheets</li>
+                    <li>Practice problems with answers</li>
+                    <li>Professor-specific materials</li>
+                </ul>
+                <p><strong>Format:</strong> Please include course code (e.g. BIO 101), professor name, and semester if known.</p>
+            </div>
+            
+            <div class="rules">
+                <h3>Submission Guidelines</h3>
+                <ul>
+                    <li>Only share materials you're permitted to distribute</li>
+                    <li>Clearly label documents with course information</li>
+                    <li>Don't share current semester exams that might still be in use</li>
+                    <li>No spam or unrelated content</li>
+                    <li>Respect copyright and academic integrity policies</li>
+                </ul>
+            </div>
+
+            <form onsubmit="handleSubmit(this); return false;">
+                <div class="form-group">
+                    <label for="note">Describe what you're sharing:</label>
+                    <textarea id="note" name="note" required 
+                              placeholder="Example: [PHY 202] Dr. Smith - Fall 2023 Midterm Exam with solutions. I've attached a PDF scan..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact">How can we contact you? (optional):</label>
+                    <input type="text" id="contact" name="contact" 
+                           placeholder="Email, WhatsApp, or ASU ID"
+                           class="form-control">
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit Materials</button>
+            </form>
+
+            <p id="status"></p>
+        </div>
+        
+        <div class="card">
+            <h2>Request Materials</h2>
+            <p>Looking for specific test bank materials? Let us know what you need.</p>
+            <button class="submit-btn" onclick="window.location.href='mailto:necro144@yahoo.com?body=ASU%20Test%20Bank%20Request:%20'">Make a Request</button>
+        </div>
+    </div>
+
+    <script>
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeText = document.getElementById('themeText');
+      
+      // Check for saved theme preference or use preferred color scheme
+      const savedTheme = localStorage.getItem('theme') || 
+                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      
+      // Apply the saved theme
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeButton(savedTheme);
+      
+      themeToggle.addEventListener('click', () => {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          updateThemeButton(newTheme);
+      });
+      
+      function updateThemeButton(theme) {
+          if (theme === 'dark') {
+              themeIcon.textContent = '☀️';
+              themeText.textContent = 'Light Mode';
+          } else {
+              themeIcon.textContent = '🌙';
+              themeText.textContent = 'Dark Mode';
+          }
+      }
+      
+      // Form submission handler
+      function handleSubmit(form) {
+          const note = form.note.value;
+          const contact = form.contact.value || 'No contact provided';
+          const status = document.getElementById('status');
+          status.textContent = 'Preparing your submission...';
+          status.className = 'info';
+          
+          // Check if the description is too short
+          if (note.length < 20) {
+              status.textContent = 'Please provide more details (at least 20 characters) about the materials.';
+              status.className = '';
+              return false;
+          }
+
+          // Encode the message for URL
+          const message = `ASU Test Bank Submission:\n\n${note}\n\nContact: ${contact}`;
+          const encodedMessage = encodeURIComponent(message);
+          const phoneNumber = 'necro144@yahoo.com'; // Replace with your number
+          const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+          // Redirect to WhatsApp
+          window.open(whatsappUrl, '_blank');
+          
+          status.textContent = 'Thank you! Please check WhatsApp to complete your submission and attach any files.';
+          status.className = 'success';
+          form.note.value = '';
+          form.contact.value = '';
+          
+          return false;
+      }
+    </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.body.style.transform = "scale(2.1)";
+    document.body.style.transformOrigin = "0 0";
+    document.body.style.width = "46.77%";  // Adjusted for correct scaling
+    document.body.style.height = "76.67%"; // Adjusted for correct scaling
+    document.body.style.overflow = "auto"; // Allow scrolling
+  });
+</script>
+
+</body>
+</html>
