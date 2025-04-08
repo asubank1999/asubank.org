@@ -1,44 +1,165 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-  <style>
-    /* Stylish link design */
-    .back-link {
-      display: inline-block;
-      background-color: #4CAF50; /* Green background */
-      color: white;             /* White text */
-      text-decoration: none;    /* Remove underline */
-      font-size: 18px;          /* Adjust font size */
-      font-weight: bold;        /* Make text bold */
-      padding: 10px 20px;       /* Add padding */
-      border-radius: 25px;      /* Rounded corners */
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-      transition: all 0.3s ease; /* Smooth transition effect */
-    }
-
-    /* Hover effect */
-    .back-link:hover {
-      background-color: #45a049; /* Darker green on hover */
-      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Enhance shadow on hover */
-      transform: translateY(-3px); /* Slight lift on hover */
-    }
-  </style>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>العد التنازلي للأحداث</title>
-
-  <link rel="stylesheet" href="asu_date_style.css">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    h1, h2 {
+      margin: 0;
+    }
+    
+    main {
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+      background-color: white;
+    }
+    
+    th, td {
+      padding: 12px 15px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+      background-color: #3498db;
+      color: white;
+      font-weight: bold;
+    }
+    
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    
+    /* Date column specific */
+    td:first-child {
+      width: 150px; /* Wider date column */
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    
+    /* Countdown column */
+    td:last-child {
+      font-family: monospace;
+      color: #e74c3c;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #2c3e50;
+      color: white;
+      margin-top: 1rem;
+    }
+    
+    /* Stylish link design */
+    .back-link {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      margin: 1rem 0;
+    }
+    
+    /* Hover effect */
+    .back-link:hover {
+      background-color: #45a049;
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+      transform: translateY(-3px);
+    }
+    
+    /* Dark mode toggle button */
+    #mode-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    
+    /* Dark mode styles */
+    .dark-mode {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+    
+    .dark-mode table {
+      background-color: #1e1e1e;
+      box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+    }
+    
+    .dark-mode th {
+      background-color: #2980b9;
+    }
+    
+    .dark-mode tr:hover {
+      background-color: #2a2a2a;
+    }
+    
+    .dark-mode td {
+      border-bottom: 1px solid #444;
+    }
+    
+    .dark-mode td:first-child {
+      color: #ecf0f1;
+    }
+    
+    .dark-mode header, .dark-mode footer {
+      background-color: #1a1a1a;
+    }
+  </style>
 </head>
 <body>
+  <button id="mode-toggle">تبديل الوضع</button>
+  
   <header>
     <h1>العد التنازلي للأحداث الجامعية</h1>
   </header>
+  
   <main>
+    <center>
+      <a href="index" class="back-link">ASU Bank👈🏽 </a>
+    </center>
+    
     <section id="events-table">
       <h2>جدول الأحداث</h2>
-<body><center>
-  <a href="index" class="back-link">ASU Bank👈🏽 </a>
-</body></center>
       <table>
         <thead>
           <tr>
@@ -54,62 +175,46 @@
       </table>
     </section>
   </main>
+  
   <footer>
     <p>جميع الحقوق محفوظة &copy; 2025</p>
   </footer>
+  
   <script src="asu_date_script.js"></script>
-</body>
-<script>
+  
+  <script>
+    // Dark mode toggle functionality
     document.getElementById('mode-toggle').addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
     });
 
+    // Check for saved theme preference or use system preference
     window.addEventListener('DOMContentLoaded', () => {
-        if (localStorage.getItem('theme') === 'dark' || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.body.classList.add('dark-mode');
-        }
+      if (localStorage.getItem('theme') === 'dark' || 
+          (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.body.classList.add('dark-mode');
+      }
     });
-</script>
-    <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault(); // Disables right-click context menu
-        });
 
-        document.addEventListener('copy', function(e) {
-            e.preventDefault(); // Disables copy action
-        });
+    // Security measures
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
 
-        document.addEventListener('paste', function(e) {
-            e.preventDefault(); // Disables paste action
-        });
+    document.addEventListener('copy', function(e) {
+      e.preventDefault();
+    });
 
-        document.addEventListener('keydown', function(e) {
-            // Disables common keyboard shortcuts
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
-                e.preventDefault();
-            }
-        });
-    </script>
+    document.addEventListener('paste', function(e) {
+      e.preventDefault();
+    });
 
-    <script>
-        function copyText() {
-            // Get the text field
-            const copyText = document.getElementById("textToCopy");
-            // Select the text
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // For mobile devices
-
-            // Copy the text inside the text field
-            navigator.clipboard.writeText(copyText.value).then(() => {
-                // Display a success message
-                document.getElementById("message").textContent = "You have my CliQ number! Any amount is appreciated - Name starts with 'qusai'";
-            }).catch(err => {
-                // Display an error message
-                console.error('Could not copy text: ', err);
-                document.getElementById("message").textContent = "Failed to copy text.";
-            });
-        }
-    </script>
-
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
 </html>
