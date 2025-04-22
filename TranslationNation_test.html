@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Nation - Academic Translation Platform</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--secondary-color);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .auth-buttons .btn {
+            margin-left: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-login {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+        
+        .btn-login:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .btn-signup {
+            background-color: var(--secondary-color);
+            color: white;
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .btn-signup:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn-hero {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-hero:hover {
+            background-color: #c0392b;
+        }
+        
+        .features {
+            padding: 4rem 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: var(--light-color);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .registration {
+            padding: 4rem 0;
+            background-color: #f9f9f9;
+        }
+        
+        .registration-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-submit {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .form-submit:hover {
+            background-color: #2980b9;
+        }
+        
+        .tabs {
+            margin-bottom: 2rem;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--dark-color);
+            position: relative;
+        }
+        
+        .tab-btn.active {
+            color: var(--secondary-color);
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 2rem 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .faq-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-answer {
+            padding-top: 0.5rem;
+            display: none;
+        }
+        
+        .faq-answer.show {
+            display: block;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-column ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin: 1rem 0;
+                justify-content: center;
+            }
+            
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                text-align: left;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .tab-btn.active::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">Translation<span>Nation</span></a>
+                <nav>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#register">Register</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#faq">FAQs</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-login" id="login-btn">Login</a>
+                    <a href="#" class="btn btn-signup" id="signup-btn">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Bridging Academic Worlds Through Translation</h1>
+            <p>Join thousands of universities, professors, and students collaborating to break language barriers in academic research and education.</p>
+            <a href="#register" class="btn-hero">Join Now</a>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Join Translation Nation?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Global Academic Network</h3>
+                    <p>Connect with universities, professors, and students from around the world to collaborate on translation projects.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Knowledge Sharing</h3>
+                    <p>Access and contribute to a growing repository of academic translations across all disciplines.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Quality Assurance</h3>
+                    <p>Our peer-review system ensures translations maintain academic integrity and accuracy.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3>Collaboration Tools</h3>
+                    <p>Specialized tools for academic teams to work together on complex translation projects.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Impact Analytics</h3>
+                    <p>Track how your translations are being used and cited in academic work worldwide.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Recognition</h3>
+                    <p>Earn credentials and recognition for your contributions to academic translation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="registration" id="register">
+        <div class="container">
+            <h2 class="section-title">Join Our Academic Translation Community</h2>
+            <div class="tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="university">University</button>
+                    <button class="tab-btn" data-tab="professor">Professor</button>
+                    <button class="tab-btn" data-tab="student">Student</button>
+                </div>
+                <div class="tab-content active" id="university-tab">
+                    <div class="registration-form">
+                        <form id="university-form">
+                            <div class="form-group">
+                                <label for="uni-name">University Name</label>
+                                <input type="text" id="uni-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="uni-country">Country</label>
+                                <input type="text" id="uni-country" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="uni-contact">Primary Contact Person</label>
+                                <input type="text" id="uni-contact" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="uni-email">Official Email</label>
+                                <input type="email" id="uni-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="uni-departments">Departments Interested (select all that apply)</label>
+                                <select id="uni-departments" multiple>
+                                    <option value="humanities">Humanities</option>
+                                    <option value="sciences">Natural Sciences</option>
+                                    <option value="social">Social Sciences</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="medical">Medical</option>
+                                    <option value="arts">Arts</option>
+                                    <option value="business">Business</option>
+                                    <option value="law">Law</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="uni-languages">Languages of Interest</label>
+                                <input type="text" id="uni-languages" placeholder="e.g., Spanish, Mandarin, Arabic">
+                            </div>
+                            <button type="submit" class="form-submit">Register University</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="tab-content" id="professor-tab">
+                    <div class="registration-form">
+                        <form id="professor-form">
+                            <div class="form-group">
+                                <label for="prof-name">Full Name</label>
+                                <input type="text" id="prof-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prof-email">Academic Email</label>
+                                <input type="email" id="prof-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prof-uni">University Affiliation</label>
+                                <input type="text" id="prof-uni" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prof-dept">Department</label>
+                                <input type="text" id="prof-dept" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prof-position">Position</label>
+                                <input type="text" id="prof-position" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prof-languages">Languages You Can Translate</label>
+                                <input type="text" id="prof-languages" placeholder="List languages and proficiency level">
+                            </div>
+                            <div class="form-group">
+                                <label for="prof-expertise">Areas of Expertise</label>
+                                <textarea id="prof-expertise" placeholder="List your academic specialties"></textarea>
+                            </div>
+                            <button type="submit" class="form-submit">Register as Professor</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="tab-content" id="student-tab">
+                    <div class="registration-form">
+                        <form id="student-form">
+                            <div class="form-group">
+                                <label for="student-name">Full Name</label>
+                                <input type="text" id="student-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="student-email">Academic Email</label>
+                                <input type="email" id="student-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="student-uni">University</label>
+                                <input type="text" id="student-uni" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="student-major">Major/Field of Study</label>
+                                <input type="text" id="student-major" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="student-level">Academic Level</label>
+                                <select id="student-level">
+                                    <option value="undergrad">Undergraduate</option>
+                                    <option value="masters">Master's</option>
+                                    <option value="phd">PhD</option>
+                                    <option value="postdoc">Postdoctoral</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="student-languages">Languages You Can Translate</label>
+                                <input type="text" id="student-languages" placeholder="List languages and proficiency level">
+                            </div>
+                            <div class="form-group">
+                                <label for="student-interest">Areas of Academic Interest</label>
+                                <textarea id="student-interest" placeholder="What subjects are you interested in translating?"></textarea>
+                            </div>
+                            <button type="submit" class="form-submit">Register as Student</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">About Translation Nation</h2>
+            <div class="tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="mission">Our Mission</button>
+                    <button class="tab-btn" data-tab="team">Team</button>
+                    <button class="tab-btn" data-tab="partners">Partners</button>
+                    <button class="tab-btn" data-tab="tos">Terms of Service</button>
+                </div>
+                <div class="tab-content active" id="mission-tab">
+                    <h3>Breaking Language Barriers in Academia</h3>
+                    <p>Translation Nation was founded in 2023 with the goal of creating a global network of academic institutions and individuals dedicated to making knowledge accessible across language barriers.</p>
+                    <p>We believe that language should never be an obstacle to the dissemination of academic knowledge and research. Our platform brings together universities, professors, and students to collaboratively translate academic materials while maintaining the highest standards of accuracy and integrity.</p>
+                    <p>Our vision is a world where any student or researcher can access academic works in their native language, and where language skills within academic communities are leveraged for the greater good of global scholarship.</p>
+                </div>
+                <div class="tab-content" id="team-tab">
+                    <h3>Our Academic Leadership</h3>
+                    <p>Translation Nation is led by a team of academics, linguists, and technologists committed to improving access to knowledge worldwide.</p>
+                    <p><strong>Dr. Elena Rodriguez</strong> - Founder and CEO, former Professor of Linguistics at Harvard University</p>
+                    <p><strong>Prof. James Chen</strong> - Chief Academic Officer, Dean of Translation Studies at Oxford</p>
+                    <p><strong>Dr. Amina Bah</strong> - Director of African Languages Initiative</p>
+                    <p><strong>Prof. Mikhail Petrov</strong> - Head of Slavic Languages Division</p>
+                    <p><strong>Dr. Li Wei</strong> - Asian Languages Coordinator</p>
+                    <p>Our team is supported by an international advisory board of university leaders and language experts.</p>
+                </div>
+                <div class="tab-content" id="partners-tab">
+                    <h3>Academic Partners Worldwide</h3>
+                    <p>Translation Nation collaborates with leading universities and academic organizations around the globe:</p>
+                    <ul>
+                        <li>Harvard University - Department of Linguistics</li>
+                        <li>University of Oxford - Faculty of Medieval and Modern Languages</li>
+                        <li>Sorbonne Université - Department of Translation</li>
+                        <li>Peking University - School of Foreign Languages</li>
+                        <li>University of Cape Town - African Languages Department</li>
+                        <li>University of São Paulo - Translation Studies Program</li>
+                        <li>National University of Singapore - Centre for Language Studies</li>
+                    </ul>
+                    <p>We are constantly expanding our network of partner institutions. If your university is interested in joining, please contact us.</p>
+                </div>
+                <div class="tab-content" id="tos-tab">
+                    <h3>Terms of Service</h3>
+                    <p>Last Updated: January 2024</p>
+                    <h4>1. Acceptance of Terms</h4>
+                    <p>By accessing or using the Translation Nation platform, you agree to be bound by these Terms of Service.</p>
+                    
+                    <h4>2. Description of Service</h4>
+                    <p>Translation Nation provides a platform for academic translation collaboration among registered universities, professors, and students.</p>
+                    
+                    <h4>3. User Accounts</h4>
+                    <p>You must register with your academic email and provide accurate information. Students must be currently enrolled at a recognized academic institution.</p>
+                    
+                    <h4>4. Academic Integrity</h4>
+                    <p>All translations must maintain the original meaning and academic rigor of the source material. Plagiarism or misrepresentation is strictly prohibited.</p>
+                    
+                    <h4>5. Intellectual Property</h4>
+                    <p>Original authors retain copyright to their works. Translated works are shared under Creative Commons Attribution-NonCommercial license unless otherwise specified.</p>
+                    
+                    <h4>6. Privacy Policy</h4>
+                    <p>We collect academic information necessary for verification and collaboration. Personal data is protected according to our Privacy Policy.</p>
+                    
+                    <h4>7. Termination</h4>
+                    <p>We reserve the right to terminate accounts that violate these terms or engage in academic misconduct.</p>
+                    
+                    <h4>8. Modifications</h4>
+                    <p>We may modify these terms with notice to registered users.</p>
+                    
+                    <p>For the complete Terms of Service document, please contact legal@translationnation.org</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq" id="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Who can join Translation Nation?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Translation Nation is open to:</p>
+                        <ul>
+                            <li>Accredited universities and academic institutions</li>
+                            <li>Professors and academic staff with verified university affiliation</li>
+                            <li>Currently enrolled students at recognized academic institutions</li>
+                        </ul>
+                        <p>All members must register with their academic email addresses for verification.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How does the translation process work?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our platform follows a rigorous academic translation process:</p>
+                        <ol>
+                            <li>Source material is uploaded by authorized academic users</li>
+                            <li>Translation projects are created and assigned to qualified translators</li>
+                            <li>Translations undergo peer review by subject matter experts</li>
+                            <li>Final versions are approved by original authors when possible</li>
+                            <li>Completed translations are made available to the academic community</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is there a cost to use Translation Nation?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Basic access to Translation Nation is free for individual academics and students. University partnerships may involve institutional subscriptions that support platform maintenance and development.</p>
+                        <p>We are committed to keeping core translation services free to promote open access to academic knowledge.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How are translation quality and accuracy maintained?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We employ multiple quality control measures:</p>
+                        <ul>
+                            <li>Translators must demonstrate language proficiency and subject matter expertise</li>
+                            <li>All translations undergo peer review by at least two qualified reviewers</li>
+                            <li>Specialized terminology databases ensure consistency</li>
+                            <li>Original authors are invited to verify translations when possible</li>
+                            <li>Community feedback systems help identify and correct issues</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I get academic credit for my translation work?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! Translation Nation provides:</p>
+                        <ul>
+                            <li>Official certificates for completed translations that can be included in academic portfolios</li>
+                            <li>Detailed records of your contributions for CVs and promotion files</li>
+                            <li>The ability to list translations in your academic publications</li>
+                            <li>Partnerships with universities that may offer course credit for significant translation projects</li>
+                        </ul>
+                        <p>Many universities recognize translation work as legitimate academic service.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What languages does Translation Nation support?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We support all academic languages, with particular focus on:</p>
+                        <ul>
+                            <li>Major world languages (English, Spanish, French, Arabic, Chinese, Russian, etc.)</li>
+                            <li>Scholarly languages important for specific disciplines (Latin, Ancient Greek, Sanskrit, etc.)</li>
+                            <li>Indigenous and less-commonly-taught languages with academic traditions</li>
+                        </ul>
+                        <p>Our platform is constantly expanding to include more language pairs based on community needs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Translation Nation</h3>
+                    <p>Bridging academic worlds through collaborative translation.</p>
+                    <p>Academic Integrity • Global Collaboration • Knowledge Accessibility</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#register">Register</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#faq">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Academic Translation Guidelines</a></li>
+                        <li><a href="#">Style Manuals</a></li>
+                        <li><a href="#">Terminology Databases</a></li>
+                        <li><a href="#">Research on Translation Pedagogy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li>Email: academia@translationnation.org</li>
+                        <li>Phone: +1 (555) 123-4567</li>
+                        <li>Address: 123 Academic Way, Cambridge, MA 02138</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 Translation Nation. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Academic Login</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Academic Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="form-submit">Login</button>
+                </div>
+                <p>Don't have an account? <a href="#" id="switch-to-signup">Sign up here</a></p>
+                <p><a href="#">Forgot password?</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Academic Registration</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-role">I am a:</label>
+                    <select id="signup-role" required>
+                        <option value="">Select your role</option>
+                        <option value="professor">Professor/Academic Staff</option>
+                        <option value="student">Student</option>
+                        <option value="university">University Administrator</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Academic Email</label>
+                    <input type="email" id="signup-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Create Password</label>
+                    <input type="password" id="signup-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm">Confirm Password</label>
+                    <input type="password" id="signup-confirm" required>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="signup-tos" required>
+                    <label for="signup-tos">I agree to the <a href="#tos">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="form-submit">Create Account</button>
+                </div>
+                <p>Already have an account? <a href="#" id="switch-to-login">Login here</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                const tabContainer = btn.closest('.tabs');
+                
+                // Update active tab button
+                tabContainer.querySelectorAll('.tab-btn').forEach(tb => {
+                    tb.classList.remove('active');
+                });
+                btn.classList.add('active');
+                
+                // Update active tab content
+                tabContainer.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const isOpen = answer.classList.contains('show');
+                
+                // Close all answers first
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.classList.remove('show');
+                    ans.previousElementSibling.querySelector('span:last-child').textContent = '+';
+                });
+                
+                // Open clicked answer if it was closed
+                if (!isOpen) {
+                    answer.classList.add('show');
+                    question.querySelector('span:last-child').textContent = '-';
+                }
+            });
+        });
+
+        // Modal functionality
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const loginModal = document.getElementById('login-modal');
+        const signupModal = document.getElementById('signup-modal');
+        const closeModals = document.querySelectorAll('.close-modal');
+        const switchToSignup = document.getElementById('switch-to-signup');
+        const switchToLogin = document.getElementById('switch-to-login');
+        
+        // Open modals
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        signupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Close modals
+        closeModals.forEach(btn => {
+            btn.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                signupModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+        });
+        
+        // Close when clicking outside modal
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            if (e.target === signupModal) {
+                signupModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Switch between login and signup
+        switchToSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            signupModal.style.display = 'flex';
+        });
+        
+        switchToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+        });
+
+        // Form submissions
+        document.getElementById('university-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('University registration submitted! We will contact you shortly for verification.');
+            // In a real app, you would send this data to your server
+        });
+        
+        document.getElementById('professor-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Professor registration submitted! Please check your academic email for verification.');
+            // In a real app, you would send this data to your server
+        });
+        
+        document.getElementById('student-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Student registration submitted! Please check your academic email for verification.');
+            // In a real app, you would send this data to your server
+        });
+        
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Login functionality would be implemented here in a real application.');
+            loginModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        document.getElementById('signup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Account created! Please check your email for verification.');
+            signupModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+    <style>
+        /* Style for the popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Overlay background */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Close button style */
+        .close-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content -->
+    <h1>Welcome to the Sample Page</h1>
+    <p>This is a placeholder for the main content of the page.</p>
+
+    <!-- Popup Message -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <p><strong>Notice:</strong> This is only a sample page and might be edited by the authorities soon. Be advised that our database is not yet online until further notice.</p>
+        <button class="close-btn" id="closePopup">Close</button>
+    </div>
+
+    <script>
+        // JavaScript to handle popup functionality
+        document.addEventListener("DOMContentLoaded", function () {
+            const popup = document.getElementById("popup");
+            const overlay = document.getElementById("overlay");
+            const closeBtn = document.getElementById("closePopup");
+
+            // Show popup and overlay on page load
+            popup.style.display = "block";
+            overlay.style.display = "block";
+
+            // Close popup and overlay when the close button is clicked
+            closeBtn.addEventListener("click", function () {
+                popup.style.display = "none";
+                overlay.style.display = "none";
+            });
+        });
+    </script>
+</body>
+</html>
