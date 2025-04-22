@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Closed</title>
+    <style>
+        /* Styling for the page */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #d9534f;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .note {
+            font-style: italic;
+            color: #777;
+            font-size: 14px;
+        }
+        /* Gradient underline for headings */
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #d9534f, #ff9800);
+            margin: 10px auto;
+        }
+        /* Hover effect on container */
+        .container:hover {
+            transform: scale(1.02);
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+    <script>
+        // Disable right-click
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            alert('Right-click is disabled on this page.');
+        });
+
+        // Disable text selection
+        document.addEventListener('selectstart', function (e) {
+            e.preventDefault();
+        });
+
+        // Disable copy and paste
+        document.addEventListener('copy', function (e) {
+            e.preventDefault();
+        });
+        document.addEventListener('cut', function (e) {
+            e.preventDefault();
+        });
+        document.addEventListener('paste', function (e) {
+            e.preventDefault();
+        });
+
+        // Block F12 and developer tools
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                (e.ctrlKey && e.shiftKey && e.key === 'C') || 
+                (e.ctrlKey && e.shiftKey && e.key === 'J')) {
+                e.preventDefault();
+                alert('Developer tools are disabled on this page.');
+            }
+        });
+
+        // Block dragging images or text
+        document.addEventListener('dragstart', function (e) {
+            e.preventDefault();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>This Page Has Been Closed</h1>
+        <p>
+            The author of this website has decided to close this page and will no longer produce summaries or any related content from this lecture. This decision was made due to students' abusive behavior toward the owner, including disrespectful actions such as falsely reporting incidents to the deanship that did not occur during the lecture. Such actions have caused significant harm to the owner.
+        </p>
+        <div class="note">
+            Thank you for your understanding.
+        </div>
+    </div>
+</body>
+</html>
