@@ -685,5 +685,116 @@ document.addEventListener('DOMContentLoaded', function() {
     console.debug = function() {};
 });
 </script>
+<!-- Website Update Popup -->
+<div id="update-popup" class="update-popup">
+  <div class="update-popup-content">
+    <span class="update-close" id="update-close">&times;</span>
+    <h3>🚀 Upcoming Update</h3>
+    <p>
+      We're updating our website on <strong>January 1, 2026</strong>!  
+      Visit our <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank">WhatsApp Community</a>  
+      for more info and support.
+    </p>
+  </div>
+</div>
+
+<style>
+/* Floating Popup Base */
+.update-popup {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  background: rgba(20, 20, 25, 0.85);
+  color: #fff;
+  padding: 18px 22px;
+  border-radius: 14px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+  font-family: "Segoe UI", sans-serif;
+  width: 290px;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.6s ease;
+  z-index: 10000;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Visible State */
+.update-popup.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Popup Content */
+.update-popup-content {
+  position: relative;
+}
+
+.update-popup h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  color: #00e6ff;
+}
+
+.update-popup p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.update-popup a {
+  color: #00e6ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.update-popup a:hover {
+  text-decoration: underline;
+}
+
+/* Close Button */
+.update-close {
+  position: absolute;
+  top: -8px;
+  right: 4px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s ease;
+}
+
+.update-close:hover {
+  color: #fff;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .update-popup {
+    width: 85%;
+    top: 15px;
+    right: 7%;
+    padding: 16px 18px;
+  }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const popup = document.getElementById("update-popup");
+  const closeBtn = document.getElementById("update-close");
+
+  // Show popup after a brief delay
+  setTimeout(() => popup.classList.add("show"), 800);
+
+  // Auto-hide after 10 seconds
+  setTimeout(() => popup.classList.remove("show"), 10800);
+
+  // Manual close
+  closeBtn.addEventListener("click", () => popup.classList.remove("show"));
+});
+</script>
+
+
 </body>
 </html>
