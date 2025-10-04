@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU E-Library Hub - Browse More Categories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B0000; /* Dark red */
+            --secondary: #FF6B6B; /* Bright red */
+            --accent: #FFD700; /* Gold accent */
+            --light: #F5F5F5; /* Light background */
+            --dark: #1A0000; /* Very dark red */
+            --text-light: #333;
+            --text-dark: #E8E8E8;
+            --card-light: #FFFFFF;
+            --card-dark: #2A0F0F; /* Dark red card */
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --hover-shadow: 0 8px 24px rgba(139, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text-light);
+            transition: var(--transition);
+            line-height: 1.6;
+            font-size: 16px;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 25px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 0 0 15px 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            height: 70px;
+            margin-right: 15px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        /* Navigation */
+        nav {
+            margin: 20px 0;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style: none;
+            gap: 12px;
+        }
+
+        .nav-item a, .nav-item button {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .nav-item a:hover, .nav-item button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Subjects Content */
+        .subjects-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--card-light);
+            border-radius: 12px;
+            padding: 25px 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 180px;
+            border: 1px solid rgba(139, 0, 0, 0.1);
+        }
+
+        body.dark-mode .card {
+            background-color: var(--card-dark);
+            border: 1px solid rgba(255, 107, 107, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--secondary);
+        }
+
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .card-icon img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        body.dark-mode .card-title {
+            color: var(--secondary);
+        }
+
+        /* Category Groups */
+        .category-group {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+            display: inline-block;
+        }
+
+        body.dark-mode .category-title {
+            color: var(--secondary);
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: 2px solid var(--primary);
+            font-size: 1.1rem;
+            outline: none;
+            transition: var(--transition);
+            background-color: var(--card-light);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .search-bar {
+            background-color: var(--card-dark);
+            color: var(--text-dark);
+            border-color: var(--secondary);
+        }
+
+        .search-bar:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Quick Access Section */
+        .quick-access {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            gap: 20px;
+        }
+
+        .quick-access-card {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .quick-access-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .quick-access-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .quick-access-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            transition: var(--transition);
+            z-index: 100;
+            text-decoration: none;
+        }
+
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 50px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(139, 0, 0, 0.1);
+        }
+
+        body.dark-mode footer {
+            color: #aaa;
+            border-top: 1px solid rgba(255, 107, 107, 0.1);
+        }
+
+        /* Desktop-specific improvements */
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 40px;
+            }
+
+            header {
+                padding: 30px 0;
+            }
+
+            .logo {
+                height: 80px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-list {
+                gap: 15px;
+            }
+
+            .nav-item a, .nav-item button {
+                padding: 12px 24px;
+                font-size: 1.1rem;
+            }
+
+            .subjects-content {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 30px;
+            }
+
+            .card {
+                padding: 30px 25px;
+                height: 200px;
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+            }
+
+            .card-title {
+                font-size: 1.4rem;
+            }
+
+            .quick-access {
+                margin: 40px 0;
+            }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 767px) {
+            .quick-access {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+
+            .logo {
+                height: 50px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .nav-item a, .nav-item button {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+
+            .card {
+                padding: 20px 15px;
+                height: 160px;
+            }
+
+            .card-icon {
+                font-size: 1.8rem;
+            }
+
+            .card-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU Logo" class="logo">
+                <h1>ASU E-Library Hub</h1>
+            </div>
+            
+            <nav>
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="indexuserportal"><i class="fas fa-home"></i> Home</a></li>
+                    <li class="nav-item"><a href="uni_tos"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+                    <li class="nav-item"><a href="https://my.asu.edu.jo" target="_blank"><i class="fas fa-user-circle"></i> MY ASU</a></li>
+                    <li class="nav-item"><a href="importantlinks"><i class="fas fa-link"></i> Important Links</a></li>
+                    <li class="nav-item"><a href="data\thankslist"><i class="fas fa-handshake"></i> Contributors</a></li>
+                    <li class="nav-item"><button id="mode-toggle"><i class="fas fa-sun"></i></button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search for subjects, courses, or resources...">
+        </div>
+
+        <!-- Quick Access Section -->
+        <div class="quick-access">
+            <a href="mostwanted" class="quick-access-card">
+                <i class="fas fa-star"></i>
+                <h3>Most Wanted Files</h3>
+                <p>الأكثر طلبا</p>
+            </a>
+            <a href="summaries" class="quick-access-card">
+                <i class="fas fa-book-open"></i>
+                <h3>Summaries</h3>
+                <p>الملخصات</p>
+            </a>
+            <a href="placement" class="quick-access-card">
+                <i class="fas fa-file-alt"></i>
+                <h3>Placement Tests</h3>
+                <p>امتحانات المستوى</p>
+            </a>
+        </div>
+
+        <!-- Subjects Content -->
+        <div class="category-group">
+            <h2 class="category-title">Core Subjects</h2>
+            <div class="subjects-content">
+                <a href="english" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="card-title">English Literature / Translation</h3>
+                </a>
+                
+                <a href="mathematics" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-ruler"></i>
+                    </div>
+                    <h3 class="card-title">Mathematics and Statistics</h3>
+                </a>
+                
+                <a href="calculus" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3 class="card-title">All Calculus</h3>
+                </a>
+                
+                <a href="arabicliterature" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <h3 class="card-title">Arabic Literature</h3>
+                    <p>الأدب العربي</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-group">
+            <h2 class="category-title">Science & Engineering</h2>
+            <div class="subjects-content">
+                <a href="it" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3 class="card-title">Information Technology</h3>
+                </a>
+                
+                <a href="engineering" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="card-title">Engineering</h3>
+                    <p>الهندسة</p>
+                </a>
+                
+                <a href="chemical" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <h3 class="card-title">Chemical Engineering</h3>
+                </a>
+                
+                <a href="electrical" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="card-title">Electrical Engineering</h3>
+                </a>
+                
+                <a href="industrial" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3 class="card-title">Industrial Engineering</h3>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-group">
+            <h2 class="category-title">Health Sciences</h2>
+            <div class="subjects-content">
+                <a href="medical" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h3 class="card-title">Health Sciences</h3>
+                </a>
+                
+                <a href="pharmacy" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-prescription-bottle-alt"></i>
+                    </div>
+                    <h3 class="card-title">Pharmacy</h3>
+                </a>
+                
+                <a href="dentistry" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-tooth"></i>
+                    </div>
+                    <h3 class="card-title">Dentistry</h3>
+                </a>
+                
+                <a href="nursing" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-user-nurse"></i>
+                    </div>
+                    <h3 class="card-title">Nursing</h3>
+                </a>
+                
+                <a href="biology" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-dna"></i>
+                    </div>
+                    <h3 class="card-title">Biology</h3>
+                </a>
+                
+                <a href="biochemistry" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3 class="card-title">Biochemistry</h3>
+                </a>
+                
+                <a href="physiology" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3 class="card-title">Physiology</h3>
+                </a>
+                
+                <a href="lab_related" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3 class="card-title">Lab Materials</h3>
+                    <p>المختبرات</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-group">
+            <h2 class="category-title">Business & Humanities</h2>
+            <div class="subjects-content">
+                <a href="business" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="card-title">Business</h3>
+                    <p>الأعمال</p>
+                </a>
+                
+                <a href="artshumanities" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3 class="card-title">Arts and Humanities</h3>
+                </a>
+                
+                <a href="hanafi" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h3 class="card-title">Shariah</h3>
+                    <p>الشريعة</p>
+                </a>
+                
+                <a href="demography" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="card-title">Demography</h3>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-group">
+            <h2 class="category-title">Additional Resources</h2>
+            <div class="subjects-content">
+                <a href="presentations" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <h3 class="card-title">Presentations</h3>
+                </a>
+                
+                <a href="https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing" class="card" target="_blank">
+                    <div class="card-icon">
+                        <img src="pin.png" alt="Website Icon">
+                    </div>
+                    <h3 class="card-title">Study Plans</h3>
+                    <p>الخطة الدراسية</p>
+                </a>
+                
+                <a href="https://drive.google.com/file/d/1QEVGiaq_ZFYZAp1RUM6gdofe0-qn5HWD/view?usp=drive_link" class="card" target="_blank">
+                    <div class="card-icon">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <h3 class="card-title">Bus Times</h3>
+                    <p>مواعيد المواصلات</p>
+                </a>
+                
+                <a href="others" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-scroll"></i>
+                    </div>
+                    <h3 class="card-title">Elective Courses / Other</h3>
+                </a>
+                
+                <a href="unarranged" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="card-title">UnArranged - Others</h3>
+                </a>
+                
+                <a href="pass_protected_admin_sample" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="card-title">TranslationNation (Passworded)</h3>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="whatsapp-button" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <footer>
+        <div class="container">
+            <p>ASU E-Library Hub &copy; 2023 | Providing resources for ASU students</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dark mode toggle
+        document.getElementById('mode-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.querySelector('#mode-toggle i');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Check for saved theme preference
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark' || 
+                (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-mode');
+                const icon = document.querySelector('#mode-toggle i');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+            
+            // Add search functionality
+            const searchBar = document.querySelector('.search-bar');
+            const cards = document.querySelectorAll('.card');
+            
+            searchBar.addEventListener('input', () => {
+                const searchTerm = searchBar.value.toLowerCase();
+                
+                cards.forEach(card => {
+                    const title = card.querySelector('.card-title').textContent.toLowerCase();
+                    const description = card.textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
