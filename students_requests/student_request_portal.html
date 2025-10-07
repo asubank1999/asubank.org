@@ -209,11 +209,11 @@
         window.location.href = url;
       }, 500); // match CSS transition time
     }
+// === BUTTON LOGIC ===
+document.getElementById('yesBtn').addEventListener('click', () => {
+  window.open("https://script.google.com/macros/s/AKfycbyKU-gQNsslbbfUsl8pJTeBej8NPMPV0GKamRrli650ck2c-5zX5wopeFPzlITocQcNtg/exec", "_blank"); // Opens link in a new tab
+});
 
-    // === BUTTON LOGIC ===
-    document.getElementById('yesBtn').addEventListener('click', () => {
-      fadeRedirect("https://script.google.com/macros/s/AKfycbyKU-gQNsslbbfUsl8pJTeBej8NPMPV0GKamRrli650ck2c-5zX5wopeFPzlITocQcNtg/exec"); // Replace with real payment page
-    });
     document.getElementById('noBtn').addEventListener('click', () => {
       fadeRedirect("index.html");
     });
