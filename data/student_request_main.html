@@ -467,6 +467,8 @@
       method.classList.add('selected');
     });
   });
+</script>
+<script>
 
   // ==========================
   // File Upload UI
@@ -566,7 +568,14 @@
       submitBtn.innerHTML = originalText;
       submitBtn.disabled = false;
     }
-  });
+if (file.size > 25 * 1024 * 1024) {
+  uploadStatus.textContent = 'File too large! Max 25 MB for Discord.';
+  uploadStatus.style.color = 'red';
+  this.value = '';
+  return;
+	}
+
+ });
 </script>
 </body>
 </html>
