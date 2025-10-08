@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    document.body.style.transform = "scale(2.1)";
-    document.body.style.transformOrigin = "0 0";
-    document.body.style.width = "46.77%";  // Adjusted for correct scaling
-    document.body.style.height = "76.67%"; // Adjusted for correct scaling
     document.body.style.overflow = "auto"; // Allow scrolling
   });
 </script>
@@ -182,23 +178,25 @@
     </div>
   </div>
 
-  <script>
-    const RATING_PAGE_URL = "rating";
+<script>
+  const RATING_PAGE_URL = "rating"; // relative link to your rating page (e.g., /rating.html)
 
-    document.getElementById('continueBtn').addEventListener('click', () => {
-      const btn = document.getElementById('continueBtn');
-      btn.disabled = true;
-      btn.textContent = 'Loading...';
-      setTimeout(() => {
-        window.open(RATING_PAGE_URL, '_blank');
-        btn.disabled = false;
-        btn.textContent = 'Continue →';
-      }, 600);
-    });
+  const continueBtn = document.getElementById('continueBtn');
+  const backBtn = document.getElementById('backBtn');
 
-    document.getElementById('backBtn').addEventListener('click', () => {
-      window.location.href = 'https://asubank.xyz';
-    });
-  </script>
+  continueBtn.addEventListener('click', () => {
+    continueBtn.disabled = true;
+    continueBtn.textContent = 'Loading...';
+    setTimeout(() => {
+      // Open in the SAME TAB
+      window.location.href = rating.html;
+    }, 600);
+  });
+
+  backBtn.addEventListener('click', () => {
+    // Go back to main domain homepage
+    window.location.href = 'https://asubank.xyz';
+  });
+</script>
 </body>
 </html>
