@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rate Your Teacher</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teacher Rating System</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -12,9 +12,8 @@
       --muted: #94a3b8;
       --accent: #22c55e;
       --accent-dark: #15803d;
-      --blue: #60a5fa;
-      --red: #ef4444;
       --yellow: #eab308;
+      --red: #ef4444;
     }
     * { box-sizing: border-box; }
     body {
@@ -24,42 +23,91 @@
       color: var(--text);
       padding: 16px;
     }
-    .container { max-width: 600px; margin: 0 auto; }
-    h1 { text-align: center; font-size: 1.8rem; }
-    p.info { text-align: center; color: var(--muted); margin-bottom: 20px; }
-    .card {
-      background: var(--card);
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-      margin-bottom: 20px;
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
     }
-    label { font-weight: 600; display: block; margin-bottom: 8px; }
-    input[type="text"] {
-      width: 100%; padding: 12px;
-      border: none; border-radius: 10px;
-      background: #0b1220; color: var(--text);
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+    p.info {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 20px;
       font-size: 1rem;
     }
-    input[type="range"] { width: 100%; margin-top: 8px; }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #0b1220;
+      color: var(--text);
+      font-size: 1rem;
+    }
+    input[type="range"] {
+      width: 100%;
+      margin-top: 8px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
     .btn {
-      flex: 1; padding: 14px;
-      border: none; border-radius: 12px;
-      font-weight: 700; font-size: 1rem;
-      cursor: pointer; color: #fff;
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #fff;
       background: linear-gradient(180deg, var(--accent), var(--accent-dark));
       transition: transform 0.1s ease;
     }
-    .btn.secondary { background: linear-gradient(180deg, #334155, #1e293b); }
-    .btn:active { transform: scale(0.97); }
-    .teacher-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .btn.secondary {
+      background: linear-gradient(180deg, #334155, #1e293b);
+    }
+    .btn:active {
+      transform: scale(0.97);
+    }
+    #status {
+      text-align: center;
+      margin-top: 10px;
+      color: var(--muted);
+    }
+    .teacher-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 16px;
+    }
     .teacher-item {
       background: #0b1220;
       border-radius: 10px;
       padding: 10px 12px;
     }
-    .teacher-header { display: flex; justify-content: space-between; }
+    .teacher-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
     .rating-bar {
       height: 10px;
       border-radius: 8px;
@@ -73,39 +121,43 @@
       width: 0%;
       transition: width 0.6s ease;
     }
-    #status { text-align: center; margin-top: 10px; color: var(--muted); }
+    @media (max-width: 480px) {
+      h1 { font-size: 1.5rem; }
+      .card { padding: 16px; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Rate Your Teacher</h1>
-    <p class="info">Search or rate your lecturers anonymously. Be the first to rate a new teacher so others can see!</p>
+    <h1>Teacher Rating System</h1>
+    <p class="info">Rate teachers anonymously and help others choose wisely. Click "Search" to view current ratings.</p>
 
     <div class="card">
       <label>Teacher Name</label>
       <input id="teacherName" type="text" placeholder="Dr. Ahmed or د. أحمد" />
+
       <label>Rating: <span id="ratingValue">5</span>/10</label>
       <input id="ratingRange" type="range" min="1" max="10" value="5" />
+
       <div class="row">
         <button class="btn" id="rateBtn">Submit</button>
         <button class="btn secondary" id="searchBtn">Search</button>
       </div>
+
       <div id="status"></div>
     </div>
 
     <div class="card">
-      <h3>Teachers List</h3>
+      <h3>Rated Teachers</h3>
       <div id="teacherList" class="teacher-list"></div>
     </div>
   </div>
 
   <script>
     // === CONFIG ===
-    // Your Google Apps Script web app endpoint:
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwdw7QBPLeBz1X-xBP6JeZEF5t7i4Ru1VfWshVqanRKd6xN0J2gQqvvovnTrYI_bpKt/exec";
 
-    // ==============
-
+    // === ELEMENTS ===
     const el = id => document.getElementById(id);
     const teacherName = el("teacherName");
     const ratingRange = el("ratingRange");
@@ -117,46 +169,62 @@
       ratingValue.textContent = ratingRange.value;
     });
 
-    el("rateBtn").addEventListener("click", async () => {
+    el("rateBtn").addEventListener("click", () => {
       const name = teacherName.value.trim();
       const rating = parseInt(ratingRange.value);
-      if (!name) return setStatus("Enter a teacher name first", "error");
-
-      setStatus("Saving...");
-      try {
-        await fetch(`${BACKEND_URL}?action=addRating&teacher=${encodeURIComponent(name)}&rating=${rating}`, {
-          method: "GET",
-          mode: "no-cors" // use GET for Apps Script public web app
-        });
-        setStatus("Rating saved!");
-        teacherName.value = "";
-        refreshList();
-      } catch {
-        setStatus("Error connecting to server.", "error");
-      }
+      if (!name) return setStatus("Enter a teacher name first.", "error");
+      addRating(name, rating);
     });
 
     el("searchBtn").addEventListener("click", refreshList);
 
-    async function refreshList() {
+    // === JSONP HELPERS ===
+    function jsonp(url, callback) {
+      const cbName = "cb_" + Math.random().toString(36).substr(2);
+      window[cbName] = data => {
+        callback(data);
+        delete window[cbName];
+        script.remove();
+      };
+      const script = document.createElement("script");
+      script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + cbName;
+      script.onerror = () => setStatus("Failed to connect to server.", "error");
+      document.body.appendChild(script);
+    }
+
+    function addRating(name, rating) {
+      setStatus("Saving...");
+      const url = `${BACKEND_URL}?action=addRating&teacher=${encodeURIComponent(name)}&rating=${rating}`;
+      jsonp(url, res => {
+        if (res && !res.error) {
+          setStatus("Rating saved successfully!");
+          teacherName.value = "";
+          refreshList();
+        } else {
+          setStatus("Error saving rating.", "error");
+        }
+      });
+    }
+
+    function refreshList() {
       setStatus("Loading...");
-      try {
-        const res = await fetch(`${BACKEND_URL}?action=listTeachers`);
-        const data = await res.json();
-        renderList(data.items || []);
-        setStatus("");
-      } catch {
-        setStatus("Could not fetch list.", "error");
-      }
+      const url = `${BACKEND_URL}?action=listTeachers`;
+      jsonp(url, res => {
+        if (res && res.items) {
+          renderList(res.items);
+          setStatus("");
+        } else {
+          setStatus("Could not fetch data.", "error");
+        }
+      });
     }
 
     function renderList(items) {
       teacherList.innerHTML = "";
       if (!items.length) {
-        teacherList.innerHTML = `<div style="color: var(--muted); text-align:center;">No teachers found yet.</div>`;
+        teacherList.innerHTML = `<div style="color:var(--muted);text-align:center;">No teachers rated yet.</div>`;
         return;
       }
-
       for (const t of items) {
         const percent = (t.average / 10) * 100;
         let color = "var(--accent)";
@@ -171,7 +239,7 @@
             <span>${t.average.toFixed(1)} / 10</span>
           </div>
           <div class="rating-bar">
-            <div class="rating-fill" style="width:${percent}%;background:${color}"></div>
+            <div class="rating-fill" style="width:${percent}%;background:${color};"></div>
           </div>
         `;
         teacherList.appendChild(div);
@@ -184,20 +252,8 @@
       statusEl.textContent = msg;
     }
 
-    // Auto-load list on page open
+    // Load list on page open
     refreshList();
   </script>
-<script>
-function loadTeachers() {
-  const callback = 'handleList_' + Math.random().toString(36).substring(2);
-  window[callback] = function(data) {
-    console.log('Teachers:', data.items);
-  };
-  const script = document.createElement('script');
-  script.src = 'https://script.google.com/macros/s/YOUR_ID/exec?action=listTeachers&callback=' + callback;
-  document.body.appendChild(script);
-}
-</script>
-  
 </body>
 </html>
