@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    document.body.style.overflow = "auto"; // Allow scrolling
-  });
-</script>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -178,25 +173,25 @@
     </div>
   </div>
 
-<script>
-  const RATING_PAGE_URL = "rating"; // relative link to your rating page (e.g., /rating.html)
+  <script>
+    // ✅ Change this to your real rating page name
+    const RATING_PAGE_URL = "rating.html"; // Opens in same tab
 
-  const continueBtn = document.getElementById('continueBtn');
-  const backBtn = document.getElementById('backBtn');
+    const continueBtn = document.getElementById('continueBtn');
+    const backBtn = document.getElementById('backBtn');
 
-  continueBtn.addEventListener('click', () => {
-    continueBtn.disabled = true;
-    continueBtn.textContent = 'Loading...';
-    setTimeout(() => {
-      // Open in the SAME TAB
-      window.location.href = rating.html;
-    }, 600);
-  });
+    continueBtn.addEventListener('click', () => {
+      continueBtn.disabled = true;
+      continueBtn.textContent = 'Loading...';
+      setTimeout(() => {
+        // ✅ Opens in the SAME TAB (no new window)
+        window.location.href = RATING_PAGE_URL;
+      }, 600);
+    });
 
-  backBtn.addEventListener('click', () => {
-    // Go back to main domain homepage
-    window.location.href = 'https://asubank.xyz';
-  });
-</script>
+    backBtn.addEventListener('click', () => {
+      window.location.href = 'https://asubank.xyz';
+    });
+  </script>
 </body>
 </html>
