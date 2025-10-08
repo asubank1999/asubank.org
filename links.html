@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Resources Portal</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4cc9f0;
+      --light-bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-dark: #2b2d42;
+      --text-light: #8d99ae;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --gradient: linear-gradient(135deg, #4361ee 0%, #3f37c9 50%, #4cc9f0 100%);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      transition: var(--transition);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background: var(--gradient);
+      box-shadow: 0 4px 20px rgba(67, 97, 238, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: white;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
+    }
+
+    .back-button {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .back-button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateX(-3px);
+    }
+
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 0.6rem;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(30deg);
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: var(--primary);
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      position: relative;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-light);
+      margin-bottom: 3rem;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 2rem;
+      text-decoration: none;
+      color: var(--text-dark);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: var(--transition);
+      border: 1px solid rgba(67, 97, 238, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(67, 97, 238, 0.15);
+      border-color: rgba(67, 97, 238, 0.3);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .card:hover .card-icon {
+      color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .card h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      position: relative;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .card h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--accent);
+      transition: var(--transition);
+      border-radius: 3px;
+    }
+
+    .card:hover h2::after {
+      width: 80px;
+    }
+
+    .card p {
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      opacity: 0;
+      animation: fadeInUp 0.6s forwards;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
+    .card:nth-child(5) { animation-delay: 0.5s; }
+    .card:nth-child(6) { animation-delay: 0.6s; }
+    .card:nth-child(7) { animation-delay: 0.7s; }
+    .card:nth-child(8) { animation-delay: 0.8s; }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      --primary: #4cc9f0;
+      --secondary: #4895ef;
+      --accent: #4361ee;
+      --light-bg: #121212;
+      --card-bg: #1e1e1e;
+      --text-dark: #f8f9fa;
+      --text-light: #adb5bd;
+    }
+
+    body.dark-mode .card {
+      border-color: rgba(76, 201, 240, 0.1);
+    }
+
+    body.dark-mode .card:hover {
+      border-color: rgba(76, 201, 240, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .card-container {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      header {
+        padding: 1rem;
+      }
+    }
+
+    /* Floating action button */
+    .fab {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: var(--gradient);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 25px rgba(67, 97, 238, 0.3);
+      cursor: pointer;
+      z-index: 50;
+      transition: var(--transition);
+    }
+
+    .fab:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 12px 30px rgba(67, 97, 238, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i>
+      <span>ASU Resources</span>
+    </div>
+    <div>
+      <a href="index" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        Back
+      </a>
+      <button id="theme-toggle" class="theme-toggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <h1>Student Resources Portal</h1>
+    <p class="subtitle">Access all university resources, materials, and tools in one centralized platform for seamless academic experience.</p>
+    
+    <div class="card-container">
+      <a href="colleges_hall" class="card">
+        <div class="card-icon">
+          <i class="fas fa-building"></i>
+        </div>
+        <h2>University Halls</h2>
+        <p>Find comprehensive information about all university halls, accommodations, and housing options available for students.</p>
+      </a>
+      
+      <a href="faqs" class="card">
+        <div class="card-icon">
+          <i class="fas fa-question-circle"></i>
+        </div>
+        <h2>FAQs</h2>
+        <p>Get instant answers to frequently asked questions about university life, academics, and student services.</p>
+      </a>
+      
+      <a href="uni_tos" class="card">
+        <div class="card-icon">
+          <i class="fas fa-file-contract"></i>
+        </div>
+        <h2>Terms of Service</h2>
+        <p>Review the site's official policies, terms of service, and website's academic regulations.</p>
+      </a>
+      
+      <a href="groups" class="card">
+        <div class="card-icon">
+          <i class="fas fa-comments"></i>
+        </div>
+        <h2>WhatsApp Groups</h2>
+        <p>Connect with fellow students through official and unofficial WhatsApp groups for your courses and programs.</p>
+      </a>
+      
+      <a href="asu_date_asu" class="card">
+        <div class="card-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h2>Academic Calendar</h2>
+        <p>Access the complete 2024/2025 academic calendar with all important dates, deadlines, and events.</p>
+      </a>
+      
+      <a href="dupload.html" class="card" target="_blank">
+        <div class="card-icon">
+          <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <h2>ASU Upload Portal</h2>
+        <p>Share your academic materials and resources with the university community through our secure upload portal.</p>
+        <span class="badge">Fast</span>
+      </a>
+      
+      <a href="googledrive_fileupload" class="card">
+        <div class="card-icon">
+          <i class="fas fa-infinity"></i>
+        </div>
+        <h2>Unlimited Uploads</h2>
+        <p>Alternative upload portal with no file size restrictions. Upload multiple large files simultaneously.</p>
+        <span class="badge">No Limits</span>
+      </a>
+      
+      <a href="https://drive.google.com/drive/folders/1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB?usp=drive_link" class="card" target="_blank">
+        <div class="card-icon">
+          <i class="fas fa-archive"></i>
+        </div>
+        <h2>Uploaded Content</h2>
+        <p>Instantly access all materials uploaded by students and faculty. New uploads appear here in real-time.</p>
+        <span class="badge">Live Updates</span>
+      </a>
+	<a href="suggest_to_whatsapp" class="card">
+  <div class="card-icon">
+    <i class="fas fa-comment-alt"></i>
+  </div>
+  <h2>Suggest Materials</h2>
+  <p>Share your ideas for improving our test bank or suggest new materials to add.</p>
+  <span class="badge">Direct to WhatsApp</span>
+</a>
+<a href="students_requests\student_request_portal" class="card">
+  <div class="card-icon">
+    <i class="fas fa-coins"></i>
+  </div>
+  <h2>Request a File (3 JDs)</h2>
+  <p>Need custom help? Pay 3 JDs to request summaries, Q&A testbanks, or personalized academic materials created just for you.</p>
+  <span class="badge">Premium</span>
+</a>
+
+<a href="portal_to_rating" class="card">
+  <div class="card-icon">
+    <i class="fas fa-star-half-alt"></i>
+  </div>
+  <h2>Rate a Teacher</h2>
+  <p>Share your honest feedback and rate your instructors anonymously to help fellow students choose wisely.</p>
+  <span class="badge">Anonymous</span>
+</a>
+    </div>
+  </main>
+
+  <div class="fab" title="Quick Help">
+    <i class="fas fa-question"></i>
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    
+    // Check for saved theme preference
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme) {
+      body.classList.add(currentTheme);
+      updateThemeIcon();
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      
+      // Save theme preference
+      const theme = body.classList.contains('dark-mode') ? 'dark-mode' : '';
+      localStorage.setItem('theme', theme);
+      
+      updateThemeIcon();
+    });
+    
+    function updateThemeIcon() {
+      const icon = themeToggle.querySelector('i');
+      if (body.classList.contains('dark-mode')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      }
+    }
+    
+    // Card hover effect enhancement
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+    });
+
+    // FAB button functionality
+    const fab = document.querySelector('.fab');
+    fab.addEventListener('click', () => {
+      window.location.href = 'faqs';
+    });
+  </script>
+  
+<script>
+// Anti-keyboard shortcuts and code inspection script
+document.addEventListener('DOMContentLoaded', function() {
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+            (e.ctrlKey && e.key === 'u')) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Blur elements when tabbing (prevents keyboard navigation)
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'Tab') {
+            document.activeElement.blur();
+        }
+    });
+
+    // Prevent drag-and-drop
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Periodic check for dev tools (works in some browsers)
+    function checkDevTools() {
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        
+        if (heightThreshold || widthThreshold) {
+            // Dev tools might be open
+            document.body.innerHTML = '<h1 style="text-align:center;padding:50px;">Developer tools are not allowed on this page</h1>';
+            window.location.reload();
+        }
+    }
+    setInterval(checkDevTools, 1000);
+
+    // Override console methods
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
+    console.info = function() {};
+    console.debug = function() {};
+});
+</script></body>
+</html>
