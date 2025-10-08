@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teacher Ratings Portal</title>
+  <style>
+    :root {
+      --bg: linear-gradient(135deg, #1e3a8a 0%, #312e81 50%, #4f46e5 100%);
+      --card: #ffffff;
+      --text: #1e1e2f;
+      --muted: #6b7280;
+      --accent: #4f46e5;
+      --accent-light: #818cf8;
+      --success: #22c55e;
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Poppins", "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .portal {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      padding: 40px 28px;
+      max-width: 460px;
+      width: 100%;
+      animation: slideIn 0.8s ease;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.3px;
+    }
+
+    p.desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 26px;
+    }
+
+    .points {
+      text-align: left;
+      background: #f9fafb;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .point:last-child { margin-bottom: 0; }
+
+    .emoji {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .point p {
+      margin: 0;
+      font-size: 0.98rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .point strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px 0;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.2s ease;
+      margin-top: 8px;
+      color: #fff;
+    }
+
+    #continueBtn {
+      background: linear-gradient(135deg, var(--success), #16a34a);
+    }
+
+    #continueBtn:hover { filter: brightness(1.1); }
+
+    #backBtn {
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+    }
+
+    #backBtn:hover { filter: brightness(1.1); }
+
+    .tos {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .tos a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--accent);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .portal { padding: 30px 20px; }
+      h1 { font-size: 1.8rem; }
+      p.desc { font-size: 1rem; }
+      .points { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="portal">
+    <h1>Rate Your Teachers 💬</h1>
+    <p class="desc">
+      Join the student community — share your experience and help others make smarter course choices.  
+      All feedback is anonymous and free to submit.
+    </p>
+
+    <div class="points">
+      <div class="point">
+        <span class="emoji">📘</span>
+        <p>By clicking <strong>"Continue"</strong>, you confirm that you’ve read and agreed to our <strong>Terms of Service</strong>.</p>
+      </div>
+      <div class="point">
+        <span class="emoji">🕵️</span>
+        <p>Your rating is <strong>100% anonymous</strong>. No admin or system can see who submitted it — privacy is guaranteed.</p>
+      </div>
+      <div class="point">
+        <span class="emoji">🚀</span>
+        <p>If your teacher isn’t listed yet, <strong>be the first to rate!</strong> Others will see your submission and join in.</p>
+      </div>
+    </div>
+
+    <button id="continueBtn" class="btn">Continue →</button>
+    <button id="backBtn" class="btn">← Back to Home</button>
+
+    <div class="tos">
+      View our <a href="uni_tos" target="_blank">Terms of Service</a> for details.
+    </div>
+  </div>
+
+  <script>
+    // ✅ Change this to your real rating page name
+    const RATING_PAGE_URL = "rating"; // Opens in same tab
+
+    const continueBtn = document.getElementById('continueBtn');
+    const backBtn = document.getElementById('backBtn');
+
+    continueBtn.addEventListener('click', () => {
+      continueBtn.disabled = true;
+      continueBtn.textContent = 'Loading...';
+      setTimeout(() => {
+        // ✅ Opens in the SAME TAB (no new window)
+        window.location.href = RATING_PAGE_URL;
+      }, 600);
+    });
+
+    backBtn.addEventListener('click', () => {
+      window.location.href = 'https://asubank.xyz';
+    });
+  </script>
+</body>
+</html>
