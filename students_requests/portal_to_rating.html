@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.body.style.transform = "scale(2.1)";
+    document.body.style.transformOrigin = "0 0";
+    document.body.style.width = "46.77%";  // Adjusted for correct scaling
+    document.body.style.height = "76.67%"; // Adjusted for correct scaling
+    document.body.style.overflow = "auto"; // Allow scrolling
+  });
+</script>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -6,162 +15,190 @@
   <title>Teacher Ratings Portal</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #111827;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #22c55e;
-      --accent-dark: #15803d;
-      --blue: #3b82f6;
-      --red: #ef4444;
-      --radius: 20px;
+      --bg: linear-gradient(135deg, #1e3a8a 0%, #312e81 50%, #4f46e5 100%);
+      --card: #ffffff;
+      --text: #1e1e2f;
+      --muted: #6b7280;
+      --accent: #4f46e5;
+      --accent-light: #818cf8;
+      --success: #22c55e;
+      --radius: 22px;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      background: radial-gradient(circle at top, #1e293b 0%, #0f172a 70%);
+      background: var(--bg);
       color: var(--text);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+      font-family: "Poppins", "Segoe UI", Roboto, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      text-align: center;
       padding: 24px;
     }
 
     .portal {
       background: var(--card);
       border-radius: var(--radius);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      padding: 40px 30px;
-      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      padding: 40px 28px;
+      max-width: 460px;
       width: 100%;
-      animation: fadeIn 1.2s ease;
+      animation: slideIn 0.8s ease;
+      text-align: center;
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 12px;
+      font-size: 2.2rem;
+      margin-bottom: 14px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      color: var(--accent);
+      letter-spacing: 0.3px;
     }
 
     p.desc {
       color: var(--muted);
       font-size: 1.05rem;
-      line-height: 1.5;
-      margin-bottom: 28px;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      text-align: left;
-      margin: 0 auto 28px;
-      color: var(--text);
       line-height: 1.6;
+      margin-bottom: 26px;
     }
 
-    ul li {
-      margin: 10px 0;
+    .points {
+      text-align: left;
+      background: #f9fafb;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .point {
       display: flex;
-      align-items: start;
-      gap: 8px;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    ul li::before {
-      content: "✔";
+    .point:last-child { margin-bottom: 0; }
+
+    .emoji {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .point p {
+      margin: 0;
+      font-size: 0.98rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .point strong {
       color: var(--accent);
-      font-weight: bold;
-      font-size: 1.1rem;
-      margin-top: 1px;
+      font-weight: 600;
     }
 
-    button {
+    .btn {
       width: 100%;
       padding: 14px 0;
       border: none;
       border-radius: var(--radius);
       font-size: 1.1rem;
       font-weight: 700;
-      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-      color: #fff;
       cursor: pointer;
-      transition: transform 0.1s ease, filter 0.2s ease;
+      transition: transform 0.15s ease, filter 0.2s ease;
+      margin-top: 8px;
+      color: #fff;
     }
 
-    button:hover {
-      filter: brightness(1.1);
+    #continueBtn {
+      background: linear-gradient(135deg, var(--success), #16a34a);
     }
 
-    button:active {
-      transform: scale(0.98);
+    #continueBtn:hover { filter: brightness(1.1); }
+
+    #backBtn {
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
     }
+
+    #backBtn:hover { filter: brightness(1.1); }
 
     .tos {
-      margin-top: 16px;
+      margin-top: 18px;
       font-size: 0.9rem;
       color: var(--muted);
     }
 
     .tos a {
-      color: var(--blue);
+      color: var(--accent);
       text-decoration: none;
-      border-bottom: 1px dotted var(--blue);
+      border-bottom: 1px dotted var(--accent);
     }
 
-    @keyframes fadeIn {
+    @keyframes slideIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 480px) {
       .portal { padding: 30px 20px; }
-      h1 { font-size: 1.6rem; }
+      h1 { font-size: 1.8rem; }
       p.desc { font-size: 1rem; }
+      .points { padding: 16px; }
     }
   </style>
 </head>
 <body>
   <div class="portal">
-    <h1>Welcome to Teacher Ratings</h1>
+    <h1>Rate Your Teachers 💬</h1>
     <p class="desc">
-      Share your honest experience — help future students choose wisely.  
-      Ratings are 100% anonymous, and every voice helps improve the academic journey.
+      Join the student community — share your experience and help others make smarter course choices.  
+      All feedback is anonymous and free to submit.
     </p>
 
-    <ul>
-      <li>By clicking "Continue", you agree to our <strong>TOS</strong> listed on the main page.</li>
-      <li>Your ratings are <strong>completely anonymous</strong> — even admins cannot see who rated whom.</li>
-      <li>If a teacher isn't listed, <strong>be the first to rate!</strong> Others will then see and add their votes.</li>
-    </ul>
+    <div class="points">
+      <div class="point">
+        <span class="emoji">📘</span>
+        <p>By clicking <strong>"Continue"</strong>, you confirm that you’ve read and agreed to our <strong>Terms of Service</strong>.</p>
+      </div>
+      <div class="point">
+        <span class="emoji">🕵️</span>
+        <p>Your rating is <strong>100% anonymous</strong>. No admin or system can see who submitted it — privacy is guaranteed.</p>
+      </div>
+      <div class="point">
+        <span class="emoji">🚀</span>
+        <p>If your teacher isn’t listed yet, <strong>be the first to rate!</strong> Others will see your submission and join in.</p>
+      </div>
+    </div>
 
-    <button id="continueBtn">Continue</button>
+    <button id="continueBtn" class="btn">Continue →</button>
+    <button id="backBtn" class="btn">← Back to Home</button>
 
     <div class="tos">
-      Read our <a href="uni_tos" target="_blank">Terms of Service</a> before continuing.
+      View our <a href="uni_tos" target="_blank">Terms of Service</a> for details.
     </div>
   </div>
 
   <script>
-// TODO: Replace this with your actual link
-const RATING_PAGE_URL = "https://script.google.com/macros/s/AKfycbwdw7QBPLeBz1X-xBP6JeZEF5t7i4Ru1VfWshVqanRKd6xN0J2gQqvvovnTrYI_bpKt/exec";
+    const RATING_PAGE_URL = "https://script.google.com/macros/s/AKfycbwdw7QBPLeBz1X-xBP6JeZEF5t7i4Ru1VfWshVqanRKd6xN0J2gQqvvovnTrYI_bpKt/exec";
 
-document.getElementById('continueBtn').addEventListener('click', () => {
-  const btn = document.getElementById('continueBtn');
-  btn.disabled = true;
-  btn.textContent = 'Loading...';
-  setTimeout(() => {
-    window.open(RATING_PAGE_URL, '_blank'); // opens in new tab
-    btn.disabled = false;
-    btn.textContent = 'Continue';
-  }, 600);
-});
+    document.getElementById('continueBtn').addEventListener('click', () => {
+      const btn = document.getElementById('continueBtn');
+      btn.disabled = true;
+      btn.textContent = 'Loading...';
+      setTimeout(() => {
+        window.open(RATING_PAGE_URL, '_blank');
+        btn.disabled = false;
+        btn.textContent = 'Continue →';
+      }, 600);
+    });
 
+    document.getElementById('backBtn').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
   </script>
 </body>
 </html>
