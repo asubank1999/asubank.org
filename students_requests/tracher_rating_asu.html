@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rate Your Teacher</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --accent-dark: #15803d;
+      --blue: #60a5fa;
+      --red: #ef4444;
+      --yellow: #eab308;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto;
+      background: var(--bg);
+      color: var(--text);
+      padding: 16px;
+    }
+    .container { max-width: 600px; margin: 0 auto; }
+    h1 { text-align: center; font-size: 1.8rem; }
+    p.info { text-align: center; color: var(--muted); margin-bottom: 20px; }
+    .card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      margin-bottom: 20px;
+    }
+    label { font-weight: 600; display: block; margin-bottom: 8px; }
+    input[type="text"] {
+      width: 100%; padding: 12px;
+      border: none; border-radius: 10px;
+      background: #0b1220; color: var(--text);
+      font-size: 1rem;
+    }
+    input[type="range"] { width: 100%; margin-top: 8px; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .btn {
+      flex: 1; padding: 14px;
+      border: none; border-radius: 12px;
+      font-weight: 700; font-size: 1rem;
+      cursor: pointer; color: #fff;
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+      transition: transform 0.1s ease;
+    }
+    .btn.secondary { background: linear-gradient(180deg, #334155, #1e293b); }
+    .btn:active { transform: scale(0.97); }
+    .teacher-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .teacher-item {
+      background: #0b1220;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .teacher-header { display: flex; justify-content: space-between; }
+    .rating-bar {
+      height: 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .rating-fill {
+      height: 100%;
+      border-radius: 8px;
+      width: 0%;
+      transition: width 0.6s ease;
+    }
+    #status { text-align: center; margin-top: 10px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Rate Your Teacher</h1>
+    <p class="info">Search or rate your lecturers anonymously. Be the first to rate a new teacher so others can see!</p>
+
+    <div class="card">
+      <label>Teacher Name</label>
+      <input id="teacherName" type="text" placeholder="Dr. Ahmed or د. أحمد" />
+      <label>Rating: <span id="ratingValue">5</span>/10</label>
+      <input id="ratingRange" type="range" min="1" max="10" value="5" />
+      <div class="row">
+        <button class="btn" id="rateBtn">Submit</button>
+        <button class="btn secondary" id="searchBtn">Search</button>
+      </div>
+      <div id="status"></div>
+    </div>
+
+    <div class="card">
+      <h3>Teachers List</h3>
+      <div id="teacherList" class="teacher-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // === CONFIG ===
+    // Your Google Apps Script web app endpoint:
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwdw7QBPLeBz1X-xBP6JeZEF5t7i4Ru1VfWshVqanRKd6xN0J2gQqvvovnTrYI_bpKt/exec";
+
+    // ==============
+
+    const el = id => document.getElementById(id);
+    const teacherName = el("teacherName");
+    const ratingRange = el("ratingRange");
+    const ratingValue = el("ratingValue");
+    const teacherList = el("teacherList");
+    const statusEl = el("status");
+
+    ratingRange.addEventListener("input", () => {
+      ratingValue.textContent = ratingRange.value;
+    });
+
+    el("rateBtn").addEventListener("click", async () => {
+      const name = teacherName.value.trim();
+      const rating = parseInt(ratingRange.value);
+      if (!name) return setStatus("Enter a teacher name first", "error");
+
+      setStatus("Saving...");
+      try {
+        await fetch(`${BACKEND_URL}?action=addRating&teacher=${encodeURIComponent(name)}&rating=${rating}`, {
+          method: "GET",
+          mode: "no-cors" // use GET for Apps Script public web app
+        });
+        setStatus("Rating saved!");
+        teacherName.value = "";
+        refreshList();
+      } catch {
+        setStatus("Error connecting to server.", "error");
+      }
+    });
+
+    el("searchBtn").addEventListener("click", refreshList);
+
+    async function refreshList() {
+      setStatus("Loading...");
+      try {
+        const res = await fetch(`${BACKEND_URL}?action=listTeachers`);
+        const data = await res.json();
+        renderList(data.items || []);
+        setStatus("");
+      } catch {
+        setStatus("Could not fetch list.", "error");
+      }
+    }
+
+    function renderList(items) {
+      teacherList.innerHTML = "";
+      if (!items.length) {
+        teacherList.innerHTML = `<div style="color: var(--muted); text-align:center;">No teachers found yet.</div>`;
+        return;
+      }
+
+      for (const t of items) {
+        const percent = (t.average / 10) * 100;
+        let color = "var(--accent)";
+        if (t.average <= 3) color = "var(--red)";
+        else if (t.average <= 6) color = "var(--yellow)";
+
+        const div = document.createElement("div");
+        div.className = "teacher-item";
+        div.innerHTML = `
+          <div class="teacher-header">
+            <strong>${t.display}</strong>
+            <span>${t.average.toFixed(1)} / 10</span>
+          </div>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width:${percent}%;background:${color}"></div>
+          </div>
+        `;
+        teacherList.appendChild(div);
+      }
+    }
+
+    function setStatus(msg, type="info") {
+      const colors = { info: "#94a3b8", error: "#ef4444" };
+      statusEl.style.color = colors[type];
+      statusEl.textContent = msg;
+    }
+
+    // Auto-load list on page open
+    refreshList();
+  </script>
+<script>
+function loadTeachers() {
+  const callback = 'handleList_' + Math.random().toString(36).substring(2);
+  window[callback] = function(data) {
+    console.log('Teachers:', data.items);
+  };
+  const script = document.createElement('script');
+  script.src = 'https://script.google.com/macros/s/YOUR_ID/exec?action=listTeachers&callback=' + callback;
+  document.body.appendChild(script);
+}
+</script>
+  
+</body>
+</html>
