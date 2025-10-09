@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload to Google Drive</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --accent: #22d3ee;
+      --text: #1e293b;
+      --text-light: #475569;
+      --bg: linear-gradient(120deg, #c7d2fe, #bae6fd);
+      --radius: 1.25rem;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--bg);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .wrapper {
+      width: 90%;
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      padding: 4rem 3rem;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.7s ease;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    p.subtitle {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .drop-zone {
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 3rem 1.5rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .drop-zone.dragover {
+      background: rgba(219, 234, 254, 0.9);
+      transform: scale(1.02);
+    }
+
+    .drop-zone img {
+      width: 120px;
+      opacity: 0.95;
+      margin-bottom: 1rem;
+      transition: transform 0.3s ease;
+    }
+
+    .drop-zone:hover img {
+      transform: scale(1.05);
+    }
+
+    .drop-zone p {
+      font-size: 1.05rem;
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    button {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #fff;
+      border: none;
+      padding: 1rem 3rem;
+      border-radius: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(79, 70, 229, 0.25);
+      transition: var(--transition);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(90deg, #4f46e5, var(--accent));
+    }
+
+    .progress-bar {
+      margin-top: 2rem;
+      width: 100%;
+      height: 12px;
+      border-radius: 9999px;
+      background-color: #e2e8f0;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.3s ease;
+    }
+
+    #result {
+      margin-top: 1.75rem;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      display: none;
+      font-size: 1rem;
+      word-break: break-word;
+    }
+
+    #result.success {
+      background: #dcfce7;
+      color: #166534;
+      border-left: 5px solid #16a34a;
+      display: block;
+    }
+
+    #result.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border-left: 5px solid #dc2626;
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Upload Your File</h1>
+    <p class="subtitle">Easily upload your study materials securely to Google Drive.</p>
+
+    <label for="fileInput" class="drop-zone" id="dropZone">
+      <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png" alt="folder" />
+      <p>Click to select a file or drag it here</p>
+    </label>
+    <input type="file" id="fileInput" />
+
+    <button id="uploadBtn" onclick="uploadFile()">Upload</button>
+
+    <div class="progress-bar">
+      <div class="progress-inner" id="progressInner"></div>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHkDIa48oL_mk7K8BDSfPCWbF-pIIeucPE94FM6NJ5HcGkjOwO6vtDfl8bX8B1lsRv/exec"; // Replace this with your web app URL
+    const fileInput = document.getElementById("fileInput");
+    const dropZone = document.getElementById("dropZone");
+    const progressBar = document.querySelector(".progress-bar");
+    const progressInner = document.getElementById("progressInner");
+    const result = document.getElementById("result");
+    const uploadBtn = document.getElementById("uploadBtn");
+    let selectedFile = null;
+
+    dropZone.addEventListener("dragover", e => {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+    dropZone.addEventListener("drop", e => {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+      selectedFile = e.dataTransfer.files[0];
+      showMessage(`Selected file: ${selectedFile.name}`, "success");
+    });
+    fileInput.addEventListener("change", e => {
+      selectedFile = e.target.files[0];
+      if (selectedFile) showMessage(`Selected file: ${selectedFile.name}`, "success");
+    });
+
+    async function uploadFile() {
+      if (!selectedFile) {
+        showMessage("Please select a file first.", "error");
+        return;
+      }
+
+      uploadBtn.disabled = true;
+      showMessage("Uploading... please wait.", "");
+      progressBar.style.display = "block";
+      progressInner.style.width = "10%";
+
+      const reader = new FileReader();
+      reader.onload = async e => {
+        const base64Data = e.target.result;
+
+        try {
+          progressInner.style.width = "40%";
+          const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+              base64Data: base64Data,
+              fileName: selectedFile.name,
+              action: "upload"
+            }),
+            headers: { "Content-Type": "application/json" }
+          });
+          const text = await response.text();
+          progressInner.style.width = "100%";
+          showMessage(text, text.startsWith("Error") ? "error" : "success");
+        } catch (error) {
+          showMessage("Upload failed: " + error.message, "error");
+        } finally {
+          uploadBtn.disabled = false;
+          fileInput.value = "";
+          selectedFile = null;
+        }
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+
+    function showMessage(msg, type) {
+      result.textContent = msg;
+      result.className = "";
+      if (type) result.classList.add(type);
+      result.style.display = "block";
+    }
+  </script>
+</body>
+</html>
