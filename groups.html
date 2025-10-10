@@ -5,21 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>University WhatsApp Links & Resources</title>
   <style>
-    /* General Styles */
+    /* Modern CSS Reset and Variables */
     :root {
-      --primary-color: #6c5ce7;
-      --primary-hover: #5a4acf;
-      --secondary-color: #007BFF;
-      --secondary-hover: #0056b3;
-      --text-color: #333;
-      --text-light: #888;
-      --bg-color: #f4f4f4;
-      --card-bg: #fff;
-      --dark-bg: #1a1a1a;
-      --dark-card: #2c2c2c;
-      --dark-text: #f4f4f4;
-      --dark-light-text: #aaa;
-      --transition: all 0.3s ease;
+      --primary-gradient: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      --secondary-gradient: linear-gradient(135deg, #007BFF, #00a8ff);
+      --accent-color: #fd79a8;
+      --text-color: #2d3436;
+      --text-light: #636e72;
+      --bg-color: #f9f9f9;
+      --card-bg: #ffffff;
+      --dark-bg: #1e272e;
+      --dark-card: #2f3640;
+      --dark-text: #f5f6fa;
+      --dark-light-text: #dcdde1;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.15);
+      --border-radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
@@ -30,24 +38,43 @@
       color: var(--text-color);
       transition: var(--transition);
       line-height: 1.6;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(0, 123, 255, 0.05) 0%, transparent 20%);
+      background-attachment: fixed;
     }
 
     body.dark-mode {
       background-color: var(--dark-bg);
       color: var(--dark-text);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(0, 123, 255, 0.1) 0%, transparent 20%);
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1200px;
       width: 90%;
-      margin: 80px auto 20px;
-      padding: 30px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin: 100px auto 30px;
+      padding: 40px;
+      box-shadow: var(--shadow);
       background-color: var(--card-bg);
-      border-radius: 12px;
+      border-radius: var(--border-radius);
       transition: var(--transition);
       opacity: 0;
       animation: fadeIn 1s ease-in-out forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--primary-gradient);
     }
 
     body.dark-mode .container {
@@ -67,8 +94,10 @@
     }
 
     h1 {
-      font-size: 2.2rem;
-      color: var(--primary-color);
+      font-size: 2.5rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       margin-bottom: 30px;
       position: relative;
       padding-bottom: 15px;
@@ -80,53 +109,95 @@
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 100px;
+      width: 150px;
       height: 4px;
-      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      background: var(--primary-gradient);
       border-radius: 2px;
     }
 
     h2 {
-      font-size: 1.8rem;
-      margin-top: 40px;
-      color: var(--primary-color);
+      font-size: 2rem;
+      margin-top: 50px;
+      color: var(--text-color);
       background: linear-gradient(90deg, rgba(108, 92, 231, 0.1), transparent);
-      padding: 10px;
-      border-radius: 8px;
+      padding: 15px;
+      border-radius: var(--border-radius);
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.dark-mode h2 {
+      color: var(--dark-text);
+      background: linear-gradient(90deg, rgba(108, 92, 231, 0.2), transparent);
+    }
+
+    h2::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 5px;
+      background: var(--primary-gradient);
     }
 
     h3 {
-      font-size: 1.3rem;
-      margin-top: 25px;
-      color: var(--secondary-color);
-      border-left: 4px solid var(--secondary-color);
-      padding-left: 10px;
+      font-size: 1.5rem;
+      margin-top: 30px;
+      color: var(--text-color);
+      border-left: 4px solid;
+      border-image: var(--secondary-gradient) 1;
+      padding-left: 15px;
+      margin-bottom: 15px;
+    }
+
+    body.dark-mode h3 {
+      color: var(--dark-text);
     }
 
     .link-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
       margin: 20px 0;
     }
 
     .whatsapp-link {
       display: flex;
       align-items: center;
-      padding: 15px;
+      padding: 18px 20px;
       text-align: left;
-      background-color: var(--primary-color);
+      background: var(--primary-gradient);
       color: #fff;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: var(--border-radius);
       transition: var(--transition);
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .whatsapp-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--secondary-gradient);
+      opacity: 0;
+      transition: var(--transition);
+      z-index: -1;
     }
 
     .whatsapp-link:hover {
-      background-color: var(--primary-hover);
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .whatsapp-link:hover::before {
+      opacity: 1;
     }
 
     .whatsapp-link.group::before {
@@ -134,10 +205,12 @@
       display: inline-block;
       width: 24px;
       height: 24px;
-      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTM4MC45IDk3LjFjLTQ5LjctNDkuNy0xMjkuMy00OS43LTE3OSAwbC0xMCAxMEMxNDkuNCAxMjcuNiAxMzkuOSAxNTkuNiAxMzkuOSAxOTJjMCA4LjggNy4yIDE2IDE2IDE2czE2LTcuMiAxNi0xNmMwLTI4LjEgMTAuNy01NC4zIDMwLjItNzQuMmwxMC0xMGMyOC4xLTI4LjEgNzMuNy0yOC4xIDEwMS44IDBsMTAgMTBjMTkuNSAxOS41IDMwLjIgNDUuNyAzMC4yIDczLjhzLTEwLjcgNTQuMy0zMC4yIDczLjhMMzA0IDMwNWMtNDUuOSA0NS45LTExOS4yIDQ1LjktMTY1LjIgMGwtMTMuMi0xMy4yYy0zLjgtMy44LTkuOS0zLjgtMTMuNyAwbC0zMi40IDMyLjRjLTMuOCAzLjgtMy44IDkuOSAwIDEzLjdsMTMuMiAxMy4yYzQ5LjkgNDkuOSAxMTUuMiA3Ny4yIDE4MSA3Ny4xIDY1LjggMCAxMjAuOC0yNC4zIDE2Ni43LTY5LjJsODMuNy04My40YzQ5LjctNDkuNyA0OS43LTEyOS4zIDAtMTc5eiIvPjwvc3ZnPg==');
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTM4MC45IDk3LjFjLTQ5LjctNDkuNy0xMjkuMy00OS43LTE3OSAwbC0xMCAxMEMxNDkuNCAxMjcuNiAxMzkuOSAxNTkuNiAxMzkuOSAxOTJjMCA4LjggNy4yIDE2IDE2IDE2czE2LTcuMiAxNi0xNmMwLTI4LjEgMTAuNy01NC4zIDMwLjItNzQuMmwxMC0xMGMyOC4xLTI4LjEgNzMuNy0yOC4xIDEwMS44IDBsMTAgMTBjMTkuNSAxOS41IDMwLjIgNDUuNyAzMC4yIDczLjhzLTEwLjcgNTQuMy0zMC4yIDczLjhMMzA0IDMwNWMtNDUuOSA0NS45LTExOS4yIDQ1LjktMTY1LjIgMGwtMTMuMi0xMy4yYy0zLjgtMy44LTkuOS0zLjgtMTMuNyAwbC0zMiNIDMyLjRjLTMuOCAzLjgtMy44IDkuOSAwIDEzLjdsMTMuMiAxMy4yYzQ5LjkgNDkuOSAxMTUuMiA3Ny4yIDE4MSA3Ny4xIDY1LjggMCAxMjAuOC0yNC4zIDE2Ni43LTY5LjJsODMuNy04My40YzQ5LjctNDkuNyA0OS43LTEyOS4zIDAtMTc5eiIvPjwvc3ZnPg==');
       background-size: contain;
-      margin-right: 10px;
+      margin-right: 12px;
       filter: brightness(0) invert(1);
+      z-index: 2;
+      position: relative;
     }
 
     .whatsapp-link.video::before {
@@ -147,35 +220,41 @@
       height: 24px;
       background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTQ2NCAzMjBjMC0zMy41LTI3LjItNjAuOC02MC44LTYwLjhIMTEyYy0zMy41IDAtNjAuOCAyNy4yLTYwLjggNjAuOHYxMjhjMCAzMy41IDI3LjIgNjAuOCA2MC44IDYwLjhoMjkxLjJjMzMuNSAwIDYwLjgtMjcuMiA2MC44LTYwLjhWMzIweiIvPjxwYXRoIGZpbGw9IndoaXRlIiBkPSJNMjA4IDI4MHY0MGMwIDYuNiA3LjIgMTAuOCAxMi45IDcuNGwxMjAtNjBjNS43LTMuNCA1LjctMTEuNCAwLTE0LjhsLTEyMC02MGMtNS43LTMuNC0xMi45IDEuMS0xMi45IDcuNFYyODF6Ii8+PC9zdmc+');
       background-size: contain;
-      margin-right: 10px;
+      margin-right: 12px;
       filter: brightness(0) invert(1);
+      z-index: 2;
+      position: relative;
     }
 
     .arabic-translation {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--text-light);
-      margin-top: 5px;
-      margin-bottom: 15px;
+      margin-top: 8px;
+      margin-bottom: 20px;
       font-style: italic;
+      padding: 10px 15px;
+      background-color: rgba(108, 92, 231, 0.05);
+      border-radius: 8px;
     }
 
     body.dark-mode .arabic-translation {
       color: var(--dark-light-text);
+      background-color: rgba(108, 92, 231, 0.1);
     }
 
     .back-button, .theme-toggle {
       position: fixed;
-      padding: 12px 24px;
-      background-color: var(--secondary-color);
+      padding: 14px 24px;
+      background: var(--secondary-gradient);
       color: #fff;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: 50px;
       border: none;
       cursor: pointer;
       transition: var(--transition);
       z-index: 1000;
       font-weight: 600;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow);
       display: flex;
       align-items: center;
       gap: 8px;
@@ -193,44 +272,67 @@
 
     .back-button::before {
       content: '←';
+      font-weight: bold;
     }
 
     .back-button:hover, .theme-toggle:hover {
-      background-color: var(--secondary-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
     }
 
     .disclaimer {
-      margin-top: 40px;
-      padding: 20px;
-      background-color: rgba(0, 123, 255, 0.1);
-      border-left: 4px solid var(--secondary-color);
-      border-radius: 8px;
-      font-size: 0.9rem;
+      margin-top: 50px;
+      padding: 25px;
+      background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(108, 92, 231, 0.1));
+      border-left: 4px solid;
+      border-image: var(--secondary-gradient) 1;
+      border-radius: var(--border-radius);
+      font-size: 0.95rem;
       color: var(--text-color);
       transition: var(--transition);
+      position: relative;
     }
 
     body.dark-mode .disclaimer {
-      background-color: rgba(0, 123, 255, 0.2);
+      background: linear-gradient(135deg, rgba(0, 123, 255, 0.15), rgba(108, 92, 231, 0.15));
       color: var(--dark-text);
     }
 
     .disclaimer strong {
-      color: var(--secondary-color);
+      background: var(--secondary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .disclaimer a {
-      color: var(--secondary-color);
+      color: var(--text-color);
       text-decoration: none;
       font-weight: 600;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .disclaimer a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--secondary-gradient);
       transition: var(--transition);
     }
 
     .disclaimer a:hover {
-      text-decoration: underline;
-      color: var(--secondary-hover);
+      color: #007BFF;
+    }
+
+    .disclaimer a:hover::after {
+      width: 100%;
+    }
+
+    body.dark-mode .disclaimer a {
+      color: var(--dark-text);
     }
 
     /* Scroll to Top and Bottom Buttons */
@@ -238,9 +340,9 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 50px;
-      height: 50px;
-      background-color: var(--primary-color);
+      width: 55px;
+      height: 55px;
+      background: var(--primary-gradient);
       color: #fff;
       border: none;
       border-radius: 50%;
@@ -250,29 +352,78 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      font-size: 1.3rem;
+      box-shadow: var(--shadow);
     }
 
     .scroll-button:hover {
-      background-color: var(--primary-hover);
       transform: translateY(-5px) scale(1.1);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--shadow-hover);
     }
 
     .scroll-button.bottom {
-      bottom: 80px;
+      bottom: 90px;
+    }
+
+    /* New Pharmacy Section */
+    .pharmacy-section {
+      margin-top: 40px;
+    }
+
+    .pharmacy-section h2 {
+      background: linear-gradient(90deg, rgba(253, 121, 168, 0.1), transparent);
+    }
+
+    body.dark-mode .pharmacy-section h2 {
+      background: linear-gradient(90deg, rgba(253, 121, 168, 0.2), transparent);
+    }
+
+    .pharmacy-section h2::before {
+      background: linear-gradient(135deg, #fd79a8, #e84393);
     }
 
     /* Responsive Design */
+    @media (max-width: 1024px) {
+      .link-container {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+    }
+
     @media (max-width: 768px) {
       .container {
-        padding: 20px;
-        margin: 70px auto 20px;
+        padding: 25px;
+        margin: 80px auto 20px;
       }
 
       h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.7rem;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+      }
+
+      .link-container {
+        grid-template-columns: 1fr;
+      }
+
+      .back-button, .theme-toggle {
+        padding: 12px 18px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.7rem;
       }
 
       h2 {
@@ -283,41 +434,14 @@
         font-size: 1.2rem;
       }
 
-      .link-container {
-        grid-template-columns: 1fr;
-      }
-
-      .back-button, .theme-toggle {
-        padding: 10px 15px;
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 15px;
-      }
-
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      h2 {
-        font-size: 1.3rem;
-      }
-
-      h3 {
+      .scroll-button {
+        width: 50px;
+        height: 50px;
         font-size: 1.1rem;
       }
 
-      .scroll-button {
-        width: 45px;
-        height: 45px;
-        font-size: 1rem;
-      }
-
       .scroll-button.bottom {
-        bottom: 70px;
+        bottom: 80px;
       }
     }
   </style>
@@ -346,6 +470,59 @@
       <a href="https://chat.whatsapp.com/KofrrWz7FrR2fM68370i9t?mode=ac_c" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الريادة و الابتكار ( شعبة 3 )</a>
     </div>
     <p class="arabic-translation">(مجموعة طلاب الجامعة، ناشطو الجامعة، مجموعة دردشة طلابية، دراسة التشريح فقط)</p>
+
+    <!-- Pharmacy Section -->
+    <div class="pharmacy-section">
+      <h2>Pharmacy</h2>
+      
+      <h3>First Year</h3>
+      <div class="link-container">
+        <a href="https://chat.whatsapp.com/BnXyii3zklZ4a7NOZyAx1L" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">2025 pharmacists 💊🥼</a>
+        <a href="https://chat.whatsapp.com/DTusznxqZoz94GTUVocE99" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مقدمة في ممارسة الصيدلة</a>
+        <a href="https://chat.whatsapp.com/EALZUiKlPcv3dLD5mD6BLm?mode=ems_copy_c" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الرياده والابتكار</a>
+        <a href="https://chat.whatsapp.com/CgQziiFMxKDFn2RCr8UaYu" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة 1</a>
+        <a href="https://chat.whatsapp.com/JbPcYR5PejYDSbHTCsUnC3" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مقدمة في ممارسة الصيدلية</a>
+        <a href="https://chat.whatsapp.com/JmupqsDMW621p3OQJpWIge" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء عامة عملي</a>
+        <a href="https://chat.whatsapp.com/CWHSt7MNPO48Hb5RTeEPMl" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">علوم حياتية 1</a>
+      </div>
+      
+      <h3>Second Year</h3>
+      <div class="link-container">
+        <a href="https://chat.whatsapp.com/BBmdm1iJpSt3JNuQsCgYEw" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Organic Chemistry 2</a>
+        <a href="https://chat.whatsapp.com/FLlGlNAZEmgLIeZ4cPc7Tp" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy and Physiology 2</a>
+        <a href="https://chat.whatsapp.com/BWwuMyJVcqoL6B5B7FfOaU" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry Lab</a>
+        <a href="https://chat.whatsapp.com/Gia6geI1S29FiLZv6XSyOl" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry</a>
+        <a href="https://chat.whatsapp.com/LUj2XjvZmLv9iOAY91UHZP" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Microbiology and Immunology</a>
+        <a href="https://chat.whatsapp.com/CsborT23sriHsVDpZe0LhE" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Microbiology Lab</a>
+      </div>
+      
+      <h3>Third Year</h3>
+      <div class="link-container">
+        <a href="https://chat.whatsapp.com/HA7waBjQmfmCMMIZ7kyYPX" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تحليل آلي</a>
+        <a href="https://chat.whatsapp.com/DQm252YuMLvFO9nNOxsw7c" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء تحليلة وتحليل آلي عملي</a>
+        <a href="https://chat.whatsapp.com/G82a090e8TOHgTPUlXJeH1" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء دوائية 1</a>
+        <a href="https://chat.whatsapp.com/Cg2YkW2Cmgq3sFQGM1XaQG" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">علم الأدوية 1</a>
+        <a href="https://chat.whatsapp.com/GGrAlYgxZ3r3UV7t5b6yfx" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلانيات 2</a>
+        <a href="https://chat.whatsapp.com/EGV9PZwsCI9BLXxr8P5h4R" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلانيات 2 عملي</a>
+      </div>
+      
+      <h3>Fourth Year</h3>
+      <div class="link-container">
+        <a href="https://chat.whatsapp.com/LBhjsj5ILk1K6K6BBbyrhb" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Drug Design</a>
+        <a href="https://chat.whatsapp.com/Cd6pEG5NTwgFCXlGEwSvUJ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacochemistry Lab</a>
+        <a href="https://chat.whatsapp.com/CTcsAT5dfceLQOtVuytXGM" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacochemistry</a>
+        <a href="https://chat.whatsapp.com/F2MNFr9Z6VD02KzMHXrZym" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacokinetics</a>
+        <a href="https://chat.whatsapp.com/BqaGt0mmeKU5GcqITXr5CC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacokinetics Lab</a>
+        <a href="https://chat.whatsapp.com/LISxqTlYHXUL7cgdekh5Gk" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmaceutical Technology</a>
+        <a href="https://chat.whatsapp.com/GKxH8N3WVQUFkKVpX5p5Wd" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmaceutical Technology</a>
+        <a href="https://chat.whatsapp.com/GJpEbHc5j1wBmxkpX25vSC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Immunology</a>
+        <a href="https://chat.whatsapp.com/Dtsvq4szJ3fL2EQLM8Ldnf" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلية سريرية ومداواة 2</a>
+        <a href="https://chat.whatsapp.com/CHybspEQSzYDpQRopoxjYj" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلية سريرية ومداواة عملي</a>
+        <a href="https://chat.whatsapp.com/K5aHNurYgewHU5ANcriHRv" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">اقتصاديات صيدلانية</a>
+        <a href="https://chat.whatsapp.com/Gbx9DckqRk6IJRr9tth5it" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مستحضرات تجميل</a>
+        <a href="https://chat.whatsapp.com/H1uMHoE8fSe0SGWCLOMtkI" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">إحصاء حيوي تطبيقي</a>
+      </div>
+    </div>
 
     <!-- Clinical Nutrition and Dietetics Section -->
     <h2>Clinical Nutrition and Dietetics</h2>
@@ -391,98 +568,24 @@
     </div>
     <p class="arabic-translation">(ضبط جودة الغذاء وإدارته، التغذية والمناعة، تغذية الرياضيين، مشروع التخرج في التغذية السريرية، العلاج التغذوي لمرضى السرطان، الأغذية الوظيفية)</p>
 
-    <!-- Physical Therapy Section -->
-    <h2>Physical Therapy</h2>
-    <h3>Third Year</h3>
+    <!-- Applied Science University (Balqa) Section -->
+    <h2>Applied Science University (Balqa)</h2>
     <div class="link-container">
-      <a href="https://chat.whatsapp.com/C9nPRynzZzt6SUOEvrf9hl" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Musculoskeletal Physical Therapy (2)</a>
-      <a href="https://chat.whatsapp.com/Gsz59h2xW9yF306pij4x63" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Musculoskeletal Physical Therapy (2) (Practical)</a>
-      <a href="https://chat.whatsapp.com/EBJdpbqyeN4KK0YDDRM8Yk" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Neuromuscular Physical Therapy (2)</a>
-      <a href="https://chat.whatsapp.com/KWjWtgHG6sbAqNHIyZjBHg" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Neuromuscular Physical Therapy (2) (Practical)</a>
-      <a href="https://chat.whatsapp.com/F9zyXwiZxcqKNqqtgP9HoP" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Cardiopulmonary Physical Therapy (2)</a>
-      <a href="https://chat.whatsapp.com/ICZQHwu5RP6AaFQ0cj3YdI" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Cardiopulmonary Physical Therapy (2) (Practical)</a>
-      <a href="https://chat.whatsapp.com/IRCX2bIFnCk1IqXcKtwGI2" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Geriatric Physical Therapy</a>
-      <a href="https://chat.whatsapp.com/HtBiox83LwZ2RhldseoZWe" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Introduction to Clinical Training</a>
-      <a href="https://chat.whatsapp.com/DxAdZ5WvlcnDdAkHp9mgnK" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Prosthetics and Assistive Devices</a>
+      <a href="https://chat.whatsapp.com/ErZhlPgLw2K3ZToErBofMK" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">جميع المواد pdf جامعة البلقاء التطبيقية 👌❤️</a>
+      <a href="https://chat.whatsapp.com/DWjr2UV8EOfFOZ3WGYdFcL" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">وطنية البلقاء جميع الشعب والكليات ❤️👌</a>
+      <a href="https://chat.whatsapp.com/DeoWPYp3Ja17B93ZKNfdYH" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">عسكرية البلقاء كل الشعب والكليات ❤️👌</a>
+      <a href="https://chat.whatsapp.com/FA9UKIlmYWM2ztls20lAzG" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">ثقافه إسلامية البلقاء جميع الشعب والكليات ❤️👌</a>
+      <a href="https://chat.whatsapp.com/FYxdSHjbeEI8RNznhApdIy" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات التواصل البلقاء جميع الشعب والكليات ❤️👌</a>
+      <a href="https://chat.whatsapp.com/LWS3iI7Slvq7zBC8kiQUSR" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">حاسوب 1 البقاء جميع الشعب والكليات ❤️❤️</a>
+      <a href="https://chat.whatsapp.com/I74XPZPl6n30HmILbgj9fm" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صحه وسلامه البلقاء جميع الشعب والكليات ❤️👌</a>
+      <a href="https://chat.whatsapp.com/JGejwoLL26r2SKcLMPwtRC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">استدراكي جميع المواد البلقاء جميع الشعب والكليات ❤️👌</a>
+      <a href="https://chat.whatsapp.com/G1E9kfUz4mzAtbYQMrZzOY" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">ريادة الأعمال البلقاء جميع الشعب والكليات ❤️👌</a>
+      <a href="https://chat.whatsapp.com/GjaOz72hROp5wyA8Ds7JLT" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">لغوية البلقاء جميع الشعب والكليات ❤️👌</a>
+      <a href="https://chat.whatsapp.com/Kjeo9rYbhLA6h1sbMKy6sb" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">العلوم العسكرية - الفصل الأول/2025</a>
+      <a href="https://chat.whatsapp.com/LmMGfFc8zSLEFUEt8gb217?mode=wwc" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">ريادة اعمال د. ليندا شعبة 1، 15:30 دبلوم فصل اول</a>
+      <a href="https://chat.whatsapp.com/G76Pf6gpTCw2bhajktEZV2" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات لغوية انجليزي د سناء عبابنه ن/ر من ٥.٣٠ ال٧</a>
     </div>
-    <p class="arabic-translation">(العلاج الطبيعي للجهاز العضلي الهيكلي ٢، العلاج الطبيعي للجهاز العصبي العضلي ٢، العلاج الطبيعي لحالات القلب و الرئتين ٢، العلاج الطبيعي لكبار السن، مدخل إلى التدريب السريري في العلاج الطبيعي، الأطراف الاصطناعية و الأجهزة المساعدة)</p>
-
-    <h3>Second Year</h3>
-    <div class="link-container">
-      <a href="https://chat.whatsapp.com/HRGImW1e3sx6aCpFmQjoAB" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Neuroscience (Section 1)</a>
-      <a href="https://chat.whatsapp.com/G9KbQWVmCDX7x4kXlQsozB" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Neuroscience (Section 2)</a>
-      <a href="https://chat.whatsapp.com/LPQpqHLmG9VCowBrS5SiOJ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biomechanics (Section 1)</a>
-      <a href="https://chat.whatsapp.com/KyQe3hPL3fdJ7NG5fsjsVY" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biomechanics (Section 2)</a>
-      <a href="https://chat.whatsapp.com/Chpac7kNFH40p924QSxNbr" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Physical and Electrical Therapy (Section 1)</a>
-      <a href="https://chat.whatsapp.com/Ghr1r6odOZeLXYj47grBN4" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Physical and Electrical Therapy (Section 2)</a>
-      <a href="https://chat.whatsapp.com/Cz0Ni94zBZUAO3NGfN1TPz" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Physical and Electrical Therapy (Practical)</a>
-      <a href="https://chat.whatsapp.com/L5nsnqrg7mY1eFuUSgzh2K" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Musculoskeletal System Evaluation</a>
-      <a href="https://chat.whatsapp.com/EiCb3v8SYxFIfyfnNLhKO1" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Musculoskeletal System Evaluation (Practical)</a>
-      <a href="https://chat.whatsapp.com/LQCLect0qnz9wX1mkI9Sjr" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Physical Therapy in Surgical Cases and Burns (Section 1)</a>
-      <a href="https://chat.whatsapp.com/IithZ1SktHrI6O8JF0MIth" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Physical Therapy in Surgical Cases and Burns (Section 2)</a>
-    </div>
-    <p class="arabic-translation">(علم الأعصاب، الميكانيكا الحيوية، العلاج الفيزيائي و الكهربائي، تقييم الجهاز العضلي الهيكلي، العلاج الطبيعي في الحالات الجراحية و الحروق)</p>
-
-    <h3>Additional Courses</h3>
-    <div class="link-container">
-      <a href="https://chat.whatsapp.com/FhRKPp91cBA8XvjswncP89" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Principles and Ethics (Section 1)</a>
-      <a href="https://chat.whatsapp.com/EXK89qhymU278D1hQVqXos" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Principles and Ethics (Section 2)</a>
-      <a href="https://chat.whatsapp.com/LH7xttgKv5OAKSBEkRElKa" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy (Section 1)</a>
-      <a href="https://chat.whatsapp.com/GFZH3p4APa48RjKBcOeCYC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy (Section 2)</a>
-      <a href="https://chat.whatsapp.com/BW5iPlUGHt8HlpkgL6fh1y" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy (Section 3)</a>
-      <a href="https://chat.whatsapp.com/IHFSZe8P3mu6uwiR3bGrcy" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy (Section 4)</a>
-      <a href="https://chat.whatsapp.com/GIhfDBt27SqD1dgLX0M7ad" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Physiology (All Sections)</a>
-      <a href="https://chat.whatsapp.com/DbBxBFQe1ri6GC1XAB9GGq" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacology for Physical Therapy</a>
-      <a href="https://chat.whatsapp.com/FMyx3Hl9BrKFmNa9sQl0JS" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Psychology for Medical Sciences</a>
-      <a href="https://chat.whatsapp.com/DUqtGTXxj9yHCZJzugjt7c" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">موضوعات مختاره في علم المداواه</a>
-    </div>
-    <p class="arabic-translation">(مبادئ و أخلاقيات، علم التشريح، علم وظائف الأعضاء جميع الشعب، علم الادوية للعلاج الطبيعي، علم النفس للعلوم الطبية)</p>
-
-    <!-- Business School Section -->
-    <h2>Business School</h2>
-    <div class="link-container">
-      <a href="https://chat.whatsapp.com/JmzQUKEbm7pBdbBRnbAvid" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Business School Students Group</a>
-      <a href="https://chat.whatsapp.com/C6FF3rVM7Qh5BSIofIoIm3" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مدخل العلوم الاقتصادي English</a>
-      <a href="https://chat.whatsapp.com/Jf4wssHuNe3E7uWa0HAEcR" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">FOV Accounting Group</a>
-    </div>
-    <p class="arabic-translation">(مجموعة طلاب كلية إدارة الأعمال، مدخل العلوم الاقتصادية بالإنجليزية، مجموعة المحاسبة)</p>
-
-    <!-- Linguistics Section -->
-    <h2>Linguistics</h2>
-    <div class="link-container">
-      <a href="https://chat.whatsapp.com/Diihku5b8Z06DCXZfLKVKz" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Comparative Linguistics - Dr. Farghal</a>
-      <a href="https://chat.whatsapp.com/JtfzyuarOJS6F6TxXzfrdr" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Contrastive Discourse Analysis - Dr. Farghal</a>
-    </div>
-    <p class="arabic-translation">(اللسانيات المقارنة - د. فرغال، تحليل الخطاب المقارن - د. فرغال)</p>
-
-    <!-- Computer Science Section -->
-    <h2>Computer Science</h2>
-    <div class="link-container">
-      <a href="https://chat.whatsapp.com/DDRN4vkegzhEYTadtodJoT" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">C.S | ASU</a>
-      <a href="https://chat.whatsapp.com/HmaRdxxBzeuBpwfg8toXfw?mode=r_c " class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Software Testing (1)</a>
-    </div>
-    <p class="arabic-translation">(علوم الحاسوب | الجامعة) | اختبار البرمجيات</p>
-
-    <!-- University Students and ASU Library -->
-    <h2>University Students</h2>
-    <div class="link-container">
-      <a href="https://chat.whatsapp.com/Ipe11O8CpCCKrpUcTIqlQp" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">University Students Group 2</a>
-      <a href="https://chat.whatsapp.com/IOxztwbL2Gr3vQ8nBEirUY" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">ELT Group Department</a>
-    </div>
-    <p class="arabic-translation">(مجموعة طلاب الجامعة ٢، مجموعة قسم تدريس اللغة الإنجليزية)</p>
-
-    <h2>AS+</h2>
-    <div class="link-container">
-      <a href="https://chat.whatsapp.com/EWF9A4xwQrTBTP6QtlTdwX" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">University Academic Content, News & Events</a>
-    </div>
-    <p class="arabic-translation">(المحتوى الأكاديمي، الأخبار والفعاليات الجامعية)</p>
-
-    <h2>ASU Library</h2>
-    <div class="link-container">
-      <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">ASU Electronic Library Hub</a>
-    </div>
-    <p class="arabic-translation">(مركز المكتبة الإلكترونية للجامعة)</p>
-
+    <p class="arabic-translation">(جميع المواد PDF لجامعة البلقاء التطبيقية، الوطنية، العسكرية، الثقافة الإسلامية، مهارات التواصل، حاسوب 1، صحة وسلامة، استدراكي جميع المواد، ريادة الأعمال، اللغوية، العلوم العسكرية، مهارات لغوية إنجليزية)</p>
     <!-- Educational Resources Section -->
     <h2>Educational Resources</h2>
 
@@ -559,137 +662,54 @@
     </div>
     <p class="arabic-translation">(الفصل الرابع: دالة الكثافة، القيمة المتوقعة، التباين والانحراف المعياري، التوزيعات الثنائية، الانحدار الخطي، التوزيع الثنائي، توزيع بواسون، التوزيع الطبيعي، نظرية الحد المركزي، التوزيعات المستمرة)</p>
 
-    <!-- Disclaimer Section -->
+
+    <!-- Disclaimer -->
     <div class="disclaimer">
-      <strong>Disclaimer:</strong> By joining any of the WhatsApp groups or accessing the educational resources listed above, you acknowledge that you are solely responsible for your actions. The university and the website's administrators are not responsible for any actions or consequences that may arise from your participation in these groups or use of these resources. These group links and resources are listed as public. If you wish to have your link or resource removed, please contact us directly via the <a href="mailto:necro144@yahoo.com" target="_blank" rel="noopener noreferrer">Requests Group</a>, and we will remove it within 24 hours.
+      <strong>Disclaimer:</strong> This website is a student-led initiative and is not officially affiliated with any university. The links provided are for educational and communication purposes only. Please verify the authenticity of any group before joining. If you encounter any issues with the links or have suggestions for improvement, please contact the website administrator.
     </div>
   </div>
 
   <script>
-    // Function to toggle light/dark mode
+    // Theme Toggle Function
     function toggleTheme() {
-      const body = document.body;
+      document.body.classList.toggle('dark-mode');
       const themeToggle = document.querySelector('.theme-toggle');
-      body.classList.toggle('dark-mode');
-      
-      // Save preference to localStorage
-      const isDarkMode = body.classList.contains('dark-mode');
-      localStorage.setItem('darkMode', isDarkMode);
-      
-      if (isDarkMode) {
+      if (document.body.classList.contains('dark-mode')) {
         themeToggle.textContent = 'Switch to Light Mode';
+        localStorage.setItem('theme', 'dark');
       } else {
         themeToggle.textContent = 'Switch to Dark Mode';
+        localStorage.setItem('theme', 'light');
       }
     }
 
     // Check for saved theme preference
-    function checkThemePreference() {
-      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-      const savedTheme = localStorage.getItem('darkMode');
-      const themeToggle = document.querySelector('.theme-toggle');
-      
-      if (savedTheme === 'true' || (savedTheme === null && prefersDarkScheme.matches)) {
-        document.body.classList.add('dark-mode');
-        themeToggle.textContent = 'Switch to Light Mode';
-      } else {
-        document.body.classList.remove('dark-mode');
-        themeToggle.textContent = 'Switch to Dark Mode';
-      }
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.querySelector('.theme-toggle').textContent = 'Switch to Light Mode';
     }
 
-    // Function to scroll to top
+    // Scroll to Top Function
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Function to scroll to bottom
+    // Scroll to Bottom Function
     function scrollToBottom() {
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
-    // Initialize theme on load
+    // Add animation to links on hover
     document.addEventListener('DOMContentLoaded', function() {
-      checkThemePreference();
-      
-      // Add animation to links when they come into view
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = 1;
-            entry.target.style.transform = 'translateY(0)';
-          }
+      const links = document.querySelectorAll('.whatsapp-link');
+      links.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-5px)';
         });
-      }, { threshold: 0.1 });
-
-      document.querySelectorAll('.whatsapp-link').forEach(link => {
-        link.style.opacity = 0;
-        link.style.transform = 'translateY(20px)';
-        link.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        observer.observe(link);
+        link.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+        });
       });
-    });
-  </script>
-
-  <script>
-    // Anti-keyboard shortcuts and code inspection script
-    document.addEventListener('DOMContentLoaded', function() {
-      // Disable right-click context menu
-      document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-      });
-
-      // Disable keyboard shortcuts
-      document.addEventListener('keydown', function(e) {
-        // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
-        if (e.key === 'F12' || 
-            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
-            (e.ctrlKey && e.key === 'u')) {
-          e.preventDefault();
-          e.stopPropagation();
-          return false;
-        }
-      });
-
-      // Disable text selection
-      document.addEventListener('selectstart', function(e) {
-        e.preventDefault();
-        return false;
-      });
-
-      // Blur elements when tabbing (prevents keyboard navigation)
-      document.addEventListener('keyup', function(e) {
-        if (e.key === 'Tab') {
-          document.activeElement.blur();
-        }
-      });
-
-      // Prevent drag-and-drop
-      document.addEventListener('dragstart', function(e) {
-        e.preventDefault();
-        return false;
-      });
-
-      // Periodic check for dev tools (works in some browsers)
-      function checkDevTools() {
-        const widthThreshold = window.outerWidth - window.innerWidth > 160;
-        const heightThreshold = window.outerHeight - window.innerHeight > 160;
-        
-        if (heightThreshold || widthThreshold) {
-          // Dev tools might be open
-          document.body.innerHTML = '<h1 style="text-align:center;padding:50px;">Developer tools are not allowed on this page</h1>';
-          window.location.reload();
-        }
-      }
-      setInterval(checkDevTools, 1000);
-
-      // Override console methods
-      console.log = function() {};
-      console.warn = function() {};
-      console.error = function() {};
-      console.info = function() {};
-      console.debug = function() {};
     });
   </script>
 </body>

@@ -6,183 +6,168 @@
 <title>جدول مواعيد الحافلات الجامعية</title>
 <style>
 :root {
-  --primary-color:#003366;
-  --secondary-color:#007bff;
-  --accent-color:#ffb400;
-  --light-bg:#f7f9fc;
-  --light-card:#fff;
-  --dark-bg:#1c1f26;
-  --dark-card:#2a2f38;
-  --dark-text:#f5f5f5;
-  --light-text:#222;
+  --primary:#003366;
+  --secondary:#0066cc;
+  --accent:#ffb400;
+  --light-bg:#f9fafc;
+  --dark-bg:#1a1d23;
+  --card-light:#fff;
+  --card-dark:#2a2f38;
+  --text-light:#222;
+  --text-dark:#f5f5f5;
   --transition:all 0.3s ease;
 }
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Cairo",sans-serif;}
-body{
-  background:var(--light-bg);
-  color:var(--light-text);
-  line-height:1.7;
-  transition:var(--transition);
+body {
+  background: var(--light-bg);
+  color: var(--text-light);
+  font-family: "Cairo", sans-serif;
+  transition: var(--transition);
 }
-body.dark{
-  background:var(--dark-bg);
-  color:var(--dark-text);
+body.dark {
+  background: var(--dark-bg);
+  color: var(--text-dark);
 }
-header{
-  background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
-  color:white;
-  text-align:center;
-  padding:25px 10px;
+header {
+  background: linear-gradient(135deg,var(--primary),var(--secondary));
+  color: #fff;
+  text-align: center;
+  padding: 25px 10px;
 }
-header h1{font-size:2rem;margin-bottom:5px;}
-.container{max-width:1100px;margin:20px auto;padding:10px;}
-.controls{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
-.search-box input,.filter-options select{
-  padding:10px 15px;border:1px solid #ccc;border-radius:8px;
-  font-size:1rem;transition:var(--transition);
+header h1 { margin: 0; font-size: 2rem; }
+.container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+.controls { display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; margin-bottom:20px; }
+input, select, button, a {
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: var(--transition);
 }
-.search-box input:focus,.filter-options select:focus{
-  border-color:var(--secondary-color);
-  box-shadow:0 0 0 2px rgba(0,123,255,0.2);
+input, select {
+  padding:10px 15px;
+  border:1px solid #ccc;
 }
-.toggle-buttons{display:flex;gap:10px;}
-.toggle-buttons button,.back-btn,.theme-toggle{
-  padding:10px 18px;border:none;border-radius:8px;cursor:pointer;
-  font-weight:bold;transition:var(--transition);
+button, a {
+  padding:10px 16px;
+  cursor:pointer;
+  font-weight:bold;
+  text-decoration:none;
 }
-.toggle-buttons button{background:var(--secondary-color);color:white;}
-.toggle-buttons button.active{background:#004a99;}
-.toggle-buttons button:hover{background:#0056b3;}
-.back-btn{background:var(--accent-color);color:white;text-decoration:none;}
-.back-btn:hover{background:#e6a200;}
-.theme-toggle{background:#444;color:white;}
-.theme-toggle:hover{background:#666;}
-.schedule-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
-.location-card{
-  background:var(--light-card);
+button:hover, a:hover { opacity:0.9; }
+.btn { background:var(--secondary); color:#fff; }
+.btn.active { background:#004a99; }
+.back-btn { background:var(--accent); color:#fff; }
+.theme-toggle { background:#444; color:#fff; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
+.card {
+  background:var(--card-light);
   border-radius:10px;
   box-shadow:0 4px 8px rgba(0,0,0,0.1);
   transition:var(--transition);
-  overflow:hidden;
 }
-body.dark .location-card{background:var(--dark-card);}
-.location-card:hover{transform:translateY(-5px);}
-.card-header{background:var(--primary-color);color:white;padding:15px 20px;font-weight:bold;font-size:1.2rem;}
-.card-body{padding:20px;}
-.pickup{color:var(--accent-color);font-weight:bold;margin-bottom:10px;line-height:1.6;}
-.timing-group{margin-bottom:10px;}
-.timing-label{font-weight:bold;color:var(--primary-color);}
-body.dark .timing-label{color:#5aa8ff;}
-.timing-values{display:flex;flex-wrap:wrap;gap:8px;margin-top:5px;}
-.time-badge{
+body.dark .card { background:var(--card-dark); }
+.card:hover { transform:translateY(-5px); }
+.card-header {
+  background:var(--primary);
+  color:#fff;
+  padding:15px;
+  font-weight:bold;
+  font-size:1.2rem;
+}
+.card-body { padding:15px 20px; }
+.pickup { color:var(--accent); margin-bottom:10px; line-height:1.6; font-weight:600; }
+.times { margin-bottom:8px; }
+.label { color:var(--primary); font-weight:bold; }
+body.dark .label { color:#5aa8ff; }
+.time-badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:5px; }
+.badge {
   background:var(--light-bg);
-  padding:6px 10px;
   border-radius:20px;
+  padding:5px 10px;
   font-size:0.9rem;
 }
-body.dark .time-badge{background:#333;color:#eee;}
-.no-results{
-  grid-column:1 / -1;text-align:center;background:white;padding:30px;border-radius:10px;
-}
-body.dark .no-results{background:var(--dark-card);}
-@media(max-width:768px){header h1{font-size:1.6rem;}.controls{flex-direction:column;}}
+body.dark .badge { background:#333; color:#eee; }
+.no-results { grid-column:1/-1; text-align:center; padding:25px; background:#fff; border-radius:10px; }
+body.dark .no-results { background:var(--card-dark); }
 </style>
 </head>
 <body>
-<header>
-<h1>جدول مواعيد الحافلات الجامعية</h1>
-</header>
+<header><h1>جدول مواعيد الحافلات الجامعية</h1></header>
 
 <div class="container">
   <div class="controls">
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="ابحث عن منطقة أو نقطة تجمع...">
-    </div>
-    <div class="filter-options">
-      <select id="timeFilter">
-        <option value="all">جميع الأوقات</option>
-        <option value="am">صباحًا (AM)</option>
-        <option value="pm">مساءً (PM)</option>
-      </select>
-    </div>
-    <div class="toggle-buttons">
-      <button id="amButton">عرض صباحًا</button>
-      <button id="pmButton">عرض مساءً</button>
-      <a href="index.html" class="back-btn">رجوع</a>
-      <button class="theme-toggle" id="themeToggle">🌙 / ☀️</button>
-    </div>
+    <input type="text" id="search" placeholder="ابحث عن منطقة...">
+    <select id="filter">
+      <option value="all">كل الأوقات</option>
+      <option value="am">صباحًا (AM)</option>
+      <option value="pm">مساءً (PM)</option>
+    </select>
+    <button class="btn" id="amBtn">عرض صباحًا</button>
+    <button class="btn" id="pmBtn">عرض مساءً</button>
+    <a href="index.html" class="back-btn">رجوع</a>
+    <button id="theme" class="theme-toggle">🌙 / ☀️</button>
   </div>
 
-  <div class="schedule-grid" id="scheduleContainer"></div>
+  <div class="grid" id="grid"></div>
 </div>
 
 <script>
-// --- COMPLETE BUS DATA (24 LOCATIONS) ---
-const busData = [
-{name:"وصفي التل", pickup:"مخابز بسمان، إشارة الرز، شارع وصفي التل الرئيسي", morning:["6:45","7:45","8:45","9:45","10:45"], evening:["1:15","2:15","4:15","5:15"]},
+const data = [
+{name:"وصفي التل",pickup:"مخابز بسمان، إشارة الرز",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
 {name:"خلدا",pickup:"الدر المنثور، روان كيك، دوار النعيمات، إشارة البنك العربي، إشارة البشيتي",morning:["6:45","7:45","8:45","9:45"],evening:["1:15","2:15","3:15","4:15","5:15"]},
 {name:"الداخلية - دوار فراس",pickup:"مدرسة سكينة، فندق الريجنسي، مختار مول، فندق القدس، جسر الرأي والدستور",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
-{name:"الاستقلال",pickup:"شارع الأقصى، كازية الاستقلال، مقابل المستشفى، بعد مستشفى الاستقلال، مدارس المنهل، عرجان",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
-{name:"طبربور",pickup:"طارق مول، كشك الشرطة، KFC، إشارات طبربور، عريفة مول، كازية المناصير، نزول النبعة، طريق ياجوز",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
-{name:"طبربور أبو عليا",pickup:"دوار محكمة الأحداث، دوار العوادات، دوار الصحفيين، مخابز بسام، دوار الدبابة",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","4:15"]},
-{name:"الصويفية",pickup:"بعد دوار الكيلو، قبل إشارات وزارة النقل، أوركيد، الخامس والسادس، جِبري، إشارة الصويفية، زعتر وزيت، المدارس الأمريكية",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"الاستقلال",pickup:"شارع الأقصى، كازية الاستقلال، مقابل المستشفى، بعد المستشفى",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"طبربور",pickup:"شارع الشهيد، مقابل KFC، إشارات الأمانة، نيون الجندويل",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"طبربور أبو عليا",pickup:"دوار محكمة الأحداث، دوار الاستقلال، الجامعة التطبيقية",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","4:15","5:15"]},
+{name:"الصويفية",pickup:"دوار الصويفية، فاموس، وزارة النقل، إشارة فندق الساوس",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
 {name:"البيادر - عبدالله غوشة",pickup:"بعد دوار الشعب، شارع ياسر مول، صيدلية سعد، الدوار الثامن عبدالله غوشة، فندق جنيفا، دوار الكيلو، شارع المدينة",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
 {name:"رغدان",pickup:"مجمع رغدان، تكية أم علي، شارع المحطة، الاستقلال",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
 {name:"الجامعة الأردنية",pickup:"طلوع نيفين، شارع الجامعة، مستشفى الجامعة، جامع الجامعة، حضرموت، التعليم العالي",morning:["7:15","8:15","9:15","10:15"],evening:["1:15","2:15","3:15","4:15","5:15"]},
 {name:"ضاحية الرشيد",pickup:"مخبز الجوهرة، ميني ماركت، سكن أميمة، مدارس المنهل، سكن عمّون",morning:["7:15","8:15","9:15","10:15"],evening:["1:15","2:15","3:15","4:15","5:15"]},
-{name:"الزرقاء - ياجوز",pickup:"مجمع الزرقاء الجديد قرب الجامع في المجمع، إشارات رحمة، إشارات حسين، عوجان، الشمالي، ياجوز",morning:["6:45","8:00","9:00"],evening:["1:15","2:15","4:15","5:15"]},
+{name:"الزرقاء - ياجوز",pickup:"مجمع الزرقاء الجديد قرب الجامع، إشارات رحمة، إشارات حسين، عوجان، الشمالي، ياجوز",morning:["6:45","8:15","9:15"],evening:["1:15","2:15","4:15","5:15"]},
 {name:"مرج الحمام",pickup:"دوار البرديني، دوار الدلة، دوار الجندي، الغرفة الرابعة، كلية لومينوس، طريق المطار، كازية المناصير",morning:["6:45","8:00"],evening:["1:15","2:15","4:15"]},
 {name:"الزرقاء الجديدة 36",pickup:"إشارة بنك العربي، مقابل سامح مول، إشارات سيفوي، دوار معصوم، إشارات الزواهرة، دوار خميس، بيرين",morning:["6:45","8:00"],evening:["1:15","2:15","4:15","5:15"]},
 {name:"حي نزال - الياسمين",pickup:"شارع الحرية، دوار الحمايدة، إشارات أبو زغلة، إشارة الإرسال، دوار الخريطة، حي نزال، راس العين، طلوع المهاجرين، جسر مستشفى عاقلة",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
 {name:"شارع الحرية",pickup:"شارع الحرية، دوار الحمايدة، إشارات أبو زغلة، إشارة الإرسال، دوار الخريطة، حي نزال، راس العين، طلوع المهاجرين، الدوار الثالث",morning:["6:45","7:45"],evening:["1:15","2:15","4:15","5:15"]},
 {name:"الهاشمي",pickup:"وزارة الصحة، إشارات مستشفى حمزة، العنتباوي، السوق، كازية توتال، مخابز تفاحة، إشارات العنبتاوي",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","4:15","5:15"]},
 {name:"الوحدات",pickup:"دوار الشرق الأوسط، إشارات الثلاثين، وادي الرمم، الاستقلال",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
-{name:"عين الباشا",pickup:"مخابز زي العسل، دوار عين الباشا، دوار المفتاح",morning:["7:00"],evening:["4:15"]},
-{name:"الرصيفة",pickup:"المنتزهات، مخيم شنلر، جسر ماركا",morning:["6:45"],evening:["4:15"]},
-{name:"البقعة",pickup:"مجمع البقعة، البنك العربي",morning:["7:00"],evening:["4:15"]},
-{name:"السلط",pickup:"مجمع السلط، السروات، دوار الكمالية، الجسر، إشارات الدوريات، دوار الأميرة بسمة، أبو نصير",morning:["6:50"],evening:["4:15"]},
+{name:"عين الباشا",pickup:"مخابز زي العسل، دوار عين الباشا، دوار المفتاح",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","4:15"]},
+{name:"البقعة",pickup:"مجمع البقعة، البنك العربي",morning:["7:00","8:00"],evening:["1:15","2:15","4:15"]},
+{name:"الرصيفة",pickup:"المنتزهات، مخيم شنلر، جسر ماركا",morning:["6:45","8:00"],evening:["1:15","2:15","4:15"]},
+{name:"السلط",pickup:"مجمع السلط، السروات، دوار الكمالية، الجسر، إشارات الدوريات، دوار الأميرة بسمة، أبو نصير",morning:["6:50","8:00","9:00"],evening:["1:15","2:15","4:15","5:15"]},
 {name:"صويلح",pickup:"بنك القاهرة عمان، إشارات الدوريات، دوار الأميرة بسمة، أبو نصير",morning:["7:15","8:15","9:15"],evening:["1:15","2:15","4:15","5:15"]}
 ];
 
-// Render
-function renderSchedule(data,filter){
-const container=document.getElementById("scheduleContainer");
-container.innerHTML="";
-if(data.length===0){container.innerHTML='<div class="no-results">لم يتم العثور على نتائج مطابقة</div>';return;}
-data.forEach(area=>{
-let am=filter!=="pm"?area.morning.map(t=>`<span class="time-badge">${t} AM</span>`).join(""):"";
-let pm=filter!=="am"?area.evening.map(t=>`<span class="time-badge">${t} PM</span>`).join(""):"";
-const card=document.createElement("div");
-card.className="location-card";
-card.innerHTML=`
-<div class="card-header">${area.name}</div>
+function render(list, mode="all"){
+const grid=document.getElementById("grid");
+grid.innerHTML="";
+if(list.length===0){grid.innerHTML='<div class="no-results">لا توجد نتائج</div>';return;}
+list.forEach(item=>{
+let am = mode!=="pm"? item.morning.map(t=>`<span class="badge">${t} AM</span>`).join("") : "";
+let pm = mode!=="am"? item.evening.map(t=>`<span class="badge">${t} PM</span>`).join("") : "";
+const el=document.createElement("div");
+el.className="card";
+el.innerHTML=`<div class="card-header">${item.name}</div>
 <div class="card-body">
-<div class="pickup">📍 ${area.pickup}</div>
-<div class="timing-group"><span class="timing-label">مواعيد صباحية:</span><div class="timing-values">${am}</div></div>
-<div class="timing-group"><span class="timing-label">مواعيد مسائية:</span><div class="timing-values">${pm}</div></div>
+<div class="pickup">📍 ${item.pickup}</div>
+<div class="times"><span class="label">مواعيد صباحية:</span><div class="time-badges">${am}</div></div>
+<div class="times"><span class="label">مواعيد مسائية:</span><div class="time-badges">${pm}</div></div>
 </div>`;
-container.appendChild(card);
+grid.appendChild(el);
 });
 }
 
-// Filter + Theme
-function filterSchedule(filter="all"){
-const term=document.getElementById("searchInput").value.toLowerCase();
-const filtered=busData.filter(a=>a.name.toLowerCase().includes(term)||a.pickup.toLowerCase().includes(term));
-renderSchedule(filtered,filter);
-document.getElementById("amButton").classList.toggle("active",filter==="am");
-document.getElementById("pmButton").classList.toggle("active",filter==="pm");
-document.getElementById("timeFilter").value=filter;
+function filterData(mode="all"){
+const search=document.getElementById("search").value.trim();
+const res=data.filter(d=>d.name.includes(search)||d.pickup.includes(search));
+render(res,mode);
 }
 
-document.getElementById("themeToggle").addEventListener("click",()=>document.body.classList.toggle("dark"));
-document.addEventListener("DOMContentLoaded",()=>{
-renderSchedule(busData,"all");
-document.getElementById("searchInput").addEventListener("input",()=>filterSchedule(document.getElementById("timeFilter").value));
-document.getElementById("timeFilter").addEventListener("change",e=>filterSchedule(e.target.value));
-document.getElementById("amButton").addEventListener("click",()=>filterSchedule("am"));
-document.getElementById("pmButton").addEventListener("click",()=>filterSchedule("pm"));
-});
+document.getElementById("amBtn").addEventListener("click",()=>{filterData("am");});
+document.getElementById("pmBtn").addEventListener("click",()=>{filterData("pm");});
+document.getElementById("filter").addEventListener("change",e=>filterData(e.target.value));
+document.getElementById("search").addEventListener("input",()=>filterData(document.getElementById("filter").value));
+document.getElementById("theme").addEventListener("click",()=>document.body.classList.toggle("dark"));
+render(data,"all");
 </script>
 </body>
 </html>
