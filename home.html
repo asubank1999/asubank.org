@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU Document Library</title>
+    <meta name="google-adsense-account" content="ca-pub-7033538324685491">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        :root {
+            --primary: #8C1D40; /* ASU Maroon */
+            --secondary: #FFC627; /* ASU Gold */
+            --accent: #00A3E0; /* ASU Blue */
+            --light: #F8F9FA;
+            --dark: #191919;
+            --gray: #6C757D;
+            --success: #78BE20;
+            --card-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        /* Theme Colors */
+        .theme-red {
+            --primary: #DC2626;
+            --secondary: #EF4444;
+            --accent: #FECACA;
+        }
+
+        .theme-pink {
+            --primary: #DB2777;
+            --secondary: #EC4899;
+            --accent: #FBCFE8;
+        }
+
+        .theme-black {
+            --primary: #000000;
+            --secondary: #374151;
+            --accent: #6B7280;
+        }
+
+        .theme-white {
+            --primary: #6B7280;
+            --secondary: #9CA3AF;
+            --accent: #E5E7EB;
+        }
+
+        .theme-blue {
+            --primary: #2563EB;
+            --secondary: #3B82F6;
+            --accent: #BFDBFE;
+        }
+
+        .theme-green {
+            --primary: #059669;
+            --secondary: #10B981;
+            --accent: #A7F3D0;
+        }
+
+        .theme-purple {
+            --primary: #7C3AED;
+            --secondary: #8B5CF6;
+            --accent: #DDD6FE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            transition: var(--transition);
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        body.background-enabled {
+            background-image: url('IMG_0569.JPG');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        body.background-enabled::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            z-index: -1;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark);
+            color: var(--light);
+        }
+
+        body.dark-mode.background-enabled::before {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Header & Navigation with Vanishing on Scroll */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 70%, black) 100%);
+            color: white;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .logo-section img {
+            height: 55px;
+            width: auto;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .logo-section h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            flex: 1;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .nav-links a, .nav-links button {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            padding: 0.7rem 1.3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-links a:hover, .nav-links button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .mode-toggle, .background-toggle, .theme-toggle {
+            background: var(--secondary) !important;
+            color: var(--dark) !important;
+            font-weight: 600 !important;
+            border: 2px solid var(--secondary) !important;
+        }
+
+        .mode-toggle:hover, .background-toggle:hover, .theme-toggle:hover {
+            background: white !important;
+            color: var(--primary) !important;
+            border-color: white !important;
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            position: relative;
+        }
+
+        .theme-options {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            z-index: 10000;
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .theme-options.show {
+            display: grid;
+        }
+
+        body.dark-mode .theme-options {
+            background: #2a2a2a;
+        }
+
+        .theme-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .theme-option:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-option.active {
+            border-color: var(--dark);
+            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--dark);
+        }
+
+        body.dark-mode .theme-option.active {
+            border-color: white;
+            box-shadow: 0 0 0 2px #2a2a2a, 0 0 0 4px white;
+        }
+
+        .theme-red-option { background: #DC2626; }
+        .theme-pink-option { background: #DB2777; }
+        .theme-black-option { background: #000000; }
+        .theme-white-option { background: #FFFFFF; border: 1px solid #E5E7EB; }
+        .theme-blue-option { background: #2563EB; }
+        .theme-green-option { background: #059669; }
+        .theme-purple-option { background: #7C3AED; }
+        .theme-default-option { background: #8C1D40; }
+
+        .theme-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 9999;
+        }
+
+        .theme-overlay.show {
+            display: block;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            margin-top: 140px;
+        }
+
+        .priority-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        body.dark-mode .section-title {
+            color: var(--secondary);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .subject-card {
+            background: white;
+            border-radius: var(--card-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark-mode .subject-card {
+            background: #2a2a2a;
+            border-left-color: var(--secondary);
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .subject-card.priority {
+            border-left: 4px solid var(--secondary);
+        }
+
+        .subject-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subject-card p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode .subject-card p {
+            color: #aaa;
+        }
+
+        .arabic-translation {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 500;
+            margin-top: 0.3rem;
+        }
+
+        body.dark-mode .arabic-translation {
+            color: var(--secondary);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--secondary);
+            color: var(--dark);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 0 var(--card-radius) 0 var(--card-radius);
+        }
+
+        .free-badge {
+            background: var(--success);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .service-badge {
+            background: var(--accent);
+            color: var(--dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Special Cards */
+        .special-card {
+            grid-column: span 2;
+            background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 70%, black) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        body.dark-mode .special-card {
+            background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 70%, black) 0%, var(--primary) 100%);
+        }
+
+        .special-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .special-card p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+
+        .special-card .btn {
+            background: var(--secondary);
+            color: var(--dark);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .special-card .btn:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #25D366;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 1rem 0;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Site Description */
+        .site-description {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--gray);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .site-description {
+            color: #aaa;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                text-align: center;
+            }
+            
+            .logo-section {
+                flex-direction: row;
+                gap: 0.75rem;
+            }
+            
+            .logo-section h1 {
+                font-size: 1.4rem;
+            }
+
+            .logo-section img {
+                height: 45px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-links a, .nav-links button {
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .special-card {
+                grid-column: span 1;
+            }
+
+            .theme-options {
+                width: 300px;
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .theme-option {
+                width: 40px;
+                height: 40px;
+            }
+
+            main {
+                margin-top: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-section h1 {
+                font-size: 1.2rem;
+            }
+
+            .logo-section img {
+                height: 40px;
+            }
+
+            .nav-links a, .nav-links button {
+                padding: 0.55rem 0.9rem;
+                font-size: 0.8rem;
+            }
+            
+            .subject-card {
+                padding: 1.2rem;
+            }
+            
+            .subject-card h3 {
+                font-size: 1rem;
+            }
+
+            main {
+                margin-top: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="banner">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU Logo">
+                <h1>E-Library Hub</h1>
+            </div>
+            
+            <nav>
+                <div class="nav-container">
+                    <div class="nav-links">
+                        <a href="uni_tos">
+                            <span>📋</span> Terms of Service
+                        </a>
+                        <a href="links">
+                            <span>🔗</span> Useful Links
+                        </a>
+                        <a href="index.html">
+                            <span>🏛️</span> Old ASU XYZ Style
+                        </a>
+                        <div class="theme-selector">
+                            <button id="theme-toggle" class="theme-toggle">
+                                <span>🎨</span> Themes
+                            </button>
+                        </div>
+                        <button id="mode-toggle" class="mode-toggle">
+                            <span>🌙</span> Dark Mode
+                        </button>
+                        <button id="background-toggle" class="background-toggle">
+                            <span>🖼️</span> Background
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Theme Overlay and Options -->
+    <div class="theme-overlay" id="themeOverlay"></div>
+    <div class="theme-options" id="themeOptions">
+        <div class="theme-option theme-default-option active" data-theme="default"></div>
+        <div class="theme-option theme-red-option" data-theme="red"></div>
+        <div class="theme-option theme-pink-option" data-theme="pink"></div>
+        <div class="theme-option theme-black-option" data-theme="black"></div>
+        <div class="theme-option theme-white-option" data-theme="white"></div>
+        <div class="theme-option theme-blue-option" data-theme="blue"></div>
+        <div class="theme-option theme-green-option" data-theme="green"></div>
+        <div class="theme-option theme-purple-option" data-theme="purple"></div>
+    </div>
+
+    <main>
+        <!-- Matcher Section -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>👥</span> Find Your Study Partners
+            </h2>
+            
+            <div class="card-grid">
+                <a href="matcher.html" class="subject-card priority">
+                    <span class="card-badge">NEW</span>
+                    <h3>
+                        <span>🔍</span> Course Matcher
+                    </h3>
+                    <p>Find classmates with similar schedules and interests</p>
+                    <p class="arabic-translation">ابحث عن زملاء الدراسة</p>
+                    <div class="free-badge">Free Service</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        Fill out your profile and we'll match you with classmates who share at least 50% compatibility. Once matched, you'll exchange contact information!
+                    </p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Rating Section -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>⭐</span> Professor Ratings
+            </h2>
+            
+            <div class="card-grid">
+                <a href="portal_to_rating" class="subject-card priority">
+                    <h3>
+                        <span>📝</span> Rate Professors Anonymously
+                    </h3>
+                    <p>Share your experience to help other students</p>
+                    <p class="arabic-translation">قيم الدكاترة anonymously</p>
+                    <div class="free-badge">Free Service</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        Your anonymous feedback helps fellow students make informed decisions when choosing courses and professors. All reviews are respectful and constructive.
+                    </p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Priority Section -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>🚀</span> Quick Access
+            </h2>
+            
+            <div class="card-grid">
+                <a href="confirm_device" class="subject-card priority">
+                    <span class="card-badge">NEW</span>
+                    <h3>
+                        <span>📥</span> Recent Uploads
+                    </h3>
+                    <p>Latest study materials and resources</p>
+                    <p class="arabic-translation">آخر التحديثات</p>
+                    <div class="free-badge">Free Service</div>
+                </a>
+                
+                <a href="student_request_portal" class="subject-card priority">
+                    <h3>
+                        <span>📬</span> Make a Request
+                    </h3>
+                    <p>Can't find what you need? Request it here</p>
+                    <p class="arabic-translation">اطلب مادة</p>
+                    <div class="service-badge">Paid Service Available</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        We offer professional PDF creation, summaries, and test banks. Contact us for pricing and details.
+                    </p>
+                </a>
+                
+                <a href="uploadmethod" class="subject-card priority">
+                    <h3>
+                        <span>📤</span> Upload Files
+                    </h3>
+                    <p>Share your study materials with others</p>
+                    <p class="arabic-translation">شارك ملفاتك</p>
+                    <div class="free-badge">Free Service</div>
+                </a>
+                
+                <a href="cal2026" class="subject-card priority">
+                    <h3>
+                        <span>📅</span> Academic Calendar 2026
+                    </h3>
+                    <p>Important dates and deadlines</p>
+                    <p class="arabic-translation">التقويم الأكاديمي</p>
+                </a>
+                
+                <a href="placement" class="subject-card priority">
+                    <h3>
+                        <span>📝</span> Placement Tests
+                    </h3>
+                    <p>Level assessment exams</p>
+                    <p class="arabic-translation">امتحانات المستوى</p>
+                </a>
+                
+                <a href="https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing" class="subject-card priority" target="_blank">
+                    <h3>
+                        <span>📚</span> Study Plans
+                    </h3>
+                    <p>Academic curriculum and course plans</p>
+                    <p class="arabic-translation">الخطة الدراسية</p>
+                </a>
+            </div>
+        </section>
+        
+        <!-- WhatsApp Community -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="whatsapp-btn" target="_blank">
+                <span>💬</span> Join Our WhatsApp Community
+                <span style="font-size: 0.8rem; margin-left: 5px;">(انضم إلى مجتمعنا)</span>
+            </a>
+        </div>
+
+        <!-- Subject Categories -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>📂</span> Subject Categories
+            </h2>
+            
+            <div class="card-grid">
+                <a href="asu_date_asu" class="subject-card">
+                    <h3>
+                        <span>📅</span> University Calendar 2024-2025
+                    </h3>
+                    <p class="arabic-translation">التقويم الجامعي</p>
+                </a>
+                
+                <a href="asu_date_asu2025_2026" class="subject-card">
+                    <h3>
+                        <span>📅</span> University Calendar 2025-2026
+                    </h3>
+                    <p class="arabic-translation">التقويم الجامعي</p>
+                </a>
+                
+                <a href="bus20251" class="subject-card">
+                    <h3>
+                        <span>🚌</span> Bus Times
+                    </h3>
+                    <p class="arabic-translation">مواعيد الحافلات</p>
+                </a>
+                
+                <a href="presentations" class="subject-card">
+                    <h3>
+                        <span>📂</span> Presentations
+                    </h3>
+                    <p class="arabic-translation">العروض التقديمية</p>
+                </a>
+                
+                <a href="mostwanted" class="subject-card">
+                    <h3>
+                        <span>🔥</span> Most Wanted Files
+                    </h3>
+                    <p class="arabic-translation">الملفات الأكثر طلباً</p>
+                </a>
+                
+                <a href="english" class="subject-card">
+                    <h3>
+                        <span>📚</span> English Literature / Translation
+                    </h3>
+                    <p class="arabic-translation">الأدب الإنجليزي / الترجمة</p>
+                </a>
+                
+                <a href="others" class="subject-card">
+                    <h3>
+                        <span>📜</span> Elective Courses / Other
+                    </h3>
+                    <p class="arabic-translation">المقررات الاختيارية / أخرى</p>
+                </a>
+                
+                <a href="unarranged" class="subject-card">
+                    <h3>
+                        <span>📋</span> Unarranged - Others
+                    </h3>
+                    <p class="arabic-translation">غير مصنف - أخرى</p>
+                </a>
+                
+                <a href="it" class="subject-card">
+                    <h3>
+                        <span>💻</span> Information Technology
+                    </h3>
+                    <p class="arabic-translation">تكنولوجيا المعلومات</p>
+                </a>
+                
+                <a href="business" class="subject-card">
+                    <h3>
+                        <span>💼</span> Business
+                    </h3>
+                    <p class="arabic-translation">الأعمال</p>
+                </a>
+                
+                <a href="engineering" class="subject-card">
+                    <h3>
+                        <span>⚙️</span> Engineering
+                    </h3>
+                    <p class="arabic-translation">الهندسة</p>
+                </a>
+                
+                <a href="demography" class="subject-card">
+                    <h3>
+                        <span>📊</span> Demography
+                    </h3>
+                    <p class="arabic-translation">الديموغرافيا</p>
+                </a>
+                
+                <a href="biology" class="subject-card">
+                    <h3>
+                        <span>🧬</span> Biology
+                    </h3>
+                    <p class="arabic-translation">علم الأحياء</p>
+                </a>
+                
+                <a href="biochemistry" class="subject-card">
+                    <h3>
+                        <span>🧪</span> Biochemistry
+                    </h3>
+                    <p class="arabic-translation">الكيمياء الحيوية</p>
+                </a>
+                
+                <a href="physiology" class="subject-card">
+                    <h3>
+                        <span>🧬</span> Physiology
+                    </h3>
+                    <p class="arabic-translation">علم وظائف الأعضاء</p>
+                </a>
+                
+                <a href="lab_related" class="subject-card">
+                    <h3>
+                        <span>⚗️</span> Lab Materials
+                    </h3>
+                    <p class="arabic-translation">مواد المختبرات</p>
+                </a>
+                
+                <a href="pharmacy" class="subject-card">
+                    <h3>
+                        <span>🏥</span> Pharmacy
+                    </h3>
+                    <p class="arabic-translation">الصيدلة</p>
+                </a>
+                
+                <a href="summaries" class="subject-card">
+                    <h3>
+                        <span>📚</span> Summaries
+                    </h3>
+                    <p class="arabic-translation">الملخصات</p>
+                </a>
+                
+                <a href="calculus" class="subject-card">
+                    <h3>
+                        <span>🧮</span> All Calculus
+                    </h3>
+                    <p class="arabic-translation">حساب التفاضل والتكامل</p>
+                </a>
+                
+                <a href="medical" class="subject-card">
+                    <h3>
+                        <span>🏥</span> Health Sciences
+                    </h3>
+                    <p class="arabic-translation">العلوم الصحية</p>
+                </a>
+                
+                <a href="mathematics" class="subject-card">
+                    <h3>
+                        <span>📊</span> Mathematics and Statistics
+                    </h3>
+                    <p class="arabic-translation">الرياضيات والإحصاء</p>
+                </a>
+                
+                <a href="artshumanities" class="subject-card">
+                    <h3>
+                        <span>🎨</span> Arts and Humanities
+                    </h3>
+                    <p class="arabic-translation">الفنون والعلوم الإنسانية</p>
+                </a>
+                
+                <a href="chemical" class="subject-card">
+                    <h3>
+                        <span>⚙️</span> Chemical Engineering
+                    </h3>
+                    <p class="arabic-translation">الهندسة الكيميائية</p>
+                </a>
+                
+                <a href="electrical" class="subject-card">
+                    <h3>
+                        <span>⚡</span> Electrical Engineering
+                    </h3>
+                    <p class="arabic-translation">الهندسة الكهربائية</p>
+                </a>
+                
+                <a href="industrial" class="subject-card">
+                    <h3>
+                        <span>⚙️</span> Industrial Engineering
+                    </h3>
+                    <p class="arabic-translation">الهندسة الصناعية</p>
+                </a>
+                
+                <a href="dentistry" class="subject-card">
+                    <h3>
+                        <span>🦷</span> Dentistry
+                    </h3>
+                    <p class="arabic-translation">طب الأسنان</p>
+                </a>
+                
+                <a href="nursing" class="subject-card">
+                    <h3>
+                        <span>🏥</span> Nursing
+                    </h3>
+                    <p class="arabic-translation">التمريض</p>
+                </a>
+                
+                <a href="hanafi" class="subject-card">
+                    <h3>
+                        <span>🕌</span> Shariah
+                    </h3>
+                    <p class="arabic-translation">الشريعة</p>
+                </a>
+                
+                <a href="arabicliterature" class="subject-card">
+                    <h3>
+                        <span>📚</span> Arabic Literature
+                    </h3>
+                    <p class="arabic-translation">الأدب العربي</p>
+                </a>
+                
+                <a href="pass_protected_admin_sample" class="subject-card">
+                    <h3>
+                        <span>🔒</span> TranslationNation (Password Protected)
+                    </h3>
+                    <p class="arabic-translation">(محمي بكلمة مرور)</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Site Description -->
+    <div class="site-description">
+        Your comprehensive resource for study materials, academic calendars, and university information
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="uni_tos">Terms of Service</a>
+                <a href="links">Useful Links</a>
+                <a href="portal_to_rating">Rate Professors</a>
+                <a href="matcher.html">Find Study Partners</a>
+                <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank">WhatsApp Community</a>
+            </div>
+            <p class="copyright">© 2023 ASU E-Library Hub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Vanishing Header - Only visible at top of page
+        const header = document.getElementById('banner');
+        
+        let ticking = false;
+
+        function updateHeader() {
+            const currentScrollY = window.scrollY;
+            
+            // Show header only when at the very top (within 50px)
+            if (currentScrollY <= 50) {
+                header.classList.remove('hidden');
+            } else {
+                header.classList.add('hidden');
+            }
+            
+            ticking = false;
+        }
+
+        function onScroll() {
+            if (!ticking) {
+                requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        }
+
+        // Add scroll event listener
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Initial check
+        updateHeader();
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeOptions = document.getElementById('themeOptions');
+        const themeOverlay = document.getElementById('themeOverlay');
+        const themeOptionsList = document.querySelectorAll('.theme-option');
+        
+        themeToggle.addEventListener('click', () => {
+            themeOptions.classList.toggle('show');
+            themeOverlay.classList.toggle('show');
+        });
+
+        // Close theme options when clicking overlay
+        themeOverlay.addEventListener('click', () => {
+            themeOptions.classList.remove('show');
+            themeOverlay.classList.remove('show');
+        });
+
+        // Theme Selection
+        themeOptionsList.forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.getAttribute('data-theme');
+                
+                // Remove all theme classes
+                document.body.classList.remove('theme-red', 'theme-pink', 'theme-black', 'theme-white', 'theme-blue', 'theme-green', 'theme-purple');
+                
+                // Add selected theme class
+                if (theme !== 'default') {
+                    document.body.classList.add(`theme-${theme}`);
+                }
+                
+                // Update active state
+                themeOptionsList.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                
+                // Save theme preference
+                localStorage.setItem('theme', theme);
+                
+                // Close theme options
+                themeOptions.classList.remove('show');
+                themeOverlay.classList.remove('show');
+            });
+        });
+
+        // Dark Mode Toggle
+        document.getElementById('mode-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            
+            // Update button text
+            const modeToggle = document.getElementById('mode-toggle');
+            const iconSpan = modeToggle.querySelector('span');
+            if (isDarkMode) {
+                iconSpan.textContent = '☀️';
+                modeToggle.innerHTML = '<span>☀️</span> Light Mode';
+            } else {
+                iconSpan.textContent = '🌙';
+                modeToggle.innerHTML = '<span>🌙</span> Dark Mode';
+            }
+        });
+
+        // Background Toggle
+        document.getElementById('background-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('background-enabled');
+            const isBackgroundEnabled = document.body.classList.contains('background-enabled');
+            localStorage.setItem('background', isBackgroundEnabled ? 'enabled' : 'disabled');
+            
+            // Update button text
+            const backgroundToggle = document.getElementById('background-toggle');
+            if (isBackgroundEnabled) {
+                backgroundToggle.innerHTML = '<span>🖼️</span> Hide Background';
+            } else {
+                backgroundToggle.innerHTML = '<span>🖼️</span> Show Background';
+            }
+        });
+
+        // Set initial theme and mode
+        window.addEventListener('DOMContentLoaded', () => {
+            // Set theme
+            const savedTheme = localStorage.getItem('theme') || 'default';
+            if (savedTheme !== 'default') {
+                document.body.classList.add(`theme-${savedTheme}`);
+                themeOptionsList.forEach(opt => {
+                    if (opt.getAttribute('data-theme') === savedTheme) {
+                        opt.classList.add('active');
+                    } else {
+                        opt.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Set dark mode
+            const savedDarkMode = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedDarkMode === 'enabled' || (!savedDarkMode && prefersDark)) {
+                document.body.classList.add('dark-mode');
+                const modeToggle = document.getElementById('mode-toggle');
+                modeToggle.innerHTML = '<span>☀️</span> Light Mode';
+            }
+            
+            // Set initial background state
+            const savedBackground = localStorage.getItem('background');
+            if (savedBackground === 'enabled') {
+                document.body.classList.add('background-enabled');
+                const backgroundToggle = document.getElementById('background-toggle');
+                backgroundToggle.innerHTML = '<span>🖼️</span> Hide Background';
+            }
+        });
+
+        // Simple page load animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.subject-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 + (index * 50));
+            });
+        });
+    </script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4DE6YQ7Q2M');
+    </script>
+
+	<script>
+// ===========================================
+// COMPREHENSIVE ANTI-COPY PROTECTION SCRIPT
+// ===========================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Right-click is disabled');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag and drop
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    document.addEventListener('drop', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Block F12 key
+        if (e.key === 'F12') {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled');
+            return false;
+        }
+
+        // Block Ctrl+Shift+I (Chrome DevTools)
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled');
+            return false;
+        }
+
+        // Block Ctrl+Shift+J (Chrome Console)
+        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+            e.preventDefault();
+            showProtectionMessage('Browser console is disabled');
+            return false;
+        }
+
+        // Block Ctrl+Shift+C (Inspect Element)
+        if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+            e.preventDefault();
+            showProtectionMessage('Inspect element is disabled');
+            return false;
+        }
+
+        // Block Ctrl+U (View Source)
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled');
+            return false;
+        }
+
+        // Block Ctrl+S (Save Page)
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Page saving is disabled');
+            return false;
+        }
+
+        // Block Ctrl+P (Print)
+        if (e.ctrlKey && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled');
+            return false;
+        }
+
+        // Block Ctrl+C (Copy)
+        if (e.ctrlKey && e.key === 'c') {
+            e.preventDefault();
+            showProtectionMessage('Copying content is disabled');
+            return false;
+        }
+
+        // Block Ctrl+A (Select All)
+        if (e.ctrlKey && e.key === 'a') {
+            e.preventDefault();
+            showProtectionMessage('Select all is disabled');
+            return false;
+        }
+
+        // Block Ctrl+X (Cut)
+        if (e.ctrlKey && e.key === 'x') {
+            e.preventDefault();
+            return false;
+        }
+
+        // Block Ctrl+V (Paste)
+        if (e.ctrlKey && e.key === 'v') {
+            e.preventDefault();
+            return false;
+        }
+
+        // Block Print Screen key
+        if (e.key === 'PrintScreen') {
+            e.preventDefault();
+            showProtectionMessage('Screenshots are disabled');
+            return false;
+        }
+    });
+
+    // Disable copy event
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying content is not allowed');
+        return false;
+    });
+
+    // Disable cut event
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable paste event
+    document.addEventListener('paste', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Prevent image dragging
+    const images = document.getElementsByTagName('img');
+    for (let i = 0; i < images.length; i++) {
+        images[i].setAttribute('draggable', 'false');
+        images[i].style.pointerEvents = 'none';
+    }
+
+    // Disable text selection via CSS
+    const style = document.createElement('style');
+    style.textContent = `
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+        
+        input, textarea {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Anti-DevTools detection (basic)
+    function detectDevTools() {
+        const threshold = 160;
+        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+        
+        if (widthThreshold || heightThreshold) {
+            document.body.innerHTML = `
+                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f8f9fa; font-family: Arial, sans-serif;">
+                    <div style="text-align: center; padding: 2rem;">
+                        <h1 style="color: #dc3545; margin-bottom: 1rem;">⚠️ Access Restricted</h1>
+                        <p style="color: #6c757d; font-size: 1.1rem;">
+                            Developer tools are not permitted on this page.<br>
+                            Please close developer tools and refresh the page.
+                        </p>
+                    </div>
+                </div>
+            `;
+            throw new Error('Developer tools detected');
+        }
+    }
+
+    // Run DevTools detection periodically
+    setInterval(detectDevTools, 1000);
+
+    // Override console methods
+    const originalConsole = {
+        log: console.log,
+        warn: console.warn,
+        error: console.error,
+        info: console.info,
+        debug: console.debug
+    };
+
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
+    console.info = function() {};
+    console.debug = function() {};
+    console.clear = function() {};
+
+    // Protection message function
+    function showProtectionMessage(message) {
+        // Create message element
+        const messageEl = document.createElement('div');
+        messageEl.textContent = message;
+        messageEl.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #dc3545;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        `;
+
+        // Add styles for animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.body.appendChild(messageEl);
+
+        // Remove message after 3 seconds
+        setTimeout(() => {
+            messageEl.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (messageEl.parentNode) {
+                    messageEl.parentNode.removeChild(messageEl);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    // Additional protection: Disable image context menu
+    document.addEventListener('contextmenu', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            showProtectionMessage('Image right-click is disabled');
+            return false;
+        }
+    }, true);
+
+    // Protection against element inspection
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(detectDevTools, 200);
+    });
+
+    console.log('🔒 Anti-copy protection activated');
+});
+
+// Additional layer: Mutation Observer to detect DOM changes
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'id') {
+            if (mutation.target.id === 'webpack-dev-server-client-overlay') {
+                mutation.target.style.display = 'none';
+            }
+        }
+    });
+});
+
+observer.observe(document, {
+    attributes: true,
+    subtree: true,
+    attributeFilter: ['id', 'class']
+});
+
+// Prevent opening new windows/tabs with specific content
+window.addEventListener('beforeunload', function(e) {
+    // This creates a warning when trying to leave the page
+    // Comment out if you don't want this behavior
+    // e.preventDefault();
+    // e.returnValue = '';
+});
+
+// Disable back/forward navigation
+history.pushState(null, null, document.URL);
+window.addEventListener('popstate', function() {
+    history.pushState(null, null, document.URL);
+});
+
+// Final protection: Self-healing if console is opened
+let checkConsole = setInterval(function() {
+    if (window.console && window.console.firebug) {
+        document.body.innerHTML = '<h1 style="text-align:center;padding:50px;color:red;">Developer tools detected. Please close them to continue.</h1>';
+        clearInterval(checkConsole);
+    }
+}, 1000);
+</script>
+
+<style>
+/* Additional CSS to prevent selection and improve protection */
+body {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Allow selection only in input fields */
+input, textarea {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+}
+
+/* Disable text selection highlight */
+::selection {
+    background: transparent !important;
+}
+
+::-moz-selection {
+    background: transparent !important;
+}
+
+/* Prevent image dragging */
+img {
+    -webkit-user-drag: none !important;
+    -khtml-user-drag: none !important;
+    -moz-user-drag: none !important;
+    -o-user-drag: none !important;
+    user-drag: none !important;
+}
+</style>
+
+</body>
+</html>
