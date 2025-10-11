@@ -87,6 +87,7 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            background-repeat: no-repeat;
         }
 
         body.background-enabled::before {
@@ -601,6 +602,13 @@
             main {
                 margin-top: 200px;
             }
+
+            /* Mobile background fix */
+            body.background-enabled {
+                background-size: 100% auto;
+                background-position: top center;
+                background-attachment: scroll;
+            }
         }
 
         @media (max-width: 480px) {
@@ -627,6 +635,22 @@
 
             main {
                 margin-top: 220px;
+            }
+
+            /* Mobile background - Static and properly sized */
+            body.background-enabled {
+                background-size: cover;
+                background-position: center center;
+                background-attachment: scroll;
+                background-repeat: no-repeat;
+            }
+            
+            body.background-enabled::before {
+                background-color: rgba(255, 255, 255, 0.92);
+            }
+            
+            body.dark-mode.background-enabled::before {
+                background-color: rgba(0, 0, 0, 0.8);
             }
         }
     </style>
@@ -1549,32 +1573,6 @@ img {
     user-drag: none !important;
 }
 </style>
-<style>
-/* Mobile fixed background */
-@media (max-width: 768px) {
-    body.background-enabled {
-        background-size: auto 100vh;
-        background-position: center center;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-    }
-}
 
-@media (max-width: 480px) {
-    body.background-enabled {
-        background-size: cover;
-        background-position: center center;
-        background-attachment: fixed;
-    }
-    
-    body.background-enabled::before {
-        background-color: rgba(255, 255, 255, 0.9);
-    }
-    
-    body.dark-mode.background-enabled::before {
-        background-color: rgba(0, 0, 0, 0.75);
-    }
-}
-</style>
 </body>
 </html>
