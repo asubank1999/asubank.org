@@ -1549,6 +1549,32 @@ img {
     user-drag: none !important;
 }
 </style>
+<style>
+/* Mobile fixed background */
+@media (max-width: 768px) {
+    body.background-enabled {
+        background-size: auto 100vh;
+        background-position: center center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }
+}
 
+@media (max-width: 480px) {
+    body.background-enabled {
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+    }
+    
+    body.background-enabled::before {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+    
+    body.dark-mode.background-enabled::before {
+        background-color: rgba(0, 0, 0, 0.75);
+    }
+}
+</style>
 </body>
 </html>
