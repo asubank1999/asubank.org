@@ -9,9 +9,9 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         :root {
-            --primary: #8C1D40; /* ASU Maroon */
-            --secondary: #FFC627; /* ASU Gold */
-            --accent: #00A3E0; /* ASU Blue */
+            --primary: #8C1D40;
+            --secondary: #FFC627;
+            --accent: #00A3E0;
             --light: #F8F9FA;
             --dark: #191919;
             --gray: #6C757D;
@@ -22,53 +22,18 @@
         }
 
         /* Theme Colors */
-        .theme-red {
-            --primary: #DC2626;
-            --secondary: #EF4444;
-            --accent: #FECACA;
-        }
+        .theme-red { --primary: #DC2626; --secondary: #EF4444; --accent: #FECACA; }
+        .theme-pink { --primary: #DB2777; --secondary: #EC4899; --accent: #FBCFE8; }
+        .theme-black { --primary: #000000; --secondary: #374151; --accent: #6B7280; }
+        .theme-white { --primary: #6B7280; --secondary: #9CA3AF; --accent: #E5E7EB; }
+        .theme-blue { --primary: #2563EB; --secondary: #3B82F6; --accent: #BFDBFE; }
+        .theme-green { --primary: #059669; --secondary: #10B981; --accent: #A7F3D0; }
+        .theme-purple { --primary: #7C3AED; --secondary: #8B5CF6; --accent: #DDD6FE; }
+        .theme-orange { --primary: #EA580C; --secondary: #F97316; --accent: #FED7AA; }
+        .theme-cyan { --primary: #0891B2; --secondary: #06B6D4; --accent: #A5F3FC; }
+        .theme-lime { --primary: #65A30D; --secondary: #84CC16; --accent: #D9F99D; }
 
-        .theme-pink {
-            --primary: #DB2777;
-            --secondary: #EC4899;
-            --accent: #FBCFE8;
-        }
-
-        .theme-black {
-            --primary: #000000;
-            --secondary: #374151;
-            --accent: #6B7280;
-        }
-
-        .theme-white {
-            --primary: #6B7280;
-            --secondary: #9CA3AF;
-            --accent: #E5E7EB;
-        }
-
-        .theme-blue {
-            --primary: #2563EB;
-            --secondary: #3B82F6;
-            --accent: #BFDBFE;
-        }
-
-        .theme-green {
-            --primary: #059669;
-            --secondary: #10B981;
-            --accent: #A7F3D0;
-        }
-
-        .theme-purple {
-            --primary: #7C3AED;
-            --secondary: #8B5CF6;
-            --accent: #DDD6FE;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -110,7 +75,7 @@
             background-color: rgba(0, 0, 0, 0.7);
         }
 
-        /* Header & Navigation with Vanishing on Scroll */
+        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 70%, black) 100%);
             color: white;
@@ -159,9 +124,7 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        nav {
-            flex: 1;
-        }
+        nav { flex: 1; }
 
         .nav-container {
             display: flex;
@@ -216,9 +179,7 @@
         }
 
         /* Theme Selector */
-        .theme-selector {
-            position: relative;
-        }
+        .theme-selector { position: relative; }
 
         .theme-options {
             position: fixed;
@@ -226,56 +187,53 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             display: none;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.2rem;
             z-index: 10000;
             max-width: 90%;
-            width: 400px;
+            width: 500px;
         }
 
-        .theme-options.show {
-            display: grid;
-        }
-
-        body.dark-mode .theme-options {
-            background: #2a2a2a;
-        }
+        .theme-options.show { display: grid; }
+        body.dark-mode .theme-options { background: #2a2a2a; }
 
         .theme-option {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             cursor: pointer;
             border: 3px solid transparent;
             transition: var(--transition);
+            position: relative;
         }
 
-        .theme-option:hover {
-            transform: scale(1.1);
-        }
+        .theme-option:hover { transform: scale(1.15); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 
         .theme-option.active {
             border-color: var(--dark);
-            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--dark);
+            box-shadow: 0 0 0 3px white, 0 0 0 6px var(--dark);
         }
 
         body.dark-mode .theme-option.active {
             border-color: white;
-            box-shadow: 0 0 0 2px #2a2a2a, 0 0 0 4px white;
+            box-shadow: 0 0 0 3px #2a2a2a, 0 0 0 6px white;
         }
 
         .theme-red-option { background: #DC2626; }
         .theme-pink-option { background: #DB2777; }
         .theme-black-option { background: #000000; }
-        .theme-white-option { background: #FFFFFF; border: 1px solid #E5E7EB; }
+        .theme-white-option { background: #FFFFFF; border: 2px solid #E5E7EB; }
         .theme-blue-option { background: #2563EB; }
         .theme-green-option { background: #059669; }
         .theme-purple-option { background: #7C3AED; }
         .theme-default-option { background: #8C1D40; }
+        .theme-orange-option { background: #EA580C; }
+        .theme-cyan-option { background: #0891B2; }
+        .theme-lime-option { background: #65A30D; }
 
         .theme-overlay {
             position: fixed;
@@ -288,9 +246,7 @@
             z-index: 9999;
         }
 
-        .theme-overlay.show {
-            display: block;
-        }
+        .theme-overlay.show { display: block; }
 
         /* Main Content */
         main {
@@ -300,9 +256,7 @@
             margin-top: 140px;
         }
 
-        .priority-section {
-            margin-bottom: 2.5rem;
-        }
+        .priority-section { margin-bottom: 2.5rem; }
 
         .section-title {
             font-size: 1.5rem;
@@ -314,9 +268,7 @@
             gap: 0.5rem;
         }
 
-        body.dark-mode .section-title {
-            color: var(--secondary);
-        }
+        body.dark-mode .section-title { color: var(--secondary); }
 
         .card-grid {
             display: grid;
@@ -350,9 +302,7 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
 
-        .subject-card.priority {
-            border-left: 4px solid var(--secondary);
-        }
+        .subject-card.priority { border-left: 4px solid var(--secondary); }
 
         .subject-card h3 {
             font-size: 1.1rem;
@@ -369,9 +319,7 @@
             margin-bottom: 1rem;
         }
 
-        body.dark-mode .subject-card p {
-            color: #aaa;
-        }
+        body.dark-mode .subject-card p { color: #aaa; }
 
         .arabic-translation {
             font-size: 0.8rem;
@@ -380,9 +328,7 @@
             margin-top: 0.3rem;
         }
 
-        body.dark-mode .arabic-translation {
-            color: var(--secondary);
-        }
+        body.dark-mode .arabic-translation { color: var(--secondary); }
 
         .card-badge {
             position: absolute;
@@ -414,49 +360,6 @@
             font-size: 0.7rem;
             font-weight: 600;
             margin-top: 0.5rem;
-        }
-
-        /* Special Cards */
-        .special-card {
-            grid-column: span 2;
-            background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 70%, black) 100%);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        body.dark-mode .special-card {
-            background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 70%, black) 0%, var(--primary) 100%);
-        }
-
-        .special-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            color: white;
-        }
-
-        .special-card p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 1rem;
-        }
-
-        .special-card .btn {
-            background: var(--secondary);
-            color: var(--dark);
-            padding: 0.7rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .special-card .btn:hover {
-            background: white;
-            transform: translateY(-2px);
         }
 
         /* WhatsApp Button */
@@ -527,9 +430,7 @@
             transition: var(--transition);
         }
 
-        .footer-links a:hover {
-            color: white;
-        }
+        .footer-links a:hover { color: white; }
 
         .copyright {
             font-size: 0.9rem;
@@ -538,72 +439,22 @@
 
         /* Responsive Design */
         @media (max-width: 1024px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            .nav-links {
-                justify-content: center;
-            }
+            .header-content { flex-direction: column; gap: 1.5rem; }
+            .nav-links { justify-content: center; }
         }
 
         @media (max-width: 768px) {
-            .header-content {
-                text-align: center;
-            }
-            
-            .logo-section {
-                flex-direction: row;
-                gap: 0.75rem;
-            }
-            
-            .logo-section h1 {
-                font-size: 1.4rem;
-            }
-
-            .logo-section img {
-                height: 45px;
-            }
-            
-            .nav-container {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .nav-links {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .nav-links a, .nav-links button {
-                font-size: 0.85rem;
-                padding: 0.6rem 1rem;
-            }
-            
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .special-card {
-                grid-column: span 1;
-            }
-
-            .theme-options {
-                width: 300px;
-                grid-template-columns: repeat(4, 1fr);
-            }
-
-            .theme-option {
-                width: 40px;
-                height: 40px;
-            }
-
-            main {
-                margin-top: 200px;
-            }
-
-            /* Mobile background fix */
+            .header-content { text-align: center; }
+            .logo-section { flex-direction: row; gap: 0.75rem; }
+            .logo-section h1 { font-size: 1.4rem; }
+            .logo-section img { height: 45px; }
+            .nav-container { flex-direction: column; width: 100%; }
+            .nav-links { width: 100%; justify-content: center; }
+            .nav-links a, .nav-links button { font-size: 0.85rem; padding: 0.6rem 1rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .theme-options { width: 350px; grid-template-columns: repeat(4, 1fr); }
+            .theme-option { width: 50px; height: 50px; }
+            main { margin-top: 200px; }
             body.background-enabled {
                 background-size: 100% auto;
                 background-position: top center;
@@ -612,46 +463,22 @@
         }
 
         @media (max-width: 480px) {
-            .logo-section h1 {
-                font-size: 1.2rem;
-            }
-
-            .logo-section img {
-                height: 40px;
-            }
-
-            .nav-links a, .nav-links button {
-                padding: 0.55rem 0.9rem;
-                font-size: 0.8rem;
-            }
-            
-            .subject-card {
-                padding: 1.2rem;
-            }
-            
-            .subject-card h3 {
-                font-size: 1rem;
-            }
-
-            main {
-                margin-top: 220px;
-            }
-
-            /* Mobile background - Static and properly sized */
+            .logo-section h1 { font-size: 1.2rem; }
+            .logo-section img { height: 40px; }
+            .nav-links a, .nav-links button { padding: 0.55rem 0.9rem; font-size: 0.8rem; }
+            .subject-card { padding: 1.2rem; }
+            .subject-card h3 { font-size: 1rem; }
+            main { margin-top: 220px; }
+            .theme-options { width: 280px; grid-template-columns: repeat(3, 1fr); }
+            .theme-option { width: 45px; height: 45px; }
             body.background-enabled {
                 background-size: cover;
                 background-position: center center;
                 background-attachment: scroll;
                 background-repeat: no-repeat;
             }
-            
-            body.background-enabled::before {
-                background-color: rgba(255, 255, 255, 0.92);
-            }
-            
-            body.dark-mode.background-enabled::before {
-                background-color: rgba(0, 0, 0, 0.8);
-            }
+            body.background-enabled::before { background-color: rgba(255, 255, 255, 0.92); }
+            body.dark-mode.background-enabled::before { background-color: rgba(0, 0, 0, 0.8); }
         }
     </style>
 </head>
@@ -672,7 +499,7 @@
                         <a href="links">
                             <span>🔗</span> Useful Links
                         </a>
-                        <a href="index.html">
+                        <a href="index">
                             <span>🏛️</span> Old ASU XYZ Style
                         </a>
                         <div class="theme-selector">
@@ -695,14 +522,17 @@
     <!-- Theme Overlay and Options -->
     <div class="theme-overlay" id="themeOverlay"></div>
     <div class="theme-options" id="themeOptions">
-        <div class="theme-option theme-default-option active" data-theme="default"></div>
-        <div class="theme-option theme-red-option" data-theme="red"></div>
-        <div class="theme-option theme-pink-option" data-theme="pink"></div>
-        <div class="theme-option theme-black-option" data-theme="black"></div>
-        <div class="theme-option theme-white-option" data-theme="white"></div>
-        <div class="theme-option theme-blue-option" data-theme="blue"></div>
-        <div class="theme-option theme-green-option" data-theme="green"></div>
-        <div class="theme-option theme-purple-option" data-theme="purple"></div>
+        <div class="theme-option theme-default-option active" data-theme="default" title="ASU Maroon"></div>
+        <div class="theme-option theme-red-option" data-theme="red" title="Red"></div>
+        <div class="theme-option theme-pink-option" data-theme="pink" title="Pink"></div>
+        <div class="theme-option theme-orange-option" data-theme="orange" title="Orange"></div>
+        <div class="theme-option theme-blue-option" data-theme="blue" title="Blue"></div>
+        <div class="theme-option theme-cyan-option" data-theme="cyan" title="Cyan"></div>
+        <div class="theme-option theme-green-option" data-theme="green" title="Green"></div>
+        <div class="theme-option theme-lime-option" data-theme="lime" title="Lime"></div>
+        <div class="theme-option theme-purple-option" data-theme="purple" title="Purple"></div>
+        <div class="theme-option theme-black-option" data-theme="black" title="Black"></div>
+        <div class="theme-option theme-white-option" data-theme="white" title="White"></div>
     </div>
 
     <main>
@@ -713,7 +543,7 @@
             </h2>
             
             <div class="card-grid">
-                <a href="matcher.html" class="subject-card priority">
+                <a href="matcher_confirm" class="subject-card priority">
                     <span class="card-badge">NEW</span>
                     <h3>
                         <span>🔍</span> Course Matcher
@@ -723,6 +553,17 @@
                     <div class="free-badge">Free Service</div>
                     <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
                         Fill out your profile and we'll match you with classmates who share at least 50% compatibility. Once matched, you'll exchange contact information!
+                    </p>
+                </a>
+                <a href="matcher_admin" class="subject-card priority">
+                    <span class="card-badge">ADMIN ONLY</span>
+                    <h3>
+                        <span>🖧</span> Course Matcher Admin Panel
+                    </h3>
+                    <p>Admin Panel for Course Matcher</p>
+                    <div class="free-badge">Locked</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        You must be the developer or co-owner at least to obtain the code
                     </p>
                 </a>
             </div>
@@ -749,7 +590,47 @@
             </div>
         </section>
 
-        <!-- Priority Section -->
+        <!--  Groups  -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>🌐</span> WhatsApp Group Links
+            </h2>
+            
+            <div class="card-grid">
+                <a href="groups" class="subject-card priority">
+                    <h3>
+                        <span>👥</span> Join Student Communities
+                    </h3>
+                    <p>Share your experience to help other students</p>
+                    <div class="free-badge">Free Service</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        Find and join WhatsApp groups for your university courses, clubs, and interests. Stay connected, share resources, and collaborate with your peers easily.
+                    </p>
+                </a>
+            </div>
+        </section>
+
+        <!--  Ads  -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>💼</span> Student Ads & Services
+            </h2>
+            
+            <div class="card-grid">
+                <a href="student_ads" class="subject-card priority">
+                    <h3>
+                        <span>📢</span> Promote What You Offer
+                    </h3>
+                    <p>Share your experience to help other students</p>
+                    <div class="service-badge">Paid Service</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        Looking to offer tutoring, design help, or items for sale? Post your ad and reach your university community.
+                    </p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Quick Access -->
         <section class="priority-section">
             <h2 class="section-title">
                 <span>🚀</span> Quick Access
@@ -758,18 +639,14 @@
             <div class="card-grid">
                 <a href="confirm_device" class="subject-card priority">
                     <span class="card-badge">NEW</span>
-                    <h3>
-                        <span>📥</span> Recent Uploads
-                    </h3>
+                    <h3><span>📥</span> Recent Uploads</h3>
                     <p>Latest study materials and resources</p>
                     <p class="arabic-translation">آخر التحديثات</p>
                     <div class="free-badge">Free Service</div>
                 </a>
                 
                 <a href="student_request_portal" class="subject-card priority">
-                    <h3>
-                        <span>📬</span> Make a Request
-                    </h3>
+                    <h3><span>📬</span> Make a Request</h3>
                     <p>Can't find what you need? Request it here</p>
                     <p class="arabic-translation">اطلب مادة</p>
                     <div class="service-badge">Paid Service Available</div>
@@ -779,36 +656,40 @@
                 </a>
                 
                 <a href="uploadmethod" class="subject-card priority">
-                    <h3>
-                        <span>📤</span> Upload Files
-                    </h3>
+                    <h3><span>📤</span> Upload Files</h3>
                     <p>Share your study materials with others</p>
                     <p class="arabic-translation">شارك ملفاتك</p>
                     <div class="free-badge">Free Service</div>
                 </a>
                 
                 <a href="cal2026" class="subject-card priority">
-                    <h3>
-                        <span>📅</span> Academic Calendar 2026
-                    </h3>
+                    <h3><span>📅</span> Academic Calendar 2026</h3>
                     <p>Important dates and deadlines</p>
                     <p class="arabic-translation">التقويم الأكاديمي</p>
                 </a>
                 
                 <a href="placement" class="subject-card priority">
-                    <h3>
-                        <span>📝</span> Placement Tests
-                    </h3>
+                    <h3><span>📝</span> Placement Tests</h3>
                     <p>Level assessment exams</p>
                     <p class="arabic-translation">امتحانات المستوى</p>
                 </a>
                 
+                <a href="halls" class="subject-card priority">
+                    <h3><span>🏫</span> University Halls</h3>
+                    <p>قاعات الجامعة</p>
+                    <p class="arabic-translation">Find comprehensive information about all university halls, accommodations, and housing options available for students</p>
+                </a>
+                
                 <a href="https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing" class="subject-card priority" target="_blank">
-                    <h3>
-                        <span>📚</span> Study Plans
-                    </h3>
+                    <h3><span>📚</span> Study Plans</h3>
                     <p>Academic curriculum and course plans</p>
                     <p class="arabic-translation">الخطة الدراسية</p>
+                </a>
+                
+                <a href="links" class="subject-card priority">
+                    <h3><span>➕</span> Useful Gate</h3>
+                    <p>Student Resources Portal ...</p>
+                    <p class="arabic-translation">Access all university resources, materials, and tools in one centralized platform for seamless academic experience</p>
                 </a>
             </div>
         </section>
@@ -829,247 +710,187 @@
             
             <div class="card-grid">
                 <a href="asu_date_asu" class="subject-card">
-                    <h3>
-                        <span>📅</span> University Calendar 2024-2025
-                    </h3>
+                    <h3><span>📅</span> University Calendar 2024-2025</h3>
                     <p class="arabic-translation">التقويم الجامعي</p>
                 </a>
                 
                 <a href="asu_date_asu2025_2026" class="subject-card">
-                    <h3>
-                        <span>📅</span> University Calendar 2025-2026
-                    </h3>
+                    <h3><span>📅</span> University Calendar 2025-2026</h3>
                     <p class="arabic-translation">التقويم الجامعي</p>
                 </a>
                 
                 <a href="bus20251" class="subject-card">
-                    <h3>
-                        <span>🚌</span> Bus Times
-                    </h3>
+                    <h3><span>🚌</span> Bus Times</h3>
                     <p class="arabic-translation">مواعيد الحافلات</p>
                 </a>
                 
                 <a href="presentations" class="subject-card">
-                    <h3>
-                        <span>📂</span> Presentations
-                    </h3>
+                    <h3><span>📂</span> Presentations</h3>
                     <p class="arabic-translation">العروض التقديمية</p>
                 </a>
                 
                 <a href="mostwanted" class="subject-card">
-                    <h3>
-                        <span>🔥</span> Most Wanted Files
-                    </h3>
+                    <h3><span>🔥</span> Most Wanted Files</h3>
                     <p class="arabic-translation">الملفات الأكثر طلباً</p>
                 </a>
                 
                 <a href="english" class="subject-card">
-                    <h3>
-                        <span>📚</span> English Literature / Translation
-                    </h3>
+                    <h3><span>📚</span> English Literature / Translation</h3>
                     <p class="arabic-translation">الأدب الإنجليزي / الترجمة</p>
                 </a>
                 
                 <a href="others" class="subject-card">
-                    <h3>
-                        <span>📜</span> Elective Courses / Other
-                    </h3>
+                    <h3><span>📜</span> Elective Courses / Other</h3>
                     <p class="arabic-translation">المقررات الاختيارية / أخرى</p>
                 </a>
                 
                 <a href="unarranged" class="subject-card">
-                    <h3>
-                        <span>📋</span> Unarranged - Others
-                    </h3>
+                    <h3><span>📋</span> Unarranged - Others</h3>
                     <p class="arabic-translation">غير مصنف - أخرى</p>
                 </a>
                 
                 <a href="it" class="subject-card">
-                    <h3>
-                        <span>💻</span> Information Technology
-                    </h3>
+                    <h3><span>💻</span> Information Technology</h3>
                     <p class="arabic-translation">تكنولوجيا المعلومات</p>
                 </a>
                 
                 <a href="business" class="subject-card">
-                    <h3>
-                        <span>💼</span> Business
-                    </h3>
+                    <h3><span>💼</span> Business</h3>
                     <p class="arabic-translation">الأعمال</p>
                 </a>
                 
                 <a href="engineering" class="subject-card">
-                    <h3>
-                        <span>⚙️</span> Engineering
-                    </h3>
+                    <h3><span>⚙️</span> Engineering</h3>
                     <p class="arabic-translation">الهندسة</p>
                 </a>
                 
                 <a href="demography" class="subject-card">
-                    <h3>
-                        <span>📊</span> Demography
-                    </h3>
+                    <h3><span>📊</span> Demography</h3>
                     <p class="arabic-translation">الديموغرافيا</p>
                 </a>
                 
                 <a href="biology" class="subject-card">
-                    <h3>
-                        <span>🧬</span> Biology
-                    </h3>
+                    <h3><span>🧬</span> Biology</h3>
                     <p class="arabic-translation">علم الأحياء</p>
                 </a>
                 
                 <a href="biochemistry" class="subject-card">
-                    <h3>
-                        <span>🧪</span> Biochemistry
-                    </h3>
+                    <h3><span>🧪</span> Biochemistry</h3>
                     <p class="arabic-translation">الكيمياء الحيوية</p>
                 </a>
                 
                 <a href="physiology" class="subject-card">
-                    <h3>
-                        <span>🧬</span> Physiology
-                    </h3>
+                    <h3><span>🧬</span> Physiology</h3>
                     <p class="arabic-translation">علم وظائف الأعضاء</p>
                 </a>
                 
                 <a href="lab_related" class="subject-card">
-                    <h3>
-                        <span>⚗️</span> Lab Materials
-                    </h3>
+                    <h3><span>⚗️</span> Lab Materials</h3>
                     <p class="arabic-translation">مواد المختبرات</p>
                 </a>
                 
                 <a href="pharmacy" class="subject-card">
-                    <h3>
-                        <span>🏥</span> Pharmacy
-                    </h3>
+                    <h3><span>🏥</span> Pharmacy</h3>
                     <p class="arabic-translation">الصيدلة</p>
                 </a>
                 
                 <a href="summaries" class="subject-card">
-                    <h3>
-                        <span>📚</span> Summaries
-                    </h3>
+                    <h3><span>📚</span> Summaries</h3>
                     <p class="arabic-translation">الملخصات</p>
                 </a>
                 
                 <a href="calculus" class="subject-card">
-                    <h3>
-                        <span>🧮</span> All Calculus
-                    </h3>
+                    <h3><span>🧮</span> All Calculus</h3>
                     <p class="arabic-translation">حساب التفاضل والتكامل</p>
                 </a>
                 
                 <a href="medical" class="subject-card">
-                    <h3>
-                        <span>🏥</span> Health Sciences
-                    </h3>
+                    <h3><span>🏥</span> Health Sciences</h3>
                     <p class="arabic-translation">العلوم الصحية</p>
                 </a>
                 
                 <a href="mathematics" class="subject-card">
-                    <h3>
-                        <span>📊</span> Mathematics and Statistics
-                    </h3>
+                    <h3><span>📊</span> Mathematics and Statistics</h3>
                     <p class="arabic-translation">الرياضيات والإحصاء</p>
                 </a>
                 
                 <a href="artshumanities" class="subject-card">
-                    <h3>
-                        <span>🎨</span> Arts and Humanities
-                    </h3>
+                    <h3><span>🎨</span> Arts and Humanities</h3>
                     <p class="arabic-translation">الفنون والعلوم الإنسانية</p>
                 </a>
                 
                 <a href="chemical" class="subject-card">
-                    <h3>
-                        <span>⚙️</span> Chemical Engineering
-                    </h3>
+                    <h3><span>⚙️</span> Chemical Engineering</h3>
                     <p class="arabic-translation">الهندسة الكيميائية</p>
                 </a>
                 
                 <a href="electrical" class="subject-card">
-                    <h3>
-                        <span>⚡</span> Electrical Engineering
-                    </h3>
+                    <h3><span>⚡</span> Electrical Engineering</h3>
                     <p class="arabic-translation">الهندسة الكهربائية</p>
                 </a>
                 
                 <a href="industrial" class="subject-card">
-                    <h3>
-                        <span>⚙️</span> Industrial Engineering
-                    </h3>
+                    <h3><span>⚙️</span> Industrial Engineering</h3>
                     <p class="arabic-translation">الهندسة الصناعية</p>
                 </a>
                 
                 <a href="dentistry" class="subject-card">
-                    <h3>
-                        <span>🦷</span> Dentistry
-                    </h3>
+                    <h3><span>🦷</span> Dentistry</h3>
                     <p class="arabic-translation">طب الأسنان</p>
                 </a>
                 
                 <a href="nursing" class="subject-card">
-                    <h3>
-                        <span>🏥</span> Nursing
-                    </h3>
+                    <h3><span>🏥</span> Nursing</h3>
                     <p class="arabic-translation">التمريض</p>
                 </a>
                 
                 <a href="hanafi" class="subject-card">
-                    <h3>
-                        <span>🕌</span> Shariah
-                    </h3>
+                    <h3><span>🕌</span> Shariah</h3>
                     <p class="arabic-translation">الشريعة</p>
                 </a>
                 
                 <a href="arabicliterature" class="subject-card">
-                    <h3>
-                        <span>📚</span> Arabic Literature
-                    </h3>
+                    <h3><span>📚</span> Arabic Literature</h3>
                     <p class="arabic-translation">الأدب العربي</p>
                 </a>
                 
                 <a href="pass_protected_admin_sample" class="subject-card">
-                    <h3>
-                        <span>🔒</span> TranslationNation (Password Protected)
-                    </h3>
+                    <h3><span>🔒</span> TranslationNation (Password Protected)</h3>
                     <p class="arabic-translation">(محمي بكلمة مرور)</p>
                 </a>
             </div>
         </section>
+        
+        <!-- Site Description -->
+        <div class="site-description">
+            <p>ASU E-Library Hub - Your comprehensive resource for study materials, academic support, and student services at Applied Science Private University.</p>
+            <p>مركز المكتبة الإلكترونية - مصدرك الشامل للمواد الدراسية والدعم الأكاديمي وخدمات الطلاب في الجامعة الأردنية للعلوم التطبيقية.</p>
+        </div>
     </main>
-
-    <!-- Site Description -->
-    <div class="site-description">
-        Your comprehensive resource for study materials, academic calendars, and university information
-    </div>
 
     <footer>
         <div class="footer-content">
             <div class="footer-links">
                 <a href="uni_tos">Terms of Service</a>
                 <a href="links">Useful Links</a>
-                <a href="portal_to_rating">Rate Professors</a>
-                <a href="matcher.html">Find Study Partners</a>
-                <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank">WhatsApp Community</a>
+                <a href="index">Old ASU XYZ Style</a>
             </div>
-            <p class="copyright">© 2023 ASU E-Library Hub. All rights reserved.</p>
+            <div class="copyright">
+                &copy; 2024 ASU E-Library Hub. All rights reserved.
+            </div>
         </div>
     </footer>
 
     <script>
-        // Vanishing Header - Only visible at top of page
+        // ===== HEADER VANISH ON SCROLL =====
         const header = document.getElementById('banner');
-        
         let ticking = false;
 
         function updateHeader() {
             const currentScrollY = window.scrollY;
             
-            // Show header only when at the very top (within 50px)
-            if (currentScrollY <= 50) {
+            // Show header only when at the very top (within 10px)
+            if (currentScrollY <= 10) {
                 header.classList.remove('hidden');
             } else {
                 header.classList.add('hidden');
@@ -1085,38 +906,33 @@
             }
         }
 
-        // Add scroll event listener
         window.addEventListener('scroll', onScroll, { passive: true });
+        updateHeader(); // Initial check
 
-        // Initial check
-        updateHeader();
-
-        // Theme Toggle
+        // ===== THEME FUNCTIONALITY =====
         const themeToggle = document.getElementById('theme-toggle');
         const themeOptions = document.getElementById('themeOptions');
         const themeOverlay = document.getElementById('themeOverlay');
         const themeOptionsList = document.querySelectorAll('.theme-option');
-        
+
         themeToggle.addEventListener('click', () => {
             themeOptions.classList.toggle('show');
             themeOverlay.classList.toggle('show');
         });
 
-        // Close theme options when clicking overlay
         themeOverlay.addEventListener('click', () => {
             themeOptions.classList.remove('show');
             themeOverlay.classList.remove('show');
         });
 
-        // Theme Selection
         themeOptionsList.forEach(option => {
             option.addEventListener('click', () => {
                 const theme = option.getAttribute('data-theme');
                 
                 // Remove all theme classes
-                document.body.classList.remove('theme-red', 'theme-pink', 'theme-black', 'theme-white', 'theme-blue', 'theme-green', 'theme-purple');
+                document.body.classList.remove('theme-red', 'theme-pink', 'theme-black', 'theme-white', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-cyan', 'theme-lime');
                 
-                // Add selected theme class
+                // Add selected theme
                 if (theme !== 'default') {
                     document.body.classList.add(`theme-${theme}`);
                 }
@@ -1125,454 +941,117 @@
                 themeOptionsList.forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
                 
-                // Save theme preference
-                localStorage.setItem('theme', theme);
+                // Save to localStorage
+                localStorage.setItem('selectedTheme', theme);
                 
-                // Close theme options
+                // Close theme selector
                 themeOptions.classList.remove('show');
                 themeOverlay.classList.remove('show');
             });
         });
 
-        // Dark Mode Toggle
-        document.getElementById('mode-toggle').addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-            
-            // Update button text
-            const modeToggle = document.getElementById('mode-toggle');
-            const iconSpan = modeToggle.querySelector('span');
-            if (isDarkMode) {
-                iconSpan.textContent = '☀️';
+        // ===== DARK MODE FUNCTIONALITY =====
+        const modeToggle = document.getElementById('mode-toggle');
+
+        function updateModeButton(isDark) {
+            if (isDark) {
                 modeToggle.innerHTML = '<span>☀️</span> Light Mode';
             } else {
-                iconSpan.textContent = '🌙';
                 modeToggle.innerHTML = '<span>🌙</span> Dark Mode';
             }
+        }
+
+        // Load dark mode preference
+        const savedDarkMode = localStorage.getItem('darkMode');
+        if (savedDarkMode === 'enabled') {
+            document.body.classList.add('dark-mode');
+            updateModeButton(true);
+        }
+
+        modeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            
+            if (isDark) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+            
+            updateModeButton(isDark);
         });
 
-        // Background Toggle
-        document.getElementById('background-toggle').addEventListener('click', () => {
-            document.body.classList.toggle('background-enabled');
-            const isBackgroundEnabled = document.body.classList.contains('background-enabled');
-            localStorage.setItem('background', isBackgroundEnabled ? 'enabled' : 'disabled');
-            
-            // Update button text
-            const backgroundToggle = document.getElementById('background-toggle');
-            if (isBackgroundEnabled) {
-                backgroundToggle.innerHTML = '<span>🖼️</span> Hide Background';
+        // ===== BACKGROUND TOGGLE FUNCTIONALITY =====
+        const backgroundToggle = document.getElementById('background-toggle');
+
+        function updateBackgroundButton(isEnabled) {
+            if (isEnabled) {
+                backgroundToggle.innerHTML = '<span>❌</span> Hide Background';
             } else {
                 backgroundToggle.innerHTML = '<span>🖼️</span> Show Background';
             }
-        });
+        }
 
-        // Set initial theme and mode
-        window.addEventListener('DOMContentLoaded', () => {
-            // Set theme
-            const savedTheme = localStorage.getItem('theme') || 'default';
-            if (savedTheme !== 'default') {
-                document.body.classList.add(`theme-${savedTheme}`);
-                themeOptionsList.forEach(opt => {
-                    if (opt.getAttribute('data-theme') === savedTheme) {
-                        opt.classList.add('active');
-                    } else {
-                        opt.classList.remove('active');
-                    }
-                });
+        // Load background preference
+        const savedBackground = localStorage.getItem('backgroundEnabled');
+        if (savedBackground === 'true') {
+            document.body.classList.add('background-enabled');
+            updateBackgroundButton(true);
+        }
+
+        backgroundToggle.addEventListener('click', () => {
+            document.body.classList.toggle('background-enabled');
+            const isEnabled = document.body.classList.contains('background-enabled');
+            
+            if (isEnabled) {
+                localStorage.setItem('backgroundEnabled', 'true');
+            } else {
+                localStorage.setItem('backgroundEnabled', 'false');
             }
             
-            // Set dark mode
-            const savedDarkMode = localStorage.getItem('darkMode');
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            if (savedDarkMode === 'enabled' || (!savedDarkMode && prefersDark)) {
-                document.body.classList.add('dark-mode');
-                const modeToggle = document.getElementById('mode-toggle');
-                modeToggle.innerHTML = '<span>☀️</span> Light Mode';
-            }
-            
-            // Set initial background state
-            const savedBackground = localStorage.getItem('background');
-            if (savedBackground === 'enabled') {
-                document.body.classList.add('background-enabled');
-                const backgroundToggle = document.getElementById('background-toggle');
-                backgroundToggle.innerHTML = '<span>🖼️</span> Hide Background';
-            }
+            updateBackgroundButton(isEnabled);
         });
 
-        // Simple page load animation
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.subject-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100 + (index * 50));
-            });
-        });
-    </script>
-
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-4DE6YQ7Q2M');
-    </script>
-
-	<script>
-// ===========================================
-// COMPREHENSIVE ANTI-COPY PROTECTION SCRIPT
-// ===========================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Disable right-click context menu
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        showProtectionMessage('Right-click is disabled');
-        return false;
-    });
-
-    // Disable text selection
-    document.addEventListener('selectstart', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // Disable drag and drop
-    document.addEventListener('dragstart', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    document.addEventListener('drop', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // Disable keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-        // Block F12 key
-        if (e.key === 'F12') {
-            e.preventDefault();
-            showProtectionMessage('Developer tools are disabled');
-            return false;
-        }
-
-        // Block Ctrl+Shift+I (Chrome DevTools)
-        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-            e.preventDefault();
-            showProtectionMessage('Developer tools are disabled');
-            return false;
-        }
-
-        // Block Ctrl+Shift+J (Chrome Console)
-        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-            e.preventDefault();
-            showProtectionMessage('Browser console is disabled');
-            return false;
-        }
-
-        // Block Ctrl+Shift+C (Inspect Element)
-        if (e.ctrlKey && e.shiftKey && e.key === 'C') {
-            e.preventDefault();
-            showProtectionMessage('Inspect element is disabled');
-            return false;
-        }
-
-        // Block Ctrl+U (View Source)
-        if (e.ctrlKey && e.key === 'u') {
-            e.preventDefault();
-            showProtectionMessage('View source is disabled');
-            return false;
-        }
-
-        // Block Ctrl+S (Save Page)
-        if (e.ctrlKey && e.key === 's') {
-            e.preventDefault();
-            showProtectionMessage('Page saving is disabled');
-            return false;
-        }
-
-        // Block Ctrl+P (Print)
-        if (e.ctrlKey && e.key === 'p') {
-            e.preventDefault();
-            showProtectionMessage('Printing is disabled');
-            return false;
-        }
-
-        // Block Ctrl+C (Copy)
-        if (e.ctrlKey && e.key === 'c') {
-            e.preventDefault();
-            showProtectionMessage('Copying content is disabled');
-            return false;
-        }
-
-        // Block Ctrl+A (Select All)
-        if (e.ctrlKey && e.key === 'a') {
-            e.preventDefault();
-            showProtectionMessage('Select all is disabled');
-            return false;
-        }
-
-        // Block Ctrl+X (Cut)
-        if (e.ctrlKey && e.key === 'x') {
-            e.preventDefault();
-            return false;
-        }
-
-        // Block Ctrl+V (Paste)
-        if (e.ctrlKey && e.key === 'v') {
-            e.preventDefault();
-            return false;
-        }
-
-        // Block Print Screen key
-        if (e.key === 'PrintScreen') {
-            e.preventDefault();
-            showProtectionMessage('Screenshots are disabled');
-            return false;
-        }
-    });
-
-    // Disable copy event
-    document.addEventListener('copy', function(e) {
-        e.preventDefault();
-        showProtectionMessage('Copying content is not allowed');
-        return false;
-    });
-
-    // Disable cut event
-    document.addEventListener('cut', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // Disable paste event
-    document.addEventListener('paste', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // Prevent image dragging
-    const images = document.getElementsByTagName('img');
-    for (let i = 0; i < images.length; i++) {
-        images[i].setAttribute('draggable', 'false');
-        images[i].style.pointerEvents = 'none';
-    }
-
-    // Disable text selection via CSS
-    const style = document.createElement('style');
-    style.textContent = `
-        * {
-            -webkit-user-select: none !important;
-            -moz-user-select: none !important;
-            -ms-user-select: none !important;
-            user-select: none !important;
-            -webkit-touch-callout: none !important;
-            -webkit-tap-highlight-color: transparent !important;
-        }
-        
-        input, textarea {
-            -webkit-user-select: text !important;
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
-            user-select: text !important;
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Anti-DevTools detection (basic)
-    function detectDevTools() {
-        const threshold = 160;
-        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
-        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-        
-        if (widthThreshold || heightThreshold) {
-            document.body.innerHTML = `
-                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f8f9fa; font-family: Arial, sans-serif;">
-                    <div style="text-align: center; padding: 2rem;">
-                        <h1 style="color: #dc3545; margin-bottom: 1rem;">⚠️ Access Restricted</h1>
-                        <p style="color: #6c757d; font-size: 1.1rem;">
-                            Developer tools are not permitted on this page.<br>
-                            Please close developer tools and refresh the page.
-                        </p>
-                    </div>
-                </div>
-            `;
-            throw new Error('Developer tools detected');
-        }
-    }
-
-    // Run DevTools detection periodically
-    setInterval(detectDevTools, 1000);
-
-    // Override console methods
-    const originalConsole = {
-        log: console.log,
-        warn: console.warn,
-        error: console.error,
-        info: console.info,
-        debug: console.debug
-    };
-
-    console.log = function() {};
-    console.warn = function() {};
-    console.error = function() {};
-    console.info = function() {};
-    console.debug = function() {};
-    console.clear = function() {};
-
-    // Protection message function
-    function showProtectionMessage(message) {
-        // Create message element
-        const messageEl = document.createElement('div');
-        messageEl.textContent = message;
-        messageEl.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #dc3545;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 10000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            animation: slideIn 0.3s ease;
-        `;
-
-        // Add styles for animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        document.body.appendChild(messageEl);
-
-        // Remove message after 3 seconds
-        setTimeout(() => {
-            messageEl.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => {
-                if (messageEl.parentNode) {
-                    messageEl.parentNode.removeChild(messageEl);
+        // ===== LOAD SAVED THEME =====
+        const savedTheme = localStorage.getItem('selectedTheme');
+        if (savedTheme && savedTheme !== 'default') {
+            document.body.classList.add(`theme-${savedTheme}`);
+            themeOptionsList.forEach(opt => {
+                if (opt.getAttribute('data-theme') === savedTheme) {
+                    opt.classList.add('active');
+                } else {
+                    opt.classList.remove('active');
                 }
-            }, 300);
-        }, 3000);
-    }
-
-    // Additional protection: Disable image context menu
-    document.addEventListener('contextmenu', function(e) {
-        if (e.target.tagName === 'IMG') {
-            e.preventDefault();
-            showProtectionMessage('Image right-click is disabled');
-            return false;
+            });
         }
-    }, true);
 
-    // Protection against element inspection
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(detectDevTools, 200);
-    });
-
-    console.log('🔒 Anti-copy protection activated');
-});
-
-// Additional layer: Mutation Observer to detect DOM changes
-const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'id') {
-            if (mutation.target.id === 'webpack-dev-server-client-overlay') {
-                mutation.target.style.display = 'none';
-            }
+        // ===== MOBILE OPTIMIZATIONS =====
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
-    });
-});
 
-observer.observe(document, {
-    attributes: true,
-    subtree: true,
-    attributeFilter: ['id', 'class']
-});
+        if (isMobileDevice()) {
+            document.body.classList.add('mobile-device');
+            
+            // Optimize touch events
+            document.addEventListener('touchstart', function() {}, {passive: true});
+        }
 
-// Prevent opening new windows/tabs with specific content
-window.addEventListener('beforeunload', function(e) {
-    // This creates a warning when trying to leave the page
-    // Comment out if you don't want this behavior
-    // e.preventDefault();
-    // e.returnValue = '';
-});
+        console.log('✅ ASU E-Library Hub loaded successfully');
+        console.log('📱 Mobile device:', isMobileDevice());
+        console.log('🎨 Current theme:', savedTheme || 'default');
+        console.log('🌙 Dark mode:', savedDarkMode === 'enabled');
+        console.log('🖼️ Background:', savedBackground === 'true');
+    </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-// Disable back/forward navigation
-history.pushState(null, null, document.URL);
-window.addEventListener('popstate', function() {
-    history.pushState(null, null, document.URL);
-});
-
-// Final protection: Self-healing if console is opened
-let checkConsole = setInterval(function() {
-    if (window.console && window.console.firebug) {
-        document.body.innerHTML = '<h1 style="text-align:center;padding:50px;color:red;">Developer tools detected. Please close them to continue.</h1>';
-        clearInterval(checkConsole);
-    }
-}, 1000);
+  gtag('config', 'G-4DE6YQ7Q2M');
 </script>
-
-<style>
-/* Additional CSS to prevent selection and improve protection */
-body {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-    -webkit-touch-callout: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-}
-
-/* Allow selection only in input fields */
-input, textarea {
-    -webkit-user-select: text !important;
-    -moz-user-select: text !important;
-    -ms-user-select: text !important;
-    user-select: text !important;
-}
-
-/* Disable text selection highlight */
-::selection {
-    background: transparent !important;
-}
-
-::-moz-selection {
-    background: transparent !important;
-}
-
-/* Prevent image dragging */
-img {
-    -webkit-user-drag: none !important;
-    -khtml-user-drag: none !important;
-    -moz-user-drag: none !important;
-    -o-user-drag: none !important;
-    user-drag: none !important;
-}
-</style>
-
+	
 </body>
 </html>
