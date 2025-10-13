@@ -535,7 +535,11 @@
         <div class="theme-option theme-white-option" data-theme="white" title="White"></div>
     </div>
 
+
+
     <main>
+	
+	
         <!-- Matcher Section -->
         <section class="priority-section">
             <h2 class="section-title">
@@ -569,6 +573,8 @@
             </div>
         </section>
 
+
+
         <!-- Rating Section -->
         <section class="priority-section">
             <h2 class="section-title">
@@ -593,7 +599,7 @@
 <!--  Private PDFs  -->
 <section class="priority-section">
     <h2 class="section-title">
-        <span>📘</span> Latest Study Slides
+        <span>📘</span> Temporary Latest Study Slides
     </h2>
     
     <div class="card-grid">
@@ -607,6 +613,73 @@
                 Explore the latest PDF slides made from course photos, updated regularly for your study convenience. To unlock access, obtain a key via WhatsApp groups or by contacting the admin directly.
             </p>
         </a>
+    </div>
+</section>
+
+<!--  ASU Term Average Calculator  -->
+<section class="priority-section">
+    <h2 class="section-title">
+        <span>🧮</span> GPA & Term Average Calculator
+    </h2>
+
+    <div class="card-grid">
+        <a href="https://web.asu.edu.jo/CalculateAvg/" target="_blank" class="subject-card free">
+            <h3>
+                <span>📊</span> Calculate Your Term Average
+            </h3>
+            <p>Official ASU tool for GPA and term average calculation</p>
+            <div class="free-badge">Free Service</div>
+            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                Easily compute your semester GPA using ASU’s official calculator. Input your courses and grades to get an accurate term average instantly.
+            </p>
+        </a>
+    </div>
+</section>
+
+<!--  Other Services  -->
+<section class="priority-section">
+    <h2 class="section-title">
+        <span>🎓</span> ASU OFFICIAL WEBSITES ( EASY ACCESS MADE FOR YOU )
+    </h2>
+    
+    <div class="card-grid">
+
+        <!--  Box 1: My ASU Portal -->
+        <a href="https://my.asu.edu.jo" target="_blank" class="subject-card free">
+            <h3>
+                <span>🌐</span> My ASU Portal
+            </h3>
+            <p>Applied Science Private University — Student & Parent Login</p>
+            <div class="free-badge">Free Service</div>
+            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                Access your ASU account or parent login to view grades, announcements, and student services directly through the official portal.
+            </p>
+        </a>
+
+        <!--  Box 2: Faculties Courses List -->
+        <a href="https://my.asu.edu.jo/Account/FacultiesList" target="_blank" class="subject-card free">
+            <h3>
+                <span>📚</span> Faculties & Courses
+            </h3>
+            <p>Explore all faculties and the courses offered at ASU</p>
+            <div class="free-badge">Free Service</div>
+            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                Browse the faculties of Arts, Science, Law, Pharmacy, Nursing, Design, IT, Business, Engineering, Sharia, Allied Medical Sciences, and Dentistry.
+            </p>
+        </a>
+
+        <!--  Box 3: Course Overview & Assignments -->
+        <a href="https://my.asu.edu.jo" target="_blank" class="subject-card free">
+            <h3>
+                <span>📝</span> Course Overview & Assignments
+            </h3>
+            <p>Quizzes, course materials, and assignment submissions</p>
+            <div class="free-badge">Free Service</div>
+            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                View registered courses, attempt quizzes, and submit assignments online. All course-related materials and updates are managed here.
+            </p>
+        </a>
+
     </div>
 </section>
         <!--  Groups  -->
@@ -713,6 +786,7 @@
             </div>
         </section>
         
+
         <!-- WhatsApp Community -->
         <div style="text-align: center; margin: 2rem 0;">
             <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="whatsapp-btn" target="_blank">
@@ -895,7 +969,7 @@
                 <a href="index">Old ASU XYZ Style</a>
             </div>
             <div class="copyright">
-                &copy; 2024 ASU E-Library Hub. All rights reserved.
+                &copy; 2023 ASU E-Library Hub. All rights reserved.
             </div>
         </div>
     </footer>
@@ -1071,6 +1145,52 @@
 
   gtag('config', 'G-4DE6YQ7Q2M');
 </script>
-	
+
+<style>
+    .subject-card {
+        display: block;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        background: var(--card-bg, #fff);
+        text-decoration: none;
+        color: inherit;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .subject-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    .locked-badge, .free-badge {
+        display: inline-block;
+        background: var(--accent, #4caf50);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        font-weight: 600;
+    }
+    .locked-badge {
+        background: #e53935;
+    }
+    .priority-section {
+        margin-bottom: 3rem;
+    }
+    .card-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>
+
+
 </body>
 </html>

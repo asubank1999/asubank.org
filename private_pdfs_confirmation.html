@@ -320,12 +320,11 @@
     <div class="agreement-section">
       <p class="agreement-text" id="agreement-text">By clicking "I Agree", you accept these Terms of Service</p>
       <button class="agree-btn" id="agree-btn">I Agree</button>
-      <p id="mobile-note">This page is optimized for mobile devices</p>
     </div>
   </div>
 
   <footer>
-    <p>Applied Science University &copy; 2025</p>
+    <p>Applied Science University &copy; 2023</p>
   </footer>
 
   <script>
@@ -349,7 +348,7 @@
           countdownElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
           if (timeLeft <= 0) {
             clearInterval(countdownInterval);
-            window.location.href = '/private_pdfs_disagree.html';
+            window.location.href = '/private_pdfs_disagree';
           }
         }, 1000);
       }
