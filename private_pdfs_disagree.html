@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Declined - Terms Not Accepted</title>
+  <style>
+    :root {
+      --primary-color: #a83256;
+      --secondary-color: #e74c78;
+      --accent-color: #ff5b5b;
+      --light-color: #ffeef2;
+      --dark-color: #3b0d1b;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #ffd9e1 0%, #ffb3c1 100%);
+      color: var(--dark-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      max-width: 600px;
+      animation: fadeIn 0.7s ease forwards;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #5a2c39;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.8rem 1.6rem;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-home { background: var(--primary-color); }
+    .btn-home:hover { background: #7a1f3c; }
+
+    .btn-tos { background: var(--secondary-color); }
+    .btn-tos:hover { background: #c43763; }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #7f8c8d;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Access Not Granted</h1>
+    <p>You have not agreed to the Terms of Service.  
+    To continue using the site or access the documents, you must read and accept the terms first.</p>
+    <div class="btn-group">
+      <a href="/home" class="btn btn-home">Return Home</a>
+      <a href="/private_pdfs_confirmation" class="btn btn-tos">Review Terms of Service</a>
+    </div>
+  </div>
+  <footer>Applied Science University &copy; 2025</footer>
+</body>
+</html>
