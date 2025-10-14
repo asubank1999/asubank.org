@@ -229,7 +229,7 @@
       <h1>Terms of Service</h1>
       <p class="subtitle">Document Access Agreement</p>
       <div class="timer" id="timer">
-        Redirecting in: <span id="countdown">1:00</span>
+        Redirecting in: <span id="countdown">3:00</span>
       </div>
       <div class="language-selector">
         <button class="lang-btn active" data-lang="en">English</button>
@@ -256,7 +256,7 @@
         <p>Users agree not to misuse the site, circumvent access controls, or misrepresent the purpose of access. Any unauthorized sharing, data scraping, or publication of restricted materials may violate copyright law.</p>
 
         <h3>4. Disclaimer of Liability</h3>
-        <p>All content is provided “as-is” without warranty. The uploader and host disclaim any responsibility for errors, omissions, or outcomes resulting from the use of the material. Users access the documents at their own risk.</p>
+        <p>All content is provided "as-is" without warranty. The uploader and host disclaim any responsibility for errors, omissions, or outcomes resulting from the use of the material. Users access the documents at their own risk.</p>
 
         <h3>5. Limitation of Responsibility</h3>
         <p>The uploader acts only as an intermediary offering temporary educational access. In no event shall the uploader or host be liable for indirect, incidental, or consequential damages arising from content use or user actions.</p>
@@ -271,10 +271,10 @@
         <p>The uploader may revoke access at any time without notice if a user violates these terms or if content is requested to be withdrawn by the rights holder.</p>
 
         <h3>9. Governing Law</h3>
-        <p>These terms are governed by and construed in accordance with the laws of the uploader’s jurisdiction. Disputes shall be resolved exclusively within that jurisdiction’s competent courts.</p>
+        <p>These terms are governed by and construed in accordance with the laws of the uploader's jurisdiction. Disputes shall be resolved exclusively within that jurisdiction's competent courts.</p>
 
         <h3>10. Acceptance</h3>
-        <p>Clicking “I Agree” constitutes electronic acceptance of these terms, equivalent to a signed written contract. If you do not agree, close this page immediately.</p>
+        <p>Clicking "I Agree" constitutes electronic acceptance of these terms, equivalent to a signed written contract. If you do not agree, close this page immediately.</p>
       </div>
 
       <!-- Arabic -->
@@ -334,10 +334,9 @@
       const agreeBtn = document.getElementById('agree-btn');
       const agreementText = document.getElementById('agreement-text');
       const countdownElement = document.getElementById('countdown');
-      const mobileNote = document.getElementById('mobile-note');
-
-      mobileNote.style.display = window.innerWidth <= 768 ? 'block' : 'none';
-      let timeLeft = 60;
+      
+      // Set initial time to 3 minutes (180 seconds)
+      let timeLeft = 180;
       let countdownInterval;
 
       function startCountdown() {
@@ -346,23 +345,28 @@
           const minutes = Math.floor(timeLeft / 60);
           const seconds = timeLeft % 60;
           countdownElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+          
           if (timeLeft <= 0) {
             clearInterval(countdownInterval);
             window.location.href = '/private_pdfs_disagree';
           }
         }, 1000);
       }
-      startCountdown();
+      
+      // Start the countdown after a brief delay to ensure page is fully loaded
+      setTimeout(startCountdown, 100);
 
       langButtons.forEach(button => {
         button.addEventListener('click', function() {
           const lang = this.getAttribute('data-lang');
           langButtons.forEach(btn => btn.classList.remove('active'));
           this.classList.add('active');
+          
           tosSections.forEach(section => {
             section.classList.remove('active');
             if (section.id === `${lang}-tos`) section.classList.add('active');
           });
+          
           if (lang === 'ar') {
             agreementText.textContent = "بالنقر على 'أوافق'، فإنك تقبل شروط الخدمة هذه";
             agreeBtn.textContent = "أوافق";
@@ -377,11 +381,13 @@
         clearInterval(countdownInterval);
         this.innerHTML = '<span>Processing...</span>';
         this.disabled = true;
-        setTimeout(() => { window.location.href = '/private_pdfs'; }, 2500);
-      });
-
-      window.addEventListener('resize', function() {
-        mobileNote.style.display = window.innerWidth <= 768 ? 'block' : 'none';
+        
+        // Use requestAnimationFrame for smoother animation
+        requestAnimationFrame(() => {
+          setTimeout(() => { 
+            window.location.href = '/private_pdfs'; 
+          }, 1500);
+        });
       });
     });
   </script>
