@@ -12,7 +12,7 @@
       --light-color: #ffeef2;
       --dark-color: #3b0d1b;
       --success-color: #e91e63;
-      --shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      --shadow: 0 3px 5px rgba(0, 0, 0, 0.12);
       --transition: all 0.3s ease;
     }
 
@@ -26,83 +26,68 @@
     body {
       background: linear-gradient(135deg, #ffd9e1 0%, #ffb3c1 100%);
       color: var(--dark-color);
-      line-height: 1.6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1rem;
+      padding: 0.5rem;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 600px;
       width: 100%;
       background: white;
-      border-radius: 12px;
+      border-radius: 10px;
       box-shadow: var(--shadow);
       overflow: hidden;
-      margin-bottom: 1rem;
-      opacity: 0;
-      transform: translateY(20px);
+      margin-bottom: 0.5rem;
       animation: fadeInUp 0.8s ease forwards;
     }
 
     @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     header {
       background: var(--primary-color);
       color: white;
-      padding: 1rem;
+      padding: 0.7rem;
       text-align: center;
       position: relative;
-      overflow: hidden;
     }
 
-    header::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
-      pointer-events: none;
-    }
-
-    h1 { font-size: 1.8rem; margin-bottom: 0.3rem; position: relative; }
-    .subtitle { font-size: 0.9rem; opacity: 0.9; }
+    h1 { font-size: 1.3rem; margin-bottom: 0.2rem; }
+    .subtitle { font-size: 0.8rem; opacity: 0.9; }
 
     .timer {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 0.4rem 1rem;
+      background: rgba(255,255,255,0.2);
+      padding: 0.2rem 0.8rem;
       border-radius: 20px;
-      margin-top: 0.6rem;
-      display: inline-block;
+      margin-top: 0.4rem;
       font-weight: 600;
+      font-size: 0.8rem;
+      display: inline-block;
     }
 
     .language-selector {
       display: flex;
       justify-content: center;
-      margin: 1rem 0 0.5rem;
-      gap: 0.5rem;
+      margin-top: 0.4rem;
+      gap: 0.4rem;
       flex-wrap: wrap;
-      position: relative;
-      z-index: 2;
     }
 
     .lang-btn {
-      padding: 0.6rem 1.2rem;
-      background: rgba(255, 255, 255, 0.3);
+      padding: 0.4rem 1rem;
+      background: rgba(255, 255, 255, 0.25);
       color: white;
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 20px;
       cursor: pointer;
       transition: var(--transition);
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
 
     .lang-btn.active {
@@ -111,115 +96,78 @@
       border-color: white;
     }
 
-    .lang-btn:hover:not(.active) {
-      background: rgba(255, 255, 255, 0.4);
-    }
-
     .content {
-      padding: 1.5rem;
-      max-height: 55vh;
+      padding: 0.8rem;
+      max-height: 45vh;
       overflow-y: auto;
+      font-size: 0.85rem;
+      line-height: 1.4;
     }
 
-    .tos-section {
-      display: none;
-      animation: fadeIn 0.5s ease;
-    }
-
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .tos-section { display: none; }
     .tos-section.active { display: block; }
 
     h2 {
       color: var(--primary-color);
-      margin-bottom: 1.2rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--light-color);
-      font-size: 1.4rem;
-    }
-
-    h3 {
-      color: var(--secondary-color);
-      margin: 1rem 0 0.6rem;
       font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      border-bottom: 1px solid var(--light-color);
+      padding-bottom: 0.3rem;
     }
 
-    p { margin-bottom: 1rem; text-align: justify; }
+    h3 { color: var(--secondary-color); font-size: 0.9rem; margin: 0.6rem 0 0.3rem; }
+
+    p { margin-bottom: 0.6rem; text-align: justify; }
 
     .warning-box {
       background: #fff1f4;
-      border-left: 4px solid #ff8ca3;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-radius: 0 8px 8px 0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-left: 3px solid #ff8ca3;
+      padding: 0.6rem;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 0.8rem;
+      font-size: 0.85rem;
     }
 
-    .warning-box h4 {
-      color: #d6336c;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .warning-box h4::before { content: "⚠️"; }
+    .warning-box h4 { color: #d6336c; font-size: 0.9rem; margin-bottom: 0.3rem; }
 
     .agreement-section {
       background: var(--light-color);
-      padding: 1.2rem;
+      padding: 0.8rem;
       text-align: center;
       border-top: 1px solid #f9c2d0;
     }
 
-    .agreement-text { margin-bottom: 1rem; font-weight: 600; }
+    .agreement-text { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.6rem; }
 
     .agree-btn {
       background: var(--success-color);
       color: white;
       border: none;
-      padding: 0.9rem 2rem;
-      font-size: 1rem;
-      border-radius: 30px;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.9rem;
+      border-radius: 25px;
       cursor: pointer;
       transition: var(--transition);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+      gap: 0.4rem;
+      width: 100%;
+      justify-content: center;
     }
 
-    .agree-btn:hover {
-      background: #c2185b;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    .agree-btn:active { transform: translateY(0); }
+    .agree-btn:hover { background: #c2185b; transform: translateY(-1px); }
     .agree-btn::after { content: "→"; font-weight: bold; }
 
     footer {
       text-align: center;
       color: #7f8c8d;
-      font-size: 0.8rem;
-      margin-top: 0.5rem;
+      font-size: 0.7rem;
+      margin-top: 0.4rem;
     }
 
-    .rtl { direction: rtl; text-align: right; }
-    .rtl h2, .rtl h3 { text-align: right; }
-    .rtl .warning-box {
-      border-left: none;
-      border-right: 4px solid #ff8ca3;
-      border-radius: 8px 0 0 8px;
-    }
-    .rtl .agree-btn::after { content: "←"; }
-
-    @media (max-width: 768px) {
-      body { padding: 0.5rem; }
-      .container { margin: 0.5rem 0; }
-      .content { max-height: 60vh; }
-      .agree-btn { width: 100%; justify-content: center; }
+    @media (max-height: 700px) {
+      .content { max-height: 40vh; }
     }
   </style>
 </head>
@@ -228,9 +176,7 @@
     <header>
       <h1>Terms of Service</h1>
       <p class="subtitle">Document Access Agreement</p>
-      <div class="timer" id="timer">
-        Redirecting in: <span id="countdown">3:00</span>
-      </div>
+      <div class="timer" id="timer">Redirecting in: <span id="countdown">3:00</span></div>
       <div class="language-selector">
         <button class="lang-btn active" data-lang="en">English</button>
         <button class="lang-btn" data-lang="ar">العربية</button>
@@ -238,82 +184,36 @@
     </header>
 
     <div class="content">
-      <!-- English -->
       <div class="tos-section active" id="en-tos">
-        <h2>Terms of Service for Document Access</h2>
+        <h2>Terms of Service</h2>
         <div class="warning-box">
           <h4>Important Notice</h4>
-          <p>Access to this content is provided for educational and reference purposes only. By continuing, you affirm that you are an authorized student or researcher and that you understand your use is limited to personal academic review.</p>
+          <p>Access is for educational use only. By continuing, you confirm you are authorized for academic use.</p>
         </div>
-
-        <h3>1. Ownership and Copyright</h3>
-        <p>All materials, including text, PDFs, and data files, are the property of their respective authors or publishers. The uploader provides access in good faith for instructional use. No ownership of copyrighted works is transferred to you.</p>
-
-        <h3>2. Permitted Use</h3>
-        <p>You may view, download, and use the materials solely for educational, non-commercial purposes. You may not reproduce, repost, or redistribute any content publicly without explicit permission from the copyright holder.</p>
-
-        <h3>3. Prohibited Conduct</h3>
-        <p>Users agree not to misuse the site, circumvent access controls, or misrepresent the purpose of access. Any unauthorized sharing, data scraping, or publication of restricted materials may violate copyright law.</p>
-
-        <h3>4. Disclaimer of Liability</h3>
-        <p>All content is provided "as-is" without warranty. The uploader and host disclaim any responsibility for errors, omissions, or outcomes resulting from the use of the material. Users access the documents at their own risk.</p>
-
-        <h3>5. Limitation of Responsibility</h3>
-        <p>The uploader acts only as an intermediary offering temporary educational access. In no event shall the uploader or host be liable for indirect, incidental, or consequential damages arising from content use or user actions.</p>
-
-        <h3>6. Reporting and Takedown Procedure</h3>
-        <p>If you believe that a document infringes copyright, you may submit a written notice identifying the work and the claimed infringement. The uploader reserves the right to remove disputed materials upon verified request under applicable law.</p>
-
-        <h3>7. User Acknowledgement</h3>
-        <p>By accepting these terms, you acknowledge that you are responsible for how you use the materials and that you will not pursue legal action against the uploader for lawful educational sharing under fair-use or equivalent academic provisions.</p>
-
-        <h3>8. Termination of Access</h3>
-        <p>The uploader may revoke access at any time without notice if a user violates these terms or if content is requested to be withdrawn by the rights holder.</p>
-
-        <h3>9. Governing Law</h3>
-        <p>These terms are governed by and construed in accordance with the laws of the uploader's jurisdiction. Disputes shall be resolved exclusively within that jurisdiction's competent courts.</p>
-
-        <h3>10. Acceptance</h3>
-        <p>Clicking "I Agree" constitutes electronic acceptance of these terms, equivalent to a signed written contract. If you do not agree, close this page immediately.</p>
+        <h3>1. Ownership</h3>
+        <p>All materials belong to their authors. Use is for learning, not redistribution.</p>
+        <h3>2. Use</h3>
+        <p>View and download for education only. Redistribution is forbidden without permission.</p>
+        <h3>3. Disclaimer</h3>
+        <p>All materials are provided "as is" without warranties. Use at your own risk.</p>
+        <h3>4. Acceptance</h3>
+        <p>Clicking “I Agree” signifies your acceptance of these terms.</p>
       </div>
 
-      <!-- Arabic -->
       <div class="tos-section rtl" id="ar-tos">
-        <h2>شروط الخدمة للوصول إلى المستندات</h2>
+        <h2>شروط الخدمة</h2>
         <div class="warning-box">
           <h4>ملاحظة هامة</h4>
-          <p>يتم توفير هذا المحتوى لأغراض تعليمية فقط. من خلال المتابعة، فإنك تؤكد أنك طالب أو باحث مخوّل للاستخدام الأكاديمي الشخصي.</p>
+          <p>الوصول مخصص للأغراض التعليمية فقط. بالمتابعة، تؤكد أنك مخوّل للاستخدام الأكاديمي.</p>
         </div>
-
-        <h3>١. الملكية وحقوق النشر</h3>
-        <p>جميع المواد هي ملك لأصحابها الشرعيين. يتم توفير الوصول بحسن نية لأغراض التعليم فقط، ولا يتم نقل أي ملكية فكرية.</p>
-
-        <h3>٢. الاستخدام المسموح</h3>
-        <p>يجوز لك عرض وتنزيل المواد للاستخدام الأكاديمي غير التجاري فقط. لا يجوز إعادة نشر أو توزيع المحتوى دون إذن صريح من صاحب الحقوق.</p>
-
-        <h3>٣. السلوك المحظور</h3>
-        <p>يوافق المستخدم على عدم إساءة استخدام الموقع أو تجاوز ضوابط الوصول أو مشاركة المحتوى المقيّد بشكل غير قانوني.</p>
-
-        <h3>٤. إخلاء المسؤولية</h3>
-        <p>يتم تقديم جميع المواد "كما هي" دون أي ضمانات. لا يتحمل الناشر أو المزوّد أي مسؤولية عن النتائج المترتبة على استخدام المحتوى.</p>
-
-        <h3>٥. حدود المسؤولية</h3>
-        <p>يعمل الناشر كوسيط لتوفير وصول تعليمي مؤقت. لا يكون مسؤولًا عن أي أضرار غير مباشرة أو تبعية ناتجة عن استخدام المواد.</p>
-
-        <h3>٦. الإبلاغ وإزالة المحتوى</h3>
-        <p>في حال وجود مطالبة بانتهاك حقوق النشر، يمكن إرسال إشعار كتابي رسمي، ويحتفظ المزوّد بحق إزالة المواد المتنازع عليها بعد التحقق.</p>
-
-        <h3>٧. إقرار المستخدم</h3>
-        <p>من خلال قبول هذه الشروط، تتحمل المسؤولية الكاملة عن طريقة استخدامك للمواد وتقر بعدم رفع أي دعوى ضد المزوّد بشأن مشاركة تعليمية قانونية.</p>
-
-        <h3>٨. إنهاء الوصول</h3>
-        <p>يجوز للمزوّد إيقاف الوصول في أي وقت دون إشعار إذا خالف المستخدم هذه الشروط.</p>
-
-        <h3>٩. القانون الحاكم</h3>
-        <p>تخضع هذه الشروط لقوانين بلد المزوّد وتُفسَّر وفقًا لها، وتُحل أي نزاعات في المحاكم المختصة هناك.</p>
-
-        <h3>١٠. القبول</h3>
-        <p>يُعد النقر على "أوافق" بمثابة قبول إلكتروني ملزم قانونيًا لهذه الشروط.</p>
+        <h3>١. الملكية</h3>
+        <p>جميع المواد تعود لأصحابها الشرعيين. الاستخدام للأغراض التعليمية فقط.</p>
+        <h3>٢. الاستخدام</h3>
+        <p>يُسمح بالعرض والتنزيل للتعلم فقط. يُمنع إعادة النشر دون إذن.</p>
+        <h3>٣. إخلاء المسؤولية</h3>
+        <p>يتم تقديم المواد كما هي دون ضمانات. الاستخدام على مسؤوليتك الخاصة.</p>
+        <h3>٤. القبول</h3>
+        <p>النقر على "أوافق" يعني قبولك لهذه الشروط.</p>
       </div>
     </div>
 
@@ -323,9 +223,7 @@
     </div>
   </div>
 
-  <footer>
-    <p>Applied Science University &copy; 2023</p>
-  </footer>
+  <footer><p>Applied Science University &copy; 2023</p></footer>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -334,39 +232,26 @@
       const agreeBtn = document.getElementById('agree-btn');
       const agreementText = document.getElementById('agreement-text');
       const countdownElement = document.getElementById('countdown');
-      
-      // Set initial time to 3 minutes (180 seconds)
       let timeLeft = 180;
-      let countdownInterval;
 
-      function startCountdown() {
-        countdownInterval = setInterval(function() {
-          timeLeft--;
-          const minutes = Math.floor(timeLeft / 60);
-          const seconds = timeLeft % 60;
-          countdownElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-          
-          if (timeLeft <= 0) {
-            clearInterval(countdownInterval);
-            window.location.href = '/private_pdfs_disagree';
-          }
-        }, 1000);
-      }
-      
-      // Start the countdown after a brief delay to ensure page is fully loaded
-      setTimeout(startCountdown, 100);
+      const timer = setInterval(() => {
+        timeLeft--;
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        countdownElement.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          window.location.href = '/private_pdfs_disagree';
+        }
+      }, 1000);
 
       langButtons.forEach(button => {
         button.addEventListener('click', function() {
-          const lang = this.getAttribute('data-lang');
-          langButtons.forEach(btn => btn.classList.remove('active'));
+          const lang = this.dataset.lang;
+          langButtons.forEach(b => b.classList.remove('active'));
           this.classList.add('active');
-          
-          tosSections.forEach(section => {
-            section.classList.remove('active');
-            if (section.id === `${lang}-tos`) section.classList.add('active');
-          });
-          
+          tosSections.forEach(sec => sec.classList.remove('active'));
+          document.getElementById(`${lang}-tos`).classList.add('active');
           if (lang === 'ar') {
             agreementText.textContent = "بالنقر على 'أوافق'، فإنك تقبل شروط الخدمة هذه";
             agreeBtn.textContent = "أوافق";
@@ -377,17 +262,11 @@
         });
       });
 
-      agreeBtn.addEventListener('click', function() {
-        clearInterval(countdownInterval);
-        this.innerHTML = '<span>Processing...</span>';
-        this.disabled = true;
-        
-        // Use requestAnimationFrame for smoother animation
-        requestAnimationFrame(() => {
-          setTimeout(() => { 
-            window.location.href = '/private_pdfs'; 
-          }, 1500);
-        });
+      agreeBtn.addEventListener('click', () => {
+        clearInterval(timer);
+        agreeBtn.textContent = "Processing...";
+        agreeBtn.disabled = true;
+        setTimeout(() => { window.location.href = '/private_pdfs'; }, 1200);
       });
     });
   </script>
