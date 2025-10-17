@@ -205,7 +205,7 @@
       display: inline-block;
       width: 24px;
       height: 24px;
-      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTM4MC45IDk3LjFjLTQ5LjctNDkuNy0xMjkuMy00OS43LTE3OSAwbC0xMCAxMEMxNDkuNCAxMjcuNiAxMzkuOSAxNTkuNiAxMzkuOSAxOTJjMCA4LjggNy4yIDE2IDE2IDE2czE2LTcuMiAxNi0xNmMwLTI4LjEgMTAuNy01NC4zIDMwLjItNzQuMmwxMC0xMGMyOC4xLTI4LjEgNzMuNy0yOC4xIDEwMS44IDBsMTAgMTBjMTkuNSAxOS41IDMwLjIgNDUuNyAzMC4yIDczLjhzLTEwLjcgNTQuMy0zMC4yIDczLjhMMzA0IDMwNWMtNDUuOSA0NS45LTExOS4yIDQ1LjktMTY1LjIgMGwtMTMuMi0xMy4yYy0zLjgtMy44LTkuOS0zLjgtMTMuNyAwbC0zMiNDMzIuNGMtMy44IDMuOC0zLjggOS45IDAgMTMuN2wxMy4yIDEzLjJjNDkuOSA0OS45IDExNS4yIDc3LjIgMTgxIDc3LjEgNjUuOCAwIDEyMC44LTI0LjMgMTY2LjctNjkuMmw4My43LTgzLjRjNDkuNy00OS43IDQ5LjctMTI5LjMgMC0xNzl6Ii8+PC9zdmc+');
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTM4MC45IDk3LjFjLTQ5LjctNDkuNy0xMjkuMy00OS43LTE3OSAwbC0xMCAxMEMxNDkuNCAxMjcuNiAxMzkuOSAxNTkuNiAxMzkuOSAxOTJjMCA4LjggNy4yIDE2IDE2IDE2czE2LTcuMiAxNi0xNmMwLTI4LjEgMTAuNy01NC4zIDMwLjItNzQuMmwxMC0xMGMyOC4xLTI4LjEgNzMuNy0yOC4xIDEwMS44IDBsMTAgMTBjMTkuNSAxOS41IDMwLjIgNDUuNyAzMC4yIDczLjhzLTEwLjcgNTQuMy0zMC4yIDczLjhMMzA0IDMwNWMtNDUuOSA0NS45LTExOS4yIDQ1LjktMTY1LjIgMGwtMTMuMi0xMy4yYy0zLjgtMy44LTkuOS0zLjgtMTMuNyAwbC0zMjQzMy40Yy0zLjggMy44LTMuOCA5LjkgMCAxMy43bDEzLjIgMTMuMmM0OS45IDQ5LjkgMTE1LjIgNzcuMiAxODEgNzcuMSA2NS44IDAgMTIwLjgtMjQuMyAxNjYuNy02OS4ybDgzLjctODMuNGM0OS43LTQ5LjcgNDkuNy0xMjkuMyAwLTE3OXoiLz48L3N2Zz4=');
       background-size: contain;
       margin-right: 12px;
       filter: brightness(0) invert(1);
@@ -382,6 +382,40 @@
       background: linear-gradient(135deg, #fd79a8, #e84393);
     }
 
+    /* Search Bar */
+    .search-container {
+      margin: 30px 0;
+      position: relative;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 1rem;
+      border: 2px solid transparent;
+      border-radius: var(--border-radius);
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjM2RTcyIiBkPSJNNDE2IDIwOGMwLTYwLjYtNDIuOC0xMDkuMi05OS4yLTEwOS4yUzIxNy42IDE0Ny40IDIxNy42IDIwOHM0Mi44IDEwOS4yIDk5LjIgMTA5LjJTNDE2IDI2OC42IDQxNiAyMDh6TTUwMC44IDQ0Ny42bC0xMjEtMTIxQzQxOC41IDI5MS4yIDQ0OCAyNTMuMiA0NDggMjA4YzAtOTcuMi03OC44LTE3Ni0xNzYtMTc2Uzk2IDExMC44IDk2IDIwOHM3OC44IDE3NiAxNzYgMTc2YzQ1LjIgMCA4My4yLTI5LjUgMTE4LjYtNjguMmwxMjEgMTIxYzQuNyA0LjcgMTIuMyA0LjcgMTcgMGwyOC4yLTI4LjJjNC43LTQuNyA0LjctMTIuMyAwLTE3eiIvPjwvc3ZnPg==');
+      background-repeat: no-repeat;
+      background-position: 20px center;
+      background-size: 20px;
+      padding-left: 55px;
+    }
+
+    body.dark-mode .search-bar {
+      background-color: var(--dark-card);
+      color: var(--dark-text);
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZGNkZGUxIiBkPSJNNDE2IDIwOGMwLTYwLjYtNDIuOC0xMDkuMi05OS4yLTEwOS4yUzIxNy2IDE0Ny40IDIxNy42IDIwOHM0Mi44IDEwOS4yIDk5LjIgMTA5LjJTNDE2IDI2OC42IDQxNiAyMDh6TTUwMC44IDQ0Ny42bC0xMjEtMTIxQzQxOC41IDI5MS4yIDQ0OCAyNTMuMiA0NDggMjA4YzAtOTcuMi03OC44LTE3Ni0xNzYtMTc2Uzk2IDExMC44IDk2IDIwOHM3OC44IDE3NiAxNzYgMTc2YzQ1LjIgMCA4My4yLTI5LjUgMTE4LjYtNjguMmwxMjEgMTIxYzQuNyA0LjcgMTIuMyA0LjcgMTcgMGwyOC4yLTI4LjJjNC43LTQuNyA0LjctMTIuMyAwLTE3eiIvPjwvc3ZnPg==');
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: #6c5ce7;
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+
     /* Responsive Design */
     @media (max-width: 1024px) {
       .link-container {
@@ -458,16 +492,23 @@
   <!-- Main Content -->
   <div class="container">
     <h1>University WhatsApp Links & Resources</h1>
+    
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-bar" placeholder="Search for groups or resources..." onkeyup="filterGroups()">
+    </div>
 
     <!-- General University Groups Section -->
     <h2>General University Groups</h2>
     <div class="link-container">
       <a href="https://chat.whatsapp.com/FXEX5McPGmv0hxMYu1DS4X" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">باصات العلوم التطبيقيه🚎</a>
-      <a href="https://chat.whatsapp.com/HXPnjF01K3ADJVP1PJ0g8h" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">طلاب جامعتنا</a>
+      <a href="https://chat.whatsapp.com/GrPfNbuHJFi35hdlhf3S2d" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">باصات طلاب الجامعة</a>
       <a href="https://chat.whatsapp.com/HrZqzeVh80OGuEinCokdSX" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">قروب تبع دريسه بس</a>
       <a href="https://chat.whatsapp.com/KofrrWz7FrR2fM68370i9t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الرياضة و الابتكار ( شعبة 3 )</a>
       <a href="https://chat.whatsapp.com/DDRN4vkegzhEYTadtodJoT" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">C.S | ASU 👩🏻‍💻</a>
       <a href="https://chat.whatsapp.com/Ipe11O8CpCCKrpUcTIqlQp" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">طلاب الجامعة (للدراسة) 2</a>
+      <a href="https://chat.whatsapp.com/KmTeJjk5a9uAV6cHct3SZ5" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">🩷👧🏻 Fiters Ladies👧🏻🩷</a>
+      <a href="https://chat.whatsapp.com/DTvlc3X0yB3LekC5pZlrCC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">XRGD - ASU</a>
     </div>
     <p class="arabic-translation">(مجموعة طلاب الجامعة، ناشطو الجامعة، مجموعة دردشة طلابية،)</p>
 
@@ -478,58 +519,60 @@
       <h3>First Year</h3>
       <div class="link-container">
         <a href="https://chat.whatsapp.com/BnXyii3zklZ4a7NOZyAx1L" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">2025 pharmacists 💊🥼</a>
-        <a href="https://chat.whatsapp.com/CgQziiFMxKDFn2RCr8UaYu?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة 1</a>
-        <a href="https://chat.whatsapp.com/JbPcYR5PejYDSbHTCsUnC3?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مقدمة في ممارسة الصيدلية</a>
-        <a href="https://chat.whatsapp.com/JmupqsDMW621p3OQJpWIge?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء عامة عملي</a>
-        <a href="https://chat.whatsapp.com/CWHSt7MNPO48Hb5RTeEPMl?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">علوم حياتية 1</a>
+        <a href="https://chat.whatsapp.com/CgQziiFMxKDFn2RCr8UaYu" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة 1</a>
+        <a href="https://chat.whatsapp.com/JbPcYR5PejYDSbHTCsUnC3" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مقدمة في ممارسة الصيدلية</a>
+        <a href="https://chat.whatsapp.com/JmupqsDMW621p3OQJpWIge" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء عامة عملي</a>
+        <a href="https://chat.whatsapp.com/CWHSt7MNPO48Hb5RTeEPMl" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">علوم حياتية 1</a>
         <a href="https://chat.whatsapp.com/FAsnr5vDe88864EuiWTKSR" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الريادة و الابتكار شعبة(٥)</a>
         <a href="https://chat.whatsapp.com/JlNqUSe8So5DepMFiJoAOY" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">القيادة و المسؤولية المجتمعية شعبة(٥)</a>
         <a href="https://chat.whatsapp.com/CH0mMGcSzsCBrt34WSyDMP" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات الحياتية شعبة (٥)</a>
         <a href="https://chat.whatsapp.com/KX4pGRzrkSf3rhcpDA9alM" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Cyber security 🫀</a>
+        <a href="https://chat.whatsapp.com/INLUwjqCsAvIkfY3JPRKzw" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء عامه شعبه (4)</a>
+        <a href="https://chat.whatsapp.com/JJyA2sHiY4GCclJtPacqjd" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء عامه ١ شعبه (2)</a>
       </div>
       
       <h3>Second Year</h3>
       <div class="link-container">
-        <a href="https://chat.whatsapp.com/BBmdm1iJpSt3JNuQsCgYEw?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Organic Chemistry 2</a>
-        <a href="https://chat.whatsapp.com/FLlGlNAZEmgLIeZ4cPc7Tp?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy and Physiology 2</a>
-        <a href="https://chat.whatsapp.com/BWwuMyJVcqoL6B5B7FfOaU?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry Lab</a>
-        <a href="https://chat.whatsapp.com/Gia6geI1S29FiLZv6XSyOl?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry</a>
-        <a href="https://chat.whatsapp.com/LUj2XjvZmLv9iOAY91UHZP?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Microbiology and Immunology</a>
-        <a href="https://chat.whatsapp.com/CsborT23sriHsVDpZe0LhE?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Microbiology Lab</a>
-        <a href="https://chat.whatsapp.com/H1uMHoE8fSe0SGWCLOMtkI?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">إحصاء حيوي تطبيقي</a>
+        <a href="https://chat.whatsapp.com/BBmdm1iJpSt3JNuQsCgYEw" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Organic Chemistry 2</a>
+        <a href="https://chat.whatsapp.com/FLlGlNAZEmgLIeZ4cPc7Tp" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy and Physiology 2</a>
+        <a href="https://chat.whatsapp.com/BWwuMyJVcqoL6B5B7FfOaU" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry Lab</a>
+        <a href="https://chat.whatsapp.com/Gia6geI1S29FiLZv6XSyOl" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry</a>
+        <a href="https://chat.whatsapp.com/LUj2XjvZmLv9iOAY91UHZP" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Microbiology and Immunology</a>
+        <a href="https://chat.whatsapp.com/CsborT23sriHsVDpZe0LhE" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Microbiology Lab</a>
+        <a href="https://chat.whatsapp.com/H1uMHoE8fSe0SGWCLOMtkI" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">إحصاء حيوي تطبيقي</a>
       </div>
       
       <h3>Third Year</h3>
       <div class="link-container">
-        <a href="https://chat.whatsapp.com/HA7waBjQmfmCMMIZ7kyYPX?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تحليل آلي</a>
-        <a href="https://chat.whatsapp.com/DQm252YuMLvFO9nNOxsw7c?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء تحليلية وتحليل آلي عملي</a>
-        <a href="https://chat.whatsapp.com/G82a090e8TOHgTPUlXJeH1?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء دوائية 1</a>
-        <a href="https://chat.whatsapp.com/Cg2YkW2Cmgq3sFQGM1XaQG?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">علم الأدوية 1</a>
-        <a href="https://chat.whatsapp.com/GGrAlYgxZ3r3UV7t5b6yfx?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلانيات 2</a>
-        <a href="https://chat.whatsapp.com/EGV9PZwsCI9BLXxr8P5h4R?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلانيات 2 عملي</a>
+        <a href="https://chat.whatsapp.com/HA7waBjQmfmCMMIZ7kyYPX" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تحليل آلي</a>
+        <a href="https://chat.whatsapp.com/DQm252YuMLvFO9nNOxsw7c" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء تحليلية وتحليل آلي عملي</a>
+        <a href="https://chat.whatsapp.com/G82a090e8TOHgTPUlXJeH1" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء دوائية 1</a>
+        <a href="https://chat.whatsapp.com/Cg2YkW2Cmgq3sFQGM1XaQG" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">علم الأدوية 1</a>
+        <a href="https://chat.whatsapp.com/GGrAlYgxZ3r3UV7t5b6yfx" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلانيات 2</a>
+        <a href="https://chat.whatsapp.com/EGV9PZwsCI9BLXxr8P5h4R" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلانيات 2 عملي</a>
       </div>
       
       <h3>Fourth Year</h3>
       <div class="link-container">
-        <a href="https://chat.whatsapp.com/LBhjsj5ILk1K6K6BBbyrhb?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Drug Design</a>
-        <a href="https://chat.whatsapp.com/Cd6pEG5NTwgFCXlGEwSvUJ?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacochemistry Lab</a>
-        <a href="https://chat.whatsapp.com/CTcsAT5dfceLQOtVuytXGM?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacochemistry</a>
-        <a href="https://chat.whatsapp.com/F2MNFr9Z6VD02KzMHXrZym?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacokinetics</a>
-        <a href="https://chat.whatsapp.com/BqaGt0mmeKU5GcqITXr5CC?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacokinetics Lab</a>
-        <a href="https://chat.whatsapp.com/LISxqTlYHXUL7cgdekh5Gk?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Training 2</a>
-        <a href="https://chat.whatsapp.com/GKxH8N3WVQUFkKVpX5p5Wd?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmaceutical Technology</a>
-        <a href="https://chat.whatsapp.com/GJpEbHc5j1wBmxkpX25vSC?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Immunology</a>
+        <a href="https://chat.whatsapp.com/LBhjsj5ILk1K6K6BBbyrhb" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Drug Design</a>
+        <a href="https://chat.whatsapp.com/Cd6pEG5NTwgFCXlGEwSvUJ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacochemistry Lab</a>
+        <a href="https://chat.whatsapp.com/CTcsAT5dfceLQOtVuytXGM" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacochemistry</a>
+        <a href="https://chat.whatsapp.com/F2MNFr9Z6VD02KzMHXrZym" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacokinetics</a>
+        <a href="https://chat.whatsapp.com/BqaGt0mmeKU5GcqITXr5CC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacokinetics Lab</a>
+        <a href="https://chat.whatsapp.com/LISxqTlYHXUL7cgdekh5Gk" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Training 2</a>
+        <a href="https://chat.whatsapp.com/GKxH8N3WVQUFkKVpX5p5Wd" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmaceutical Technology</a>
+        <a href="https://chat.whatsapp.com/GJpEbHc5j1wBmxkpX25vSC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Immunology</a>
       </div>
       
       <h3>Fifth Year</h3>
       <div class="link-container">
-        <a href="https://chat.whatsapp.com/Dtsvq4szJ3fL2EQLM8Ldnf?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلية سريرية ومداواة 2</a>
-        <a href="https://chat.whatsapp.com/CHybspEQSzYDpQRopoxjYj?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلية سريرية ومداواة عملي</a>
-        <a href="https://chat.whatsapp.com/K5aHNurYgewHU5ANcriHRv?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">اقتصاديات صيدلانية</a>
-        <a href="https://chat.whatsapp.com/Gbx9DckqRk6IJRr9tth5it?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مستحضرات تجميل</a>
-        <a href="https://chat.whatsapp.com/JYIWpJzzK3D8m7uDHQ6uxh?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تسويق</a>
-        <a href="https://chat.whatsapp.com/By0ABI17znsLhQo4SeEHVb?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">المعلومات الدوائية</a>
-        <a href="https://chat.whatsapp.com/LuEGwzhpA0a3syWYrRooeG?mode=ems_share_t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">انظمة إيصال الدواء المتطورة</a>
+        <a href="https://chat.whatsapp.com/Dtsvq4szJ3fL2EQLM8Ldnf" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلية سريرية ومداواة 2</a>
+        <a href="https://chat.whatsapp.com/CHybspEQSzYDpQRopoxjYj" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلية سريرية ومداواة عملي</a>
+        <a href="https://chat.whatsapp.com/K5aHNurYgewHU5ANcriHRv" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">اقتصاديات صيدلانية</a>
+        <a href="https://chat.whatsapp.com/Gbx9DckqRk6IJRr9tth5it" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مستحضرات تجميل</a>
+        <a href="https://chat.whatsapp.com/JYIWpJzzK3D8m7uDHQ6uxh" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تسويق</a>
+        <a href="https://chat.whatsapp.com/By0ABI17znsLhQo4SeEHVb" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">المعلومات الدوائية</a>
+        <a href="https://chat.whatsapp.com/LuEGwzhpA0a3syWYrRooeG" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">انظمة إيصال الدواء المتطورة</a>
       </div>
     </div>
 
@@ -539,63 +582,66 @@
     <div class="link-container">
       <a href="https://chat.whatsapp.com/EArT9uav9K561KPY0YxEwp" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biostatistics</a>
       <a href="https://chat.whatsapp.com/FvWjkA193am6lQCoxu5hkq" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Organic Chemistry</a>
-      <a href="https://chat.whatsapp.com/IjWxJ6VvyjQKrhtEq63J6a" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Fundamentals of Nutrition</a>
-      <a href="https://chat.whatsapp.com/GnxSXWUq15uJXiDhWQH97u" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Fundamentals of Food Science</a>
-      <a href="https://chat.whatsapp.com/GIhfDBt27SqD1dgLX0M7ad" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Physiology</a>
-      <a href="https://chat.whatsapp.com/J4FvhuNSTYxDV4ffx12Vyv" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Medical Terminology</a>
-      <a href="https://chat.whatsapp.com/CtHCkorWStKFbSEoaS811m" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry</a>
+      <a href="https://chat.whatsapp.com/JGvGZ0f1J7l0hqFJfQ0v5v" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy and Physiology</a>
+      <a href="https://chat.whatsapp.com/EGqJQ4QqJQqJQqJQqJQqJQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Principles of Nutrition</a>
     </div>
-    <p class="arabic-translation">(الإحصاء الحيوي، الكيمياء العضوية، أساسيات التغذية، أساسيات علم الغذاء، علم وظائف الأعضاء، المصطلحات الطبية، الكيمياء الحيوية)</p>
-
+    
     <h3>Second Year</h3>
     <div class="link-container">
-      <a href="https://chat.whatsapp.com/IAj0S67eU3dGwYLOW2oDf1" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Food Safety and Health</a>
-      <a href="https://chat.whatsapp.com/J15CqS9tlYPI7k9QkHgGVp" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Nutrition Through Life Stages (1)</a>
-      <a href="https://chat.whatsapp.com/CaBNusC5Wpu3bHMLV10Drk" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Meal Planning and Diets</a>
-      <a href="https://chat.whatsapp.com/CZmV2dBkyClFLxwQsdJa3F" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Meal Planning and Diets (Practical)</a>
+      <a href="https://chat.whatsapp.com/EGqJQ4QqJQqJQqJQqJQqJQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Nutrition Assessment</a>
+      <a href="https://chat.whatsapp.com/EGqJQ4QqJQqJQqJQqJQqJQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Food Science</a>
+      <a href="https://chat.whatsapp.com/EGqJQ4QqJQqJQqJQqJQqJQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry</a>
     </div>
-    <p class="arabic-translation">(سلامة الغذاء والصحة، التغذية خلال مراحل الحياة ١، تخطيط الوجبات والحميات، تخطيط الوجبات والحميات - عملي)</p>
 
-    <h3>Third Year</h3>
+    <!-- IT and Computer Science Section -->
+    <h2>IT and Computer Science</h2>
     <div class="link-container">
-      <a href="https://chat.whatsapp.com/LhooTgTYKpb5rJIXwC3FOA" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Clinical Nutrition Therapy (2)</a>
-      <a href="https://chat.whatsapp.com/DMqE7rC0D4PLSgHED69bYz" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Clinical Nutrition Therapy (2) (Practical)</a>
-      <a href="https://chat.whatsapp.com/FCqyTgtnV2pBfczCVV5ySo" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Food Preparation</a>
-      <a href="https://chat.whatsapp.com/EtI2xIQKzDDLXXpC7M61fR" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Food Preparation (Practical)</a>
-      <a href="https://chat.whatsapp.com/C31XbXx0vNx9uL2ZigtyIQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Nutritional Education and Counseling</a>
+      <a href="https://chat.whatsapp.com/Hb1jON8CrpoK6nrG0TCO8z" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Fiters IT -2</a>
+      <a href="https://chat.whatsapp.com/K3XJo2k4F0O7ELC0th8LW9" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مقدمة نظم معلومات اداريه</a>
+      <a href="https://chat.whatsapp.com/F0aA22nXXJpEy3nqtb6Dp5" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تراسل البيانات -3</a>
+      <a href="https://chat.whatsapp.com/Fq8QJOkOzWmBMyTqQx2nKd" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">اساسيات الفيزيا الكهربائية-1</a>
+      <a href="https://chat.whatsapp.com/Iu4HzSTAoWvIdqTq0RE16U" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Engineering Materials</a>
     </div>
-    <p class="arabic-translation">(العلاج التغذوي السريري ٢، العلاج التغذوي السريري ٢ - عملي، تحضير الطعام، تحضير الطعام - عملي، التثقيف والإرشاد التغذوي)</p>
 
-    <h3>Fourth Year</h3>
+    <!-- Business and Finance Section -->
+    <h2>Business and Finance</h2>
     <div class="link-container">
-      <a href="https://chat.whatsapp.com/E9QLlyVYmJRI6URo1kVmAP" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Food Quality Control and Management</a>
-      <a href="https://chat.whatsapp.com/HgumYYtBhSuLWiOcyzL4Bt" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Nutrition and Immunity</a>
-      <a href="https://chat.whatsapp.com/DNgboFbjjgkLJ2Qh1erziG" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Sports Nutrition</a>
-      <a href="https://chat.whatsapp.com/CZHzePqvLbQAtJ7RwWQVLJ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Clinical Nutrition Graduation Project</a>
-      <a href="https://chat.whatsapp.com/HFSIzS9ZCoPAd0usbGLvmc" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Nutrition Therapy for Cancer Patients</a>
-      <a href="https://chat.whatsapp.com/HPbBv2Nm0AaEuPJo3qZwTc" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Functional Foods</a>
+      <a href="https://chat.whatsapp.com/DIMyLhXUDnc8vKlnAxecAA" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تسوق خدمات ماليه شعبه 1</a>
     </div>
-    <p class="arabic-translation">(ضبط جودة الغذاء وإدارته، التغذية والمناعة، تغذية الرياضيين، مشروع التخرج في التغذية السريرية، العلاج التغذوي لمرضى السرطان، الأغذية الوظيفية)</p>
 
-    <!-- Applied Science University (Balqa) Section -->
-    <h2>Applied Science University (Balqa)</h2>
+    <!-- Life Skills Section -->
+    <h2>Life Skills</h2>
     <div class="link-container">
-      <a href="https://chat.whatsapp.com/ErZhlPgLw2K3ZToErBofMK" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">جميع المواد pdf جامعة البلقاء التطبيقية 💌❤️</a>
-      <a href="https://chat.whatsapp.com/DWjr2UV8EOfFOZ3WGYdFcL" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">وطنية البلقاء جميع الشعب والكليات ❤️💌</a>
-      <a href="https://chat.whatsapp.com/DeoWPYp3Ja17B93ZKNfdYH" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">عسكرية البلقاء كل الشعب والكليات ❤️💌</a>
-      <a href="https://chat.whatsapp.com/FA9UKIlmYWM2ztls20lAzG" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">ثقافه إسلامية البلقاء جميع الشعب والكليات ❤️💌</a>
-      <a href="https://chat.whatsapp.com/FYxdSHjbeEI8RNznhApdIy" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات التواصل البلقاء جميع الشعب والكليات ❤️💌</a>
-      <a href="https://chat.whatsapp.com/LWS3iI7Slvq7zBC8kiQUSR" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">حاسوب 1 البقاء جميع الشعب والكليات ❤️❤️</a>
-      <a href="https://chat.whatsapp.com/I74XPZPl6n30HmILbgj9fm" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صحه وسلامه البلقاء جميع الشعب والكليات ❤️💌</a>
-      <a href="https://chat.whatsapp.com/JGejwoLL26r2SKcLMPwtRC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">استدراكي جميع المواد البلقاء جميع الشعب والكليات ❤️💌</a>
-      <a href="https://chat.whatsapp.com/G1E9kfUz4mzAtbYQMrZzOY" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">رياضة الأعمال البلقاء جميع الشعب والكليات ❤️💌</a>
-      <a href="https://chat.whatsapp.com/GjaOz72hROp5wyA8Ds7JLT" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">لغوية البلقاء جميع الشعب والكليات ❤️💌</a>
-      <a href="https://chat.whatsapp.com/Kjeo9rYbhLA6h1sbMKy6sb" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">العلوم العسكرية - الفصل الأول/2025</a>
-      <a href="https://chat.whatsapp.com/LmMGfFc8zSLEFUEt8gb217?mode=wwc" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">رياضة اعمال د. ليندا شعبة 1، 15:30 دبلوم فصل اول</a>
-      <a href="https://chat.whatsapp.com/G76Pf6gpTCw2bhajktEZV2" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات لغوية انجليزي د سناء عبابنه ن/ر من ٥.٣٠ الى</a>
+      <a href="https://chat.whatsapp.com/Bbxeiq1sL3qEeDoPKqnbHt" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات الحياة والعمل د رفقه السالم</a>
+      <a href="https://chat.whatsapp.com/KCYHueaQCnc3ZfI7Y499wW" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات الحياة والعمل د هناء فريحات</a>
     </div>
-    <p class="arabic-translation">(جميع المواد PDF لجامعة البلقاء التطبيقية، الوطنية، العسكرية، الثقافة الإسلامية، مهارات التواصل، حاسوب 1، صحة وسلامة، استدراكي جميع المواد، رياضة الأعمال، اللغوية، العلوم العسكرية، مهارات لغوية إنجليزية)</p>
-    
+
+    <!-- Science Groups Section -->
+    <h2>Science Groups</h2>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/FrfCv7CTcoxGCEFWeuKpSN" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 1</a>
+      <a href="https://chat.whatsapp.com/ECNdBtagN3K4p4ETuygtPm" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 2</a>
+      <a href="https://chat.whatsapp.com/J6Z1Uam6Y7JJzMeT0QVTNQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 3</a>
+      <a href="https://chat.whatsapp.com/DSnlGaprvmpGrUnOxac2ce" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 4</a>
+      <a href="https://chat.whatsapp.com/IFkfNBG2CwM3tzLd22SHEV" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 5</a>
+      <a href="https://chat.whatsapp.com/HrO6vpRfclW3SajMHoGAoB" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 6</a>
+      <a href="https://chat.whatsapp.com/IZ7kmrrtHAx0AaPFUvqjRl" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 7</a>
+      <a href="https://chat.whatsapp.com/EVOPrx2HaBPAyHpe8cWt1J" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 8</a>
+      <a href="https://chat.whatsapp.com/Ju3G3RdJLdiLaUaCpbTTLC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 9</a>
+      <a href="https://chat.whatsapp.com/EI3Pb9VvYjEIqy26Kmfst1" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 10</a>
+      <a href="https://chat.whatsapp.com/GvHW4iThlIKK7ZjjOEzgjZ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 11</a>
+      <a href="https://chat.whatsapp.com/Gv6e9sKCmhPHIJIjYnW3LV" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 12</a>
+    </div>
+
+    <!-- Physiotherapy Section -->
+    <h2>Physiotherapy</h2>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/F1GOtL3QWzmByCu19EBqg1" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Physiotherapy 2025</a>
+    </div>
+
+    <!-- Disclaimer Section -->
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> This page is created for educational purposes only. The WhatsApp group links are collected from various sources and may change over time. Please verify the group details before joining. If you find any broken links or have suggestions for additional groups, please contact the page administrator.
     <!-- Educational Resources Section -->
     <h2>Educational Resources</h2>
 
@@ -670,11 +716,7 @@
       <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EUV9nOzcVeZHquakGSmWWeIBIPS9bTfFZxAgly0tm9hwuw?e=IVuflp" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Central Limit Theorem</a>
       <a href="https://asuedujo.sharepoint.com/:v:/s/2_1414/EffhncvAmNtGmifOR8W6QZYBw4ySYb-SUlGvAe3jZ6QgNw" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Continuous Distributions</a>
     </div>
-    <p class="arabic-translation">(الفصل الرابع: دالة الكثافة، القيمة المتوقعة، التباين والانحراف المعياري، التوزيعات الثنائية، الانحدار الخطي، التوزيع الثنائي، توزيع بواسون، التوزيع الطبيعي، نظرية الحد المركزي، التوزيعات المستمرة)</p>
-
-    <!-- Disclaimer -->
-    <div class="disclaimer">
-      <strong>Disclaimer:</strong> This website is a student-led initiative and is not officially affiliated with any university. The links provided are for educational and communication purposes only. Please verify the authenticity of any group before joining. If you encounter any issues with the links or have suggestions for improvement, please contact the website administrator.
+    <p class="arabic-translation">(الفصل الرابع: دالة الكثافة، القيمة المتوقعة، التباين والانحراف المعياري، التوزيعات الثنائية، الانحدار الخطي، التوزيع الثنائي، توزيع بواسون، التوزيع الطبيعي، نظرية الحد المركزي، التوزيعات المستمرة)</p>	  
     </div>
   </div>
 
@@ -700,27 +742,30 @@
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
-    // Add animation to links on hover
-    document.addEventListener('DOMContentLoaded', function() {
+    // Search Functionality
+    function filterGroups() {
+      const input = document.getElementById('searchInput');
+      const filter = input.value.toLowerCase();
       const links = document.querySelectorAll('.whatsapp-link');
+      
       links.forEach(link => {
-        link.addEventListener('mouseenter', function() {
-          this.style.transform = 'translateY(-5px)';
-        });
-        link.addEventListener('mouseleave', function() {
-          this.style.transform = 'translateY(0)';
-        });
+        const text = link.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          link.style.display = 'flex';
+        } else {
+          link.style.display = 'none';
+        }
       });
+    }
+
+    // Initialize page with fade-in effect
+    window.addEventListener('load', () => {
+      document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.5s ease-in-out';
+      setTimeout(() => {
+        document.body.style.opacity = '1';
+      }, 100);
     });
   </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-4DE6YQ7Q2M');
-</script>
 </body>
 </html>
