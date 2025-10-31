@@ -19,6 +19,8 @@
       border: 2px solid #333;
       border-radius: 8px;
       margin-bottom: 10px;
+      background: #000;
+      object-fit: cover;
     }
     canvas { display: none; }
     #result {
@@ -53,9 +55,9 @@
 <body>
 
   <h1>QR Code Scanner</h1>
-  <video id="video" autoplay></video>
+  <video id="video" autoplay playsinline muted></video>
   <canvas id="canvas" width="320" height="240"></canvas>
-  <div id="result">Scan a QR code to see the result here.</div>
+  <div id="result">Scanning for QR codes...</div>
 
   <div id="upload-container">
     <input type="file" id="file-input" accept="image/*">
@@ -67,49 +69,72 @@
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
     const result = document.getElementById('result');
+    const fileInput = document.getElementById('file-input');
 
-    // Start the camera
+    let scanning = false;
+
     async function startCamera() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' },
+        });
         video.srcObject = stream;
+        video.setAttribute('playsinline', true); // iOS Safari compatibility
+        video.play();
+        scanning = true;
         requestAnimationFrame(scanFrame);
       } catch (err) {
-        alert('Camera access denied or unavailable.');
+        result.textContent = 'Unable to access camera: ' + err.message;
       }
     }
 
-    // Scan each frame from the video
     function scanFrame() {
+      if (!scanning) return;
+
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        canvas.height = video.videoHeight;
+        canvas.width = video.videoWidth;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
         const code = jsQR(imageData.data, imageData.width, imageData.height);
+
         if (code) {
-          result.textContent = `QR Code Detected: ${code.data}`;
+          result.textContent = 'QR Code Detected: ' + code.data;
+          // Optional: stop scanning after detection
+          // scanning = false;
+          // video.srcObject.getTracks().forEach(track => track.stop());
         }
       }
       requestAnimationFrame(scanFrame);
     }
 
-    // Handle image upload
-    document.getElementById('file-input').addEventListener('change', function(event) {
+    // Image upload handling
+    fileInput.addEventListener('change', function (event) {
       const file = event.target.files[0];
       if (!file) return;
       const img = new Image();
       const reader = new FileReader();
-      reader.onload = function(e) {
-        img.onload = function() {
-          context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      reader.onload = function (e) {
+        img.onload = function () {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          context.drawImage(img, 0, 0, img.width, img.height);
           const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
           const code = jsQR(imageData.data, imageData.width, imageData.height);
-          result.textContent = code ? `QR Code: ${code.data}` : 'No QR code detected in this image.';
+          if (code) {
+            result.textContent = 'QR Code: ' + code.data;
+          } else {
+            result.textContent = 'No QR code detected in this image.';
+          }
         };
         img.src = e.target.result;
       };
+
       reader.readAsDataURL(file);
     });
 
+    // Start camera on page load
     startCamera();
   </script>
 </body>
