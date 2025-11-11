@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU Security Alert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Alert Card */
+        .alert-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Section */
+        .alert-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(220, 38, 38, 0.1);
+        }
+
+        .alert-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .alert-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #dc2626;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        .alert-subtitle {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Content Section */
+        .alert-content {
+            margin-bottom: 40px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #475569;
+            margin-bottom: 16px;
+            background: rgba(248, 250, 252, 0.8);
+            padding: 20px;
+            border-radius: 16px;
+            border-left: 4px solid #dc2626;
+        }
+
+        .description-ar {
+            direction: rtl;
+            text-align: right;
+            font-size: 1.05rem;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 2px solid #fca5a5;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .warning-box p {
+            color: #991b1b;
+            font-weight: 600;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .warning-box strong {
+            color: #7f1d1d;
+            font-weight: 800;
+        }
+
+        /* Protection Tips */
+        .tips-grid {
+            display: grid;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tip-card:hover {
+            transform: translateX(8px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .tip-card::before {
+            content: "✓";
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+
+        .tip-card p {
+            display: inline;
+            color: #1e293b;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* Numbers List */
+        .numbers-section {
+            background: rgba(15, 23, 42, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-top: 32px;
+        }
+
+        .number-item {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #dc2626;
+            transition: all 0.3s ease;
+        }
+
+        .number-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .number-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .number-phone {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .number-name {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .number-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: rgba(220, 38, 38, 0.1);
+            color: #991b1b;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        /* Footer */
+        .alert-footer {
+            text-align: center;
+            padding-top: 32px;
+            border-top: 2px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-message {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-submessage {
+            font-size: 0.95rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .alert-card {
+                padding: 28px 20px;
+                border-radius: 20px;
+            }
+
+            .alert-icon {
+                font-size: 3rem;
+            }
+
+            .alert-title {
+                font-size: 1.5rem;
+            }
+
+            .alert-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+
+            .description {
+                font-size: 0.95rem;
+                padding: 16px;
+            }
+
+            .description-ar {
+                font-size: 1rem;
+            }
+
+            .warning-box {
+                padding: 20px;
+            }
+
+            .warning-box p {
+                font-size: 0.95rem;
+            }
+
+            .numbers-section {
+                padding: 20px;
+            }
+
+            .number-item {
+                padding: 16px;
+            }
+
+            .number-phone {
+                font-size: 1rem;
+            }
+
+            .number-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tip-card {
+                padding: 16px;
+            }
+
+            .tip-card p {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .alert-title {
+                font-size: 1.3rem;
+            }
+
+            .alert-icon {
+                font-size: 2.5rem;
+            }
+
+            .number-phone {
+                font-size: 0.95rem;
+            }
+
+            .number-name {
+                font-size: 0.75rem;
+                padding: 5px 10px;
+            }
+
+            .tag {
+                font-size: 0.75rem;
+                padding: 3px 10px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            }
+
+            .alert-card {
+                background: rgba(30, 41, 59, 0.95);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .alert-title {
+                color: #fca5a5;
+            }
+
+            .alert-subtitle {
+                color: #94a3b8;
+            }
+
+            .section-title {
+                color: #f1f5f9;
+            }
+
+            .description {
+                background: rgba(15, 23, 42, 0.5);
+                color: #cbd5e1;
+                border-left-color: #fca5a5;
+            }
+
+            .number-item {
+                background: rgba(30, 41, 59, 0.8);
+                border-left-color: #fca5a5;
+            }
+
+            .number-phone {
+                color: #f1f5f9;
+            }
+
+            .tip-card {
+                background: rgba(30, 41, 59, 0.5);
+                border-color: rgba(59, 130, 246, 0.3);
+            }
+
+            .tip-card p {
+                color: #cbd5e1;
+            }
+
+            .numbers-section {
+                background: rgba(15, 23, 42, 0.3);
+            }
+
+            .footer-message {
+                -webkit-text-fill-color: #93c5fd;
+            }
+
+            .footer-submessage {
+                color: #94a3b8;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="alert-card">
+            <!-- Header -->
+            <div class="alert-header">
+                <div class="alert-icon">⚠️</div>
+                <h1 class="alert-title">Security Warning</h1>
+                <p class="alert-subtitle">Suspected Scam / Phishing Numbers (≈80% Spam)</p>
+            </div>
+
+            <!-- Content -->
+            <div class="alert-content">
+                <!-- Arabic Description -->
+                <div class="section">
+                    <div class="description description-ar">
+                        تم الإبلاغ عن أرقام الواتساب هذه بأنها تُستخدم في عمليات احتيال تتعلق بالتبرعات، أو المساعدات العائلية، أو الاشتراكات، أو حلول الواجبات المدرسية. غالبًا ما تستخدم قصصًا عاطفية أو دينية مزيفة، بالإضافة إلى "أدلة" مُزيفة، لطلب الأموال، ثم تقوم بحظر الضحايا. يُرجى التعامل مع هذه الأرقام كمصدر خطر عالٍ — لا تتفاعل معها مطلقًا.
+                    </div>
+                </div>
+
+                <!-- English Description -->
+                <div class="section">
+                    <div class="description">
+                        These WhatsApp numbers have been reported as running donation, family-help, subscription or homework-solution scams. They often use emotional or religious stories and fake "proof" to ask for money, then block victims. Treat these as high-risk — do not interact.
+                    </div>
+                </div>
+
+                <!-- Warning Box -->
+                <div class="warning-box">
+                    <p><strong>⛔ DO NOT:</strong> Reply, click links, join random groups, send money, or provide personal documents/IDs.</p>
+                    <p style="margin-top: 12px;"><strong>🚨 If you've already sent money or personal info:</strong> Contact your bank and local authorities right away.</p>
+                </div>
+
+                <!-- Protection Tips Arabic -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🛡️</span>
+                        <span>كيف تحمي نفسك</span>
+                    </h2>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <p>حظر هذه الأرقام والإبلاغ عنها عبر تطبيق واتساب</p>
+                        </div>
+                        <div class="tip-card">
+                            <p>لا ترسل أبدًا أموالًا، أو بطاقات هدايا، أو تفاصيل حسابات بنكية لأي جهة مجهولة</p>
+                        </div>
+                        <div class="tip-card">
+                            <p>تحقق بشكل مستقل (عبر الهاتف أو الموقع الرسمي) قبل التبرع لأي سبب</p>
+                        </div>
+                        <div class="tip-card">
+                            <p>شارك هذا التحذير مع العائلة ومجموعات المجتمع</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Protection Tips English -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔒</span>
+                        <span>How to Protect Yourself</span>
+                    </h2>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <p>Block and report the numbers to WhatsApp</p>
+                        </div>
+                        <div class="tip-card">
+                            <p>Never send money, gift cards, or bank details to unknown contacts</p>
+                        </div>
+                        <div class="tip-card">
+                            <p>Verify independently (phone or official website) before donating to any cause</p>
+                        </div>
+                        <div class="tip-card">
+                            <p>Share this warning with family and community groups</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reported Numbers -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">📞</span>
+                        <span>Reported / Suspected Numbers</span>
+                    </h2>
+                    
+                    <div class="numbers-section">
+                        <div class="number-item">
+                            <div class="number-header">
+                                <span class="number-phone">+962 7 8844 9890</span>
+                                <span class="number-name">ANWAAR</span>
+                            </div>
+                            <div class="number-tags">
+                                <span class="tag">Likely BOT</span>
+                                <span class="tag">Scammy Links</span>
+                                <span class="tag">Defending Scams</span>
+                            </div>
+                        </div>
+
+                        <div class="number-item">
+                            <div class="number-header">
+                                <span class="number-phone">+962 7 8245 7360</span>
+                                <span class="number-name">NO NAME</span>
+                            </div>
+                            <div class="number-tags">
+                                <span class="tag">Likely BOT Account</span>
+                            </div>
+                        </div>
+
+                        <div class="number-item">
+                            <div class="number-header">
+                                <span class="number-phone">+962 7 8667 7904</span>
+                                <span class="number-name">MOHD</span>
+                            </div>
+                            <div class="number-tags">
+                                <span class="tag">CliQ Scammer</span>
+                                <span class="tag">Liar</span>
+                                <span class="tag">BOT</span>
+                            </div>
+                        </div>
+
+                        <div class="number-item">
+                            <div class="number-header">
+                                <span class="number-phone">+962 7 8545 9162</span>
+                                <span class="number-name">NO NAME</span>
+                            </div>
+                            <div class="number-tags">
+                                <span class="tag">Likely BOT Account</span>
+                            </div>
+                        </div>
+
+                        <div class="number-item">
+                            <div class="number-header">
+                                <span class="number-phone">+962 7 8617 1021</span>
+                                <span class="number-name">ENSHERAH</span>
+                            </div>
+                            <div class="number-tags">
+                                <span class="tag">Spammer</span>
+                                <span class="tag">BOT</span>
+                            </div>
+                        </div>
+
+                        <div class="number-item">
+                            <div class="number-header">
+                                <span class="number-phone">+967 714 496 392</span>
+                                <span class="number-name">KING OF EXAMS</span>
+                            </div>
+                            <div class="number-tags">
+                                <span class="tag">Scammer</span>
+                                <span class="tag">Fake Job</span>
+                                <span class="tag">BOT</span>
+                            </div>
+                        </div>
+
+                        <div class="number-item">
+                            <div class="number-header">
+                                <span class="number-phone">+967 700 905 992</span>
+                                <span class="number-name">DOCTOR</span>
+                            </div>
+                            <div class="number-tags">
+                                <span class="tag">BOT</span>
+                                <span class="tag">Scammer</span>
+                            </div>
+                        </div>
+
+                        <div class="number-item">
+                            <div class="number-header">
+                                <span class="number-phone">+962 7 9130 7872</span>
+                                <span class="number-name">UNISTORE</span>
+                            </div>
+                            <div class="number-tags">
+                                <span class="tag">Scammer</span>
+                                <span class="tag">Fake Designer</span>
+                                <span class="tag">BOT</span>
+                            </div>
+                        </div>
+
+                        <div class="number-item">
+                            <div class="number-header">
+                                <span class="number-phone">+966 53 397 7449</span>
+                                <span class="number-name">NO NAME</span>
+                            </div>
+                            <div class="number-tags">
+                                <span class="tag">Subscription Scam</span>
+                                <span class="tag">BOT</span>
+                                <span class="tag">Fake Job</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="alert-footer">
+                <p class="footer-message">Spread the word — kindness is not an invitation to be conned.</p>
+                <p class="footer-submessage">Stay skeptical, block fast, and report. 🛡️</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
