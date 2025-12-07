@@ -2,56 +2,23 @@
 <html lang="en">
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    document.body.style.overflow = "auto"; // Allow scrolling
+    document.body.style.overflow = "auto";
   });
 </script>
 <head>
-    <!-- Favicon link -->
     <link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recent Materials - MOBILE</title>
     <link rel="stylesheet" href="search.css">
     <link rel="stylesheet" href="sub_newindexstyle.css">
-</head>
-<body>
-    <header>
-        <h1>ASU JORDAN</h1>
-        <nav>
-            <ul>
-                <li><a href="index">HOME</a></li>
-                <li><button id="mode-toggle">LIGHT/DARK</button></li>
-            </ul>
-        </nav>
-    </header>
-    <main><center><img src="ASU_Jordan_logo-removebg-preview.png" alt="Website Icon" width="80" height="80">
-        <h2>MOST RECENT UPLOADS</h2>
-</head>
-<body>
-<div class="search-container">
-    <input type="text" id="search-input" placeholder="Search...">
-    <button id="search-button">Search</button>
-</div>
-
-<div class="search-results" id="search-results">
-    <!-- Example search result items (dynamically added) -->
-</div>
-
-<div class="search-navigation" id="search-navigation">
-    <button id="prev-search">Jump to Previous Search</button>
-    <button id="next-search">Jump to Next Search</button>
-</div>
-
-    <script src="search.js"></script>
-    <script src="importantmessage.js"></script>
-</body>
     <style>
         :root {
-            --background-color-light: #ffffff; /* White*/
+            --background-color-light: #ffffff;
             --background-color-dark: #000000;
             --text-color-light: #333;
             --text-color-dark: #e0e0e0;
-            --card-background-color-light: #e8f5e9; /* Lighter green */
+            --card-background-color-light: #e8f5e9;
             --card-background-color-dark: #1e1e1e;
             --card-text-color-light: #333;
             --card-text-color-dark: #e0e0e0;
@@ -106,12 +73,114 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
 
+        /* Archive Notice Banner - Mobile Optimized */
+        .archive-banner {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            margin: 15px 10px;
+            padding: 20px 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .archive-content {
+            text-align: center;
+        }
+
+        .archive-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .archive-icon svg {
+            width: 26px;
+            height: 26px;
+            color: white;
+        }
+
+        .archive-title {
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .archive-text {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .archive-text-ar {
+            direction: rtl;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .latest-btn {
+            display: inline-block;
+            background: white;
+            color: #ff6b6b;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1em;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            margin-top: 5px;
+        }
+
+        .latest-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .latest-btn svg {
+            width: 18px;
+            height: 18px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
         .subject-grid {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 90px;
-            gap: 50px; /* More space between cards */
+            padding: 20px;
+            gap: 20px;
+            opacity: 0.65;
+            filter: grayscale(25%);
         }
 
         .subject-card {
@@ -120,12 +189,12 @@
             padding: 25px;
             border-radius: 10px;
             width: 100%;
-            max-width: 400px; /* Static width for card */
+            max-width: 400px;
             box-shadow: var(--card-box-shadow-light);
             transition: background-color 1.3s, color 0.3s, box-shadow 0.3s;
             text-align: center;
             position: relative;
-            text-decoration: none; /* Remove underline */
+            text-decoration: none;
         }
 
         .subject-card h3 {
@@ -134,17 +203,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px; /* Space between text and image */
+            gap: 8px;
         }
 
         .subject-card img {
             vertical-align: middle;
-            width: 16px; /* Smaller image size */
+            width: 16px;
             height: 16px;
         }
 
         .subject-card:hover {
-            box-shadow: var(--card-box-shadow-dark); /* Darker shadow on hover */
+            box-shadow: var(--card-box-shadow-dark);
         }
 
         body.dark-mode .subject-card {
@@ -159,26 +228,13 @@
         }
 
         .custom-link {
-            font-size: 1.8em; /* all in one lib link */
+            font-size: 1.8em;
             color: inherit;
-            text-decoration: none; /* Remove underline */
+            text-decoration: none;
         }
 
         .custom-link:hover {
-            text-decoration: none; /* Underline on hover */
-        }
-		
-    </style>
-    <!-- This is for Box Alert-->
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            justify-content: center;
-            align-items: center;
-
-            overflow: hidden;
-            font-family: 'Times New Roman', Times, serif;
+            text-decoration: none;
         }
 
         .alert-container {
@@ -195,14 +251,14 @@
             background: linear-gradient(to right, #8b0000, #008b8b);
             padding: 25px;
             border-radius: 15px;
-            color: #fff; /* White text */
+            color: #fff;
             text-align: center;
             box-shadow: 0 0 30px rgba(255, 77, 77, 0.8);
             font-size: 1em;
             position: relative;
             animation: bounce 1.5s ease infinite;
             transition: all 0.3s ease;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Add text shadow for better visibility */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         .alert-box:hover {
@@ -240,38 +296,107 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
-    </style>
-    <!-- This is for end box alert-->
 
+        @media (max-width: 480px) {
+            .archive-banner {
+                margin: 10px 5px;
+                padding: 15px 10px;
+            }
+
+            .archive-title {
+                font-size: 1.1em;
+            }
+
+            .archive-text, .archive-text-ar {
+                font-size: 0.85em;
+            }
+
+            .latest-btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>ASU JORDAN</h1>
+        <nav>
+            <ul>
+                <li><a href="index">HOME</a></li>
+                <li><button id="mode-toggle">LIGHT/DARK</button></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <center>
+            <img src="ASU_Jordan_logo-removebg-preview.png" alt="Website Icon" width="80" height="80">
+            
+            <!-- Archive Notice Banner -->
+            <div class="archive-banner">
+                <div class="archive-content">
+                    <div class="archive-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    <div class="archive-title">⚠️ Archived Section</div>
+                    <div class="archive-text">
+                        <strong>Notice:</strong> This page is no longer updated. Visit the latest section for new materials.
+                    </div>
+                    <div class="archive-text-ar">
+                        <strong>إشعار:</strong> هذه الصفحة لم تعد محدثة. قم بزيارة القسم الأحدث للحصول على مواد جديدة.
+                    </div>
+                    <a href="latest.html" class="latest-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                        Latest Files
+                    </a>
+                </div>
+            </div>
 
-<a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="whatsapp-button" target="_blank">
-    WhatsApp Group
-</a>
-</body>
+            <h2>ARCHIVED MATERIALS</h2>
+        </center>
 
-<h5>WhatsApp necro144@yahoo.com</h5>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-button">Search</button>
+        </div>
 
-<div class="unread-message" onclick="toggleMessage()">
-  <div class="message-preview">
-    <span class="badge">1</span>
-    <span class="text">Important unread message</span>
-    <span class="chevron">▼</span>
-  </div>
-  <div class="full-message">
-    <p>Hey, we're looking for student volunteers to share any materials that could help out friends, first-semester university students, or just anyone! PDFs, worksheets, test banks, any data - we want it all! Drop them in the WhatsApp Community requests group ASAP!</p>
-    <p>نحن نبحث عن طلاب متطوعين لتقديم أي مواد قد تسهم في مساعدة الأصدقاء، طلاب السنة الأولى بالجامعة، أو أي شخص آخر. نحن نرحب بالملفات المنسقة، أوراق العمل، بنوك الاختبارات، وأي بيانات - نقبل جميعها. يرجى إرسالها إلى مجموعة طلبات المجتمع على واتساب بأسرع وقت ممكن.</p>
-    <button class="dismiss-btn" onclick="dismissMessage(event)">Got it!</button>
-  </div>
-</div>
+        <div class="search-results" id="search-results"></div>
 
+        <div class="search-navigation" id="search-navigation">
+            <button id="prev-search">Jump to Previous Search</button>
+            <button id="next-search">Jump to Next Search</button>
+        </div>
+
+        <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="whatsapp-button" target="_blank">
+            WhatsApp Group
+        </a>
+
+        <div class="unread-message" onclick="toggleMessage()">
+            <div class="message-preview">
+                <span class="badge">1</span>
+                <span class="text">Important unread message</span>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="full-message">
+                <p>Hey, we're looking for student volunteers to share any materials that could help out friends, first-semester university students, or just anyone! PDFs, worksheets, test banks, any data - we want it all! Drop them in the WhatsApp Community requests group ASAP!</p>
+                <p>نحن نبحث عن طلاب متطوعين لتقديم أي مواد قد تسهم في مساعدة الأصدقاء، طلاب السنة الأولى بالجامعة، أو أي شخص آخر. نحن نرحب بالملفات المنسقة، أوراق العمل، بنوك الاختبارات، وأي بيانات - نقبل جميعها. يرجى إرسالها إلى مجموعة طلبات المجتمع على واتساب بأسرع وقت ممكن.</p>
+                <button class="dismiss-btn" onclick="dismissMessage(event)">Got it!</button>
+            </div>
+        </div>
+
+        <div class="subject-grid">
             <div class="subject-card">
                 <a href="https://web.asu.edu.jo/CalculateAvg/" target="_blank">
-                    <h3><img src="pin.png" alt="Website Icon" width="20" height="20"><font color=red>ASU/GPA Calculation</font color></h3>
+                    <h3><img src="pin.png" alt="Website Icon" width="20" height="20"><font color=red>ASU/GPA Calculation</font></h3>
                 </a>
             </div>
-			
 29/Nov/2025
 
 <div class="subject-card">
@@ -5342,7 +5467,6 @@
                 </a>
             </div>
 
-            </div>
             <div class="subject-card">
                 <a href="https://drive.google.com/drive/folders/166-vjvxSFv28KJlK1zpN7fy0xSKxZQIJ?usp=sharing" target="_blank">
                     <h3>DRAMA</h3>
@@ -6064,7 +6188,6 @@
                 <a href="https://drive.google.com/file/d/1laJiAYRmT5UOkCGLfr5fxi-bzSTNzMYy/view?usp=drive_link" target="_blank">
                     <h3>Biology - 10 Photosynthesis 2023</h3>
                 </a>
-            </div>
             </div>
             <div class="subject-card">
                 <a href="https://drive.google.com/file/d/1HX5W_JRBBp_EkY-Uomy2bvqjCRtc2Wqd/view?usp=sharing" target="_blank">
@@ -7771,31 +7894,30 @@
             <!-- Add more subjects as needed -->
         </div>
     </main>
-    <script src="scripts.js"></script>
-	
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-4DE6YQ7Q2M');
-</script>
-</body>
-<script>
-        // Disable right-click context menu
+    <script src="scripts.js"></script>
+    <script src="search.js"></script>
+    <script src="importantmessage.js"></script>
+    
+    <script>
         window.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
 
-        // Disable Ctrl+U shortcut
         window.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'u') {
                 e.preventDefault();
             }
         });
+    </script>
 
-</script>
-
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4DE6YQ7Q2M');
+    </script>
+</body>
 </html>
