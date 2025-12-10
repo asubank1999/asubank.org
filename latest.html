@@ -3,629 +3,1238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recents</title>
+    <title>Student Files Library</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --border: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-hover: rgba(67, 97, 238, 0.15);
+            --card-bg: #ffffff;
+            
+            --pdf: #e74c3c;
+            --folder: #f39c12;
+            --image: #3498db;
+            --video: #9b59b6;
+            --document: #2ecc71;
+            --spreadsheet: #27ae60;
+            --presentation: #e67e22;
+            --archive: #f1c40f;
+            --audio: #1abc9c;
+            --text: #95a5a6;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --bg-primary: #e3f2fd;
-            --bg-secondary: #e8eaf6;
-            --card-bg: #ffffff;
-            --text-primary: #333333;
-            --text-secondary: #757575;
-            --border-color: #e0e0e0;
-            --hover-border: #2196f3;
-            --btn-primary: #2196f3;
-            --btn-primary-hover: #1976d2;
-            --gradient-start: #2196f3;
-            --gradient-end: #3f51b5;
-            --shadow: rgba(0, 0, 0, 0.1);
-            --icon-pdf: #f44336;
-            --icon-image: #2196f3;
-            --icon-video: #9c27b0;
-            --icon-archive: #ff9800;
-            --icon-excel: #43a047;
-            --icon-powerpoint: #ff5722;
-            --icon-word: #1976d2;
-            --icon-default: #757575;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #0a1929;
-            --bg-secondary: #001e3c;
-            --card-bg: #132f4c;
-            --text-primary: #e3f2fd;
-            --text-secondary: #b0bec5;
-            --border-color: #1e4976;
-            --hover-border: #42a5f5;
-            --btn-primary: #42a5f5;
-            --btn-primary-hover: #1e88e5;
-            --gradient-start: #1565c0;
-            --gradient-end: #283593;
-            --shadow: rgba(0, 0, 0, 0.4);
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
-            padding: 10px;
-            transition: background 0.3s ease;
+            color: var(--dark);
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 15px;
         }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px var(--shadow);
-            overflow: hidden;
-            transition: background 0.3s ease;
-        }
-
+        /* Header - Mobile Optimized */
         .header {
-            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
-            color: white;
+            background: white;
+            border-radius: 16px;
             padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
         }
 
-        .header-top {
+        .header-content {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            gap: 10px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .header-left {
+        .logo-section {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
-        .back-btn {
-            background: rgba(255, 255, 255, 0.2);
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .header-title h1 {
             font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
             margin-bottom: 5px;
         }
 
-        .header-title p {
-            color: #bbdefb;
-            font-size: 13px;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .theme-toggle, .refresh-btn {
-            background: white;
-            color: var(--btn-primary);
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s;
+        .title p {
+            color: var(--gray);
             font-size: 14px;
         }
 
-        .theme-toggle:hover, .refresh-btn:hover {
-            background: #f5f5f5;
-            transform: translateY(-2px);
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            background: var(--light);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
 
-        .refresh-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .stat-item {
+            text-align: center;
         }
 
-        .search-container {
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.1);
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Search Section - Mobile Optimized */
+        .search-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px var(--shadow);
+            border: 1px solid var(--border);
         }
 
         .search-box {
             display: flex;
-            align-items: center;
-            background: white;
-            border-radius: 8px;
-            padding: 10px 15px;
-            gap: 10px;
-        }
-
-        .search-box svg {
-            color: var(--text-secondary);
-            flex-shrink: 0;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .search-input {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 14px;
-            color: var(--text-primary);
-            background: transparent;
-        }
-
-        .refresh-icon {
-            width: 16px;
-            height: 16px;
-        }
-
-        .refresh-icon.spinning {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .content {
-            padding: 20px;
-        }
-
-        .loading, .error, .empty {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .loading-spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid var(--border-color);
-            border-top-color: var(--btn-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        .error {
-            color: #f44336;
-        }
-
-        .empty {
-            color: var(--text-secondary);
-        }
-
-        .files-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .file-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border: 2px solid var(--border-color);
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid var(--border);
             border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
             transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--shadow-hover);
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-        }
-
-        .file-item:hover {
-            border-color: var(--hover-border);
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .file-icon {
-            width: 40px;
-            height: 40px;
-            flex-shrink: 0;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 120px;
         }
 
-        .file-icon svg {
-            width: 28px;
-            height: 28px;
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px var(--shadow-hover);
         }
 
-        .file-info {
-            flex-grow: 1;
-            min-width: 0;
+        /* Sort Controls - Mobile Optimized */
+        .sort-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px var(--shadow);
+            border: 1px solid var(--border);
         }
+
+        .sort-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sort-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sort-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 15px;
+            min-width: 60px;
+        }
+
+        .sort-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sort-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 100px;
+            justify-content: center;
+        }
+
+        .sort-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .sort-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .sort-order {
+            display: flex;
+            gap: 8px;
+        }
+
+        .order-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .order-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Files Container */
+        .files-container {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            min-height: 400px;
+            margin-bottom: 20px;
+        }
+
+        .files-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            background: var(--light);
+            padding: 4px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .view-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 3px 10px var(--shadow);
+        }
+
+        /* Grid View - Mobile Optimized */
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .file-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .file-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 24px;
+        }
+
+        .file-icon.pdf { background: rgba(231, 76, 60, 0.1); color: var(--pdf); }
+        .file-icon.folder { background: rgba(243, 156, 18, 0.1); color: var(--folder); }
+        .file-icon.image { background: rgba(52, 152, 219, 0.1); color: var(--image); }
+        .file-icon.video { background: rgba(155, 89, 182, 0.1); color: var(--video); }
+        .file-icon.document { background: rgba(46, 204, 113, 0.1); color: var(--document); }
+        .file-icon.spreadsheet { background: rgba(39, 174, 96, 0.1); color: var(--spreadsheet); }
+        .file-icon.presentation { background: rgba(230, 126, 34, 0.1); color: var(--presentation); }
+        .file-icon.archive { background: rgba(241, 196, 15, 0.1); color: var(--archive); }
+        .file-icon.audio { background: rgba(26, 188, 156, 0.1); color: var(--audio); }
+        .file-icon.text { background: rgba(149, 165, 166, 0.1); color: var(--text); }
+        .file-icon.file { background: rgba(108, 117, 125, 0.1); color: var(--gray); }
 
         .file-name {
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
+            font-size: 15px;
+            margin-bottom: 10px;
+            color: var(--dark);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-size: 14px;
+            min-height: 40px;
+            line-height: 1.4;
         }
 
         .file-meta {
             display: flex;
-            gap: 15px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--gray);
         }
 
         .file-meta span {
             display: flex;
             align-items: center;
+            gap: 6px;
+        }
+
+        .file-date {
+            color: var(--gray);
+            font-size: 12px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
             gap: 4px;
         }
 
+        .file-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .file-card:hover .file-actions,
+        .file-card:focus-within .file-actions {
+            opacity: 1;
+        }
+
         .open-btn {
-            background: var(--btn-primary);
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 8px 16px;
+            width: 34px;
+            height: 34px;
             border-radius: 8px;
-            font-weight: 600;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.3s;
-            flex-shrink: 0;
-            font-size: 13px;
         }
 
         .open-btn:hover {
-            background: var(--btn-primary-hover);
+            background: var(--primary-dark);
+            transform: scale(1.1);
         }
 
-        .footer {
-            background: var(--border-color);
-            padding: 12px 20px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            color: var(--text-secondary);
+        /* List View - Mobile Optimized */
+        .files-list {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .file-row {
+            display: grid;
+            grid-template-columns: 40px minmax(0, 3fr) 80px 90px;
+            align-items: center;
+            padding: 12px 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+            gap: 10px;
+        }
+
+        .file-row:hover {
+            background: var(--light);
+            border-color: var(--primary);
+        }
+
+        .list-icon {
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .list-name {
+            font-weight: 500;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .list-size {
             font-size: 13px;
+            color: var(--gray);
+            text-align: right;
         }
 
-        .icon-pdf { color: var(--icon-pdf); }
-        .icon-image { color: var(--icon-image); }
-        .icon-video { color: var(--icon-video); }
-        .icon-audio { color: #4caf50; }
-        .icon-archive { color: var(--icon-archive); }
-        .icon-excel { color: var(--icon-excel); }
-        .icon-powerpoint { color: var(--icon-powerpoint); }
-        .icon-word { color: var(--icon-word); }
-        .icon-default { color: var(--icon-default); }
+        .list-date {
+            font-size: 12px;
+            color: var(--gray);
+            text-align: right;
+        }
 
-        @media (max-width: 768px) {
-            .header {
-                padding: 15px;
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--gray-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .empty-icon {
+            font-size: 56px;
+            color: var(--gray-light);
+            margin-bottom: 20px;
+        }
+
+        /* Error State */
+        .error-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: #fff5f5;
+            border-radius: 12px;
+            border: 1px solid #fed7d7;
+        }
+
+        .error-icon {
+            font-size: 56px;
+            color: #fc8181;
+            margin-bottom: 20px;
+        }
+
+        .retry-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .retry-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        /* Responsive Improvements */
+        @media (min-width: 768px) {
+            .container {
+                padding: 20px;
             }
-
-            .header-title h1 {
-                font-size: 20px;
+            
+            .header-content {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
             }
-
-            .header-actions {
-                width: 100%;
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                width: auto;
             }
-
-            .theme-toggle, .refresh-btn {
+            
+            .search-box {
+                flex-direction: row;
+            }
+            
+            .search-input {
                 flex: 1;
-                justify-content: center;
             }
-
-            .content {
-                padding: 15px;
+            
+            .search-actions {
+                flex-wrap: nowrap;
             }
-
-            .file-item {
-                padding: 10px;
+            
+            .sort-controls {
+                flex-direction: row;
+                align-items: center;
             }
-
-            .file-name {
-                font-size: 13px;
+            
+            .sort-row {
+                flex: 1;
             }
-
-            .file-meta {
-                font-size: 11px;
+            
+            .files-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 20px;
             }
+            
+            .file-row {
+                grid-template-columns: 50px minmax(0, 3fr) 100px 120px;
+            }
+        }
 
-            .open-btn {
-                padding: 6px 12px;
-                font-size: 12px;
+        @media (min-width: 1024px) {
+            .files-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             }
         }
 
         @media (max-width: 480px) {
-            body {
-                padding: 5px;
+            .title h1 {
+                font-size: 22px;
             }
+            
+            .search-btn {
+                min-width: 100px;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .sort-btn {
+                min-width: 80px;
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .order-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .file-row {
+                grid-template-columns: 35px minmax(0, 2fr) 70px;
+            }
+            
+            .list-date {
+                display: none;
+            }
+            
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
-            .file-item {
-                flex-wrap: wrap;
-            }
+        /* File Size Styling */
+        .size-sm { color: #27ae60; }
+        .size-md { color: #f39c12; }
+        .size-lg { color: #e74c3c; }
 
-            .open-btn {
-                width: 100%;
-                margin-top: 5px;
-            }
+        /* Active sort indicator */
+        .sort-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin-left: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sort-btn.active .sort-indicator,
+        .order-btn.active .sort-indicator {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card">
-            <div class="header">
-                <div class="header-top">
-                    <div class="header-left">
-                        <button class="back-btn" onclick="goBack()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M19 12H5M12 19l-7-7 7-7"/>
-                            </svg>
-                            Back
-                        </button>
-                        <div class="header-title">
-                            <h1>Recent Files</h1>
-                            <p>Google Drive files viewer</p>
-                        </div>
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <i class="fas fa-folder-open"></i>
                     </div>
-                    <div class="header-actions">
-                        <button class="theme-toggle" id="themeToggle">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="5"/>
-                                <line x1="12" y1="1" x2="12" y2="3"/>
-                                <line x1="12" y1="21" x2="12" y2="23"/>
-                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                                <line x1="1" y1="12" x2="3" y2="12"/>
-                                <line x1="21" y1="12" x2="23" y2="12"/>
-                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                            </svg>
-                            <span id="themeText">Dark</span>
-                        </button>
-                        <button class="refresh-btn" id="refreshBtn">
-                            <svg class="refresh-icon" id="refreshIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-                            </svg>
-                            Refresh
-                        </button>
+                    <div class="title">
+                        <h1>Student Files Library</h1>
+                        <p>Access all uploaded files and resources</p>
                     </div>
                 </div>
-                <div class="search-container">
-                    <div class="search-box">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="m21 21-4.35-4.35"/>
-                        </svg>
-                        <input type="text" class="search-input" id="searchInput" placeholder="Search files...">
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalFiles">0</span>
+                        <span class="stat-label">Total Files</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="recentFiles">0</span>
+                        <span class="stat-label">This Week</span>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <div class="content" id="content">
+        <!-- Search -->
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search files by name...">
+                <div class="search-actions">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <button class="search-btn" id="clearSearchBtn" style="background: var(--gray); display: none;">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sort Controls -->
+        <section class="sort-section">
+            <div class="sort-controls">
+                <div class="sort-row">
+                    <span class="sort-label">Sort by:</span>
+                    <div class="sort-buttons">
+                        <button class="sort-btn" data-sort="date">
+                            <i class="far fa-calendar"></i> Date
+                            <span class="sort-indicator"></span>
+                        </button>
+                        <button class="sort-btn" data-sort="name">
+                            <i class="fas fa-font"></i> Name
+                            <span class="sort-indicator"></span>
+                        </button>
+                        <button class="sort-btn" data-sort="size">
+                            <i class="fas fa-hdd"></i> Size
+                            <span class="sort-indicator"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="sort-row">
+                    <span class="sort-label">Order:</span>
+                    <div class="sort-order">
+                        <button class="order-btn" data-order="desc">
+                            <i class="fas fa-sort-amount-down"></i> Descending
+                            <span class="sort-indicator"></span>
+                        </button>
+                        <button class="order-btn" data-order="asc">
+                            <i class="fas fa-sort-amount-up"></i> Ascending
+                            <span class="sort-indicator"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Files Container -->
+        <section class="files-container">
+            <div class="files-header">
+                <h2 class="section-title">
+                    <i class="fas fa-file-alt"></i> All Files
+                    <span id="filesCount" style="font-size: 14px; color: var(--gray); margin-left: 10px;">(0)</span>
+                </h2>
+                <div class="view-toggle">
+                    <button class="view-btn active" id="gridViewBtn">
+                        <i class="fas fa-th-large"></i> Grid
+                    </button>
+                    <button class="view-btn" id="listViewBtn">
+                        <i class="fas fa-list"></i> List
+                    </button>
+                </div>
+            </div>
+
+            <!-- Files will be loaded here -->
+            <div id="filesContent">
                 <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <p>Loading files...</p>
+                    <div class="spinner"></div>
+                    <p>Loading files from Google Drive...</p>
                 </div>
             </div>
+        </section>
 
-            <div class="footer" id="footer" style="display: none;">
-                <p>Showing <span id="fileCount">0</span> file(s)</p>
-            </div>
-        </div>
+        <!-- Footer -->
+        <footer class="footer">
+            <p>All files are securely stored in Google Drive.</p>
+            <p style="margin-top: 5px; font-size: 13px; opacity: 0.7;">
+                <i class="fas fa-sync-alt"></i> Auto-refresh every 5 minutes
+            </p>
+        </footer>
     </div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEOKlvZ0DbccuJ3DcNgor3ALA6Dbp3GTgaL2zmHRxMrbJXTuKxv-tTYkiZgDX69whi-A/exec';
+        // Configuration - REPLACE WITH YOUR ACTUAL SCRIPT URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9_c0Hr4aOusP5Wskn9fIw6UO6m8k4Esps3wJqKvZv2LQf6qcNFqP99cgU5UFOskVHsQ/exec';
         
+        // State
         let allFiles = [];
         let filteredFiles = [];
+        let currentView = 'grid';
+        let currentSort = 'date';
+        let currentOrder = 'desc';
+        let currentSearch = '';
 
-        function goBack() {
-            window.location.href = 'index.html';
-        }
+        // DOM Elements
+        const filesContent = document.getElementById('filesContent');
+        const totalFilesEl = document.getElementById('totalFiles');
+        const recentFilesEl = document.getElementById('recentFiles');
+        const filesCountEl = document.getElementById('filesCount');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const gridViewBtn = document.getElementById('gridViewBtn');
+        const listViewBtn = document.getElementById('listViewBtn');
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            document.getElementById('themeText').textContent = newTheme === 'dark' ? 'Light' : 'Dark';
-        }
-
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            document.getElementById('themeText').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
-        }
-
+        // Utility Functions
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
+            if (bytes < 1024) return bytes + ' Bytes';
+            
             const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+            const size = parseFloat((bytes / Math.pow(k, i)).toFixed(2));
+            
+            return size + ' ' + sizes[i];
+        }
+
+        function getSizeClass(bytes) {
+            if (bytes < 1024 * 1024) return 'size-sm'; // Less than 1MB
+            if (bytes < 1024 * 1024 * 10) return 'size-md'; // Less than 10MB
+            return 'size-lg'; // 10MB or more
         }
 
         function formatDate(dateString) {
-            const date = new Date(dateString);
+            try {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffTime = Math.abs(now - date);
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (isNaN(diffDays)) return 'Recent';
+                if (diffDays === 0) return 'Today';
+                if (diffDays === 1) return 'Yesterday';
+                if (diffDays < 7) return diffDays + ' days ago';
+                
+                return date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+                });
+            } catch (e) {
+                return 'Recent';
+            }
+        }
+
+        function getFileIconHTML(iconType) {
+            const icons = {
+                folder: 'fa-folder',
+                pdf: 'fa-file-pdf',
+                image: 'fa-file-image',
+                video: 'fa-file-video',
+                document: 'fa-file-word',
+                spreadsheet: 'fa-file-excel',
+                presentation: 'fa-file-powerpoint',
+                archive: 'fa-file-archive',
+                audio: 'fa-file-audio',
+                text: 'fa-file-alt',
+                file: 'fa-file'
+            };
+            
+            const iconClass = icons[iconType] || 'fa-file';
+            return `<i class="fas ${iconClass}"></i>`;
+        }
+
+        function updateStats(files) {
+            const total = allFiles.length;
+            const filtered = files.length;
             const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
             
-            if (diffDays === 0) return 'Today';
-            if (diffDays === 1) return 'Yesterday';
-            if (diffDays < 7) return diffDays + ' days ago';
+            const recent = allFiles.filter(file => {
+                try {
+                    const fileDate = new Date(file.dateUploaded);
+                    return !isNaN(fileDate) && fileDate >= oneWeekAgo;
+                } catch (e) {
+                    return false;
+                }
+            }).length;
             
-            return date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric' 
+            totalFilesEl.textContent = total.toLocaleString();
+            recentFilesEl.textContent = recent.toLocaleString();
+            filesCountEl.textContent = `(${filtered})`;
+            
+            // Show/hide clear button
+            clearSearchBtn.style.display = currentSearch ? 'flex' : 'none';
+        }
+
+        // Sort Functions
+        function sortFiles(files) {
+            return [...files].sort((a, b) => {
+                let valueA, valueB;
+                
+                switch(currentSort) {
+                    case 'name':
+                        valueA = a.name.toLowerCase();
+                        valueB = b.name.toLowerCase();
+                        break;
+                    case 'size':
+                        valueA = a.size || 0;
+                        valueB = b.size || 0;
+                        break;
+                    case 'date':
+                    default:
+                        valueA = new Date(a.dateUploaded).getTime();
+                        valueB = new Date(b.dateUploaded).getTime();
+                }
+                
+                if (currentOrder === 'asc') {
+                    return valueA > valueB ? 1 : -1;
+                } else {
+                    return valueA < valueB ? 1 : -1;
+                }
             });
         }
 
-        function getFileIcon(mimeType) {
-            let iconClass = 'icon-default';
-            let iconPath = 'M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z M13 2v7h7';
+        // Render Functions
+        function renderGrid(files) {
+            if (files.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-file-circle-exclamation"></i>
+                        </div>
+                        <h3>${currentSearch ? 'No files found' : 'No files available'}</h3>
+                        <p>${currentSearch ? 'Try a different search term' : 'Files will appear here once uploaded'}</p>
+                    </div>
+                `;
+            }
+
+            const sortedFiles = sortFiles(files);
             
-            if (mimeType.includes('pdf')) {
-                iconClass = 'icon-pdf';
-                iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8';
-            } else if (mimeType.includes('image')) {
-                iconClass = 'icon-image';
-                iconPath = 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M17 8l-5-5-5 5 M12 3v12';
-            } else if (mimeType.includes('video')) {
-                iconClass = 'icon-video';
-                iconPath = 'M23 7l-7 5 7 5V7z M16 5H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z';
-            } else if (mimeType.includes('audio')) {
-                iconClass = 'icon-audio';
-                iconPath = 'M9 18V5l12-2v13 M9 18c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z M21 16c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z';
-            } else if (mimeType.includes('zip') || mimeType.includes('compressed')) {
-                iconClass = 'icon-archive';
-                iconPath = 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5 5-5 M12 15V3';
-            } else if (mimeType.includes('spreadsheet') || mimeType.includes('excel')) {
-                iconClass = 'icon-excel';
-                iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M8 13h8 M8 17h8';
-            } else if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) {
-                iconClass = 'icon-powerpoint';
-                iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M12 18v-6 M9 15h6';
-            } else if (mimeType.includes('document') || mimeType.includes('word')) {
-                iconClass = 'icon-word';
-                iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8';
+            return `
+                <div class="files-grid">
+                    ${sortedFiles.map(file => `
+                        <div class="file-card" data-id="${file.id}" onclick="openFile('${file.url}')">
+                            <div class="file-actions">
+                                <button class="open-btn" onclick="event.stopPropagation(); openFile('${file.url}')" title="Open File">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                            </div>
+                            <div class="file-icon ${file.icon}">
+                                ${getFileIconHTML(file.icon)}
+                            </div>
+                            <h3 class="file-name" title="${file.name.replace(/"/g, '&quot;')}">${file.name}</h3>
+                            <div class="file-meta">
+                                <span>
+                                    <i class="fas fa-hdd"></i>
+                                    <span class="${getSizeClass(file.size || 0)}">${formatFileSize(file.size || 0)}</span>
+                                </span>
+                                <span>
+                                    <i class="fas ${file.icon === 'folder' ? 'fa-folder-open' : 'fa-file'}"></i>
+                                    ${file.icon.charAt(0).toUpperCase() + file.icon.slice(1)}
+                                </span>
+                            </div>
+                            <div class="file-date">
+                                <i class="far fa-clock"></i> ${formatDate(file.dateUploaded)}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderList(files) {
+            if (files.length === 0) {
+                return renderGrid(files);
+            }
+
+            const sortedFiles = sortFiles(files);
+            
+            return `
+                <div class="files-list">
+                    ${sortedFiles.map(file => `
+                        <div class="file-row" data-id="${file.id}" onclick="openFile('${file.url}')">
+                            <div class="list-icon ${file.icon}">
+                                ${getFileIconHTML(file.icon)}
+                            </div>
+                            <div class="list-name" title="${file.name.replace(/"/g, '&quot;')}">${file.name}</div>
+                            <div class="list-size ${getSizeClass(file.size || 0)}">${formatFileSize(file.size || 0)}</div>
+                            <div class="list-date">${formatDate(file.dateUploaded)}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderFiles(files) {
+            updateStats(files);
+            
+            if (currentView === 'grid') {
+                filesContent.innerHTML = renderGrid(files);
+            } else {
+                filesContent.innerHTML = renderList(files);
             }
             
-            return '<svg class="' + iconClass + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="' + iconPath + '"/></svg>';
-        }
-
-        function openFile(url, name) {
-            window.open(url, '_blank');
-        }
-
-        function searchFiles() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            // Show/hide views based on current selection
+            const gridEl = document.querySelector('.files-grid');
+            const listEl = document.querySelector('.files-list');
             
-            if (searchTerm === '') {
-                filteredFiles = allFiles;
+            if (gridEl) gridEl.style.display = currentView === 'grid' ? 'grid' : 'none';
+            if (listEl) listEl.style.display = currentView === 'list' ? 'flex' : 'none';
+        }
+
+        // Search Functionality
+        function searchFiles() {
+            currentSearch = searchInput.value.trim();
+            
+            if (!currentSearch) {
+                filteredFiles = [...allFiles];
             } else {
+                const searchLower = currentSearch.toLowerCase();
                 filteredFiles = allFiles.filter(file => 
-                    file.name.toLowerCase().includes(searchTerm)
+                    file.name.toLowerCase().includes(searchLower) ||
+                    file.icon.toLowerCase().includes(searchLower) ||
+                    file.mimeType.toLowerCase().includes(searchLower)
                 );
             }
             
             renderFiles(filteredFiles);
+            updateSortButtons();
         }
 
-        function renderFiles(files) {
-            const content = document.getElementById('content');
-            const footer = document.getElementById('footer');
-            const fileCount = document.getElementById('fileCount');
-
-            if (files.length === 0) {
-                content.innerHTML = '<div class="empty"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><p>No files found</p></div>';
-                footer.style.display = 'none';
-                return;
-            }
-
-            let filesHTML = '<div class="files-list">';
-            files.forEach(function(file, index) {
-                filesHTML += '<div class="file-item" data-index="' + index + '">';
-                filesHTML += '<div class="file-icon">' + getFileIcon(file.mimeType) + '</div>';
-                filesHTML += '<div class="file-info">';
-                filesHTML += '<div class="file-name">' + file.name + '</div>';
-                filesHTML += '<div class="file-meta">';
-                filesHTML += '<span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>' + formatFileSize(file.size) + '</span>';
-                filesHTML += '<span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + formatDate(file.dateUploaded) + '</span>';
-                filesHTML += '</div></div>';
-                filesHTML += '<button class="open-btn" data-url="' + file.url + '" data-name="' + file.name + '">Open</button>';
-                filesHTML += '</div>';
-            });
-            filesHTML += '</div>';
-
-            content.innerHTML = filesHTML;
-            fileCount.textContent = files.length;
-            footer.style.display = 'block';
-
-            document.querySelectorAll('.open-btn').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    const url = this.getAttribute('data-url');
-                    const name = this.getAttribute('data-name');
-                    openFile(url, name);
-                });
-            });
+        function clearSearch() {
+            searchInput.value = '';
+            currentSearch = '';
+            filteredFiles = [...allFiles];
+            renderFiles(filteredFiles);
         }
 
-        function loadFiles() {
-            const content = document.getElementById('content');
-            const refreshBtn = document.getElementById('refreshBtn');
-            const refreshIcon = document.getElementById('refreshIcon');
-            
-            content.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading files...</p></div>';
-            
-            refreshBtn.disabled = true;
-            refreshIcon.classList.add('spinning');
+        // File Operations
+        function openFile(url) {
+            window.open(url, '_blank');
+        }
 
-            fetch(SCRIPT_URL, {
-                method: 'GET',
-                mode: 'cors',
-                cache: 'no-cache'
-            })
-                .then(function(response) {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(function(data) {
-                    allFiles = data.files || [];
-                    filteredFiles = allFiles;
+        // View Toggle
+        function toggleView(view) {
+            currentView = view;
+            
+            // Update button states
+            gridViewBtn.classList.toggle('active', view === 'grid');
+            listViewBtn.classList.toggle('active', view === 'list');
+            
+            // Render with current view
+            renderFiles(filteredFiles);
+        }
+
+        // Sort Controls
+        function updateSortButtons() {
+            // Update sort buttons
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.sort === currentSort);
+            });
+            
+            // Update order buttons
+            document.querySelectorAll('.order-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.order === currentOrder);
+            });
+            
+            // Update URL params for sharing
+            updateURLParams();
+        }
+
+        function setSort(sortBy) {
+            currentSort = sortBy;
+            renderFiles(filteredFiles);
+            updateSortButtons();
+        }
+
+        function setOrder(order) {
+            currentOrder = order;
+            renderFiles(filteredFiles);
+            updateSortButtons();
+        }
+
+        function updateURLParams() {
+            const params = new URLSearchParams();
+            if (currentSearch) params.set('search', currentSearch);
+            if (currentSort !== 'date') params.set('sort', currentSort);
+            if (currentOrder !== 'desc') params.set('order', currentOrder);
+            
+            const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+            window.history.replaceState({}, '', newUrl);
+        }
+
+        // Load Files from Google Drive
+        async function loadFiles() {
+            try {
+                filesContent.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading files from Google Drive...</p>
+                    </div>
+                `;
+
+                // Build URL with parameters
+                const params = new URLSearchParams();
+                if (currentSearch) params.set('search', currentSearch);
+                params.set('sort', currentSort);
+                params.set('order', currentOrder);
+                params.set('t', Date.now()); // Prevent caching
+                
+                const url = `${SCRIPT_URL}?${params.toString()}`;
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const text = await response.text();
+                let data;
+                
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    console.error('Failed to parse JSON:', text.substring(0, 200));
+                    throw new Error('Invalid response format from server');
+                }
+                
+                if (data && data.success && Array.isArray(data.files)) {
+                    allFiles = data.files;
+                    filteredFiles = [...allFiles];
                     renderFiles(filteredFiles);
-                    refreshBtn.disabled = false;
-                    refreshIcon.classList.remove('spinning');
-                })
-                .catch(function(error) {
-                    console.error('Fetch error:', error);
-                    content.innerHTML = '<div class="error"><p>Failed to load files</p><p style="font-size: 12px; margin-top: 10px;">' + error.message + '</p><button class="open-btn" onclick="loadFiles()" style="margin-top: 16px;">Try Again</button></div>';
-                    refreshBtn.disabled = false;
-                    refreshIcon.classList.remove('spinning');
-                });
+                    
+                    // Update UI
+                    const listEl = document.querySelector('.files-list');
+                    if (listEl) {
+                        listEl.style.display = currentView === 'list' ? 'flex' : 'none';
+                    }
+                    
+                } else {
+                    throw new Error('Invalid data format received from server');
+                }
+                
+            } catch (error) {
+                console.error('Error loading files:', error);
+                filesContent.innerHTML = `
+                    <div class="error-state">
+                        <div class="error-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>Error Loading Files</h3>
+                        <p>${error.message}</p>
+                        <button class="retry-btn" onclick="loadFiles()">
+                            <i class="fas fa-redo"></i> Try Again
+                        </button>
+                    </div>
+                `;
+            }
         }
 
-        document.getElementById('refreshBtn').addEventListener('click', loadFiles);
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        document.getElementById('searchInput').addEventListener('input', searchFiles);
+        // Event Listeners
+        searchBtn.addEventListener('click', searchFiles);
+        clearSearchBtn.addEventListener('click', clearSearch);
         
-        initTheme();
-        window.onload = loadFiles;
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchFiles();
+        });
+
+        gridViewBtn.addEventListener('click', () => toggleView('grid'));
+        listViewBtn.addEventListener('click', () => toggleView('list'));
+
+        // Sort buttons
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', () => setSort(btn.dataset.sort));
+        });
+
+        document.querySelectorAll('.order-btn').forEach(btn => {
+            btn.addEventListener('click', () => setOrder(btn.dataset.order));
+        });
+
+        // Debounced search for better performance
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(searchFiles, 300);
+        });
+
+        // Load URL parameters on page load
+        function loadURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            
+            if (params.has('search')) {
+                currentSearch = params.get('search');
+                searchInput.value = currentSearch;
+            }
+            
+            if (params.has('sort')) {
+                currentSort = params.get('sort');
+            }
+            
+            if (params.has('order')) {
+                currentOrder = params.get('order');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadURLParams();
+            loadFiles();
+            updateSortButtons();
+            
+            // Auto-refresh every 5 minutes
+            setInterval(loadFiles, 5 * 60 * 1000);
+        });
+        
+        // Make functions available globally
+        window.openFile = openFile;
+        window.loadFiles = loadFiles;
+        window.clearSearch = clearSearch;
     </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
-    <script>
 </body>
 </html>
