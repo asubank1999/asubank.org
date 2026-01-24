@@ -519,26 +519,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     });
 
-    // Periodic check for dev tools (works in some browsers)
-    function checkDevTools() {
-        const widthThreshold = window.outerWidth - window.innerWidth > 160;
-        const heightThreshold = window.outerHeight - window.innerHeight > 160;
-        
-        if (heightThreshold || widthThreshold) {
-            // Dev tools might be open
-            document.body.innerHTML = '<h1 style="text-align:center;padding:50px;">Developer tools are not allowed on this page</h1>';
-            window.location.reload();
-        }
-    }
-    setInterval(checkDevTools, 1000);
-
-    // Override console methods
-    console.log = function() {};
-    console.warn = function() {};
-    console.error = function() {};
-    console.info = function() {};
-    console.debug = function() {};
-});
 </script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
