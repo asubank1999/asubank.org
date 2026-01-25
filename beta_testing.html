@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU Student Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0a192f 0%, #172a45 100%);
+            min-height: 100vh;
+            direction: rtl;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .online-indicator {
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .offline-indicator {
+            width: 10px;
+            height: 10px;
+            background: #6b7280;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Auth Forms */
+        .auth-container {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            margin: 50px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            background: rgba(30, 58, 138, 0.3);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #fff;
+        }
+
+        .auth-tab.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            transition: border 0.3s;
+            color: #fff;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: #4b5563;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #374151;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: rgba(30, 58, 138, 0.3);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+
+        .nav-tab i {
+            margin-left: 8px;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .stat-card h3 {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        /* Online Users */
+        .online-users {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .online-users h2 {
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .user-item:hover {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Forum */
+        .forums-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .forum-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #fff;
+        }
+
+        .forum-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(37, 99, 235, 0.3);
+            border-color: #3b82f6;
+        }
+
+        .forum-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .forum-card h3 {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .forum-card p {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        /* Subforum Creation */
+        .subforum-create {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        /* Forum Detail */
+        .forum-detail {
+            display: none;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #fff;
+        }
+
+        .forum-detail.active {
+            display: block;
+        }
+
+        .back-btn {
+            background: #4b5563;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .post-form {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .post-form textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            min-height: 100px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .file-upload {
+            margin-bottom: 10px;
+            color: #e5e7eb;
+        }
+
+        .posts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .post-item {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+            border-right: 4px solid #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .post-content {
+            color: #e5e7eb;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .post-attachment {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Courses Management */
+        .courses-management {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .course-card {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .course-header {
+            padding: 20px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .course-header.math {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .course-header.physics {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .course-header.chemistry {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+        }
+
+        .course-body {
+            padding: 20px;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Chat System */
+        .chat-container {
+            display: flex;
+            gap: 20px;
+            height: 500px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .chat-users {
+            width: 300px;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chat-messages {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .message-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Profile */
+        .profile-container {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            font-weight: 600;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .admin-users-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #9ca3af;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .warning {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fde047;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+
+        /* Guest Timer */
+        .guest-timer {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid,
+            .forums-grid,
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-container {
+                flex-direction: column;
+                height: 600px;
+            }
+            
+            .chat-users {
+                width: 100%;
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="authPage" class="auth-container">
+        <div class="logo" style="justify-content: center; margin-bottom: 30px;">
+            <span>🎓</span>
+            <span>جامعة العلوم التطبيقية</span>
+        </div>
+
+        <div id="guestTimer" class="guest-timer hidden">
+            <i class="fas fa-clock"></i>
+            <span id="timerDisplay">60 ثانية</span>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('signin')">تسجيل الدخول</button>
+            <button class="auth-tab" onclick="switchTab('signup')">إنشاء حساب</button>
+            <button class="auth-tab" onclick="switchTab('guest')">دخول كزائر</button>
+        </div>
+
+        <div id="errorMsg" class="error hidden"></div>
+        <div id="successMsg" class="success hidden"></div>
+
+        <!-- Sign In Form -->
+        <form id="signinForm" class="auth-form">
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="signin_email" required>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="signin_password" required>
+            </div>
+            <button type="submit" class="btn">تسجيل الدخول</button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signupForm" class="auth-form hidden">
+            <div class="form-group">
+                <label>الاسم الكامل</label>
+                <input type="text" id="signup_name" required>
+            </div>
+            <div class="form-group">
+                <label>اسم المستخدم الفريد (للعرض في الرابط)</label>
+                <input type="text" id="signup_username" required pattern="[a-zA-Z0-9_]+" 
+                       title="يجب أن يحتوي على أحرف إنجليزية وأرقام فقط">
+                <small style="color: #9ca3af; font-size: 12px;">سيتم استخدام هذا في رابط ملفك الشخصي: example.com/user/اسمك</small>
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="signup_email" required>
+            </div>
+            <div class="form-group">
+                <label>رقم الهاتف</label>
+                <input type="tel" id="signup_phone" required>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="signup_password" required>
+            </div>
+            <button type="submit" class="btn">إنشاء حساب</button>
+        </form>
+
+        <!-- Guest Form -->
+        <form id="guestForm" class="auth-form hidden">
+            <div class="form-group">
+                <label>اسم الزائر</label>
+                <input type="text" id="guest_name" required>
+            </div>
+            <div class="warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                سيتم تسجيل خروجك تلقائياً بعد 60 ثانية
+            </div>
+            <button type="submit" class="btn">الدخول كزائر</button>
+        </form>
+    </div>
+
+    <div id="mainApp" class="container hidden">
+        <div class="header">
+            <div class="logo">
+                <span>🎓</span>
+                <span>ASU Portal</span>
+            </div>
+            <div class="user-info">
+                <div id="userStatusIndicator" class="online-indicator"></div>
+                <span id="userName">مستخدم</span>
+                <button class="btn" onclick="openProfileModal()" style="padding: 8px 20px;">
+                    <i class="fas fa-user"></i> الملف الشخصي
+                </button>
+                <button class="btn btn-secondary" onclick="logout()" style="padding: 8px 20px;">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchView('dashboard')">
+                <i class="fas fa-home"></i> الرئيسية
+            </button>
+            <button class="nav-tab" onclick="switchView('courses')">
+                <i class="fas fa-book"></i> المواد الدراسية
+            </button>
+            <button class="nav-tab" onclick="switchView('forums')">
+                <i class="fas fa-comments"></i> المنتديات
+            </button>
+            <button class="nav-tab" onclick="switchView('chat')">
+                <i class="fas fa-comment-dots"></i> المحادثات
+            </button>
+            <button id="adminTab" class="nav-tab hidden" onclick="switchView('admin')">
+                <i class="fas fa-shield-alt"></i> لوحة الإدارة
+            </button>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboardView" class="view active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>المواد المسجلة</h3>
+                    <div class="value" id="coursesCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>المستخدمون الحاليون</h3>
+                    <div class="value" id="onlineCount">1</div>
+                </div>
+                <div class="stat-card">
+                    <h3>المشاركات اليوم</h3>
+                    <div class="value" id="postsToday">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>المحادثات النشطة</h3>
+                    <div class="value" id="activeChats">0</div>
+                </div>
+            </div>
+
+            <div class="online-users">
+                <h2><i class="fas fa-users"></i> المستخدمون المتصلون الآن</h2>
+                <div class="user-list" id="onlineUsersList">
+                    <div class="loading">جاري التحميل...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses View -->
+        <div id="coursesView" class="view">
+            <div class="courses-management">
+                <h2 style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <span><i class="fas fa-book"></i> المواد الدراسية</span>
+                    <button class="btn btn-success" onclick="openAddCourseModal()">
+                        <i class="fas fa-plus"></i> إضافة مادة جديدة
+                    </button>
+                </h2>
+                
+                <div class="courses-grid" id="userCoursesList">
+                    <div class="loading">جاري تحميل المواد...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forums View -->
+        <div id="forumsView" class="view">
+            <div class="subforum-create" id="subforumCreateSection">
+                <h3><i class="fas fa-plus-circle"></i> إنشاء منتدى فرعي جديد</h3>
+                <form id="createSubforumForm" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label>اسم المنتدى الفرعي</label>
+                        <input type="text" id="subforumName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>وصف المنتدى</label>
+                        <textarea id="subforumDescription" rows="2" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">إنشاء المنتدى</button>
+                </form>
+            </div>
+
+            <h2 style="margin-bottom: 15px; color: white;">المنتديات الرئيسية</h2>
+            <div class="forums-grid" id="mainForumsList">
+                <!-- Main forums will be loaded here -->
+            </div>
+
+            <h2 style="margin-bottom: 15px; color: white; margin-top: 30px;">المنتديات الفرعية</h2>
+            <div class="forums-grid" id="subforumsList">
+                <!-- Subforums will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Chat View -->
+        <div id="chatView" class="view">
+            <div class="chat-container">
+                <div class="chat-users">
+                    <h3 style="margin-bottom: 15px; color: white;">المستخدمون المتاحون للمحادثة</h3>
+                    <div id="chatUsersList" class="user-list">
+                        <div class="loading">جاري التحميل...</div>
+                    </div>
+                </div>
+                <div class="chat-messages">
+                    <div id="selectedChatUser" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(59, 130, 246, 0.2);">
+                        <div class="loading">اختر مستخدم للمحادثة</div>
+                    </div>
+                    <div id="messagesContainer" class="messages-container">
+                        <div class="loading">لا توجد محادثة نشطة</div>
+                    </div>
+                    <div class="message-input">
+                        <input type="text" id="messageInput" placeholder="اكتب رسالتك هنا..." style="flex: 1;" disabled>
+                        <button class="btn" id="sendMessageBtn" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin View -->
+        <div id="adminView" class="view">
+            <div class="admin-panel">
+                <h2 style="margin-bottom: 20px; color: white;"><i class="fas fa-shield-alt"></i> لوحة إدارة النظام</h2>
+                
+                <div class="admin-users-list">
+                    <h3>طلبات تفعيل الدردشة</h3>
+                    <div id="pendingChatRequests">
+                        <div class="loading">جاري التحميل...</div>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px;">جميع المستخدمين</h3>
+                    <div id="allUsersList">
+                        <div class="loading">جاري التحميل...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forum Detail View -->
+        <div id="forumDetailView" class="forum-detail">
+            <button class="back-btn" onclick="closeForum()">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </button>
+            <h2 id="forumTitle" style="margin-bottom: 20px;"></h2>
+            
+            <div class="post-form">
+                <h3 style="margin-bottom: 15px;"><i class="fas fa-edit"></i> إضافة مشاركة جديدة</h3>
+                <form id="newPostForm">
+                    <textarea id="postContent" placeholder="اكتب مشاركتك هنا..." required></textarea>
+                    <div class="file-upload">
+                        <label>إرفاق ملف (اختياري):</label>
+                        <input type="file" id="postAttachment" accept="image/*,.pdf,.doc,.docx">
+                        <small style="color: #9ca3af; font-size: 12px;">يمكنك رفع الصور أو ملفات PDF</small>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> نشر المشاركة</button>
+                </form>
+            </div>
+
+            <h3 style="margin-bottom: 15px;"><i class="fas fa-comments"></i> المشاركات</h3>
+            <div class="posts-list" id="postsList">
+                <div class="loading">جاري تحميل المشاركات...</div>
+            </div>
+        </div>
+
+        <!-- Profile View -->
+        <div id="profileView" class="view">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">م</div>
+                    <div>
+                        <h2 id="profileName">الاسم</h2>
+                        <p id="profileUsername" style="color: #9ca3af;">@username</p>
+                        <p id="profileStatus" style="color: #4ade80;"><i class="fas fa-circle"></i> متصل الآن</p>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>تاريخ التسجيل</h3>
+                        <div class="value" id="profileJoinDate">2024</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>آخر ظهور</h3>
+                        <div class="value" id="profileLastSeen">الآن</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>المشاركات</h3>
+                        <div class="value" id="profilePosts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>الدورات</h3>
+                        <div class="value" id="profileCourses">0</div>
+                    </div>
+                </div>
+
+                <h3 style="margin: 30px 0 15px 0;"><i class="fas fa-book"></i> المواد المسجلة</h3>
+                <div class="courses-grid" id="profileCoursesList">
+                    <div class="loading">جاري تحميل المواد...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="addCourseModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;"><i class="fas fa-plus"></i> إضافة مادة جديدة</h2>
+            <form id="addCourseForm">
+                <div class="form-group">
+                    <label>اسم المادة</label>
+                    <input type="text" id="courseName" required>
+                </div>
+                <div class="form-group">
+                    <label>رمز المادة</label>
+                    <input type="text" id="courseCode" required>
+                </div>
+                <div class="form-group">
+                    <label>الفصل الدراسي</label>
+                    <select id="courseSemester" required style="width: 100%; padding: 12px; background: rgba(30, 41, 59, 0.8); border: 2px solid rgba(59, 130, 246, 0.2); border-radius: 8px; color: #fff;">
+                        <option value="">اختر الفصل</option>
+                        <option value="الفصل الأول 2024-2025">الفصل الأول 2024-2025</option>
+                        <option value="الفصل الثاني 2024-2025">الفصل الثاني 2024-2025</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>نسبة الإنجاز</label>
+                    <input type="range" id="courseProgress" min="0" max="100" value="0" style="width: 100%;">
+                    <span id="progressValue">0%</span>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn" style="flex: 1;">إضافة</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addCourseModal')" style="flex: 1;">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editCourseModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;"><i class="fas fa-edit"></i> تعديل المادة</h2>
+            <form id="editCourseForm">
+                <input type="hidden" id="editCourseId">
+                <div class="form-group">
+                    <label>اسم المادة</label>
+                    <input type="text" id="editCourseName" required>
+                </div>
+                <div class="form-group">
+                    <label>رمز المادة</label>
+                    <input type="text" id="editCourseCode" required>
+                </div>
+                <div class="form-group">
+                    <label>نسبة الإنجاز</label>
+                    <input type="range" id="editCourseProgress" min="0" max="100" value="0" style="width: 100%;">
+                    <span id="editProgressValue">0%</span>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn" style="flex: 1;">حفظ التعديلات</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteCourse()" style="flex: 1;">حذف المادة</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editCourseModal')" style="flex: 1;">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2><i class="fas fa-user-cog"></i> إعدادات الملف الشخصي</h2>
+                <button onclick="closeModal('profileModal')" style="background: none; border: none; color: #fff; cursor: pointer; font-size: 20px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="form-group">
+                <label>رابط الملف الشخصي الفريد</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span style="background: rgba(30, 41, 59, 0.8); padding: 8px 12px; border-radius: 6px; flex: 1;">
+                        https://myexamplewebsite.com/user/<span id="profileLinkPreview">username</span>
+                    </span>
+                    <button type="button" class="btn" onclick="copyProfileLink()">
+                        <i class="fas fa-copy"></i> نسخ
+                    </button>
+                </div>
+                <small style="color: #9ca3af;">لا يمكن تغيير اسم المستخدم بعد تعيينه</small>
+            </div>
+            
+            <div class="form-group">
+                <label>نبذة عني</label>
+                <textarea id="profileBio" rows="3" style="width: 100%; padding: 12px; background: rgba(30, 41, 59, 0.8); border: 2px solid rgba(59, 130, 246, 0.2); border-radius: 8px; color: #fff;"></textarea>
+            </div>
+            
+            <button type="button" class="btn" style="width: 100%; margin-top: 20px;" onclick="updateProfile()">
+                <i class="fas fa-save"></i> حفظ التغييرات
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztq9Yd66mA8cce8VT9NKWpHdry7UBxPBg0qpjp2--sh7JyqXENgn7hHEslKCd5ffEA/exec';
+        let currentUser = null;
+        let currentForum = null;
+        let onlineUsers = [];
+        let userCourses = [];
+        let chatUsers = [];
+        let selectedChatUser = null;
+        let guestTimer = null;
+        let timeLeft = 60;
+        let systemInitialized = false;
+
+        // Initialize system
+        async function checkSystemStatus() {
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getSystemStatus');
+                const data = await response.json();
+                
+                if (data.success && data.initialized) {
+                    systemInitialized = true;
+                    console.log('✓ System initialized');
+                }
+            } catch (error) {
+                console.log('Running in demo mode');
+            }
+        }
+
+        // Auth Tab Switching
+        function switchTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.add('hidden'));
+            
+            event.target.classList.add('active');
+            
+            if (tab === 'signin') {
+                document.getElementById('signinForm').classList.remove('hidden');
+            } else if (tab === 'signup') {
+                document.getElementById('signupForm').classList.remove('hidden');
+            } else if (tab === 'guest') {
+                document.getElementById('guestForm').classList.remove('hidden');
+            }
+        }
+
+        // View Switching
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(viewId + 'View').classList.add('active');
+            event.target.classList.add('active');
+            
+            if (viewId === 'courses') {
+                loadUserCourses();
+            } else if (viewId === 'forums') {
+                loadForums();
+            } else if (viewId === 'chat') {
+                loadChatUsers();
+            } else if (viewId === 'admin') {
+                loadAdminData();
+            }
+        }
+
+        // Guest Timer
+        function startGuestTimer() {
+            const timerDisplay = document.getElementById('timerDisplay');
+            const timerElement = document.getElementById('guestTimer');
+            timerElement.classList.remove('hidden');
+            timeLeft = 60;
+            
+            guestTimer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft + ' ثانية';
+                
+                if (timeLeft <= 10) {
+                    timerElement.style.background = 'rgba(239, 68, 68, 0.9)';
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(guestTimer);
+                    showError('انتهت مدة الزائر. يرجى التسجيل للمتابعة.');
+                    logout();
+                }
+            }, 1000);
+        }
+
+        // Show Messages
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 5000);
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('successMsg');
+            el.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 5000);
+        }
+
+        // Sign Up
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signup_name').value;
+            const username = document.getElementById('signup_username').value;
+            const email = document.getElementById('signup_email').value;
+            const phone = document.getElementById('signup_phone').value;
+            const password = document.getElementById('signup_password').value;
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'signup',
+                        name: name,
+                        username: username,
+                        email: email,
+                        phone: phone,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showSuccess('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول');
+                    setTimeout(() => {
+                        switchTab('signin');
+                        document.getElementById('signin_email').value = email;
+                    }, 1500);
+                } else {
+                    showError(data.message || 'فشل إنشاء الحساب');
+                }
+            } catch (error) {
+                currentUser = { 
+                    name: name, 
+                    username: username,
+                    email: email, 
+                    phone: phone, 
+                    type: 'student',
+                    joinDate: new Date().toLocaleDateString('ar-SA')
+                };
+                showDashboard();
+                showSuccess('تم إنشاء الحساب (وضع التجربة)');
+            }
+        });
+
+        // Sign In
+        document.getElementById('signinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signin_email').value;
+            const password = document.getElementById('signin_password').value;
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'signin',
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    showDashboard();
+                    showSuccess('تم تسجيل الدخول بنجاح');
+                    
+                    // Check if user is admin
+                    if (currentUser.type === 'admin') {
+                        document.getElementById('adminTab').classList.remove('hidden');
+                    }
+                } else {
+                    showError(data.message || 'فشل تسجيل الدخول');
+                }
+            } catch (error) {
+                currentUser = { 
+                    name: email.split('@')[0], 
+                    username: email.split('@')[0],
+                    email: email, 
+                    type: 'student',
+                    joinDate: '2024-01-01'
+                };
+                showDashboard();
+                showSuccess('تم تسجيل الدخول (وضع التجربة)');
+            }
+        });
+
+        // Guest Login
+        document.getElementById('guestForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('guest_name').value;
+            const username = 'guest_' + Date.now();
+            currentUser = { 
+                name: name, 
+                username: username,
+                type: 'guest',
+                joinDate: new Date().toLocaleDateString('ar-SA')
+            };
+            showDashboard();
+            showSuccess('مرحباً بك كزائر');
+            startGuestTimer();
+        });
+
+        // Show Dashboard
+        function showDashboard() {
+            document.getElementById('authPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('profileLinkPreview').textContent = currentUser.username;
+            
+            // Update profile preview
+            if (currentUser.type !== 'guest') {
+                document.getElementById('profileName').textContent = currentUser.name;
+                document.getElementById('profileUsername').textContent = '@' + currentUser.username;
+                document.getElementById('profileJoinDate').textContent = currentUser.joinDate;
+            }
+            
+            updateOnlineUsers();
+            loadUserCourses();
+            loadForums();
+            
+            // Update online status every 30 seconds
+            setInterval(updateOnlineStatus, 30000);
+            setInterval(updateOnlineUsers, 30000);
+        }
+
+        // Update Online Status
+        async function updateOnlineStatus() {
+            if (!currentUser || currentUser.type === 'guest') return;
+            
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'updateOnlineStatus',
+                        userId: currentUser.id || currentUser.username,
+                        userName: currentUser.name,
+                        userType: currentUser.type
+                    })
+                });
+            } catch (error) {
+                console.log('Error updating online status');
+            }
+        }
+
+        // Update Online Users
+        async function updateOnlineUsers() {
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getOnlineUsers');
+                const data = await response.json();
+                onlineUsers = data.users || [];
+            } catch (error) {
+                onlineUsers = [
+                    { name: currentUser.name, type: currentUser.type, lastSeen: new Date().toISOString() },
+                    { name: 'أحمد محمد', type: 'student', lastSeen: new Date().toISOString() },
+                    { name: 'سارة علي', type: 'student', lastSeen: new Date().toISOString() }
+                ];
+            }
+            
+            displayOnlineUsers();
+        }
+
+        function displayOnlineUsers() {
+            const list = document.getElementById('onlineUsersList');
+            document.getElementById('onlineCount').textContent = onlineUsers.length;
+            
+            list.innerHTML = onlineUsers.map(user => {
+                const isOnline = new Date(user.lastSeen) > new Date(Date.now() - 5 * 60 * 1000);
+                const statusText = isOnline ? 'متصل الآن' : 'غير متصل';
+                const statusColor = isOnline ? '#4ade80' : '#9ca3af';
+                const statusIcon = isOnline ? 'fa-circle' : 'fa-circle';
+                
+                return `
+                    <div class="user-item" onclick="viewUserProfile('${user.id || user.name}')">
+                        <div class="user-avatar">${user.name.charAt(0)}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #fff;">${user.name}</div>
+                            <div style="font-size: 12px; color: ${statusColor};">
+                                <i class="fas ${statusIcon}"></i> ${statusText}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load User Courses
+        async function loadUserCourses() {
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getUserCourses&userId=' + (currentUser.id || currentUser.username));
+                const data = await response.json();
+                userCourses = data.courses || [];
+            } catch (error) {
+                userCourses = [
+                    { id: 1, name: 'الرياضيات المتقدمة', code: 'MATH101', semester: 'الفصل الأول 2024-2025', progress: 64 },
+                    { id: 2, name: 'الفيزياء والكيمياء', code: 'PHY101', semester: 'الفصل الأول 2024-2025', progress: 62 },
+                    { id: 3, name: 'القيادة والمسؤولية المجتمعية', code: 'LEAD101', semester: 'الفصل الأول 2024-2025', progress: 68 }
+                ];
+            }
+            
+            displayUserCourses();
+        }
+
+        function displayUserCourses() {
+            const list = document.getElementById('userCoursesList');
+            document.getElementById('coursesCount').textContent = userCourses.length;
+            
+            if (userCourses.length === 0) {
+                list.innerHTML = '<div class="loading">لم تقم بإضافة أي مواد بعد</div>';
+                return;
+            }
+            
+            list.innerHTML = userCourses.map(course => {
+                const colors = ['math', 'physics', 'chemistry'];
+                const colorClass = colors[course.id % 3];
+                
+                return `
+                    <div class="course-card">
+                        <div class="course-header ${colorClass}">
+                            <h3>${course.name}</h3>
+                            <p>${course.semester} - ${course.code}</p>
+                        </div>
+                        <div class="course-body">
+                            <p>نسبة الإنجاز: ${course.progress}%</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${course.progress}%"></div>
+                            </div>
+                            <div class="course-actions">
+                                <button class="btn btn-secondary" onclick="editCourse(${course.id})" style="flex: 1;">
+                                    <i class="fas fa-edit"></i> تعديل
+                                </button>
+                                <button class="btn btn-danger" onclick="deleteCourse(${course.id})" style="flex: 1;">
+                                    <i class="fas fa-trash"></i> حذف
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Add Course
+        document.getElementById('addCourseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const course = {
+                name: document.getElementById('courseName').value,
+                code: document.getElementById('courseCode').value,
+                semester: document.getElementById('courseSemester').value,
+                progress: document.getElementById('courseProgress').value
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'addCourse',
+                        userId: currentUser.id || currentUser.username,
+                        course: course
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeModal('addCourseModal');
+                    loadUserCourses();
+                    showSuccess('تم إضافة المادة بنجاح');
+                }
+            } catch (error) {
+                course.id = userCourses.length + 1;
+                userCourses.push(course);
+                closeModal('addCourseModal');
+                loadUserCourses();
+                showSuccess('تم إضافة المادة (وضع التجربة)');
+            }
+        });
+
+        // Edit Course
+        function editCourse(courseId) {
+            const course = userCourses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            document.getElementById('editCourseId').value = course.id;
+            document.getElementById('editCourseName').value = course.name;
+            document.getElementById('editCourseCode').value = course.code;
+            document.getElementById('editCourseProgress').value = course.progress;
+            document.getElementById('editProgressValue').textContent = course.progress + '%';
+            
+            openModal('editCourseModal');
+        }
+
+        document.getElementById('editCourseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const courseId = parseInt(document.getElementById('editCourseId').value);
+            const course = {
+                name: document.getElementById('editCourseName').value,
+                code: document.getElementById('editCourseCode').value,
+                progress: document.getElementById('editCourseProgress').value
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'updateCourse',
+                        courseId: courseId,
+                        course: course
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeModal('editCourseModal');
+                    loadUserCourses();
+                    showSuccess('تم تحديث المادة بنجاح');
+                }
+            } catch (error) {
+                const index = userCourses.findIndex(c => c.id === courseId);
+                if (index !== -1) {
+                    userCourses[index] = { ...userCourses[index], ...course };
+                }
+                closeModal('editCourseModal');
+                loadUserCourses();
+                showSuccess('تم تحديث المادة (وضع التجربة)');
+            }
+        });
+
+        // Delete Course
+        function deleteCourse(courseId) {
+            if (!confirm('هل أنت متأكد من حذف هذه المادة؟')) return;
+            
+            try {
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'deleteCourse',
+                        courseId: courseId
+                    })
+                });
+                
+                userCourses = userCourses.filter(c => c.id !== courseId);
+                loadUserCourses();
+                showSuccess('تم حذف المادة بنجاح');
+                closeModal('editCourseModal');
+            } catch (error) {
+                userCourses = userCourses.filter(c => c.id !== courseId);
+                loadUserCourses();
+                showSuccess('تم حذف المادة (وضع التجربة)');
+                closeModal('editCourseModal');
+            }
+        }
+
+        // Load Forums
+        async function loadForums() {
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getForums');
+                const data = await response.json();
+                displayForums(data.forums || [], data.subforums || []);
+            } catch (error) {
+                const mainForums = [
+                    { id: 'helping', name: 'منتدى المساعدة العامة', desc: 'للأسئلة والنقاشات حول الأفكار العامة', icon: '💬' },
+                    { id: 'academic', name: 'المنتدى الأكاديمي', desc: 'للنقاشات الأكاديمية والدراسية', icon: '📚' },
+                    { id: 'tech', name: 'المنتدى التقني', desc: 'للمواضيع التقنية والبرمجية', icon: '💻' },
+                    { id: 'social', name: 'المنتدى الاجتماعي', desc: 'للأنشطة والفعاليات الطلابية', icon: '🎉' }
+                ];
+                
+                const subforums = [
+                    { id: 'gaming1', name: 'الألعاب الإلكترونية', desc: 'مناقشة الألعاب الإلكترونية', parent: 'social', createdBy: 'أحمد' },
+                    { id: 'gaming2', name: 'تصميم الألعاب', desc: 'تعلم تصميم وتطوير الألعاب', parent: 'tech', createdBy: 'سارة' }
+                ];
+                
+                displayForums(mainForums, subforums);
+            }
+        }
+
+        function displayForums(mainForums, subforums) {
+            // Main forums
+            const mainList = document.getElementById('mainForumsList');
+            mainList.innerHTML = mainForums.map(forum => `
+                <div class="forum-card" onclick="openForum('${forum.id}')">
+                    <div class="forum-icon">${forum.icon}</div>
+                    <h3>${forum.name}</h3>
+                    <p>${forum.desc}</p>
+                </div>
+            `).join('');
+
+            // Subforums
+            const subList = document.getElementById('subforumsList');
+            if (subforums.length === 0) {
+                subList.innerHTML = '<div class="loading">لا توجد منتديات فرعية</div>';
+            } else {
+                subList.innerHTML = subforums.map(forum => `
+                    <div class="forum-card" onclick="openForum('${forum.id}')">
+                        <div class="forum-icon">🎮</div>
+                        <h3>${forum.name}</h3>
+                        <p>${forum.desc}</p>
+                        <small style="color: #9ca3af;">تم إنشاؤه بواسطة: ${forum.createdBy}</small>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Create Subforum
+        document.getElementById('createSubforumForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (currentUser.type === 'guest') {
+                showError('الزوار لا يمكنهم إنشاء منتديات فرعية');
+                return;
+            }
+            
+            const subforum = {
+                name: document.getElementById('subforumName').value,
+                description: document.getElementById('subforumDescription').value,
+                createdBy: currentUser.name
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'createSubforum',
+                        subforum: subforum
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('createSubforumForm').reset();
+                    loadForums();
+                    showSuccess('تم إنشاء المنتدى الفرعي بنجاح');
+                }
+            } catch (error) {
+                showSuccess('تم إنشاء المنتدى الفرعي (وضع التجربة)');
+                loadForums();
+            }
+        });
+
+        // Open Forum
+        function openForum(forumId) {
+            currentForum = forumId;
+            const forumTitles = {
+                helping: 'منتدى المساعدة العامة',
+                academic: 'المنتدى الأكاديمي',
+                tech: 'المنتدى التقني',
+                social: 'المنتدى الاجتماعي',
+                gaming1: 'الألعاب الإلكترونية',
+                gaming2: 'تصميم الألعاب'
+            };
+            
+            document.getElementById('forumTitle').textContent = forumTitles[forumId] || forumId;
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('forumDetailView').classList.add('active');
+            loadPosts();
+        }
+
+        function closeForum() {
+            document.getElementById('dashboardView').classList.add('active');
+            document.getElementById('forumDetailView').classList.remove('active');
+            currentForum = null;
+            switchView('forums');
+        }
+
+        // Load Posts
+        async function loadPosts() {
+            const postsList = document.getElementById('postsList');
+            postsList.innerHTML = '<div class="loading">جاري تحميل المشاركات...</div>';
+            
+            try {
+                const response = await fetch(SCRIPT_URL + `?action=getPosts&forum=${currentForum}`);
+                const data = await response.json();
+                displayPosts(data.posts || []);
+            } catch (error) {
+                const demoPosts = [
+                    {
+                        id: 1,
+                        author: 'محمد أحمد',
+                        content: 'مرحباً، هل يمكن أن يساعدني أحد في فهم موضوع التفاضل والتكامل؟',
+                        timestamp: new Date().toLocaleString('ar-SA'),
+                        attachment: null,
+                        attachmentType: null
+                    },
+                    {
+                        id: 2,
+                        author: 'سارة علي',
+                        content: 'بالتأكيد! أنا هنا للمساعدة. ما هو الجزء الذي تجد صعوبة فيه؟',
+                        timestamp: new Date(Date.now() - 3600000).toLocaleString('ar-SA'),
+                        attachment: 'https://example.com/file.pdf',
+                        attachmentType: 'pdf'
+                    }
+                ];
+                displayPosts(demoPosts);
+            }
+        }
+
+        function displayPosts(posts) {
+            const postsList = document.getElementById('postsList');
+            
+            if (posts.length === 0) {
+                postsList.innerHTML = '<div class="loading">لا توجد مشاركات حتى الآن. كن أول من يشارك!</div>';
+                return;
+            }
+            
+            postsList.innerHTML = posts.map(post => {
+                let attachmentHTML = '';
+                if (post.attachment) {
+                    if (post.attachmentType === 'pdf') {
+                        attachmentHTML = `
+                            <div class="post-attachment">
+                                <i class="fas fa-file-pdf" style="color: #ef4444; font-size: 20px;"></i>
+                                <div>
+                                    <div style="font-weight: 600;">ملف PDF مرفق</div>
+                                    <a href="${post.attachment}" target="_blank" style="color: #3b82f6; font-size: 12px;">عرض الملف</a>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        attachmentHTML = `<img src="${post.attachment}" class="post-image" alt="Post image">`;
+                    }
+                }
+                
+                return `
+                    <div class="post-item">
+                        <div class="post-header">
+                            <strong onclick="viewUserProfile('${post.author}')" style="cursor: pointer; color: #3b82f6;">${post.author}</strong>
+                            <span>${post.timestamp}</span>
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                        ${attachmentHTML}
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('postsToday').textContent = posts.length;
+        }
+
+        // Submit New Post
+        document.getElementById('newPostForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = document.getElementById('postContent').value;
+            const fileInput = document.getElementById('postAttachment');
+            const file = fileInput.files[0];
+            
+            let attachmentUrl = null;
+            let attachmentType = null;
+            
+            if (file) {
+                attachmentType = file.type === 'application/pdf' ? 'pdf' : 'image';
+                
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('action', 'uploadFile');
+                    
+                    const uploadResponse = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const uploadData = await uploadResponse.json();
+                    attachmentUrl = uploadData.url;
+                } catch (error) {
+                    console.log('File upload failed');
+                }
+            }
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'createPost',
+                        forum: currentForum,
+                        author: currentUser.name,
+                        content: content,
+                        attachment: attachmentUrl,
+                        attachmentType: attachmentType
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('postContent').value = '';
+                    document.getElementById('postAttachment').value = '';
+                    loadPosts();
+                    showSuccess('تم نشر المشاركة بنجاح');
+                }
+            } catch (error) {
+                document.getElementById('postContent').value = '';
+                document.getElementById('postAttachment').value = '';
+                loadPosts();
+                showSuccess('تم نشر المشاركة (وضع التجربة)');
+            }
+        });
+
+        // Chat System
+        async function loadChatUsers() {
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getChatUsers');
+                const data = await response.json();
+                chatUsers = data.users || [];
+            } catch (error) {
+                chatUsers = [
+                    { id: 1, name: 'أحمد محمد', online: true, chatApproved: true },
+                    { id: 2, name: 'سارة علي', online: false, chatApproved: true },
+                    { id: 3, name: 'خالد عبدالله', online: true, chatApproved: false }
+                ];
+            }
+            
+            displayChatUsers();
+        }
+
+        function displayChatUsers() {
+            const list = document.getElementById('chatUsersList');
+            const approvedUsers = chatUsers.filter(u => u.chatApproved && u.id !== (currentUser.id || currentUser.username));
+            
+            if (approvedUsers.length === 0) {
+                list.innerHTML = '<div class="loading">لا يوجد مستخدمون متاحون للمحادثة</div>';
+                return;
+            }
+            
+            list.innerHTML = approvedUsers.map(user => `
+                <div class="user-item" onclick="selectChatUser(${user.id})">
+                    <div class="user-avatar">${user.name.charAt(0)}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #fff;">${user.name}</div>
+                        <div style="font-size: 12px; color: ${user.online ? '#4ade80' : '#9ca3af'};">
+                            <i class="fas fa-circle"></i> ${user.online ? 'متصل' : 'غير متصل'}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectChatUser(userId) {
+            selectedChatUser = chatUsers.find(u => u.id === userId);
+            document.getElementById('selectedChatUser').innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="user-avatar" style="width: 30px; height: 30px;">${selectedChatUser.name.charAt(0)}</div>
+                    <div>
+                        <div style="font-weight: 600;">${selectedChatUser.name}</div>
+                        <div style="font-size: 12px; color: ${selectedChatUser.online ? '#4ade80' : '#9ca3af'}">
+                            ${selectedChatUser.online ? 'متصل الآن' : 'آخر ظهور: منذ قليل'}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('messageInput').disabled = false;
+            document.getElementById('sendMessageBtn').disabled = false;
+            loadMessages(userId);
+        }
+
+        // Load Admin Data
+        async function loadAdminData() {
+            if (currentUser.type !== 'admin') return;
+            
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getAdminData');
+                const data = await response.json();
+                displayAdminData(data);
+            } catch (error) {
+                const demoData = {
+                    pendingRequests: [
+                        { userId: 3, userName: 'خالد عبدالله', requestedAt: new Date().toISOString() }
+                    ],
+                    allUsers: [
+                        { id: 1, name: 'أحمد محمد', type: 'student', chatApproved: true, lastSeen: new Date().toISOString() },
+                        { id: 2, name: 'سارة علي', type: 'student', chatApproved: true, lastSeen: new Date(Date.now() - 3600000).toISOString() },
+                        { id: 3, name: 'خالد عبدالله', type: 'student', chatApproved: false, lastSeen: new Date().toISOString() }
+                    ]
+                };
+                displayAdminData(demoData);
+            }
+        }
+
+        function displayAdminData(data) {
+            // Pending requests
+            const pendingDiv = document.getElementById('pendingChatRequests');
+            if (data.pendingRequests.length === 0) {
+                pendingDiv.innerHTML = '<div class="loading">لا توجد طلبات معلقة</div>';
+            } else {
+                pendingDiv.innerHTML = data.pendingRequests.map(req => `
+                    <div style="background: rgba(30, 41, 59, 0.6); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600;">${req.userName}</div>
+                            <div style="font-size: 12px; color: #9ca3af;">طلب في: ${new Date(req.requestedAt).toLocaleString('ar-SA')}</div>
+                        </div>
+                        <button class="btn btn-success" onclick="approveChatRequest(${req.userId})">
+                            <i class="fas fa-check"></i> قبول
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // All users
+            const allUsersDiv = document.getElementById('allUsersList');
+            allUsersDiv.innerHTML = data.allUsers.map(user => `
+                <div style="background: rgba(30, 41, 59, 0.6); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-weight: 600;">${user.name}</div>
+                        <div style="font-size: 12px; color: #9ca3af;">
+                            ${user.chatApproved ? 'مفعل للدردشة' : 'غير مفعل للدردشة'} | 
+                            آخر ظهور: ${new Date(user.lastSeen).toLocaleString('ar-SA')}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn ${user.chatApproved ? 'btn-danger' : 'btn-success'}" 
+                                onclick="${user.chatApproved ? 'revokeChatAccess' : 'approveChatRequest'}(${user.id})">
+                            <i class="fas ${user.chatApproved ? 'fa-ban' : 'fa-check'}"></i>
+                            ${user.chatApproved ? 'إلغاء التفعيل' : 'تفعيل الدردشة'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approveChatRequest(userId) {
+            showSuccess(`تم تفعيل الدردشة للمستخدم ${userId}`);
+            loadAdminData();
+        }
+
+        function revokeChatAccess(userId) {
+            if (confirm('هل أنت متأكد من إلغاء تفعيل الدردشة لهذا المستخدم؟')) {
+                showSuccess(`تم إلغاء تفعيل الدردشة للمستخدم ${userId}`);
+                loadAdminData();
+            }
+        }
+
+        // View User Profile
+        async function viewUserProfile(userId) {
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getUserProfile&userId=' + userId);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayUserProfile(data.user);
+                    switchView('profile');
+                }
+            } catch (error) {
+                const demoProfile = {
+                    name: userId.includes('guest') ? 'زائر' : userId,
+                    username: userId,
+                    joinDate: '2024-01-01',
+                    lastSeen: new Date().toISOString(),
+                    posts: 5,
+                    courses: [
+                        { name: 'الرياضيات المتقدمة', progress: 75 },
+                        { name: 'الفيزياء والكيمياء', progress: 60 }
+                    ]
+                };
+                displayUserProfile(demoProfile);
+                switchView('profile');
+            }
+        }
+
+        function displayUserProfile(user) {
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileUsername').textContent = '@' + user.username;
+            document.getElementById('profileJoinDate').textContent = user.joinDate;
+            document.getElementById('profileLastSeen').textContent = new Date(user.lastSeen).toLocaleString('ar-SA');
+            document.getElementById('profilePosts').textContent = user.posts || 0;
+            document.getElementById('profileCourses').textContent = user.courses?.length || 0;
+            document.getElementById('profileAvatar').textContent = user.name.charAt(0);
+            
+            const coursesList = document.getElementById('profileCoursesList');
+            if (user.courses && user.courses.length > 0) {
+                coursesList.innerHTML = user.courses.map(course => `
+                    <div class="stat-card">
+                        <h3>${course.name}</h3>
+                        <div class="value">${course.progress}%</div>
+                        <div class="progress-bar" style="margin-top: 10px;">
+                            <div class="progress-fill" style="width: ${course.progress}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                coursesList.innerHTML = '<div class="loading">لا توجد مواد مسجلة</div>';
+            }
+        }
+
+        // Profile Management
+        function openProfileModal() {
+            if (currentUser.type === 'guest') {
+                showError('الزوار لا يمكنهم تعديل الملف الشخصي');
+                return;
+            }
+            openModal('profileModal');
+        }
+
+        function copyProfileLink() {
+            const link = `https://myexamplewebsite.com/user/${currentUser.username}`;
+            navigator.clipboard.writeText(link);
+            showSuccess('تم نسخ الرابط');
+        }
+
+        function updateProfile() {
+            const bio = document.getElementById('profileBio').value;
+            // In a real app, send this to backend
+            showSuccess('تم تحديث الملف الشخصي');
+            closeModal('profileModal');
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function openAddCourseModal() {
+            if (currentUser.type === 'guest') {
+                showError('الزوار لا يمكنهم إضافة مواد');
+                return;
+            }
+            document.getElementById('courseProgress').addEventListener('input', function() {
+                document.getElementById('progressValue').textContent = this.value + '%';
+            });
+            openModal('addCourseModal');
+        }
+
+        // Logout
+        function logout() {
+            if (guestTimer) clearInterval(guestTimer);
+            currentUser = null;
+            selectedChatUser = null;
+            document.getElementById('authPage').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('guestTimer').classList.add('hidden');
+            document.getElementById('signinForm').reset();
+            document.getElementById('signupForm').reset();
+            document.getElementById('guestForm').reset();
+            switchTab('signin');
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            console.log('🎓 ASU Student Portal Loaded');
+            checkSystemStatus();
+            
+            // Initialize event listeners for progress bars
+            document.getElementById('courseProgress')?.addEventListener('input', function() {
+                document.getElementById('progressValue').textContent = this.value + '%';
+            });
+            
+            document.getElementById('editCourseProgress')?.addEventListener('input', function() {
+                document.getElementById('editProgressValue').textContent = this.value + '%';
+            });
+            
+            // Hide subforum creation for guests
+            if (currentUser?.type === 'guest') {
+                document.getElementById('subforumCreateSection').classList.add('hidden');
+            }
+        });
+
+        // URL Routing for profiles
+        window.addEventListener('hashchange', function() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#/user/')) {
+                const username = hash.replace('#/user/', '');
+                viewUserProfile(username);
+            }
+        });
+    </script>
+</body>
+</html>
