@@ -7,6 +7,21 @@
     <meta name="google-adsense-account" content="ca-pub-7033538324685491">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="favicon2.ico" type="image/x-icon">
+
+    <!-- ===================== -->
+    <!--   PWA / Add to Home   -->
+    <!-- ===================== -->
+    <!-- Android / General PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#8C1D40">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ASU Library">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-120x120.png">
     <style>
         :root {
             --primary: #8C1D40;
@@ -1132,6 +1147,13 @@
             
             // Optimize touch events
             document.addEventListener('touchstart', function() {}, {passive: true});
+        }
+
+        // ===== SERVICE WORKER (PWA) =====
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(() => console.log('✅ Service Worker registered'))
+                .catch(err => console.log('⚠️ SW registration failed:', err));
         }
 
         console.log('✅ ASU E-Library Hub loaded successfully');
