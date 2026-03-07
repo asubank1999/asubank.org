@@ -1,239 +1,295 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    document.body.style.transform = "scale(2.0)";
-    document.body.style.transformOrigin = "0 0";
-    document.body.style.width = "46.77%";  // Adjusted for correct scaling
-    document.body.style.height = "76.67%"; // Adjusted for correct scaling
-    document.body.style.overflow = "auto"; // Allow scrolling
-  });
-</script>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adjusted Lecture Timetable (Ramadan)</title>
-    <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        h1, h2 {
-            text-align: center;
-            color: var(--heading-color);
-        }
+<title>ASU Ramadan Schedule</title>
 
-        /* Dark Mode Variables */
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --heading-color: #4CAF50;
-            --table-bg: #ffffff;
-            --table-border: #ddd;
-            --table-hover: #f2f2f2;
-            --adjusted-bg: #ffcccb;
-            --button-bg: #4CAF50;
-            --button-text: #ffffff;
-        }
+<style>
 
-        [data-theme="dark"] {
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
-            --heading-color: #4CAF50;
-            --table-bg: #1e1e1e;
-            --table-border: #333;
-            --table-hover: #333;
-            --adjusted-bg: #ff6666;
-            --button-bg: #4CAF50;
-            --button-text: #ffffff;
-        }
+:root{
+    --bg:#ffffff;
+    --text:#111111;
+    --card:#f4f4f4;
+    --accent:#2563eb;
+    --border:#dddddd;
+}
 
-        /* Table Styles */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            background-color: var(--table-bg);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+body.dark{
+    --bg:#0f172a;
+    --text:#f1f5f9;
+    --card:#1e293b;
+    --accent:#3b82f6;
+    --border:#334155;
+}
 
-        th, td {
-            border: 1px solid var(--table-border);
-            padding: 10px;
-            text-align: center;
-        }
+body{
+    margin:0;
+    font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition:0.3s;
+}
 
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 24px;
+    border-bottom:1px solid var(--border);
+}
 
-        tr:nth-child(even) {
-            background-color: var(--table-hover);
-        }
+h1{
+    margin:0;
+    font-size:20px;
+}
 
-        tr:hover {
-            background-color: var(--table-hover);
-        }
+.controls{
+    display:flex;
+    gap:10px;
+}
 
-        .adjusted {
-            background-color: var(--adjusted-bg);
-            font-weight: bold;
-        }
+button{
+    border:none;
+    padding:10px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+}
 
-        /* Back Button */
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
+.theme-btn{
+    background:var(--accent);
+    color:white;
+}
 
-        .back-button:hover {
-            background-color: #45a049;
-        }
+.back-btn{
+    background:var(--card);
+    color:var(--text);
+}
 
-        /* Dark Mode Toggle */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-            color: var(--text-color);
-        }
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:30px 20px;
+}
 
-        /* Mobile-Friendly Styles */
-        @media (max-width: 768px) {
-            table {
-                font-size: 14px;
-            }
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--card);
+    border-radius:10px;
+    overflow:hidden;
+}
 
-            th, td {
-                padding: 8px;
-            }
+th,td{
+    padding:14px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+}
 
-            .back-button {
-                font-size: 14px;
-                padding: 8px 16px;
-            }
-        }
-    </style>
+th{
+    background:var(--accent);
+    color:white;
+}
+
+tr:last-child td{
+    border-bottom:none;
+}
+
+.section{
+    margin-top:40px;
+}
+
+.section h2{
+    margin-bottom:15px;
+}
+
+@media(max-width:700px){
+
+table thead{
+    display:none;
+}
+
+table, tbody, tr, td{
+    display:block;
+    width:100%;
+}
+
+tr{
+    margin-bottom:12px;
+    background:var(--card);
+    border-radius:8px;
+    padding:10px;
+}
+
+td{
+    text-align:left;
+    padding:8px 10px;
+}
+
+td::before{
+    font-weight:bold;
+    display:block;
+}
+
+td:nth-child(1)::before{content:"Lecture";}
+td:nth-child(2)::before{content:"Regular Time";}
+td:nth-child(3)::before{content:"Ramadan Time";}
+
+}
+
+</style>
 </head>
+
 <body>
 
-<!-- Back Button -->
-<a href="index.html" class="back-button">← Back</a>
+<header>
 
-<!-- Dark Mode Toggle Button -->
-<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+<h1>ASU Ramadan Lecture Schedule</h1>
 
-<h1>Adjusted Lecture Timetable</h1>
-<h2>Ramadan 2024/2025</h2>
+<div class="controls">
+<button class="back-btn" onclick="location.href='index'">⬅ Back</button>
+<button class="theme-btn" onclick="toggleTheme()">🌙 / ☀</button>
+</div>
 
-<!-- Adjusted Timetable -->
+</header>
+
+<div class="container">
+
+<div class="section">
+
+<h2>Sunday & Tuesday</h2>
+
 <table>
-    <tr>
-        <th>Time (Adjusted for Ramadan)</th>
-        <th>Days</th>
-    </tr>
-    <tr class="adjusted">
-        <td>8:00 - 9:00 → 9:00 - 9:40</td>
-        <td>Sunday - Tuesday - Thursday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>9:00 - 10:00 → 9:50 - 10:30</td>
-        <td>Sunday - Tuesday - Thursday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>10:00 - 11:00 → 10:40 - 11:20</td>
-        <td>Sunday - Tuesday - Thursday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>11:00 - 12:00 → 11:30 - 12:10</td>
-        <td>Sunday - Tuesday - Thursday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>12:00 - 13:00 → 12:20 - 13:00</td>
-        <td>Sunday - Tuesday - Thursday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>13:00 - 14:00 → 13:10 - 13:50</td>
-        <td>Sunday - Tuesday - Thursday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>14:00 - 15:00 → 14:00 - 14:40</td>
-        <td>Sunday - Tuesday - Thursday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>15:00 - 16:00 → 14:50 - 15:30</td>
-        <td>Sunday - Tuesday - Thursday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>16:00 - 17:00 → 15:40 - 16:20</td>
-        <td>Sunday - Tuesday - Thursday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>8:00 - 9:30 → 9:00 - 10:00</td>
-        <td>Monday - Wednesday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>9:30 - 11:00 → 10:15 - 11:15</td>
-        <td>Monday - Wednesday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>11:00 - 12:30 → 11:30 - 12:30</td>
-        <td>Monday - Wednesday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>12:30 - 14:00 → 12:45 - 13:45</td>
-        <td>Monday - Wednesday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>14:00 - 15:30 → 14:00 - 15:00</td>
-        <td>Monday - Wednesday</td>
-    </tr>
-    <tr class="adjusted">
-        <td>15:30 - 17:00 → 15:15 - 16:15</td>
-        <td>Monday - Wednesday</td>
-    </tr>
+
+<thead>
+<tr>
+<th>Lecture #</th>
+<th>Regular Semester</th>
+<th>Ramadan Time</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td>08:00 – 09:30</td>
+<td>09:00 – 10:00</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>09:30 – 11:00</td>
+<td>10:15 – 11:15</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>11:00 – 12:30</td>
+<td>11:30 – 12:30</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>12:30 – 14:00</td>
+<td>12:45 – 13:45</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>14:00 – 15:30</td>
+<td>14:00 – 15:00</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>15:30 – 17:00</td>
+<td>15:15 – 16:15</td>
+</tr>
+
+</tbody>
 </table>
 
-<!-- JavaScript for Theme Toggle -->
-<script>
-    function toggleTheme() {
-        const body = document.body;
-        const currentTheme = body.getAttribute('data-theme');
-        if (currentTheme === 'dark') {
-            body.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-        } else {
-            body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        }
-    }
+</div>
 
-    // Load saved theme from localStorage
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.setAttribute('data-theme', 'dark');
-    }
+<div class="section">
+
+<h2>Monday & Wednesday</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Lecture #</th>
+<th>Regular Semester</th>
+<th>Ramadan Time</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td>08:00 – 09:30</td>
+<td>09:00 – 10:00</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>09:30 – 11:00</td>
+<td>10:15 – 11:15</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>11:00 – 12:30</td>
+<td>11:30 – 12:30</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>12:30 – 14:00</td>
+<td>12:45 – 13:45</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>14:00 – 15:30</td>
+<td>14:00 – 15:00</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>15:30 – 17:00</td>
+<td>15:15 – 16:15</td>
+</tr>
+
+</tbody>
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+function toggleTheme(){
+
+document.body.classList.toggle("dark");
+
+localStorage.setItem(
+"theme",
+document.body.classList.contains("dark") ? "dark":"light"
+);
+
+}
+
+if(localStorage.getItem("theme")==="dark"){
+document.body.classList.add("dark");
+}
+
 </script>
 
 </body>
