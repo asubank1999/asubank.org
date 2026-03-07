@@ -1,0 +1,192 @@
+<!-- Data extracted from syllabus: :contentReference[oaicite:0]{index=0} -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>American Literature II Schedule</title>
+<style>
+body{
+font-family:Segoe UI,Arial,sans-serif;
+background:#0f172a;
+color:#fff;
+margin:0;
+padding:40px;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+#countdown{
+text-align:center;
+font-size:22px;
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+margin-bottom:30px;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+}
+
+.card{
+background:#1e293b;
+border-radius:14px;
+padding:20px;
+box-shadow:0 8px 20px rgba(0,0,0,0.35);
+transition:transform .2s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.date{
+font-size:18px;
+font-weight:bold;
+margin-bottom:6px;
+color:#38bdf8;
+}
+
+.mode{
+display:inline-block;
+padding:4px 10px;
+border-radius:6px;
+font-size:12px;
+margin-bottom:10px;
+}
+
+.inclass{background:#22c55e;}
+.async{background:#a855f7;}
+
+.topic{
+font-size:15px;
+line-height:1.5;
+}
+
+.week{
+font-size:13px;
+opacity:.7;
+margin-bottom:6px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>American Literature II — Class Schedule</h1>
+
+<div id="countdown">Loading next class...</div>
+
+<div class="container" id="schedule"></div>
+
+<script>
+
+const classes = [
+
+{date:"2026-03-02T12:30:00",mode:"In-class lecture",week:1,topic:"Orientation — American Literature 1900-1915"},
+{date:"2026-03-04T12:30:00",mode:"Asynchronous",week:1,topic:"Chopin — A Pair of Silk Stockings"},
+
+{date:"2026-03-09T12:30:00",mode:"In-class lecture",week:2,topic:"Chopin — A Pair of Silk Stockings"},
+{date:"2026-03-11T12:30:00",mode:"Asynchronous",week:2,topic:"American Literature 1914-1945 — Frost, Stevens"},
+
+{date:"2026-03-16T12:30:00",mode:"In-class lecture",week:3,topic:"Pound — River Merchant's Wife / In a Station of the Metro / Williams — Red Wheelbarrow"},
+{date:"2026-03-18T12:30:00",mode:"Asynchronous",week:3,topic:"H.D. — Helen"},
+
+{date:"2026-03-23T12:30:00",mode:"In-class lecture",week:4,topic:"Eliot — The Waste Land (Part Study)"},
+{date:"2026-03-25T12:30:00",mode:"Asynchronous",week:4,topic:"Eliot — The Waste Land (Continuation)"},
+
+{date:"2026-03-30T12:30:00",mode:"In-class lecture",week:5,topic:"Eliot — The Waste Land"},
+{date:"2026-04-01T12:30:00",mode:"Asynchronous",week:5,topic:"Eliot — The Waste Land (Online Study)"},
+
+{date:"2026-04-06T12:30:00",mode:"In-class lecture",week:6,topic:"McKay — Africa / America — Cummings — in Just-"},
+{date:"2026-04-08T12:30:00",mode:"Asynchronous",week:6,topic:"Hemingway — In Another Country"},
+
+{date:"2026-04-13T12:30:00",mode:"In-class lecture",week:7,topic:"Hemingway — In Another Country"},
+{date:"2026-04-15T12:30:00",mode:"Asynchronous",week:7,topic:"Hemingway — In Another Country (Online Discussion)"},
+
+{date:"2026-04-20T12:30:00",mode:"In-class lecture",week:8,topic:"Faulkner — A Rose for Emily"},
+{date:"2026-04-22T12:30:00",mode:"Asynchronous",week:8,topic:"Faulkner — A Rose for Emily (Analysis)"},
+
+{date:"2026-04-27T12:30:00",mode:"In-class lecture",week:9,topic:"Faulkner — A Rose for Emily"},
+{date:"2026-04-29T12:30:00",mode:"Asynchronous",week:9,topic:"Midterm Examination Preparation"},
+
+{date:"2026-05-04T12:30:00",mode:"In-class lecture",week:10,topic:"Hughes — Negro Speaks of Rivers / Cullen — Incident"},
+{date:"2026-05-06T12:30:00",mode:"Asynchronous",week:10,topic:"Roethke — My Papa’s Waltz / Bishop — One Art"},
+
+{date:"2026-05-11T12:30:00",mode:"In-class lecture",week:11,topic:"Introduction — American Literature 1945-Present"},
+{date:"2026-05-13T12:30:00",mode:"Asynchronous",week:11,topic:"Brooks — the mother / Vonnegut — Harrison Bergeron"},
+
+{date:"2026-05-18T12:30:00",mode:"In-class lecture",week:12,topic:"Sexton — Sylvia’s Death / Plath — Mirror"},
+{date:"2026-05-20T12:30:00",mode:"Asynchronous",week:12,topic:"Pynchon — Entropy"},
+
+{date:"2026-05-25T12:30:00",mode:"In-class lecture",week:13,topic:"Eid Holiday"},
+{date:"2026-05-27T12:30:00",mode:"Asynchronous",week:13,topic:"Eid Holiday — Online"},
+
+{date:"2026-06-01T12:30:00",mode:"In-class lecture",week:14,topic:"Walker — Everyday Use"},
+{date:"2026-06-03T12:30:00",mode:"Asynchronous",week:14,topic:"Walker — Everyday Use (Analysis)"},
+
+{date:"2026-06-08T12:30:00",mode:"In-class lecture",week:15,topic:"Walker — Everyday Use"},
+{date:"2026-06-10T12:30:00",mode:"Asynchronous",week:15,topic:"Tan — Two Kinds"},
+
+{date:"2026-06-15T12:30:00",mode:"In-class lecture",week:16,topic:"Tan — Two Kinds / Trethewey — Vignette"},
+{date:"2026-06-17T12:30:00",mode:"Asynchronous",week:16,topic:"Course Revision"}
+];
+
+const container = document.getElementById("schedule");
+
+classes.forEach(c=>{
+let d = new Date(c.date);
+let card=document.createElement("div");
+card.className="card";
+
+card.innerHTML=`
+<div class="week">Week ${c.week}</div>
+<div class="date">${d.toDateString()} — ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
+<div class="mode ${c.mode.includes("In-class")?"inclass":"async"}">${c.mode}</div>
+<div class="topic">${c.topic}</div>
+`;
+
+container.appendChild(card);
+});
+
+function updateCountdown(){
+
+let now=new Date();
+
+let upcoming=classes
+.map(c=>({...c,dateObj:new Date(c.date)}))
+.filter(c=>c.dateObj>now)
+.sort((a,b)=>a.dateObj-b.dateObj)[0];
+
+if(!upcoming){
+document.getElementById("countdown").innerText="All classes completed.";
+return;
+}
+
+let diff=upcoming.dateObj-now;
+
+let days=Math.floor(diff/(1000*60*60*24));
+let hours=Math.floor((diff/(1000*60*60))%24);
+let minutes=Math.floor((diff/(1000*60))%60);
+let seconds=Math.floor((diff/1000)%60);
+
+document.getElementById("countdown").innerHTML=
+`Next Class: <b>${upcoming.topic}</b><br>
+${upcoming.mode} — ${upcoming.dateObj.toDateString()}<br>
+⏳ ${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+}
+
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+</script>
+
+</body>
+</html>
