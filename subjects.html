@@ -1,100 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found | ASU</title>
-    <style>
-        :root {
-            --dark-bg: #121212;
-            --accent-orange: #ff6b35;
-            --light-orange: #ff9e71;
-            --text-light: #f5f5f5;
-            --text-muted: #aaaaaa;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: var(--dark-bg);
-            color: var(--text-light);
-            line-height: 1.6;
-        }
-        
-        .container {
-            text-align: center;
-            padding: 3rem;
-            max-width: 600px;
-            border-left: 4px solid var(--accent-orange);
-        }
-        
-        h1 {
-            color: var(--accent-orange);
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-        
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            color: var(--text-muted);
-        }
-        
-        .logo {
-            margin-bottom: 2rem;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--accent-orange);
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: var(--accent-orange);
-            color: var(--dark-bg);
-            padding: 0.8rem 2rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-        
-        .btn:hover {
-            background-color: transparent;
-            color: var(--accent-orange);
-            border-color: var(--accent-orange);
-            transform: translateY(-2px);
-        }
-        
-        .error-code {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-top: 2rem;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 2rem 1.5rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>NOT FOUND - Redirecting...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Auto Redirect after 3 seconds -->
+  <meta http-equiv="refresh" content="3; url=https://asubank.xyz">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0078d4, #00b4ff);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 420px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    p {
+      margin: 10px 0;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #ffeb3b;
+    }
+
+    .countdown {
+      font-size: 22px;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      opacity: 0.8;
+    }
+  </style>
+
+  <script>
+    let seconds = 3;
+
+    function updateCountdown() {
+      const el = document.getElementById("countdown");
+      if (seconds > 0) {
+        el.textContent = seconds;
+        seconds--;
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+
+    setTimeout(function() {
+      window.location.href = "https://asubank.xyz";
+    }, 3000);
+  </script>
 </head>
+
 <body>
-    <div class="container">
-        <div class="logo">ASU BANK</div>
-        <h1>This page no longer exists</h1>
-        <p>The page you're looking for may have been moved or deleted. Please return to our homepage or contact support if you believe this is an error.</p>
-        <a href="index" class="btn">Return to Homepage</a>
-        <div class="error-code">Error code: 410</div>
-    </div>
+  <div class="container">
+    <h1>Redirecting...</h1>
+
+    <p>
+      You will be redirected shortly.
+    </p>
+    <p class="countdown">
+      Redirecting in <span id="countdown">3</span> seconds...
+    </p>
+
+    <p>
+      If you are not redirected automatically, 
+      <a href="https://asubank.xyz">click here</a>.
+    </p>
+  </div>
 </body>
 </html>

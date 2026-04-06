@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Submissions – ASU E-Library Hub</title>
+    <meta name="google-adsense-account" content="ca-pub-7033538324685491">
+
+    <!-- Google Tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4DE6YQ7Q2M');
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon2.ico" type="image/x-icon">
+
+    <style>
+        /* ── Variables (imported from index.html) ── */
+        :root {
+            --primary:      #8C1D40;
+            --secondary:    #FFC627;
+            --accent:       #00A3E0;
+            --light:        #F8F9FA;
+            --dark:         #191919;
+            --gray:         #6C757D;
+            --success:      #78BE20;
+            --card-radius:  14px;
+            --shadow:       0 4px 20px rgba(0,0,0,0.09);
+            --transition:   all 0.3s ease;
+            --card-bg:      #ffffff;
+            --body-bg:      #F0EEF2;
+            --border:       rgba(140,29,64,0.12);
+            --text-sub:     #5a5a6a;
+        }
+
+        /* ── Dark mode ── */
+        body.dark-mode {
+            --light:    #191919;
+            --dark:     #F8F9FA;
+            --card-bg:  #242030;
+            --body-bg:  #141220;
+            --border:   rgba(255,255,255,0.08);
+            --text-sub: #a0a0b8;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--dark);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ── Decorative background mesh ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(140,29,64,0.08)   0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 90% 100%, rgba(0,163,224,0.06)   0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 50% 50%,  rgba(255,198,39,0.04)  0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body.dark-mode::before {
+            background:
+                radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(140,29,64,0.15)   0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 90% 100%, rgba(0,163,224,0.10)   0%, transparent 60%);
+        }
+
+        /* ── Header (imported style from index.html) ── */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 70%, black) 100%);
+            color: white;
+            padding: 1.1rem 1.5rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.18);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .logo-icon {
+            width: 44px; height: 44px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+
+        .logo-text h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+        }
+        .logo-text span {
+            font-size: 0.75rem;
+            opacity: 0.75;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .btn-header {
+            background: rgba(255,255,255,0.12);
+            color: white;
+            padding: 0.55rem 1.1rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.18);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+            backdrop-filter: blur(8px);
+        }
+        .btn-header:hover {
+            background: rgba(255,255,255,0.22);
+            transform: translateY(-1px);
+        }
+
+        .btn-header.accent {
+            background: var(--secondary);
+            color: var(--dark);
+            font-weight: 600;
+            border-color: var(--secondary);
+        }
+        .btn-header.accent:hover {
+            background: white;
+            color: var(--primary);
+            border-color: white;
+        }
+
+        /* ── Page wrapper ── */
+        .page-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem;
+        }
+
+        /* ── Hero / Page title ── */
+        .page-hero {
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .page-hero-text {}
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: linear-gradient(90deg, rgba(140,29,64,0.1), rgba(140,29,64,0.05));
+            color: var(--primary);
+            padding: 0.35rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            border: 1px solid rgba(140,29,64,0.18);
+            margin-bottom: 0.75rem;
+        }
+        body.dark-mode .hero-eyebrow {
+            background: rgba(140,29,64,0.2);
+            border-color: rgba(140,29,64,0.4);
+        }
+
+        .page-hero h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.7rem, 3vw, 2.4rem);
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+        .page-hero h2 span {
+            color: var(--primary);
+        }
+
+        .page-hero p {
+            margin-top: 0.5rem;
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            max-width: 480px;
+        }
+
+        /* ── Stats pills ── */
+        .stats-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-pill {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.1rem;
+            min-width: 80px;
+            box-shadow: var(--shadow);
+        }
+        .stat-pill .num {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+        .stat-pill .lbl {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        /* ── Filter tabs ── */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.75rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1.1rem;
+            border-radius: 50px;
+            border: 1.5px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-sub);
+            font-size: 0.83rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .filter-tab:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .filter-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .filter-count {
+            background: rgba(255,255,255,0.25);
+            padding: 0.1rem 0.45rem;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+        .filter-tab:not(.active) .filter-count {
+            background: var(--border);
+            color: var(--text-sub);
+        }
+
+        /* ── Cards grid ── */
+        .submissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.4rem;
+        }
+
+        /* ── Submission Card ── */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            animation: cardIn 0.5s ease both;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        }
+
+        @keyframes cardIn {
+            from { opacity:0; transform: translateY(18px); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+        .card:nth-child(1) { animation-delay: 0.05s; }
+        .card:nth-child(2) { animation-delay: 0.12s; }
+        .card:nth-child(3) { animation-delay: 0.19s; }
+        .card:nth-child(4) { animation-delay: 0.26s; }
+        .card:nth-child(5) { animation-delay: 0.33s; }
+        .card:nth-child(6) { animation-delay: 0.40s; }
+
+        /* Card accent strip */
+        .card-strip {
+            height: 5px;
+            width: 100%;
+        }
+        .strip-pdf   { background: linear-gradient(90deg, #e53935, #ef9a9a); }
+        .strip-pptx  { background: linear-gradient(90deg, #F97316, #FED7AA); }
+        .strip-docx  { background: linear-gradient(90deg, #2563EB, #BFDBFE); }
+        .strip-image { background: linear-gradient(90deg, #059669, #A7F3D0); }
+        .strip-video { background: linear-gradient(90deg, #7C3AED, #DDD6FE); }
+
+        .card-body {
+            padding: 1.4rem 1.4rem 1rem;
+            flex: 1;
+        }
+
+        /* Student info row */
+        .student-row {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .avatar {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .avatar-1 { background: linear-gradient(135deg, #8C1D40, #C84060); }
+        .avatar-2 { background: linear-gradient(135deg, #0891B2, #06B6D4); }
+        .avatar-3 { background: linear-gradient(135deg, #7C3AED, #A78BFA); }
+        .avatar-4 { background: linear-gradient(135deg, #059669, #34D399); }
+        .avatar-5 { background: linear-gradient(135deg, #EA580C, #FB923C); }
+        .avatar-6 { background: linear-gradient(135deg, #0F766E, #2DD4BF); }
+
+        .avatar-badge {
+            position: absolute;
+            bottom: -2px; right: -2px;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--card-bg);
+            font-size: 0.55rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .badge-approved { background: #78BE20; }
+        .badge-pending  { background: #FFC627; }
+        .badge-review   { background: #00A3E0; }
+
+        .student-info {}
+        .student-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+        .student-meta {
+            font-size: 0.78rem;
+            color: var(--text-sub);
+            margin-top: 0.15rem;
+        }
+
+        /* File info */
+        .file-block {
+            background: color-mix(in srgb, var(--primary) 5%, transparent);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+        .card:hover .file-block {
+            border-color: var(--primary);
+            background: color-mix(in srgb, var(--primary) 8%, transparent);
+        }
+        body.dark-mode .file-block {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .file-icon {
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .icon-pdf   { background: rgba(229,57,53,0.12);  color: #e53935; }
+        .icon-pptx  { background: rgba(249,115,22,0.12); color: #F97316; }
+        .icon-docx  { background: rgba(37,99,235,0.12);  color: #2563EB; }
+        .icon-image { background: rgba(5,150,105,0.12);  color: #059669; }
+        .icon-video { background: rgba(124,58,237,0.12); color: #7C3AED; }
+
+        .file-details { min-width: 0; flex: 1; }
+        .file-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .file-size {
+            font-size: 0.74rem;
+            color: var(--text-sub);
+            margin-top: 0.1rem;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.28rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .status-approved { background: rgba(120,190,32,0.12);  color: #5a9c0a; border: 1px solid rgba(120,190,32,0.3); }
+        .status-pending  { background: rgba(255,198,39,0.15);  color: #a07800; border: 1px solid rgba(255,198,39,0.4); }
+        .status-review   { background: rgba(0,163,224,0.12);   color: #0076a8; border: 1px solid rgba(0,163,224,0.3); }
+        body.dark-mode .status-approved { color: #78BE20; }
+        body.dark-mode .status-pending  { color: #FFC627; }
+        body.dark-mode .status-review   { color: #00A3E0; }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .submitted-date {
+            font-size: 0.74rem;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Card footer */
+        .card-footer {
+            padding: 0.9rem 1.4rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .btn-view {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .btn-view:hover {
+            background: color-mix(in srgb, var(--primary) 85%, black);
+            transform: translateY(-1px);
+        }
+
+        .btn-action {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            background: var(--body-bg);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            color: var(--text-sub);
+        }
+        .btn-action:hover {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: var(--dark);
+        }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-sub);
+            display: none;
+        }
+        .empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+        .empty-state h3 { font-size: 1.1rem; color: var(--dark); margin-bottom: 0.4rem; }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--dark);
+            color: var(--light);
+            padding: 0.75rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex; align-items: center; gap: 0.5rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 9999;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .page-hero { flex-direction: column; align-items: flex-start; }
+            .submissions-grid { grid-template-columns: 1fr; }
+            .header-content { gap: 0.75rem; }
+            .btn-header span.label { display: none; }
+        }
+
+        /* ── Footer (imported from index.html) ── */
+        footer {
+            background: color-mix(in srgb, var(--primary) 95%, black);
+            color: rgba(255,255,255,0.8);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.82rem;
+            position: relative;
+            z-index: 1;
+        }
+        footer a { color: var(--secondary); text-decoration: none; }
+        footer .copyright { margin-top: 0.4rem; opacity: 0.55; font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+
+    <!-- ══ HEADER ══ -->
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">📚</div>
+                <div class="logo-text">
+                    <h1>ASU E-Library Hub</h1>
+                    <span>Student Submissions Board</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="index.html" class="btn-header">← <span class="label">Back to Home</span></a>
+                <button class="btn-header accent" onclick="openSubmitModal()">＋ <span class="label">New Submission</span></button>
+                <button class="btn-header" id="darkToggle" onclick="toggleDark()">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ══ MAIN ══ -->
+    <main class="page-wrap">
+
+        <!-- Page Hero -->
+        <div class="page-hero">
+            <div class="page-hero-text">
+                <div class="hero-eyebrow">📋 Campus Display Board</div>
+                <h2>Student <span>Submissions</span></h2>
+                <p>Manage PDRs, presentations, and documents scheduled for the campus screen.</p>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-pill">
+                    <span class="num">6</span>
+                    <span class="lbl">Total</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="num">2</span>
+                    <span class="lbl">Approved</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="num">3</span>
+                    <span class="lbl">Pending</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="num">1</span>
+                    <span class="lbl">In Review</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-bar">
+            <button class="filter-tab active" data-filter="all" onclick="filterCards(this,'all')">
+                All <span class="filter-count">6</span>
+            </button>
+            <button class="filter-tab" data-filter="approved" onclick="filterCards(this,'approved')">
+                ✅ Approved <span class="filter-count">2</span>
+            </button>
+            <button class="filter-tab" data-filter="pending" onclick="filterCards(this,'pending')">
+                ⏳ Pending <span class="filter-count">3</span>
+            </button>
+            <button class="filter-tab" data-filter="review" onclick="filterCards(this,'review')">
+                🔍 In Review <span class="filter-count">1</span>
+            </button>
+        </div>
+
+        <!-- Submissions Grid -->
+        <div class="submissions-grid" id="submissionsGrid">
+
+            <!-- ── Card 1 ── -->
+            <div class="card" data-status="approved">
+                <div class="card-strip strip-pdf"></div>
+                <div class="card-body">
+                    <div class="student-row">
+                        <div class="avatar avatar-1">
+                            AH
+                            <span class="avatar-badge badge-approved" title="Approved">✓</span>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name">Ahmed Hassan</div>
+                            <div class="student-meta">ID: 1234567 · Computer Science</div>
+                        </div>
+                    </div>
+
+                    <div class="file-block">
+                        <div class="file-icon icon-pdf">📄</div>
+                        <div class="file-details">
+                            <div class="file-name">PDR_AhmedHassan_CS401.pdf</div>
+                            <div class="file-size">PDF Document · 2.4 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="card-meta">
+                        <span class="status-badge status-approved">✅ Approved</span>
+                        <span class="submitted-date">🕐 Jan 14, 2026</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-view" onclick="viewFile(event,'Ahmed Hassan')">👁 View File</a>
+                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
+                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
+                </div>
+            </div>
+
+            <!-- ── Card 2 ── -->
+            <div class="card" data-status="pending">
+                <div class="card-strip strip-pptx"></div>
+                <div class="card-body">
+                    <div class="student-row">
+                        <div class="avatar avatar-2">
+                            SR
+                            <span class="avatar-badge badge-pending" title="Pending"></span>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name">Sara Rashid</div>
+                            <div class="student-meta">ID: 2345678 · Business Admin</div>
+                        </div>
+                    </div>
+
+                    <div class="file-block">
+                        <div class="file-icon icon-pptx">📊</div>
+                        <div class="file-details">
+                            <div class="file-name">Capstone_Presentation_Sara.pptx</div>
+                            <div class="file-size">PowerPoint · 8.1 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="card-meta">
+                        <span class="status-badge status-pending">⏳ Pending</span>
+                        <span class="submitted-date">🕐 Jan 18, 2026</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-view" onclick="viewFile(event,'Sara Rashid')">👁 View File</a>
+                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
+                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
+                </div>
+            </div>
+
+            <!-- ── Card 3 ── -->
+            <div class="card" data-status="review">
+                <div class="card-strip strip-docx"></div>
+                <div class="card-body">
+                    <div class="student-row">
+                        <div class="avatar avatar-3">
+                            KM
+                            <span class="avatar-badge badge-review" title="In Review"></span>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name">Khalid Mohammed</div>
+                            <div class="student-meta">ID: 3456789 · Electrical Eng.</div>
+                        </div>
+                    </div>
+
+                    <div class="file-block">
+                        <div class="file-icon icon-docx">📝</div>
+                        <div class="file-details">
+                            <div class="file-name">Research_Report_EE502.docx</div>
+                            <div class="file-size">Word Document · 1.7 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="card-meta">
+                        <span class="status-badge status-review">🔍 In Review</span>
+                        <span class="submitted-date">🕐 Jan 22, 2026</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-view" onclick="viewFile(event,'Khalid Mohammed')">👁 View File</a>
+                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
+                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
+                </div>
+            </div>
+
+            <!-- ── Card 4 ── -->
+            <div class="card" data-status="approved">
+                <div class="card-strip strip-image"></div>
+                <div class="card-body">
+                    <div class="student-row">
+                        <div class="avatar avatar-4">
+                            LN
+                            <span class="avatar-badge badge-approved" title="Approved">✓</span>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name">Lina Nasser</div>
+                            <div class="student-meta">ID: 4567890 · Graphic Design</div>
+                        </div>
+                    </div>
+
+                    <div class="file-block">
+                        <div class="file-icon icon-image">🖼</div>
+                        <div class="file-details">
+                            <div class="file-name">DesignPortfolio_Lina_2026.pdf</div>
+                            <div class="file-size">PDF Document · 14.3 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="card-meta">
+                        <span class="status-badge status-approved">✅ Approved</span>
+                        <span class="submitted-date">🕐 Jan 25, 2026</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-view" onclick="viewFile(event,'Lina Nasser')">👁 View File</a>
+                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
+                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
+                </div>
+            </div>
+
+            <!-- ── Card 5 ── -->
+            <div class="card" data-status="pending">
+                <div class="card-strip strip-video"></div>
+                <div class="card-body">
+                    <div class="student-row">
+                        <div class="avatar avatar-5">
+                            OA
+                            <span class="avatar-badge badge-pending" title="Pending"></span>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name">Omar Al-Amin</div>
+                            <div class="student-meta">ID: 5678901 · Multimedia Arts</div>
+                        </div>
+                    </div>
+
+                    <div class="file-block">
+                        <div class="file-icon icon-video">🎞</div>
+                        <div class="file-details">
+                            <div class="file-name">Showcase_Video_Omar.pptx</div>
+                            <div class="file-size">PowerPoint · 22.6 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="card-meta">
+                        <span class="status-badge status-pending">⏳ Pending</span>
+                        <span class="submitted-date">🕐 Jan 29, 2026</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-view" onclick="viewFile(event,'Omar Al-Amin')">👁 View File</a>
+                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
+                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
+                </div>
+            </div>
+
+        <!-- ── Card 6 ── -->
+            <div class="card" data-status="pending">
+                <div class="card-strip strip-pdf"></div>
+                <div class="card-body">
+                    <div class="student-row">
+                        <div class="avatar avatar-6">
+                            Q
+                            <span class="avatar-badge badge-pending" title="Pending"></span>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name">Qusai</div>
+                            <div class="student-meta">Presentation · Google Drive</div>
+                        </div>
+                    </div>
+
+                    <div class="file-block">
+                        <div class="file-icon icon-pdf">📄</div>
+                        <div class="file-details">
+                            <div class="file-name">Educational AI Uses for Students.pdf</div>
+                            <div class="file-size">PDF Document · Google Drive</div>
+                        </div>
+                    </div>
+
+                    <div class="card-meta">
+                        <span class="status-badge status-pending">⏳ Pending</span>
+                        <span class="submitted-date">🕐 Apr 6, 2026</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://drive.google.com/file/d/19DEjAY3UaM-WOtHq2hWhhZcjT_YS7Nxt/view" class="btn-view" target="_blank">👁 View File</a>
+                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
+                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
+                </div>
+            </div>
+
+        </div><!-- /grid -->
+
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">📭</div>
+            <h3>No submissions found</h3>
+            <p>Try selecting a different filter.</p>
+        </div>
+
+    </main>
+
+    <!-- ══ FOOTER (imported from index.html) ══ -->
+    <footer>
+        <div>
+            <a href="index.html">Home</a> &nbsp;·&nbsp;
+            <a href="#">Submit File</a> &nbsp;·&nbsp;
+            <a href="#">Contact Library</a>
+        </div>
+        <div class="copyright">© 2026 ASU E-Library Hub. All rights reserved.</div>
+    </footer>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">📋 <span id="toastMsg">Copied!</span></div>
+
+    <script>
+        // ── Dark Mode (imported logic from index.html) ──
+        const darkToggle = document.getElementById('darkToggle');
+
+        function toggleDark() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            darkToggle.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+        }
+
+        // Load saved preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkToggle.textContent = '☀️';
+        }
+
+        // ── Filter cards ──
+        function filterCards(btn, status) {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cards = document.querySelectorAll('.card');
+            let visible = 0;
+            cards.forEach(card => {
+                const match = status === 'all' || card.dataset.status === status;
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+
+            document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+        }
+
+        // ── Toast ──
+        let toastTimer;
+        function toast(msg) {
+            const el = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            el.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+        }
+
+        // ── View File (placeholder) ──
+        function viewFile(e, name) {
+            e.preventDefault();
+            toast(`Opening ${name}'s file…`);
+        }
+
+        // ── Submit modal placeholder ──
+        function openSubmitModal() {
+            toast('Submission form coming soon!');
+        }
+    </script>
+</body>
+</html>
