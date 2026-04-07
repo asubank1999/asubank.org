@@ -604,8 +604,8 @@
                 </div>
             </div>
             <div class="header-actions">
-                <a href="index.html" class="btn-header">← <span class="label">Back to Home</span></a>
-                <button class="btn-header accent" onclick="openSubmitModal()">＋ <span class="label">New Submission</span></button>
+                <a href="/index" class="btn-header">← <span class="label">Back to Home</span></a>
+                <button class="btn-header accent" onclick="window.location.href='/gupload'">＋ <span class="label">New Submission</span></button>
                 <button class="btn-header" id="darkToggle" onclick="toggleDark()">🌙</button>
             </div>
         </div>
@@ -624,19 +624,19 @@
 
             <div class="stats-row">
                 <div class="stat-pill">
-                    <span class="num">6</span>
+                    <span class="num">2</span>
                     <span class="lbl">Total</span>
                 </div>
                 <div class="stat-pill">
-                    <span class="num">2</span>
+                    <span class="num">1</span>
                     <span class="lbl">Approved</span>
                 </div>
                 <div class="stat-pill">
-                    <span class="num">3</span>
+                    <span class="num">1</span>
                     <span class="lbl">Pending</span>
                 </div>
                 <div class="stat-pill">
-                    <span class="num">1</span>
+                    <span class="num">0</span>
                     <span class="lbl">In Review</span>
                 </div>
             </div>
@@ -645,198 +645,23 @@
         <!-- Filter Tabs -->
         <div class="filter-bar">
             <button class="filter-tab active" data-filter="all" onclick="filterCards(this,'all')">
-                All <span class="filter-count">6</span>
+                All <span class="filter-count">2</span>
             </button>
             <button class="filter-tab" data-filter="approved" onclick="filterCards(this,'approved')">
-                ✅ Approved <span class="filter-count">2</span>
+                ✅ Approved <span class="filter-count">1</span>
             </button>
             <button class="filter-tab" data-filter="pending" onclick="filterCards(this,'pending')">
-                ⏳ Pending <span class="filter-count">3</span>
+                ⏳ Pending <span class="filter-count">1</span>
             </button>
             <button class="filter-tab" data-filter="review" onclick="filterCards(this,'review')">
-                🔍 In Review <span class="filter-count">1</span>
+                🔍 In Review <span class="filter-count">0</span>
             </button>
         </div>
 
         <!-- Submissions Grid -->
         <div class="submissions-grid" id="submissionsGrid">
 
-            <!-- ── Card 1 ── -->
-            <div class="card" data-status="approved">
-                <div class="card-strip strip-pdf"></div>
-                <div class="card-body">
-                    <div class="student-row">
-                        <div class="avatar avatar-1">
-                            AH
-                            <span class="avatar-badge badge-approved" title="Approved">✓</span>
-                        </div>
-                        <div class="student-info">
-                            <div class="student-name">Ahmed Hassan</div>
-                            <div class="student-meta">ID: 1234567 · Computer Science</div>
-                        </div>
-                    </div>
-
-                    <div class="file-block">
-                        <div class="file-icon icon-pdf">📄</div>
-                        <div class="file-details">
-                            <div class="file-name">PDR_AhmedHassan_CS401.pdf</div>
-                            <div class="file-size">PDF Document · 2.4 MB</div>
-                        </div>
-                    </div>
-
-                    <div class="card-meta">
-                        <span class="status-badge status-approved">✅ Approved</span>
-                        <span class="submitted-date">🕐 Jan 14, 2026</span>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn-view" onclick="viewFile(event,'Ahmed Hassan')">👁 View File</a>
-                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
-                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
-                </div>
-            </div>
-
-            <!-- ── Card 2 ── -->
-            <div class="card" data-status="pending">
-                <div class="card-strip strip-pptx"></div>
-                <div class="card-body">
-                    <div class="student-row">
-                        <div class="avatar avatar-2">
-                            SR
-                            <span class="avatar-badge badge-pending" title="Pending"></span>
-                        </div>
-                        <div class="student-info">
-                            <div class="student-name">Sara Rashid</div>
-                            <div class="student-meta">ID: 2345678 · Business Admin</div>
-                        </div>
-                    </div>
-
-                    <div class="file-block">
-                        <div class="file-icon icon-pptx">📊</div>
-                        <div class="file-details">
-                            <div class="file-name">Capstone_Presentation_Sara.pptx</div>
-                            <div class="file-size">PowerPoint · 8.1 MB</div>
-                        </div>
-                    </div>
-
-                    <div class="card-meta">
-                        <span class="status-badge status-pending">⏳ Pending</span>
-                        <span class="submitted-date">🕐 Jan 18, 2026</span>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn-view" onclick="viewFile(event,'Sara Rashid')">👁 View File</a>
-                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
-                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
-                </div>
-            </div>
-
-            <!-- ── Card 3 ── -->
-            <div class="card" data-status="review">
-                <div class="card-strip strip-docx"></div>
-                <div class="card-body">
-                    <div class="student-row">
-                        <div class="avatar avatar-3">
-                            KM
-                            <span class="avatar-badge badge-review" title="In Review"></span>
-                        </div>
-                        <div class="student-info">
-                            <div class="student-name">Khalid Mohammed</div>
-                            <div class="student-meta">ID: 3456789 · Electrical Eng.</div>
-                        </div>
-                    </div>
-
-                    <div class="file-block">
-                        <div class="file-icon icon-docx">📝</div>
-                        <div class="file-details">
-                            <div class="file-name">Research_Report_EE502.docx</div>
-                            <div class="file-size">Word Document · 1.7 MB</div>
-                        </div>
-                    </div>
-
-                    <div class="card-meta">
-                        <span class="status-badge status-review">🔍 In Review</span>
-                        <span class="submitted-date">🕐 Jan 22, 2026</span>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn-view" onclick="viewFile(event,'Khalid Mohammed')">👁 View File</a>
-                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
-                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
-                </div>
-            </div>
-
-            <!-- ── Card 4 ── -->
-            <div class="card" data-status="approved">
-                <div class="card-strip strip-image"></div>
-                <div class="card-body">
-                    <div class="student-row">
-                        <div class="avatar avatar-4">
-                            LN
-                            <span class="avatar-badge badge-approved" title="Approved">✓</span>
-                        </div>
-                        <div class="student-info">
-                            <div class="student-name">Lina Nasser</div>
-                            <div class="student-meta">ID: 4567890 · Graphic Design</div>
-                        </div>
-                    </div>
-
-                    <div class="file-block">
-                        <div class="file-icon icon-image">🖼</div>
-                        <div class="file-details">
-                            <div class="file-name">DesignPortfolio_Lina_2026.pdf</div>
-                            <div class="file-size">PDF Document · 14.3 MB</div>
-                        </div>
-                    </div>
-
-                    <div class="card-meta">
-                        <span class="status-badge status-approved">✅ Approved</span>
-                        <span class="submitted-date">🕐 Jan 25, 2026</span>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn-view" onclick="viewFile(event,'Lina Nasser')">👁 View File</a>
-                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
-                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
-                </div>
-            </div>
-
-            <!-- ── Card 5 ── -->
-            <div class="card" data-status="pending">
-                <div class="card-strip strip-video"></div>
-                <div class="card-body">
-                    <div class="student-row">
-                        <div class="avatar avatar-5">
-                            OA
-                            <span class="avatar-badge badge-pending" title="Pending"></span>
-                        </div>
-                        <div class="student-info">
-                            <div class="student-name">Omar Al-Amin</div>
-                            <div class="student-meta">ID: 5678901 · Multimedia Arts</div>
-                        </div>
-                    </div>
-
-                    <div class="file-block">
-                        <div class="file-icon icon-video">🎞</div>
-                        <div class="file-details">
-                            <div class="file-name">Showcase_Video_Omar.pptx</div>
-                            <div class="file-size">PowerPoint · 22.6 MB</div>
-                        </div>
-                    </div>
-
-                    <div class="card-meta">
-                        <span class="status-badge status-pending">⏳ Pending</span>
-                        <span class="submitted-date">🕐 Jan 29, 2026</span>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn-view" onclick="viewFile(event,'Omar Al-Amin')">👁 View File</a>
-                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
-                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
-                </div>
-            </div>
-
-        <!-- ── Card 6 ── -->
+            <!-- ── Card 1 – Qusai ── -->
             <div class="card" data-status="pending">
                 <div class="card-strip strip-pdf"></div>
                 <div class="card-body">
@@ -866,8 +691,43 @@
                 </div>
                 <div class="card-footer">
                     <a href="https://drive.google.com/file/d/19DEjAY3UaM-WOtHq2hWhhZcjT_YS7Nxt/view" class="btn-view" target="_blank">👁 View File</a>
-                    <button class="btn-action" title="Download" onclick="toast('Downloading file…')">⬇</button>
-                    <button class="btn-action" title="Share" onclick="toast('Link copied!')">🔗</button>
+                    <a href="https://drive.google.com/uc?export=download&id=19DEjAY3UaM-WOtHq2hWhhZcjT_YS7Nxt" class="btn-action" title="Download" target="_blank" onclick="toast('Downloading file…')">⬇</a>
+                    <button class="btn-action" title="Copy Link" onclick="copyLink('https://drive.google.com/file/d/19DEjAY3UaM-WOtHq2hWhhZcjT_YS7Nxt/view')">🔗</button>
+                </div>
+            </div>
+
+            <!-- ── Card 2 – Unnamed Student ── -->
+            <div class="card" data-status="approved">
+                <div class="card-strip strip-pdf"></div>
+                <div class="card-body">
+                    <div class="student-row">
+                        <div class="avatar avatar-1">
+                            ?
+                            <span class="avatar-badge badge-approved" title="Approved">✓</span>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name">Unnamed Student</div>
+                            <div class="student-meta">PDF · Google Drive</div>
+                        </div>
+                    </div>
+
+                    <div class="file-block">
+                        <div class="file-icon icon-pdf">📄</div>
+                        <div class="file-details">
+                            <div class="file-name">الفصل الثالث (أساسيات تسعير الخيارات).pdf</div>
+                            <div class="file-size">PDF Document · Google Drive</div>
+                        </div>
+                    </div>
+
+                    <div class="card-meta">
+                        <span class="status-badge status-approved">✅ Approved</span>
+                        <span class="submitted-date">🕐 Apr 7, 2026</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://drive.google.com/file/d/1Yug16iFXUPTsyIFfITn7EvqmbZky7TyT/view?usp=drive_link" class="btn-view" target="_blank">👁 View File</a>
+                    <a href="https://drive.google.com/uc?export=download&id=1Yug16iFXUPTsyIFfITn7EvqmbZky7TyT" class="btn-action" title="Download" target="_blank" onclick="toast('Downloading file…')">⬇</a>
+                    <button class="btn-action" title="Copy Link" onclick="copyLink('https://drive.google.com/file/d/1Yug16iFXUPTsyIFfITn7EvqmbZky7TyT/view?usp=drive_link')">🔗</button>
                 </div>
             </div>
 
@@ -884,9 +744,9 @@
     <!-- ══ FOOTER (imported from index.html) ══ -->
     <footer>
         <div>
-            <a href="index.html">Home</a> &nbsp;·&nbsp;
-            <a href="#">Submit File</a> &nbsp;·&nbsp;
-            <a href="#">Contact Library</a>
+            <a href="/index">Home</a> &nbsp;·&nbsp;
+            <a href="/gupload">Submit File</a> &nbsp;·&nbsp;
+            <a href="WHATSAPP_PLACEHOLDER" id="whatsappLink">Contact Library</a>
         </div>
         <div class="copyright">© 2026 ASU E-Library Hub. All rights reserved.</div>
     </footer>
@@ -937,15 +797,26 @@
             toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
         }
 
+        // ── Copy Link ──
+        function copyLink(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                toast('📎 Link copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const ta = document.createElement('textarea');
+                ta.value = url;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                toast('📎 Link copied to clipboard!');
+            });
+        }
+
         // ── View File (placeholder) ──
         function viewFile(e, name) {
             e.preventDefault();
             toast(`Opening ${name}'s file…`);
-        }
-
-        // ── Submit modal placeholder ──
-        function openSubmitModal() {
-            toast('Submission form coming soon!');
         }
     </script>
 </body>
