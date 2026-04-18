@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library 12312025</title>
+    <title>E-Library</title>
     <meta name="google-adsense-account" content="ca-pub-7033538324685491">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="favicon2.ico" type="image/x-icon">
@@ -514,9 +514,6 @@
                         <a href="links">
                             <span>🔗</span> Useful Links
                         </a>
-                        <a href="home">
-                            <span>🏛️</span> Old ASU XYZ Style
-                        </a>
                         <div class="theme-selector">
                             <button id="theme-toggle" class="theme-toggle">
                                 <span>🎨</span> Themes
@@ -552,27 +549,269 @@
 
 
 
-    <main>
-<!-- Event Gallery -->
-<section class="priority-section">
-    <h2 class="section-title">
-        <span>📸</span> Event Gallery
-    </h2>
-    
-    <div class="card-grid">
-        <a href="gallery" class="subject-card priority">
-            <h3>
-                <span>🎉</span> Campus Event Photos
-            </h3>
-            <p>Explore memorable moments captured during university events</p>
-            <p class="arabic-translation">استعرض صور الفعاليات داخل الحرم الجامعي</p>
-            <div class="free-badge">Captured by QUSAI</div>
-            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
-                A curated collection of photos taken by our photographer QUSAI, showcasing highlights, activities, and unforgettable moments from events held across the university campus.
-            </p>
-        </a>
+<main>
+<!-- ══════════════════════════════════════════════
+     UPDATE ANNOUNCEMENT BANNER — paste anywhere
+     near the top of <main>, auto-dismisses in 5s
+     ══════════════════════════════════════════════ -->
+
+<style>
+    #updateBanner {
+        position: relative;
+        z-index: 999;
+        margin: 1rem 1rem 0;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #0f766e 0%, #0369a1 60%, #1d4ed8 100%);
+        box-shadow: 0 6px 28px rgba(3, 105, 161, 0.35), 0 2px 8px rgba(0,0,0,0.15);
+        overflow: hidden;
+        animation: bannerSlideIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        transition: opacity 0.55s ease, transform 0.55s ease, max-height 0.55s ease, margin 0.55s ease, padding 0.55s ease;
+    }
+
+    #updateBanner.hide {
+        opacity: 0;
+        transform: translateY(-14px);
+        max-height: 0 !important;
+        margin-top: 0;
+        margin-bottom: 0;
+        pointer-events: none;
+    }
+
+    @keyframes bannerSlideIn {
+        from { opacity: 0; transform: translateY(-18px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Animated shimmer overlay */
+    #updateBanner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            105deg,
+            transparent 30%,
+            rgba(255,255,255,0.07) 50%,
+            transparent 70%
+        );
+        background-size: 250% 100%;
+        animation: shimmer 2.4s infinite linear;
+        pointer-events: none;
+        border-radius: inherit;
+    }
+    @keyframes shimmer {
+        0%   { background-position: 200% center; }
+        100% { background-position: -200% center; }
+    }
+
+    .banner-inner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.2rem;
+        flex-wrap: wrap;
+    }
+
+    .banner-icon-wrap {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.22);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.45rem;
+        flex-shrink: 0;
+        backdrop-filter: blur(6px);
+    }
+
+    .banner-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .banner-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #ffffff;
+        letter-spacing: 0.01em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.28rem;
+    }
+
+    .banner-tag {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        color: #e0f2fe;
+        padding: 0.15rem 0.55rem;
+        border-radius: 50px;
+    }
+
+    .banner-body {
+        font-size: 0.82rem;
+        color: rgba(255,255,255,0.85);
+        line-height: 1.55;
+    }
+
+    .banner-body strong {
+        color: #bfdbfe;
+    }
+
+    .banner-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.4rem;
+        flex-shrink: 0;
+    }
+
+    .banner-close {
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: rgba(255,255,255,0.7);
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, color 0.2s;
+        line-height: 1;
+        padding: 0;
+    }
+    .banner-close:hover {
+        background: rgba(255,255,255,0.25);
+        color: white;
+    }
+
+    /* Countdown ring */
+    .banner-timer {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.7rem;
+        color: rgba(255,255,255,0.55);
+        white-space: nowrap;
+    }
+    .timer-ring {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+    }
+    .timer-ring circle {
+        fill: none;
+        stroke-width: 2.5;
+    }
+    .timer-track  { stroke: rgba(255,255,255,0.15); }
+    .timer-fill   {
+        stroke: rgba(255,255,255,0.65);
+        stroke-linecap: round;
+        stroke-dasharray: 44;
+        stroke-dashoffset: 0;
+        transform-origin: center;
+        transform: rotate(-90deg);
+        animation: countdown 10s linear forwards;
+    }
+    @keyframes countdown {
+        from { stroke-dashoffset: 0; }
+        to   { stroke-dashoffset: 44; }
+    }
+
+    @media (max-width: 520px) {
+        #updateBanner { margin: 0.75rem 0.5rem 0; border-radius: 12px; }
+        .banner-inner { padding: 0.85rem 1rem; gap: 0.75rem; }
+        .banner-body  { font-size: 0.78rem; }
+    }
+</style>
+
+<div id="updateBanner" role="status" aria-live="polite">
+    <div class="banner-inner">
+
+        <div class="banner-icon-wrap">🚀</div>
+
+        <div class="banner-text">
+            <div class="banner-title">
+                Platform Update
+                <span class="banner-tag">✨ What's New</span>
+            </div>
+            <div class="banner-body">
+                We've <strong>added new materials</strong>, introduced the
+                <strong>Search Tutorial</strong> page, fixed the Ramadan section,
+                and improved how you find resources — all to make your experience faster &amp; easier.
+            </div>
+        </div>
+
+        <div class="banner-right">
+            <button class="banner-close" onclick="dismissBanner()" aria-label="Dismiss">✕</button>
+            <div class="banner-timer">
+                <svg class="timer-ring" viewBox="0 0 18 18">
+                    <circle class="timer-track" cx="9" cy="9" r="7"/>
+                    <circle class="timer-fill"  cx="9" cy="9" r="7"/>
+                </svg>
+                auto-closing
+            </div>
+        </div>
+
     </div>
-</section>
+</div>
+
+<script>
+    (function () {
+        var banner = document.getElementById('updateBanner');
+        var timer  = setTimeout(dismissBanner, 10000);
+
+        function dismissBanner() {
+            clearTimeout(timer);
+            banner.classList.add('hide');
+            // Remove from layout after transition ends
+            banner.addEventListener('transitionend', function () {
+                banner.style.display = 'none';
+            }, { once: true });
+        }
+
+        // Expose to inline onclick too
+        window.dismissBanner = dismissBanner;
+    })();
+</script>
+        <!-- ══ WhatsApp Community — near top so every visitor sees it ══ -->
+        <div style="text-align: center; margin: 1.2rem 0 0.5rem;">
+            <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" class="whatsapp-btn" target="_blank">
+                <span>💬</span> Join Our WhatsApp Community
+                <span style="font-size: 0.8rem; margin-left: 5px;">(انضم إلى مجتمعنا)</span>
+            </a>
+        </div>
+
+        <!-- Event Gallery -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>📸</span> Event Gallery
+            </h2>
+            
+            <div class="card-grid">
+                <a href="gallery" class="subject-card priority">
+                    <h3>
+                        <span>🎉</span> Campus Event Photos
+                    </h3>
+                    <p>Explore memorable moments captured during university events</p>
+                    <p class="arabic-translation">استعرض صور الفعاليات داخل الحرم الجامعي</p>
+                    <div class="free-badge">Captured by QUSAI</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        A curated collection of photos taken by our photographer QUSAI, showcasing highlights, activities, and unforgettable moments from events held across the university campus.
+                    </p>
+                </a>
+            </div>
+        </section>
+
         <!-- MAIN resources -->
         <section class="priority-section">
             <h2 class="section-title">
@@ -588,11 +827,10 @@
                     <p>Latest study materials and resources [ ADVANCED ]</p>
                     <div class="free-badge">FREE SERVICE</div>
                     <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
-                        Latest uploaded PDF, DOCx, Midterms, Finals, Quiz ect..!
+                        Latest uploaded PDF, DOCx, Midterms, Finals, Quiz etc..!
                     </p>
                 </a>
 
-            <div class="card-grid">
                 <a href="search" class="subject-card priority">
                     <span class="card-badge">NEW</span>
                     <h3>
@@ -601,7 +839,21 @@
                     <p>Latest study materials and resources [ FAST SEARCH ]</p>
                     <div class="free-badge">FREE SERVICE</div>
                     <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
-                        Latest uploaded PDF, DOCx, Midterms, Finals, Quiz ect..!
+                        Latest uploaded PDF, DOCx, Midterms, Finals, Quiz etc..!
+                    </p>
+                </a>
+
+                <!-- ══ Tutorial page card ══ -->
+                <a href="tutorial" class="subject-card priority">
+                    <span class="card-badge">TIP</span>
+                    <h3>
+                        <span>🔍</span> How to Search Efficiently
+                    </h3>
+                    <p>Learn the fastest way to find any material on the platform</p>
+                    <p class="arabic-translation">تعلّم كيف تبحث بسرعة وكفاءة</p>
+                    <div class="free-badge">FREE SERVICE</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        Step-by-step video tutorial covering three proven search methods — get your results faster and more accurately every time.
                     </p>
                 </a>
 
@@ -615,9 +867,6 @@
             </div>
         </section>
 
-
-	
-	
         <!-- Matcher Section -->
         <section class="priority-section">
             <h2 class="section-title">
@@ -637,21 +886,20 @@
                         Fill out your profile and we'll match you with classmates who share at least 50% compatibility. Once matched, you'll exchange contact information!
                     </p>
                 </a>
-					<a href="submissions" class="subject-card priority">
-   					 <span class="card-badge">SUBMISSIONS</span>
-   					<h3>
-    					    <span>📋</span> Student Submissions Board
-   					 </h3>
-   					 <p>Submit and manage files scheduled for the campus display screen</p>
-   					 <div class="free-badge">Open</div>
-   					 <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
-      					  Upload PDFs, presentations, and documents for review and approval
-  					  </p>
-					</a>
-					</div>
+
+                <a href="submissions" class="subject-card priority">
+                    <span class="card-badge">SUBMISSIONS</span>
+                    <h3>
+                        <span>📋</span> Student Submissions Board
+                    </h3>
+                    <p>Submit and manage files scheduled for the campus display screen</p>
+                    <div class="free-badge">Open</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        Upload PDFs, presentations, and documents for review and approval
+                    </p>
+                </a>
+            </div>
         </section>
-
-
 
         <!-- Rating Section -->
         <section class="priority-section">
@@ -674,71 +922,71 @@
             </div>
         </section>
 
-<!--  Private PDFs  -->
-<section class="priority-section">
-    <h2 class="section-title">
-        <span>📘</span> 3 PDFs
-    </h2>
-    
-    <div class="card-grid">
-<a 
-  href="https://drive.google.com/drive/folders/122Cjtd7s0jlJlkqMrD2_NmqOFE1ir91h"
-  class="subject-card priority"
-  target="_blank"
-  rel="noopener noreferrer"
->
-            <h3>
-                <span>🔓</span> Access Course PDFs
-            </h3>
-            <p>Entrepreneurship & Innovation | Leadership & Social Accountability | Life Skills</p>
-            <div class="locked-badge">Key is not Required</div>
-            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
-                ريادة الأعمال والابتكار | القيادة والمسؤولية الاجتماعية | مهارات الحياة
-            </p>
-        </a>
-    </div>
-</section>
+        <!-- Private PDFs -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>📘</span> 3 PDFs
+            </h2>
+            
+            <div class="card-grid">
+                <a 
+                    href="https://drive.google.com/drive/folders/122Cjtd7s0jlJlkqMrD2_NmqOFE1ir91h"
+                    class="subject-card priority"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <h3>
+                        <span>🔓</span> Access Course PDFs
+                    </h3>
+                    <p>Entrepreneurship & Innovation | Leadership & Social Accountability | Life Skills</p>
+                    <div class="locked-badge">Key is not Required</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        ريادة الأعمال والابتكار | القيادة والمسؤولية الاجتماعية | مهارات الحياة
+                    </p>
+                </a>
+            </div>
+        </section>
 
-<!--  Box 8: ASU Shortcuts -->
-<section class="priority-section">
-    <h2 class="section-title">
-        <span>🧮</span> ASU Portal Links
-    </h2>
+        <!-- ASU Portal Links -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>🧮</span> ASU Portal Links
+            </h2>
 
-        <a href="asu" class="subject-card free">
-            <h3>
-                <span>⚡</span> ASU Shortcuts
-            </h3>
-            <p>All-in-one access to your essential ASU tools and student services</p>
-            <div class="free-badge">Free Service</div>
-            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
-                Quickly reach everything you need:
-                My ASU, Edugate, Teams, Make PDF, Make Word, Make PowerPoint,
-                See Courses List, and Your Absence Record — all from one place.
-            </p>
-        </a>
-    </div>
-</section>
+            <div class="card-grid">
+                <a href="asu" class="subject-card free">
+                    <h3>
+                        <span>⚡</span> ASU Shortcuts
+                    </h3>
+                    <p>All-in-one access to your essential ASU tools and student services</p>
+                    <div class="free-badge">Free Service</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        Quickly reach everything you need:
+                        My ASU, Edugate, Teams, Make PDF, Make Word, Make PowerPoint,
+                        See Courses List, and Your Absence Record — all from one place.
+                    </p>
+                </a>
+            </div>
+        </section>
 
-<!--  Box 9: ASU Ramadan -->
-<section class="priority-section">
-    <h2 class="section-title">
-        <span>🌙</span> ASU Ramadan Schedule
-    </h2>
+        <!-- ASU Ramadan -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>🌙</span> ASU Ramadan Schedule
+            </h2>
 
-        <a href="ramadan_timetable" class="subject-card free">
-            <h3>
-                <span>⚡</span> ASU Shortcuts
-            </h3>
-            <p>ASU Ramadan Lecture Schedule</p>
-            <div class="free-badge">Free Service</div>
-            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
-            </p>
-        </a>
-    </div>
-</section>
+            <div class="card-grid">
+                <a href="ramadan_timetable" class="subject-card free">
+                    <h3>
+                        <span>🌙</span> View Ramadan Lecture Timetable
+                    </h3>
+                    <p>ASU Ramadan Lecture Schedule</p>
+                    <div class="free-badge">Free Service</div>
+                </a>
+            </div>
+        </section>
 
-        <!--  Groups  -->
+        <!-- Groups -->
         <section class="priority-section">
             <h2 class="section-title">
                 <span>🌐</span> WhatsApp Group Links
@@ -758,7 +1006,7 @@
             </div>
         </section>
 
-        <!--  Ads  -->
+        <!-- Ads -->
         <section class="priority-section">
             <h2 class="section-title">
                 <span>💼</span> Student Ads & Services
