@@ -225,7 +225,10 @@
             padding: 0.3rem 0.9rem;
             font-size: 0.82rem !important;
             color: var(--accent) !important;
-            max-width: fit-content !important;
+            max-width: 100% !important;
+            flex-wrap: wrap;
+            word-break: break-word;
+            line-height: 1.5;
         }
         .photographer-credit strong { color: var(--primary); }
 
@@ -679,33 +682,32 @@
                 <p class="photographer-credit">📷 All photos captured by <strong>Qusai</strong> — website administrator &amp; university volunteer.</p>
             </div>
             <div class="stats-row">
-                <div class="stat-pill"><span class="num">7</span><span class="lbl">Albums</span></div>
+                <div class="stat-pill"><span class="num">8</span><span class="lbl">Albums</span></div>
                 <div class="stat-pill"><span class="num">5</span><span class="lbl">Events</span></div>
             </div>
         </div>
 
         <!-- Filter Tabs -->
         <div class="filter-bar">
-            <button class="filter-tab active" onclick="filterAlbums(this,'all')">All <span class="filter-count">7</span></button>
-            <button class="filter-tab" onclick="filterAlbums(this,'exam')">📝 Exam <span class="filter-count">5</span></button>
-            <button class="filter-tab" onclick="filterAlbums(this,'volunteer')">🤝 Volunteer <span class="filter-count">1</span></button>
-            <button class="filter-tab" onclick="filterAlbums(this,'presentation')">🎤 Presentations <span class="filter-count">0</span></button>
-            <button class="filter-tab" onclick="filterAlbums(this,'career')">💼 Career <span class="filter-count">0</span></button>
-            <button class="filter-tab" onclick="filterAlbums(this,'ceremony')">🎓 Ceremony <span class="filter-count">1</span></button>
-            <button class="filter-tab" onclick="filterAlbums(this,'workshop')">🧪 Workshop <span class="filter-count">0</span></button>
-            <button class="filter-tab" onclick="filterAlbums(this,'social')">🎉 Social <span class="filter-count">0</span></button>
+            <button class="filter-tab active" data-category="all">All <span class="filter-count">8</span></button>
+            <button class="filter-tab" data-category="exam">📝 Exam <span class="filter-count">5</span></button>
+            <button class="filter-tab" data-category="volunteer">🤝 Volunteer <span class="filter-count">1</span></button>
+            <button class="filter-tab" data-category="presentation">🎤 Presentations <span class="filter-count">0</span></button>
+            <button class="filter-tab" data-category="career">💼 Career <span class="filter-count">0</span></button>
+            <button class="filter-tab" data-category="ceremony">🎓 Ceremony <span class="filter-count">2</span></button>
+            <button class="filter-tab" data-category="workshop">🧪 Workshop <span class="filter-count">0</span></button>
+            <button class="filter-tab" data-category="social">🎉 Social <span class="filter-count">0</span></button>
         </div>
 
         <div class="gallery-grid" id="galleryGrid">
 
-            <!-- 1. Promising Translator Exam (unchanged) -->
+            <!-- 1. Promising Translator Exam -->
             <div class="album-card" data-category="exam">
                 <div class="album-thumb" data-card-id="album1">
-                    <div class="thumb-placeholder">📸🎓<span>Exam Gallery</span></div>
+                    <img class="cover-img" src="IMG_6501.JPG" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
                     <span class="album-ribbon ribbon-exam">Exam Day</span>
                     <div class="photo-count-badge">📁 Full Collection</div>
                     <div class="thumb-overlay"><div class="overlay-btn">👁</div></div>
-                    <button class="edit-thumb-btn" onclick="event.stopPropagation(); editCardThumbnail(this)">🖼 Set Cover</button>
                 </div>
                 <div class="album-body">
                     <div class="album-title">Promising Translator Exam – All Photos (Edited & Raw)</div>
@@ -721,11 +723,10 @@
             <!-- 2. Phase 1 Exam RAW -->
             <div class="album-card" data-category="exam">
                 <div class="album-thumb" data-card-id="album2">
-                    <div class="thumb-placeholder">📸⚡<span>RAW Unedited</span></div>
+                    <img class="cover-img" src="IMG_6430.JPG" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
                     <span class="album-ribbon ribbon-exam">Raw Files</span>
                     <div class="photo-count-badge">📁 No Edit</div>
                     <div class="thumb-overlay"><div class="overlay-btn">👁</div></div>
-                    <button class="edit-thumb-btn" onclick="event.stopPropagation(); editCardThumbnail(this)">🖼 Set Cover</button>
                 </div>
                 <div class="album-body">
                     <div class="album-title">Phase 1 – Exam Testing Photos (RAW / Unedited)</div>
@@ -741,11 +742,10 @@
             <!-- 3. Volunteering Team (EDITED) -->
             <div class="album-card" data-category="volunteer">
                 <div class="album-thumb" data-card-id="album3">
-                    <div class="thumb-placeholder">🤝✨<span>Volunteer Team</span></div>
+                    <img class="cover-img" src="IMG_6522.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
                     <span class="album-ribbon ribbon-volunteer">Volunteering</span>
                     <div class="photo-count-badge">📁 Edited</div>
                     <div class="thumb-overlay"><div class="overlay-btn">👁</div></div>
-                    <button class="edit-thumb-btn" onclick="event.stopPropagation(); editCardThumbnail(this)">🖼 Set Cover</button>
                 </div>
                 <div class="album-body">
                     <div class="album-title">Edited Volunteering Team Photo – Campus (April 8)</div>
@@ -761,11 +761,10 @@
             <!-- 4. Graduation -->
             <div class="album-card" data-category="ceremony">
                 <div class="album-thumb" data-card-id="album4">
-                    <div class="thumb-placeholder">🎓📸<span>Graduation</span></div>
+                    <img class="cover-img" src="20260416_102702376_iOS.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
                     <span class="album-ribbon ribbon-ceremony">Graduation</span>
                     <div class="photo-count-badge">📁 Gallery</div>
                     <div class="thumb-overlay"><div class="overlay-btn">👁</div></div>
-                    <button class="edit-thumb-btn" onclick="event.stopPropagation(); editCardThumbnail(this)">🖼 Set Cover</button>
                 </div>
                 <div class="album-body">
                     <div class="album-title">Graduation Photos – 2nd Semester &amp; Summer | English Lit &amp; Translation<br><small style="font-size:0.8rem;">صور خريجي الفصل الثاني والصيفي</small></div>
@@ -778,14 +777,13 @@
                 </div>
             </div>
 
-            <!-- 5. Volunteer Students who helped the event (updated title) -->
+            <!-- 5. Volunteer Students -->
             <div class="album-card" data-category="exam">
                 <div class="album-thumb" data-card-id="album5">
-                    <div class="thumb-placeholder">📷🌟<span>Volunteer Heroes</span></div>
+                    <img class="cover-img" src="IMG_4935.JPG" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
                     <span class="album-ribbon ribbon-volunteer">Volunteers</span>
                     <div class="photo-count-badge">📁 Team</div>
                     <div class="thumb-overlay"><div class="overlay-btn">👁</div></div>
-                    <button class="edit-thumb-btn" onclick="event.stopPropagation(); editCardThumbnail(this)">🖼 Set Cover</button>
                 </div>
                 <div class="album-body">
                     <div class="album-title">✨ The Volunteer Students Who Helped the Event Become Successful ✨<br><small style="font-size:0.8rem;color:var(--text-sub);font-weight:400;">صور جانبية جزئية – فريق المتطوعين</small></div>
@@ -801,11 +799,10 @@
             <!-- 6. PT 2024 March -->
             <div class="album-card" data-category="exam">
                 <div class="album-thumb" data-card-id="album6">
-                    <div class="thumb-placeholder">📸🏆<span>PT 2024 Mar</span></div>
+                    <img class="cover-img" src="IMG_1467.JPG" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
                     <span class="album-ribbon ribbon-exam">PT 2024</span>
                     <div class="photo-count-badge">📁 March 2024</div>
                     <div class="thumb-overlay"><div class="overlay-btn">👁</div></div>
-                    <button class="edit-thumb-btn" onclick="event.stopPropagation(); editCardThumbnail(this)">🖼 Set Cover</button>
                 </div>
                 <div class="album-body">
                     <div class="album-title">Promising Translator 2024 – March</div>
@@ -821,11 +818,10 @@
             <!-- 7. PT 2024 Winners -->
             <div class="album-card" data-category="exam">
                 <div class="album-thumb" data-card-id="album7">
-                    <div class="thumb-placeholder">🏅🎉<span>Winners 2024</span></div>
+                    <img class="cover-img" src="IMG_1611.JPG" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
                     <span class="album-ribbon ribbon-exam">PT 2024 Winners</span>
                     <div class="photo-count-badge">📁 Students &amp; Winners</div>
                     <div class="thumb-overlay"><div class="overlay-btn">👁</div></div>
-                    <button class="edit-thumb-btn" onclick="event.stopPropagation(); editCardThumbnail(this)">🖼 Set Cover</button>
                 </div>
                 <div class="album-body">
                     <div class="album-title">Promising Translator 2024 – Students &amp; Winners Photos at ASU</div>
@@ -838,6 +834,25 @@
                 </div>
             </div>
 
+            <!-- 8. Graduation Photo Day on Campus (Shams Photographer) -->
+            <div class="album-card" data-category="ceremony">
+                <div class="album-thumb" data-card-id="album8">
+                    <img class="cover-img" src="SHAMS PHOTOGRAPHER ( EDIT ) (4).jpeg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
+                    <span class="album-ribbon ribbon-ceremony">Graduation Day</span>
+                    <div class="photo-count-badge">📁 Edited Photos</div>
+                    <div class="thumb-overlay"><div class="overlay-btn">👁</div></div>
+                </div>
+                <div class="album-body">
+                    <div class="album-title">Graduation Photo Day on Campus</div>
+                    <div class="album-meta-row"><span class="album-meta-item">📅 2026</span><span class="meta-dot"></span><span class="album-meta-item">📍 ASU Campus</span></div>
+                    <p class="album-desc">Professional photos taken by Shams Photography and edited by their team. These are edited images only — RAW files were not provided, as the photographer on this occasion was not Qusai (who typically shares RAW photos at no cost for university activities).</p>
+                </div>
+                <div class="album-footer">
+                    <a href="https://asuedujo-my.sharepoint.com/:f:/g/personal/202120132_students_asu_edu_jo/IgAmci1URQ04TpOzEWjSlf0kAdnggRjVj2hBDAm-Ux6krAs?e=QVhNPU" class="btn-view-album" target="_blank">🖼 Open SharePoint Album</a>
+                    <button class="btn-action" onclick="copyLink('https://asuedujo-my.sharepoint.com/:f:/g/personal/202120132_students_asu_edu_jo/IgAmci1URQ04TpOzEWjSlf0kAdnggRjVj2hBDAm-Ux6krAs?e=QVhNPU')">🔗</button>
+                </div>
+            </div>
+
         </div>
 
         <div class="empty-state" id="emptyState">
@@ -846,7 +861,7 @@
             <p>Try selecting a different category.</p>
         </div>
 
-        <!-- NEW: Photo Session Promo Footer (booking) -->
+        <!-- Photo Session Promo Footer -->
         <div class="photo-session-promo">
             <div class="promo-text">
                 <h3>📸 Book a Creative Photo Session</h3>
@@ -865,121 +880,70 @@
     <div class="toast" id="toast">📋 <span id="toastMsg"></span></div>
 
     <script>
-        // Dark mode
-        const darkToggle = document.getElementById('darkToggle');
-        function toggleDark() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            darkToggle.textContent = isDark ? '☀️' : '🌙';
-            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-        }
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            darkToggle.textContent = '☀️';
-        }
+    // ── Dark mode ────────────────────────────────────────────────────
+    const darkToggle = document.getElementById('darkToggle');
+    function toggleDark() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        darkToggle.textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+    }
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+        darkToggle.textContent = '☀️';
+    }
 
-        function filterAlbums(btn, category) {
-            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-            const cards = document.querySelectorAll('.album-card');
-            let visible = 0;
-            cards.forEach(card => {
-                const match = category === 'all' || card.dataset.category === category;
-                card.style.display = match ? '' : 'none';
-                if (match) visible++;
-            });
-            document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
-        }
-
-        let toastTimer;
-        function toast(msg) {
-            const el = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            el.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
-        }
-
-        function copyLink(url) {
-            if (!url || url === '#') { toast('⚠️ No valid link'); return; }
-            navigator.clipboard.writeText(url).then(() => toast('📎 Link copied!')).catch(() => {
-                const ta = document.createElement('textarea');
-                ta.value = url;
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                toast('📎 Link copied!');
-            });
-        }
-
-        // Image cover editor: replace thumbnail via URL or local file
-        function editCardThumbnail(btnElement) {
-            const thumbDiv = btnElement.closest('.album-thumb');
-            if (!thumbDiv) return;
-            const currentImg = thumbDiv.querySelector('img');
-            const placeholderDiv = thumbDiv.querySelector('.thumb-placeholder');
-            
-            const option = confirm('📸 Replace cover image?\n- Press OK to paste an image URL (JPG/PNG)\n- Cancel to upload a local image file');
-            if (option) {
-                let url = prompt('Enter image URL (direct link to .jpg/.png):');
-                if (url && url.trim()) {
-                    setThumbnailImage(thumbDiv, url.trim());
-                } else if(url !== null) toast('❌ Invalid URL');
-            } else {
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
-                fileInput.accept = 'image/jpeg,image/png,image/jpg';
-                fileInput.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(ev) {
-                            setThumbnailImage(thumbDiv, ev.target.result);
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                };
-                fileInput.click();
-            }
-        }
-
-        function setThumbnailImage(container, src) {
-            let img = container.querySelector('img');
-            const placeholder = container.querySelector('.thumb-placeholder');
-            if (!img) {
-                img = document.createElement('img');
-                img.style.width = '100%';
-                img.style.height = '100%';
-                img.style.objectFit = 'cover';
-                if (placeholder) placeholder.style.display = 'none';
-                container.insertBefore(img, container.firstChild);
-                // re-insert ribbon/badge to keep z-order
-                const ribbon = container.querySelector('.album-ribbon');
-                const badge = container.querySelector('.photo-count-badge');
-                const overlay = container.querySelector('.thumb-overlay');
-                const editBtn = container.querySelector('.edit-thumb-btn');
-                if (ribbon) container.appendChild(ribbon);
-                if (badge) container.appendChild(badge);
-                if (overlay) container.appendChild(overlay);
-                if (editBtn) container.appendChild(editBtn);
-            } else {
-                if (placeholder) placeholder.style.display = 'none';
-            }
-            img.src = src;
-            img.onerror = () => {
-                toast('⚠️ Failed to load image. Check URL or file.');
-                if (placeholder) placeholder.style.display = 'flex';
-                if (img) img.remove();
-            };
-            toast('✅ Cover image updated!');
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const activeTab = document.querySelector('.filter-tab.active');
-            if (activeTab && activeTab.textContent.includes('All')) filterAlbums(activeTab, 'all');
-            else filterAlbums(document.querySelector('.filter-tab[onclick*="all"]'), 'all');
+    // ── Filter tabs ──────────────────────────────────────────────────
+    function filterAlbums(btn, category) {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        const cards = document.querySelectorAll('.album-card');
+        let visible = 0;
+        cards.forEach(card => {
+            const match = category === 'all' || card.dataset.category === category;
+            card.style.display = match ? '' : 'none';
+            if (match) visible++;
         });
+        document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    // Initialize filter tabs with event listeners
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            filterAlbums(this, category);
+        });
+    });
+
+    // Set default active filter
+    const defaultActiveTab = document.querySelector('.filter-tab.active');
+    if (defaultActiveTab) {
+        const defaultCategory = defaultActiveTab.getAttribute('data-category');
+        filterAlbums(defaultActiveTab, defaultCategory);
+    }
+
+    // ── Toast ────────────────────────────────────────────────────────
+    let toastTimer;
+    function toast(msg) {
+        const el = document.getElementById('toast');
+        document.getElementById('toastMsg').textContent = msg;
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+    }
+
+    function copyLink(url) {
+        if (!url || url === '#') { toast('⚠️ No valid link'); return; }
+        navigator.clipboard.writeText(url).then(() => toast('📎 Link copied!')).catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = url; document.body.appendChild(ta);
+            ta.select(); document.execCommand('copy');
+            document.body.removeChild(ta); toast('📎 Link copied!');
+        });
+    }
+
+    // ── Close modal on backdrop click — removed (no modal) ──────────
+
     </script>
 </body>
 </html>
