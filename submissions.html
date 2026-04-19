@@ -539,6 +539,62 @@
             color: var(--dark);
         }
 
+        /* ── Backup tag ── */
+        .backup-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: rgba(0,163,224,0.12);
+            color: #0076a8;
+            border: 1px solid rgba(0,163,224,0.3);
+            padding: 0.22rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        body.dark-mode .backup-tag { color: #00A3E0; background: rgba(0,163,224,0.18); }
+
+        /* ── Backup links list ── */
+        .backup-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-bottom: 1rem;
+        }
+        .backup-link {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            background: color-mix(in srgb, var(--accent) 5%, transparent);
+            border: 1px solid rgba(0,163,224,0.18);
+            border-radius: 8px;
+            padding: 0.55rem 0.85rem;
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .backup-link:hover {
+            background: rgba(0,163,224,0.1);
+            border-color: var(--accent);
+            transform: translateX(3px);
+        }
+        .bl-icon { font-size: 1rem; flex-shrink: 0; }
+        .bl-label { flex: 1; color: var(--dark); }
+        .bl-platform {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            background: var(--border);
+            padding: 0.1rem 0.45rem;
+            border-radius: 50px;
+        }
+        .bl-arrow { font-size: 0.8rem; color: var(--text-sub); flex-shrink: 0; }
+
         /* ── Empty state ── */
         .empty-state {
             text-align: center;
@@ -624,11 +680,11 @@
 
             <div class="stats-row">
                 <div class="stat-pill">
-                    <span class="num">2</span>
+                    <span class="num">3</span>
                     <span class="lbl">Total</span>
                 </div>
                 <div class="stat-pill">
-                    <span class="num">1</span>
+                    <span class="num">2</span>
                     <span class="lbl">Approved</span>
                 </div>
                 <div class="stat-pill">
@@ -645,10 +701,10 @@
         <!-- Filter Tabs -->
         <div class="filter-bar">
             <button class="filter-tab active" data-filter="all" onclick="filterCards(this,'all')">
-                All <span class="filter-count">2</span>
+                All <span class="filter-count">3</span>
             </button>
             <button class="filter-tab" data-filter="approved" onclick="filterCards(this,'approved')">
-                ✅ Approved <span class="filter-count">1</span>
+                ✅ Approved <span class="filter-count">2</span>
             </button>
             <button class="filter-tab" data-filter="pending" onclick="filterCards(this,'pending')">
                 ⏳ Pending <span class="filter-count">1</span>
@@ -731,6 +787,68 @@
                 </div>
             </div>
 
+            <!-- ── Card 3 – Nadeen (Teaching Writing – Backup Files) ── -->
+            <div class="card" data-status="approved">
+                <div class="card-strip strip-pptx"></div>
+                <div class="card-body">
+                    <div class="student-row">
+                        <div class="avatar avatar-5">
+                            N
+                            <span class="avatar-badge badge-approved" title="Approved">✓</span>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name">Nadeen</div>
+                            <div class="student-meta">Presentation · OneDrive &amp; Google Drive</div>
+                        </div>
+                    </div>
+
+                    <div class="file-block">
+                        <div class="file-icon icon-pptx">📊</div>
+                        <div class="file-details">
+                            <div class="file-name">Teaching Writing</div>
+                            <div class="file-size">Presentation · 4 Backup Copies</div>
+                        </div>
+                        <span class="backup-tag">🛡 Backup</span>
+                    </div>
+
+                    <div class="backup-links">
+                        <a href="https://asuedujo-my.sharepoint.com/:p:/g/personal/202120132_students_asu_edu_jo/IQA0-IC8bQRHRLpEeM9ku1FTATKIddiXUSDIMkcVighpr1w?e=1QOspq" class="backup-link" target="_blank">
+                            <span class="bl-icon">📊</span>
+                            <span class="bl-label">Teaching Writing.pptx</span>
+                            <span class="bl-platform">OneDrive</span>
+                            <span class="bl-arrow">↗</span>
+                        </a>
+                        <a href="https://asuedujo-my.sharepoint.com/:b:/g/personal/202120132_students_asu_edu_jo/IQCj6BQyIBybRIBYiTjlhWtvAXo02KeerYulcIEJFk7sCe8?e=z1Q89f" class="backup-link" target="_blank">
+                            <span class="bl-icon">📄</span>
+                            <span class="bl-label">Teaching Writing.pdf</span>
+                            <span class="bl-platform">OneDrive</span>
+                            <span class="bl-arrow">↗</span>
+                        </a>
+                        <a href="https://drive.google.com/file/d/1_XBYf61T3j7M6C76flere9TCkgthZNbO/view" class="backup-link" target="_blank">
+                            <span class="bl-icon">📄</span>
+                            <span class="bl-label">Teaching Writing.pdf</span>
+                            <span class="bl-platform">Google Drive</span>
+                            <span class="bl-arrow">↗</span>
+                        </a>
+                        <a href="https://docs.google.com/presentation/d/1A973BShVX5sV-KKsZtn-XjtBzGesTfb33kb_RWL_njY/edit?slide=id.p1#slide=id.p1" class="backup-link" target="_blank">
+                            <span class="bl-icon">📊</span>
+                            <span class="bl-label">Teaching Writing.pptx</span>
+                            <span class="bl-platform">Google Drive</span>
+                            <span class="bl-arrow">↗</span>
+                        </a>
+                    </div>
+
+                    <div class="card-meta">
+                        <span class="status-badge status-approved">✅ Approved</span>
+                        <span class="submitted-date">🕐 Apr 19, 2026</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-view" onclick="toast('Use the backup links above to open the file 📂')">🛡 Backup Files – Open if Campus Fails</button>
+                    <button class="btn-action" title="Copy OneDrive PPTX link" onclick="copyLink('https://asuedujo-my.sharepoint.com/:p:/g/personal/202120132_students_asu_edu_jo/IQA0-IC8bQRHRLpEeM9ku1FTATKIddiXUSDIMkcVighpr1w?e=1QOspq')">🔗</button>
+                </div>
+            </div>
+
         </div><!-- /grid -->
 
         <div class="empty-state" id="emptyState">
@@ -746,7 +864,7 @@
         <div>
             <a href="/index">Home</a> &nbsp;·&nbsp;
             <a href="/gupload">Submit File</a> &nbsp;·&nbsp;
-            <a href="WHATSAPP_PLACEHOLDER" id="whatsappLink">Contact Library</a>
+            <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" id="whatsappLink">Contact Library</a>
         </div>
         <div class="copyright">© 2026 ASU E-Library Hub. All rights reserved.</div>
     </footer>
