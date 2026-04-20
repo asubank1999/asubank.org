@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Student Files Library | v2 Experience</title>
+    <title>Student Files Library | Smart Search & Share</title>
     <link rel="icon" href="favicon2.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
@@ -59,7 +59,7 @@
             padding: 20px;
         }
 
-        /* Enhanced Header */
+        /* Header */
         .header {
             background: var(--card-bg);
             border-radius: 32px;
@@ -67,7 +67,6 @@
             margin-bottom: 24px;
             box-shadow: var(--shadow-xl);
             border: 1px solid rgba(255,255,255,0.5);
-            backdrop-filter: blur(2px);
         }
 
         .header-content {
@@ -144,7 +143,7 @@
             font-weight: 600;
         }
 
-        /* V2 Glow Button Enhanced */
+        /* V2 Glow Button */
         .v2-update-wrapper {
             margin-bottom: 24px;
             display: flex;
@@ -189,14 +188,13 @@
             box-shadow: 0 24px 44px rgba(245, 87, 108, 0.8);
         }
 
-        /* Search Section - Better */
+        /* Search Section */
         .search-section {
             background: var(--card-bg);
             border-radius: 28px;
             padding: 24px;
             margin-bottom: 24px;
             box-shadow: var(--shadow-lg);
-            transition: all 0.2s;
         }
 
         .search-box {
@@ -282,13 +280,7 @@
             color: var(--dark);
         }
 
-        .search-btn:disabled, .clear-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Sort Section Enhanced */
+        /* Sort Section */
         .sort-section {
             background: var(--card-bg);
             border-radius: 28px;
@@ -353,6 +345,29 @@
             box-shadow: var(--shadow-sm);
         }
 
+        /* URL Indicator Badge */
+        .url-share-badge {
+            background: var(--primary-soft);
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-size: 12px;
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .url-share-badge:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .url-share-badge i {
+            font-size: 14px;
+        }
+
         /* Files Container */
         .files-container {
             background: var(--card-bg);
@@ -380,6 +395,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .files-count-badge {
@@ -536,7 +552,7 @@
             transform: translateX(5px);
         }
 
-        /* Status Messages */
+        /* Status */
         .loading-state, .empty-state, .error-state {
             text-align: center;
             padding: 70px 20px;
@@ -577,15 +593,8 @@
             .stats { padding: 8px 20px; gap: 16px; }
             .file-row { grid-template-columns: 40px minmax(0, 2fr) 80px; }
             .list-date { display: none; }
-            .sort-controls { flex-direction: column; align-items: stretch; }
         }
 
-        @media (max-width: 480px) {
-            .files-grid { grid-template-columns: 1fr; }
-            .v2-glow-btn { padding: 12px 20px; font-size: 0.85rem; }
-        }
-
-        /* Icon classes */
         .file-icon.pdf { background: rgba(239, 68, 68, 0.12); color: var(--pdf); }
         .file-icon.folder { background: rgba(245, 158, 11, 0.12); color: var(--folder); }
         .file-icon.image { background: rgba(59, 130, 246, 0.12); color: var(--image); }
@@ -601,7 +610,7 @@
                 <div class="logo"><i class="fas fa-graduation-cap"></i></div>
                 <div class="title">
                     <h1>Student Files Library</h1>
-                    <p>Instant access to all academic resources</p>
+                    <p>Shareable links • Search & filter preserved in URL</p>
                 </div>
             </div>
             <div class="stats">
@@ -613,9 +622,7 @@
 
     <div class="v2-update-wrapper">
         <button class="v2-glow-btn" id="v2NotifyBtn">
-            <i class="fas fa-magic"></i> 
-            ✨ Try latest_v2 — Fresh UI & Smart Features ✨
-            <i class="fas fa-arrow-right"></i>
+            <i class="fas fa-magic"></i> ✨ Try latest_v2 — Fresh UI & Smart Features ✨ <i class="fas fa-arrow-right"></i>
         </button>
     </div>
 
@@ -623,12 +630,17 @@
         <div class="search-box">
             <div class="search-input-wrapper">
                 <i class="fas fa-search search-icon-left"></i>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search by file name, type...">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by file name, type... (URL updates automatically)">
             </div>
             <div class="search-actions">
                 <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> Search</button>
                 <button class="clear-btn" id="clearSearchBtn" style="display: none;"><i class="fas fa-times"></i> Clear</button>
             </div>
+        </div>
+        <!-- Shareable URL indicator -->
+        <div id="shareableUrlBadge" class="url-share-badge" style="display: none;">
+            <i class="fas fa-link"></i> <span id="urlHintText">Share this link to keep search filters</span>
+            <i class="fas fa-copy"></i>
         </div>
     </section>
 
@@ -669,7 +681,7 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyuzws_2LcDC8nb2KU-02swjehyRf1ivY14EbX1qcJC1chCUTLTOAAwtQ5JlXvNcLez/exec';
     let allFiles = [], filteredFiles = [];
     let currentView = 'grid', currentSort = 'date', currentOrder = 'desc', currentSearch = '';
-    let isLoading = false;  // 🔥 NEW: prevent search during loading
+    let isLoading = false;
 
     const filesContent = document.getElementById('filesContent');
     const totalFilesEl = document.getElementById('totalFiles');
@@ -678,7 +690,62 @@
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
     const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const shareableBadge = document.getElementById('shareableUrlBadge');
+    const urlHintText = document.getElementById('urlHintText');
 
+    // ========== URL PARAMETER MANAGEMENT ==========
+    function updateURLParams() {
+        const params = new URLSearchParams();
+        if (currentSearch && currentSearch.trim() !== '') {
+            params.set('search', currentSearch.trim());
+        }
+        if (currentSort !== 'date') {
+            params.set('sort', currentSort);
+        }
+        if (currentOrder !== 'desc') {
+            params.set('order', currentOrder);
+        }
+        if (currentView !== 'grid') {
+            params.set('view', currentView);
+        }
+        
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.history.replaceState({}, '', newUrl);
+        
+        // Update shareable badge
+        if (currentSearch && currentSearch.trim() !== '') {
+            shareableBadge.style.display = 'inline-flex';
+            urlHintText.innerText = `🔍 Searching "${currentSearch}" — copy & share this link`;
+        } else if (params.toString()) {
+            shareableBadge.style.display = 'inline-flex';
+            urlHintText.innerText = `⚡ Custom view — share this filtered link`;
+        } else {
+            shareableBadge.style.display = 'none';
+        }
+    }
+    
+    function loadURLParams() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('search')) {
+            currentSearch = params.get('search');
+            searchInput.value = currentSearch;
+        }
+        if (params.has('sort')) {
+            currentSort = params.get('sort');
+        }
+        if (params.has('order')) {
+            currentOrder = params.get('order');
+        }
+        if (params.has('view')) {
+            currentView = params.get('view');
+            if (currentView === 'grid') document.getElementById('gridViewBtn').classList.add('active');
+            else document.getElementById('listViewBtn').classList.add('active');
+            if (currentView === 'grid') document.getElementById('listViewBtn').classList.remove('active');
+            else document.getElementById('gridViewBtn').classList.remove('active');
+        }
+        updateSortButtons();
+    }
+    
     // Helper functions
     function formatFileSize(bytes) {
         if (!bytes || bytes === 0) return '0 B';
@@ -759,10 +826,9 @@
         if (listDiv) listDiv.style.display = currentView === 'list' ? 'flex' : 'none';
     }
 
-    // 🔥 FIXED SEARCH: Only search on existing loaded data, no resync unless needed, gray out during load
+    // Perform search and update URL
     function performSearch() {
         if (isLoading) {
-            // If loading, show a temporary message and ignore search until ready
             filesContent.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Loading files, please wait...</p></div>`;
             return;
         }
@@ -774,6 +840,7 @@
             filteredFiles = allFiles.filter(f => f.name.toLowerCase().includes(lower) || f.icon.toLowerCase().includes(lower));
         }
         renderFiles(filteredFiles);
+        updateURLParams();  // 🔥 Update URL with search parameter
         updateSortButtons();
     }
 
@@ -783,6 +850,7 @@
         currentSearch = '';
         filteredFiles = [...allFiles];
         renderFiles(filteredFiles);
+        updateURLParams(); // clear search from URL
     }
 
     async function loadFiles(keepSearchState = false) {
@@ -802,15 +870,21 @@
             try { data = JSON.parse(text); } catch(e) { throw new Error('Invalid response format'); }
             if (data && data.success && Array.isArray(data.files)) {
                 allFiles = data.files.map(f => ({ ...f, size: f.size || 0, dateUploaded: f.dateUploaded || new Date().toISOString() }));
-                // Reset search if needed
                 if (!keepSearchState) {
-                    currentSearch = '';
-                    searchInput.value = '';
-                }
-                filteredFiles = [...allFiles];
-                if (currentSearch) {
-                    const lower = currentSearch.toLowerCase();
-                    filteredFiles = allFiles.filter(f => f.name.toLowerCase().includes(lower) || f.icon.toLowerCase().includes(lower));
+                    // If we have currentSearch from URL params, apply it
+                    if (currentSearch) {
+                        const lower = currentSearch.toLowerCase();
+                        filteredFiles = allFiles.filter(f => f.name.toLowerCase().includes(lower) || f.icon.toLowerCase().includes(lower));
+                    } else {
+                        filteredFiles = [...allFiles];
+                    }
+                } else {
+                    if (currentSearch) {
+                        const lower = currentSearch.toLowerCase();
+                        filteredFiles = allFiles.filter(f => f.name.toLowerCase().includes(lower) || f.icon.toLowerCase().includes(lower));
+                    } else {
+                        filteredFiles = [...allFiles];
+                    }
                 }
                 renderFiles(filteredFiles);
             } else throw new Error('Invalid data');
@@ -827,22 +901,33 @@
     }
 
     function openFile(url) { window.open(url, '_blank'); }
-
     function toggleView(view) {
         if (isLoading) return;
         currentView = view;
         document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
         document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
         renderFiles(filteredFiles);
+        updateURLParams(); // store view preference
     }
-
-    function setSort(sortBy) { if(isLoading) return; currentSort = sortBy; renderFiles(filteredFiles); updateSortButtons(); }
-    function setOrder(order) { if(isLoading) return; currentOrder = order; renderFiles(filteredFiles); updateSortButtons(); }
+    function setSort(sortBy) { if(isLoading) return; currentSort = sortBy; renderFiles(filteredFiles); updateURLParams(); updateSortButtons(); }
+    function setOrder(order) { if(isLoading) return; currentOrder = order; renderFiles(filteredFiles); updateURLParams(); updateSortButtons(); }
     function updateSortButtons() {
         document.querySelectorAll('.sort-chip').forEach(btn => btn.classList.toggle('active', btn.dataset.sort === currentSort));
         document.querySelectorAll('.order-chip').forEach(btn => btn.classList.toggle('active', btn.dataset.order === currentOrder));
     }
-
+    
+    function copyShareableLink() {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            const originalText = urlHintText.innerText;
+            urlHintText.innerText = '✅ Link copied to clipboard!';
+            setTimeout(() => {
+                if (currentSearch) urlHintText.innerText = `🔍 Searching "${currentSearch}" — copy & share this link`;
+                else urlHintText.innerText = `⚡ Custom view — share this filtered link`;
+            }, 2000);
+        });
+    }
+    
     function notifyV2() {
         const base = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
         window.location.href = base + 'latest_v2';
@@ -857,21 +942,24 @@
     document.querySelectorAll('.sort-chip').forEach(btn => btn.addEventListener('click', () => setSort(btn.dataset.sort)));
     document.querySelectorAll('.order-chip').forEach(btn => btn.addEventListener('click', () => setOrder(btn.dataset.order)));
     document.getElementById('v2NotifyBtn').addEventListener('click', notifyV2);
-
+    shareableBadge.addEventListener('click', copyShareableLink);
+    
     let debounceTimeout;
     searchInput.addEventListener('input', () => {
         if (isLoading) return;
         clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(performSearch, 350);
+        debounceTimeout = setTimeout(performSearch, 400);
     });
 
     window.openFile = openFile;
     window.loadFiles = loadFiles;
-
+    
     document.addEventListener('DOMContentLoaded', () => {
-        loadFiles();
+        loadURLParams();
+        loadFiles(true);
         setInterval(() => { if (!isLoading) loadFiles(true); }, 300000);
     });
 </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
 </body>
 </html>
