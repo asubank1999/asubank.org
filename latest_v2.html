@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <link rel="icon" href="favicon2.ico" type="image/x-icon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Files Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ══ THEME TOKENS ══ */
+    :root {
+      --bg:       #f0f0f8;
+      --surface:  #ffffff;
+      --surface2: #f7f7fc;
+      --surface3: #ededf5;
+      --border:   rgba(0,0,0,0.08);
+      --border2:  rgba(0,0,0,0.13);
+      --text:     #0c0c1e;
+      --text2:    #5a5a7a;
+      --text3:    #9898b8;
+      --primary:  #5b4fff;
+      --primary2: #7c6fff;
+      --accent:   #e040fb;
+      --glow:     rgba(91,79,255,0.2);
+      --glow2:    rgba(224,64,251,0.15);
+      --nav-bg:   rgba(255,255,255,0.85);
+      --hero-bg:  #eeeeff;
+      --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md:0 4px 18px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+      --shadow-focus:0 0 0 3px rgba(91,79,255,0.25);
+      --r-sm:8px; --r-md:14px; --r-lg:20px; --r-xl:28px;
+      --t:220ms cubic-bezier(.4,0,.2,1);
+    }
+    [data-theme="dark"] {
+      --bg:       #07070e;
+      --surface:  #0f0f1c;
+      --surface2: #141425;
+      --surface3: #1a1a2e;
+      --border:   rgba(255,255,255,0.07);
+      --border2:  rgba(255,255,255,0.13);
+      --text:     #eeeeff;
+      --text2:    #8888aa;
+      --text3:    #4a4a66;
+      --primary:  #7c72ff;
+      --primary2: #9d96ff;
+      --accent:   #e879f9;
+      --glow:     rgba(124,114,255,0.32);
+      --glow2:    rgba(232,121,249,0.22);
+      --nav-bg:   rgba(7,7,14,0.9);
+      --hero-bg:  #0a0a18;
+      --shadow-sm:0 1px 3px rgba(0,0,0,0.35);
+      --shadow-md:0 4px 24px rgba(0,0,0,0.45);
+      --shadow-focus:0 0 0 3px rgba(124,114,255,0.35);
+    }
+
+    /* ══ RESET ══ */
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      transition:background var(--t),color var(--t);
+      overflow-x:hidden;
+    }
+    a{text-decoration:none;color:inherit;}
+
+    /* ══ GRAIN ══ */
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+      opacity:.028;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size:220px 220px;
+    }
+    [data-theme="dark"] body::after{opacity:.05;}
+
+    /* ══ LAYOUT ══ */
+    .container{max-width:1380px;margin:0 auto;padding:0 22px;}
+
+    /* ══ NAV ══ */
+    .nav{
+      position:sticky;top:0;z-index:500;
+      background:var(--nav-bg);
+      backdrop-filter:blur(20px) saturate(180%);
+      -webkit-backdrop-filter:blur(20px) saturate(180%);
+      border-bottom:1px solid var(--border);
+      transition:background var(--t),border-color var(--t);
+    }
+    .nav-inner{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:14px;height:64px;
+      max-width:1380px;margin:0 auto;padding:0 22px;
+    }
+    .nav-home{
+      display:flex;align-items:center;gap:7px;
+      font-size:13.5px;font-weight:500;color:var(--text2);
+      padding:7px 15px;border-radius:var(--r-sm);
+      border:1px solid var(--border);background:var(--surface);
+      transition:all var(--t);white-space:nowrap;
+    }
+    .nav-home:hover{color:var(--primary);border-color:var(--primary);background:var(--surface2);transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+    .nav-home i{font-size:13px;}
+    .nav-brand{display:flex;align-items:center;gap:10px;flex:1;justify-content:center;}
+    .nav-logo-icon{
+      width:34px;height:34px;border-radius:9px;flex-shrink:0;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-size:15px;box-shadow:0 4px 14px var(--glow);
+    }
+    .nav-brand-name{
+      font-family:'Syne',sans-serif;font-weight:700;font-size:18px;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .nav-actions{display:flex;align-items:center;gap:10px;}
+
+    /* Upload button */
+    .upload-btn{
+      display:inline-flex;align-items:center;gap:7px;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      color:#fff!important;font-size:13.5px;font-weight:600;
+      padding:8px 18px;border-radius:var(--r-sm);border:none;cursor:pointer;
+      transition:all var(--t);position:relative;overflow:hidden;
+      white-space:nowrap;box-shadow:0 4px 14px var(--glow);
+    }
+    .upload-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.22),transparent);opacity:0;transition:opacity var(--t);}
+    .upload-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px var(--glow);}
+    .upload-btn:hover::before{opacity:1;}
+    .upload-btn:active{transform:translateY(0);}
+    .upload-btn i{font-size:13px;}
+
+    /* Theme toggle */
+    .theme-toggle{
+      width:38px;height:38px;border-radius:var(--r-sm);
+      border:1px solid var(--border);background:var(--surface);
+      color:var(--text2);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size:15px;transition:all var(--t);position:relative;overflow:hidden;flex-shrink:0;
+    }
+    .theme-toggle:hover{color:var(--primary);border-color:var(--primary);background:var(--surface2);}
+    .t-icon{position:absolute;transition:all .35s cubic-bezier(.4,0,.2,1);}
+    .t-icon.sun {opacity:1;transform:translateY(0) rotate(0deg);}
+    .t-icon.moon{opacity:0;transform:translateY(14px) rotate(-30deg);}
+    [data-theme="dark"] .t-icon.sun {opacity:0;transform:translateY(-14px) rotate(30deg);}
+    [data-theme="dark"] .t-icon.moon{opacity:1;transform:translateY(0) rotate(0deg);}
+
+    /* ══ HERO ══ */
+    .hero{
+      position:relative;background:var(--hero-bg);
+      padding:64px 0 52px;overflow:hidden;
+      transition:background var(--t);
+    }
+    .orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+    .orb-1{width:520px;height:520px;top:-220px;left:-100px;background:radial-gradient(circle,var(--glow) 0%,transparent 70%);animation:drift1 13s ease-in-out infinite;}
+    .orb-2{width:420px;height:420px;bottom:-160px;right:-60px;background:radial-gradient(circle,var(--glow2) 0%,transparent 70%);animation:drift2 16s ease-in-out infinite;}
+    @keyframes drift1{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,28px);}}
+    @keyframes drift2{0%,100%{transform:translate(0,0);}50%{transform:translate(-30px,-22px);}}
+    .hero::before{
+      content:'';position:absolute;inset:0;
+      background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+      background-size:44px 44px;opacity:.45;
+    }
+    .hero-content{
+      position:relative;z-index:1;
+      display:flex;flex-direction:column;align-items:center;
+      text-align:center;gap:28px;
+    }
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--surface);border:1px solid var(--border2);
+      border-radius:100px;padding:6px 16px;
+      font-size:13px;font-weight:500;color:var(--text2);
+      box-shadow:var(--shadow-sm);animation:fadeDown .5s ease both;
+    }
+    .badge-dot{
+      width:7px;height:7px;background:#22c55e;border-radius:50%;
+      box-shadow:0 0 0 3px rgba(34,197,94,.25);
+      animation:pulse-dot 2.2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.25);}50%{box-shadow:0 0 0 7px rgba(34,197,94,.08);}}
+    .hero-title{
+      font-family:'Syne',sans-serif;font-weight:800;
+      font-size:clamp(30px,5vw,54px);line-height:1.12;color:var(--text);
+      animation:fadeDown .5s .08s ease both;
+    }
+    .hero-title em{
+      font-style:normal;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes fadeUp  {from{opacity:0;transform:translateY(16px); }to{opacity:1;transform:translateY(0);}}
+
+    /* search */
+    .search-wrapper{width:100%;max-width:680px;animation:fadeUp .5s .14s ease both;}
+    .search-box{
+      display:flex;align-items:center;gap:8px;
+      background:var(--surface);border:1.5px solid var(--border2);
+      border-radius:var(--r-xl);padding:6px 6px 6px 20px;
+      box-shadow:var(--shadow-md);transition:all var(--t);
+    }
+    .search-box:focus-within{border-color:var(--primary);box-shadow:var(--shadow-focus),var(--shadow-md);}
+    .search-icon{color:var(--text3);font-size:15px;flex-shrink:0;}
+    .search-input{
+      flex:1;border:none;background:transparent;
+      font-family:'DM Sans',sans-serif;font-size:15.5px;color:var(--text);outline:none;min-width:0;
+    }
+    .search-input::placeholder{color:var(--text3);}
+    .search-go{
+      width:44px;height:44px;border-radius:18px;flex-shrink:0;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      color:#fff;border:none;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;font-size:15px;
+      transition:all var(--t);box-shadow:0 4px 12px var(--glow);
+    }
+    .search-go:hover{transform:scale(1.08);box-shadow:0 6px 20px var(--glow);}
+    .search-go:active{transform:scale(.96);}
+    .search-clear{
+      width:34px;height:34px;border-radius:50%;flex-shrink:0;
+      background:var(--surface3);border:1px solid var(--border);color:var(--text2);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      font-size:13px;transition:all var(--t);
+    }
+    .search-clear:hover{background:var(--surface2);color:var(--text);}
+
+    /* popular */
+    .popular-section{display:flex;align-items:center;flex-wrap:wrap;gap:8px;justify-content:center;animation:fadeUp .5s .22s ease both;}
+    .popular-label{font-size:12px;font-weight:600;color:var(--text3);display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.07em;}
+    .popular-label i{color:#f97316;font-size:12px;}
+    .popular-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
+    .chip{
+      display:inline-flex;align-items:center;gap:5px;
+      background:var(--surface);border:1.5px solid var(--border2);
+      color:var(--text2);font-size:13px;font-weight:500;
+      padding:5px 13px;border-radius:100px;cursor:pointer;
+      transition:all var(--t);user-select:none;
+    }
+    .chip:hover{background:var(--primary);border-color:var(--primary);color:#fff;transform:translateY(-2px);box-shadow:0 6px 18px var(--glow);}
+    .chip-count{background:var(--surface3);color:var(--text3);border-radius:100px;padding:1px 7px;font-size:11px;font-weight:700;transition:all var(--t);}
+    .chip:hover .chip-count{background:rgba(255,255,255,.22);color:#fff;}
+    .chips-loading{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text3);}
+    .spin-sm{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+
+    /* ══ TOOLBAR ══ */
+    .toolbar{
+      display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;gap:12px;padding:18px 0;
+    }
+    .toolbar-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .stat-pill{
+      display:inline-flex;align-items:center;gap:6px;
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:100px;padding:6px 14px;
+      font-size:13px;font-weight:500;color:var(--text2);
+      box-shadow:var(--shadow-sm);transition:background var(--t),border-color var(--t);
+    }
+    .stat-pill i{color:var(--primary);font-size:12px;}
+    .toolbar-controls{display:flex;align-items:center;gap:10px;}
+    .sort-select{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);
+      color:var(--text);font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;
+      padding:7px 32px 7px 12px;outline:none;cursor:pointer;
+      box-shadow:var(--shadow-sm);transition:all var(--t);appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239898b8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right 10px center;
+    }
+    .sort-select:hover{border-color:var(--primary);}
+    .sort-select:focus{border-color:var(--primary);box-shadow:var(--shadow-focus);}
+    .view-toggle{
+      display:flex;background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--r-sm);overflow:hidden;box-shadow:var(--shadow-sm);
+    }
+    .view-btn{
+      width:36px;height:36px;border:none;background:transparent;
+      color:var(--text3);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;font-size:14px;
+      transition:all var(--t);
+    }
+    .view-btn:hover,.view-btn.active{color:var(--primary);background:var(--surface2);}
+
+    /* ══ FILES ══ */
+    .main-content{padding-bottom:90px;}
+    .files-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;}
+
+    /* File card */
+    .file-card{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--r-md);padding:20px;cursor:pointer;
+      transition:all var(--t);position:relative;overflow:hidden;
+      display:flex;flex-direction:column;gap:12px;
+      animation:cardIn .4s ease both;box-shadow:var(--shadow-sm);
+    }
+    @keyframes cardIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+    .file-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:var(--card-accent,var(--primary));opacity:0;transition:opacity var(--t);
+    }
+    .file-card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:0 14px 36px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.05);}
+    [data-theme="dark"] .file-card:hover{box-shadow:0 14px 42px rgba(0,0,0,.55);}
+    .file-card:hover::before{opacity:1;}
+    .card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .file-icon-wrap{width:46px;height:46px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
+    .card-open-btn{
+      width:30px;height:30px;border-radius:8px;
+      background:var(--surface2);border:1px solid var(--border);
+      color:var(--text3);cursor:pointer;opacity:0;
+      display:flex;align-items:center;justify-content:center;font-size:12px;
+      transition:all var(--t);flex-shrink:0;
+    }
+    .file-card:hover .card-open-btn{opacity:1;}
+    .card-open-btn:hover{background:var(--primary);border-color:var(--primary);color:#fff;}
+    .file-name{font-weight:600;font-size:14.5px;line-height:1.45;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border);}
+    .card-meta{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--text3);}
+    .card-meta span{display:flex;align-items:center;gap:4px;}
+    .card-date{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:4px;}
+
+    /* List view */
+    .files-list{display:flex;flex-direction:column;gap:6px;}
+    .file-row{
+      display:grid;grid-template-columns:42px 1fr auto auto;
+      align-items:center;gap:14px;padding:13px 18px;
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--r-sm);cursor:pointer;
+      transition:all var(--t);box-shadow:var(--shadow-sm);animation:cardIn .3s ease both;
+    }
+    .file-row:hover{border-color:var(--primary);background:var(--surface2);transform:translateX(3px);}
+    .row-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+    .row-name{font-weight:500;font-size:14px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .row-size{font-size:12.5px;color:var(--text3);white-space:nowrap;}
+    .row-date{font-size:12px;color:var(--text3);white-space:nowrap;}
+
+    /* type colours */
+    .t-pdf         {background:rgba(239,68,68,.1); color:#ef4444;--card-accent:#ef4444;}
+    .t-folder      {background:rgba(245,158,11,.1);color:#f59e0b;--card-accent:#f59e0b;}
+    .t-image       {background:rgba(59,130,246,.1);color:#3b82f6;--card-accent:#3b82f6;}
+    .t-video       {background:rgba(168,85,247,.1);color:#a855f7;--card-accent:#a855f7;}
+    .t-document    {background:rgba(16,185,129,.1);color:#10b981;--card-accent:#10b981;}
+    .t-spreadsheet {background:rgba(34,197,94,.1); color:#22c55e;--card-accent:#22c55e;}
+    .t-presentation{background:rgba(249,115,22,.1);color:#f97316;--card-accent:#f97316;}
+    .t-archive     {background:rgba(234,179,8,.1); color:#eab308;--card-accent:#eab308;}
+    .t-audio       {background:rgba(20,184,166,.1);color:#14b8a6;--card-accent:#14b8a6;}
+    .t-text        {background:rgba(148,163,184,.1);color:#94a3b8;--card-accent:#94a3b8;}
+    .t-file        {background:rgba(100,116,139,.1);color:#64748b;--card-accent:#64748b;}
+    .size-sm{color:#22c55e;}.size-md{color:#f59e0b;}.size-lg{color:#ef4444;}
+
+    /* ══ STATES ══ */
+    .loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px;gap:20px;color:var(--text2);font-size:15px;}
+    .loading-rings{position:relative;width:60px;height:60px;}
+    .ring{position:absolute;border-radius:50%;border:2.5px solid transparent;animation:spin 1.2s linear infinite;}
+    .ring-1{inset:0;    border-top-color:var(--primary);  animation-duration:1.0s;}
+    .ring-2{inset:9px;  border-top-color:var(--accent);   animation-duration:1.5s;animation-direction:reverse;}
+    .ring-3{inset:18px; border-top-color:var(--primary2); animation-duration:.8s;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px;gap:12px;text-align:center;}
+    .empty-icon{font-size:54px;color:var(--text3);margin-bottom:6px;}
+    .empty-state h3{font-size:20px;font-weight:600;color:var(--text);}
+    .empty-state p{font-size:14.5px;color:var(--text2);}
+
+    .error-state{display:flex;flex-direction:column;align-items:center;padding:60px 20px;gap:12px;text-align:center;background:var(--surface);border:1px solid rgba(239,68,68,.2);border-radius:var(--r-lg);}
+    .error-icon{font-size:48px;color:#ef4444;}
+    .error-state h3{font-size:18px;font-weight:600;color:var(--text);}
+    .error-state p{font-size:14px;color:var(--text2);}
+    .retry-btn{margin-top:8px;background:var(--primary);color:#fff;border:none;padding:10px 24px;border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all var(--t);display:inline-flex;align-items:center;gap:7px;}
+    .retry-btn:hover{background:var(--primary2);transform:translateY(-2px);}
+
+    /* ══ MOBILE FAB ══ */
+    .fab{
+      position:fixed;bottom:28px;right:24px;z-index:400;
+      width:56px;height:56px;border-radius:18px;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      color:#fff;display:none;align-items:center;justify-content:center;
+      font-size:20px;box-shadow:0 8px 26px var(--glow);transition:all var(--t);
+    }
+    .fab:hover{transform:translateY(-3px) scale(1.07);box-shadow:0 14px 34px var(--glow);}
+
+    /* ══ FOOTER ══ */
+    .footer{text-align:center;padding:24px 20px;font-size:13px;color:var(--text3);border-top:1px solid var(--border);}
+
+    /* ══ RESPONSIVE ══ */
+    @media(max-width:768px){
+      .nav-brand-name{display:none;}
+      .upload-btn span{display:none;}
+      .upload-btn{padding:8px 13px;}
+      .hero{padding:44px 0 38px;}
+      .files-grid{grid-template-columns:1fr 1fr;gap:12px;}
+      .file-row{grid-template-columns:36px 1fr auto;}
+      .row-date{display:none;}
+      .fab{display:flex;}
+    }
+    @media(max-width:480px){
+      .files-grid{grid-template-columns:1fr;}
+      .toolbar{flex-direction:column;align-items:flex-start;}
+    }
+    @media(min-width:1024px){
+      .files-grid{grid-template-columns:repeat(auto-fill,minmax(310px,1fr));}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/index" class="nav-home">
+        <i class="fas fa-house"></i>
+        <span>Home</span>
+      </a>
+      <div class="nav-brand">
+        <div class="nav-logo-icon"><i class="fas fa-folder-open"></i></div>
+        <span class="nav-brand-name">StudyFiles</span>
+      </div>
+      <div class="nav-actions">
+        <a href="/gupload" class="upload-btn">
+          <i class="fas fa-cloud-arrow-up"></i>
+          <span>Upload Material</span>
+        </a>
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+          <i class="fas fa-sun t-icon sun"></i>
+          <i class="fas fa-moon t-icon moon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="container">
+      <div class="hero-content">
+
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span id="totalFiles">…</span>&nbsp;files available
+        </div>
+
+        <h1 class="hero-title">Find your study<br><em>materials</em></h1>
+
+        <div class="search-wrapper">
+          <div class="search-box">
+            <i class="fas fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" class="search-input"
+                   placeholder="Search lecture notes, PDFs, past papers…"
+                   autocomplete="off" spellcheck="false">
+            <button class="search-clear" id="clearSearchBtn" style="display:none;" title="Clear">
+              <i class="fas fa-times"></i>
+            </button>
+            <button class="search-go" id="searchBtn" title="Search">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Popular searches -->
+        <div class="popular-section" id="popularSection" style="display:none;">
+          <span class="popular-label">
+            <i class="fas fa-fire-flame-curved"></i> Trending
+          </span>
+          <div class="popular-chips" id="popularChips">
+            <span class="chips-loading"><span class="spin-sm"></span> Loading…</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLBAR -->
+  <div class="container">
+    <div class="toolbar">
+      <div class="toolbar-stats">
+        <div class="stat-pill">
+          <i class="fas fa-file"></i>
+          <span id="filesCountText">0 files</span>
+        </div>
+        <div class="stat-pill">
+          <i class="fas fa-calendar-week"></i>
+          <span id="recentFiles">0</span>&nbsp;this week
+        </div>
+      </div>
+      <div class="toolbar-controls">
+        <select class="sort-select" id="sortSelect">
+          <option value="date-desc">Newest first</option>
+          <option value="date-asc">Oldest first</option>
+          <option value="name-asc">Name A → Z</option>
+          <option value="name-desc">Name Z → A</option>
+          <option value="size-desc">Largest first</option>
+          <option value="size-asc">Smallest first</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="gridViewBtn" title="Grid">
+            <i class="fas fa-grip"></i>
+          </button>
+          <button class="view-btn" id="listViewBtn" title="List">
+            <i class="fas fa-list-ul"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILES -->
+  <main class="container main-content">
+    <div id="filesContent">
+      <div class="loading-state">
+        <div class="loading-rings">
+          <div class="ring ring-1"></div>
+          <div class="ring ring-2"></div>
+          <div class="ring ring-3"></div>
+        </div>
+        <p>Loading files from Google Drive…</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile upload FAB -->
+  <a href="/gupload" class="fab" title="Upload material">
+    <i class="fas fa-cloud-arrow-up"></i>
+  </a>
+
+  <footer class="footer">
+    Powered by Qusai &nbsp;·&nbsp; auto-syncs every 5 minutes
+  </footer>
+
+  <script>
+    /* ══ CONFIG ══ */
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyuzws_2LcDC8nb2KU-02swjehyRf1ivY14EbX1qcJC1chCUTLTOAAwtQ5JlXvNcLez/exec';
+
+    /* ══ THEME ══ */
+    const html        = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    function getTheme()    { try { return localStorage.getItem('sfl_theme') || 'light'; } catch(e) { return 'light'; } }
+    function saveTheme(t)  { try { localStorage.setItem('sfl_theme', t); } catch(e) {} }
+    function applyTheme(t) { html.setAttribute('data-theme', t); }
+    applyTheme(getTheme());
+    themeToggle.addEventListener('click', () => {
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next); saveTheme(next);
+    });
+
+    /* ══ STATE ══ */
+    let allFiles = [], filteredFiles = [];
+    let currentView = 'grid', currentSort = 'date', currentOrder = 'desc';
+    let currentSearch = '', isLoading = false, searchTimer = null;
+
+    /* ══ DOM ══ */
+    const filesContent   = document.getElementById('filesContent');
+    const totalFilesEl   = document.getElementById('totalFiles');
+    const recentFilesEl  = document.getElementById('recentFiles');
+    const filesCountText = document.getElementById('filesCountText');
+    const searchInput    = document.getElementById('searchInput');
+    const searchBtn      = document.getElementById('searchBtn');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const gridViewBtn    = document.getElementById('gridViewBtn');
+    const listViewBtn    = document.getElementById('listViewBtn');
+    const popularSection = document.getElementById('popularSection');
+    const popularChips   = document.getElementById('popularChips');
+    const sortSelect     = document.getElementById('sortSelect');
+
+    /* ══ POPULAR SEARCHES ══ */
+    async function loadPopularSearches() {
+      popularSection.style.display = 'flex';
+      popularChips.innerHTML = `<span class="chips-loading"><span class="spin-sm"></span> Loading…</span>`;
+      try {
+        const res  = await fetch(`${SCRIPT_URL}?action=popular_searches&limit=8&t=${Date.now()}`);
+        const data = await res.json();
+        if (!data.success || !data.searches?.length) { popularSection.style.display = 'none'; return; }
+        popularSection.style.display = 'flex';
+        popularChips.innerHTML = data.searches.map(({ term, count }) =>
+          `<span class="chip" onclick="applyChipSearch(${JSON.stringify(term)})">${escHtml(term)}<span class="chip-count">${count}</span></span>`
+        ).join('');
+      } catch(e) { popularSection.style.display = 'none'; }
+    }
+
+    function trackSearchTerm(term) {
+      if (!term || term.trim().length < 2) return;
+      fetch(`${SCRIPT_URL}?action=track_search&term=${encodeURIComponent(term.trim())}&t=${Date.now()}`).catch(()=>{});
+    }
+
+    function applyChipSearch(term) { searchInput.value = term; executeSearch(); }
+
+    /* ══ UTILS ══ */
+    function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function fmtSize(b) {
+      if (!b) return '0 B';
+      const k=1024, s=['B','KB','MB','GB'], i=Math.floor(Math.log(b)/Math.log(k));
+      return parseFloat((b/Math.pow(k,i)).toFixed(1))+' '+s[i];
+    }
+    function sizeClass(b) { return b<1048576?'size-sm':b<10485760?'size-md':'size-lg'; }
+    function fmtDate(ds) {
+      try {
+        const d=new Date(ds), now=new Date(), days=Math.floor(Math.abs(now-d)/86400000);
+        if(isNaN(days)) return 'Recent';
+        if(days===0) return 'Today'; if(days===1) return 'Yesterday';
+        if(days<7) return days+'d ago';
+        return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:d.getFullYear()!==now.getFullYear()?'numeric':undefined});
+      } catch(e){return 'Recent';}
+    }
+    const IMAP={folder:'fa-folder',pdf:'fa-file-pdf',image:'fa-file-image',video:'fa-file-video',
+      document:'fa-file-word',spreadsheet:'fa-file-excel',presentation:'fa-file-powerpoint',
+      archive:'fa-file-archive',audio:'fa-file-audio',text:'fa-file-lines',file:'fa-file'};
+    function iconHtml(t) { return `<i class="fas ${IMAP[t]||'fa-file'}"></i>`; }
+
+    /* ══ STATS ══ */
+    function updateStats(files) {
+      const oneWk = new Date(Date.now()-7*86400000);
+      const recent = allFiles.filter(f=>{try{const d=new Date(f.dateUploaded);return !isNaN(d)&&d>=oneWk;}catch(e){return false;}}).length;
+      totalFilesEl.textContent   = allFiles.length.toLocaleString();
+      recentFilesEl.textContent  = recent.toLocaleString();
+      filesCountText.textContent = `${files.length} file${files.length!==1?'s':''}`;
+      clearSearchBtn.style.display = currentSearch ? 'flex' : 'none';
+    }
+
+    /* ══ SORT ══ */
+    function sorted(files) {
+      return [...files].sort((a,b)=>{
+        let vA,vB;
+        if(currentSort==='name'){vA=a.name.toLowerCase();vB=b.name.toLowerCase();}
+        else if(currentSort==='size'){vA=a.size||0;vB=b.size||0;}
+        else{vA=new Date(a.dateUploaded).getTime();vB=new Date(b.dateUploaded).getTime();}
+        return currentOrder==='asc'?(vA>vB?1:-1):(vA<vB?1:-1);
+      });
+    }
+
+    /* ══ RENDER ══ */
+    function renderEmpty(){
+      return `<div class="empty-state"><div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+        <h3>${currentSearch?'No files found':'No files yet'}</h3>
+        <p>${currentSearch?`Nothing matched &ldquo;${escHtml(currentSearch)}&rdquo;`:'Files will appear here once uploaded'}</p></div>`;
+    }
+    function renderGrid(files) {
+      if(!files.length) return renderEmpty();
+      return `<div class="files-grid">${sorted(files).map((f,i)=>`
+        <div class="file-card" style="animation-delay:${Math.min(i*.04,.4)}s" onclick="openFile('${f.url}')">
+          <div class="card-header">
+            <div class="file-icon-wrap t-${f.icon}">${iconHtml(f.icon)}</div>
+            <button class="card-open-btn" onclick="event.stopPropagation();openFile('${f.url}')" title="Open">
+              <i class="fas fa-arrow-up-right-from-square"></i>
+            </button>
+          </div>
+          <div class="file-name" title="${escHtml(f.name)}">${escHtml(f.name)}</div>
+          <div class="card-footer">
+            <div class="card-meta"><span><i class="fas fa-weight-hanging"></i><span class="${sizeClass(f.size||0)}">${fmtSize(f.size||0)}</span></span></div>
+            <div class="card-date"><i class="far fa-clock"></i> ${fmtDate(f.dateUploaded)}</div>
+          </div>
+        </div>`).join('')}</div>`;
+    }
+    function renderList(files) {
+      if(!files.length) return renderEmpty();
+      return `<div class="files-list">${sorted(files).map((f,i)=>`
+        <div class="file-row" style="animation-delay:${Math.min(i*.03,.3)}s" onclick="openFile('${f.url}')">
+          <div class="row-icon t-${f.icon}">${iconHtml(f.icon)}</div>
+          <div class="row-name" title="${escHtml(f.name)}">${escHtml(f.name)}</div>
+          <div class="row-size ${sizeClass(f.size||0)}">${fmtSize(f.size||0)}</div>
+          <div class="row-date">${fmtDate(f.dateUploaded)}</div>
+        </div>`).join('')}</div>`;
+    }
+    function renderFiles(files) { updateStats(files); filesContent.innerHTML = currentView==='grid'?renderGrid(files):renderList(files); }
+
+    /* ══ URL ══ */
+    function pushURL() {
+      const p=new URLSearchParams();
+      if(currentSearch) p.set('search',currentSearch);
+      if(currentSort!=='date') p.set('sort',currentSort);
+      if(currentOrder!=='desc') p.set('order',currentOrder);
+      const url=window.location.pathname+(p.toString()?'?'+p:'');
+      try{window.history.replaceState({},'',url);}catch(e){}
+      clearSearchBtn.style.display=currentSearch?'flex':'none';
+    }
+    function readURL() {
+      const p=new URLSearchParams(window.location.search);
+      if(p.has('search')){currentSearch=p.get('search');searchInput.value=currentSearch;}
+      if(p.has('sort'))  currentSort=p.get('sort');
+      if(p.has('order')) currentOrder=p.get('order');
+      const val=currentSort+'-'+currentOrder;
+      if(sortSelect.querySelector(`[value="${val}"]`)) sortSelect.value=val;
+    }
+
+    /* ══ SEARCH ══ */
+    function executeSearch() {
+      currentSearch=searchInput.value.trim();
+      if(currentSearch.length>=2){trackSearchTerm(currentSearch);setTimeout(loadPopularSearches,1600);}
+      pushURL(); loadFiles();
+    }
+    function clearSearch(){searchInput.value='';currentSearch='';pushURL();loadFiles();}
+
+    /* ══ LOAD ══ */
+    async function loadFiles() {
+      if(isLoading) return;
+      isLoading=true;
+      filesContent.innerHTML=`<div class="loading-state"><div class="loading-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div><p>${currentSearch?`Searching &ldquo;${escHtml(currentSearch)}&rdquo;…`:'Loading files…'}</p></div>`;
+      try {
+        const p=new URLSearchParams({sort:currentSort,order:currentOrder,t:Date.now()});
+        if(currentSearch) p.set('search',currentSearch);
+        const res=await fetch(`${SCRIPT_URL}?${p}`);
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data=await res.json();
+        if(data?.success&&Array.isArray(data.files)){
+          allFiles=filteredFiles=data.files;
+          renderFiles(allFiles);
+        } else throw new Error(data?.error||'Unexpected response');
+      } catch(err) {
+        console.error(err);
+        filesContent.innerHTML=`<div class="error-state"><div class="error-icon"><i class="fas fa-triangle-exclamation"></i></div><h3>Couldn't load files</h3><p>${escHtml(err.message)}</p><button class="retry-btn" onclick="loadFiles()"><i class="fas fa-rotate-right"></i> Try again</button></div>`;
+      } finally { isLoading=false; }
+    }
+
+    function openFile(url){window.open(url,'_blank');}
+
+    /* ══ VIEW ══ */
+    function toggleView(v){
+      currentView=v;
+      gridViewBtn.classList.toggle('active',v==='grid');
+      listViewBtn.classList.toggle('active',v==='list');
+      renderFiles(filteredFiles);
+    }
+
+    /* ══ SORT SELECT ══ */
+    sortSelect.addEventListener('change',()=>{
+      const [s,o]=sortSelect.value.split('-');
+      currentSort=s; currentOrder=o;
+      renderFiles(filteredFiles); pushURL();
+    });
+
+    /* ══ EVENTS ══ */
+    searchBtn.addEventListener('click', executeSearch);
+    clearSearchBtn.addEventListener('click', clearSearch);
+    searchInput.addEventListener('keydown', e=>{if(e.key==='Enter'){clearTimeout(searchTimer);executeSearch();}});
+    searchInput.addEventListener('input', ()=>{clearTimeout(searchTimer);searchTimer=setTimeout(executeSearch,480);});
+    gridViewBtn.addEventListener('click', ()=>toggleView('grid'));
+    listViewBtn.addEventListener('click', ()=>toggleView('list'));
+
+    /* ══ INIT ══ */
+    document.addEventListener('DOMContentLoaded', ()=>{
+      readURL(); loadPopularSearches(); loadFiles();
+      setInterval(loadFiles, 5*60*1000);
+    });
+
+    window.openFile=openFile; window.loadFiles=loadFiles;
+    window.clearSearch=clearSearch; window.applyChipSearch=applyChipSearch;
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+</body>
+</html>

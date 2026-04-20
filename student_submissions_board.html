@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Student Submissions – ASU E-Library Hub</title>
+    <meta name="google-adsense-account" content="ca-pub-7033538324685491">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4DE6YQ7Q2M');</script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon2.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8C1D40;
+            --primary-light: #a83254;
+            --secondary: #FFC627;
+            --accent: #00A3E0;
+            --dark: #191919;
+            --light: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --body-bg: #F5F5F8;
+            --border: rgba(140, 29, 64, 0.12);
+            --text-main: #1a1a2e;
+            --text-sub: #6c6c7a;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            --primary: #a83254;
+            --primary-light: #c4456a;
+            --dark: #F8F9FA;
+            --light: #1a1a2e;
+            --card-bg: #242030;
+            --body-bg: #141220;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #F8F9FA;
+            --text-sub: #a0a0b8;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--body-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 10% 0%, rgba(140, 29, 64, 0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 50% at 90% 100%, rgba(0, 163, 224, 0.04) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .logo-text h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-header {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            padding: 0.5rem 1.1rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-header:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-2px);
+        }
+
+        .btn-header.accent {
+            background: var(--secondary);
+            color: var(--dark);
+            font-weight: 600;
+            border-color: var(--secondary);
+        }
+
+        .btn-header.accent:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(90deg, rgba(140, 29, 64, 0.1), rgba(140, 29, 64, 0.05));
+            color: var(--primary);
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid rgba(140, 29, 64, 0.2);
+            margin-bottom: 0.75rem;
+        }
+
+        body.dark-mode .eyebrow {
+            background: rgba(140, 29, 64, 0.2);
+            border-color: rgba(140, 29, 64, 0.4);
+        }
+
+        .hero-section h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .hero-section h2 span {
+            color: var(--primary);
+        }
+
+        .hero-section p {
+            margin-top: 0.5rem;
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            max-width: 500px;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0.75rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.1rem;
+            min-width: 80px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            border: 1.5px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .filter-count {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 0.1rem 0.45rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .filter-btn.active .filter-count {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .refresh-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: transparent;
+            border: 1.5px solid var(--border);
+            color: var(--text-sub);
+            padding: 0.45rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .refresh-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .refresh-btn.spin .refresh-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Submissions Grid */
+        .submissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Submission Card */
+        .submission-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            animation: cardFadeIn 0.5s ease both;
+        }
+
+        .submission-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-strip {
+            height: 5px;
+            width: 100%;
+        }
+
+        .strip-pdf { background: linear-gradient(90deg, #e53935, #ef9a9a); }
+        .strip-pptx { background: linear-gradient(90deg, #F97316, #FED7AA); }
+        .strip-docx { background: linear-gradient(90deg, #2563EB, #BFDBFE); }
+        .strip-image { background: linear-gradient(90deg, #059669, #A7F3D0); }
+        .strip-video { background: linear-gradient(90deg, #7C3AED, #DDD6FE); }
+
+        .card-body {
+            padding: 1.3rem 1.3rem 1rem;
+        }
+
+        /* Student Row */
+        .student-row {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .avatar-1 { background: linear-gradient(135deg, #8C1D40, #C84060); }
+        .avatar-2 { background: linear-gradient(135deg, #0891B2, #06B6D4); }
+        .avatar-3 { background: linear-gradient(135deg, #7C3AED, #A78BFA); }
+        .avatar-4 { background: linear-gradient(135deg, #059669, #34D399); }
+        .avatar-5 { background: linear-gradient(135deg, #EA580C, #FB923C); }
+        .avatar-6 { background: linear-gradient(135deg, #0F766E, #2DD4BF); }
+
+        .status-badge-avatar {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--card-bg);
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge-approved { background: #78BE20; }
+        .badge-pending { background: #FFC627; }
+        .badge-review { background: #00A3E0; }
+
+        .student-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .student-meta {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            margin-top: 0.15rem;
+        }
+
+        /* File Block */
+        .file-block {
+            background: color-mix(in srgb, var(--primary) 5%, transparent);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .submission-card:hover .file-block {
+            border-color: var(--primary);
+            background: color-mix(in srgb, var(--primary) 8%, transparent);
+        }
+
+        body.dark-mode .file-block {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .file-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .icon-pdf { background: rgba(229, 57, 53, 0.12); }
+        .icon-pptx { background: rgba(249, 115, 22, 0.12); }
+        .icon-docx { background: rgba(37, 99, 235, 0.12); }
+        .icon-image { background: rgba(5, 150, 105, 0.12); }
+        .icon-video { background: rgba(124, 58, 237, 0.12); }
+
+        .file-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-meta {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            margin-top: 0.1rem;
+        }
+
+        .backup-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: rgba(0, 163, 224, 0.12);
+            color: #0076a8;
+            border: 1px solid rgba(0, 163, 224, 0.3);
+            padding: 0.2rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        body.dark-mode .backup-tag {
+            color: #00A3E0;
+        }
+
+        /* Backup Links */
+        .backup-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .backup-link {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            background: color-mix(in srgb, var(--accent) 5%, transparent);
+            border: 1px solid rgba(0, 163, 224, 0.18);
+            border-radius: 8px;
+            padding: 0.55rem 0.85rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .backup-link:hover {
+            background: rgba(0, 163, 224, 0.1);
+            border-color: var(--accent);
+            transform: translateX(3px);
+        }
+
+        /* Notes */
+        .notes-box {
+            background: rgba(255, 198, 39, 0.08);
+            border: 1px solid rgba(255, 198, 39, 0.25);
+            border-radius: 8px;
+            padding: 0.65rem 0.9rem;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        /* Status & Date Row */
+        .info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.28rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-approved {
+            background: rgba(120, 190, 32, 0.12);
+            color: #5a9c0a;
+            border: 1px solid rgba(120, 190, 32, 0.3);
+        }
+
+        .status-pending {
+            background: rgba(255, 198, 39, 0.15);
+            color: #a07800;
+            border: 1px solid rgba(255, 198, 39, 0.4);
+        }
+
+        .status-review {
+            background: rgba(0, 163, 224, 0.12);
+            color: #0076a8;
+            border: 1px solid rgba(0, 163, 224, 0.3);
+        }
+
+        body.dark-mode .status-approved { color: #78BE20; }
+        body.dark-mode .status-pending { color: #FFC627; }
+        body.dark-mode .status-review { color: #00A3E0; }
+
+        .date-text {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Card Footer */
+        .card-footer {
+            padding: 0.9rem 1.3rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .view-btn {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .view-btn:hover {
+            background: color-mix(in srgb, var(--primary) 85%, black);
+            transform: translateY(-1px);
+        }
+
+        .action-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: var(--body-bg);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            color: var(--text-sub);
+        }
+
+        .action-btn:hover {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: var(--dark);
+        }
+
+        /* Skeleton Loading */
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skeleton-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .skeleton-strip {
+            height: 5px;
+            background: #e9ecef;
+        }
+
+        .skeleton-body {
+            padding: 1.3rem;
+        }
+
+        .skeleton-line {
+            height: 12px;
+            border-radius: 6px;
+            background: #e9ecef;
+            margin-bottom: 10px;
+        }
+
+        body.dark-mode .skeleton-strip,
+        body.dark-mode .skeleton-line {
+            background: #2e2b3a;
+        }
+
+        /* Error Banner */
+        .error-banner {
+            background: rgba(229, 57, 53, 0.08);
+            border: 1px solid rgba(229, 57, 53, 0.25);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: #b71c1c;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.88rem;
+        }
+
+        body.dark-mode .error-banner {
+            color: #ff8a80;
+        }
+
+        .error-banner button {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: inherit;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-sub);
+            display: none;
+        }
+
+        .empty-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--dark);
+            color: var(--body-bg);
+            padding: 0.75rem 1.3rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 9999;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            background: color-mix(in srgb, var(--primary) 95%, black);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.82rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            margin-top: 0.5rem;
+            opacity: 0.55;
+            font-size: 0.75rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1.5rem 1rem 3rem;
+            }
+
+            .hero-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .submissions-grid,
+            .skeleton-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.4rem 0.9rem;
+                font-size: 0.8rem;
+            }
+
+            .btn-header .btn-text {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-container {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .stat-card {
+                flex: 1;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <div class="logo-icon">📚</div>
+            <div class="logo-text">
+                <h1>ASU E-Library Hub</h1>
+                <span>Student Submissions Board</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="index.html" class="btn-header">← <span class="btn-text">Home</span></a>
+            <button class="btn-header accent" onclick="location.href='submit_file'">＋ <span class="btn-text">Submit</span></button>
+            <button class="btn-header" id="darkToggle" onclick="toggleDarkMode()">🌙</button>
+        </div>
+    </div>
+</header>
+
+<main class="main-container">
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="eyebrow">📋 Campus Display Board</div>
+            <h2>Student <span>Submissions</span></h2>
+            <p>Manage PDFs, presentations, and documents scheduled for the campus screen.</p>
+        </div>
+        <div class="stats-container">
+            <div class="stat-card"><span class="stat-number" id="statTotal">–</span><span class="stat-label">Total</span></div>
+            <div class="stat-card"><span class="stat-number" id="statApproved">–</span><span class="stat-label">Approved</span></div>
+            <div class="stat-card"><span class="stat-number" id="statPending">–</span><span class="stat-label">Pending</span></div>
+            <div class="stat-card"><span class="stat-number" id="statReview">–</span><span class="stat-label">Review</span></div>
+        </div>
+    </div>
+
+    <div class="error-banner" id="errorBanner" style="display: none">
+        ⚠️ <span id="errorMessage">Could not load submissions.</span>
+        <button onclick="loadSubmissions()">Retry</button>
+    </div>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All <span class="filter-count" id="countAll">–</span></button>
+        <button class="filter-btn" data-filter="approved" onclick="setFilter('approved', this)">✅ Approved <span class="filter-count" id="countApproved">–</span></button>
+        <button class="filter-btn" data-filter="pending" onclick="setFilter('pending', this)">⏳ Pending <span class="filter-count" id="countPending">–</span></button>
+        <button class="filter-btn" data-filter="review" onclick="setFilter('review', this)">🔍 In Review <span class="filter-count" id="countReview">–</span></button>
+        <button class="refresh-btn" id="refreshBtn" onclick="loadSubmissions()"><span class="refresh-icon">↺</span> Refresh</button>
+    </div>
+
+    <!-- Skeleton Loader -->
+    <div class="skeleton-grid" id="skeletonGrid">
+        <div class="skeleton-card"><div class="skeleton-strip"></div><div class="skeleton-body"><div class="skeleton-line" style="width: 45%"></div><div class="skeleton-line" style="width: 70%; height: 18px; margin: 14px 0 10px"></div><div class="skeleton-line" style="width: 100%; height: 58px; border-radius: 10px"></div><div class="skeleton-line" style="width: 55%; margin-top: 16px"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-strip"></div><div class="skeleton-body"><div class="skeleton-line" style="width: 45%"></div><div class="skeleton-line" style="width: 70%; height: 18px; margin: 14px 0 10px"></div><div class="skeleton-line" style="width: 100%; height: 58px; border-radius: 10px"></div><div class="skeleton-line" style="width: 55%; margin-top: 16px"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-strip"></div><div class="skeleton-body"><div class="skeleton-line" style="width: 45%"></div><div class="skeleton-line" style="width: 70%; height: 18px; margin: 14px 0 10px"></div><div class="skeleton-line" style="width: 100%; height: 58px; border-radius: 10px"></div><div class="skeleton-line" style="width: 55%; margin-top: 16px"></div></div></div>
+    </div>
+
+    <div class="submissions-grid" id="submissionsGrid" style="display: none;"></div>
+    
+    <div class="empty-state" id="emptyState">
+        <div class="empty-icon">📭</div>
+        <h3>No submissions found</h3>
+        <p>Try a different filter, or be the first to submit!</p>
+    </div>
+</main>
+
+<footer>
+    <div>
+        <a href="index.html">Home</a> &nbsp;·&nbsp; 
+        <a href="submit_file">Submit File</a> &nbsp;·&nbsp; 
+        <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ">Contact Library</a>
+    </div>
+    <div class="copyright">© 2026 ASU E-Library Hub. All rights reserved.</div>
+</footer>
+
+<div class="toast" id="toast"><span id="toastMessage"></span></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  ⚠️  
+// ══════════════════════════════════════════════════════
+const API_URL = 'https://script.google.com/macros/s/AKfycbxT65oWO1Pve_9i4xThLiKBDZ1KTHlOoetrcOMo1A9QjoK8cm7djR077INB-yVSVaWN/exec';
+
+// Global variables
+let allSubmissions = [];
+let currentFilter = 'all';
+
+// Dark Mode
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', isDark ? '1' : '0');
+}
+
+if (localStorage.getItem('darkMode') === '1') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('darkToggle').textContent = '☀️';
+}
+
+// Helper Functions
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMessage').textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('📎 Link copied!');
+    }).catch(() => {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('📎 Link copied!');
+    });
+}
+
+// Get file icon and style
+function getFileStyle(fileType) {
+    const types = {
+        pdf: { icon: '📄', strip: 'strip-pdf', iconClass: 'icon-pdf' },
+        pptx: { icon: '📊', strip: 'strip-pptx', iconClass: 'icon-pptx' },
+        ppt: { icon: '📊', strip: 'strip-pptx', iconClass: 'icon-pptx' },
+        docx: { icon: '📝', strip: 'strip-docx', iconClass: 'icon-docx' },
+        doc: { icon: '📝', strip: 'strip-docx', iconClass: 'icon-docx' },
+        image: { icon: '🖼️', strip: 'strip-image', iconClass: 'icon-image' },
+        video: { icon: '🎬', strip: 'strip-video', iconClass: 'icon-video' }
+    };
+    return types[String(fileType || 'pdf').toLowerCase()] || types.pdf;
+}
+
+// Get status style
+function getStatusStyle(status) {
+    const statuses = {
+        approved: { class: 'status-approved', label: '✅ Approved', badge: 'badge-approved', icon: '✓' },
+        pending: { class: 'status-pending', label: '⏳ Pending', badge: 'badge-pending', icon: '' },
+        review: { class: 'status-review', label: '🔍 In Review', badge: 'badge-review', icon: '' }
+    };
+    return statuses[status] || statuses.pending;
+}
+
+// Load submissions using JSONP
+function loadSubmissions() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    refreshBtn.classList.add('spin');
+    document.getElementById('errorBanner').style.display = 'none';
+    document.getElementById('skeletonGrid').style.display = 'grid';
+    document.getElementById('submissionsGrid').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'none';
+
+    const callbackName = 'jsonp_callback_' + Date.now();
+    
+    window[callbackName] = function(response) {
+        delete window[callbackName];
+        refreshBtn.classList.remove('spin');
+        
+        if (response && response.success) {
+            allSubmissions = response.data || [];
+            renderSubmissions();
+        } else {
+            document.getElementById('errorBanner').style.display = 'flex';
+            document.getElementById('errorMessage').textContent = 'Could not load: ' + (response?.error || 'Unknown error');
+            document.getElementById('skeletonGrid').style.display = 'none';
+        }
+    };
+    
+    const script = document.createElement('script');
+    script.src = API_URL + '?action=list&callback=' + callbackName;
+    script.onerror = function() {
+        delete window[callbackName];
+        document.head.removeChild(script);
+        refreshBtn.classList.remove('spin');
+        document.getElementById('errorBanner').style.display = 'flex';
+        document.getElementById('errorMessage').textContent = 'Network error. Please check your connection and API URL.';
+        document.getElementById('skeletonGrid').style.display = 'none';
+    };
+    
+    document.head.appendChild(script);
+}
+
+// Render submissions
+function renderSubmissions() {
+    // Update counts
+    const counts = {
+        all: allSubmissions.length,
+        approved: allSubmissions.filter(s => s.status === 'approved').length,
+        pending: allSubmissions.filter(s => s.status === 'pending').length,
+        review: allSubmissions.filter(s => s.status === 'review').length
+    };
+    
+    document.getElementById('statTotal').textContent = counts.all;
+    document.getElementById('statApproved').textContent = counts.approved;
+    document.getElementById('statPending').textContent = counts.pending;
+    document.getElementById('statReview').textContent = counts.review;
+    document.getElementById('countAll').textContent = counts.all;
+    document.getElementById('countApproved').textContent = counts.approved;
+    document.getElementById('countPending').textContent = counts.pending;
+    document.getElementById('countReview').textContent = counts.review;
+    
+    // Filter submissions
+    let filtered = allSubmissions;
+    if (currentFilter !== 'all') {
+        filtered = allSubmissions.filter(s => s.status === currentFilter);
+    }
+    
+    if (filtered.length === 0) {
+        document.getElementById('skeletonGrid').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'block';
+        return;
+    }
+    
+    // Build cards
+    const grid = document.getElementById('submissionsGrid');
+    grid.innerHTML = '';
+    
+    filtered.forEach((sub, index) => {
+        const fileStyle = getFileStyle(sub.fileType);
+        const statusStyle = getStatusStyle(sub.status);
+        const avatarNum = sub.avatarNum || Math.floor(Math.random() * 6) + 1;
+        const initials = (sub.studentName || '?')[0].toUpperCase();
+        
+        let backupLinksHtml = '';
+        if (sub.isBackup && sub.backupLinks && sub.backupLinks.length) {
+            backupLinksHtml = '<div class="backup-links">' + sub.backupLinks.map(link => `
+                <a href="${escapeHtml(link.url)}" class="backup-link" target="_blank" rel="noopener noreferrer">
+                    <span>${getFileStyle(link.type || 'pdf').icon}</span>
+                    <span style="flex:1">${escapeHtml(link.label || sub.presentationTitle)}</span>
+                    <span style="font-size:0.7rem;opacity:0.6">${escapeHtml(link.platform || '')}</span>
+                    <span>↗</span>
+                </a>
+            `).join('') + '</div>';
+        }
+        
+        const notesHtml = sub.notes ? `<div class="notes-box">💬 <span>${escapeHtml(sub.notes)}</span></div>` : '';
+        const backupTag = sub.isBackup ? '<span class="backup-tag">🛡 Backup</span>' : '';
+        
+        const card = document.createElement('div');
+        card.className = 'submission-card';
+        card.style.animationDelay = `${index * 0.05}s`;
+        card.innerHTML = `
+            <div class="card-strip ${fileStyle.strip}"></div>
+            <div class="card-body">
+                <div class="student-row">
+                    <div class="avatar avatar-${avatarNum}">
+                        ${initials}
+                        <span class="status-badge-avatar ${statusStyle.badge}">${statusStyle.icon}</span>
+                    </div>
+                    <div>
+                        <div class="student-name">${escapeHtml(sub.studentName)}</div>
+                        <div class="student-meta">${escapeHtml((sub.fileType || 'File').toUpperCase())} · ${escapeHtml(sub.platform || '')}</div>
+                    </div>
+                </div>
+                <div class="file-block">
+                    <div class="file-icon ${fileStyle.iconClass}">${fileStyle.icon}</div>
+                    <div class="file-details">
+                        <div class="file-title">${escapeHtml(sub.presentationTitle)}</div>
+                        <div class="file-meta">${escapeHtml((sub.fileType || 'File').toUpperCase())} · ${escapeHtml(sub.platform || '')}</div>
+                    </div>
+                    ${backupTag}
+                </div>
+                ${backupLinksHtml}
+                ${notesHtml}
+                <div class="info-row">
+                    <span class="status-badge ${statusStyle.class}">${statusStyle.label}</span>
+                    <span class="date-text">🕐 ${escapeHtml(sub.submittedDate || '')}</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="${escapeHtml(sub.primaryUrl)}" class="view-btn" target="_blank" rel="noopener noreferrer">👁 View File</a>
+                <button class="action-btn" onclick="copyToClipboard('${escapeHtml(sub.primaryUrl)}')" title="Copy Link">🔗</button>
+                <button class="action-btn" onclick="copyToClipboard('${escapeHtml(sub.id)}')" title="Copy ID">📋</button>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+    
+    document.getElementById('skeletonGrid').style.display = 'none';
+    document.getElementById('submissionsGrid').style.display = 'grid';
+    document.getElementById('emptyState').style.display = 'none';
+}
+
+// Set filter
+function setFilter(filter, btnElement) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+    renderSubmissions();
+}
+
+// Initial load
+loadSubmissions();
+</script>
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Disables right-click context menu
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault(); // Disables copy action
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault(); // Disables paste action
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disables common keyboard shortcuts
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+
+</body>
+</html>

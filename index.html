@@ -608,7 +608,7 @@
         display: flex;
         align-items: center;
         gap: 1rem;
-        padding: 1rem 1.2rem;
+        padding: 0.5rem 1.2rem;
         flex-wrap: wrap;
     }
 
@@ -621,7 +621,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.45rem;
+        font-size: 1.20rem;
         flex-shrink: 0;
         backdrop-filter: blur(6px);
     }
@@ -714,13 +714,13 @@
     }
     .timer-track  { stroke: rgba(255,255,255,0.15); }
     .timer-fill   {
-        stroke: rgba(255,255,255,0.65);
+        stroke: rgba(1,255,255,0.65);
         stroke-linecap: round;
         stroke-dasharray: 44;
         stroke-dashoffset: 0;
         transform-origin: center;
         transform: rotate(-90deg);
-        animation: countdown 10s linear forwards;
+        animation: countdown 5s linear forwards;
     }
     @keyframes countdown {
         from { stroke-dashoffset: 0; }
@@ -745,9 +745,8 @@
                 <span class="banner-tag">✨ What's New</span>
             </div>
             <div class="banner-body">
-                We've <strong>added new materials</strong>, introduced the
-                <strong>Search Tutorial</strong> page, fixed the Ramadan section,
-                and improved how you find resources — all to make your experience faster &amp; easier.
+                We've <strong>added new upload form</strong>.
+                + <strong>Search Tutorial</strong> page.
             </div>
         </div>
 
@@ -768,7 +767,7 @@
 <script>
     (function () {
         var banner = document.getElementById('updateBanner');
-        var timer  = setTimeout(dismissBanner, 10000);
+        var timer  = setTimeout(dismissBanner, 5000);
 
         function dismissBanner() {
             clearTimeout(timer);
@@ -887,15 +886,26 @@
                     </p>
                 </a>
 
-                <a href="submissions" class="subject-card priority">
+                <a href="student_submissions_board" class="subject-card priority">
                     <span class="card-badge">SUBMISSIONS</span>
                     <h3>
-                        <span>📋</span> Student Submissions Board
+                        <span>📋</span> Submitted Files ( STUDENTS )
+                    </h3>
+                    <p>See current submitted files</p>
+                    <div class="free-badge">Open</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        Uploaded PDFs, presentations, and documents from students.
+                    </p>
+                </a>
+                <a href="submit_file" class="subject-card priority">
+                    <span class="card-badge">SUBMISSIONS</span>
+                    <h3>
+                        <span>📋</span> Upload your Presentations!
                     </h3>
                     <p>Submit and manage files scheduled for the campus display screen</p>
                     <div class="free-badge">Open</div>
                     <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
-                        Upload PDFs, presentations, and documents for review and approval
+                        Upload PDFs, presentations, and documents in one place. Share them, get feedback, and see when they are approved.
                     </p>
                 </a>
             </div>
@@ -925,7 +935,7 @@
         <!-- Private PDFs -->
         <section class="priority-section">
             <h2 class="section-title">
-                <span>📘</span> 3 PDFs
+                <span>📘</span> 3 PDFs | Admin Access
             </h2>
             
             <div class="card-grid">
@@ -942,6 +952,21 @@
                     <div class="locked-badge">Key is not Required</div>
                     <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
                         ريادة الأعمال والابتكار | القيادة والمسؤولية الاجتماعية | مهارات الحياة
+                    </p>
+                </a>
+            <div class="card-grid">
+                <a 
+                    href="adminpanel_subs"
+                    class="subject-card priority"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <h3>
+                        <span>🔐</span> ASU Library Admin Panel
+                    </h3>
+                    <div class="locked-badge">Key is Required</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        ADMIN PANEL | Approve, review, or reject student submissions for admins only.
                     </p>
                 </a>
             </div>

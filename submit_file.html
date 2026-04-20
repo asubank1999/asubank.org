@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Submit File – ASU E-Library Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon2.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8C1D40;
+            --primary-light: #a83254;
+            --secondary: #FFC627;
+            --accent: #00A3E0;
+            --dark: #191919;
+            --card-bg: #FFFFFF;
+            --body-bg: #F5F5F8;
+            --border: rgba(140, 29, 64, 0.12);
+            --text-main: #1a1a2e;
+            --text-sub: #6c6c7a;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            --primary: #a83254;
+            --primary-light: #c4456a;
+            --dark: #F8F9FA;
+            --card-bg: #242030;
+            --body-bg: #141220;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #F8F9FA;
+            --text-sub: #a0a0b8;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--body-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 10% 0%, rgba(140, 29, 64, 0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 50% at 90% 100%, rgba(0, 163, 224, 0.04) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .logo-text h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .btn-header {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-header:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-2px);
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(90deg, rgba(140, 29, 64, 0.1), rgba(140, 29, 64, 0.05));
+            color: var(--primary);
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid rgba(140, 29, 64, 0.2);
+            margin-bottom: 0.75rem;
+        }
+
+        body.dark-mode .eyebrow {
+            background: rgba(140, 29, 64, 0.2);
+            border-color: rgba(140, 29, 64, 0.4);
+        }
+
+        .hero-section h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 800;
+        }
+
+        .hero-section h2 span {
+            color: var(--primary);
+        }
+
+        .hero-section p {
+            margin-top: 0.5rem;
+            color: var(--text-sub);
+            font-size: 0.95rem;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .form-section {
+            padding: 1.75rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Form Fields */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.45rem;
+        }
+
+        .required {
+            color: var(--primary);
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: var(--body-bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(140, 29, 64, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238C1D40' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 12px;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+
+        .hint-text {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            margin-top: 0.35rem;
+        }
+
+        .row-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Error States */
+        .error-message {
+            font-size: 0.7rem;
+            color: #e53935;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: #e53935;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        /* Backup Toggle */
+        .backup-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.2rem;
+            background: rgba(0, 163, 224, 0.05);
+            border: 1px solid rgba(0, 163, 224, 0.18);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            gap: 1rem;
+        }
+
+        .toggle-label strong {
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: block;
+        }
+
+        .toggle-label span {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #d1d5db;
+            border-radius: 50px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .slider:before {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .slider {
+            background: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Backup Builder */
+        .backup-builder {
+            display: none;
+            margin-top: 1.25rem;
+        }
+
+        .backup-builder.visible {
+            display: block;
+        }
+
+        .backup-row {
+            display: grid;
+            grid-template-columns: 1fr 140px 100px auto;
+            gap: 0.6rem;
+            align-items: end;
+            margin-bottom: 0.75rem;
+        }
+
+        .mini-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .backup-row input,
+        .backup-row select {
+            background: var(--body-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.8rem;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .backup-row input:focus,
+        .backup-row select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.1);
+        }
+
+        .remove-btn {
+            width: 38px;
+            height: 38px;
+            background: rgba(229, 57, 53, 0.1);
+            border: 1px solid rgba(229, 57, 53, 0.25);
+            border-radius: 8px;
+            color: #e53935;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .remove-btn:hover {
+            background: rgba(229, 57, 53, 0.18);
+        }
+
+        .add-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(0, 163, 224, 0.08);
+            border: 1.5px dashed rgba(0, 163, 224, 0.35);
+            color: #0076a8;
+            border-radius: 8px;
+            padding: 0.55rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .add-link-btn:hover {
+            background: rgba(0, 163, 224, 0.14);
+            border-color: var(--accent);
+        }
+
+        /* Submit Footer */
+        .submit-footer {
+            padding: 1.5rem 2rem;
+            background: color-mix(in srgb, var(--primary) 3%, transparent);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.85rem 2.2rem;
+            border-radius: 50px;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .submit-btn:hover {
+            background: color-mix(in srgb, var(--primary) 85%, black);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(140, 29, 64, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .footer-note {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2.5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Success Overlay */
+        .success-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .success-overlay.show {
+            display: flex;
+        }
+
+        .success-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-card p {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .success-btn {
+            padding: 0.65rem 1.4rem;
+            border-radius: 50px;
+            border: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .success-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .success-btn.secondary {
+            background: var(--body-bg);
+            color: var(--text-main);
+            border: 1.5px solid var(--border);
+        }
+
+        /* Footer */
+        footer {
+            background: color-mix(in srgb, var(--primary) 95%, black);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.82rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            margin-top: 0.5rem;
+            opacity: 0.55;
+            font-size: 0.75rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1.5rem 1rem 3rem;
+            }
+
+            .form-section {
+                padding: 1.25rem 1.25rem;
+            }
+
+            .submit-footer {
+                padding: 1.25rem;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .row-two {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .backup-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .btn-header .btn-text {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <div class="logo-icon">📚</div>
+            <div class="logo-text">
+                <h1>ASU E-Library Hub</h1>
+                <span>Submit a File</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="student_submissions_board" class="btn-header">📋 <span class="btn-text">Board</span></a>
+            <a href="index.html" class="btn-header">← <span class="btn-text">Home</span></a>
+            <button class="btn-header" id="darkToggle" onclick="toggleDarkMode()">🌙</button>
+        </div>
+    </div>
+</header>
+
+<main class="main-container">
+    <div class="hero-section">
+        <div class="eyebrow">📤 Upload to Campus Screen</div>
+        <h2>Submit Your <span>Presentation</span></h2>
+        <p>Your file will be reviewed and added to the campus display board once approved.</p>
+    </div>
+
+    <div class="form-card">
+        <!-- Student Info -->
+        <div class="form-section">
+            <div class="section-title">👤 Student Information</div>
+            <div class="row-two">
+                <div class="form-group" id="groupName">
+                    <label>Student Name <span class="required">*</span></label>
+                    <input type="text" id="studentName" placeholder="e.g., Nadeen Al-Ahmad" autocomplete="name">
+                    <div class="error-message" id="errorName">Please enter your name.</div>
+                </div>
+                <div class="form-group">
+                    <label>Student ID <span style="color: var(--text-sub); font-weight: 400;">(optional)</span></label>
+                    <input type="text" id="studentId" placeholder="e.g., 201842000">
+                </div>
+            </div>
+        </div>
+
+        <!-- File Details -->
+        <div class="form-section">
+            <div class="section-title">📄 File Details</div>
+            <div class="form-group" id="groupTitle">
+                <label>Presentation / File Title <span class="required">*</span></label>
+                <input type="text" id="presentationTitle" placeholder="e.g., Teaching Writing Strategies">
+                <div class="error-message" id="errorTitle">Please enter the file title.</div>
+            </div>
+            <div class="row-two">
+                <div class="form-group" id="groupType">
+                    <label>File Type <span class="required">*</span></label>
+                    <select id="fileType">
+                        <option value="">Select type…</option>
+                        <option value="pdf">📄 PDF</option>
+                        <option value="pptx">📊 PowerPoint (PPTX)</option>
+                        <option value="docx">📝 Word (DOCX)</option>
+                        <option value="image">🖼️ Image</option>
+                        <option value="video">🎬 Video</option>
+                    </select>
+                    <div class="error-message" id="errorType">Please select a file type.</div>
+                </div>
+                <div class="form-group" id="groupPlatform">
+                    <label>Platform <span class="required">*</span></label>
+                    <select id="platform">
+                        <option value="">Select platform…</option>
+                        <option value="Google Drive">Google Drive</option>
+                        <option value="OneDrive">OneDrive</option>
+                        <option value="Dropbox">Dropbox</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div class="error-message" id="errorPlatform">Please select a platform.</div>
+                </div>
+            </div>
+            <div class="form-group" id="groupUrl">
+                <label>Primary File URL <span class="required">*</span></label>
+                <input type="url" id="primaryUrl" placeholder="https://drive.google.com/… or https://…sharepoint.com/…">
+                <div class="hint-text">Paste the shareable link. Make sure it is set to "Anyone with the link can view".</div>
+                <div class="error-message" id="errorUrl">Please enter a valid URL starting with https://</div>
+            </div>
+            <div class="form-group">
+                <label>Notes <span style="color: var(--text-sub); font-weight: 400;">(optional)</span></label>
+                <textarea id="notes" placeholder="Any notes for the library team (e.g., course name, preferred display time)…"></textarea>
+            </div>
+        </div>
+
+        <!-- Backup Options -->
+        <div class="form-section">
+            <div class="section-title">🛡 Backup Options</div>
+            <div class="backup-toggle" onclick="toggleBackup()">
+                <div class="toggle-label">
+                    <strong>Mark as Backup File</strong>
+                    <span>Enable if this is a backup in case the main file can't open on campus.</span>
+                </div>
+                <label class="toggle-switch" onclick="event.stopPropagation()">
+                    <input type="checkbox" id="isBackup" onchange="toggleBackup()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="backup-builder" id="backupBuilder">
+                <div style="font-size: 0.8rem; color: var(--text-sub); margin: 1rem 0 0.75rem; padding: 0.6rem 0.8rem; background: rgba(0, 163, 224, 0.06); border-radius: 8px; border: 1px solid rgba(0, 163, 224, 0.15);">
+                    💡 Add additional backup links below — different formats or platforms. All will appear on the submissions card.
+                </div>
+                <div id="backupList"></div>
+                <button type="button" class="add-link-btn" onclick="addBackupLink()">＋ Add Backup Link</button>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="submit-footer">
+            <div class="footer-note">🔒 Submissions are reviewed before appearing on the board.</div>
+            <button class="submit-btn" id="submitBtn" onclick="submitForm()">📤 Submit File</button>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div>
+        <a href="index.html">Home</a> &nbsp;·&nbsp;
+        <a href="student_submissions_board">Submissions Board</a> &nbsp;·&nbsp;
+        <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ">Contact Library</a>
+    </div>
+    <div class="copyright">© 2026 ASU E-Library Hub. All rights reserved.</div>
+</footer>
+
+<!-- Success Overlay -->
+<div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+        <div class="success-icon">🎉</div>
+        <h3>Submission Received!</h3>
+        <p>Your file is pending review. It will appear on the submissions board once approved by the library team.</p>
+        <div class="success-buttons">
+            <button class="success-btn primary" onclick="location.href='student_submissions_board'">📋 View Board</button>
+            <button class="success-btn secondary" onclick="resetForm()">＋ Submit Another</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  ⚠️  PASTE YOUR APPS SCRIPT WEB APP URL BELOW
+// ══════════════════════════════════════════════════════
+const API_URL = 'https://script.google.com/macros/s/AKfycbxT65oWO1Pve_9i4xThLiKBDZ1KTHlOoetrcOMo1A9QjoK8cm7djR077INB-yVSVaWN/exec';
+
+// Dark Mode
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', isDark ? '1' : '0');
+}
+
+if (localStorage.getItem('darkMode') === '1') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('darkToggle').textContent = '☀️';
+}
+
+// Backup functionality
+let backupCounter = 0;
+
+function toggleBackup() {
+    const isChecked = document.getElementById('isBackup').checked;
+    document.getElementById('backupBuilder').classList.toggle('visible', isChecked);
+}
+
+function addBackupLink() {
+    backupCounter++;
+    const id = 'backup_' + backupCounter;
+    const row = document.createElement('div');
+    row.className = 'backup-row';
+    row.id = id;
+    row.innerHTML = `
+        <div>
+            <span class="mini-label">File URL</span>
+            <input type="url" placeholder="https://…" data-field="url">
+        </div>
+        <div>
+            <span class="mini-label">Platform</span>
+            <select data-field="platform">
+                <option value="Google Drive">Google Drive</option>
+                <option value="OneDrive">OneDrive</option>
+                <option value="Dropbox">Dropbox</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div>
+            <span class="mini-label">Type</span>
+            <select data-field="type">
+                <option value="pdf">PDF</option>
+                <option value="pptx">PPTX</option>
+                <option value="docx">DOCX</option>
+                <option value="image">Image</option>
+            </select>
+        </div>
+        <button type="button" class="remove-btn" onclick="document.getElementById('${id}').remove()" title="Remove">✕</button>
+    `;
+    document.getElementById('backupList').appendChild(row);
+}
+
+function getBackupLinks() {
+    return Array.from(document.querySelectorAll('#backupList .backup-row')).map(row => ({
+        url: row.querySelector('[data-field="url"]').value.trim(),
+        platform: row.querySelector('[data-field="platform"]').value,
+        type: row.querySelector('[data-field="type"]').value,
+        label: document.getElementById('presentationTitle').value.trim() || 'Backup File'
+    })).filter(link => link.url);
+}
+
+// Validation helpers
+function showError(groupId, errorId, isValid) {
+    const group = document.getElementById(groupId);
+    if (!isValid) {
+        group.classList.add('error');
+        return false;
+    }
+    group.classList.remove('error');
+    return true;
+}
+
+// Submit form using JSONP
+function submitForm() {
+    const name = document.getElementById('studentName').value.trim();
+    const title = document.getElementById('presentationTitle').value.trim();
+    const fileType = document.getElementById('fileType').value;
+    const platform = document.getElementById('platform').value;
+    const url = document.getElementById('primaryUrl').value.trim();
+
+    let isValid = true;
+    isValid = showError('groupName', 'errorName', name.length > 0) && isValid;
+    isValid = showError('groupTitle', 'errorTitle', title.length > 0) && isValid;
+    isValid = showError('groupType', 'errorType', fileType.length > 0) && isValid;
+    isValid = showError('groupPlatform', 'errorPlatform', platform.length > 0) && isValid;
+    isValid = showError('groupUrl', 'errorUrl', url.startsWith('https://') || url.startsWith('http://')) && isValid;
+
+    if (!isValid) {
+        document.querySelector('.form-group.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading-spinner"></span> Submitting…';
+
+    const payload = {
+        studentName: name,
+        presentationTitle: title,
+        fileType: fileType,
+        platform: platform,
+        primaryUrl: url,
+        notes: document.getElementById('notes').value.trim(),
+        isBackup: document.getElementById('isBackup').checked,
+        backupLinks: getBackupLinks()
+    };
+
+    const callbackName = 'jsonp_callback_' + Date.now();
+    
+    window[callbackName] = function(response) {
+        delete window[callbackName];
+        document.head.removeChild(script);
+        
+        if (response && response.success) {
+            document.getElementById('successOverlay').classList.add('show');
+        } else {
+            alert('❌ Submission failed: ' + (response?.error || 'Unknown error'));
+        }
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '📤 Submit File';
+    };
+    
+    const encodedData = encodeURIComponent(JSON.stringify(payload));
+    const script = document.createElement('script');
+    script.src = `${API_URL}?action=submit&data=${encodedData}&callback=${callbackName}`;
+    script.onerror = function() {
+        delete window[callbackName];
+        document.head.removeChild(script);
+        alert('❌ Network error. Please check:\n1. API URL is correct\n2. Script is deployed\n3. Internet connection');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '📤 Submit File';
+    };
+    
+    document.head.appendChild(script);
+}
+
+function resetForm() {
+    document.getElementById('successOverlay').classList.remove('show');
+    document.getElementById('studentName').value = '';
+    document.getElementById('studentId').value = '';
+    document.getElementById('presentationTitle').value = '';
+    document.getElementById('primaryUrl').value = '';
+    document.getElementById('notes').value = '';
+    document.getElementById('fileType').value = '';
+    document.getElementById('platform').value = '';
+    document.getElementById('isBackup').checked = false;
+    document.getElementById('backupBuilder').classList.remove('visible');
+    document.getElementById('backupList').innerHTML = '';
+    document.querySelectorAll('.form-group').forEach(g => g.classList.remove('error'));
+    backupCounter = 0;
+}
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+
+</body>
+</html>
