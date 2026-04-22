@@ -596,10 +596,108 @@
         .size-lg { color: #ef4444; font-weight: 600; }
 
         @media (max-width: 768px) {
-            .container { padding: 16px; }
-            .stats { padding: 8px 20px; gap: 16px; }
-            .file-row { grid-template-columns: 40px minmax(0, 2fr) 80px; }
+            /* Container */
+            .container { padding: 12px; }
+
+            /* Header */
+            .header { padding: 18px 16px; border-radius: 22px; }
+            .logo { width: 50px; height: 50px; font-size: 24px; border-radius: 16px; }
+            .title h1 { font-size: 22px; }
+            .title p { font-size: 13px; }
+            .stats {
+                padding: 8px 16px;
+                gap: 16px;
+                width: 100%;
+                justify-content: center;
+            }
+            .stat-number { font-size: 22px; }
+
+            /* V2 Button */
+            .v2-glow-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 20px;
+                font-size: 0.95rem;
+                gap: 10px;
+            }
+
+            /* Search section */
+            .search-section { padding: 16px; border-radius: 20px; }
+            .search-actions {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .search-btn, .clear-btn {
+                flex: 1 1 auto;
+                justify-content: center;
+                padding: 11px 16px;
+                font-size: 14px;
+                min-width: 0;
+            }
+            .adv-search-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 11px 16px;
+                font-size: 14px;
+            }
+
+            /* Sort section */
+            .sort-section { padding: 16px; border-radius: 20px; }
+            .sort-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            .sort-group {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .sort-buttons, .order-buttons {
+                width: 100%;
+                gap: 8px;
+            }
+            .sort-chip, .order-chip {
+                flex: 1 1 auto;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            /* Files container */
+            .files-container { padding: 16px; border-radius: 22px; }
+            .files-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            .view-toggle { width: 100%; }
+            .view-btn { flex: 1; justify-content: center; }
+            .section-title { font-size: 18px; }
+
+            /* Grid */
+            .files-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            .file-card { padding: 16px; border-radius: 18px; }
+            .file-icon { width: 46px; height: 46px; font-size: 24px; margin-bottom: 12px; }
+            .file-name { font-size: 14px; }
+
+            /* List view */
+            .file-row { grid-template-columns: 40px minmax(0, 2fr) 80px; gap: 10px; padding: 12px 14px; }
             .list-date { display: none; }
+
+            /* Loading notice */
+            .loading-notice { font-size: 13px; padding: 11px 14px; }
+        }
+
+        @media (max-width: 400px) {
+            .files-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .title h1 { font-size: 19px; }
+            .logo-section { gap: 12px; }
         }
 
         /* Loading Notice Banner */
