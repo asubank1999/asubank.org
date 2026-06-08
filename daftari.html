@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark" data-lang="ar">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Daftarna | دفترنا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════
+   CSS VARIABLES — LIGHT & DARK
+═══════════════════════════════════════════════════ */
+:root {
+  --gold:       #c9a84c;
+  --gold-l:     #e8d09a;
+  --gold-d:     #9a7535;
+  --radius:     14px;
+  --gap:        clamp(1.2rem,4vw,2.8rem);
+  --font-ar:    'Tajawal', sans-serif;
+  --font-en:    'DM Sans', sans-serif;
+  --trans:      .25s ease;
+}
+[data-theme="light"] {
+  --bg:         #f8f5f0;
+  --bg2:        #f0ece4;
+  --bg3:        #fffcf7;
+  --surface:    #ffffff;
+  --border:     rgba(201,168,76,.18);
+  --border2:    rgba(0,0,0,.08);
+  --ink:        #1a1410;
+  --ink2:       #5a4e44;
+  --ink3:       #9a8f85;
+  --nav-bg:     rgba(248,245,240,.92);
+  --shadow:     rgba(0,0,0,.08);
+  --shadow-lg:  rgba(0,0,0,.14);
+}
+[data-theme="dark"] {
+  --bg:         #131110;
+  --bg2:        #1c1916;
+  --bg3:        #201d1a;
+  --surface:    #252018;
+  --border:     rgba(201,168,76,.2);
+  --border2:    rgba(255,255,255,.07);
+  --ink:        #f0ebe3;
+  --ink2:       #b8ad9e;
+  --ink3:       #7a6e64;
+  --nav-bg:     rgba(19,17,16,.92);
+  --shadow:     rgba(0,0,0,.3);
+  --shadow-lg:  rgba(0,0,0,.5);
+}
+
+/* ═══════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-ar);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background var(--trans), color var(--trans);
+}
+[data-lang="en"] body,
+[data-lang="en"] * { font-family: var(--font-en); }
+[data-lang="en"] { direction: ltr; }
+[data-lang="ar"] { direction: rtl; }
+
+/* lang-specific content */
+.en { display: none; }
+.ar { display: block; }
+[data-lang="en"] .en { display: block; }
+[data-lang="en"] .ar { display: none; }
+[data-lang="en"] .en-inline { display: inline; }
+[data-lang="en"] .ar-inline { display: none; }
+.en-inline { display: none; }
+.ar-inline { display: inline; }
+
+/* ═══════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 200;
+  padding: .9rem var(--gap);
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--trans);
+}
+.nav-logo {
+  font-size: 1.5rem; font-weight: 900; color: var(--ink);
+  cursor: pointer; text-decoration: none;
+  flex-shrink: 0;
+}
+.nav-logo em { color: var(--gold); font-style: normal; }
+.nav-right { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.nav-pill {
+  border: 1.5px solid var(--border2);
+  background: transparent; color: var(--ink);
+  padding: .42rem 1rem; border-radius: 100px;
+  font-size: .82rem; font-weight: 600;
+  cursor: pointer; transition: var(--trans);
+  font-family: inherit;
+}
+.nav-pill:hover { border-color: var(--gold); color: var(--gold-d); }
+.nav-cta {
+  background: var(--gold); color: #1a1410;
+  border: none; padding: .5rem 1.3rem;
+  border-radius: 100px; font-size: .85rem;
+  font-weight: 700; cursor: pointer; transition: var(--trans);
+  font-family: inherit;
+}
+.nav-cta:hover { background: var(--gold-d); color: #fff; transform: translateY(-1px); }
+.theme-toggle {
+  width: 38px; height: 38px;
+  border: 1.5px solid var(--border2);
+  background: transparent; color: var(--ink);
+  border-radius: 50%; cursor: pointer; font-size: 1rem;
+  display: grid; place-items: center; transition: var(--trans);
+  flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: var(--gold); }
+
+/* ═══════════════════════════════════════════════════
+   PAGE MANAGEMENT
+═══════════════════════════════════════════════════ */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ═══════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════ */
+#hero {
+  padding-top: 86px;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: flex-start;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 55% at 5% 90%, rgba(201,168,76,.12), transparent 55%),
+    radial-gradient(ellipse 40% 40% at 95% 10%, rgba(201,168,76,.08), transparent 50%);
+}
+.hero-ring {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  border: 1px solid rgba(201,168,76,.12);
+  animation: spinRing 70s linear infinite;
+}
+.hero-ring-1 { width: 600px; height: 600px; top: -200px; right: -200px; }
+.hero-ring-2 { width: 380px; height: 380px; bottom: -100px; left: -140px; animation-duration: 50s; animation-direction: reverse; }
+@keyframes spinRing { to { transform: rotate(360deg); } }
+
+.hero-inner {
+  position: relative; z-index: 1;
+  padding: var(--gap) var(--gap) var(--gap) calc(var(--gap) * 2);
+  max-width: 700px;
+  width: 100%;
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+}
+[data-lang="en"] .hero-inner { padding: var(--gap) calc(var(--gap)*1.5) var(--gap) var(--gap); }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .75rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--gold-d); font-weight: 600;
+  border: 1px solid var(--gold-l);
+  padding: .32rem 1rem; border-radius: 100px;
+  margin-bottom: 1.6rem;
+  animation: fadeUp .7s ease both;
+}
+[data-theme="dark"] .hero-badge { border-color: rgba(201,168,76,.3); color: var(--gold); }
+.hero-title {
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  font-weight: 900; line-height: 1.08;
+  animation: fadeUp .7s .1s ease both;
+}
+.hero-title em { color: var(--gold); font-style: normal; }
+.hero-desc {
+  margin-top: 1.4rem;
+  font-size: clamp(.95rem, 2vw, 1.1rem);
+  color: var(--ink2); max-width: 480px;
+  animation: fadeUp .7s .2s ease both;
+}
+.hero-btns {
+  margin-top: 2.4rem; display: flex; gap: .8rem; flex-wrap: wrap;
+  animation: fadeUp .7s .3s ease both;
+}
+.btn-cta {
+  background: var(--ink); color: var(--bg);
+  border: none; padding: .85rem 2.2rem;
+  border-radius: 100px; font-size: .95rem; font-weight: 700;
+  cursor: pointer; transition: var(--trans); font-family: inherit;
+  box-shadow: 0 6px 24px var(--shadow-lg);
+}
+.btn-cta:hover { background: var(--gold); color: #1a1410; transform: translateY(-2px); }
+.btn-outline {
+  background: transparent; color: var(--ink);
+  border: 1.5px solid var(--border2);
+  padding: .85rem 2.2rem;
+  border-radius: 100px; font-size: .95rem; font-weight: 600;
+  cursor: pointer; transition: var(--trans); font-family: inherit;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold-d); transform: translateY(-2px); }
+
+.hero-stats {
+  margin-top: 3rem; display: flex; gap: 2rem; flex-wrap: wrap;
+  animation: fadeUp .7s .4s ease both;
+}
+.stat { }
+.stat-num { font-size: 1.5rem; font-weight: 900; color: var(--gold); }
+.stat-lbl { font-size: .78rem; color: var(--ink3); }
+
+/* ═══════════════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════════════ */
+.section {
+  padding: clamp(4rem,10vw,7rem) var(--gap);
+  max-width: 1140px; margin: 0 auto;
+  text-align: start;
+}
+.section-tag {
+  font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gold-d); font-weight: 700;
+  margin-bottom: .8rem;
+  display: block;
+}
+[data-theme="dark"] .section-tag { color: var(--gold); }
+.section-h {
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  font-weight: 800; line-height: 1.2; margin-bottom: 3rem;
+  text-align: start;
+}
+
+/* Features */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2rem;
+}
+.feat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.8rem 1.6rem;
+  transition: var(--trans);
+}
+.feat:hover { transform: translateY(-3px); box-shadow: 0 12px 36px var(--shadow); }
+.feat-icon {
+  width: 50px; height: 50px; border-radius: 12px;
+  background: var(--bg2); border: 1px solid var(--border);
+  display: grid; place-items: center; font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.feat h3 { font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+.feat p  { font-size: .87rem; color: var(--ink2); }
+
+/* Steps */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.8rem; }
+.step { text-align: center; }
+.step-n {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--gold); color: #1a1410;
+  font-size: 1.4rem; font-weight: 900;
+  display: grid; place-items: center; margin: 0 auto 1rem;
+  box-shadow: 0 6px 18px rgba(201,168,76,.3);
+}
+.step h3 { font-size: .97rem; font-weight: 700; margin-bottom: .35rem; }
+.step p  { font-size: .83rem; color: var(--ink2); }
+
+/* CTA Banner */
+.cta-banner {
+  background: var(--ink); color: var(--bg);
+  border-radius: 20px; margin: 0 var(--gap);
+  padding: clamp(3rem,8vw,5rem) var(--gap);
+  text-align: center; position: relative; overflow: hidden;
+}
+.cta-banner::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% -10%, rgba(201,168,76,.22), transparent 55%);
+  pointer-events: none;
+}
+.cta-banner h2 { font-size: clamp(1.6rem,4vw,2.5rem); font-weight: 900; margin-bottom: .8rem; position: relative; }
+.cta-banner p  { opacity: .72; max-width: 440px; margin: 0 auto 2rem; position: relative; font-size: .95rem; }
+
+/* Footer */
+footer {
+  text-align: center; padding: 2rem var(--gap);
+  font-size: .82rem; color: var(--ink3);
+  border-top: 1px solid var(--border);
+}
+
+/* ═══════════════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════════════ */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(6px);
+  z-index: 500; display: grid; place-items: center; padding: 1rem;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 2.4rem 2rem;
+  width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;
+  transform: translateY(16px); transition: transform .3s;
+  position: relative;
+}
+.overlay.open .modal { transform: translateY(0); }
+.modal-x {
+  position: absolute; top: 1rem;
+  width: 32px; height: 32px;
+  background: var(--bg2); border: none; border-radius: 50%;
+  cursor: pointer; font-size: 1rem; display: grid; place-items: center;
+  color: var(--ink); transition: var(--trans);
+}
+[data-lang="ar"] .modal-x { left: 1rem; }
+[data-lang="en"] .modal-x { right: 1rem; }
+.modal-x:hover { background: var(--gold-l); }
+.modal h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: .25rem; }
+.modal .sub { font-size: .85rem; color: var(--ink3); margin-bottom: 1.8rem; }
+
+/* ═══════════════════════════════════════════════════
+   FORMS
+═══════════════════════════════════════════════════ */
+.fgrp { margin-bottom: 1.1rem; }
+.fgrp label { display: block; font-size: .82rem; font-weight: 700; margin-bottom: .4rem; color: var(--ink); }
+.fgrp input, .fgrp textarea, .fgrp select {
+  width: 100%; background: var(--bg);
+  border: 1.5px solid var(--border2);
+  border-radius: 10px; padding: .72rem 1rem;
+  font-family: inherit; font-size: .92rem; color: var(--ink);
+  outline: none; resize: vertical; transition: border .2s;
+}
+.fgrp input:focus, .fgrp textarea:focus, .fgrp select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.13);
+}
+[data-theme="dark"] .fgrp input,
+[data-theme="dark"] .fgrp textarea,
+[data-theme="dark"] .fgrp select {
+  background: var(--bg2); border-color: var(--border);
+}
+.fgrp select option { background: var(--surface); color: var(--ink); }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.fhint { font-size: .75rem; color: var(--ink3); margin-top: .28rem; }
+
+.upload-zone {
+  border: 2px dashed rgba(201,168,76,.35);
+  border-radius: 10px; padding: 1.3rem;
+  text-align: center; cursor: pointer;
+  transition: var(--trans); background: var(--bg);
+}
+.upload-zone:hover { border-color: var(--gold); background: rgba(201,168,76,.04); }
+.upload-zone input[type=file] { display: none; }
+.upload-zone .uz-icon { font-size: 1.8rem; }
+.upload-zone .uz-lbl { font-size: .8rem; color: var(--ink3); margin-top: .3rem; }
+.photo-prev { width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px; margin-top: .7rem; display: none; }
+
+.btn-block {
+  width: 100%; padding: .88rem;
+  border-radius: 10px; border: none; font-family: inherit;
+  font-size: .95rem; font-weight: 700; cursor: pointer; transition: var(--trans);
+}
+.btn-dark  { background: var(--ink); color: var(--bg); }
+.btn-dark:hover  { background: var(--gold); color: #1a1410; }
+.btn-amber { background: var(--gold); color: #1a1410; }
+.btn-amber:hover { background: var(--gold-d); color: #fff; }
+
+.spin {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,.35); border-top-color: #fff;
+  border-radius: 50%; animation: spinning .65s linear infinite;
+  vertical-align: middle; margin-inline-start: .4rem;
+}
+.spin.dk { border-color: rgba(0,0,0,.2); border-top-color: #1a1410; }
+@keyframes spinning { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════════════
+   BOOK PAGE
+═══════════════════════════════════════════════════ */
+#page-book { padding-top: 70px; }
+
+.book-header {
+  background: linear-gradient(160deg, var(--ink) 0%, #2a2218 100%);
+  color: #f0ebe3;
+  padding: clamp(2.5rem,7vw,4.5rem) var(--gap) clamp(2rem,5vw,3rem);
+  position: relative; overflow: hidden;
+}
+.book-header::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% -5%, rgba(201,168,76,.2), transparent 55%);
+  pointer-events: none;
+}
+.book-header-inner {
+  position: relative; z-index: 1;
+  max-width: 760px; margin: 0 auto; text-align: center;
+}
+.book-avatar {
+  width: 96px; height: 96px; border-radius: 50%;
+  border: 3px solid var(--gold); object-fit: cover;
+  margin: 0 auto 1.1rem; display: block; background: #2a2218;
+}
+.book-name { font-size: clamp(1.9rem,5vw,3rem); font-weight: 900; }
+.book-meta { opacity: .72; font-size: .92rem; margin-top: .3rem; }
+.book-cover-quote { max-width: 520px; margin: 1.2rem auto 0; font-size: .95rem; opacity: .82; font-style: italic; }
+
+.book-toolbar {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: .8rem var(--gap);
+  display: flex; align-items: center; justify-content: center;
+  gap: .7rem; flex-wrap: wrap;
+}
+.share-input {
+  flex: 1; max-width: 360px; min-width: 180px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 100px; padding: .45rem 1.1rem;
+  font-size: .82rem; color: var(--ink); outline: none;
+  font-family: inherit;
+}
+.tbtn {
+  padding: .45rem 1.1rem; border-radius: 100px;
+  border: none; font-family: inherit; font-size: .82rem;
+  cursor: pointer; transition: var(--trans); font-weight: 600;
+}
+.tbtn-dark  { background: var(--ink); color: var(--bg); }
+.tbtn-dark:hover  { background: var(--gold); color: #1a1410; }
+.tbtn-amber { background: var(--gold); color: #1a1410; }
+.tbtn-amber:hover { background: var(--gold-d); color: #fff; }
+
+.book-body {
+  max-width: 940px; margin: 0 auto;
+  padding: 2.5rem var(--gap);
+}
+.msgs-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.8rem; flex-wrap: wrap; gap: .8rem;
+}
+.msgs-h { font-size: 1.2rem; font-weight: 800; }
+.msgs-badge {
+  font-size: .78rem; color: var(--ink3);
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 100px; padding: .3rem .85rem;
+}
+.msgs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1.1rem;
+}
+.msg-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.4rem;
+  position: relative; transition: var(--trans);
+  animation: fadeUp .4s ease both;
+}
+.msg-card:hover { box-shadow: 0 8px 28px var(--shadow); }
+.msg-photo { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; margin-bottom: .9rem; display: block; }
+.msg-sender  { font-weight: 700; font-size: .93rem; margin-bottom: .2rem; }
+.msg-rel {
+  font-size: .75rem; color: var(--gold-d);
+  background: rgba(201,168,76,.1); padding: .15rem .65rem;
+  border-radius: 100px; display: inline-block; margin-bottom: .7rem;
+}
+[data-theme="dark"] .msg-rel { color: var(--gold); background: rgba(201,168,76,.15); }
+.msg-body { font-size: .88rem; color: var(--ink2); line-height: 1.65; }
+.msg-date  { font-size: .7rem; color: var(--ink3); margin-top: .7rem; }
+.msg-del {
+  position: absolute; top: .75rem;
+  width: 26px; height: 26px; border: none;
+  background: rgba(220,60,60,.1); color: #c04040;
+  border-radius: 50%; font-size: .75rem; cursor: pointer;
+  display: none; place-items: center; transition: var(--trans);
+}
+[data-lang="ar"] .msg-del { left: .75rem; }
+[data-lang="en"] .msg-del { right: .75rem; }
+.msg-del:hover { background: rgba(220,60,60,.22); }
+.owner-mode .msg-del { display: grid; }
+
+/* Locked */
+.locked-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 3rem 2rem; text-align: center; margin: 1rem 0;
+}
+.locked-box .l-icon { font-size: 2.8rem; margin-bottom: .9rem; }
+.locked-box h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: .4rem; }
+.locked-box p  { color: var(--ink2); font-size: .9rem; }
+.countdown { font-size: 1.9rem; font-weight: 900; color: var(--gold); margin: 1rem 0; }
+
+/* Empty */
+.empty-state { text-align: center; padding: 4rem 1rem; color: var(--ink3); }
+.empty-state .ei { font-size: 2.8rem; margin-bottom: .8rem; }
+
+/* Success */
+.success-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 2rem; text-align: center;
+}
+.success-box .si  { font-size: 2.8rem; margin-bottom: .7rem; }
+.success-box h3   { font-size: 1.2rem; font-weight: 800; margin-bottom: .3rem; }
+.success-box p    { font-size: .87rem; color: var(--ink2); margin-bottom: 1.1rem; }
+.copy-row {
+  display: flex; align-items: center; gap: .5rem;
+  background: var(--bg2); border-radius: 10px; padding: .55rem .8rem; margin-bottom: .8rem;
+}
+.copy-row input {
+  flex: 1; border: none; background: transparent; font-family: inherit;
+  font-size: .82rem; color: var(--ink); outline: none;
+}
+.copy-row button {
+  border: none; background: var(--gold); color: #1a1410;
+  border-radius: 7px; padding: .38rem .85rem;
+  font-family: inherit; font-size: .78rem; font-weight: 700; cursor: pointer;
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: 1.8rem; right: 1.8rem;
+  background: var(--ink); color: var(--bg);
+  padding: .72rem 1.4rem; border-radius: 100px;
+  font-size: .88rem; z-index: 700;
+  transform: translateY(60px); opacity: 0;
+  transition: .3s; pointer-events: none; font-weight: 600;
+}
+[data-lang="en"] .toast { right: 1.8rem; left: auto; }
+[data-lang="ar"] .toast { left: 1.8rem; right: auto; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.gold { background: var(--gold); color: #1a1410; }
+.toast.red  { background: #c04040; color: #fff; }
+
+/* ═══════════════════════════════════════════════════
+   API SETUP BANNER
+═══════════════════════════════════════════════════ */
+.setup-banner {
+  background: linear-gradient(135deg, #2a1f0a, #1a1410);
+  color: #f0ebe3; padding: 1rem var(--gap);
+  text-align: center; font-size: .85rem;
+  border-bottom: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  gap: .6rem; flex-wrap: wrap;
+}
+.setup-banner strong { color: var(--gold); }
+.setup-banner a { color: var(--gold-l); }
+.setup-banner.hidden { display: none; }
+
+/* ═══════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════ */
+@media (max-width: 520px) {
+  .frow { grid-template-columns: 1fr; }
+  .hero-btns { flex-direction: column; }
+  .book-toolbar { flex-direction: column; }
+  .share-input { max-width: 100%; }
+  .msgs-grid { grid-template-columns: 1fr; }
+  .nav-right { gap: .4rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SETUP BANNER (hidden once API URL is set) ══ -->
+<div class="setup-banner hidden" id="setup-banner">
+  <span class="ar-inline">⚠️ لم يتم إعداد رابط الـ API بعد.</span>
+  <span class="en-inline">⚠️ API URL not configured yet.</span>
+  <strong>
+    <span class="ar-inline">افتح الكود وابحث عن <code>https://script.google.com/macros/s/AKfycbxgJXBlTDwREp6iq4NH79tb93oNyzwQZ8iOvAw1p8vCq7YiuFo60RnbE-htrs5Vbrs/exec</code> واستبدله برابط النشر</span>
+    <span class="en-inline">Open the code, find <code>https://script.google.com/macros/s/AKfycbxgJXBlTDwREp6iq4NH79tb93oNyzwQZ8iOvAw1p8vCq7YiuFo60RnbE-htrs5Vbrs/exec</code> and replace with your deploy URL</span>
+  </strong>
+  <a href="#" onclick="dismissBanner()">✕</a>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a class="nav-logo" onclick="goHome()">دفتر<em>نا</em> <span style="font-family:var(--font-en);font-size:.85rem;opacity:.6;font-weight:500">Daftarna</span></a>
+  <div class="nav-right">
+    <button class="nav-pill" onclick="showOverlay('ov-open')">
+      <span class="ar">فتح كتاب</span><span class="en">Open Book</span>
+    </button>
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">☀️</button>
+    <button class="nav-pill" onclick="toggleLang()" id="lang-btn">EN</button>
+    <button class="nav-cta" onclick="showOverlay('ov-create')">
+      <span class="ar">✨ ابدأ مجاناً</span><span class="en">✨ Start Free</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════
+     PAGE: LANDING
+══════════════════════════════════════════════════ -->
+<div id="page-landing" class="page active">
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-ring hero-ring-1"></div>
+    <div class="hero-ring hero-ring-2"></div>
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span>✦</span>
+        <span class="ar">كتاب التخرج الرقمي</span>
+        <span class="en">Digital Graduation Book</span>
+        <span>✦</span>
+      </div>
+      <h1 class="hero-title ar">
+        اجمع<br/><em>ذكرياتك</em><br/>في مكان واحد
+      </h1>
+      <h1 class="hero-title en">
+        Collect your<br/><em>memories</em><br/>in one place
+      </h1>
+      <p class="hero-desc ar">أنشئ كتاب تخرجك الرقمي المجاني، شاركه مع أحبائك، واحتفظ برسائلهم وصورهم إلى الأبد.</p>
+      <p class="hero-desc en">Create your free digital graduation book, share it with loved ones, and keep their messages and photos forever.</p>
+      <div class="hero-btns">
+        <button class="btn-cta" onclick="showOverlay('ov-create')">
+          <span class="ar">أنشئ كتابك الآن — مجاناً</span>
+          <span class="en">Create Your Book — Free</span>
+        </button>
+        <button class="btn-outline" onclick="showOverlay('ov-open')">
+          <span class="ar">لديّ رابط كتاب</span>
+          <span class="en">I have a book link</span>
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">100%</div>
+          <div class="stat-lbl ar">مجاني</div>
+          <div class="stat-lbl en">Free</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">∞</div>
+          <div class="stat-lbl ar">رسائل</div>
+          <div class="stat-lbl en">Messages</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">PDF</div>
+          <div class="stat-lbl ar">قابل للتحميل</div>
+          <div class="stat-lbl en">Downloadable</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <div class="section">
+    <div class="section-tag ar">✦ المميزات ✦</div>
+    <div class="section-tag en">✦ Features ✦</div>
+    <h2 class="section-h ar">كل ما تحتاجه في كتاب واحد</h2>
+    <h2 class="section-h en">Everything you need in one book</h2>
+    <div class="features-grid">
+      <div class="feat"><div class="feat-icon">📖</div>
+        <h3 class="ar">كتاب رقمي مجاني</h3><h3 class="en">Free Digital Book</h3>
+        <p class="ar">أنشئ كتابك في ثوانٍ بدون تسجيل</p><p class="en">Create your book in seconds, no account needed</p>
+      </div>
+      <div class="feat"><div class="feat-icon">💌</div>
+        <h3 class="ar">رسائل من أحبابك</h3><h3 class="en">Messages from Loved Ones</h3>
+        <p class="ar">يترك أصدقاؤك رسائل تبقى معك للأبد</p><p class="en">Friends leave personal messages that stay with you forever</p>
+      </div>
+      <div class="feat"><div class="feat-icon">📷</div>
+        <h3 class="ar">صور مع الرسائل</h3><h3 class="en">Photos with Messages</h3>
+        <p class="ar">يرفق كل شخص صورة مع رسالته</p><p class="en">Everyone can attach a photo to their message</p>
+      </div>
+      <div class="feat"><div class="feat-icon">⏰</div>
+        <h3 class="ar">تاريخ كشف مخصص</h3><h3 class="en">Custom Reveal Date</h3>
+        <p class="ar">اختر يوماً لتُكشف كل الرسائل دفعة واحدة</p><p class="en">Choose a date to reveal all messages at once</p>
+      </div>
+      <div class="feat"><div class="feat-icon">📄</div>
+        <h3 class="ar">تحميل كـ PDF</h3><h3 class="en">Download as PDF</h3>
+        <p class="ar">احفظ كتابك كملف PDF في أي وقت</p><p class="en">Save your book as a beautiful PDF anytime</p>
+      </div>
+      <div class="feat"><div class="feat-icon">🔒</div>
+        <h3 class="ar">خصوصية تامة</h3><h3 class="en">Full Privacy</h3>
+        <p class="ar">لا يصل للرسائل إلا عبر رابطك الخاص</p><p class="en">Only accessible through your private link</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div style="background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+    <div class="section">
+      <div class="section-tag ar">✦ كيف يعمل؟ ✦</div>
+      <div class="section-tag en">✦ How it works ✦</div>
+      <h2 class="section-h ar">أربع خطوات بسيطة</h2>
+      <h2 class="section-h en">Four simple steps</h2>
+      <div class="steps">
+        <div class="step"><div class="step-n">١</div>
+          <h3 class="ar">أنشئ كتابك</h3><h3 class="en">Create your book</h3>
+          <p class="ar">أدخل اسمك وبياناتك واختر تاريخ الكشف</p><p class="en">Enter your name, details and reveal date</p>
+        </div>
+        <div class="step"><div class="step-n">٢</div>
+          <h3 class="ar">شارك الرابط</h3><h3 class="en">Share the link</h3>
+          <p class="ar">أرسل رابطك لأصدقائك وعائلتك</p><p class="en">Send your link to friends and family</p>
+        </div>
+        <div class="step"><div class="step-n">٣</div>
+          <h3 class="ar">تتراكم الرسائل</h3><h3 class="en">Messages pour in</h3>
+          <p class="ar">يكتبون تهانيهم ويرفقون صورهم</p><p class="en">They write congratulations and attach photos</p>
+        </div>
+        <div class="step"><div class="step-n">٤</div>
+          <h3 class="ar">احتفظ بالذكرى</h3><h3 class="en">Keep the memory</h3>
+          <p class="ar">اقرأ الرسائل وحمّل الكتاب كـ PDF</p><p class="en">Read messages and download as PDF</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="section">
+    <div class="cta-banner">
+      <h2 class="ar">ابدأ تجميع ذكرياتك اليوم</h2>
+      <h2 class="en">Start collecting your memories today</h2>
+      <p class="ar">مجاني تماماً — لا يتطلب تسجيل حساب</p>
+      <p class="en">Completely free — no account required</p>
+      <button class="btn-cta" onclick="showOverlay('ov-create')">
+        <span class="ar">أنشئ كتابي الآن ✨</span>
+        <span class="en">Create My Book Now ✨</span>
+      </button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Daftarna | دفترنا &nbsp;·&nbsp; <span class="ar">كل الحقوق محفوظة</span><span class="en">All rights reserved</span></p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PAGE: BOOK
+══════════════════════════════════════════════════ -->
+<div id="page-book" class="page">
+  <div class="book-header">
+    <div class="book-header-inner">
+      <img id="book-avatar" class="book-avatar" src="" alt=""/>
+      <h1 class="book-name" id="book-name">—</h1>
+      <div class="book-meta" id="book-meta">—</div>
+      <div class="book-cover-quote" id="book-cover-quote"></div>
+    </div>
+  </div>
+
+  <div class="book-toolbar">
+    <input class="share-input" id="share-field" readonly value=""/>
+    <button class="tbtn tbtn-dark" onclick="copyShareUrl()">
+      <span class="ar">نسخ الرابط</span><span class="en">Copy Link</span>
+    </button>
+    <button class="tbtn tbtn-amber" onclick="showOverlay('ov-message')">
+      <span class="ar">أضف رسالة ✍️</span><span class="en">Add Message ✍️</span>
+    </button>
+    <button class="tbtn tbtn-dark" id="btn-pdf" onclick="downloadPDF()" style="display:none">
+      <span class="ar">تحميل PDF 📄</span><span class="en">Download PDF 📄</span>
+    </button>
+    <button class="tbtn tbtn-dark" id="btn-owner-key" onclick="showOverlay('ov-owner')" style="display:none">
+      <span class="ar">🔑 رابط المالك</span><span class="en">🔑 Owner Link</span>
+    </button>
+  </div>
+
+  <div class="book-body">
+    <div class="msgs-header">
+      <div class="msgs-h ar">الرسائل والتهاني 💌</div>
+      <div class="msgs-h en">Messages & Congratulations 💌</div>
+      <div class="msgs-badge" id="msgs-count">…</div>
+    </div>
+    <div id="msgs-container"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL: CREATE BOOK
+══════════════════════════════════════════════════ -->
+<div class="overlay" id="ov-create">
+  <div class="modal">
+    <button class="modal-x" onclick="closeOverlay('ov-create')">✕</button>
+    <h2 class="ar">أنشئ كتابك 📖</h2><h2 class="en">Create Your Book 📖</h2>
+    <p class="sub ar">أدخل معلوماتك وسنُنشئ رابطك فوراً</p>
+    <p class="sub en">Enter your details and we'll create your link instantly</p>
+    <div id="create-form">
+      <div class="fgrp">
+        <label class="ar">اسمك الكامل *</label><label class="en">Full Name *</label>
+        <input id="f-name" type="text" placeholder="e.g. Sara Ahmed / سارة أحمد"/>
+      </div>
+      <div class="frow">
+        <div class="fgrp">
+          <label class="ar">الجامعة</label><label class="en">University</label>
+          <input id="f-uni" type="text"/>
+        </div>
+        <div class="fgrp">
+          <label class="ar">التخصص</label><label class="en">Major</label>
+          <input id="f-major" type="text"/>
+        </div>
+      </div>
+      <div class="fgrp">
+        <label class="ar">سنة التخرج</label><label class="en">Graduation Year</label>
+        <input id="f-year" type="text" placeholder="2025"/>
+      </div>
+      <div class="fgrp">
+        <label class="ar">رسالة الغلاف (اختياري)</label><label class="en">Cover Message (optional)</label>
+        <textarea id="f-cover" rows="2" placeholder="A welcome note for visitors…"></textarea>
+      </div>
+      <div class="fgrp">
+        <label class="ar">📷 صورتك (اختياري)</label><label class="en">📷 Your Photo (optional)</label>
+        <div class="upload-zone" onclick="document.getElementById('f-photo').click()">
+          <div class="uz-icon">📸</div>
+          <div class="uz-lbl ar">انقر لرفع صورة</div>
+          <div class="uz-lbl en">Click to upload a photo</div>
+          <input type="file" id="f-photo" accept="image/*" onchange="prevPhoto(this,'f-photo-prev')"/>
+          <img id="f-photo-prev" class="photo-prev"/>
+        </div>
+      </div>
+      <div class="fgrp">
+        <label class="ar">⏰ تاريخ كشف الرسائل (اختياري)</label><label class="en">⏰ Message Reveal Date (optional)</label>
+        <input id="f-reveal" type="datetime-local"/>
+        <div class="fhint ar">إن اخترت تاريخاً، ستُخفى الرسائل حتى يصل ذلك التاريخ</div>
+        <div class="fhint en">Messages will be hidden until this date and time</div>
+      </div>
+      <button class="btn-block btn-dark" id="btn-create" onclick="createBook()">
+        <span class="ar">أنشئ كتابي الآن</span><span class="en">Create My Book Now</span>
+      </button>
+    </div>
+    <div id="create-success" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL: OPEN BOOK
+══════════════════════════════════════════════════ -->
+<div class="overlay" id="ov-open">
+  <div class="modal">
+    <button class="modal-x" onclick="closeOverlay('ov-open')">✕</button>
+    <h2 class="ar">افتح كتاباً 📚</h2><h2 class="en">Open a Book 📚</h2>
+    <p class="sub ar">الصق رابط الكتاب أو معرّفه</p>
+    <p class="sub en">Paste the book link or its ID</p>
+    <div class="fgrp">
+      <label class="ar">رابط أو معرّف الكتاب</label><label class="en">Book Link or ID</label>
+      <input id="f-open" type="text" placeholder="https://… or bk_123_xxxxx"/>
+    </div>
+    <button class="btn-block btn-dark" onclick="openBook()">
+      <span class="ar">فتح الكتاب</span><span class="en">Open Book</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL: ADD MESSAGE
+══════════════════════════════════════════════════ -->
+<div class="overlay" id="ov-message">
+  <div class="modal">
+    <button class="modal-x" onclick="closeOverlay('ov-message')">✕</button>
+    <h2 class="ar">أضف رسالتك ✍️</h2><h2 class="en">Add Your Message ✍️</h2>
+    <p class="sub ar">ستصل رسالتك لصاحب الكتاب</p>
+    <p class="sub en">Your message will be delivered to the graduate</p>
+    <div id="msg-form">
+      <div class="fgrp">
+        <label class="ar">اسمك *</label><label class="en">Your Name *</label>
+        <input id="m-name" type="text"/>
+      </div>
+      <div class="fgrp">
+        <label class="ar">صفتك / علاقتك</label><label class="en">Your Relation</label>
+        <select id="m-rel">
+          <option value="" class="ar">اختر…</option>
+          <option value="" class="en">Choose…</option>
+          <option value="Friend / صديق">Friend / صديق</option>
+          <option value="Classmate / زميل دراسة">Classmate / زميل دراسة</option>
+          <option value="Family / عائلة">Family / عائلة</option>
+          <option value="Professor / أستاذ">Professor / أستاذ</option>
+          <option value="Sibling / أخ أو أخت">Sibling / أخ أو أخت</option>
+          <option value="Parent / أحد الوالدين">Parent / أحد الوالدين</option>
+          <option value="Other / أخرى">Other / أخرى</option>
+        </select>
+      </div>
+      <div class="fgrp">
+        <label class="ar">رسالتك *</label><label class="en">Your Message *</label>
+        <textarea id="m-text" rows="4" placeholder="Write your congratulations here…"></textarea>
+      </div>
+      <div class="fgrp">
+        <label class="ar">📷 صورة (اختياري)</label><label class="en">📷 Photo (optional)</label>
+        <div class="upload-zone" onclick="document.getElementById('m-photo').click()">
+          <div class="uz-icon">📷</div>
+          <div class="uz-lbl ar">انقر لإرفاق صورة</div>
+          <div class="uz-lbl en">Click to attach a photo</div>
+          <input type="file" id="m-photo" accept="image/*" onchange="prevPhoto(this,'m-photo-prev')"/>
+          <img id="m-photo-prev" class="photo-prev"/>
+        </div>
+      </div>
+      <button class="btn-block btn-amber" id="btn-send" onclick="sendMessage()">
+        <span class="ar">إرسال الرسالة 💌</span><span class="en">Send Message 💌</span>
+      </button>
+    </div>
+    <div id="msg-success" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL: OWNER LINK
+══════════════════════════════════════════════════ -->
+<div class="overlay" id="ov-owner">
+  <div class="modal">
+    <button class="modal-x" onclick="closeOverlay('ov-owner')">✕</button>
+    <h2 class="ar">رابط المالك 🔑</h2><h2 class="en">Owner Link 🔑</h2>
+    <p class="sub ar">احتفظ به — يتيح لك حذف الرسائل وتحميل الـ PDF</p>
+    <p class="sub en">Keep this safe — it lets you delete messages and download PDF</p>
+    <div class="copy-row">
+      <input type="text" id="owner-field" readonly/>
+      <button onclick="copyField('owner-field')">
+        <span class="ar">نسخ</span><span class="en">Copy</span>
+      </button>
+    </div>
+    <div class="fhint" style="color:#c04040">
+      <span class="ar">⚠️ لا تشاركه مع أحد</span>
+      <span class="en">⚠️ Do not share this with anyone</span>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════ -->
+<script>
+// ╔══════════════════════════════════════════════════════╗
+//  ⚙️  CONFIGURATION
+//  Replace the URL below with your Google Apps Script
+//  web app deploy URL after publishing it.
+//  
+//  Steps:
+//  1. Open Google Sheets → Extensions → Apps Script
+//  2. Paste the Code.gs contents
+//  3. Deploy → New Deployment → Web App
+//     Execute as: Me | Who has access: Anyone
+//  4. Copy the URL and paste it below
+// ╚══════════════════════════════════════════════════════╝
+const API_URL = "https://script.google.com/macros/s/AKfycbxgJXBlTDwREp6iq4NH79tb93oNyzwQZ8iOvAw1p8vCq7YiuFo60RnbE-htrs5Vbrs/exec";
+
+// ── State ──────────────────────────────────────────────
+let BOOK_ID   = null;
+let OWNER_KEY = null;
+let LANG      = 'ar';
+let THEME     = 'light';
+
+// ── Boot ───────────────────────────────────────────────
+(function boot() {
+  // Restore theme/lang preferences
+  const savedTheme = localStorage.getItem('daftarna_theme') || 'dark';
+  const savedLang  = localStorage.getItem('daftarna_lang')  || 'ar';
+  applyTheme(savedTheme, false);
+  applyLang(savedLang, false);
+
+  // Check if API URL is configured
+  if (API_URL !== "https://script.google.com/macros/s/AKfycbxgJXBlTDwREp6iq4NH79tb93oNyzwQZ8iOvAw1p8vCq7YiuFo60RnbE-htrs5Vbrs/exec" && API_URL.startsWith('http')) {
+    document.getElementById('setup-banner').classList.add('hidden');
+  }
+
+  // Parse URL hash for book
+  parseHashAndLoad();
+  window.addEventListener('hashchange', parseHashAndLoad);
+})();
+
+function parseHashAndLoad() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+  try {
+    const params = new URLSearchParams(hash.startsWith('?') ? hash.slice(1) : hash);
+    const bid = params.get('b');
+    const ok  = params.get('ok');
+    if (bid) {
+      BOOK_ID   = bid;
+      OWNER_KEY = ok || null;
+      loadBookPage(bid, ok);
+    }
+  } catch(e) {}
+}
+
+// ── Theme ──────────────────────────────────────────────
+function toggleTheme() {
+  applyTheme(THEME === 'light' ? 'dark' : 'light', true);
+}
+function applyTheme(t, save) {
+  THEME = t;
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('theme-btn').textContent = t === 'light' ? '🌙' : '☀️';
+  if (save) localStorage.setItem('daftarna_theme', t);
+}
+
+// ── Language ───────────────────────────────────────────
+function toggleLang() {
+  applyLang(LANG === 'ar' ? 'en' : 'ar', true);
+}
+function applyLang(l, save) {
+  LANG = l;
+  document.documentElement.setAttribute('data-lang', l);
+  document.documentElement.setAttribute('lang', l);
+  document.documentElement.setAttribute('dir', l === 'ar' ? 'rtl' : 'ltr');
+  document.getElementById('lang-btn').textContent = l === 'ar' ? 'EN' : 'عر';
+  if (save) localStorage.setItem('daftarna_lang', l);
+}
+
+// ── Navigation ─────────────────────────────────────────
+function goHome() {
+  window.location.hash = '';
+  showPage('page-landing');
+}
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── Overlays ───────────────────────────────────────────
+function showOverlay(id)  { document.getElementById(id).classList.add('open'); }
+function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ── Toast ──────────────────────────────────────────────
+function toast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show ' + (type||'');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── API ────────────────────────────────────────────────
+// GAS does NOT support CORS preflight (OPTIONS). The only reliable
+// cross-origin call is a plain GET with URL params — no custom headers,
+// no body. GAS automatically adds Access-Control-Allow-Origin: * on GET.
+async function api(action, data) {
+  const params = new URLSearchParams({ action });
+  if (data) {
+    Object.keys(data).forEach(function(k) {
+      if (data[k] !== undefined && data[k] !== null && data[k] !== '') {
+        params.set(k, String(data[k]));
+      }
+    });
+  }
+  const url = API_URL + '?' + params.toString();
+  const res  = await fetch(url, { method: 'GET', redirect: 'follow' });
+  if (!res.ok) throw new Error('Server error HTTP ' + res.status);
+  const text = await res.text();
+  try { return JSON.parse(text); }
+  catch(e) { throw new Error('Bad server response: ' + text.slice(0,200)); }
+}
+
+// ── Photo helpers ──────────────────────────────────────
+function prevPhoto(input, prevId) {
+  if (!input.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const img = document.getElementById(prevId);
+    img.src = e.target.result; img.style.display = 'block';
+    input.closest('.upload-zone').querySelector('.uz-icon').style.display = 'none';
+    input.closest('.upload-zone').querySelectorAll('.uz-lbl').forEach(l => l.style.display='none');
+  };
+  r.readAsDataURL(input.files[0]);
+}
+
+async function uploadIfAny(inputId) {
+  const inp = document.getElementById(inputId);
+  if (!inp || !inp.files[0]) return null;
+  const file = inp.files[0];
+
+  // Resize image to max 600px wide before uploading to keep URL size manageable
+  return new Promise(resolve => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = ev => {
+      img.onload = () => {
+        const MAX = 600;
+        let w = img.width, h = img.height;
+        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const b64 = canvas.toDataURL('image/jpeg', 0.75).split(',')[1];
+        api('uploadPhoto', { imageBase64: b64, mimeType: 'image/jpeg', fileName: file.name })
+          .then(res => resolve(res.success ? res.photoUrl : null))
+          .catch(() => resolve(null));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── Helpers ────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function bookUrl(id)  { return location.origin + location.pathname + '#?b=' + id; }
+function ownerUrl(id, ok) { return location.origin + location.pathname + '#?b=' + id + '&ok=' + ok; }
+function copyField(id) {
+  const v = document.getElementById(id).value;
+  navigator.clipboard.writeText(v)
+    .then(() => toast(LANG==='ar' ? 'تم النسخ ✓' : 'Copied ✓', 'gold'))
+    .catch(()=> toast(LANG==='ar' ? 'تعذّر النسخ' : 'Copy failed', 'red'));
+}
+function copyShareUrl() { copyField('share-field'); }
+function dismissBanner() { document.getElementById('setup-banner').classList.add('hidden'); }
+
+// ══════════════════════════════════════════════════════
+//  CREATE BOOK
+// ══════════════════════════════════════════════════════
+async function createBook() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { toast(LANG==='ar'?'يرجى إدخال اسمك':'Please enter your name','red'); return; }
+
+  const btn = document.getElementById('btn-create');
+  btn.innerHTML = (LANG==='ar'?'جاري الإنشاء':'Creating') + '…<span class="spin"></span>';
+  btn.disabled  = true;
+
+  try {
+    const photoUrl = await uploadIfAny('f-photo');
+    const res = await api('createBook', {
+      graduateName:   name,
+      university:     document.getElementById('f-uni').value.trim(),
+      major:          document.getElementById('f-major').value.trim(),
+      graduationYear: document.getElementById('f-year').value.trim(),
+      coverMessage:   document.getElementById('f-cover').value.trim(),
+      revealDate:     document.getElementById('f-reveal').value,
+      photoUrl:       photoUrl || ''
+    });
+    if (!res.success) throw new Error(res.error || 'Unknown error');
+
+    const bUrl = bookUrl(res.bookId);
+    const oUrl = ownerUrl(res.bookId, res.ownerKey);
+
+    document.getElementById('create-form').style.display = 'none';
+    document.getElementById('create-success').style.display = '';
+    document.getElementById('create-success').innerHTML = `
+      <div class="success-box">
+        <div class="si">🎉</div>
+        <h3 class="ar">تم إنشاء كتابك!</h3><h3 class="en">Your book is ready!</h3>
+        <p class="ar">شارك هذا الرابط مع أصدقائك وعائلتك</p>
+        <p class="en">Share this link with friends and family</p>
+        <div class="copy-row">
+          <input type="text" value="${bUrl}" readonly id="new-burl"/>
+          <button onclick="copyField('new-burl')">${LANG==='ar'?'نسخ':'Copy'}</button>
+        </div>
+        <p style="font-size:.78rem;color:#c04040;margin:.4rem 0 .6rem">
+          <span class="ar">⚠️ احفظ رابط المالك — لن يظهر مرة أخرى</span>
+          <span class="en">⚠️ Save your owner link — it won't appear again</span>
+        </p>
+        <div class="copy-row" style="border:1px solid rgba(201,168,76,.35)">
+          <input type="text" value="${oUrl}" readonly id="new-ourl"/>
+          <button onclick="copyField('new-ourl')">${LANG==='ar'?'نسخ':'Copy'}</button>
+        </div>
+        <button class="btn-block btn-dark" style="margin-top:1rem" onclick="goToBook('${res.bookId}','${res.ownerKey}')">
+          <span class="ar">فتح كتابي ←</span><span class="en">Open My Book →</span>
+        </button>
+      </div>`;
+
+  } catch(err) {
+    toast((LANG==='ar'?'خطأ: ':'Error: ') + err.message, 'red');
+    btn.innerHTML = `<span class="ar">أنشئ كتابي الآن</span><span class="en">Create My Book Now</span>`;
+    btn.disabled  = false;
+  }
+}
+
+function goToBook(bid, ok) {
+  closeOverlay('ov-create');
+  BOOK_ID = bid; OWNER_KEY = ok;
+  window.location.hash = '?b=' + bid + '&ok=' + ok;
+  loadBookPage(bid, ok);
+}
+
+// ══════════════════════════════════════════════════════
+//  OPEN BOOK
+// ══════════════════════════════════════════════════════
+function openBook() {
+  let raw = document.getElementById('f-open').value.trim();
+  let bid = null, ok = null;
+
+  // Try to extract from URL
+  try {
+    const u = new URL(raw);
+    const hash = u.hash.slice(1).replace(/^\?/,'');
+    const p = new URLSearchParams(hash);
+    bid = p.get('b'); ok = p.get('ok');
+  } catch {}
+
+  if (!bid) {
+    const m = raw.match(/(bk_\d+_\w+)/);
+    bid = m ? m[1] : null;
+  }
+  if (!bid && raw.startsWith('bk_')) bid = raw;
+
+  if (!bid) { toast(LANG==='ar'?'رابط غير صحيح':'Invalid link','red'); return; }
+
+  closeOverlay('ov-open');
+  BOOK_ID = bid; OWNER_KEY = ok;
+  window.location.hash = '?b=' + bid + (ok ? '&ok=' + ok : '');
+  loadBookPage(bid, ok);
+}
+
+// ══════════════════════════════════════════════════════
+//  LOAD BOOK PAGE
+// ══════════════════════════════════════════════════════
+async function loadBookPage(bid, ok) {
+  showPage('page-book');
+  document.getElementById('msgs-count').textContent = '…';
+  document.getElementById('msgs-container').innerHTML =
+    `<div class="empty-state"><div class="ei">⏳</div><p>${LANG==='ar'?'جاري التحميل…':'Loading…'}</p></div>`;
+
+  try {
+    const res = await api('getBook', { bookId: bid });
+    if (!res.success) throw new Error(res.error);
+    const b = res.book;
+
+    document.getElementById('book-name').textContent  = b.graduateName || '—';
+    document.getElementById('book-meta').textContent  = [b.major, b.university, b.graduationYear].filter(Boolean).join(' · ');
+    document.getElementById('book-cover-quote').textContent = b.coverMessage || '';
+
+    const av = document.getElementById('book-avatar');
+    if (b.photoUrl) { av.src = b.photoUrl; av.style.display = 'block'; }
+    else av.style.display = 'none';
+
+    document.getElementById('share-field').value = bookUrl(bid);
+
+    if (ok) {
+      document.getElementById('btn-pdf').style.display       = '';
+      document.getElementById('btn-owner-key').style.display = '';
+      document.getElementById('owner-field').value = ownerUrl(bid, ok);
+      document.getElementById('page-book').classList.add('owner-mode');
+    }
+
+    await loadMessages(bid, ok);
+  } catch(err) {
+    document.getElementById('msgs-container').innerHTML =
+      `<div class="empty-state"><div class="ei">😕</div><p>${esc(err.message)}</p></div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  LOAD MESSAGES
+// ══════════════════════════════════════════════════════
+async function loadMessages(bid, ok) {
+  const box   = document.getElementById('msgs-container');
+  const badge = document.getElementById('msgs-count');
+
+  try {
+    const res = await api('getMessages', { bookId: bid, ownerKey: ok || '' });
+
+    if (res.locked) {
+      const d = new Date(res.revealDate);
+      badge.textContent = res.count + (LANG==='ar' ? ' رسالة' : ' messages');
+      box.innerHTML = `
+        <div class="locked-box">
+          <div class="l-icon">🔒</div>
+          <h3 class="ar">الرسائل مخفية حتى تاريخ الكشف</h3>
+          <h3 class="en">Messages are hidden until reveal date</h3>
+          <p class="ar">يوجد <strong>${res.count}</strong> رسالة تنتظرك</p>
+          <p class="en"><strong>${res.count}</strong> message(s) waiting for you</p>
+          <div class="countdown" id="cdown">—</div>
+          <p style="font-size:.82rem;color:var(--ink3)">
+            ${d.toLocaleDateString(LANG==='ar'?'ar-SA':'en-US',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'})}
+          </p>
+        </div>`;
+      startCountdown(d);
+      return;
+    }
+
+    const msgs = res.messages || [];
+    badge.textContent = msgs.length + (LANG==='ar' ? ' رسالة' : ' message' + (msgs.length!==1?'s':''));
+
+    if (!msgs.length) {
+      box.innerHTML = `<div class="empty-state"><div class="ei">💌</div>
+        <p class="ar">لا توجد رسائل بعد<br/>شارك الرابط!</p>
+        <p class="en">No messages yet<br/>Share the link!</p></div>`;
+      return;
+    }
+
+    box.innerHTML = '<div class="msgs-grid" id="msgs-grid"></div>';
+    const grid = document.getElementById('msgs-grid');
+    msgs.forEach(m => grid.appendChild(buildCard(m, ok)));
+
+  } catch(err) {
+    box.innerHTML = `<div class="empty-state"><div class="ei">⚠️</div><p>${esc(err.message)}</p></div>`;
+  }
+}
+
+function buildCard(m, ok) {
+  const el   = document.createElement('div');
+  el.className = 'msg-card';
+  const date = m.submittedAt
+    ? new Date(m.submittedAt).toLocaleDateString(LANG==='ar'?'ar-SA':'en-US',{year:'numeric',month:'short',day:'numeric'})
+    : '';
+  el.innerHTML = `
+    ${m.photoUrl ? `<img src="${esc(m.photoUrl)}" class="msg-photo" alt="photo"/>` : ''}
+    <button class="msg-del" onclick="delMsg('${esc(m.msgId)}','${esc(BOOK_ID)}','${esc(ok||'')}',this)">✕</button>
+    <div class="msg-sender">${esc(m.senderName)}</div>
+    ${m.senderRelation ? `<span class="msg-rel">${esc(m.senderRelation)}</span>` : ''}
+    <div class="msg-body">${esc(m.message)}</div>
+    <div class="msg-date">${date}</div>`;
+  return el;
+}
+
+// ══════════════════════════════════════════════════════
+//  SEND MESSAGE
+// ══════════════════════════════════════════════════════
+async function sendMessage() {
+  const name = document.getElementById('m-name').value.trim();
+  const text = document.getElementById('m-text').value.trim();
+  if (!name) { toast(LANG==='ar'?'يرجى إدخال اسمك':'Please enter your name','red'); return; }
+  if (!text) { toast(LANG==='ar'?'يرجى كتابة رسالتك':'Please write your message','red'); return; }
+  if (!BOOK_ID) { toast(LANG==='ar'?'خطأ: معرف الكتاب مفقود':'Error: book ID missing','red'); return; }
+
+  const btn = document.getElementById('btn-send');
+  btn.innerHTML = (LANG==='ar'?'جاري الإرسال':'Sending') + '…<span class="spin dk"></span>';
+  btn.disabled  = true;
+
+  try {
+    const photoUrl = await uploadIfAny('m-photo');
+    const res = await api('addMessage', {
+      bookId:         BOOK_ID,
+      senderName:     name,
+      senderRelation: document.getElementById('m-rel').value,
+      message:        text,
+      photoUrl:       photoUrl || ''
+    });
+    if (!res.success) throw new Error(res.error);
+
+    document.getElementById('msg-form').style.display = 'none';
+    document.getElementById('msg-success').style.display = '';
+    document.getElementById('msg-success').innerHTML = `
+      <div class="success-box">
+        <div class="si">💌</div>
+        <h3 class="ar">تم إرسال رسالتك!</h3><h3 class="en">Message sent!</h3>
+        <p class="ar">شكراً، ستصل رسالتك في وقت الكشف</p>
+        <p class="en">Thank you! Your message will arrive at reveal time</p>
+        <button class="btn-block btn-amber" onclick="closeOverlay('ov-message')">
+          <span class="ar">رائع! ✨</span><span class="en">Awesome! ✨</span>
+        </button>
+      </div>`;
+    loadMessages(BOOK_ID, OWNER_KEY);
+  } catch(err) {
+    toast((LANG==='ar'?'خطأ: ':'Error: ') + err.message, 'red');
+    btn.innerHTML = `<span class="ar">إرسال الرسالة 💌</span><span class="en">Send Message 💌</span>`;
+    btn.disabled  = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  DELETE MESSAGE
+// ══════════════════════════════════════════════════════
+async function delMsg(msgId, bookId, ownerKey, btn) {
+  if (!confirm(LANG==='ar'?'هل تريد حذف هذه الرسالة؟':'Delete this message?')) return;
+  try {
+    const res = await api('deleteMessage', { msgId, bookId, ownerKey });
+    if (!res.success) throw new Error(res.error);
+    btn.closest('.msg-card').remove();
+    toast(LANG==='ar'?'تم الحذف':'Deleted');
+    const g = document.getElementById('msgs-grid');
+    const n = g ? g.children.length : 0;
+    document.getElementById('msgs-count').textContent = n + (LANG==='ar'?' رسالة':' message'+(n!==1?'s':''));
+  } catch(err) { toast((LANG==='ar'?'خطأ: ':'Error: ')+err.message,'red'); }
+}
+
+// ══════════════════════════════════════════════════════
+//  COUNTDOWN
+// ══════════════════════════════════════════════════════
+function startCountdown(target) {
+  function tick() {
+    const diff = target - Date.now();
+    const el   = document.getElementById('cdown');
+    if (!el) return;
+    if (diff <= 0) {
+      el.textContent = LANG==='ar'?'🎉 حان وقت الكشف!':'🎉 Reveal time!';
+      loadMessages(BOOK_ID, OWNER_KEY); return;
+    }
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor(diff%86400000/3600000);
+    const m = Math.floor(diff%3600000/60000);
+    const s = Math.floor(diff%60000/1000);
+    if (LANG==='ar') el.textContent = `${d}ي ${h}س ${m}د ${s}ث`;
+    else el.textContent = `${d}d ${h}h ${m}m ${s}s`;
+  }
+  tick(); setInterval(tick, 1000);
+}
+
+// ══════════════════════════════════════════════════════
+//  DOWNLOAD PDF
+// ══════════════════════════════════════════════════════
+async function downloadPDF() {
+  const btn = document.getElementById('btn-pdf');
+  btn.innerHTML = (LANG==='ar'?'جاري التحضير…':'Preparing…') + '<span class="spin"></span>';
+  btn.disabled  = true;
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+    const W=210, H=297, M=18;
+    let y = M;
+
+    function line(txt, sz, bold, rgb) {
+      doc.setFontSize(sz||11); doc.setFont('helvetica', bold?'bold':'normal');
+      doc.setTextColor(...(rgb||[30,20,16]));
+      const lines = doc.splitTextToSize(String(txt||''), W-M*2);
+      lines.forEach(l => {
+        if (y > H-M) { doc.addPage(); y = M; }
+        doc.text(l, W-M, y, { align:'right' });
+        y += (sz||11)*0.42 + 2.5;
+      });
+    }
+
+    // Cover page
+    doc.setFillColor(20,16,14);
+    doc.rect(0,0,W,H,'F');
+    doc.setFillColor(201,168,76);
+    doc.rect(0,H-4,W,4,'F');
+    doc.setFontSize(36); doc.setFont('helvetica','bold'); doc.setTextColor(201,168,76);
+    doc.text(document.getElementById('book-name').textContent, W/2, 90, { align:'center' });
+    doc.setFontSize(13); doc.setTextColor(230,220,200);
+    doc.text(document.getElementById('book-meta').textContent, W/2, 106, { align:'center' });
+    const cq = document.getElementById('book-cover-quote').textContent;
+    if (cq) {
+      doc.setFontSize(10); doc.setTextColor(180,165,140);
+      const cl = doc.splitTextToSize(cq, W-M*2);
+      doc.text(cl, W/2, 122, { align:'center' });
+    }
+    doc.setFontSize(9); doc.setTextColor(100,92,82);
+    doc.text('Daftarna | دفترنا', W/2, H-12, { align:'center' });
+
+    // Messages page
+    doc.addPage(); y = M;
+    line(LANG==='ar'?'الرسائل والتهاني':'Messages & Congratulations', 20, true, [26,20,16]);
+    y += 4;
+    document.querySelectorAll('.msg-card').forEach(card => {
+      if (y > H-60) { doc.addPage(); y = M; }
+      const snd = card.querySelector('.msg-sender')?.textContent || '';
+      const rel = card.querySelector('.msg-rel')?.textContent || '';
+      const txt = card.querySelector('.msg-body')?.textContent || '';
+      const dt  = card.querySelector('.msg-date')?.textContent || '';
+      const txH = doc.splitTextToSize(txt, W-M*2-4).length * 5.5 + 28;
+      doc.setFillColor(242,237,228); doc.roundedRect(M, y-3, W-M*2, txH, 3, 3, 'F');
+      line(snd, 12, true); if (rel) line(rel, 9, false, [154,117,53]); line(txt, 9, false, [70,58,48]); line(dt, 7, false, [160,148,135]);
+      y += 5;
+    });
+    doc.save('daftarna-' + (document.getElementById('book-name').textContent || 'book') + '.pdf');
+  } catch(err) { toast((LANG==='ar'?'خطأ PDF: ':'PDF Error: ')+err.message,'red'); }
+  btn.innerHTML = `<span class="ar">تحميل PDF 📄</span><span class="en">Download PDF 📄</span>`;
+  btn.disabled  = false;
+}
+</script>
+</body>
+</html>
