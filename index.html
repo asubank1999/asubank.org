@@ -550,6 +550,192 @@
 
 
 <main>
+
+<!-- ══════════════════════════════════════════════
+     PANORAMA STUDENT CHOICE SECTION
+     ══════════════════════════════════════════════ -->
+<style>
+    .panorama-section {
+        margin: 0 0 2.5rem 0;
+        text-align: center;
+    }
+
+    .panorama-heading {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.4rem;
+    }
+
+    body.dark-mode .panorama-heading { color: var(--secondary); }
+
+    .panorama-subheading {
+        font-size: 0.95rem;
+        color: var(--gray);
+        margin-bottom: 1.8rem;
+    }
+
+    .panorama-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .panorama-cards { grid-template-columns: 1fr; }
+        .panorama-heading { font-size: 1.3rem; }
+    }
+
+    .pano-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 2.5rem 1.5rem;
+        border-radius: 20px;
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: none;
+        font-family: 'Inter', sans-serif;
+        min-height: 220px;
+    }
+
+    .pano-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+    }
+
+    /* Card 1 — Main Library (maroon gradient) */
+    .pano-card-main {
+        background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 60%, black) 100%);
+        color: white;
+        box-shadow: 0 6px 24px rgba(140,29,64,0.3);
+    }
+
+    /* Card 2 — Fast Search (gold/amber) */
+    .pano-card-search {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        box-shadow: 0 6px 24px rgba(245,158,11,0.35);
+    }
+
+    /* Card 3 — WhatsApp (green) */
+    .pano-card-whatsapp {
+        background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        color: white;
+        box-shadow: 0 6px 24px rgba(37,211,102,0.3);
+    }
+
+    .pano-icon {
+        font-size: 3rem;
+        line-height: 1;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+    }
+
+    .pano-card h2 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .pano-card p {
+        font-size: 0.88rem;
+        opacity: 0.88;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .pano-card .pano-arabic {
+        font-size: 0.8rem;
+        opacity: 0.75;
+        margin: 0;
+    }
+
+    .pano-badge {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.35);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.6rem;
+        border-radius: 50px;
+        backdrop-filter: blur(6px);
+    }
+
+    .pano-divider {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 2.5rem 0 2rem;
+        color: var(--gray);
+        font-size: 0.85rem;
+    }
+
+    .pano-divider::before,
+    .pano-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: rgba(0,0,0,0.1);
+    }
+
+    body.dark-mode .pano-divider::before,
+    body.dark-mode .pano-divider::after {
+        background: rgba(255,255,255,0.1);
+    }
+</style>
+
+<div class="panorama-section">
+    <h2 class="panorama-heading">👋 What would you like to do?</h2>
+    <p class="panorama-subheading">اختر وجهتك — Choose your destination</p>
+
+    <div class="panorama-cards">
+
+        <!-- Option 1: Main Library -->
+        <a href="#main-content" class="pano-card pano-card-main" onclick="document.getElementById('main-content').scrollIntoView({behavior:'smooth'}); return false;">
+            <span class="pano-badge">Main</span>
+            <div class="pano-icon">📚</div>
+            <h2>E-Library Hub</h2>
+            <p>Browse all study materials, courses, uploads &amp; services</p>
+            <p class="pano-arabic">تصفح المكتبة الكاملة</p>
+        </a>
+
+        <!-- Option 2: Fast Materials Search -->
+        <a href="search" class="pano-card pano-card-search">
+            <span class="pano-badge">Fast</span>
+            <div class="pano-icon">⚡</div>
+            <h2>Fast Materials Search</h2>
+            <p>Find PDFs, midterms, finals &amp; notes instantly</p>
+            <p class="pano-arabic">ابحث عن المواد بسرعة</p>
+        </a>
+
+        <!-- Option 3: WhatsApp Community -->
+        <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank" class="pano-card pano-card-whatsapp">
+            <span class="pano-badge">Community</span>
+            <div class="pano-icon">💬</div>
+            <h2>Join WhatsApp Community</h2>
+            <p>Get updates, share files &amp; connect with students</p>
+            <p class="pano-arabic">انضم إلى مجتمعنا على واتساب</p>
+        </a>
+
+    </div>
+
+    <div class="pano-divider">or scroll down for everything</div>
+</div>
+
+<div id="main-content"></div>
+
 <!-- ══════════════════════════════════════════════
      UPDATE ANNOUNCEMENT BANNER — paste anywhere
      near the top of <main>, auto-dismisses in 5s
