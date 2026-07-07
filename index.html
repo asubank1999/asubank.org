@@ -47,6 +47,12 @@
         .theme-orange { --primary: #EA580C; --secondary: #F97316; --accent: #FED7AA; }
         .theme-cyan { --primary: #0891B2; --secondary: #06B6D4; --accent: #A5F3FC; }
         .theme-lime { --primary: #65A30D; --secondary: #84CC16; --accent: #D9F99D; }
+        .theme-teal { --primary: #0D9488; --secondary: #14B8A6; --accent: #99F6E4; }
+        .theme-indigo { --primary: #4F46E5; --secondary: #6366F1; --accent: #C7D2FE; }
+        .theme-rose { --primary: #E11D48; --secondary: #F43F5E; --accent: #FECDD3; }
+        .theme-amber { --primary: #D97706; --secondary: #F59E0B; --accent: #FDE68A; }
+        .theme-emerald { --primary: #047857; --secondary: #10B981; --accent: #A7F3D0; }
+        .theme-slate { --primary: #334155; --secondary: #475569; --accent: #CBD5E1; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -63,12 +69,14 @@
         }
 
         body.background-enabled {
-            background-image: url('IMG_0569.JPG');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             background-repeat: no-repeat;
         }
+
+        body.background-enabled.bg-photo-1 { background-image: url('IMG_0569.JPG'); }
+        body.background-enabled.bg-photo-2 { background-image: url('IMG_6460.JPG'); }
 
         body.background-enabled::before {
             content: '';
@@ -206,11 +214,13 @@
             padding: 2rem;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             display: none;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1.2rem;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.1rem;
             z-index: 10000;
             max-width: 90%;
-            width: 500px;
+            width: 560px;
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         .theme-options.show { display: grid; }
@@ -249,6 +259,12 @@
         .theme-orange-option { background: #EA580C; }
         .theme-cyan-option { background: #0891B2; }
         .theme-lime-option { background: #65A30D; }
+        .theme-teal-option { background: #0D9488; }
+        .theme-indigo-option { background: #4F46E5; }
+        .theme-rose-option { background: #E11D48; }
+        .theme-amber-option { background: #D97706; }
+        .theme-emerald-option { background: #047857; }
+        .theme-slate-option { background: #334155; }
 
         .theme-overlay {
             position: fixed;
@@ -262,6 +278,82 @@
         }
 
         .theme-overlay.show { display: block; }
+
+        /* Background Selector */
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 9999;
+        }
+        .bg-overlay.show { display: block; }
+
+        .bg-options {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            z-index: 10000;
+            max-width: 92%;
+            width: 420px;
+        }
+        .bg-options.show { display: grid; }
+        body.dark-mode .bg-options { background: #2a2a2a; }
+
+        .bg-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .bg-option-preview {
+            width: 84px;
+            height: 84px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            border: 3px solid transparent;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            background-color: var(--light);
+        }
+        body.dark-mode .bg-option-preview.bg-preview-none { background-color: #3a3a3a; color: #ddd; }
+
+        .bg-option:hover .bg-option-preview { transform: scale(1.06); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+        .bg-option.active .bg-option-preview {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px white, 0 0 0 6px var(--primary);
+        }
+        body.dark-mode .bg-option.active .bg-option-preview {
+            box-shadow: 0 0 0 3px #2a2a2a, 0 0 0 6px var(--primary);
+        }
+
+        .bg-option span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--dark);
+            text-align: center;
+        }
+        body.dark-mode .bg-option span { color: var(--light); }
+
+        @media (max-width: 480px) {
+            .bg-options { width: 300px; padding: 1.4rem; gap: 0.9rem; }
+            .bg-option-preview { width: 64px; height: 64px; }
+        }
 
         /* Main Content */
         main {
@@ -543,10 +635,32 @@
         <div class="theme-option theme-green-option" data-theme="green" title="Green"></div>
         <div class="theme-option theme-lime-option" data-theme="lime" title="Lime"></div>
         <div class="theme-option theme-purple-option" data-theme="purple" title="Purple"></div>
+        <div class="theme-option theme-teal-option" data-theme="teal" title="Teal"></div>
+        <div class="theme-option theme-indigo-option" data-theme="indigo" title="Indigo"></div>
+        <div class="theme-option theme-rose-option" data-theme="rose" title="Rose"></div>
+        <div class="theme-option theme-amber-option" data-theme="amber" title="Amber"></div>
+        <div class="theme-option theme-emerald-option" data-theme="emerald" title="Emerald"></div>
+        <div class="theme-option theme-slate-option" data-theme="slate" title="Slate"></div>
         <div class="theme-option theme-black-option" data-theme="black" title="Black"></div>
         <div class="theme-option theme-white-option" data-theme="white" title="White"></div>
     </div>
 
+    <!-- Background Overlay and Options -->
+    <div class="bg-overlay" id="bgOverlay"></div>
+    <div class="bg-options" id="bgOptions">
+        <div class="bg-option active" data-bg="none" title="No Background">
+            <div class="bg-option-preview bg-preview-none">🚫</div>
+            <span>None</span>
+        </div>
+        <div class="bg-option" data-bg="photo1" title="Campus View 1">
+            <div class="bg-option-preview" style="background-image:url('IMG_0569.JPG');"></div>
+            <span>Campus View 1</span>
+        </div>
+        <div class="bg-option" data-bg="photo2" title="Campus View 2">
+            <div class="bg-option-preview" style="background-image:url('IMG_6460.JPG');"></div>
+            <span>Campus View 2</span>
+        </div>
+    </div>
 
 
 <main>
@@ -735,6 +849,132 @@
 </div>
 
 <div id="main-content"></div>
+
+<!-- ══════════════════════════════════════════════
+     LIVE SITE SEARCH — filters every card on the page
+     ══════════════════════════════════════════════ -->
+<style>
+    .site-search-wrap {
+        position: sticky;
+        top: 140px;
+        z-index: 500;
+        margin: 0.6rem 1rem 1.6rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .site-search-box {
+        width: 100%;
+        max-width: 620px;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: white;
+        border: 2px solid var(--accent);
+        border-radius: 50px;
+        padding: 0.75rem 1.2rem;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+    }
+    body.dark-mode .site-search-box { background: #232323; border-color: var(--primary); }
+    .site-search-box:focus-within {
+        border-color: var(--primary);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .site-search-icon { font-size: 1.1rem; flex-shrink: 0; opacity: 0.7; }
+    .site-search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        color: var(--dark);
+    }
+    body.dark-mode .site-search-input { color: var(--light); }
+    .site-search-input::placeholder { color: var(--gray); }
+    .site-search-clear {
+        border: none;
+        background: var(--light);
+        color: var(--gray);
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.8rem;
+    }
+    body.dark-mode .site-search-clear { background: #3a3a3a; color: #ccc; }
+    .site-search-status {
+        margin-top: 0.5rem;
+        font-size: 0.82rem;
+        color: var(--gray);
+        min-height: 1.1rem;
+    }
+    @media (max-width: 480px) {
+        .site-search-wrap { top: 130px; margin: 0.4rem 0.75rem 1.2rem; }
+        .site-search-box { padding: 0.65rem 1rem; }
+        .site-search-input { font-size: 0.88rem; }
+    }
+</style>
+
+<div class="site-search-wrap">
+    <div class="site-search-box">
+        <span class="site-search-icon">🔍</span>
+        <input type="text" id="siteSearchInput" class="site-search-input" placeholder="Search anything on the site… ابحث عن أي شيء" autocomplete="off">
+        <button id="siteSearchClear" class="site-search-clear" aria-label="Clear search">✕</button>
+    </div>
+    <p id="siteSearchStatus" class="site-search-status"></p>
+</div>
+
+<script>
+    (function () {
+        const input = document.getElementById('siteSearchInput');
+        const clearBtn = document.getElementById('siteSearchClear');
+        const status = document.getElementById('siteSearchStatus');
+
+        function getCards() { return Array.from(document.querySelectorAll('.subject-card, .pano-card')); }
+        function getSections() { return Array.from(document.querySelectorAll('.priority-section')); }
+
+        function runSearch() {
+            const q = input.value.trim().toLowerCase();
+            clearBtn.style.display = q ? 'flex' : 'none';
+
+            if (!q) {
+                getCards().forEach(c => { c.style.display = ''; });
+                getSections().forEach(s => { s.style.display = ''; });
+                status.textContent = '';
+                return;
+            }
+
+            let matchCount = 0;
+            getCards().forEach(card => {
+                const match = card.innerText.toLowerCase().includes(q);
+                card.style.display = match ? '' : 'none';
+                if (match) matchCount++;
+            });
+
+            getSections().forEach(section => {
+                const hasVisibleCard = Array.from(section.querySelectorAll('.subject-card'))
+                    .some(c => c.style.display !== 'none');
+                section.style.display = hasVisibleCard ? '' : 'none';
+            });
+
+            status.textContent = matchCount
+                ? `${matchCount} result${matchCount === 1 ? '' : 's'} found`
+                : 'No results found — try a different keyword';
+        }
+
+        input.addEventListener('input', runSearch);
+        clearBtn.addEventListener('click', () => {
+            input.value = '';
+            runSearch();
+            input.focus();
+        });
+    })();
+</script>
 
 <!-- ══════════════════════════════════════════════
      UPDATE ANNOUNCEMENT BANNER — paste anywhere
@@ -975,6 +1215,25 @@
                 <span style="font-size: 0.8rem; margin-left: 5px;">(انضم إلى مجتمعنا)</span>
             </a>
         </div>
+
+        <!-- University Calendars — moved to top for easy access -->
+        <section class="priority-section">
+            <h2 class="section-title">
+                <span>📅</span> University Calendars
+            </h2>
+
+            <div class="card-grid">
+                <a href="asu_date_asu" class="subject-card priority">
+                    <h3><span>📅</span> University Calendar 2024-2025</h3>
+                    <p class="arabic-translation">التقويم الجامعي</p>
+                </a>
+
+                <a href="asu_date_asu2025_2026" class="subject-card priority">
+                    <h3><span>📅</span> University Calendar 2025-2026</h3>
+                    <p class="arabic-translation">التقويم الجامعي</p>
+                </a>
+            </div>
+        </section>
 
         <!-- Event Gallery -->
         <section class="priority-section">
@@ -1317,16 +1576,6 @@
             </h2>
             
             <div class="card-grid">
-                <a href="asu_date_asu" class="subject-card">
-                    <h3><span>📅</span> University Calendar 2024-2025</h3>
-                    <p class="arabic-translation">التقويم الجامعي</p>
-                </a>
-                
-                <a href="asu_date_asu2025_2026" class="subject-card">
-                    <h3><span>📅</span> University Calendar 2025-2026</h3>
-                    <p class="arabic-translation">التقويم الجامعي</p>
-                </a>
-                
                 <a href="bus20251" class="subject-card">
                     <h3><span>🚌</span> Bus Times ( OUTDATED ) 20251</h3>
                     <p class="arabic-translation">مواعيد الحافلات</p>
@@ -1538,7 +1787,7 @@
                 const theme = option.getAttribute('data-theme');
                 
                 // Remove all theme classes
-                document.body.classList.remove('theme-red', 'theme-pink', 'theme-black', 'theme-white', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-cyan', 'theme-lime');
+                document.body.classList.remove('theme-red', 'theme-pink', 'theme-black', 'theme-white', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-cyan', 'theme-lime', 'theme-teal', 'theme-indigo', 'theme-rose', 'theme-amber', 'theme-emerald', 'theme-slate');
                 
                 // Add selected theme
                 if (theme !== 'default') {
@@ -1589,36 +1838,47 @@
             updateModeButton(isDark);
         });
 
-        // ===== BACKGROUND TOGGLE FUNCTIONALITY =====
+        // ===== BACKGROUND PICKER FUNCTIONALITY =====
         const backgroundToggle = document.getElementById('background-toggle');
-
-        function updateBackgroundButton(isEnabled) {
-            if (isEnabled) {
-                backgroundToggle.innerHTML = '<span>❌</span> Hide Background';
-            } else {
-                backgroundToggle.innerHTML = '<span>🖼️</span> Show Background';
-            }
-        }
-
-        // Load background preference
-        const savedBackground = localStorage.getItem('backgroundEnabled');
-        if (savedBackground === 'true') {
-            document.body.classList.add('background-enabled');
-            updateBackgroundButton(true);
-        }
+        const bgOptions = document.getElementById('bgOptions');
+        const bgOverlay = document.getElementById('bgOverlay');
+        const bgOptionsList = document.querySelectorAll('.bg-option');
 
         backgroundToggle.addEventListener('click', () => {
-            document.body.classList.toggle('background-enabled');
-            const isEnabled = document.body.classList.contains('background-enabled');
-            
-            if (isEnabled) {
-                localStorage.setItem('backgroundEnabled', 'true');
-            } else {
-                localStorage.setItem('backgroundEnabled', 'false');
-            }
-            
-            updateBackgroundButton(isEnabled);
+            bgOptions.classList.toggle('show');
+            bgOverlay.classList.toggle('show');
         });
+
+        bgOverlay.addEventListener('click', () => {
+            bgOptions.classList.remove('show');
+            bgOverlay.classList.remove('show');
+        });
+
+        function applyBackground(choice) {
+            document.body.classList.remove('background-enabled', 'bg-photo-1', 'bg-photo-2');
+            if (choice === 'photo1') {
+                document.body.classList.add('background-enabled', 'bg-photo-1');
+            } else if (choice === 'photo2') {
+                document.body.classList.add('background-enabled', 'bg-photo-2');
+            }
+            bgOptionsList.forEach(opt => {
+                opt.classList.toggle('active', opt.getAttribute('data-bg') === choice);
+            });
+            localStorage.setItem('selectedBackground', choice);
+        }
+
+        bgOptionsList.forEach(option => {
+            option.addEventListener('click', () => {
+                applyBackground(option.getAttribute('data-bg'));
+                bgOptions.classList.remove('show');
+                bgOverlay.classList.remove('show');
+            });
+        });
+
+        // Load background preference (migrates the old on/off flag if present)
+        const legacyBg = localStorage.getItem('backgroundEnabled');
+        const savedBackground = localStorage.getItem('selectedBackground') || (legacyBg === 'true' ? 'photo1' : 'none');
+        applyBackground(savedBackground);
 
         // ===== LOAD SAVED THEME =====
         const savedTheme = localStorage.getItem('selectedTheme');
@@ -1656,7 +1916,7 @@
         console.log('📱 Mobile device:', isMobileDevice());
         console.log('🎨 Current theme:', savedTheme || 'default');
         console.log('🌙 Dark mode:', savedDarkMode === 'enabled');
-        console.log('🖼️ Background:', savedBackground === 'true');
+        console.log('🖼️ Background:', savedBackground);
     </script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>

@@ -2,218 +2,343 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>العد التنازلي للأحداث</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0d2340">
+  <title>العد التنازلي للأحداث الجامعية</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230d2340'/%3E%3Ctext x='50' y='66' font-size='55' text-anchor='middle' fill='%23c9a227'%3E🎓%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
   <style>
-    /* General Styles */
+    :root {
+      --navy: #0d2340;
+      --navy-deep: #081527;
+      --navy-soft: #16335c;
+      --gold: #c9a227;
+      --gold-soft: #e0c368;
+      --maroon: #8b1e3f;
+      --bg: #f7f5ef;
+      --card-bg: #ffffff;
+      --text: #1c2b3a;
+      --muted: #6b7688;
+      --border: #e4e0d4;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(13, 35, 64, 0.08);
+      --font-head: 'Amiri', 'Georgia', serif;
+      --font-body: 'Tajawal', 'Segoe UI', sans-serif;
+      --transition: all 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+
     body {
-      font-family: 'Arial', sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-      color: #333;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+      transition: background 0.4s ease, color 0.4s ease;
+      background-image:
+        radial-gradient(circle at 15% 0%, rgba(201, 162, 39, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 85% 100%, rgba(13, 35, 64, 0.05) 0%, transparent 40%);
     }
-    
+
+    /* ===== Header ===== */
     header {
-      background-color: #2c3e50;
-      color: white;
-      padding: 1rem;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+      color: #f5f2e8;
+      padding: 3rem 1.4rem 2.6rem;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 3px solid var(--gold);
     }
-    
-    h1, h2 {
-      margin: 0;
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(201,162,39,0.18) 1px, transparent 1px);
+      background-size: 22px 22px;
+      opacity: 0.35;
     }
-    
+    .crest {
+      font-size: 2.6rem;
+      margin-bottom: 0.6rem;
+      position: relative;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+    }
+    header h1 {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      letter-spacing: 0.3px;
+      position: relative;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    header .subtitle {
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--gold-soft);
+      letter-spacing: 0.5px;
+      position: relative;
+      font-weight: 500;
+    }
+    header .divider {
+      width: 90px; height: 2px;
+      background: var(--gold);
+      margin: 1.1rem auto 0;
+      position: relative;
+      border-radius: 2px;
+    }
+
+    /* ===== Main ===== */
     main {
-      padding: 1rem;
-      max-width: 1200px;
+      padding: 1.6rem 1.2rem 2.4rem;
+      max-width: 1320px;
       margin: 0 auto;
     }
-    
-    /* Table Styles */
+
+    .back-link-wrap { text-align: center; margin: -1.6rem 0 1.8rem; position: relative; z-index: 5; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card-bg);
+      color: var(--navy);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.7rem 1.6rem;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .back-link:hover {
+      background: var(--navy);
+      color: var(--gold-soft);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(13, 35, 64, 0.18);
+    }
+
+    #events-table {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 1.4rem 1.2rem 1.1rem;
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--navy);
+      border-bottom: 1px solid var(--border);
+    }
+    .section-heading::before, .section-heading::after {
+      content: '';
+      height: 1px;
+      width: 40px;
+      background: var(--gold);
+    }
+
+    /* ===== Table ===== */
+    .table-scroll { width: 100%; }
+
     table {
       width: 100%;
+      table-layout: fixed;
       border-collapse: collapse;
-      margin: 1rem 0;
-      box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-      background-color: white;
     }
-    
-    th, td {
-      padding: 12px 15px;
+
+    thead th {
+      background: var(--navy);
+      color: #f5f2e8;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 14px 10px;
       text-align: center;
-      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      word-break: break-word;
     }
-    
-    th {
-      background-color: #3498db;
-      color: white;
-      font-weight: bold;
+    thead th:first-child { border-top-right-radius: 0; }
+    thead th:nth-child(1) { width: 22%; }
+    thead th:nth-child(2) { width: 16%; }
+    thead th:nth-child(3) { width: 42%; }
+    thead th:nth-child(4) { width: 20%; }
+
+    tbody td {
+      padding: 13px 10px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.92rem;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
-    
-    tr:hover {
-      background-color: #f1f1f1;
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: #fbfaf5; }
+    tbody tr:hover { background: rgba(201, 162, 39, 0.08); }
+
+    tbody td:first-child {
+      font-weight: 700;
+      color: var(--navy);
     }
-    
-    /* Date column specific */
-    td:first-child {
-      width: 150px; /* Wider date column */
-      font-weight: bold;
-      color: #2c3e50;
+    tbody td:last-child {
+      font-family: 'Consolas', 'Courier New', monospace;
+      color: var(--maroon);
+      font-weight: 700;
+      letter-spacing: 0.3px;
     }
-    
-    /* Countdown column */
-    td:last-child {
-      font-family: monospace;
-      color: #e74c3c;
-    }
-    
+
     footer {
       text-align: center;
-      padding: 1rem;
-      background-color: #2c3e50;
-      color: white;
-      margin-top: 1rem;
+      padding: 1.6rem 1.2rem;
+      background: var(--navy-deep);
+      color: rgba(245, 242, 232, 0.7);
+      font-size: 0.85rem;
+      margin-top: 2.4rem;
     }
-    
-    /* Stylish link design */
-    .back-link {
-      display: inline-block;
-      background-color: #4CAF50;
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-      font-weight: bold;
-      padding: 10px 20px;
-      border-radius: 25px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-      margin: 1rem 0;
-    }
-    
-    /* Hover effect */
-    .back-link:hover {
-      background-color: #45a049;
-      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
-      transform: translateY(-3px);
-    }
-    
-    /* Dark mode toggle button */
+    footer .gold-text { color: var(--gold-soft); }
+
+    /* ===== Dark mode toggle ===== */
     #mode-toggle {
       position: fixed;
-      top: 10px;
-      left: 10px;
-      background: #2c3e50;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
+      top: 16px; left: 16px;
+      background: var(--card-bg);
+      color: var(--navy);
+      border: 1px solid var(--border);
+      padding: 9px 16px;
+      border-radius: 999px;
       cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.82rem;
       z-index: 1000;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    
-    /* Dark mode styles */
-    .dark-mode {
-      background-color: #121212;
-      color: #f1f1f1;
+    #mode-toggle:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(13,35,64,0.18); }
+
+    /* ===== Dark mode ===== */
+    body.dark-mode {
+      --bg: #0b1420;
+      --card-bg: #131f30;
+      --text: #eef1f5;
+      --muted: #8b98a8;
+      --border: #223146;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
-    
-    .dark-mode table {
-      background-color: #1e1e1e;
-      box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+    body.dark-mode header { background: linear-gradient(135deg, #081527 0%, #050d18 100%); }
+    body.dark-mode thead th { background: #0a1526; }
+    body.dark-mode tbody tr:nth-child(even) { background: #101b2b; }
+    body.dark-mode tbody tr:hover { background: rgba(201, 162, 39, 0.1); }
+    body.dark-mode tbody td:first-child { color: var(--gold-soft); }
+    body.dark-mode .back-link { background: var(--card-bg); color: var(--gold-soft); border-color: var(--border); }
+    body.dark-mode #mode-toggle { background: var(--card-bg); color: var(--gold-soft); border-color: var(--border); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 640px) {
+      header { padding: 2.4rem 1rem 2.2rem; }
+      .section-heading { font-size: 1.2rem; }
+      thead th, tbody td { padding: 10px 12px; font-size: 0.82rem; }
+      #mode-toggle { top: 12px; left: 12px; padding: 7px 12px; font-size: 0.75rem; }
+      .back-link { font-size: 0.85rem; padding: 0.6rem 1.3rem; }
     }
-    
-    .dark-mode th {
-      background-color: #2980b9;
-    }
-    
-    .dark-mode tr:hover {
-      background-color: #2a2a2a;
-    }
-    
-    .dark-mode td {
-      border-bottom: 1px solid #444;
-    }
-    
-    .dark-mode td:first-child {
-      color: #ecf0f1;
-    }
-    
-    .dark-mode header, .dark-mode footer {
-      background-color: #1a1a1a;
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
     }
   </style>
 </head>
 <body>
-  <button id="mode-toggle">تبديل الوضع</button>
-  
+  <button id="mode-toggle"><span id="mode-icon">🌙</span><span id="mode-label">الوضع الليلي</span></button>
+
   <header>
+    <div class="crest">🎓</div>
     <h1>العد التنازلي للأحداث الجامعية</h1>
+    <div class="subtitle">الجامعة العلمية التطبيقية · Applied Science University</div>
+    <div class="divider"></div>
   </header>
-  
+
   <main>
-    <center>
-      <a href="index" class="back-link">ASU Bank👈🏽 </a>
-    </center>
-    
+    <div class="back-link-wrap">
+      <a href="index" class="back-link">ASU Bank 👈🏽</a>
+    </div>
+
     <section id="events-table">
-      <h2>جدول الأحداث</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>التاريخ</th>
-            <th>اليوم</th>
-            <th>الحدث</th>
-            <th>العد التنازلي</th>
-          </tr>
-        </thead>
-        <tbody id="events-body">
-          <!-- Event rows will be dynamically added here -->
-        </tbody>
-      </table>
+      <h2 class="section-heading">جدول الأحداث</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>اليوم</th>
+              <th>الحدث</th>
+              <th>العد التنازلي</th>
+            </tr>
+          </thead>
+          <tbody id="events-body">
+            <!-- Event rows will be dynamically added here -->
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
-  
+
   <footer>
-    <p>جميع الحقوق محفوظة &copy; 2025</p>
+    <p>جميع الحقوق محفوظة <span class="gold-text">&copy; 2026</span> — Applied Science University</p>
   </footer>
-  
-  <script src="data\asu_date_script2025_2026.js"></script>
-  
+
+  <script src="data/asu_date_script2025_2026.js"></script>
+
   <script>
-    // Dark mode toggle functionality
-    document.getElementById('mode-toggle').addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    // ===== Dark mode toggle =====
+    const modeToggle = document.getElementById('mode-toggle');
+    const modeIcon = document.getElementById('mode-icon');
+    const modeLabel = document.getElementById('mode-label');
+
+    function setModeUI(isDark) {
+      modeIcon.textContent = isDark ? '☀️' : '🌙';
+      modeLabel.textContent = isDark ? 'الوضع النهاري' : 'الوضع الليلي';
+    }
+
+    modeToggle.addEventListener('click', () => {
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      setModeUI(isDark);
     });
 
-    // Check for saved theme preference or use system preference
     window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('theme') === 'dark' || 
-          (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.body.classList.add('dark-mode');
-      }
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = saved === 'dark' || (!saved && prefersDark);
+      if (isDark) document.body.classList.add('dark-mode');
+      setModeUI(isDark);
     });
 
-    // Security measures
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
-
-    document.addEventListener('copy', function(e) {
-      e.preventDefault();
-    });
-
-    document.addEventListener('paste', function(e) {
-      e.preventDefault();
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'u' || e.key === 'a')) {
-        e.preventDefault();
-      }
+    // ===== Security measures =====
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('copy', e => e.preventDefault());
+    document.addEventListener('paste', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      const key = e.key.toLowerCase();
+      const blocked =
+        (e.ctrlKey && ['c', 'v', 'x', 'u', 'a', 's'].includes(key)) ||
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c', 'k'].includes(key));
+      if (blocked) e.preventDefault();
     });
   </script>
 </body>
