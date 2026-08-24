@@ -17,7 +17,7 @@ All materials are intended for **educational and review purposes only**. We enco
 ---
 
  📁 How to Use
-1. Navigate to https://asubank.xyz
+1. Navigate to https://asubank.org
 2. Download PDFs, review past exams, or access study guides.
 3. Use the materials to test your knowledge and prepare for upcoming assessments.
 
