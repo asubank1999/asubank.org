@@ -21,6 +21,7 @@
       --gold: #c9a227;
       --gold-soft: #e0c368;
       --maroon: #8b1e3f;
+      --green: #2e7d32;
       --bg: #f7f5ef;
       --card-bg: #ffffff;
       --text: #1c2b3a;
@@ -183,7 +184,7 @@
       width: 100%;
       table-layout: fixed;
       border-collapse: collapse;
-      min-width: 480px;
+      min-width: 520px;
       font-size: 0.85rem;
     }
 
@@ -200,10 +201,11 @@
       z-index: 2;
       letter-spacing: 0.3px;
     }
-    thead th:nth-child(1) { width: 18%; }
-    thead th:nth-child(2) { width: 16%; }
-    thead th:nth-child(3) { width: 42%; }
-    thead th:nth-child(4) { width: 24%; }
+    thead th:nth-child(1) { width: 15%; }
+    thead th:nth-child(2) { width: 12%; }
+    thead th:nth-child(3) { width: 10%; }
+    thead th:nth-child(4) { width: 40%; }
+    thead th:nth-child(5) { width: 23%; }
 
     tbody td {
       padding: 10px 6px;
@@ -221,14 +223,20 @@
     tbody td:first-child {
       font-weight: 700;
       color: var(--navy);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       line-height: 1.3;
     }
     tbody td:nth-child(2) {
       color: var(--muted);
-      font-size: 0.7rem;
+      font-size: 0.65rem;
     }
     tbody td:nth-child(3) {
+      font-weight: 700;
+      color: var(--gold);
+      font-size: 0.7rem;
+      direction: ltr;
+    }
+    tbody td:nth-child(4) {
       text-align: right;
       padding-right: 8px;
       font-size: 0.78rem;
@@ -242,6 +250,9 @@
       font-size: 0.7rem;
       line-height: 1.3;
       direction: ltr;
+    }
+    tbody td:last-child .countdown-ended {
+      color: var(--green);
     }
 
     /* ===== Season Divider ===== */
@@ -261,6 +272,9 @@
     .season-divider td:nth-child(3) {
       text-align: center;
       padding-right: 6px;
+    }
+    .season-divider td:nth-child(4) {
+      text-align: center;
     }
 
     /* ===== Footer ===== */
@@ -344,27 +358,29 @@
       .section-heading .year-badge { font-size: 0.6rem; padding: 0.05rem 0.6rem; }
       
       table { 
-        min-width: 380px; 
+        min-width: 420px; 
         font-size: 0.75rem;
       }
       
       thead th { 
-        font-size: 0.65rem; 
+        font-size: 0.6rem; 
         padding: 8px 4px;
       }
-      thead th:nth-child(1) { width: 16%; }
-      thead th:nth-child(2) { width: 14%; }
-      thead th:nth-child(3) { width: 44%; }
-      thead th:nth-child(4) { width: 26%; }
+      thead th:nth-child(1) { width: 14%; }
+      thead th:nth-child(2) { width: 11%; }
+      thead th:nth-child(3) { width: 10%; }
+      thead th:nth-child(4) { width: 40%; }
+      thead th:nth-child(5) { width: 25%; }
       
       tbody td { 
         padding: 8px 4px; 
         font-size: 0.7rem;
       }
-      tbody td:first-child { font-size: 0.65rem; }
-      tbody td:nth-child(2) { font-size: 0.6rem; }
-      tbody td:nth-child(3) { 
-        font-size: 0.7rem; 
+      tbody td:first-child { font-size: 0.6rem; }
+      tbody td:nth-child(2) { font-size: 0.55rem; }
+      tbody td:nth-child(3) { font-size: 0.6rem; }
+      tbody td:nth-child(4) { 
+        font-size: 0.65rem; 
         padding-right: 4px;
       }
       tbody td:last-child { 
@@ -373,7 +389,7 @@
       }
       
       .season-divider td { 
-        font-size: 0.75rem; 
+        font-size: 0.7rem; 
         padding: 6px 4px;
       }
       
@@ -395,12 +411,12 @@
     }
 
     @media (max-width: 380px) {
-      table { min-width: 340px; font-size: 0.7rem; }
-      thead th { font-size: 0.6rem; padding: 6px 3px; }
-      tbody td { padding: 6px 3px; font-size: 0.65rem; }
-      tbody td:first-child { font-size: 0.6rem; }
-      tbody td:nth-child(3) { font-size: 0.65rem; }
-      tbody td:last-child { font-size: 0.55rem; }
+      table { min-width: 360px; font-size: 0.7rem; }
+      thead th { font-size: 0.55rem; padding: 6px 3px; }
+      tbody td { padding: 6px 3px; font-size: 0.6rem; }
+      tbody td:first-child { font-size: 0.55rem; }
+      tbody td:nth-child(4) { font-size: 0.6rem; }
+      tbody td:last-child { font-size: 0.5rem; }
       
       .section-heading { font-size: 0.85rem; }
       header h1 { font-size: 1rem; }
@@ -447,6 +463,7 @@
             <tr>
               <th>التاريخ</th>
               <th>اليوم</th>
+              <th>الأسبوع</th>
               <th>الحدث</th>
               <th>العد التنازلي</th>
             </tr>
@@ -483,7 +500,6 @@
       setModeUI(isDark);
     });
 
-    // Handle touch events for dark mode toggle
     modeToggle.addEventListener('touchstart', (e) => {
       // Allow touch event to trigger click
     }, { passive: true });
@@ -509,9 +525,8 @@
       if (blocked) e.preventDefault();
     });
   </script>
-<!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
 
-  
 </body>
 </html>
