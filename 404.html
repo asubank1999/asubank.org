@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | ASU E-Library Hub</title>
+    <meta name="description" content="The page you're looking for doesn't exist on ASU E-Library Hub. Return to the homepage to find test banks, past exams, and study materials.">
+    <meta name="robots" content="noindex, follow">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon2.ico" type="image/x-icon">
+    <link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/png">
+    <style>
+        :root {
+            --primary: #8C1D40;
+            --secondary: #FFC627;
+            --accent: #00A3E0;
+            --light: #F8F9FA;
+            --dark: #191919;
+            --gray: #6C757D;
+            --card-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body { overflow-x: hidden; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #5e1329 100%);
+            color: white;
+            padding: 1.25rem 1rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-section img { height: 48px; width: auto; }
+        .logo-section h1 { font-size: 1.3rem; font-weight: 700; margin: 0; }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.25rem;
+        }
+
+        .error-card {
+            max-width: 560px;
+            width: 100%;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--secondary);
+        }
+
+        .error-code {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .error-body {
+            color: var(--gray);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-body-ar {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            direction: rtl;
+        }
+
+        .error-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.6rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background: #6f1732; transform: translateY(-2px); }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        .btn-secondary:hover { background: rgba(140, 29, 64, 0.08); transform: translateY(-2px); }
+
+        .btn:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            padding: 1.25rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 480px) {
+            .error-card { padding: 2.25rem 1.5rem; }
+            .error-code { font-size: 3.5rem; }
+            .error-title { font-size: 1.2rem; }
+            .btn { width: 100%; justify-content: center; }
+            .error-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo-section" aria-label="ASU E-Library Hub — Go to homepage">
+                <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU E-Library Hub logo" width="48" height="48">
+                <h1>E-Library Hub</h1>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="error-card">
+            <div class="error-code" aria-hidden="true">404</div>
+            <h2 class="error-title">Page Not Found</h2>
+            <p class="error-body">
+                Sorry, we couldn't find the page you were looking for. It may have been moved, renamed, or never existed.
+            </p>
+            <p class="error-body-ar">
+                عذرًا، لم نتمكن من العثور على الصفحة التي تبحث عنها. ربما تم نقلها أو حذفها.
+            </p>
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary">
+                    <span aria-hidden="true">🏠</span> Back to Homepage
+                </a>
+                <a href="/search" class="btn btn-secondary">
+                    <span aria-hidden="true">🔍</span> Search Materials
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 ASU E-Library Hub. All rights reserved.
+    </footer>
+</body>
+</html>
