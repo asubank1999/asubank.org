@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gaming Community Vote | ASU E-Library Hub</title>
+<meta name="description" content="Vote on whether ASU E-Library Hub should open a Discord gaming community. Tell us which games you play.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="favicon2.ico" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg-0: #07070d;
+        --bg-1: #0d0d1a;
+        --bg-2: #14142a;
+        --bg-3: #1c1c3a;
+        --neon: #7c3aed;
+        --neon-2: #a855f7;
+        --cyan: #06b6d4;
+        --pink: #ec4899;
+        --green: #22c55e;
+        --red: #ef4444;
+        --text: #e9e9ff;
+        --muted: #8a8ab0;
+        --border: rgba(124, 58, 237, 0.35);
+        --radius: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overflow-x: hidden; }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background:
+            radial-gradient(circle at 20% 0%, rgba(124,58,237,0.18), transparent 45%),
+            radial-gradient(circle at 80% 100%, rgba(6,182,212,0.14), transparent 45%),
+            var(--bg-0);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.55;
+        display: flex;
+        flex-direction: column;
+        background-attachment: fixed;
+    }
+
+    /* Animated grid backdrop */
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(124,58,237,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(124,58,237,0.06) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+        z-index: 0;
+        mask-image: radial-gradient(circle at center, black 30%, transparent 85%);
+    }
+
+    body > * { position: relative; z-index: 1; }
+
+    /* ---------- Header ---------- */
+    header {
+        padding: 1rem 1.25rem;
+        background: rgba(7,7,13,0.7);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: inherit;
+        min-width: 0;
+    }
+    .logo-section img { height: 42px; width: auto; flex-shrink: 0; }
+    .logo-section h1 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.05rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, var(--neon-2), var(--cyan));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        white-space: nowrap;
+    }
+    .nav-link {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.88rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        border: 1px solid var(--border);
+        background: rgba(124,58,237,0.1);
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .nav-link:hover, .nav-link:focus-visible {
+        background: rgba(124,58,237,0.25);
+        box-shadow: 0 0 20px rgba(124,58,237,0.5);
+        outline: none;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+        flex: 1;
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1rem 3rem;
+    }
+
+    /* Hero */
+    .hero {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .hero-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        border: 1px solid var(--cyan);
+        padding: 0.3rem 0.85rem;
+        border-radius: 50px;
+        margin-bottom: 1rem;
+        box-shadow: 0 0 18px rgba(6,182,212,0.4), inset 0 0 12px rgba(6,182,212,0.1);
+        animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 18px rgba(6,182,212,0.4), inset 0 0 12px rgba(6,182,212,0.1); }
+        50%      { box-shadow: 0 0 28px rgba(6,182,212,0.7), inset 0 0 16px rgba(6,182,212,0.2); }
+    }
+    .hero h2 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 2.1rem;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+        line-height: 1.15;
+        background: linear-gradient(120deg, #ffffff 20%, var(--neon-2) 60%, var(--cyan) 90%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 0.75rem;
+    }
+    .hero p {
+        color: var(--muted);
+        font-size: 0.98rem;
+        max-width: 620px;
+        margin: 0 auto;
+    }
+    .hero .ar {
+        direction: rtl;
+        font-size: 0.85rem;
+        margin-top: 0.4rem;
+        color: #a3a3cc;
+    }
+
+    /* Live stats bar */
+    .stats-card {
+        background: linear-gradient(135deg, rgba(20,20,42,0.9), rgba(28,28,58,0.7));
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.5rem 1.5rem 1.75rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+        position: relative;
+        overflow: hidden;
+    }
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--neon), var(--cyan), var(--pink), var(--neon));
+        background-size: 300% 100%;
+        animation: slide 4s linear infinite;
+    }
+    @keyframes slide {
+        0%   { background-position: 0% 50%; }
+        100% { background-position: 300% 50%; }
+    }
+    .stats-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+        flex-wrap: wrap;
+    }
+    .stats-header h3 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+    }
+    .live-dot {
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 12px var(--green);
+        animation: blink 1.4s ease-in-out infinite;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50%      { opacity: 0.35; }
+    }
+    .stats-total {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+    .stats-total strong { color: var(--text); font-size: 1.05rem; }
+
+    .percent-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 0.9rem;
+        margin-bottom: 0.85rem;
+    }
+    .percent-row:last-child { margin-bottom: 0; }
+
+    .percent-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        font-size: 0.92rem;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 0.04em;
+    }
+    .percent-label .dot {
+        width: 12px; height: 12px;
+        border-radius: 50%;
+    }
+    .percent-label.yes .dot { background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .percent-label.no  .dot { background: var(--red);   box-shadow: 0 0 10px var(--red); }
+
+    .percent-value {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 900;
+        font-size: 1.1rem;
+        min-width: 68px;
+        text-align: right;
+    }
+    .percent-value.yes { color: var(--green); text-shadow: 0 0 12px rgba(34,197,94,0.5); }
+    .percent-value.no  { color: var(--red);   text-shadow: 0 0 12px rgba(239,68,68,0.5); }
+
+    .bar-track {
+        grid-column: 1 / -1;
+        height: 12px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.06);
+        overflow: hidden;
+        position: relative;
+        margin-top: 0.35rem;
+    }
+    .bar-fill {
+        height: 100%;
+        width: 0;
+        border-radius: 8px;
+        transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        position: relative;
+    }
+    .bar-fill.yes {
+        background: linear-gradient(90deg, #16a34a, #4ade80);
+        box-shadow: 0 0 16px rgba(34,197,94,0.55);
+    }
+    .bar-fill.no {
+        background: linear-gradient(90deg, #dc2626, #f87171);
+        box-shadow: 0 0 16px rgba(239,68,68,0.55);
+    }
+    .bar-fill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        background-size: 60% 100%;
+        animation: sheen 2.4s linear infinite;
+    }
+    @keyframes sheen {
+        0%   { background-position: -100% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    .stats-top-games {
+        margin-top: 1.2rem;
+        padding-top: 1.2rem;
+        border-top: 1px dashed rgba(124,58,237,0.25);
+    }
+    .stats-top-games h4 {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.6rem;
+    }
+    .top-games-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+    .top-game-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 0.28rem 0.7rem;
+        border-radius: 50px;
+        background: rgba(124,58,237,0.15);
+        border: 1px solid rgba(124,58,237,0.4);
+        color: #d8caff;
+    }
+    .top-game-chip .count {
+        background: var(--neon);
+        color: white;
+        padding: 0.05rem 0.4rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 800;
+    }
+    .top-games-empty {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    /* Vote card */
+    .vote-card {
+        background: linear-gradient(135deg, rgba(20,20,42,0.9), rgba(28,28,58,0.7));
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.75rem 1.5rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .vote-section-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .vote-section-title::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 10px var(--cyan);
+    }
+
+    .field-label {
+        display: block;
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.35rem;
+    }
+    .field-label .ar {
+        display: block;
+        direction: rtl;
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-weight: 500;
+        margin-top: 0.15rem;
+    }
+
+    /* Yes / No vote buttons */
+    .vote-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.85rem;
+        margin-bottom: 2rem;
+    }
+    .vote-btn {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 1.4rem 1rem;
+        border-radius: 14px;
+        border: 2px solid transparent;
+        background: rgba(255,255,255,0.03);
+        cursor: pointer;
+        font-family: inherit;
+        color: var(--text);
+        transition: all 0.25s ease;
+        overflow: hidden;
+    }
+    .vote-btn .v-icon {
+        font-size: 1.7rem;
+        line-height: 1;
+    }
+    .vote-btn .v-label {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+    }
+    .vote-btn .v-sub {
+        font-size: 0.72rem;
+        color: var(--muted);
+        direction: rtl;
+    }
+    .vote-btn.yes {
+        border-color: rgba(34,197,94,0.4);
+        box-shadow: inset 0 0 24px rgba(34,197,94,0.06);
+    }
+    .vote-btn.yes:hover {
+        border-color: var(--green);
+        box-shadow: 0 0 24px rgba(34,197,94,0.4), inset 0 0 32px rgba(34,197,94,0.12);
+        transform: translateY(-2px);
+    }
+    .vote-btn.no {
+        border-color: rgba(239,68,68,0.4);
+        box-shadow: inset 0 0 24px rgba(239,68,68,0.06);
+    }
+    .vote-btn.no:hover {
+        border-color: var(--red);
+        box-shadow: 0 0 24px rgba(239,68,68,0.4), inset 0 0 32px rgba(239,68,68,0.12);
+        transform: translateY(-2px);
+    }
+    .vote-btn.selected.yes {
+        background: linear-gradient(135deg, rgba(34,197,94,0.25), rgba(34,197,94,0.08));
+        border-color: var(--green);
+        box-shadow: 0 0 32px rgba(34,197,94,0.55), inset 0 0 32px rgba(34,197,94,0.15);
+    }
+    .vote-btn.selected.no {
+        background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(239,68,68,0.08));
+        border-color: var(--red);
+        box-shadow: 0 0 32px rgba(239,68,68,0.55), inset 0 0 32px rgba(239,68,68,0.15);
+    }
+    .vote-btn:focus-visible {
+        outline: 3px solid var(--cyan);
+        outline-offset: 3px;
+    }
+
+    /* Interested? (Yes/No) */
+    .interest-row {
+        display: flex;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+    }
+    .interest-btn {
+        flex: 1;
+        min-width: 130px;
+        padding: 0.85rem 1rem;
+        border-radius: 50px;
+        border: 2px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.03);
+        color: var(--text);
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+    .interest-btn:hover {
+        border-color: var(--neon-2);
+        background: rgba(124,58,237,0.1);
+        box-shadow: 0 0 18px rgba(124,58,237,0.35);
+    }
+    .interest-btn.selected {
+        background: linear-gradient(135deg, rgba(124,58,237,0.4), rgba(6,182,212,0.2));
+        border-color: var(--neon-2);
+        box-shadow: 0 0 24px rgba(124,58,237,0.6);
+    }
+    .interest-btn:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+    /* Games picker */
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.55rem;
+        margin-bottom: 1rem;
+    }
+    .game-chip {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 0.75rem;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.03);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.85rem;
+        font-weight: 600;
+        user-select: none;
+        text-align: left;
+        font-family: inherit;
+        color: var(--text);
+        min-width: 0;
+    }
+    .game-chip .emoji { font-size: 1.05rem; flex-shrink: 0; }
+    .game-chip .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .game-chip:hover {
+        border-color: var(--neon-2);
+        background: rgba(124,58,237,0.12);
+        transform: translateY(-1px);
+    }
+    .game-chip.selected {
+        background: linear-gradient(135deg, rgba(124,58,237,0.4), rgba(6,182,212,0.2));
+        border-color: var(--neon-2);
+        box-shadow: 0 0 16px rgba(124,58,237,0.55);
+    }
+    .game-chip.selected .name::before {
+        content: '✓ ';
+        color: var(--cyan);
+    }
+    .game-chip:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+    /* Inputs */
+    .text-input, textarea {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        border: 2px solid rgba(255,255,255,0.08);
+        background: rgba(0,0,0,0.25);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.92rem;
+        transition: all 0.2s ease;
+        resize: vertical;
+    }
+    .text-input:focus, textarea:focus {
+        outline: none;
+        border-color: var(--neon-2);
+        box-shadow: 0 0 0 4px rgba(124,58,237,0.18), 0 0 20px rgba(124,58,237,0.35);
+    }
+    .text-input::placeholder, textarea::placeholder {
+        color: #6a6a8f;
+    }
+    textarea { min-height: 100px; }
+
+    .field-group { margin-bottom: 1.6rem; }
+
+    .char-count {
+        text-align: right;
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-top: 0.3rem;
+    }
+
+    /* Submit */
+    .submit-row {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.95rem 1.8rem;
+        border-radius: 50px;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 800;
+        font-size: 0.88rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: none;
+        transition: all 0.25s ease;
+        text-decoration: none;
+    }
+    .btn-primary {
+        flex: 1;
+        min-width: 200px;
+        background: linear-gradient(135deg, var(--neon), var(--cyan));
+        color: white;
+        box-shadow: 0 0 24px rgba(124,58,237,0.55), 0 4px 12px rgba(0,0,0,0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-primary:hover:not(:disabled) {
+        box-shadow: 0 0 36px rgba(124,58,237,0.85), 0 0 48px rgba(6,182,212,0.4);
+        transform: translateY(-2px);
+    }
+    .btn-primary:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+    .btn-primary::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+        background-size: 60% 100%;
+        animation: sheen 2.8s linear infinite;
+    }
+    .btn-secondary {
+        background: rgba(255,255,255,0.05);
+        color: var(--text);
+        border: 2px solid rgba(255,255,255,0.12);
+    }
+    .btn-secondary:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: var(--neon-2);
+    }
+    .btn:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+    /* Status messages */
+    .status-message {
+        display: none;
+        padding: 1rem 1.15rem;
+        border-radius: 12px;
+        margin-top: 1.25rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        border: 1px solid;
+    }
+    .status-message.success {
+        display: block;
+        background: rgba(34,197,94,0.12);
+        color: #86efac;
+        border-color: rgba(34,197,94,0.5);
+        box-shadow: 0 0 24px rgba(34,197,94,0.2);
+    }
+    .status-message.error {
+        display: block;
+        background: rgba(239,68,68,0.12);
+        color: #fca5a5;
+        border-color: rgba(239,68,68,0.5);
+        box-shadow: 0 0 24px rgba(239,68,68,0.2);
+    }
+    .status-message.info {
+        display: block;
+        background: rgba(6,182,212,0.12);
+        color: #67e8f9;
+        border-color: rgba(6,182,212,0.5);
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 1.5rem 1rem;
+        color: var(--muted);
+        font-size: 0.82rem;
+        border-top: 1px solid var(--border);
+        background: rgba(7,7,13,0.6);
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+        .hero h2 { font-size: 1.5rem; }
+        .vote-buttons { grid-template-columns: 1fr; }
+        .games-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+        .stats-card, .vote-card { padding: 1.25rem 1rem; }
+        .btn { width: 100%; }
+        .submit-row { flex-direction: column; }
+        .logo-section h1 { font-size: 0.9rem; }
+        .nav-link { font-size: 0.78rem; padding: 0.4rem 0.75rem; }
+    }
+    @media (max-width: 380px) {
+        .games-grid { grid-template-columns: 1fr 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <a href="/" class="logo-section" aria-label="ASU E-Library Hub — Home">
+            <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU E-Library Hub logo" width="42" height="42">
+            <h1>ASU Gaming Vote</h1>
+        </a>
+        <a href="/" class="nav-link">← Home</a>
+    </div>
+</header>
+
+<main>
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-badge">🎮 Community Poll</div>
+        <h2>Should we open a Discord Gaming Community?</h2>
+        <p>Cast your vote and tell us which games you'd love to play with fellow ASU students. Your voice decides whether this community opens.</p>
+        <p class="ar">هل تريد أن نفتح مجتمع ألعاب على ديسكورد؟ صوّت وأخبرنا بالألعاب التي تحبها.</p>
+    </div>
+
+    <!-- Live stats -->
+    <div class="stats-card" id="statsCard">
+        <div class="stats-header">
+            <h3><span class="live-dot"></span> Live Results</h3>
+            <div class="stats-total">Total votes: <strong id="statTotal">0</strong></div>
+        </div>
+
+        <div class="percent-row">
+            <div class="percent-label yes"><span class="dot"></span> YES — Open it</div>
+            <div class="percent-value yes" id="yesPercent">0%</div>
+            <div class="bar-track"><div class="bar-fill yes" id="yesBar"></div></div>
+        </div>
+
+        <div class="percent-row">
+            <div class="percent-label no"><span class="dot"></span> NO — Don't open</div>
+            <div class="percent-value no" id="noPercent">0%</div>
+            <div class="bar-track"><div class="bar-fill no" id="noBar"></div></div>
+        </div>
+
+        <div class="stats-top-games" id="topGamesWrap" style="display:none;">
+            <h4>🔥 Top games students want</h4>
+            <div class="top-games-list" id="topGamesList"></div>
+        </div>
+    </div>
+
+    <!-- Vote form -->
+    <div class="vote-card">
+        <form id="voteForm" novalidate>
+
+            <!-- Vote YES / NO -->
+            <div class="field-group">
+                <span class="field-label">
+                    1. Should we open the Discord gaming community?
+                    <span class="ar">هل يجب أن نفتح مجتمع الألعاب على ديسكورد؟</span>
+                </span>
+                <div class="vote-buttons">
+                    <button type="button" class="vote-btn yes" data-vote="YES" aria-pressed="false">
+                        <span class="v-icon">✅</span>
+                        <span class="v-label">YES</span>
+                        <span class="v-sub">نعم، افتحوا</span>
+                    </button>
+                    <button type="button" class="vote-btn no" data-vote="NO" aria-pressed="false">
+                        <span class="v-icon">❌</span>
+                        <span class="v-label">NO</span>
+                        <span class="v-sub">لا، لا تفتحوا</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Interested in joining if opened -->
+            <div class="field-group">
+                <span class="field-label">
+                    2. Would you personally be interested in joining?
+                    <span class="ar">هل أنت شخصيًا مهتم بالانضمام إذا فُتح؟</span>
+                </span>
+                <div class="interest-row" role="group" aria-label="Are you interested in joining">
+                    <button type="button" class="interest-btn" data-interested="true">👍 Yes / نعم</button>
+                    <button type="button" class="interest-btn" data-interested="false">👎 No / لا</button>
+                </div>
+            </div>
+
+            <!-- Games -->
+            <div class="field-group">
+                <span class="field-label">
+                    3. Which games would you like to play? (optional)
+                    <span class="ar">ما الألعاب التي تحب لعبها؟ (اختياري)</span>
+                </span>
+                <div class="games-grid" id="gamesGrid" role="group" aria-label="Game selection"></div>
+
+                <input type="text" id="otherGame" class="text-input"
+                       placeholder="Other game not listed… لعبة أخرى غير مذكورة"
+                       maxlength="60" aria-label="Other game">
+
+                <div class="char-count"><span id="gamesCount">0</span> games selected</div>
+            </div>
+
+            <!-- Suggestion -->
+            <div class="field-group">
+                <span class="field-label">
+                    4. Any suggestion or idea about the community? (optional)
+                    <span class="ar">أي اقتراح أو فكرة عن المجتمع؟ (اختياري)</span>
+                </span>
+                <textarea id="suggestion" maxlength="400"
+                          placeholder="Tournaments, voice channels, game nights, rules… بطولات، قنوات صوتية، ليالي ألعاب…"></textarea>
+                <div class="char-count"><span id="suggestionCount">0</span> / 400</div>
+            </div>
+
+            <!-- Actions -->
+            <div class="submit-row">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    🚀 Submit My Vote
+                </button>
+                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                    ↺ Reset
+                </button>
+            </div>
+
+            <div class="status-message" id="statusMessage" role="status" aria-live="polite"></div>
+        </form>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 ASU E-Library Hub · Gaming Community Poll
+</footer>
+
+<script>
+(function () {
+    'use strict';
+
+    // ============================================================
+    //  ⚠️ PASTE YOUR APPS SCRIPT /exec URL HERE  ⚠️
+    // ============================================================
+    var BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzmBIXkb4uqwWsZ_gYUwSRMTwZVshGucECvWSeCpO76zVAFq5SsWVXCnnTBUdOWcdYK8Q/exec';
+
+    // ---------- Games list ----------
+    var GAMES = [
+        { name: 'Valorant',        emoji: '🎯' },
+        { name: 'League of Legends', emoji: '⚔️' },
+        { name: 'CS2',             emoji: '🔫' },
+        { name: 'Fortnite',        emoji: '🏗️' },
+        { name: 'Minecraft',       emoji: '⛏️' },
+        { name: 'GTA V',           emoji: '🚗' },
+        { name: 'Rocket League',   emoji: '🚀' },
+        { name: 'Apex Legends',    emoji: '🪂' },
+        { name: 'Overwatch 2',     emoji: '🛡️' },
+        { name: 'PUBG',            emoji: '🎒' },
+        { name: 'Call of Duty',    emoji: '💥' },
+        { name: 'Rainbow Six',     emoji: '🌈' },
+        { name: 'Dota 2',          emoji: '🧙' },
+        { name: 'Roblox',          emoji: '🧱' },
+        { name: 'Among Us',        emoji: '🔪' },
+        { name: 'Fall Guys',       emoji: '🍬' },
+        { name: 'FIFA / EA FC',    emoji: '⚽' },
+        { name: 'NBA 2K',          emoji: '🏀' },
+        { name: 'Clash Royale',    emoji: '👑' },
+        { name: 'Clash of Clans',  emoji: '🏰' },
+        { name: 'Free Fire',       emoji: '🔥' },
+        { name: 'Mobile Legends',  emoji: '📱' },
+        { name: 'Genshin Impact',  emoji: '🌸' },
+        { name: 'Elden Ring',      emoji: '🗡️' },
+        { name: 'Stardew Valley',  emoji: '🌾' },
+        { name: 'Terraria',        emoji: '🌳' },
+        { name: 'Chess.com',       emoji: '♟️' },
+        { name: 'Uno / Cards',     emoji: '🃏' },
+        { name: 'Skribbl.io',      emoji: '✏️' },
+        { name: 'Jackbox',         emoji: '📺' }
+    ];
+
+    // ---------- State ----------
+    var selectedVote = null;
+    var selectedInterested = null;
+    var selectedGames = new Set();
+
+    // ---------- DOM ----------
+    var form            = document.getElementById('voteForm');
+    var submitBtn       = document.getElementById('submitBtn');
+    var resetBtn        = document.getElementById('resetBtn');
+    var statusMessage   = document.getElementById('statusMessage');
+    var gamesGrid       = document.getElementById('gamesGrid');
+    var otherGameInput  = document.getElementById('otherGame');
+    var gamesCountEl    = document.getElementById('gamesCount');
+    var suggestionBox   = document.getElementById('suggestion');
+    var suggestionCount = document.getElementById('suggestionCount');
+
+    // Stats
+    var statTotal    = document.getElementById('statTotal');
+    var yesPercentEl = document.getElementById('yesPercent');
+    var noPercentEl  = document.getElementById('noPercent');
+    var yesBar       = document.getElementById('yesBar');
+    var noBar        = document.getElementById('noBar');
+    var topGamesWrap = document.getElementById('topGamesWrap');
+    var topGamesList = document.getElementById('topGamesList');
+
+    // ---------- Build games grid ----------
+    GAMES.forEach(function (g) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'game-chip';
+        btn.dataset.game = g.name;
+        btn.setAttribute('aria-pressed', 'false');
+        btn.innerHTML = '<span class="emoji">' + g.emoji + '</span><span class="name">' + g.name + '</span>';
+        btn.addEventListener('click', function () {
+            if (selectedGames.has(g.name)) {
+                selectedGames.delete(g.name);
+                btn.classList.remove('selected');
+                btn.setAttribute('aria-pressed', 'false');
+            } else {
+                selectedGames.add(g.name);
+                btn.classList.add('selected');
+                btn.setAttribute('aria-pressed', 'true');
+            }
+            updateGamesCount();
+        });
+        gamesGrid.appendChild(btn);
+    });
+
+    function updateGamesCount() {
+        var extra = otherGameInput.value.trim() ? 1 : 0;
+        gamesCountEl.textContent = selectedGames.size + extra;
+    }
+
+    // ---------- Vote buttons ----------
+    document.querySelectorAll('.vote-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var v = btn.dataset.vote;
+            document.querySelectorAll('.vote-btn').forEach(function (b) {
+                b.classList.remove('selected');
+                b.setAttribute('aria-pressed', 'false');
+            });
+            btn.classList.add('selected');
+            btn.setAttribute('aria-pressed', 'true');
+            selectedVote = v;
+        });
+    });
+
+    // ---------- Interest buttons ----------
+    document.querySelectorAll('.interest-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.interest-btn').forEach(function (b) {
+                b.classList.remove('selected');
+            });
+            btn.classList.add('selected');
+            selectedInterested = btn.dataset.interested === 'true';
+        });
+    });
+
+    // ---------- Char counters ----------
+    suggestionBox.addEventListener('input', function () {
+        suggestionCount.textContent = this.value.length;
+    });
+    otherGameInput.addEventListener('input', updateGamesCount);
+
+    // ---------- Status ----------
+    function showStatus(type, msg) {
+        statusMessage.textContent = msg;
+        statusMessage.className = 'status-message ' + type;
+    }
+    function clearStatus() {
+        statusMessage.textContent = '';
+        statusMessage.className = 'status-message';
+    }
+
+    // ---------- Reset ----------
+    resetBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        selectedVote = null;
+        selectedInterested = null;
+        selectedGames.clear();
+        document.querySelectorAll('.vote-btn, .interest-btn, .game-chip').forEach(function (b) {
+            b.classList.remove('selected');
+            if (b.hasAttribute('aria-pressed')) b.setAttribute('aria-pressed', 'false');
+        });
+        otherGameInput.value = '';
+        suggestionBox.value = '';
+        suggestionCount.textContent = '0';
+        updateGamesCount();
+        clearStatus();
+    });
+
+    // ---------- Stats rendering ----------
+    function renderStats(stats) {
+        if (!stats) return;
+        statTotal.textContent = stats.totalVotes || 0;
+        yesPercentEl.textContent = (stats.yesPercent || 0) + '%';
+        noPercentEl.textContent  = (stats.noPercent  || 0) + '%';
+        yesBar.style.width = (stats.yesPercent || 0) + '%';
+        noBar.style.width  = (stats.noPercent  || 0) + '%';
+
+        var tg = stats.topGames || [];
+        if (tg.length > 0) {
+            topGamesWrap.style.display = 'block';
+            topGamesList.innerHTML = '';
+            tg.forEach(function (g) {
+                var chip = document.createElement('span');
+                chip.className = 'top-game-chip';
+                chip.innerHTML = g.name + ' <span class="count">' + g.count + '</span>';
+                topGamesList.appendChild(chip);
+            });
+        } else {
+            topGamesWrap.style.display = 'none';
+        }
+    }
+
+    function fetchStats() {
+        fetch(BACKEND_URL, { method: 'GET' })
+            .then(function (res) { return res.json(); })
+            .then(function (json) {
+                if (json && json.ok && json.stats) renderStats(json.stats);
+            })
+            .catch(function (err) { console.warn('Stats fetch failed:', err); });
+    }
+
+    // Initial + periodic refresh
+    fetchStats();
+    setInterval(fetchStats, 15000);
+
+    // ---------- Submit ----------
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearStatus();
+
+        if (selectedVote !== 'YES' && selectedVote !== 'NO') {
+            showStatus('error', '⚠️ Please choose YES or NO before submitting. — اختر نعم أو لا قبل الإرسال.');
+            return;
+        }
+
+        var payload = {
+            timestamp: new Date().toISOString(),
+            vote: selectedVote,
+            interested: selectedInterested,
+            games: Array.from(selectedGames),
+            otherGame: otherGameInput.value.trim(),
+            suggestion: suggestionBox.value.trim(),
+            page: window.location.href,
+            userAgent: navigator.userAgent
+        };
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⏳ Sending…';
+        showStatus('info', 'Sending your vote…');
+
+        fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+        })
+        .then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+        })
+        .then(function (json) {
+            if (!json.ok) throw new Error(json.error || 'Rejected');
+            showStatus('success', '✅ Vote recorded! Thank you. — تم تسجيل صوتك، شكرًا لك!');
+            if (json.stats) renderStats(json.stats);
+            // Reset the whole form so they can't double-submit
+            setTimeout(function () {
+                resetBtn.click();
+            }, 1200);
+        })
+        .catch(function (err) {
+            console.error('Submit error:', err);
+            showStatus('error', '❌ Something went wrong. Please try again. — حدث خطأ، حاول مرة أخرى.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '🚀 Submit My Vote';
+        });
+    });
+})();
+</script>
+</body>
+</html>
