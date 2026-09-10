@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | ASU E-Library Hub WhatsApp Groups</title>
+    <meta name="description" content="Terms of Service for joining ASU E-Library Hub WhatsApp study groups.">
+    <meta name="robots" content="noindex, follow">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon2.ico" type="image/x-icon">
+    <link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/png">
+    <style>
+        :root {
+            --primary: #8C1D40;
+            --secondary: #FFC627;
+            --accent: #00A3E0;
+            --light: #F8F9FA;
+            --dark: #191919;
+            --gray: #6C757D;
+            --card-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow-x: hidden; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #5e1329 100%);
+            color: white;
+            padding: 1.25rem 1rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-section img { height: 48px; width: auto; }
+        .logo-section h1 { font-size: 1.3rem; font-weight: 700; margin: 0; }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 3rem 1.25rem;
+        }
+
+        .tos-card {
+            max-width: 760px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 2.75rem 2.5rem;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--secondary);
+        }
+
+        .tos-header { text-align: center; margin-bottom: 2rem; }
+
+        .tos-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .tos-subtitle {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .updated {
+            display: inline-block;
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            background: var(--light);
+            color: var(--gray);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+        }
+
+        .notice-box {
+            background: #FFF8E5;
+            border: 1px solid var(--secondary);
+            border-radius: var(--card-radius);
+            padding: 1rem 1.25rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        .notice-box strong { color: var(--primary); }
+
+        section { margin-bottom: 1.75rem; }
+
+        h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        p, li {
+            color: #3a3a3a;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        ul { padding-left: 1.25rem; margin-bottom: 0.5rem; }
+
+        .ar {
+            direction: rtl;
+            text-align: right;
+            color: var(--gray);
+            font-size: 0.88rem;
+            margin-top: 0.25rem;
+            padding-top: 0.25rem;
+            border-top: 1px dashed #e5e5e5;
+        }
+
+        .groups-box {
+            background: var(--light);
+            border-radius: var(--card-radius);
+            padding: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .group-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 0.6rem;
+            border: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+        .group-link:last-child { margin-bottom: 0; }
+
+        .group-link .label { font-weight: 600; font-size: 0.92rem; }
+
+        .group-link a {
+            color: white;
+            background: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+        .group-link a:hover { background: #0086b8; }
+
+        .accept-banner {
+            margin-top: 2rem;
+            text-align: center;
+            padding: 1.25rem;
+            border-radius: var(--card-radius);
+            background: rgba(140, 29, 64, 0.06);
+            border: 1px dashed var(--primary);
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .actions {
+            margin-top: 1.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        .btn-secondary:hover { background: rgba(140, 29, 64, 0.08); transform: translateY(-2px); }
+
+        .btn:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            padding: 1.25rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 480px) {
+            .tos-card { padding: 2rem 1.25rem; }
+            .tos-title { font-size: 1.4rem; }
+            .group-link { flex-direction: column; align-items: flex-start; }
+            .group-link a { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo-section" aria-label="ASU E-Library Hub — Go to homepage">
+                <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU E-Library Hub logo" width="48" height="48">
+                <h1>E-Library Hub</h1>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="tos-card">
+            <div class="tos-header">
+                <div class="tos-title">Terms of Service — WhatsApp Study Groups</div>
+                <p class="tos-subtitle">ASU E-Library Hub · Student Community Groups</p>
+                <span class="updated">Last updated: September 10, 2026</span>
+            </div>
+
+            <div class="notice-box">
+                <strong>By requesting to join, opening, or remaining a member of any group linked below, you acknowledge that you have read and agree to these Terms of Service.</strong> If you do not agree, please do not join, and leave the group if you're already a member.
+                <div class="ar">
+                    <strong>بالانضمام إلى أي من المجموعات أدناه أو فتحها أو البقاء فيها، فإنك تقر بأنك قرأت هذه الشروط ووافقت عليها.</strong> إذا كنت لا توافق، يرجى عدم الانضمام، ومغادرة المجموعة إذا كنت عضوًا بالفعل.
+                </div>
+            </div>
+
+            <section>
+                <h2>📌 1. Purpose of These Groups</h2>
+                <p>These WhatsApp groups are informal, student-run spaces created to help ASPU students share study materials, past exams, test banks, and academic support with one another by cohort year.</p>
+                <p class="ar">هذه المجموعات هي مساحات طلابية غير رسمية تهدف إلى مساعدة طلاب الجامعة على تبادل المواد الدراسية والامتحانات السابقة والدعم الأكاديمي حسب سنة الدفعة.</p>
+            </section>
+
+            <section>
+                <h2>👤 2. Role of the Admin</h2>
+                <p>The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.</p>
+                <p class="ar">يقوم المشرف/المشرفون بتنظيم المجموعة بشكل تطوعي، ولا يتحملون مسؤولية دقة أو اكتمال أو موثوقية أي محتوى يشاركه الأعضاء الآخرون.</p>
+            </section>
+
+            <section>
+                <h2>🔒 3. Admin Privacy &amp; No-Harassment Policy</h2>
+                <ul>
+                    <li>Members may not harass, threaten, defame, dox, or attack the admin(s) — publicly or privately — regarding decisions made about group management, content removal, or member removal.</li>
+                    <li>Disagreements with an admin decision should be raised respectfully and privately. Abusive behavior toward an admin is grounds for immediate removal and may be reported to WhatsApp or relevant university authorities.</li>
+                    <li>Admins reserve the right to keep their personal information (phone number visibility, identity, contact details) private and are not obligated to disclose it beyond what WhatsApp itself displays.</li>
+                </ul>
+                <p class="ar">يُمنع مضايقة أو تهديد أو الإساءة إلى المشرف بخصوص قراراته الإدارية. الإساءة تجاه المشرف تؤدي إلى الطرد الفوري من المجموعة.</p>
+            </section>
+
+            <section>
+                <h2>✅ 4. Acceptable Use</h2>
+                <ul>
+                    <li>Share academic resources relevant to the cohort/group (notes, past exams, study guides).</li>
+                    <li>Ask and answer academic questions respectfully.</li>
+                    <li>Keep discussions relevant to university/academic matters.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>🚫 5. Prohibited Conduct</h2>
+                <ul>
+                    <li>Spam, advertising, unrelated promotions, or repeated off-topic messages.</li>
+                    <li>Hate speech, harassment, bullying, or discriminatory remarks toward any member.</li>
+                    <li>Sharing malicious links, viruses, or phishing content.</li>
+                    <li>Impersonating university staff, the admin, or other students.</li>
+                    <li>Sharing another member's personal information without consent.</li>
+                    <li>Any illegal activity, including academic dishonesty in violation of university policy.</li>
+                </ul>
+                <p class="ar">يُمنع النشر المزعج، خطاب الكراهية، التنمر، انتحال الشخصية، أو مشاركة روابط ضارة أو أي نشاط غير قانوني.</p>
+            </section>
+
+            <section>
+                <h2>⚖️ 6. Moderation &amp; Removal</h2>
+                <p>Admins may warn, mute, remove, or block any member who violates these Terms, at their sole discretion, without prior notice. Content shared in the group may be removed or reported if it violates these Terms or applicable law.</p>
+            </section>
+
+            <section>
+                <h2>🎓 7. No Official Affiliation</h2>
+                <p>These groups are independently run by students and are <strong>not</strong> official channels of the university. Materials shared are for peer-to-peer study support only and are not endorsed, verified, or issued by any academic department or institution.</p>
+                <p class="ar">هذه المجموعات غير رسمية وغير تابعة للجامعة، والمواد المشتركة هي لأغراض الدعم الدراسي بين الطلاب فقط.</p>
+            </section>
+
+            <section>
+                <h2>📄 8. Content Ownership &amp; Liability</h2>
+                <p>Members are solely responsible for the content they share and must ensure they have the right to share it. The admin is not liable for copyright issues, inaccuracies in shared materials, or any consequences resulting from reliance on content posted in the group.</p>
+            </section>
+
+            <section>
+                <h2>🔁 9. Changes to These Terms</h2>
+                <p>These Terms may be updated at any time. Continued membership in the group after changes are posted constitutes acceptance of the revised Terms.</p>
+            </section>
+
+            <section>
+                <h2>💬 10. Groups Covered by These Terms</h2>
+                <div class="groups-box">
+                    <div class="group-link">
+                        <span class="label">🎓 جيل 2008 — ASPU</span>
+                        <a href="https://chat.whatsapp.com/CgDMYZACYgY30fyYpLsH4a" target="_blank" rel="noopener noreferrer">Join Group</a>
+                    </div>
+                    <div class="group-link">
+                        <span class="label">🎓 جيل 2007 — ASPU</span>
+                        <a href="https://chat.whatsapp.com/HYQwEGXHmy1Ddil4E7uYji" target="_blank" rel="noopener noreferrer">Join Group</a>
+                    </div>
+                </div>
+            </section>
+
+            <div class="accept-banner">
+                ✅ By tapping a link above and joining, you confirm you have read and accepted these Terms of Service.
+            </div>
+
+            <div class="actions">
+                <a href="/" class="btn btn-secondary">🏠 Back to Homepage</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 ASU E-Library Hub. All rights reserved.
+    </footer>
+</body>
+</html>
