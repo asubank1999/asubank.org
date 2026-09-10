@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rate Our Service | ASU E-Library Hub</title>
+<meta name="description" content="Share your feedback about ASU E-Library Hub. Rate our service, answer True/False questions, and send suggestions directly to our team.">
+<meta name="robots" content="noindex, follow">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon2.ico" type="image/x-icon">
+<link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/png">
+<style>
+    :root {
+        --primary: #8C1D40;
+        --secondary: #FFC627;
+        --accent: #00A3E0;
+        --light: #F8F9FA;
+        --dark: #191919;
+        --gray: #6C757D;
+        --card-radius: 12px;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --transition: all 0.25s ease;
+        --success: #28a745;
+        --error: #dc3545;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overflow-x: hidden; }
+    body {
+        font-family: 'Inter', sans-serif;
+        background: var(--light);
+        color: var(--dark);
+        line-height: 1.55;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Header */
+    header {
+        background: linear-gradient(135deg, var(--primary) 0%, #5e1329 100%);
+        color: white;
+        padding: 1rem;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+    }
+    .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+    .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: inherit;
+        min-width: 0;
+    }
+    .logo-section img { height: 42px; width: auto; flex-shrink: 0; }
+    .logo-section h1 { font-size: 1.15rem; font-weight: 700; margin: 0; white-space: nowrap; }
+    .nav-link {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 0.45rem 0.9rem;
+        border-radius: 50px;
+        transition: var(--transition);
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .nav-link:hover, .nav-link:focus-visible {
+        background: rgba(255,255,255,0.15);
+        outline: 2px solid var(--secondary);
+        outline-offset: 2px;
+    }
+
+    /* Main */
+    main {
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 2rem 1rem 2.5rem;
+    }
+    .rating-card {
+        max-width: 760px;
+        width: 100%;
+        background: white;
+        border-radius: 18px;
+        padding: 2rem 1.75rem;
+        box-shadow: var(--shadow);
+        border-top: 4px solid var(--secondary);
+    }
+    .card-header { text-align: center; margin-bottom: 1.75rem; }
+    .card-header h2 {
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.4rem;
+    }
+    .card-header p { color: var(--gray); font-size: 0.95rem; }
+    .card-header .arabic {
+        direction: rtl;
+        color: var(--gray);
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+
+    /* Fieldsets */
+    fieldset { border: none; margin-bottom: 1.75rem; }
+    legend {
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--dark);
+        margin-bottom: 0.9rem;
+        padding: 0 0 0.35rem 0;
+        display: block;
+        width: 100%;
+        border-bottom: 2px solid var(--secondary);
+    }
+    legend .ar {
+        font-size: 0.8rem;
+        font-weight: 400;
+        color: #6C757D;
+        direction: rtl;
+        float: right;
+    }
+
+    /* True/False grid (horizontal layout) */
+    .tf-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+    }
+    .tf-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.75rem 0.85rem;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        background: #fafafa;
+        transition: var(--transition);
+    }
+    .tf-item:hover { border-color: #ddd; background: #fff; }
+    .tf-item.answered { border-color: #c9e7d0; background: #f4fbf6; }
+
+    .tf-label {
+        font-size: 0.88rem;
+        color: var(--dark);
+        line-height: 1.35;
+    }
+    .tf-label .num {
+        font-weight: 700;
+        color: var(--primary);
+        margin-right: 0.35rem;
+    }
+    .tf-label .ar {
+        display: block;
+        direction: rtl;
+        color: var(--gray);
+        font-size: 0.76rem;
+        margin-top: 0.2rem;
+        line-height: 1.3;
+    }
+
+    .tf-buttons { display: flex; gap: 0.4rem; }
+    .tf-btn {
+        flex: 1;
+        padding: 0.5rem 0.6rem;
+        border-radius: 50px;
+        border: 2px solid #ddd;
+        background: white;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: var(--transition);
+        color: var(--gray);
+        font-family: inherit;
+    }
+    .tf-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .tf-btn.selected-true  { background: var(--success); border-color: var(--success); color: white; }
+    .tf-btn.selected-false { background: var(--error);   border-color: var(--error);   color: white; }
+    .tf-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+    /* Slider */
+    .slider-wrapper { padding: 0.75rem 0 0.35rem; }
+    .slider-value-display {
+        text-align: center;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0.2rem 0 0.4rem;
+    }
+    input[type="range"] {
+        width: 100%;
+        height: 8px;
+        -webkit-appearance: none;
+        appearance: none;
+        background: linear-gradient(
+            to right,
+            var(--secondary) 0%,
+            var(--secondary) var(--fill, 50%),
+            #ddd var(--fill, 50%),
+            #ddd 100%);
+        border-radius: 10px;
+        outline: none;
+        cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: var(--primary);
+        border: 3px solid white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: var(--primary);
+        border: 3px solid white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        cursor: pointer;
+    }
+    input[type="range"]:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    .rating-scale {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--gray);
+        margin-top: 0.2rem;
+    }
+
+    /* Textarea */
+    textarea {
+        width: 100%;
+        min-height: 110px;
+        padding: 0.9rem;
+        border: 2px solid #ddd;
+        border-radius: var(--card-radius);
+        font-family: inherit;
+        font-size: 0.9rem;
+        resize: vertical;
+        transition: var(--transition);
+    }
+    textarea:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(140,29,64,0.1);
+    }
+    textarea::placeholder { color: #aaa; }
+    .char-count {
+        text-align: right;
+        font-size: 0.75rem;
+        color: var(--gray);
+        margin-top: 0.2rem;
+    }
+
+    /* Buttons */
+    .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        justify-content: center;
+        margin-top: 1.75rem;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        padding: 0.8rem 1.6rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        border: 2px solid transparent;
+        cursor: pointer;
+        min-width: 170px;
+        font-family: inherit;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: #6f1732; transform: translateY(-2px); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-secondary {
+        background: transparent;
+        color: var(--primary);
+        border-color: var(--primary);
+    }
+    .btn-secondary:hover { background: rgba(140,29,64,0.08); transform: translateY(-2px); }
+    .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+    /* Status */
+    .status-message {
+        display: none;
+        padding: 0.9rem 1.1rem;
+        border-radius: var(--card-radius);
+        margin-top: 1.25rem;
+        font-weight: 500;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+    .status-message.success { display: block; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .status-message.error   { display: block; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .status-message.info    { display: block; background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+
+    /* Footer */
+    footer {
+        background: var(--dark);
+        color: rgba(255,255,255,0.6);
+        text-align: center;
+        padding: 1.1rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+        .rating-card { padding: 1.5rem 1.1rem; }
+        .card-header h2 { font-size: 1.2rem; }
+        .tf-grid { grid-template-columns: 1fr; }
+        .btn { width: 100%; min-width: 0; }
+        .form-actions { flex-direction: column; }
+        .slider-value-display { font-size: 1.4rem; }
+        .logo-section h1 { font-size: 1rem; }
+        .nav-link { font-size: 0.82rem; padding: 0.4rem 0.7rem; }
+    }
+</style>
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <a href="/" class="logo-section" aria-label="ASU E-Library Hub — Go to homepage">
+            <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU E-Library Hub logo" width="42" height="42">
+            <h1>E-Library Hub</h1>
+        </a>
+        <a href="/" class="nav-link" aria-label="Return to homepage">← Home</a>
+    </div>
+</header>
+
+<main>
+    <div class="rating-card">
+        <div class="card-header">
+            <h2>How do you see our service?</h2>
+            <p>Your feedback helps us improve the ASU E-Library Hub experience for everyone.</p>
+            <p class="arabic">رأيك يهمنا — ساعدنا في تحسين خدمة المكتبة الإلكترونية</p>
+        </div>
+
+        <form id="ratingForm" novalidate>
+            <fieldset>
+                <legend>
+                    Quick True / False Questions
+                    <span class="ar">أسئلة سريعة (صح / خطأ)</span>
+                </legend>
+                <div class="tf-grid" id="tfContainer"><!-- injected by JS --></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>
+                    Overall Rating
+                    <span class="ar">التقييم العام</span>
+                </legend>
+                <div class="slider-wrapper">
+                    <div class="slider-value-display" id="sliderValueDisplay">7</div>
+                    <input type="range" id="ratingSlider" min="1" max="10" value="7" step="1"
+                           aria-label="Overall rating from 1 to 10"
+                           aria-valuemin="1" aria-valuemax="10" aria-valuenow="7">
+                    <div class="rating-scale">
+                        <span>1 — Poor | ضعيف</span>
+                        <span>10 — Excellent | ممتاز</span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>
+                    Your Suggestions
+                    <span class="ar">اقتراحاتك</span>
+                </legend>
+                <textarea id="suggestionBox" maxlength="500"
+                          placeholder="Tell us what we can improve... (optional) — أخبرنا بما يمكن تحسينه (اختياري)"
+                          aria-label="Your suggestions for improvement"></textarea>
+                <div class="char-count"><span id="charCount">0</span> / 500</div>
+            </fieldset>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <span aria-hidden="true">📨</span> Send Feedback
+                </button>
+                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                    <span aria-hidden="true">↺</span> Reset
+                </button>
+            </div>
+
+            <div class="status-message" id="statusMessage" role="status" aria-live="polite"></div>
+        </form>
+    </div>
+</main>
+
+<footer>&copy; 2026 ASU E-Library Hub. All rights reserved.</footer>
+
+<script>
+(function () {
+    'use strict';
+
+    // ============================================================
+    //  ⚠️  PASTE YOUR APPS SCRIPT /exec URL HERE  ⚠️
+    //  Example: https://script.google.com/macros/s/AKfycb.../exec
+    // ============================================================
+    var BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyA-A0WREgeLnCZYLpe3V1jtDDJ1LC2Pc-iYxG0_5soAwPcbPjLITla3_k8Q4t9Gk2E/exec';
+
+    // Where to send the user after a successful submission
+    var REDIRECT_URL = '/';
+
+    // Seconds to show the success message before redirecting
+    var REDIRECT_DELAY_MS = 1800;
+
+    // Questions — must match the backend QUESTIONS array.
+    var QUESTIONS = [
+        { key: 'q1',  en: 'Easy to navigate',        ar: 'سهل التنقل' },
+        { key: 'q2',  en: 'Found materials quickly', ar: 'مواد سريعة الوصول' },
+        { key: 'q3',  en: 'Loads fast',              ar: 'تحميل سريع' },
+        { key: 'q4',  en: 'Mobile-friendly design',  ar: 'مناسب للجوال' },
+        { key: 'q5',  en: 'Would recommend',         ar: 'سأنصح به' },
+        { key: 'q6',  en: 'Accurate search results', ar: 'نتائج بحث دقيقة' },
+        { key: 'q7',  en: 'Smooth download',         ar: 'تحميل سلس' },
+        { key: 'q8',  en: 'Well-organized content',  ar: 'محتوى منظم' },
+        { key: 'q9',  en: 'Feels safe',              ar: 'أشعر بالأمان' },
+        { key: 'q10', en: 'Will use again',          ar: 'سأستخدمه مجددًا' }
+    ];
+
+    // ---- DOM ----
+    var form          = document.getElementById('ratingForm');
+    var submitBtn     = document.getElementById('submitBtn');
+    var resetBtn      = document.getElementById('resetBtn');
+    var statusMessage = document.getElementById('statusMessage');
+    var slider        = document.getElementById('ratingSlider');
+    var sliderDisplay = document.getElementById('sliderValueDisplay');
+    var suggestionBox = document.getElementById('suggestionBox');
+    var charCount     = document.getElementById('charCount');
+    var tfContainer   = document.getElementById('tfContainer');
+
+    // ---- State ----
+    var tfAnswers = {};
+    QUESTIONS.forEach(function (q) { tfAnswers[q.key] = null; });
+
+    // ---- Build T/F cards ----
+    QUESTIONS.forEach(function (q, idx) {
+        var card = document.createElement('div');
+        card.className = 'tf-item';
+        card.dataset.q = q.key;
+
+        var label = document.createElement('span');
+        label.className = 'tf-label';
+        label.id = q.key + '-label';
+        label.innerHTML =
+            '<span class="num">' + (idx + 1) + '.</span>' + q.en +
+            '<span class="ar">' + q.ar + '</span>';
+
+        var group = document.createElement('div');
+        group.className = 'tf-buttons';
+        group.setAttribute('role', 'group');
+        group.setAttribute('aria-labelledby', q.key + '-label');
+
+        ['true', 'false'].forEach(function (val) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'tf-btn';
+            btn.dataset.q = q.key;
+            btn.dataset.val = val;
+            btn.setAttribute('aria-pressed', 'false');
+            btn.textContent = val === 'true' ? 'True' : 'False';
+            group.appendChild(btn);
+        });
+
+        card.appendChild(label);
+        card.appendChild(group);
+        tfContainer.appendChild(card);
+    });
+
+    // ---- T/F click handling ----
+    tfContainer.addEventListener('click', function (e) {
+        var btn = e.target.closest('.tf-btn');
+        if (!btn) return;
+        var q = btn.dataset.q;
+        var val = btn.dataset.val === 'true';
+        var group = btn.closest('.tf-buttons');
+        group.querySelectorAll('.tf-btn').forEach(function (b) {
+            b.classList.remove('selected-true', 'selected-false');
+            b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add(val ? 'selected-true' : 'selected-false');
+        btn.setAttribute('aria-pressed', 'true');
+        tfAnswers[q] = val;
+        btn.closest('.tf-item').classList.add('answered');
+    });
+
+    // ---- Slider ----
+    function updateSlider() {
+        var val = parseInt(slider.value, 10);
+        sliderDisplay.textContent = val;
+        slider.setAttribute('aria-valuenow', val);
+        var percent = ((val - 1) / 9) * 100;
+        slider.style.setProperty('--fill', percent + '%');
+    }
+    slider.addEventListener('input', updateSlider);
+    updateSlider();
+
+    // ---- Char counter ----
+    suggestionBox.addEventListener('input', function () {
+        charCount.textContent = this.value.length;
+    });
+
+    // ---- Status ----
+    function showStatus(type, msg) {
+        statusMessage.textContent = msg;
+        statusMessage.className = 'status-message ' + type;
+    }
+    function clearStatus() {
+        statusMessage.textContent = '';
+        statusMessage.className = 'status-message';
+    }
+
+    // ---- Reset ----
+    resetBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        tfContainer.querySelectorAll('.tf-btn').forEach(function (b) {
+            b.classList.remove('selected-true', 'selected-false');
+            b.setAttribute('aria-pressed', 'false');
+        });
+        tfContainer.querySelectorAll('.tf-item').forEach(function (c) {
+            c.classList.remove('answered');
+        });
+        Object.keys(tfAnswers).forEach(function (k) { tfAnswers[k] = null; });
+        slider.value = 7;
+        updateSlider();
+        suggestionBox.value = '';
+        charCount.textContent = '0';
+        clearStatus();
+    });
+
+    // ---- Validation ----
+    function validate() {
+        var missing = [];
+        QUESTIONS.forEach(function (q, i) {
+            if (tfAnswers[q.key] === null) missing.push(i + 1);
+        });
+        if (missing.length > 0) {
+            return { valid: false, message: 'Please answer all True/False questions. Missing: ' + missing.join(', ') + '.' };
+        }
+        return { valid: true };
+    }
+
+    // ---- Payload ----
+    function buildPayload() {
+        var answers = {};
+        QUESTIONS.forEach(function (q) {
+            answers[q.key] = tfAnswers[q.key] === true ? 'True' : 'False';
+        });
+        return {
+            timestamp: new Date().toISOString(),
+            rating: parseInt(slider.value, 10),
+            answers: answers,
+            suggestion: suggestionBox.value.trim(),
+            page: window.location.href,
+            userAgent: navigator.userAgent
+        };
+    }
+
+    // ---- Send ----
+    function sendToBackend(payload) {
+        return fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+        }).then(function (res) {
+            if (!res.ok) throw new Error('Backend error ' + res.status);
+            return res.json();
+        }).then(function (json) {
+            if (!json.ok) throw new Error(json.error || 'Submission rejected.');
+            return json;
+        });
+    }
+
+    // ---- Submit ----
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearStatus();
+
+        var validation = validate();
+        if (!validation.valid) {
+            showStatus('error', validation.message);
+            return;
+        }
+
+        var payload = buildPayload();
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span aria-hidden="true">⏳</span> Sending...';
+        showStatus('info', 'Sending your feedback…');
+
+        sendToBackend(payload)
+            .then(function () {
+                showStatus('success', '✅ Thank you! Redirecting… — شكرًا لك، جارٍ التحويل…');
+                // Redirect to the homepage after a brief pause
+                setTimeout(function () {
+                    window.location.href = REDIRECT_URL;
+                }, REDIRECT_DELAY_MS);
+            })
+            .catch(function (err) {
+                console.error('Submission error:', err);
+                showStatus('error', '❌ Sorry, something went wrong. Please try again. — حدث خطأ، يرجى المحاولة مرة أخرى.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span aria-hidden="true">📨</span> Send Feedback';
+            });
+    });
+})();
+</script>
+</body>
+</html>

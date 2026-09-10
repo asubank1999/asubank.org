@@ -844,7 +844,7 @@
 </style>
 
 <div class="panorama-section">
-    <h2 class="panorama-heading">👋 What would you like to do?</h2>
+    <h2 class="panorama-heading">👋 Instant access to peer-verified summaries, past papers, and test banks curated by ASU students, for ASU students</h2>
     <p class="panorama-subheading">اختر وجهتك — Choose your destination</p>
 
     <div class="panorama-cards">
@@ -1179,7 +1179,7 @@
         stroke-dashoffset: 0;
         transform-origin: center;
         transform: rotate(-90deg);
-        animation: countdown 5s linear forwards;
+        animation: countdown 20s linear forwards;
     }
     @keyframes countdown {
         from { stroke-dashoffset: 0; }
@@ -1201,11 +1201,10 @@
         <div class="banner-text">
             <div class="banner-title">
                 Platform Update
-                <span class="banner-tag">✨ What's New</span>
+                <span class="banner-tag">✨ IMPORTANT NOTE FROM ADMIN</span>
             </div>
-            <div class="banner-body">
-                We've <strong>added new upload form</strong>.
-                + <strong>Search Tutorial</strong> page.
+            <div class="banner-body">Please note that this service may become available exclusively to paid users. Your donations are greatly appreciated and help us continue providing and improving our services. For more information, please contact us through our WhatsApp community.
+يرجى العلم بأن هذه الخدمة قد تصبح متاحة للمستخدمين المدفوعين فقط. نحتاج إلى تبرعاتكم ودعمكم لمساعدتنا على الاستمرار في تقديم خدماتنا وتطويرها. لمزيد من المعلومات، يرجى التواصل معنا عبر مجتمع الواتساب.
             </div>
         </div>
 
@@ -1224,22 +1223,18 @@
 </div>
 
 <script>
-    (function () {
-        var banner = document.getElementById('updateBanner');
-        var timer  = setTimeout(dismissBanner, 5000);
+    function dismissBanner() {
+        const banner = document.getElementById('updateBanner');
+        if (banner) banner.classList.add('hide');
+    }
 
-        function dismissBanner() {
-            clearTimeout(timer);
-            banner.classList.add('hide');
-            // Remove from layout after transition ends
-            banner.addEventListener('transitionend', function () {
-                banner.style.display = 'none';
-            }, { once: true });
-        }
+    // Auto-dismiss after 20 seconds, matching the ring animation
+    const bannerTimeoutId = setTimeout(dismissBanner, 20000);
 
-        // Expose to inline onclick too
-        window.dismissBanner = dismissBanner;
-    })();
+    // If user manually closes it early, no need to keep the timeout around
+    document.querySelector('.banner-close')?.addEventListener('click', () => {
+        clearTimeout(bannerTimeoutId);
+    });
 </script>
         <!-- ══ WhatsApp Community — near top so every visitor sees it ══ -->
         <div style="text-align: center; margin: 1.2rem 0 0.5rem;">
@@ -1257,17 +1252,15 @@
 
             <div class="card-grid">
                 <a href="asu_date_asu" class="subject-card priority">
-                    <h3><span>📅</span> University Calendar 2024-2025</h3>
-                    <p class="arabic-translation">التقويم الجامعي</p>
+                    <h3><span>📅</span>Calendar 2024-2025 [OLD]</h3>
                 </a>
 
                 <a href="asu_date_asu2025_2026" class="subject-card priority">
-                    <h3><span>📅</span> University Calendar 2025-2026</h3>
-                    <p class="arabic-translation">التقويم الجامعي</p>
+                    <h3><span>📅</span>Calendar 2025-2026 [OLD]</h3>
                 </a>
                 <a href="calendar27" class="subject-card priority">
-                    <h3><span>📅</span> University Calendar 2026-2027</h3>
-                    <p class="arabic-translation">التقويم الجامعي</p>
+                    <h3><span>📅</span>Calendar 2026-2027 [NEW]</h3>
+                    <p class="arabic-translation">التقويم</p>
                 </a>
             </div>
         </section>
@@ -1355,6 +1348,32 @@
             </h2>
             
             <div class="card-grid">
+                <a href="service_rating" class="subject-card priority">
+                    <span class="card-badge">NEW</span>
+                    <h3>
+                        <span>⭐</span> Rate Our Service
+                    </h3>
+                    <p>Tell us how we're doing — it takes less than 2 minutes</p>
+                    <p class="arabic-translation">قيّم خدمتنا — رأيك يهمنا</p>
+                    <div class="free-badge">Free Service</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        Answer 10 quick True/False questions, slide your overall rating from 1 to 10, and leave an optional suggestion. Your feedback goes straight to the admin team and helps us improve ASU E-Library Hub for everyone.
+                    </p>
+                </a>
+
+                <a href="wa_tos" class="subject-card priority">
+                    <span class="card-badge">TERMS</span>
+                    <h3>
+                        <span>📜</span> WhatsApp Groups — Terms of Service
+                    </h3>
+                    <p>Read the rules before joining any student WhatsApp group</p>
+                    <p class="arabic-translation">شروط الخدمة لمجموعات الواتساب</p>
+                    <div class="free-badge">Read Before Joining</div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
+                        These groups are student-run, informal, and independent from the university. The Terms of Service explain the purpose of the groups, acceptable use, prohibited conduct, moderation rules, admin privacy, and the disclaimer of official affiliation. By joining any group, you agree to these Terms.
+                    </p>
+                </a>
+
                 <a href="matcher_confirm" class="subject-card priority">
                     <span class="card-badge">NEW</span>
                     <h3>
