@@ -694,6 +694,11 @@
         <label>Any requests or notes for the photographer?</label>
         <textarea id="notes" rows="3" placeholder="E.g. specific style, outfit changes, mood references, special requirements…" style="resize:vertical;" oninput="update()"></textarea>
       </div>
+      <div class="field">
+        <label>Promo Code</label>
+        <input type="text" id="promoCode" placeholder="Have a discount code?" style="text-transform:uppercase;" oninput="update()">
+        <div id="promoMsg" style="font-size:0.75rem;margin-top:0.35rem;font-family:'Inter',sans-serif;"></div>
+      </div>
     </div>
 
     <!-- SUBMIT -->
@@ -748,6 +753,10 @@
         <span class="label">ASU Discount</span>
         <span class="val green" id="li-discount">—</span>
       </div>
+      <div class="inv-row">
+        <span class="label">Promo Discount</span>
+        <span class="val green" id="li-promo">—</span>
+      </div>
     </div>
 
     <div class="inv-total-row">
@@ -787,6 +796,38 @@ let hours = 0;
 let editPhotos = 0;
 let locationVal = 'asu';
 let premiumEdit = true;
+
+// ── PROMO CODES ──
+// key: code (uppercase), value: { percentOff, expires: 'YYYY-MM-DD' (last valid day, inclusive) }
+const PROMO_CODES = {
+  'FRIENDSONLY70': { percentOff: 70, expires: '2028-12-12' }
+};
+
+function getActivePromo() {
+  const raw = (document.getElementById('promoCode').value || '').trim().toUpperCase();
+  const msgEl = document.getElementById('promoMsg');
+  if (!raw) { msgEl.textContent = ''; return null; }
+
+  const promo = PROMO_CODES[raw];
+  if (!promo) {
+    msgEl.textContent = '✗ Invalid promo code';
+    msgEl.style.color = '#c0524a';
+    return null;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const expiry = new Date(promo.expires + 'T23:59:59');
+  if (today > expiry) {
+    msgEl.textContent = `✗ Code expired (was valid through ${promo.expires})`;
+    msgEl.style.color = '#c0524a';
+    return null;
+  }
+
+  msgEl.textContent = `✓ ${promo.percentOff}% off applied`;
+  msgEl.style.color = '#3f8f5c';
+  return { code: raw, percentOff: promo.percentOff };
+}
 
 // ── LOCATION SELECT ──
 function selectLoc(el, val) {
@@ -871,7 +912,12 @@ function update() {
   const travel    = isASU ? 0 : 5;
   // ASU = no travel, but no discount on hours/edits per spec (50% off is on location cost i.e. travel = 0)
   const discount  = isASU ? 0 : 0; // ASU discount = travel fee waived
-  const total     = hourRate + editCost + travel;
+  const subtotal  = hourRate + editCost + travel;
+
+  const activePromo  = getActivePromo();
+  const promoPercent = activePromo ? activePromo.percentOff : 0;
+  const promoAmount  = subtotal * (promoPercent / 100);
+  const total        = subtotal - promoAmount;
 
   document.getElementById('li-hours').textContent     = hours > 0 ? `${hours.toFixed(1)} hr` : '—';
   document.getElementById('li-rate').textContent      = hours > 0 ? `${hourRate.toFixed(0)} JD` : '0 JD';
@@ -891,12 +937,21 @@ function update() {
     discEl.className = 'val zero';
   }
 
-  document.getElementById('totalAmount').textContent = total.toFixed(0);
+  const promoEl = document.getElementById('li-promo');
+  if (activePromo) {
+    promoEl.textContent = `-${promoAmount.toFixed(2)} JD (${activePromo.code})`;
+    promoEl.className = 'val green';
+  } else {
+    promoEl.textContent = '—';
+    promoEl.className = 'val zero';
+  }
+
+  document.getElementById('totalAmount').textContent = total.toFixed(2);
 }
 
 // ── BACKEND ENDPOINT (Google Apps Script Web App URL) ──
 // Paste your deployed GAS Web App URL below — users never see this
-const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyNQ9wEq9Lkdqkld2SGipfia8wOlOmJUQG0qsAyV5XBLuRu2RWobLeeJcTFuC8Frc9DxQ/exec";
+const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxMdRZImJfRkBjjG_l-DhOrJLZsVghrpuRybmGZwQAv8jSiBEYRb639e0Sl4wUV7S2H2A/exec";
 
 // ── SUBMIT ──
 async function submitBooking() {
@@ -927,7 +982,13 @@ async function submitBooking() {
   const hourRate = hours * 5;
   const editCost = editPhotos * 3;
   const travel   = locationVal === 'asu' ? 0 : 5;
-  const total    = hourRate + editCost + travel;
+  const subtotal = hourRate + editCost + travel;
+
+  const activePromo  = getActivePromo();
+  const promoCode    = activePromo ? activePromo.code : null;
+  const promoPercent = activePromo ? activePromo.percentOff : 0;
+  const promoAmount  = subtotal * (promoPercent / 100);
+  const total        = subtotal - promoAmount;
 
   // Booking data sent to Google Apps Script backend
   const bookingData = {
@@ -951,6 +1012,10 @@ async function submitBooking() {
       hourlyFee: hourRate,
       editFee: editCost,
       travelFee: travel,
+      subtotal: subtotal,
+      promoCode: promoCode,
+      promoPercentOff: promoPercent,
+      promoAmount: promoAmount,
       estimatedTotal: total
     },
     submittedAt: new Date().toISOString()
@@ -999,6 +1064,8 @@ function closeSuccess() {
   document.getElementById('locationText').value = '';
   document.getElementById('notes').value = '';
   document.getElementById('editCount').value = '0';
+  document.getElementById('promoCode').value = '';
+  document.getElementById('promoMsg').textContent = '';
   hours = 0; editPhotos = 0;
   document.getElementById('durationDisplay').textContent = '';
   locationVal = 'asu';
