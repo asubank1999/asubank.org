@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lens & Light Studio — Booking</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #191919;
+    --paper: #F8F9FA;
+    --cream: #F1EFEA;
+    --accent: #8C1D40;
+    --accent2: #6b1630;
+    --muted: #6C757D;
+    --line: #E2E4E8;
+    --white: #ffffff;
+    --green: #78BE20;
+    --red: #DC2626;
+    --gold: #FFC627;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 10% 0%, rgba(140,29,64,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 100%, rgba(255,198,39,0.08) 0%, transparent 50%);
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    color: white;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+  }
+  .logo {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-dot { width:8px;height:8px;background:var(--gold);border-radius:50%; }
+  .header-tag {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .header-tag:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 2.5rem;
+    position: relative;
+  }
+  .hero-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(140,29,64,0.08);
+    display: inline-block;
+    padding: 0.35rem 0.9rem;
+    border-radius: 50px;
+    margin-bottom: 1.1rem;
+  }
+  .hero h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(2.1rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    margin: 1.5rem auto;
+    border-radius: 2px;
+  }
+
+  /* ── LAYOUT ── */
+  .page-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-title .num {
+    width: 26px; height: 26px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .form-section { margin-bottom: 2.25rem; }
+
+  .row { display: grid; gap: 1rem; margin-bottom: 1rem; }
+  .row-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .row-2 { grid-template-columns: 1fr 1fr; }
+  .row-1 { grid-template-columns: 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+  }
+  .field label .req { color: var(--accent); margin-left: 2px; }
+  .field input, .field select, .field textarea {
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    width: 100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(140,29,64,0.12);
+  }
+  .field select { cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236C757D' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  /* ── LOCATION PILLS ── */
+  .location-group { display: flex; gap: 10px; flex-wrap: wrap; }
+  .loc-pill {
+    flex: 1; min-width: 160px;
+    padding: 12px 16px;
+    border: 2px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .loc-pill:hover { border-color: var(--accent); background: rgba(140,29,64,0.04); }
+  .loc-pill.selected { border-color: var(--accent); background: rgba(140,29,64,0.07); }
+  .loc-pill input[type=radio] { display: none; }
+  .loc-pill .pill-name { font-weight: 600; font-size: 0.88rem; }
+  .loc-pill .pill-note { font-size: 0.75rem; color: var(--muted); }
+  .loc-pill.selected .pill-name { color: var(--accent); }
+  .loc-pill .pill-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-top: 2px;
+    width: fit-content;
+  }
+  .badge-free { background: rgba(120,190,32,0.14); color: #4d8a10; }
+  .badge-fee  { background: rgba(220,38,38,0.1);  color: var(--red); }
+
+  /* ── PREMIUM TOGGLE ── */
+  .premium-toggle { display: flex; gap: 10px; flex-wrap: wrap; }
+  .prem-card {
+    flex: 1; min-width: 140px;
+    padding: 14px 16px;
+    border: 2px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .prem-card:hover { border-color: var(--accent); }
+  .prem-card.selected { border-color: var(--accent); background: rgba(140,29,64,0.06); }
+  .prem-card input[type=radio] { display: none; }
+  .prem-card .card-top { display: flex; justify-content: space-between; align-items: center; }
+  .prem-card .card-title { font-weight: 600; font-size: 0.9rem; }
+  .prem-card .card-price { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.78rem; color: var(--accent); }
+  .prem-card .card-desc { font-size: 0.76rem; color: var(--muted); margin-top: 4px; }
+  .checkmark {
+    width: 18px; height: 18px;
+    border: 2px solid var(--line);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem;
+    color: var(--white);
+    transition: all 0.2s;
+  }
+  .prem-card.selected .checkmark { background: var(--accent); border-color: var(--accent); }
+
+  /* ── PHOTO COUNTER ── */
+  .photo-counter {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .counter-btn {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    background: var(--paper);
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    color: var(--ink);
+  }
+  .counter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .counter-val {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: center;
+    color: var(--ink);
+  }
+  .counter-label { font-size: 0.82rem; color: var(--muted); }
+
+  #editCount { width: 70px; text-align: center; font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; }
+
+  /* ── INVOICE CARD ── */
+  .invoice-card {
+    background: linear-gradient(160deg, var(--ink) 0%, #2a2a2a 100%);
+    color: var(--paper);
+    border-radius: 12px;
+    padding: 2rem;
+    position: sticky;
+    top: 90px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  }
+  .invoice-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(245,240,232,0.1);
+  }
+  .invoice-header h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .live-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    background: rgba(255,198,39,0.18);
+    color: var(--gold);
+    border-radius: 20px;
+    border: 1px solid rgba(255,198,39,0.3);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .live-dot {
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 1.4s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .inv-section { margin-bottom: 1.25rem; }
+  .inv-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(245,240,232,0.06);
+    font-size: 0.85rem;
+  }
+  .inv-row:last-child { border-bottom: none; }
+  .inv-row .label { color: rgba(245,240,232,0.6); }
+  .inv-row .val { font-family: 'Inter', sans-serif; font-weight: 600; }
+  .inv-row .val.zero { color: rgba(245,240,232,0.3); }
+  .inv-row .val.green { color: #7ee06a; }
+  .inv-row .val.yellow { color: var(--gold); }
+
+  .inv-total-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0 0;
+    border-top: 2px solid rgba(255,198,39,0.4);
+    margin-top: 6px;
+  }
+  .inv-total-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .inv-total-amount {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .inv-currency { font-size: 0.9rem; opacity: 0.7; margin-left: 3px; }
+
+  .inv-customer {
+    background: rgba(245,240,232,0.06);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 1.25rem;
+    font-size: 0.82rem;
+    line-height: 1.8;
+  }
+  .inv-customer .name {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .inv-customer .detail { color: rgba(245,240,232,0.55); font-size: 0.78rem; }
+
+  .payment-section { margin-top: 1.5rem; }
+  .payment-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(245,240,232,0.4);
+    margin-bottom: 0.75rem;
+  }
+  .payment-methods { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pay-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid rgba(245,240,232,0.15);
+    color: rgba(245,240,232,0.7);
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.02em;
+  }
+  .pay-badge.paypal { border-color: rgba(0,112,243,0.4); color: #4fb3ff; }
+  .pay-badge.cliq   { border-color: rgba(120,190,32,0.5); color: #7ee06a; }
+  .pay-badge.cash   { border-color: rgba(255,198,39,0.4); color: var(--gold); }
+
+  .disclaimer {
+    font-size: 0.72rem;
+    color: rgba(245,240,232,0.35);
+    margin-top: 1rem;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ── SUBMIT BUTTON ── */
+  .submit-btn {
+    width: 100%;
+    padding: 15px 24px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1.75rem;
+    letter-spacing: 0.01em;
+    position: relative;
+    overflow: hidden;
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(140,29,64,0.35);
+  }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ── SUCCESS OVERLAY ── */
+  #successOverlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(14,14,14,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+  #successOverlay.show { display: flex; }
+  .success-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    max-width: 440px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .success-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    margin: 0 auto 1.25rem;
+  }
+  .success-box h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  .success-box p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .success-close {
+    padding: 10px 28px;
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 820px) {
+    .page-wrap { grid-template-columns: 1fr; }
+    .invoice-card { position: static; }
+    .row-3 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px) {
+    .row-3, .row-2 { grid-template-columns: 1fr; }
+    .form-card { padding: 1.5rem; }
+    .hero { padding: 2.5rem 1rem 1.5rem; }
+  }
+
+  /* ── VALIDATION ── */
+  .field input.invalid, .field select.invalid { border-color: var(--red); }
+  .err-msg { font-size: 0.72rem; color: var(--red); margin-top: 2px; display: none; }
+  .field.error .err-msg { display: block; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span>ASU Lens & Light Studio</span>
+  </div>
+  <a class="header-tag" href="index.html">← Back to E-Library Hub</a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">📸 Book Your Session</div>
+  <h1>Every frame, <em>a story</em>.</h1>
+  <div class="divider"></div>
+  <p>Fill in your details below and receive a real-time invoice estimate. Once submitted, the photographer reviews and sends the final invoice via your preferred payment method.</p>
+</div>
+
+<!-- Backend endpoint is handled server-side -->
+
+<!-- MAIN LAYOUT -->
+<div class="page-wrap">
+
+  <!-- FORM -->
+  <div class="form-card">
+
+    <!-- SECTION 1: CUSTOMER INFO -->
+    <div class="form-section">
+      <div class="section-title">
+        <span class="num">1</span> Customer Information
+      </div>
+      <div class="row row-3">
+        <div class="field" id="f-first">
+          <label>First Name <span class="req">*</span></label>
+          <input type="text" id="firstName" placeholder="Ahmad" oninput="update()">
+          <span class="err-msg">Required</span>
+        </div>
+        <div class="field" id="f-mid">
+          <label>Middle Name</label>
+          <input type="text" id="middleName" placeholder="Khaled" oninput="update()">
+        </div>
+        <div class="field" id="f-last">
+          <label>Last Name <span class="req">*</span></label>
+          <input type="text" id="lastName" placeholder="Al-Rashid" oninput="update()">
+          <span class="err-msg">Required</span>
+        </div>
+      </div>
+      <div class="row row-2">
+        <div class="field">
+          <label>WhatsApp / Phone <span class="req">*</span></label>
+          <input type="tel" id="phone" placeholder="+962 7X XXX XXXX" oninput="update()">
+          <span class="err-msg">Required</span>
+        </div>
+        <div class="field">
+          <label>Email (optional)</label>
+          <input type="email" id="email" placeholder="you@example.com" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: SHOOT DETAILS -->
+    <div class="form-section">
+      <div class="section-title">
+        <span class="num">2</span> Session Details
+      </div>
+      <div class="row row-2">
+        <div class="field">
+          <label>Date of Shoot <span class="req">*</span></label>
+          <input type="date" id="shootDate" oninput="update()">
+        </div>
+        <div class="field">
+          <label>Session Type</label>
+          <select id="sessionType" onchange="update()">
+            <option value="portrait">Portrait</option>
+            <option value="graduation">Graduation</option>
+            <option value="group">Group</option>
+            <option value="event">Event</option>
+            <option value="product">Product / Commercial</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="row row-2">
+        <div class="field">
+          <label>From (Start Time) <span class="req">*</span></label>
+          <input type="time" id="timeFrom" oninput="calcHours()">
+        </div>
+        <div class="field">
+          <label>To (End Time) <span class="req">*</span></label>
+          <input type="time" id="timeTo" oninput="calcHours()">
+        </div>
+      </div>
+      <!-- Duration display -->
+      <div id="durationDisplay" style="font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;color:var(--accent);margin-bottom:1rem;min-height:20px;"></div>
+    </div>
+
+    <!-- SECTION 3: LOCATION -->
+    <div class="form-section">
+      <div class="section-title">
+        <span class="num">3</span> Shooting Location
+      </div>
+      <div class="location-group" id="locGroup">
+        <label class="loc-pill selected" onclick="selectLoc(this, 'asu')">
+          <input type="radio" name="location" value="asu" checked>
+          <div class="pill-name">🏛 Applied Science University</div>
+          <div class="pill-note">ASU Campus</div>
+          <div class="pill-badge badge-free">No Travel Fee · 50% Off Location</div>
+        </label>
+        <label class="loc-pill" onclick="selectLoc(this, 'outside')">
+          <input type="radio" name="location" value="outside">
+          <div class="pill-name">📍 Outside ASU</div>
+          <div class="pill-note">Any other location</div>
+          <div class="pill-badge badge-fee">+5 JD Travel / Effort Fee</div>
+        </label>
+      </div>
+      <div class="field row-1" style="margin-top:0.9rem;">
+        <label>Specific Location / Address</label>
+        <input type="text" id="locationText" placeholder="e.g. Jabal Amman, Rainbow Street, ASU Gate 1…" oninput="update()">
+      </div>
+    </div>
+
+    <!-- SECTION 4: PHOTOS & EDITING -->
+    <div class="form-section">
+      <div class="section-title">
+        <span class="num">4</span> Photos & Editing
+      </div>
+
+      <div style="margin-bottom:1.25rem;">
+        <div class="field">
+          <label>Number of Photos to Edit <span class="req">*</span></label>
+          <div class="photo-counter" style="margin-top:6px;">
+            <button class="counter-btn" onclick="changeCount(-1)">−</button>
+            <input type="number" id="editCount" min="0" value="0" oninput="clampCount(); update()">
+            <button class="counter-btn" onclick="changeCount(1)">+</button>
+            <span class="counter-label">photos × 3 JD each</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:0.5rem;">
+        <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);font-family:'Inter',sans-serif;display:block;margin-bottom:0.65rem;">Edit Quality <span class="req">*</span></label>
+        <div class="premium-toggle">
+          <label class="prem-card" onclick="selectPremium(this, 'standard')">
+            <input type="radio" name="premium" value="standard">
+            <div class="card-top">
+              <span class="card-title">Standard Edit</span>
+              <span class="checkmark">✓</span>
+            </div>
+            <div class="card-price">3 JD / photo</div>
+            <div class="card-desc">Basic retouching, color grading, crop & export</div>
+          </label>
+          <label class="prem-card selected" onclick="selectPremium(this, 'premium')">
+            <input type="radio" name="premium" value="premium" checked>
+            <div class="card-top">
+              <span class="card-title">✨ Premium Edit</span>
+              <span class="checkmark">✓</span>
+            </div>
+            <div class="card-price">3 JD / photo (base)</div>
+            <div class="card-desc">Photoshop + paid tools · skin retouching, compositing, advanced grading</div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: NOTES -->
+    <div class="form-section">
+      <div class="section-title">
+        <span class="num">5</span> Additional Notes
+      </div>
+      <div class="field">
+        <label>Any requests or notes for the photographer?</label>
+        <textarea id="notes" rows="3" placeholder="E.g. specific style, outfit changes, mood references, special requirements…" style="resize:vertical;" oninput="update()"></textarea>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <button class="submit-btn" id="submitBtn" onclick="submitBooking()">
+      📨 Submit Booking Request
+    </button>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:0.75rem;text-align:center;">
+      The photographer reviews your request and sends the final invoice via WhatsApp or email.
+    </div>
+
+  </div><!-- /form-card -->
+
+  <!-- LIVE INVOICE CARD -->
+  <div class="invoice-card">
+    <div class="invoice-header">
+      <h2>Live Invoice</h2>
+      <div class="live-badge"><div class="live-dot"></div> Live</div>
+    </div>
+
+    <!-- Customer snapshot -->
+    <div class="inv-customer" id="invCustomer">
+      <div class="name" id="invName">—</div>
+      <div class="detail" id="invDate">Date: —</div>
+      <div class="detail" id="invTime">Time: —</div>
+      <div class="detail" id="invLoc">Location: —</div>
+      <div class="detail" id="invPhone">Phone: —</div>
+    </div>
+
+    <!-- Line items -->
+    <div class="inv-section">
+      <div class="inv-row">
+        <span class="label">Session Duration</span>
+        <span class="val" id="li-hours">—</span>
+      </div>
+      <div class="inv-row">
+        <span class="label">Hourly Rate (5 JD/hr)</span>
+        <span class="val" id="li-rate">0 JD</span>
+      </div>
+      <div class="inv-row">
+        <span class="label">Edit Count</span>
+        <span class="val" id="li-editCount">0 photos</span>
+      </div>
+      <div class="inv-row">
+        <span class="label">Edit Cost (3 JD each)</span>
+        <span class="val" id="li-editCost">0 JD</span>
+      </div>
+      <div class="inv-row">
+        <span class="label">Travel / Location Fee</span>
+        <span class="val" id="li-travel">0 JD</span>
+      </div>
+      <div class="inv-row">
+        <span class="label">ASU Discount</span>
+        <span class="val green" id="li-discount">—</span>
+      </div>
+    </div>
+
+    <div class="inv-total-row">
+      <span class="inv-total-label">Estimated Total</span>
+      <span class="inv-total-amount"><span id="totalAmount">0</span><span class="inv-currency">JD</span></span>
+    </div>
+
+    <div class="payment-section">
+      <div class="payment-label">Accepted Payments</div>
+      <div class="payment-methods">
+        <span class="pay-badge paypal">PayPal</span>
+        <span class="pay-badge cliq">CliQ</span>
+        <span class="pay-badge cash">Cash</span>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      * This is an estimated invoice. Final amount confirmed by photographer after review. Premium editing complexity may affect final pricing.
+    </div>
+  </div><!-- /invoice-card -->
+
+</div><!-- /page-wrap -->
+
+<!-- SUCCESS OVERLAY -->
+<div id="successOverlay">
+  <div class="success-box">
+    <div class="success-icon">✓</div>
+    <h3>Booking Submitted!</h3>
+    <p>Your request has been sent to the photographer via Discord and is under review. You'll be contacted on <strong id="successPhone">your number</strong> with the final invoice and payment details.</p>
+    <button class="success-close" onclick="closeSuccess()">Done</button>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+let hours = 0;
+let editPhotos = 0;
+let locationVal = 'asu';
+let premiumEdit = true;
+
+// ── LOCATION SELECT ──
+function selectLoc(el, val) {
+  document.querySelectorAll('.loc-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  locationVal = val;
+  update();
+}
+
+// ── PREMIUM SELECT ──
+function selectPremium(el, val) {
+  document.querySelectorAll('.prem-card').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  premiumEdit = (val === 'premium');
+  el.querySelector('input').checked = true;
+  update();
+}
+
+// ── CALC HOURS ──
+function calcHours() {
+  const from = document.getElementById('timeFrom').value;
+  const to   = document.getElementById('timeTo').value;
+  if (from && to) {
+    const [fh, fm] = from.split(':').map(Number);
+    const [th, tm] = to.split(':').map(Number);
+    const diff = (th * 60 + tm) - (fh * 60 + fm);
+    hours = diff > 0 ? diff / 60 : 0;
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    document.getElementById('durationDisplay').textContent =
+      hours > 0
+        ? `⏱ Duration: ${h > 0 ? h + 'h ' : ''}${m > 0 ? m + 'm' : ''} — ${(hours * 5).toFixed(0)} JD`
+        : '⚠ End time must be after start time';
+  } else {
+    hours = 0;
+    document.getElementById('durationDisplay').textContent = '';
+  }
+  update();
+}
+
+// ── COUNTER ──
+function changeCount(delta) {
+  const el = document.getElementById('editCount');
+  const val = parseInt(el.value) || 0;
+  el.value = Math.max(0, val + delta);
+  editPhotos = parseInt(el.value);
+  update();
+}
+function clampCount() {
+  const el = document.getElementById('editCount');
+  const val = parseInt(el.value) || 0;
+  el.value = Math.max(0, val);
+  editPhotos = el.value;
+  update();
+}
+
+// ── UPDATE INVOICE ──
+function update() {
+  editPhotos = parseInt(document.getElementById('editCount').value) || 0;
+
+  const fn = document.getElementById('firstName').value.trim();
+  const mn = document.getElementById('middleName').value.trim();
+  const ln = document.getElementById('lastName').value.trim();
+  const fullName = [fn, mn, ln].filter(Boolean).join(' ') || '—';
+  const date     = document.getElementById('shootDate').value;
+  const from     = document.getElementById('timeFrom').value;
+  const to       = document.getElementById('timeTo').value;
+  const loc      = document.getElementById('locationText').value.trim();
+  const phone    = document.getElementById('phone').value.trim();
+
+  // Customer snapshot
+  document.getElementById('invName').textContent  = fullName;
+  document.getElementById('invDate').textContent  = date   ? '📅 ' + date : 'Date: —';
+  document.getElementById('invTime').textContent  = (from && to) ? `⏰ ${from} → ${to}` : 'Time: —';
+  document.getElementById('invLoc').textContent   = loc    ? '📍 ' + loc + (locationVal === 'asu' ? ' (ASU)' : '') : locationVal === 'asu' ? '📍 ASU Campus' : 'Location: —';
+  document.getElementById('invPhone').textContent = phone  ? '📱 ' + phone : 'Phone: —';
+
+  // Pricing
+  const hourRate  = hours * 5;
+  const editCost  = editPhotos * 3;
+  const isASU     = locationVal === 'asu';
+  const travel    = isASU ? 0 : 5;
+  // ASU = no travel, but no discount on hours/edits per spec (50% off is on location cost i.e. travel = 0)
+  const discount  = isASU ? 0 : 0; // ASU discount = travel fee waived
+  const total     = hourRate + editCost + travel;
+
+  document.getElementById('li-hours').textContent     = hours > 0 ? `${hours.toFixed(1)} hr` : '—';
+  document.getElementById('li-rate').textContent      = hours > 0 ? `${hourRate.toFixed(0)} JD` : '0 JD';
+  document.getElementById('li-editCount').textContent = editPhotos > 0 ? `${editPhotos} photos` : '0 photos';
+  document.getElementById('li-editCost').textContent  = editPhotos > 0 ? `${editCost} JD` : '0 JD';
+
+  const travelEl = document.getElementById('li-travel');
+  travelEl.textContent = travel > 0 ? `${travel} JD` : '0 JD';
+  travelEl.className = 'val' + (travel > 0 ? '' : ' zero');
+
+  const discEl = document.getElementById('li-discount');
+  if (isASU) {
+    discEl.textContent = 'Travel waived ✓';
+    discEl.className = 'val green';
+  } else {
+    discEl.textContent = '—';
+    discEl.className = 'val zero';
+  }
+
+  document.getElementById('totalAmount').textContent = total.toFixed(0);
+}
+
+// ── BACKEND ENDPOINT (Google Apps Script Web App URL) ──
+// Paste your deployed GAS Web App URL below — users never see this
+const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyNQ9wEq9Lkdqkld2SGipfia8wOlOmJUQG0qsAyV5XBLuRu2RWobLeeJcTFuC8Frc9DxQ/exec";
+
+// ── SUBMIT ──
+async function submitBooking() {
+  const fn  = document.getElementById('firstName').value.trim();
+  const ln  = document.getElementById('lastName').value.trim();
+  const ph  = document.getElementById('phone').value.trim();
+  const dt  = document.getElementById('shootDate').value;
+  const tf  = document.getElementById('timeFrom').value;
+  const tt  = document.getElementById('timeTo').value;
+
+  if (!fn || !ln || !ph || !dt || !tf || !tt) {
+    showFormError('Please fill in all required fields: name, phone, date and time.');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Sending your request…';
+
+  const mn       = document.getElementById('middleName').value.trim();
+  const fullName = [fn, mn, ln].filter(Boolean).join(' ');
+  const loc      = document.getElementById('locationText').value.trim() || (locationVal === 'asu' ? 'ASU Campus' : 'Not specified');
+  const notes    = document.getElementById('notes').value.trim();
+  const email    = document.getElementById('email').value.trim();
+  const stype    = document.getElementById('sessionType').value;
+
+  editPhotos = parseInt(document.getElementById('editCount').value) || 0;
+  const hourRate = hours * 5;
+  const editCost = editPhotos * 3;
+  const travel   = locationVal === 'asu' ? 0 : 5;
+  const total    = hourRate + editCost + travel;
+
+  // Booking data sent to Google Apps Script backend
+  const bookingData = {
+    fullName,
+    firstName: fn,
+    middleName: mn,
+    lastName: ln,
+    phone: ph,
+    email,
+    shootDate: dt,
+    timeFrom: tf,
+    timeTo: tt,
+    durationHours: hours.toFixed(2),
+    sessionType: stype,
+    location: loc,
+    locationZone: locationVal,
+    editPhotos,
+    editType: premiumEdit ? 'Premium (Photoshop + paid tools)' : 'Standard',
+    notes,
+    pricing: {
+      hourlyFee: hourRate,
+      editFee: editCost,
+      travelFee: travel,
+      estimatedTotal: total
+    },
+    submittedAt: new Date().toISOString()
+  };
+
+  try {
+    await fetch(GAS_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors', // GAS requires no-cors from external origins
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bookingData)
+    });
+    // no-cors means we can't read the response, but it still goes through
+  } catch (e) {
+    console.warn('Submission error:', e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = '📨 Submit Booking Request';
+  document.getElementById('successPhone').textContent = ph;
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+function showFormError(msg) {
+  const existing = document.getElementById('formErrMsg');
+  if (existing) existing.remove();
+  const el = document.createElement('div');
+  el.id = 'formErrMsg';
+  el.style.cssText = 'background:#fef0f0;border:1.5px solid #f5c2c7;color:#9b2226;padding:10px 14px;border-radius:8px;font-size:0.85rem;margin-bottom:1rem;';
+  el.textContent = '⚠ ' + msg;
+  document.querySelector('.submit-btn').before(el);
+  setTimeout(() => el.remove(), 5000);
+}
+
+function closeSuccess() {
+  document.getElementById('successOverlay').classList.remove('show');
+  // Reset form
+  document.getElementById('firstName').value = '';
+  document.getElementById('middleName').value = '';
+  document.getElementById('lastName').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('shootDate').value = '';
+  document.getElementById('timeFrom').value = '';
+  document.getElementById('timeTo').value = '';
+  document.getElementById('locationText').value = '';
+  document.getElementById('notes').value = '';
+  document.getElementById('editCount').value = '0';
+  hours = 0; editPhotos = 0;
+  document.getElementById('durationDisplay').textContent = '';
+  locationVal = 'asu';
+  document.querySelectorAll('.loc-pill').forEach((p,i) => p.classList.toggle('selected', i===0));
+  premiumEdit = true;
+  document.querySelectorAll('.prem-card').forEach((p,i) => p.classList.toggle('selected', i===1));
+  update();
+}
+
+// Init
+update();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+
+</body>
+</html>
