@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سُلّم التقديرات | ASU E-Library Hub</title>
+    <meta name="description" content="سلّم التقديرات المعتمد للمعدل الفصلي والتراكمي في ASU E-Library Hub، مع حاسبة فورية لمعرفة تقديرك.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon2.ico" type="image/x-icon">
+    <link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/png">
+    <style>
+        :root {
+            --primary: #8C1D40;
+            --primary-dark: #5e1329;
+            --secondary: #FFC627;
+            --accent: #00A3E0;
+            --light: #F8F9FA;
+            --dark: #191919;
+            --gray: #6C757D;
+            --card-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+
+            --band-honors: #8C1D40;
+            --band-honors-bg: #F7E7EC;
+            --band-excellent: #00789C;
+            --band-excellent-bg: #E2F2F8;
+            --band-vgood: #B8860B;
+            --band-vgood-bg: #FBF1D9;
+            --band-good: #4A6B5A;
+            --band-good-bg: #E9F0EC;
+            --band-pass: #6C757D;
+            --band-pass-bg: #EDEEEF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow-x: hidden; }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.25rem 1rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-section img { height: 48px; width: auto; }
+        .logo-section h1 { font-size: 1.3rem; font-weight: 700; margin: 0; font-family: 'Inter', sans-serif; }
+        .logo-section span.tagline {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.75);
+            margin-top: 2px;
+        }
+
+        main {
+            flex: 1;
+            padding: 3rem 1.25rem;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .hero-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--secondary);
+            margin-bottom: 1.75rem;
+            text-align: center;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+            margin-bottom: 0.6rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-card h2 {
+            font-size: clamp(1.6rem, 5vw, 2.1rem);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-card p {
+            color: var(--gray);
+            font-size: 1rem;
+            max-width: 48ch;
+            margin: 0 auto;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: var(--card-radius);
+            padding: 1.75rem 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 1.1rem;
+            color: var(--dark);
+        }
+
+        .scale {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .band {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem 1.1rem;
+            border-radius: var(--card-radius);
+            position: relative;
+            overflow: hidden;
+        }
+        .band::before {
+            content: "";
+            position: absolute;
+            top: 0; right: 0; bottom: 0;
+            width: 5px;
+        }
+
+        .band-honors { background: var(--band-honors-bg); }
+        .band-honors::before { background: var(--band-honors); }
+        .band-honors .band-title { color: var(--band-honors); }
+
+        .band-excellent { background: var(--band-excellent-bg); }
+        .band-excellent::before { background: var(--band-excellent); }
+        .band-excellent .band-title { color: var(--band-excellent); }
+
+        .band-vgood { background: var(--band-vgood-bg); }
+        .band-vgood::before { background: var(--band-vgood); }
+        .band-vgood .band-title { color: var(--band-vgood); }
+
+        .band-good { background: var(--band-good-bg); }
+        .band-good::before { background: var(--band-good); }
+        .band-good .band-title { color: var(--band-good); }
+
+        .band-pass { background: var(--band-pass-bg); }
+        .band-pass::before { background: var(--band-pass); }
+        .band-pass .band-title { color: var(--band-pass); }
+
+        .band-title { font-size: 1.02rem; font-weight: 700; }
+        .band-desc { font-size: 0.85rem; color: var(--gray); margin-top: 2px; }
+        .band-num {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark);
+            background: rgba(255,255,255,0.65);
+            padding: 5px 12px;
+            border-radius: 50px;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .calc-hint {
+            color: var(--gray);
+            font-size: 0.92rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .calc-row {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .calc-row input {
+            flex: 1;
+            min-width: 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            padding: 0.85rem 1rem;
+            border-radius: 50px;
+            border: 2px solid #E5E1DC;
+            background: var(--light);
+            color: var(--dark);
+            outline: none;
+            transition: var(--transition);
+        }
+        .calc-row input:focus { border-color: var(--accent); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.6rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        .btn-secondary:hover { background: rgba(140, 29, 64, 0.08); transform: translateY(-2px); }
+
+        .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+        .calc-result {
+            margin-top: 1.1rem;
+            padding: 0.9rem 1.1rem;
+            border-radius: var(--card-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .calc-result.show { display: flex; }
+        .calc-result .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+        .actions-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+
+        .foot-note {
+            font-size: 0.85rem;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            padding: 1.25rem 1rem;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        @media (max-width: 480px) {
+            .hero-card { padding: 2rem 1.5rem; }
+            .section-card { padding: 1.4rem 1.1rem; }
+            .band { padding: 0.85rem 0.9rem; }
+            .band-title { font-size: 0.95rem; }
+            .calc-row { flex-direction: column; }
+            .calc-row button { width: 100%; justify-content: center; }
+            .btn { width: 100%; justify-content: center; }
+            .actions-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo-section" aria-label="ASU E-Library Hub — الذهاب إلى الرئيسية">
+                <img src="ASU_Jordan_logo-removebg-preview.png" alt="شعار ASU E-Library Hub" width="48" height="48">
+                <div>
+                    <h1>E-Library Hub</h1>
+                    <span class="tagline">سُلّم التقديرات</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+
+            <div class="hero-card">
+                <span class="eyebrow">دليل الطالب</span>
+                <h2>سُلّم التقديرات</h2>
+                <p>هكذا تُحوَّل النسبة المئوية للمعدل الفصلي والتراكمي إلى تقدير. اعرف مكانك، واحسب تقديرك مباشرة أدناه.</p>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">الجدول الكامل</div>
+                <ul class="scale">
+                    <li class="band band-honors">
+                        <div>
+                            <div class="band-title">ممتاز مع مرتبة الشرف</div>
+                            <div class="band-desc">أعلى تقدير في السلّم</div>
+                        </div>
+                        <div class="band-num">92 – 100</div>
+                    </li>
+                    <li class="band band-excellent">
+                        <div>
+                            <div class="band-title">ممتاز</div>
+                            <div class="band-desc">أداء متفوّق</div>
+                        </div>
+                        <div class="band-num">84 – أقل من 92</div>
+                    </li>
+                    <li class="band band-vgood">
+                        <div>
+                            <div class="band-title">جيد جداً</div>
+                            <div class="band-desc">أداء قوي وثابت</div>
+                        </div>
+                        <div class="band-num">76 – أقل من 84</div>
+                    </li>
+                    <li class="band band-good">
+                        <div>
+                            <div class="band-title">جيد</div>
+                            <div class="band-desc">أداء مقبول بوضوح</div>
+                        </div>
+                        <div class="band-num">68 – أقل من 76</div>
+                    </li>
+                    <li class="band band-pass">
+                        <div>
+                            <div class="band-title">مقبول</div>
+                            <div class="band-desc">الحد الأدنى للنجاح</div>
+                        </div>
+                        <div class="band-num">60 – أقل من 68</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">احسب تقديرك</div>
+                <p class="calc-hint">أدخل معدّلك الفصلي أو التراكمي (من 0 إلى 100) لمعرفة تقديرك فوراً.</p>
+                <div class="calc-row">
+                    <input type="number" id="gradeInput" placeholder="مثال: 87" min="0" max="100" inputmode="decimal">
+                    <button class="btn btn-primary" id="calcBtn">احسب</button>
+                </div>
+                <div class="calc-result" id="calcResult">
+                    <span class="dot" id="resultDot"></span>
+                    <span id="resultText"></span>
+                </div>
+            </div>
+
+            <div class="actions-row">
+                <a href="/" class="btn btn-primary">
+                    <span aria-hidden="true">🏠</span> الرئيسية
+                </a>
+                <a href="/search" class="btn btn-secondary">
+                    <span aria-hidden="true">🔍</span> ابحث عن مواد
+                </a>
+            </div>
+
+            <p class="foot-note" style="margin-top:1.75rem;">النسب المذكورة تمثّل الحدود المعتمدة للمعدل الفصلي والتراكمي.</p>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 ASU E-Library Hub. All rights reserved.
+    </footer>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+
+    <script>
+        const bands = [
+            { min: 92, max: 100, label: "ممتاز مع مرتبة الشرف", color: "#8C1D40" },
+            { min: 84, max: 92,  label: "ممتاز",                  color: "#00789C" },
+            { min: 76, max: 84,  label: "جيد جداً",                color: "#B8860B" },
+            { min: 68, max: 76,  label: "جيد",                     color: "#4A6B5A" },
+            { min: 60, max: 68,  label: "مقبول",                   color: "#6C757D" },
+        ];
+
+        function getBand(value) {
+            if (value >= 92) return bands[0];
+            if (value >= 84) return bands[1];
+            if (value >= 76) return bands[2];
+            if (value >= 68) return bands[3];
+            if (value >= 60) return bands[4];
+            return null;
+        }
+
+        const input = document.getElementById('gradeInput');
+        const btn = document.getElementById('calcBtn');
+        const result = document.getElementById('calcResult');
+        const resultText = document.getElementById('resultText');
+        const resultDot = document.getElementById('resultDot');
+
+        function calculate() {
+            const raw = input.value.trim();
+            if (raw === "") { result.classList.remove('show'); return; }
+            const value = parseFloat(raw);
+
+            if (isNaN(value) || value < 0 || value > 100) {
+                resultText.textContent = "الرجاء إدخال رقم بين 0 و 100.";
+                resultDot.style.background = "#B8860B";
+                result.style.background = "#FBF1D9";
+                result.style.color = "#B8860B";
+                result.classList.add('show');
+                return;
+            }
+
+            const band = getBand(value);
+            if (band) {
+                resultText.textContent = `التقدير: ${band.label}`;
+                resultDot.style.background = band.color;
+                result.style.color = band.color;
+                result.style.background = band.color + "1A";
+            } else {
+                resultText.textContent = "أقل من 60 — دون مستوى النجاح.";
+                resultDot.style.background = "#6C757D";
+                result.style.color = "#6C757D";
+                result.style.background = "#EDEEEF";
+            }
+            result.classList.add('show');
+        }
+
+        btn.addEventListener('click', calculate);
+        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    </script>
+</body>
+</html>
