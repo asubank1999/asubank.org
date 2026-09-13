@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Student Guide | Applied Science Private University</title>
+    <meta name="description" content="Practical guide for new students at Applied Science Private University (ASPU) in Amman, Jordan. Tuition fees, majors, admissions, e-services, scholarships, and campus life.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon2.ico" type="image/x-icon">
+    <link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/png">
+    <style>
+        :root {
+            --primary: #8C1D40;
+            --secondary: #FFC627;
+            --accent: #00A3E0;
+            --light: #F8F9FA;
+            --dark: #191919;
+            --gray: #6C757D;
+            --card-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --card-bg: #FFFFFF;
+            --body-bg: var(--light);
+            --text-color: var(--dark);
+            --text-muted: var(--gray);
+            --border-color: #E2E8F0;
+        }
+
+        body.dark-mode {
+            --primary: #B8325A;
+            --secondary: #FFD54F;
+            --accent: #4DD0E1;
+            --light: #121212;
+            --dark: #E0E0E0;
+            --gray: #9E9E9E;
+            --card-bg: #1E1E1E;
+            --body-bg: #0D0D0D;
+            --text-color: #E0E0E0;
+            --text-muted: #9E9E9E;
+            --border-color: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow-x: hidden; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.rtl { direction: rtl; text-align: right; }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #5e1329 100%);
+            color: white;
+            padding: 1.5rem 1rem 2.5rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        body.dark-mode header {
+            background: linear-gradient(135deg, #2a0a14 0%, #1a050c 100%);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-section img { height: 48px; width: auto; }
+        .logo-section h1 { font-size: 1.3rem; font-weight: 700; margin: 0; }
+
+        .header-controls { display: flex; gap: 0.5rem; }
+
+        .lang-toggle, .theme-toggle {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .lang-toggle:hover, .theme-toggle:hover {
+            background: var(--secondary);
+            color: var(--primary);
+            border-color: var(--secondary);
+        }
+
+        .header-hero {
+            max-width: 1200px;
+            margin: 1.5rem auto 0;
+            text-align: center;
+        }
+
+        .header-hero .badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 4px 14px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .header-hero h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .header-hero p { font-size: 1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        /* Main */
+        main {
+            flex: 1;
+            max-width: 900px;
+            margin: -1.5rem auto 0;
+            padding: 0 1.25rem 3rem;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        /* Controls */
+        .controls {
+            background: var(--card-bg);
+            padding: 1.25rem;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--secondary);
+            margin-bottom: 2rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-box { position: relative; width: 100%; }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+            font-family: inherit;
+            background: var(--body-bg);
+            color: var(--text-color);
+        }
+
+        body.rtl .search-box input { padding: 12px 45px 12px 20px; }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            background: var(--card-bg);
+        }
+
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.5;
+        }
+
+        body.rtl .search-box::before { left: auto; right: 15px; }
+
+        /* Category & Accordion */
+        .category-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-title:first-of-type { margin-top: 0; }
+
+        details {
+            border: 1px solid var(--border-color);
+            border-radius: var(--card-radius);
+            margin-bottom: 10px;
+            background: var(--card-bg);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        details:hover { box-shadow: var(--shadow); }
+
+        details[open] {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        summary {
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--primary);
+            transition: background 0.2s;
+        }
+
+        summary::-webkit-details-marker { display: none; }
+        summary:hover { background: var(--light); }
+
+        .icon-plus {
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: var(--secondary);
+            transition: transform 0.3s;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        body.rtl .icon-plus { margin-left: 0; margin-right: 1rem; }
+
+        details[open] summary {
+            border-bottom: 1px solid var(--border-color);
+            background: var(--light);
+        }
+
+        details[open] .icon-plus { transform: rotate(45deg); }
+
+        .answer {
+            padding: 1.25rem;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .answer a {
+            color: var(--accent);
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .answer table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.9rem;
+        }
+
+        .answer th, .answer td {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        body.rtl .answer th, body.rtl .answer td { text-align: right; }
+
+        .answer th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+            display: none;
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            margin-top: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            padding: 2rem 1rem;
+            font-size: 0.85rem;
+            margin-top: auto;
+            transition: background-color 0.3s ease;
+        }
+
+        body.dark-mode footer {
+            background: #000000;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .footer-links {
+            margin-top: 0.75rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        body.dark-mode .footer-links a { color: rgba(255,255,255,0.4); }
+
+        .footer-links a:hover { color: var(--secondary); }
+
+        @media (max-width: 600px) {
+            .header-hero h2 { font-size: 1.4rem; }
+            .header-content { justify-content: center; text-align: center; }
+            .header-controls { width: 100%; justify-content: center; }
+            summary { font-size: 0.9rem; padding: 0.9rem 1rem; }
+            .answer { padding: 1rem; font-size: 0.9rem; }
+            .answer table { font-size: 0.8rem; }
+            .answer th, .answer td { padding: 0.35rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo-section" aria-label="Applied Science Private University — Home">
+                <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASPU logo" width="48" height="48">
+                <h1>ASPU Guide</h1>
+            </a>
+            <div class="header-controls">
+                <button class="lang-toggle" id="langBtn" onclick="toggleLanguage()">العربية</button>
+                <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
+            </div>
+        </div>
+        <div class="header-hero">
+            <div class="badge" id="headerBadge">NEW STUDENTS</div>
+            <h2 id="headerTitle">Applied Science Private University</h2>
+            <p id="headerDesc">Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between.</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search questions...">
+            </div>
+        </div>
+
+        <div id="faqContainer"></div>
+        <div id="noResults" class="no-results">
+            <p id="noResultsText">No questions found. Try different keywords.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p id="footerText">&copy; 2026 Applied Science Private University. All rights reserved. | Deanship of Student Affairs</p>
+        <div class="footer-links">
+            <a href="/privacy" id="privacyLink">Privacy Policy</a>
+            <a href="/terms" id="termsLink">Terms & Conditions</a>
+        </div>
+    </footer>
+
+    <script>
+        // ==========================================
+        // DATA: ASPU Jordan New Student FAQ (Expanded)
+        // ==========================================
+        const faqData = [
+            // --- Category 1: Admissions & Registration ---
+            { cat_en: "Admissions & Registration", cat_ar: "القبول والتسجيل", icon: "🎓",
+              q_en: "How do I apply for admission to ASPU?",
+              a_en: "Apply through the university's online admission portal at <a href='https://admission.asu.edu.jo/' target='_blank' rel='noopener'>admission.asu.edu.jo</a>. You'll need to upload your Tawjihi certificate, ID, and personal photo. The portal lets you track your application status and complete registration steps. For inquiries, WhatsApp: 00962775778804 or 00962779966698.",
+              q_ar: "كيف أقدم على جامعة العلوم التطبيقية؟",
+              a_ar: "التقديم من خلال منصة القبول الإلكترونية على <a href='https://admission.asu.edu.jo/' target='_blank' rel='noopener'>admission.asu.edu.jo</a>. بتحتاج ترفع شهادة التوجيهي، الهوية، وصورة شخصية. المنصة بتخليك تتابع حالة طلبك وتكمل خطوات التسجيل. للاستفسار واتساب: 00962775778804 أو 00962779966698." },
+
+            { cat_en: "Admissions & Registration", cat_ar: "القبول والتسجيل", icon: "🎓",
+              q_en: "What documents do I need for registration?",
+              a_en: "Original Tawjihi certificate, national ID or passport, personal photos, and proof of fee payment. International students may need additional documents for residency.",
+              q_ar: "شو الوثائق المطلوبة للتسجيل؟",
+              a_ar: "شهادة التوجيهي الأصلية، الهوية أو جواز السفر، صور شخصية، وإثبات دفع الرسوم. الطلاب الدوليين ممكن يحتاجوا وثائق إضافية للإقامة." },
+
+            { cat_en: "Admissions & Registration", cat_ar: "القبول والتسجيل", icon: "🎓",
+              q_en: "Is there a registration fee?",
+              a_en: "Yes, registration fees apply. However, ASPU frequently runs promotions offering <strong>100% exemption from registration fees</strong> during specific enrollment periods. Check the admission portal or contact the Admissions Office for current offers.",
+              q_ar: "هل في رسوم تسجيل؟",
+              a_ar: "نعم، في رسوم تسجيل. بس الجامعة بتعمل عروض متكررة بإعفاء <strong>100% من رسوم التسجيل</strong> خلال فترات تسجيل محددة. تحقق من منصة القبول أو تواصل مع دائرة القبول والتسجيل للعروض الحالية." },
+
+            { cat_en: "Admissions & Registration", cat_ar: "القبول والتسجيل", icon: "🎓",
+              q_en: "What is the minimum attendance requirement?",
+              a_en: "You must attend at least 75% of lectures for each course. Falling below this may result in being barred from the final exam (DN grade).",
+              q_ar: "شو الحد الأدنى للحضور؟",
+              a_ar: "لازم تحضر 75% على الأقل من محاضرات كل مادة. إذا نزلت عن هالنسبة ممكن تتحرم من الامتحان النهائي (علامة DN)." },
+
+            // --- Category 2: Tuition Fees & Costs ---
+            { cat_en: "Tuition Fees & Costs", cat_ar: "الرسوم والتكاليف", icon: "💰",
+              q_en: "How much is the credit hour fee? (Bachelor's Programs)",
+              a_en: "Fees vary by program. According to the official student guide (2021), sample fees per credit hour in JOD: <table><tr><th>Faculty</th><th>Program</th><th>JOD/Hour</th></tr><tr><td>Arts & Sciences</td><td>English Language</td><td>85</td></tr><tr><td>Arts & Sciences</td><td>Chemistry</td><td>60</td></tr><tr><td>Business</td><td>Accounting</td><td>90</td></tr><tr><td>Business</td><td>Business Admin</td><td>85</td></tr><tr><td>Law</td><td>Law</td><td>65</td></tr><tr><td>Engineering</td><td>Mechanical Eng.</td><td>125</td></tr><tr><td>Engineering</td><td>Civil Eng.</td><td>130</td></tr><tr><td>Pharmacy</td><td>Pharmacy</td><td>125</td></tr><tr><td>Pharmacy</td><td>Clinical Nutrition</td><td>65</td></tr><tr><td>Nursing</td><td>Nursing</td><td>80</td></tr><tr><td>IT</td><td>Computer Science</td><td>90</td></tr><tr><td>IT</td><td>Software Eng.</td><td>100</td></tr></table> <em>Note: Fees are subject to change. Confirm with Admissions Office.</em>",
+              q_ar: "كم رسوم الساعة المعتمدة؟ (برامج البكالوريوس)",
+              a_ar: "الرسوم بتختلف حسب التخصص. حسب دليل الطالب الرسمي (2021)، نماذج لرسوم الساعة بالدينار الأردني: <table><tr><th>الكلية</th><th>التخصص</th><th>دينار/ساعة</th></tr><tr><td>الآداب والعلوم</td><td>اللغة الإنجليزية</td><td>85</td></tr><tr><td>الآداب والعلوم</td><td>الكيمياء</td><td>60</td></tr><tr><td>الأعمال</td><td>المحاسبة</td><td>90</td></tr><tr><td>الأعمال</td><td>إدارة الأعمال</td><td>85</td></tr><tr><td>الحقوق</td><td>الحقوق</td><td>65</td></tr><tr><td>الهندسة</td><td>الهندسة الميكانيكية</td><td>125</td></tr><tr><td>الهندسة</td><td>الهندسة المدنية</td><td>130</td></tr><tr><td>الصيدلة</td><td>الصيدلة</td><td>125</td></tr><tr><td>الصيدلة</td><td>التغذية السريرية</td><td>65</td></tr><tr><td>التمريض</td><td>التمريض</td><td>80</td></tr><tr><td>تكنولوجيا المعلومات</td><td>علم الحاسوب</td><td>90</td></tr><tr><td>تكنولوجيا المعلومات</td><td>هندسة البرمجيات</td><td>100</td></tr></table> <em>ملاحظة: الرسوم قابلة للتغيير. تأكد من دائرة القبول والتسجيل.</em>" },
+
+            { cat_en: "Tuition Fees & Costs", cat_ar: "الرسوم والتكاليف", icon: "💰",
+              q_en: "What about Master's program fees?",
+              a_en: "Graduate program fees (per credit hour in JOD): <table><tr><th>Program</th><th>JOD/Hour</th></tr><tr><td>Master of Accounting</td><td>175</td></tr><tr><td>Master of Marketing</td><td>175</td></tr><tr><td>Master of Computer Science</td><td>150</td></tr><tr><td>Master of Pharmaceutical Sciences</td><td>150</td></tr><tr><td>Master of Nursing</td><td>150</td></tr><tr><td>Master of Finance & Risk Mgmt</td><td>175</td></tr><tr><td>Master of Translation</td><td>150</td></tr></table>",
+              q_ar: "شو رسوم برامج الماجستير؟",
+              a_ar: "رسوم برامج الدراسات العليا (للساعة المعتمدة بالدينار): <table><tr><th>البرنامج</th><th>دينار/ساعة</th></tr><tr><td>ماجستير المحاسبة</td><td>175</td></tr><tr><td>ماجستير التسويق</td><td>175</td></tr><tr><td>ماجستير علم الحاسوب</td><td>150</td></tr><tr><td>ماجستير العلوم الصيدلانية</td><td>150</td></tr><tr><td>ماجستير التمريض</td><td>150</td></tr><tr><td>ماجستير المالية وإدارة المخاطر</td><td>175</td></tr><tr><td>ماجستير الترجمة</td><td>150</td></tr></table>" },
+
+            // --- Category 3: All Majors & Faculties ---
+            { cat_en: "All Majors & Faculties", cat_ar: "جميع التخصصات والكليات", icon: "🏛️",
+              q_en: "What faculties and majors does ASPU offer?",
+              a_en: "<strong>Faculty of Arts & Sciences:</strong> English Language & Literature, English/Translation, Chemistry, Political Science, Digital Media.<br><br><strong>Faculty of Business:</strong> Accounting, Accounting (English), Business Administration, Business Admin (English), Financial & Banking Management (English/Arabic), Marketing, Marketing (English), Management Information Systems, Digital Marketing.<br><br><strong>Faculty of Law:</strong> Law.<br><br><strong>Faculty of Engineering & Technology:</strong> Mechanical Engineering, Industrial Engineering, Civil Engineering, Architecture, Power & Control Engineering, Electrical/Communications & Computer Engineering, Renewable Energy Technology.<br><br><strong>Faculty of Pharmacy:</strong> Pharmacy, Clinical Nutrition & Dietetics.<br><br><strong>Faculty of Nursing:</strong> Nursing.<br><br><strong>Faculty of IT:</strong> Computer Science, Software Engineering.<br><br><strong>Faculty of Arts & Design:</strong> Graphic Design, Interior Design.<br><br>For the full and updated list, visit <a href='https://admission.asu.edu.jo/' target='_blank' rel='noopener'>admission.asu.edu.jo</a>.",
+              q_ar: "شو الكليات والتخصصات الموجودة في الجامعة؟",
+              a_ar: "<strong>كلية الآداب والعلوم:</strong> اللغة الإنجليزية وآدابها، اللغة الإنجليزية/ترجمة، الكيمياء، العلوم السياسية، الإعلام الرقمي.<br><br><strong>كلية الأعمال:</strong> المحاسبة، المحاسبة باللغة الإنجليزية، إدارة الأعمال، إدارة الأعمال باللغة الإنجليزية، الإدارة المالية والمصرفية (إنجليزي/عربي)، التسويق، التسويق باللغة الإنجليزية، نظم المعلومات الإدارية، التسويق الرقمي.<br><br><strong>كلية الحقوق:</strong> الحقوق.<br><br><strong>كلية الهندسة والتكنولوجيا:</strong> الهندسة الميكانيكية، الهندسة الصناعية، الهندسة المدنية، الهندسة المعمارية، هندسة القوى والتحكم، الهندسة الكهربائية/الاتصالات والحاسوب، تكنولوجيا الطاقة المتجددة.<br><br><strong>كلية الصيدلة:</strong> الصيدلة، التغذية السريرية والحميات.<br><br><strong>كلية التمريض:</strong> التمريض.<br><br><strong>كلية تكنولوجيا المعلومات:</strong> علم الحاسوب، هندسة البرمجيات.<br><br><strong>كلية الفنون والتصميم:</strong> تصميم الجرافيك، التصميم الداخلي.<br><br>للقائمة الكاملة والمحدثة، زر <a href='https://admission.asu.edu.jo/' target='_blank' rel='noopener'>admission.asu.edu.jo</a>." },
+
+            // --- Category 4: Scholarships & Discounts ---
+            { cat_en: "Scholarships & Discounts", cat_ar: "المنح والخصومات", icon: "🎓",
+              q_en: "What scholarships and discounts are available?",
+              a_en: "<strong>Sibling Discount:</strong> 20% for each enrolled sibling.<br><br><strong>Children of Martyrs:</strong> 10% (limited to 10 students).<br><br><strong>Children of Armed Forces/Retirees:</strong> 10%.<br><br><strong>University Staff Children:</strong> 35-53% depending on years of service.<br><br><strong>Students with Disabilities:</strong> Up to 50%.<br><br><strong>Quran Memorizers:</strong> 25%.<br><br><strong>Union Schools Graduates:</strong> 20%.<br><br><strong>Social Scholarships:</strong> 30 annual scholarships covering 25% of fees.<br><br><strong>Top Achievers:</strong> Additional 5% for first in class (after 30 credit hours).<br><br><em>Note: Scholarships cannot be combined.</em>",
+              q_ar: "شو المنح والخصومات المتاحة؟",
+              a_ar: "<strong>خصم الأخوة:</strong> 20% لكل أخ مسجل.<br><br><strong>أبناء الشهداء:</strong> 10% (بحد أقصى 10 طلاب).<br><br><strong>أبناء العاملين والمتقاعدين في القوات المسلحة:</strong> 10%.<br><br><strong>أبناء العاملين في الجامعة:</strong> 35-53% حسب سنوات الخدمة.<br><br><strong>الطلبة من أصحاب الإعاقات:</strong> حتى 50%.<br><br><strong>حافظ القرآن الكريم:</strong> 25%.<br><br><strong>خريجي مدارس الاتحاد:</strong> 20%.<br><br><strong>المنح الاجتماعية:</strong> 30 منحة سنوية تغطي 25% من الرسوم.<br><br><strong>الأول على دفعته:</strong> خصم إضافي 5% (بعد إكمال 30 ساعة).<br><br><em>ملاحظة: لا يجوز الجمع بين منحتين.</em>" },
+
+            { cat_en: "Scholarships & Discounts", cat_ar: "المنح والخصومات", icon: "🎓",
+              q_en: "Are there merit-based scholarships for new students?",
+              a_en: "Yes. ASPU offers partial scholarships up to <strong>50%</strong> based on Tawjihi grades. There are also special scholarships for top IT students (100%, 75%, 50%, 30% for ranks 1-10). Check the admission portal for the current scholarship brackets.",
+              q_ar: "هل في منح للطلاب المتفوقين الجدد؟",
+              a_ar: "نعم. الجامعة بتقدم منح جزئية تصل إلى <strong>50%</strong> حسب معدل التوجيهي. كمان في منح خاصة لطلاب تكنولوجيا المعلومات المتميزين (100%، 75%، 50%، 30% للمراكز 1-10). تحقق من منصة القبول لشرائح المنح الحالية." },
+
+            // --- Category 5: E-Services & Learning Platforms ---
+            { cat_en: "E-Services & Learning Platforms", cat_ar: "الخدمات الإلكترونية ومنصات التعلم", icon: "💻",
+              q_en: "What is MY ASU and what can I do with it?",
+              a_en: "MY ASU (<a href='https://my.asu.edu.jo/' target='_blank' rel='noopener'>my.asu.edu.jo</a>) is the student services portal. You can register for courses, view grades, check attendance, manage finances, and access your academic plan. There's also a mobile app for <a href='https://apps.apple.com/jo/app/my-asu-app/id6745174615' target='_blank' rel='noopener'>iOS</a> and <a href='https://play.google.com/store/apps/details?id=com.kivocsa99.asu' target='_blank' rel='noopener'>Android</a>.",
+              q_ar: "شو هي MY ASU وشو بقدر أعمل فيها؟",
+              a_ar: "MY ASU (<a href='https://my.asu.edu.jo/' target='_blank' rel='noopener'>my.asu.edu.jo</a>) هي بوابة الخدمات الطلابية. بتقدر تسجل مواد، تشوف علاماتك، تتابع غياباتك، تدير أمورك المالية، وتوصل لخطتك الدراسية. في كمان تطبيق للموبايل على <a href='https://apps.apple.com/jo/app/my-asu-app/id6745174615' target='_blank' rel='noopener'>iOS</a> و <a href='https://play.google.com/store/apps/details?id=com.kivocsa99.asu' target='_blank' rel='noopener'>Android</a>." },
+
+            { cat_en: "E-Services & Learning Platforms", cat_ar: "الخدمات الإلكترونية ومنصات التعلم", icon: "💻",
+              q_en: "What is EduGate and how do I use it?",
+              a_en: "EduGate (<a href='https://edugate.asu.edu.jo/login/index.php' target='_blank' rel='noopener'>edugate.asu.edu.jo</a>) is the university's asynchronous learning platform. Course materials, assignments, quizzes, and exams are posted here. You log in with your university email and password.",
+              q_ar: "شو هي EduGate وكيف أستخدمها؟",
+              a_ar: "EduGate (<a href='https://edugate.asu.edu.jo/login/index.php' target='_blank' rel='noopener'>edugate.asu.edu.jo</a>) هي منصة التعلم غير المتزامن. مواد المساقات، الواجبات، الاختبارات القصيرة، والامتحانات بتنزل هنا. بتسجل دخول بالإيميل الجامعي وكلمة المرور." },
+
+            { cat_en: "E-Services & Learning Platforms", cat_ar: "الخدمات الإلكترونية ومنصات التعلم", icon: "💻",
+              q_en: "What are the official links for e-services?",
+              a_en: "<strong>MY ASU (Student Portal):</strong> <a href='https://my.asu.edu.jo/' target='_blank' rel='noopener'>https://my.asu.edu.jo/</a><br><strong>EduGate (LMS):</strong> <a href='https://edugate.asu.edu.jo/login/index.php' target='_blank' rel='noopener'>https://edugate.asu.edu.jo/login/index.php</a><br><strong>Microsoft Office365:</strong> <a href='https://login.microsoftonline.com' target='_blank' rel='noopener'>https://login.microsoftonline.com</a><br><strong>Admission Portal:</strong> <a href='https://admission.asu.edu.jo/' target='_blank' rel='noopener'>https://admission.asu.edu.jo/</a><br><strong>Level Exam Registration:</strong> <a href='https://web.asu.edu.jo/sys/placement/Default.aspx' target='_blank' rel='noopener'>https://web.asu.edu.jo/sys/placement/Default.aspx</a>",
+              q_ar: "شو الروابط الرسمية للخدمات الإلكترونية؟",
+              a_ar: "<strong>MY ASU (بوابة الطالب):</strong> <a href='https://my.asu.edu.jo/' target='_blank' rel='noopener'>https://my.asu.edu.jo/</a><br><strong>EduGate (منصة التعلم):</strong> <a href='https://edugate.asu.edu.jo/login/index.php' target='_blank' rel='noopener'>https://edugate.asu.edu.jo/login/index.php</a><br><strong>مايكروسوفت أوفيس 365:</strong> <a href='https://login.microsoftonline.com' target='_blank' rel='noopener'>https://login.microsoftonline.com</a><br><strong>منصة القبول:</strong> <a href='https://admission.asu.edu.jo/' target='_blank' rel='noopener'>https://admission.asu.edu.jo/</a><br><strong>تسجيل امتحانات المستوى:</strong> <a href='https://web.asu.edu.jo/sys/placement/Default.aspx' target='_blank' rel='noopener'>https://web.asu.edu.jo/sys/placement/Default.aspx</a>" },
+
+            { cat_en: "E-Services & Learning Platforms", cat_ar: "الخدمات الإلكترونية ومنصات التعلم", icon: "💻",
+              q_en: "How do I register for level exams?",
+              a_en: "You can register for level exams (placement tests) by paying the fee on campus, or electronically via eFAWATEERcom. Steps: 1) Go to the registration link and generate a payment number. 2) Use eFAWATEERcom or your banking app: Education Sector > Applied Science University > Other Fees Services. 3) After payment, check your exam date within 30 minutes on the inquiry page.",
+              q_ar: "كيف أسجل لامتحانات المستوى؟",
+              a_ar: "بتقدر تسجل لامتحانات المستوى بدفع الرسوم داخل الحرم الجامعي، أو إلكترونياً عبر إي فواتيركم. الخطوات: 1) ادخل على رابط التسجيل واصدر رقم دفع. 2) استخدم إي فواتيركم أو تطبيق البنك: القطاع التعليمي > جامعة العلوم التطبيقية > خدمات رسوم أخرى. 3) بعد الدفع، تحقق من موعد الامتحان خلال نصف ساعة من صفحة الاستعلام." },
+
+            { cat_en: "E-Services & Learning Platforms", cat_ar: "الخدمات الإلكترونية ومنصات التعلم", icon: "💻",
+              q_en: "How do I access the campus Wi-Fi?",
+              a_en: "Select the ASPU-Student network and log in with your university email and password. Wi-Fi is available in all academic buildings, the library, and common areas.",
+              q_ar: "كيف أتصل بواي فاي الجامعة؟",
+              a_ar: "اختر شبكة ASPU-Student وسجل دخول بالإيميل الجامعي وكلمة المرور. الواي فاي متوفر في كل المباني الأكاديمية والمكتبة والمناطق العامة." },
+
+            // --- Category 6: Academics & Credit Hours ---
+            { cat_en: "Academics & Credit Hours", cat_ar: "الشؤون الأكاديمية والساعات المعتمدة", icon: "📚",
+              q_en: "How many credit hours do I need to graduate?",
+              a_en: "It varies by program. Most bachelor's programs require 120-135 credit hours. For example, Nursing requires 135 credit hours. Check your specific study plan in the student portal.",
+              q_ar: "كم ساعة معتمدة بحتاج للتخرج؟",
+              a_ar: "بتختلف حسب التخصص. معظم برامج البكالوريوس بتطلب 120-135 ساعة معتمدة. مثلاً التمريض بحتاج 135 ساعة. تحقق من خطتك الدراسية في بوابة الطالب." },
+
+            { cat_en: "Academics & Credit Hours", cat_ar: "الشؤون الأكاديمية والساعات المعتمدة", icon: "📚",
+              q_en: "What GPA do I need to avoid academic probation?",
+              a_en: "You need a cumulative GPA of at least 2.0 out of 4.0. Falling below this places you on academic probation, and you'll have limited credit hours until your GPA improves.",
+              q_ar: "شو المعدل اللي بحتاجه لتجنب الإنذار الأكاديمي؟",
+              a_ar: "لازم يكون معدلك التراكمي 2.0 من 4.0 على الأقل. إذا نزلت عن هالمعدل بتصير تحت الإنذار الأكاديمي، وبتكون ساعاتك محدودة لحد ما يتحسن معدلك." },
+
+            { cat_en: "Academics & Credit Hours", cat_ar: "الشؤون الأكاديمية والساعات المعتمدة", icon: "📚",
+              q_en: "What is the Add/Drop period?",
+              a_en: "The first two weeks of the semester where you can add or drop courses without academic or financial penalties. After this period, withdrawals count as 'W' on your transcript.",
+              q_ar: "شو فترة الإضافة والحذف؟",
+              a_ar: "أول أسبوعين من الفصل، بتقدر تضيف أو تحذف مواد بدون غرامات أكاديمية أو مالية. بعد هالفترة، السحب بيتسجل 'W' على كشف علاماتك." },
+
+            // --- Category 7: Campus Life & Facilities ---
+            { cat_en: "Campus Life & Facilities", cat_ar: "الحياة الجامعية والمرافق", icon: "🏛️",
+              q_en: "Where is the university located and how do I contact it?",
+              a_en: "<strong>Address:</strong> Shafa Badran, Amman, Jordan.<br><strong>Admissions Phone:</strong> 065609999 ext. 4<br><strong>WhatsApp:</strong> 00962775778804 / 00962779966698<br><strong>Website:</strong> <a href='https://www.asu.edu.jo/' target='_blank' rel='noopener'>www.asu.edu.jo</a>",
+              q_ar: "وين موقع الجامعة وكيف أتواصل معها؟",
+              a_ar: "<strong>العنوان:</strong> شفا بدران، عمان، الأردن.<br><strong>هاتف القبول:</strong> 065609999 فرعي 4<br><strong>واتساب:</strong> 00962775778804 / 00962779966698<br><strong>الموقع الإلكتروني:</strong> <a href='https://www.asu.edu.jo/' target='_blank' rel='noopener'>www.asu.edu.jo</a>" },
+
+            { cat_en: "Campus Life & Facilities", cat_ar: "الحياة الجامعية والمرافق", icon: "🏛️",
+              q_en: "Is there parking on campus?",
+              a_en: "Yes, but it's limited. There was a student protest in 2024 about the JD 50 per semester parking fee. The university considers it a symbolic fee. Arrive early to find spots.",
+              q_ar: "في مواقف سيارات في الجامعة؟",
+              a_ar: "نعم، بس محدودة. في 2024 صار احتجاج طلابي على رسوم المواقف اللي كانت 50 دينار للفصل. الجامعة بتعتبرها رسوم رمزية. إجي بكير تلاقي مكان." },
+
+            { cat_en: "Campus Life & Facilities", cat_ar: "الحياة الجامعية والمرافق", icon: "🏛️",
+              q_en: "What student clubs exist?",
+              a_en: "ASPU has various clubs including sports, culture, environment, engineering, English language, and volunteer clubs. You can join by visiting the Student Activities Office.",
+              q_ar: "شو الأندية الطلابية الموجودة؟",
+              a_ar: "في أندية متنوعة: رياضية، ثقافية، بيئية، هندسية، لغة إنجليزية، وتطوعية. بتقدر تنضم بزيارة مكتب الأنشطة الطلابية." }
+        ];
+
+        // ==========================================
+        // APP LOGIC
+        // ==========================================
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.body.classList.toggle('rtl', currentLang === 'ar');
+
+            document.getElementById('langBtn').textContent = currentLang === 'en' ? 'العربية' : 'English';
+            document.getElementById('headerBadge').textContent = currentLang === 'en' ? 'NEW STUDENTS' : 'الطلاب الجدد';
+            document.getElementById('headerTitle').textContent = currentLang === 'en' 
+                ? 'Applied Science Private University' 
+                : 'جامعة العلوم التطبيقية الخاصة';
+            document.getElementById('headerDesc').textContent = currentLang === 'en' 
+                ? 'Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between.' 
+                : 'دليل عملي للطلاب الجدد في عمان، الأردن. الرسوم، التخصصات، الخدمات الإلكترونية، وكل شي بينهم.';
+            document.getElementById('searchInput').placeholder = currentLang === 'en' 
+                ? 'Search questions...' 
+                : 'ابحث عن الأسئلة...';
+            document.getElementById('noResultsText').textContent = currentLang === 'en' 
+                ? 'No questions found. Try different keywords.' 
+                : 'ما في أسئلة مطابقة. جرب كلمات ثانية.';
+            document.getElementById('footerText').textContent = currentLang === 'en' 
+                ? '© 2026 Applied Science Private University. All rights reserved. | Deanship of Student Affairs' 
+                : '© 2026 جامعة العلوم التطبيقية الخاصة. جميع الحقوق محفوظة. | عمادة شؤون الطلبة';
+            document.getElementById('privacyLink').textContent = currentLang === 'en' ? 'Privacy Policy' : 'سياسة الخصوصية';
+            document.getElementById('termsLink').textContent = currentLang === 'en' ? 'Terms & Conditions' : 'الشروط والأحكام';
+
+            renderFAQ();
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeBtn');
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            btn.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('aspu-theme', isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        (function() {
+            const saved = localStorage.getItem('aspu-theme');
+            if (saved === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeBtn').textContent = '☀️';
+            }
+        })();
+
+        function renderFAQ(filter = '') {
+            const container = document.getElementById('faqContainer');
+            container.innerHTML = '';
+
+            let visibleCount = 0;
+            const categories = {};
+
+            faqData.forEach((item) => {
+                const cat = currentLang === 'en' ? item.cat_en : item.cat_ar;
+                if (!categories[cat]) categories[cat] = { icon: item.icon, items: [] };
+
+                const q = currentLang === 'en' ? item.q_en : item.q_ar;
+                const a = currentLang === 'en' ? item.a_en : item.a_ar;
+
+                const plainQ = q.replace(/<[^>]*>/g, '');
+                const plainA = a.replace(/<[^>]*>/g, '');
+
+                if (plainQ.toLowerCase().includes(filter) || plainA.toLowerCase().includes(filter)) {
+                    categories[cat].items.push({ q, a });
+                    visibleCount++;
+                }
+            });
+
+            for (const cat in categories) {
+                if (categories[cat].items.length === 0) continue;
+
+                const catTitle = document.createElement('h2');
+                catTitle.className = 'category-title';
+                catTitle.innerHTML = `<span>${categories[cat].icon}</span> ${cat}`;
+                container.appendChild(catTitle);
+
+                categories[cat].items.forEach(item => {
+                    const details = document.createElement('details');
+                    details.className = 'faq-item';
+                    details.innerHTML = `
+                        <summary>
+                            <span>${item.q}</span>
+                            <span class="icon-plus">+</span>
+                        </summary>
+                        <div class="answer">${item.a}</div>
+                    `;
+                    container.appendChild(details);
+                });
+            }
+
+            document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            renderFAQ(this.value.toLowerCase().trim());
+        });
+
+        renderFAQ();
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4DE6YQ7Q2M');
+    </script>
+</body>
+</html>
