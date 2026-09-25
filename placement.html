@@ -1,259 +1,706 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Favicon link -->
-    <link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASU - Test Banks</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="respo.css">
-</head>
-<body>
-    <header>
-        <h1>ASU JORDAN</h1>
-        <nav>
-            <ul>
-                <li><a href="index">HOME</a></li>
-                <li><a href="subjects">RECENT</a></li>
-
-                <li><button id="mode-toggle">LIGHT/DARK</button></li>
-            </ul>
-        </nav>
-    </header>
-    <main><center><img src="ASU_Jordan_logo-removebg-preview.png" alt="Website Icon" width="80" height="80">
-        <h2>PLACEMENT TESTS</h2>
+    <title>ASU Jordan - Placement Tests</title>
+    <link rel="icon" href="ASU_Jordan_logo-removebg-preview.png" type="image/x-icon">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6d28d9;
+            --primary-dark: #5b21b6;
+            --primary-light: #7c3aed;
+            --accent: #f59e0b;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --border-color: #e5e7eb;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
         }
+
+        /* Header Styles */
+        header {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        header > div {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        #mode-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        #mode-toggle:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-icon img {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .hero p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Warning Box */
         .warning-box {
-            background-color: #1234;
-            border-left: 10px solid red;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 5px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
         }
-        .tos-link {
-            color: #d9534f;
-            font-weight: bold;
+
+        .warning-box strong {
+            color: #b45309;
+            font-weight: 600;
+        }
+
+        .warning-box a {
+            color: #d97706;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .warning-box a:hover {
+            color: #b45309;
+            text-decoration: underline;
+        }
+
+        .warning-box h3 {
+            margin-top: 1rem;
+            color: #b45309;
+            font-size: 1rem;
+        }
+
+        .warning-box p {
+            margin: 0.75rem 0;
+            color: #78350f;
+            line-height: 1.6;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--bg-white);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section-header h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .subject-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .subject-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .subject-card a {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 140px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, transparent 0%, rgba(109, 40, 217, 0.03) 100%);
+            transition: background 0.3s ease;
+        }
+
+        .subject-card:hover a {
+            background: linear-gradient(135deg, rgba(109, 40, 217, 0.05) 0%, rgba(109, 40, 217, 0.1) 100%);
+        }
+
+        .subject-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .subject-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .card-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header > div {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+            }
+
+            .card-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+
+            .subject-card a {
+                min-height: 120px;
+                padding: 1.25rem;
+            }
+
+            .warning-box {
+                padding: 1rem;
+            }
+
+            main {
+                padding: 1.5rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 1rem 0.5rem;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            .hero-icon {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 1rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 0.75rem;
+            }
+
+            .section-header h3 {
+                font-size: 1.25rem;
+            }
+
+            #mode-toggle {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --bg-light: #111827;
+            --bg-white: #1f2937;
+            --text-dark: #f9fafb;
+            --text-light: #d1d5db;
+            --border-color: #374151;
+        }
+
+        body.dark-mode .warning-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.15) 100%);
+            border-left-color: #f59e0b;
+        }
+
+        /* Print Styles */
+        @media print {
+            header,
+            #mode-toggle {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-
-<div class="warning-box">
-    <strong>IMPORTANT NOTICE:</strong> Please make sure to read our <a href="uni_tos" class="tos-link">Terms of Service</a> before you start browsing the website. By using this website, you agree to our terms and conditions. The owner of this website is not responsible for your exam marks or any comments you make about this website.
-<h2>باستخدام هذا الموقع ، فإنك توافق على الشروط والأحكام الخاصة بنا. مالك هذا الموقع غير مسؤول عن علامات الامتحان الخاصة بك أو أي تعليقات تقوم بها حول هذا الموقع</h2>
-    <h3><a href="uni_tos" style="text-decoration: none; color: #8015ad;">الشروط والأحكام</a></h3>
-</div>
-<h5>WhatsApp 0799760271</h5>
-
-
-
-
-
-            <div class="subject-card">
-                <a href="https://drive.google.com/file/d/1LG94xwCrpZQQHBfwQ82BqHz2ZAG0nz9Y/view?usp=sharing" target="_blank">
-                    <h3>اللغة العربية 2019</h3>
-                </a>
-            </div>
-
-
-            <div class="subject-card">
-                <a href="https://drive.google.com/drive/folders/1Ldz1GqDg0xyVkc62Rzb86aKWP0pMn2N2?usp=sharing" target="_blank">
-                    <h3>نماذج محدثة 2024 لدراسة امتحانات المستوى</h3>
-                </a>
-            </div>
-
-            <div class="subject-card">
-                <a href="https://drive.google.com/drive/folders/1FFAV7Ch5pGVhOINqywE3Ty_Q9YIeh0mi?usp=sharing" target="_blank">
-                    <h3>نماذج امتحانات مستوى</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://drive.google.com/drive/folders/1oAMlwe5Tl58SnaOwXqFMQcZ8POs8b5rr?usp=sharing" target="_blank">
-                    <h3>نماذج لامتحانات المستوى ASU 2018</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/bwk5mWbom4RLp8JX6" target="_blank">
-                    <h3>مستوى مهارات الحاسوب 1</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/9veLrYzLQRiZR5QZ7" target="_blank">
-                    <h3>مستوى مهارات الحاسوب 2</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/MBJtSkTdSjZRsr5x9" target="_blank">
-                    <h3>مستوى مهارات الحاسوب 3</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/zsQ6rRhVDzAHiKAt8" target="_blank">
-                    <h3>مستوى مهارات الحاسوب 4</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/o9Cmt8T28edTpXn79" target="_blank">
-                    <h3>مستوى مهارات الحاسوب 5</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/otn4TZ7Z5JzHym6q6" target="_blank">
-                    <h3>مستوى مهارات الحاسوب 6</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/D8ommTMoGgbPiF2ZA" target="_blank">
-                    <h3>عربي مستوى 1</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/z1oBkoJiLK9EW8rr7" target="_blank">
-                    <h3>عربي مستوى 2</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/hSqdnry1P1uaZf7S7" target="_blank">
-                    <h3>عربي مستوى 3</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/ZRiLCSaJnXcwyswj8" target="_blank">
-                    <h3>عربي مستوى 4</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/6ciYzuHmyS4z6M9o8" target="_blank">
-                    <h3>عربي مستوى 5</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/Cc7hYAibX4MUmK9W6" target="_blank">
-                    <h3>عربي مستوى 6</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/vVRNCPTJk3qMeGpu6" target="_blank">
-                    <h3>عربي مستوى 7</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/nxuxrtaeiHoGu9WB8" target="_blank">
-                    <h3>عربي مستوى 8</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/dtt5xdjvYyUA7jGY6" target="_blank">
-                    <h3>انجليزي مستوى 1</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/B427sHE8aGESCzry9" target="_blank">
-                    <h3>انجليزي مستوى 2</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/RH2oDexqSPf543z7A" target="_blank">
-                    <h3>انجليزي مستوى 3</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/NtZWRvA5znq2MV998" target="_blank">
-                    <h3>انجليزي مستوى 4</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/teKkTY1ungZ4kFsa6" target="_blank">
-                    <h3>انجليزي مستوى 5</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/M1rZcU1Ft3um7TCk6" target="_blank">
-                    <h3>انجليزي مستوى 6</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://forms.gle/5Qe7mwzkC24ZSUa36" target="_blank">
-                    <h3>انجليزي مستوى 7</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://drive.google.com/file/d/1291DHraxsa-SsNXvBtVDzeStNIGAWhVh/view" target="_blank">
-                    <h3>_امتحان المستوى لمادة اللغة العربيّة  :</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://drive.google.com/file/d/141ALaE-qA1dJaOE_TkE2L1sxowneB0k3/view" target="_blank">
-                    <h3>_امتحان المستوى لمادة اللغة الإنجليزية :</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://drive.google.com/file/d/15UsPvFsoZ-Qhs0AXOd1gUHU_6c6kTezs/view" target="_blank">
-                    <h3>_امتحان المستوى لمادة الحاسوب  :</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://drive.google.com/drive/folders/1r_UL6P9LOE-GH0IxXNOPBjrmesLjMky4?usp=sharing" target="_blank">
-                    <h3>عربي مستوى</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://drive.google.com/drive/folders/19Zg_UxqWMSNXqZxbZMf8UpeiqxRqF09r?usp=sharing" target="_blank">
-                    <h3>انجليزي مستوى</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://drive.google.com/drive/folders/1bbk6RSXm_LiyGUo4U4CGnjcvysvSvuU3?usp=sharing" target="_blank">
-                    <h3>حاسوب مستوى</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://www.dropbox.com/scl/fi/zaa809dly7rrfxk53xb35/99.pdf?rlkey=mwumrzbczx0fmeubk1d8atelz&st=55qz52mm&dl=0" target="_blank">
-                    <h3>اسئلة انجليزي 99 مع اجابات</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://www.dropbox.com/scl/fi/gzc8gs0dnead4xr1sutat/.pdf?rlkey=taaf97ht5velv9oo40bu8yoz8&st=o5g4o66z&dl=0" target="_blank">
-                    <h3>الحاسوب والبرمجيات الجاهزه</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://www.dropbox.com/scl/fi/x95cszrclg02ifyhtsnn6/99.pdf?rlkey=u4u0pkmtyxbdomorn9wfrq9sv&st=sw0h1ug6&dl=0" target="_blank">
-                    <h3>بنك أسئلة انجليزي 99</h3>
-                </a>
-            </div>
-            <div class="subject-card">
-                <a href="https://www.dropbox.com/scl/fi/qwv3e8okwqwlpsj9jxmlm/2024.pdf?rlkey=lal7xm254z7h2bxvj0t8v7l6e&st=7kt84g7y&dl=0" target="_blank">
-                    <h3>بنك مهارات التواصل -ربيعي 2024 نيرد الشامل</h3>
-                </a>
-            </div>
-
-            <!-- Add more subjects as needed -->
+    <header>
+        <div>
+            <h1>ASU Jordan</h1>
+            <nav>
+                <ul>
+                    <li><a href="index">Home</a></li>
+                    <li><button id="mode-toggle">Dark Mode</button></li>
+                </ul>
+            </nav>
         </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-icon">
+                <img src="ASU_Jordan_logo-removebg-preview.png" alt="ASU Jordan Logo">
+            </div>
+            <h2>Placement Tests</h2>
+            <p>Prepare for your university placement exams</p>
+        </section>
+
+        <!-- Warning Notice -->
+        <div class="warning-box">
+            <strong>Important Notice:</strong>
+            <p>Please read our <a href="uni_tos">Terms of Service</a> before using this website. By accessing these resources, you agree to our terms and conditions. The website owner is not responsible for exam results or user-generated comments.</p>
+            <p><strong>الإشعار المهم:</strong> يرجى قراءة <a href="uni_tos">الشروط والأحكام</a> قبل استخدام هذا الموقع. بالوصول إلى هذه الموارد، فإنك توافق على شروطنا وأحكامنا. صاحب الموقع غير مسؤول عن نتائج الامتحان أو التعليقات التي ينشرها المستخدمون.</p>
+            <h3><a href="uni_tos">الشروط والأحكام</a></h3>
+        </div>
+
+        <div class="contact-info">
+            📱 WhatsApp Support Available
+        </div>
+
+        <!-- Arabic Section -->
+        <section>
+            <div class="section-header">
+                <h3>🇸🇦 اختبارات اللغة العربية</h3>
+            </div>
+            <div class="card-grid">
+                <div class="subject-card">
+                    <a href="https://drive.google.com/file/d/1LG94xwCrpZQQHBfwQ82BqHz2ZAG0nz9Y/view?usp=sharing" target="_blank">
+                        <h3>اللغة العربية 2019</h3>
+                        <span class="card-badge">Study Material</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/D8ommTMoGgbPiF2ZA" target="_blank">
+                        <h3>عربي مستوى 1</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/z1oBkoJiLK9EW8rr7" target="_blank">
+                        <h3>عربي مستوى 2</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/hSqdnry1P1uaZf7S7" target="_blank">
+                        <h3>عربي مستوى 3</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/ZRiLCSaJnXcwyswj8" target="_blank">
+                        <h3>عربي مستوى 4</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/6ciYzuHmyS4z6M9o8" target="_blank">
+                        <h3>عربي مستوى 5</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/Cc7hYAibX4MUmK9W6" target="_blank">
+                        <h3>عربي مستوى 6</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/vVRNCPTJk3qMeGpu6" target="_blank">
+                        <h3>عربي مستوى 7</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/nxuxrtaeiHoGu9WB8" target="_blank">
+                        <h3>عربي مستوى 8</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://drive.google.com/drive/folders/1r_UL6P9LOE-GH0IxXNOPBjrmesLjMky4?usp=sharing" target="_blank">
+                        <h3>عربي مستوى - مجموعة</h3>
+                        <span class="card-badge">Folder</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://drive.google.com/file/d/1291DHraxsa-SsNXvBtVDzeStNIGAWhVh/view" target="_blank">
+                        <h3>امتحان المستوى - اللغة العربية</h3>
+                        <span class="card-badge">Exam</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- English Section -->
+        <section>
+            <div class="section-header">
+                <h3>🇬🇧 English Placement Tests</h3>
+            </div>
+            <div class="card-grid">
+                <div class="subject-card">
+                    <a href="https://forms.gle/dtt5xdjvYyUA7jGY6" target="_blank">
+                        <h3>English Level 1</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/B427sHE8aGESCzry9" target="_blank">
+                        <h3>English Level 2</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/RH2oDexqSPf543z7A" target="_blank">
+                        <h3>English Level 3</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/NtZWRvA5znq2MV998" target="_blank">
+                        <h3>English Level 4</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/teKkTY1ungZ4kFsa6" target="_blank">
+                        <h3>English Level 5</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/M1rZcU1Ft3um7TCk6" target="_blank">
+                        <h3>English Level 6</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/5Qe7mwzkC24ZSUa36" target="_blank">
+                        <h3>English Level 7</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://www.dropbox.com/scl/fi/zaa809dly7rrfxk53xb35/99.pdf?rlkey=mwumrzbczx0fmeubk1d8atelz&st=55qz52mm&dl=0" target="_blank">
+                        <h3>English Q&A Bank 99</h3>
+                        <span class="card-badge">Study Material</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://www.dropbox.com/scl/fi/x95cszrclg02ifyhtsnn6/99.pdf?rlkey=u4u0pkmtyxbdomorn9wfrq9sv&st=sw0h1ug6&dl=0" target="_blank">
+                        <h3>English Question Bank 99</h3>
+                        <span class="card-badge">Study Material</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://drive.google.com/drive/folders/19Zg_UxqWMSNXqZxbZMf8UpeiqxRqF09r?usp=sharing" target="_blank">
+                        <h3>English Level - Collection</h3>
+                        <span class="card-badge">Folder</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://drive.google.com/file/d/141ALaE-qA1dJaOE_TkE2L1sxowneB0k3/view" target="_blank">
+                        <h3>Level Exam - English</h3>
+                        <span class="card-badge">Exam</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Computer Skills Section -->
+        <section>
+            <div class="section-header">
+                <h3>💻 Computer Skills Tests</h3>
+            </div>
+            <div class="card-grid">
+                <div class="subject-card">
+                    <a href="https://forms.gle/bwk5mWbom4RLp8JX6" target="_blank">
+                        <h3>Computer Skills Level 1</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/9veLrYzLQRiZR5QZ7" target="_blank">
+                        <h3>Computer Skills Level 2</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/MBJtSkTdSjZRsr5x9" target="_blank">
+                        <h3>Computer Skills Level 3</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/zsQ6rRhVDzAHiKAt8" target="_blank">
+                        <h3>Computer Skills Level 4</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/o9Cmt8T28edTpXn79" target="_blank">
+                        <h3>Computer Skills Level 5</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://forms.gle/otn4TZ7Z5JzHym6q6" target="_blank">
+                        <h3>Computer Skills Level 6</h3>
+                        <span class="card-badge">Test</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://www.dropbox.com/scl/fi/gzc8gs0dnead4xr1sutat/.pdf?rlkey=taaf97ht5velv9oo40bu8yoz8&st=o5g4o66z&dl=0" target="_blank">
+                        <h3>Computer & Ready Software</h3>
+                        <span class="card-badge">Study Material</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://drive.google.com/drive/folders/1bbk6RSXm_LiyGUo4U4CGnjcvysvSvuU3?usp=sharing" target="_blank">
+                        <h3>Computer Level - Collection</h3>
+                        <span class="card-badge">Folder</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://drive.google.com/file/d/15UsPvFsoZ-Qhs0AXOd1gUHU_6c6kTezs/view" target="_blank">
+                        <h3>Level Exam - Computer</h3>
+                        <span class="card-badge">Exam</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Updated Models Section -->
+        <section>
+            <div class="section-header">
+                <h3>📚 Updated Practice Models 2024</h3>
+            </div>
+            <div class="card-grid">
+                <div class="subject-card">
+                    <a href="https://drive.google.com/drive/folders/1Ldz1GqDg0xyVkc62Rzb86aKWP0pMn2N2?usp=sharing" target="_blank">
+                        <h3>Updated Models 2024</h3>
+                        <p>نماذج محدثة لدراسة امتحانات المستوى</p>
+                        <span class="card-badge">Collection</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://drive.google.com/drive/folders/1FFAV7Ch5pGVhOINqywE3Ty_Q9YIeh0mi?usp=sharing" target="_blank">
+                        <h3>Level Exam Models</h3>
+                        <p>نماذج امتحانات مستوى</p>
+                        <span class="card-badge">Collection</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://drive.google.com/drive/folders/1oAMlwe5Tl58SnaOwXqFMQcZ8POs8b5rr?usp=sharing" target="_blank">
+                        <h3>ASU Level Exams 2018</h3>
+                        <p>نماذج لامتحانات المستوى ASU 2018</p>
+                        <span class="card-badge">Collection</span>
+                    </a>
+                </div>
+                <div class="subject-card">
+                    <a href="https://www.dropbox.com/scl/fi/qwv3e8okwqwlpsj9jxmlm/2024.pdf?rlkey=lal7xm254z7h2bxvj0t8v7l6e&st=7kt84g7y&dl=0" target="_blank">
+                        <h3>Communication Skills Bank</h3>
+                        <p>بنك مهارات التواصل - ربيعي 2024</p>
+                        <span class="card-badge">Study Material</span>
+                    </a>
+                </div>
+            </div>
+        </section>
     </main>
-    <script src="scripts.js"></script>
+
+    <script>
+        // Dark Mode Toggle
+        const modeToggle = document.getElementById('mode-toggle');
+        
+        // Check for saved dark mode preference or default to light mode
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            modeToggle.textContent = 'Light Mode';
+        }
+
+        modeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isNowDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isNowDark);
+            modeToggle.textContent = isNowDark ? 'Light Mode' : 'Dark Mode';
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (link.getAttribute('href') !== 'index' && !link.getAttribute('href').startsWith('http')) {
+                    e.preventDefault();
+                    const target = document.querySelector(link.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // Open external links in new tab
+        document.querySelectorAll('a[target="_blank"]').forEach(link => {
+            link.setAttribute('rel', 'noopener noreferrer');
+        });
+    </script>
 </body>
-<script>
-        // Disable right-click context menu
-        window.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // Disable Ctrl+U shortcut
-        window.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'u') {
-                e.preventDefault();
-            }
-        });
-
-        // Disable all keyboard shortcuts
-        window.addEventListener('keydown', function(e) {
-            e.preventDefault();
-        });
-</script>
 </html>
