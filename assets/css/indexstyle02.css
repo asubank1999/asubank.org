@@ -1,0 +1,205 @@
+/* 🧠 Neo-Holographic Glassmorphism Theme (Fixed Banner Image Visibility) */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-glow: rgba(0, 255, 255, 0.35);
+  --text-main: rgba(255, 255, 255, 0.95);
+  --text-dim: rgba(255, 255, 255, 0.75);
+  --neon-blue: #00eaff;
+  --neon-pink: #ff00ff;
+  --neon-gradient: linear-gradient(120deg, #00eaff, #ff00ff, #00ffc6);
+}
+
+/* ✨ Floating Glow Animation */
+@keyframes float-glow {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 0 12px var(--glass-glow);
+  }
+  50% {
+    transform: translateY(-3px);
+    box-shadow: 0 0 30px var(--neon-blue);
+  }
+}
+
+/* 🌀 Gradient Drift Animation */
+@keyframes gradient-drift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 🔮 Subject Card */
+.subject-card {
+  position: relative;
+  color: var(--text-main);
+  border-radius: 22px;
+  padding: 28px;
+  text-align: center;
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  background-image: var(--neon-gradient);
+  background-size: 300% 300%;
+  animation: gradient-drift 8s infinite ease-in-out;
+}
+
+.subject-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.subject-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 50px rgba(0, 255, 255, 0.4);
+  animation: float-glow 4s infinite ease-in-out;
+}
+
+.subject-card:hover::before {
+  opacity: 1;
+}
+
+/* 🌌 Banner (Fixed Image Visibility) */
+.banner {
+  position: relative;
+  height: 220px;
+  width: 100%;
+  border-radius: 0 0 24px 24px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+/* ✅ FIXED: Correct file path syntax for background image */
+background-image: url('/assets/img/banner.JPG');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+z-index: 0;
+}
+
+.banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* ✅ FIXED: Make overlay more transparent so image shows */
+  background: linear-gradient(
+    60deg,
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 50, 100, 0.35),
+    rgba(0, 0, 0, 0.45)
+  );
+  backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+.banner-content {
+  position: relative;
+  color: var(--text-main);
+  z-index: 2;
+  text-align: center;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.6);
+}
+
+.banner-logo {
+  width: 110px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 15px var(--neon-blue));
+}
+
+.banner h1 {
+  font-size: 2.2em;
+  font-weight: 400;
+  background: var(--neon-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* 🧩 Quantum Button */
+.modern-button {
+  display: inline-block;
+  padding: 12px 32px;
+  font-size: 1em;
+  color: var(--text-main);
+  background: var(--neon-gradient);
+  background-size: 200% 200%;
+  border: none;
+  border-radius: 32px;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+  transition: all 0.4s ease;
+  animation: gradient-drift 6s infinite ease-in-out;
+  overflow: hidden;
+}
+
+.modern-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  transition: 0.6s;
+}
+
+.modern-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5);
+}
+
+.modern-button:hover::before {
+  left: 100%;
+}
+
+.modern-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
+}
+
+.modern-button span {
+  display: block;
+  font-size: 0.8em;
+  color: var(--text-dim);
+  margin-top: 5px;
+}
+
+/* 📱 Responsive Tweaks */
+@media (max-width: 768px) {
+  .subject-card {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .banner {
+    height: 180px;
+  }
+
+  .banner h1 {
+    font-size: 1.6em;
+  }
+
+  .modern-button {
+    padding: 10px 26px;
+    font-size: 0.9em;
+  }
+}
