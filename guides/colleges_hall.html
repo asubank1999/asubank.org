@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University Halls Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 80px auto 20px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    body.dark-mode .container {
+      background-color: #2d2d2d;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    h1, h2 {
+      font-family: 'Poppins', sans-serif;
+      color: #007bff;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    ul li {
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    body.dark-mode ul li {
+      background-color: #3a3a3a;
+    }
+
+    ul li:hover {
+      background-color: #e9ecef;
+      transform: scale(1.02);
+    }
+
+    body.dark-mode ul li:hover {
+      background-color: #4a4a4a;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    strong {
+      color: #007bff;
+    }
+
+    /* Back to Home and Theme Toggle Buttons */
+    .back-button, .theme-toggle {
+      position: fixed;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      z-index: 1000;
+    }
+
+    .back-button {
+      top: 20px;
+      left: 20px;
+    }
+
+    .theme-toggle {
+      top: 20px;
+      right: 20px;
+    }
+
+    .back-button:hover, .theme-toggle:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    /* Scroll to Top and Bottom Buttons */
+    .scroll-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: #6c5ce7;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+    }
+
+    .scroll-button:hover {
+      background-color: #5a4acf;
+      transform: scale(1.1);
+    }
+
+    .scroll-button.bottom {
+      bottom: 70px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      ul li {
+        font-size: 0.9rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+        body {
+            display: center;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+            margin: 1;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+  </style>
+</head>
+<body>
+  <!-- Back to Home and Theme Toggle Buttons -->
+  <a href="/guides/importantlinks" class="back-button">Back to Home</a>
+  <button class="theme-toggle" onclick="toggleDarkMode()">🌓</button>
+
+  <!-- Scroll to Top and Bottom Buttons -->
+  <button class="scroll-button" onclick="scrollToTop()">↑</button>
+  <button class="scroll-button bottom" onclick="scrollToBottom()">↓</button>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>University Halls Guide</h1>
+
+    <section>
+      <h2>List of Halls and Faculties</h2>
+      <ul>
+        <li>1 - College of IT</li>
+        <li>2 - College of Law</li>
+        <li>3 - Workshops</li>
+        <li>4 - College of Pharmacy</li>
+        <li>5 - College of Business</li>
+        <li>6 - Gymnasium</li>
+        <li>7 - College of Nursing</li>
+        <li>8 - College of Arts</li>
+        <li>9 - College of Engineering</li>
+        <li>10 - Deanship</li>
+        <li>21 - College of Dentistry</li>
+        <li>G/B - Clinics Building</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Understanding Hall Numbers</h2>
+      <p>
+        Hall numbers follow a specific format to help you locate them easily. For example:
+        <br>
+        <strong>1206</strong> means:
+        <ul>
+          <li><strong>1</strong> = College Number (College of IT)</li>
+          <li><strong>2</strong> = Floor Number (2nd Floor)</li>
+          <li><strong>06</strong> = Hall Number (Hall 06)</li>
+        </ul>
+        Use this format to navigate to your desired hall.
+      </p>
+    </section>
+  </div>
+<body><center>
+    <img src="/assets/img/hall_helper.jpeg" alt="Hall Helper">
+</body></center>
+  <script>
+    // Function to toggle light/dark mode
+    function toggleDarkMode() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        themeToggle.textContent = '🌞';
+      } else {
+        themeToggle.textContent = '🌓';
+      }
+    }
+
+    // Function to scroll to top
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Function to scroll to bottom
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

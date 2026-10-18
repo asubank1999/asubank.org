@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanks to Our Contributors</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :focus {
+            outline: none;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .thanks-container {
+            background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+            padding: 30px 25px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1),
+                        0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .thanks-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,204,0,0.2) 0%, transparent 70%);
+            transform: rotate(25deg);
+            pointer-events: none;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 25px;
+            display: block;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(255, 204, 0, 0.4));
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .thanks-container h1 {
+            margin: 0 0 30px;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #cc9900, #ff6600);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .thanks-container h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(45deg, #cc9900, #ff6600);
+            border-radius: 3px;
+        }
+
+        .names {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .names li {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .names li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 153, 0, 0.3), transparent);
+            transition: left 0.7s ease;
+        }
+
+        .names li:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 153, 0, 0.15);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 153, 0, 0.4);
+        }
+
+        .names li:hover::before {
+            left: 100%;
+        }
+
+        .shine-text {
+            background: linear-gradient(45deg, #cc9900, #ff6600, #cc9900);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            text-shadow: 0 0 10px rgba(255, 153, 0, 0.3), 0 0 20px rgba(255, 153, 0, 0.2);
+        }
+
+        @keyframes shine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .heart {
+            color: #ff3366;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+        }
+
+        .button {
+            background: linear-gradient(45deg, #cc9900, #ff6600);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .toggle-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            background: rgba(0, 0, 0, 0.1);
+            color: #333;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 153, 0, 0.2);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(45deg, #cc9900, #ff6600);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 153, 0, 0.5);
+        }
+
+        /* Help note */
+        .help-note {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .help-note a {
+            color: #cc9900;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .help-note a:hover {
+            text-decoration: underline;
+        }
+
+        /* Text size classes */
+        .text-small .names li {
+            font-size: 24px;
+        }
+
+        .text-large .names li {
+            font-size: 40px;
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            .thanks-container {
+                padding: 25px 20px;
+                border-radius: 16px;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 20px;
+            }
+            
+            .thanks-container h1 {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+            
+            .names li {
+                font-size: 26px;
+                padding: 12px 15px;
+            }
+            
+            .text-small .names li {
+                font-size: 20px;
+            }
+            
+            .text-large .names li {
+                font-size: 32px;
+            }
+            
+            .footer {
+                font-size: 13px;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .thanks-container {
+                padding: 20px 15px;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .thanks-container h1 {
+                font-size: 22px;
+            }
+            
+            .names li {
+                font-size: 22px;
+                padding: 10px 12px;
+            }
+            
+            .text-small .names li {
+                font-size: 18px;
+            }
+            
+            .text-large .names li {
+                font-size: 28px;
+            }
+        }
+
+        /* Disable text selection */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="no-select">
+    <div class="thanks-container">
+        <div class="controls">
+            <button class="button" id="backButton">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <div class="toggle-container">
+                <button class="toggle-btn" id="textSizeToggle" title="Toggle text size">
+                    <i class="fas fa-text-height"></i>
+                </button>
+            </div>
+        </div>
+        
+        <img src="/assets/img/ASU_Jordan_logo_alt.png" alt="ASU Jordan Logo" class="logo">
+        <h1>Thanks to Our Contributors!</h1>
+        <ul class="names">
+            <li><span class="shine-text name-item">Qusai</span></li>
+            <li><span class="shine-text name-item">Lina</span></li>
+            <li><span class="shine-text name-item">Hxcker</span></li>
+            <li><span class="shine-text name-item">Osama</span></li>
+            <li><span class="shine-text name-item">Sama</span></li>
+            <li><span class="shine-text name-item">اعشق تمردي</span></li>
+        </ul>
+        
+        <div class="help-note">
+            <p>If you wish to help us, please send a message to <a href="https://wa.me/+962799760271" target="_blank">ASU-Requests</a> on WhatsApp Community Group</p>
+        </div>
+        
+        <div class="footer">
+            Made with <span class="heart"><i class="fas fa-heart"></i></span> for our amazing team
+        </div>
+    </div>
+
+    <script>
+        // Disable keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+U, etc.
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                (e.ctrlKey && e.key === 'U') ||
+                (e.ctrlKey && e.key === 'S') ||
+                (e.ctrlKey && e.key === 'R')
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Add touch interaction for mobile
+        document.querySelectorAll('.names li').forEach(item => {
+            item.addEventListener('touchstart', function() {
+                this.classList.add('hover-effect');
+            });
+            
+            item.addEventListener('touchend', function() {
+                this.classList.remove('hover-effect');
+            });
+        });
+
+        // Prevent zoom on double-tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // New functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Back button functionality
+            document.getElementById('backButton').addEventListener('click', function() {
+                window.history.back();
+            });
+            
+            // Text size toggle
+            const textSizeToggle = document.getElementById('textSizeToggle');
+            let textSizeState = 0; // 0: normal, 1: small, 2: large
+            textSizeToggle.addEventListener('click', function() {
+                const container = document.querySelector('.thanks-container');
+                // Remove any existing text size classes
+                container.classList.remove('text-small', 'text-large');
+                
+                // Cycle through text sizes
+                textSizeState = (textSizeState + 1) % 3;
+                
+                if (textSizeState === 1) {
+                    container.classList.add('text-small');
+                } else if (textSizeState === 2) {
+                    container.classList.add('text-large');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

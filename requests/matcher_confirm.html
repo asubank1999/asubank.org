@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classmate Matching Service | University</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            background: linear-gradient(to right, #1a2a6c, #2a3a8c);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 2rem;
+            color: #fdbb2d;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .info-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #1a2a6c;
+        }
+
+        .info-section h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-section p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            background-color: #fff9db;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffec99;
+            margin: 20px 0;
+        }
+
+        .highlight h3 {
+            color: #e67700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .privacy-notice {
+            background-color: #e7f5ff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #a5d8ff;
+            margin: 20px 0;
+        }
+
+        .privacy-notice h3 {
+            color: #1971c2;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #1a2a6c, #2a3a8c);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #2a3a8c, #3a4a9c);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background-color: #dee2e6;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-help {
+            background: linear-gradient(to right, #fdbb2d, #ffcc44);
+            color: #333;
+        }
+
+        .btn-help:hover {
+            background: linear-gradient(to right, #ffcc44, #ffdd66);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-content h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .whatsapp-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #25D366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-link:hover {
+            background-color: #128C7E;
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .btn {
+                padding: 14px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1>Classmate Matching Service</h1>
+            <p>Find classmates with similar schedules and interests</p>
+        </header>
+        
+        <div class="content">
+            <div class="info-section">
+                <h2><i class="fas fa-info-circle"></i> How It Works</h2>
+                <p>Fill out your profile with your academic interests, class schedule, and hobbies. Our system will match you with classmates who share at least 50% compatibility.</p>
+                
+                <div class="highlight">
+                    <h3><i class="fas fa-hourglass-half"></i> Important: Please Be Patient</h3>
+                    <p>After submitting your profile, you'll need to wait until another student with similar interests also submits their profile. This process may take some time depending on how many students are using the service.</p>
+                </div>
+                
+                <div class="privacy-notice">
+                    <h3><i class="fas fa-shield-alt"></i> Your Privacy Matters</h3>
+                    <p>Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email.</p>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h2><i class="fas fa-envelope"></i> Email Verification Required</h2>
+                <p>To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.</p>
+                
+                <div class="highlight">
+                    <h3><i class="fas fa-phone-alt"></i> Need Assistance?</h3>
+                    <p>If you encounter any issues or have questions about the service, please call or WhatsApp us at: <strong>00962799760271</strong></p>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="agreeBtn">
+                    <i class="fas fa-check-circle"></i> I Agree
+                </button>
+                <button class="btn btn-secondary" id="disagreeBtn">
+                    <i class="fas fa-times-circle"></i> I Disagree
+                </button>
+                <button class="btn btn-help" id="helpBtn">
+                    <i class="fas fa-question-circle"></i> I Need Help
+                </button>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-hands-helping"></i> Need Assistance?</h2>
+            <p>If you're still having trouble understanding how this service works, our support team is here to help!</p>
+            <p>Message this number on WhatsApp and we'll guide you through the process:</p>
+            <a href="#" class="whatsapp-link">
+                <i class="fab fa-whatsapp"></i> 00962799760271
+            </a>
+            <p style="margin-top: 20px; font-size: 0.9rem;">Our support hours are Sun-Thu</p>
+        </div>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const agreeBtn = document.getElementById('agreeBtn');
+        const disagreeBtn = document.getElementById('disagreeBtn');
+        const helpBtn = document.getElementById('helpBtn');
+        const helpModal = document.getElementById('helpModal');
+        const closeModal = document.querySelector('.close-modal');
+        
+        // Event listeners
+        agreeBtn.addEventListener('click', function() {
+            // Redirect to matcher.html
+            window.location.href = '/requests/matcher';
+        });
+        
+        disagreeBtn.addEventListener('click', function() {
+            // Redirect to index.html
+            window.location.href = '/';
+        });
+        
+        helpBtn.addEventListener('click', function() {
+            helpModal.style.display = 'flex';
+        });
+        
+        closeModal.addEventListener('click', function() {
+            helpModal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === helpModal) {
+                helpModal.style.display = 'none';
+            }
+        });
+        
+        // Add some interactive effects
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4DE6YQ7Q2M');
+</script>
+</body>
+</html>

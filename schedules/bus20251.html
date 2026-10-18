@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جدول مواعيد الحافلات الجامعية</title>
+<style>
+:root {
+  --primary:#003366;
+  --secondary:#0066cc;
+  --accent:#ffb400;
+  --light-bg:#f9fafc;
+  --dark-bg:#1a1d23;
+  --card-light:#fff;
+  --card-dark:#2a2f38;
+  --text-light:#222;
+  --text-dark:#f5f5f5;
+  --transition:all 0.3s ease;
+}
+body {
+  background: var(--light-bg);
+  color: var(--text-light);
+  font-family: "Cairo", sans-serif;
+  transition: var(--transition);
+}
+body.dark {
+  background: var(--dark-bg);
+  color: var(--text-dark);
+}
+header {
+  background: linear-gradient(135deg,var(--primary),var(--secondary));
+  color: #fff;
+  text-align: center;
+  padding: 25px 10px;
+}
+header h1 { margin: 0; font-size: 2rem; }
+.container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+.controls { display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; margin-bottom:20px; }
+input, select, button, a {
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+input, select {
+  padding:10px 15px;
+  border:1px solid #ccc;
+}
+button, a {
+  padding:10px 16px;
+  cursor:pointer;
+  font-weight:bold;
+  text-decoration:none;
+}
+button:hover, a:hover { opacity:0.9; }
+.btn { background:var(--secondary); color:#fff; }
+.btn.active { background:#004a99; }
+.back-btn { background:var(--accent); color:#fff; }
+.theme-toggle { background:#444; color:#fff; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
+.card {
+  background:var(--card-light);
+  border-radius:10px;
+  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+  transition:var(--transition);
+}
+body.dark .card { background:var(--card-dark); }
+.card:hover { transform:translateY(-5px); }
+.card-header {
+  background:var(--primary);
+  color:#fff;
+  padding:15px;
+  font-weight:bold;
+  font-size:1.2rem;
+}
+.card-body { padding:15px 20px; }
+.pickup { color:var(--accent); margin-bottom:10px; line-height:1.6; font-weight:600; }
+.times { margin-bottom:8px; }
+.label { color:var(--primary); font-weight:bold; }
+body.dark .label { color:#5aa8ff; }
+.time-badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:5px; }
+.badge {
+  background:var(--light-bg);
+  border-radius:20px;
+  padding:5px 10px;
+  font-size:0.9rem;
+}
+body.dark .badge { background:#333; color:#eee; }
+.no-results { grid-column:1/-1; text-align:center; padding:25px; background:#fff; border-radius:10px; }
+body.dark .no-results { background:var(--card-dark); }
+</style>
+</head>
+<body>
+<header><h1>جدول مواعيد الحافلات الجامعية</h1></header>
+
+<div class="container">
+  <div class="controls">
+    <input type="text" id="search" placeholder="ابحث عن منطقة...">
+    <select id="filter">
+      <option value="all">كل الأوقات</option>
+      <option value="am">صباحًا (AM)</option>
+      <option value="pm">مساءً (PM)</option>
+    </select>
+    <button class="btn" id="amBtn">عرض صباحًا</button>
+    <button class="btn" id="pmBtn">عرض مساءً</button>
+    <a href="/" class="back-btn">رجوع</a>
+    <button id="theme" class="theme-toggle">🌙 / ☀️</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const data = [
+{name:"وصفي التل",pickup:"مخابز بسمان، إشارة الرز",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"خلدا",pickup:"الدر المنثور، روان كيك، دوار النعيمات، إشارة البنك العربي، إشارة البشيتي",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"الداخلية - دوار فراس",pickup:"مدرسة سكينة، فندق الريجنسي، مختار مول، فندق القدس، جسر الرأي والدستور",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"الاستقلال",pickup:"شارع الأقصى، كازية الاستقلال، مقابل المستشفى، بعد المستشفى",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"طبربور",pickup:"شارع الشهيد، مقابل KFC، إشارات الأمانة، نيون الجندويل",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"طبربور أبو عليا",pickup:"دوار محكمة الأحداث، دوار الاستقلال، الجامعة التطبيقية",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","4:15"]},
+{name:"الصويفية",pickup:"دوار الصويفية، فاموس، وزارة النقل، إشارة فندق الساوس",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"البيادر - عبدالله غوشة",pickup:"بعد دوار الشعب، شارع ياسر مول، صيدلية سعد، الدوار الثامن عبدالله غوشة، فندق جنيفا، دوار الكيلو، شارع المدينة",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"رغدان",pickup:"مجمع رغدان، تكية أم علي، شارع المحطة، الاستقلال",morning:["7:00","8:00","9:00","10:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"الجامعة الأردنية",pickup:"طلوع نيفين، شارع الجامعة، مستشفى الجامعة، جامع الجامعة، حضرموت، التعليم العالي",morning:["7:15","8:15","9:15","10:15"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"ضاحية الرشيد",pickup:"مخبز الجوهرة، ميني ماركت، سكن أميمة، مدارس المنهل، سكن عمّون",morning:["7:15","8:15","9:15","10:15"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"الزرقاء - ياجوز",pickup:"مجمع الزرقاء الجديد قرب الجامع، إشارات رحمة، إشارات حسين، عوجان، الشمالي، ياجوز",morning:["6:45","8:15","9:15"],evening:["1:15","2:15","4:15","5:15"]},
+{name:"مرج الحمام",pickup:"دوار البرديني، دوار الدلة، دوار الجندي، الغرفة الرابعة، كلية لومينوس، طريق المطار، كازية المناصير",morning:["6:45","8:00"],evening:["1:15","2:15","4:15"]},
+{name:"ماركا",pickup:"جسر ماركا، إشارات الترخيص، النجمة، نزول عين غزال، ليالي الشرق، إشارات طبربور",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","4:15","5:15"]},
+{name:"الزرقاء الجديدة 36",pickup:"إشارة بنك العربي، مقابل سامح مول، إشارات سيفوي، دوار معصوم، إشارات الزواهرة، دوار خميس، بيرين",morning:["6:45","8:00"],evening:["1:15","2:15","4:15","5:15"]},
+{name:"حي نزال - الياسمين",pickup:"شارع الحرية، دوار الحمايدة، إشارات أبو زغلة، إشارة الإرسال، دوار الخريطة، حي نزال، راس العين، طلوع المهاجرين، جسر مستشفى عاقلة",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"شارع الحرية",pickup:"شارع الحرية، دوار الحمايدة، إشارات أبو زغلة، إشارة الإرسال، دوار الخريطة، حي نزال، راس العين، طلوع المهاجرين، الدوار الثالث",morning:["6:45","7:45"],evening:["1:15","2:15","4:15","5:15"]},
+{name:"الهاشمي",pickup:"وزارة الصحة، إشارات مستشفى حمزة، العنتباوي، السوق، كازية توتال، مخابز تفاحة، إشارات العنبتاوي",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","4:15","5:15"]},
+{name:"الوحدات",pickup:"دوار الشرق الأوسط، إشارات الثلاثين، وادي الرمم، الاستقلال",morning:["7:00","8:00","9:00"],evening:["1:15","2:15","3:15","4:15","5:15"]},
+{name:"عين الباشا",pickup:"مخابز زي العسل، دوار عين الباشا، دوار المفتاح",morning:["7:00"],evening:["4:15"]},
+{name:"البقعة",pickup:"مجمع البقعة، البنك العربي",morning:["7:00"],evening:["4:15"]},
+{name:"الرصيفة",pickup:"المنتزهات، مخيم شنلر، جسر ماركا",morning:["6:45"],evening:["4:15"]},
+{name:"السلط",pickup:"مجمع السلط، السروات، دوار الكمالية، الجسر، إشارات الدوريات، دوار الأميرة بسمة، أبو نصير",morning:["6:50"],evening:["4:15"]},
+{name:"صويلح",pickup:"بنك القاهرة عمان، إشارات الدوريات، دوار الأميرة بسمة، أبو نصير",morning:["7:15","8:15","9:15"],evening:["1:15","2:15","4:15"]}
+];
+
+function render(list, mode="all"){
+const grid=document.getElementById("grid");
+grid.innerHTML="";
+if(list.length===0){grid.innerHTML='<div class="no-results">لا توجد نتائج</div>';return;}
+list.forEach(item=>{
+let am = mode!=="pm"? item.morning.map(t=>`<span class="badge">${t} AM</span>`).join("") : "";
+let pm = mode!=="am"? item.evening.map(t=>`<span class="badge">${t} PM</span>`).join("") : "";
+const el=document.createElement("div");
+el.className="card";
+el.innerHTML=`<div class="card-header">${item.name}</div>
+<div class="card-body">
+<div class="pickup">📍 ${item.pickup}</div>
+<div class="times"><span class="label">مواعيد صباحية:</span><div class="time-badges">${am}</div></div>
+<div class="times"><span class="label">مواعيد مسائية:</span><div class="time-badges">${pm}</div></div>
+</div>`;
+grid.appendChild(el);
+});
+}
+
+function filterData(mode="all"){
+const search=document.getElementById("search").value.trim();
+const res=data.filter(d=>d.name.includes(search)||d.pickup.includes(search));
+render(res,mode);
+}
+
+document.getElementById("amBtn").addEventListener("click",()=>{filterData("am");});
+document.getElementById("pmBtn").addEventListener("click",()=>{filterData("pm");});
+document.getElementById("filter").addEventListener("change",e=>filterData(e.target.value));
+document.getElementById("search").addEventListener("input",()=>filterData(document.getElementById("filter").value));
+document.getElementById("theme").addEventListener("click",()=>document.body.classList.toggle("dark"));
+render(data,"all");
+</script>
+</body>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4DE6YQ7Q2M');
+</script>
+</html>

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University WhatsApp Links & Resources</title>
+  <style>
+    /* Modern CSS Reset and Variables */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      --secondary-gradient: linear-gradient(135deg, #007BFF, #00a8ff);
+      --accent-color: #fd79a8;
+      --text-color: #2d3436;
+      --text-light: #636e72;
+      --bg-color: #f9f9f9;
+      --card-bg: #ffffff;
+      --dark-bg: #1e272e;
+      --dark-card: #2f3640;
+      --dark-text: #f5f6fa;
+      --dark-light-text: #dcdde1;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.15);
+      --border-radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: var(--transition);
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(0, 123, 255, 0.05) 0%, transparent 20%);
+      background-attachment: fixed;
+    }
+
+    body.dark-mode {
+      background-color: var(--dark-bg);
+      color: var(--dark-text);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(0, 123, 255, 0.1) 0%, transparent 20%);
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 90%;
+      margin: 100px auto 30px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      opacity: 0;
+      animation: fadeIn 1s ease-in-out forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--primary-gradient);
+    }
+
+    body.dark-mode .container {
+      background-color: var(--dark-card);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 30px;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 4px;
+      background: var(--primary-gradient);
+      border-radius: 2px;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-top: 50px;
+      color: var(--text-color);
+      background: linear-gradient(90deg, rgba(108, 92, 231, 0.1), transparent);
+      padding: 15px;
+      border-radius: var(--border-radius);
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.dark-mode h2 {
+      color: var(--dark-text);
+      background: linear-gradient(90deg, rgba(108, 92, 231, 0.2), transparent);
+    }
+
+    h2::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 5px;
+      background: var(--primary-gradient);
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin-top: 30px;
+      color: var(--text-color);
+      border-left: 4px solid;
+      border-image: var(--secondary-gradient) 1;
+      padding-left: 15px;
+      margin-bottom: 15px;
+    }
+
+    body.dark-mode h3 {
+      color: var(--dark-text);
+    }
+
+    .link-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .whatsapp-link {
+      display: flex;
+      align-items: center;
+      padding: 18px 20px;
+      text-align: left;
+      background: var(--primary-gradient);
+      color: #fff;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .whatsapp-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--secondary-gradient);
+      opacity: 0;
+      transition: var(--transition);
+      z-index: -1;
+    }
+
+    .whatsapp-link:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .whatsapp-link:hover::before {
+      opacity: 1;
+    }
+
+    .whatsapp-link.group::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTM4MC45IDk3LjFjLTQ5LjctNDkuNy0xMjkuMy00OS43LTE3OSAwbC0xMCAxMEMxNDkuNCAxMjcuNiAxMzkuOSAxNTkuNiAxMzkuOSAxOTJjMCA4LjggNy4yIDE2IDE2IDE2czE2LTcuMiAxNi0xNmMwLTI4LjEgMTAuNy01NC4zIDMwLjItNzQuMmwxMC0xMGMyOC4xLTI4LjEgNzMuNy0yOC4xIDEwMS44IDBsMTAgMTBjMTkuNSAxOS41IDMwLjIgNDUuNyAzMC4yIDczLjhzLTEwLjcgNTQuMy0zMC4yIDczLjhMMzA0IDMwNWMtNDUuOSA0NS45LTExOS4yIDQ1LjktMTY1LjIgMGwtMTMuMi0xMy4yYy0zLjgtMy44LTkuOS0zLjgtMTMuNyAwbC0zMjQzMy40Yy0zLjggMy44LTMuOCA5LjkgMCAxMy43bDEzLjIgMTMuMmM0OS45IDQ5LjkgMTE1LjIgNzcuMiAxODEgNzcuMSA2NS44IDAgMTIwLjgtMjQuMyAxNjYuNy02OS4ybDgzLjctODMuNGM0OS43LTQ5LjcgNDkuNy0xMjkuMyAwLTE3OXoiLz48L3N2Zz4=');
+      background-size: contain;
+      margin-right: 12px;
+      filter: brightness(0) invert(1);
+      z-index: 2;
+      position: relative;
+    }
+
+    .whatsapp-link.video::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTQ2NCAzMjBjMC0zMy41LTI3LjItNjAuOC02MC44LTYwLjhIMTEyYy0zMy41IDAtNjAuOCAyNy4yLTYwLjggNjAuOHYxMjhjMCAzMy41IDI3LjIgNjAuOCA2MC44IDYwLjhoMjkxLjJjMzMuNSAwIDYwLjgtMjcuMiA2MC44LTYwLjhWMzIweiIvPjxwYXRoIGZpbGw9IndoaXRlIiBkPSJNMjA4IDI4MHY0MGMwIDYuNiA3LjIgMTAuOCAxMi45IDcuNGwxMjAtNjBjNS43LTMuNCA1LjctMTEuNCAwLTE0LjhsLTEyMC02MGMtNS43LTMuNC0xMi45IDEuMS0xMi45IDcuNFYyODF6Ii8+PC9zdmc+');
+      background-size: contain;
+      margin-right: 12px;
+      filter: brightness(0) invert(1);
+      z-index: 2;
+      position: relative;
+    }
+
+    .arabic-translation {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-top: 8px;
+      margin-bottom: 20px;
+      font-style: italic;
+      padding: 10px 15px;
+      background-color: rgba(108, 92, 231, 0.05);
+      border-radius: 8px;
+    }
+
+    body.dark-mode .arabic-translation {
+      color: var(--dark-light-text);
+      background-color: rgba(108, 92, 231, 0.1);
+    }
+
+    .back-button, .theme-toggle {
+      position: fixed;
+      padding: 14px 24px;
+      background: var(--secondary-gradient);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 1000;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-button {
+      top: 20px;
+      left: 20px;
+    }
+
+    .theme-toggle {
+      top: 20px;
+      right: 20px;
+    }
+
+    .back-button::before {
+      content: '←';
+      font-weight: bold;
+    }
+
+    .back-button:hover, .theme-toggle:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .disclaimer {
+      margin-top: 50px;
+      padding: 25px;
+      background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(108, 92, 231, 0.1));
+      border-left: 4px solid;
+      border-image: var(--secondary-gradient) 1;
+      border-radius: var(--border-radius);
+      font-size: 0.95rem;
+      color: var(--text-color);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    body.dark-mode .disclaimer {
+      background: linear-gradient(135deg, rgba(0, 123, 255, 0.15), rgba(108, 92, 231, 0.15));
+      color: var(--dark-text);
+    }
+
+    .disclaimer strong {
+      background: var(--secondary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .disclaimer a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .disclaimer a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--secondary-gradient);
+      transition: var(--transition);
+    }
+
+    .disclaimer a:hover {
+      color: #007BFF;
+    }
+
+    .disclaimer a:hover::after {
+      width: 100%;
+    }
+
+    body.dark-mode .disclaimer a {
+      color: var(--dark-text);
+    }
+
+    /* Scroll to Top and Bottom Buttons */
+    .scroll-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 55px;
+      height: 55px;
+      background: var(--primary-gradient);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: var(--shadow);
+    }
+
+    .scroll-button:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .scroll-button.bottom {
+      bottom: 90px;
+    }
+
+    /* New Pharmacy Section */
+    .pharmacy-section {
+      margin-top: 40px;
+    }
+
+    .pharmacy-section h2 {
+      background: linear-gradient(90deg, rgba(253, 121, 168, 0.1), transparent);
+    }
+
+    body.dark-mode .pharmacy-section h2 {
+      background: linear-gradient(90deg, rgba(253, 121, 168, 0.2), transparent);
+    }
+
+    .pharmacy-section h2::before {
+      background: linear-gradient(135deg, #fd79a8, #e84393);
+    }
+
+    /* Search Bar */
+    .search-container {
+      margin: 30px 0;
+      position: relative;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 1rem;
+      border: 2px solid transparent;
+      border-radius: var(--border-radius);
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjM2RTcyIiBkPSJNNDE2IDIwOGMwLTYwLjYtNDIuOC0xMDkuMi05OS4yLTEwOS4yUzIxNy42IDE0Ny40IDIxNy42IDIwOHM0Mi44IDEwOS4yIDk5LjIgMTA5LjJTNDE2IDI2OC42IDQxNiAyMDh6TTUwMC44IDQ0Ny42bC0xMjEtMTIxQzQxOC41IDI5MS4yIDQ0OCAyNTMuMiA0NDggMjA4YzAtOTcuMi03OC44LTE3Ni0xNzYtMTc2Uzk2IDExMC44IDk2IDIwOHM3OC44IDE3NiAxNzYgMTc2YzQ1LjIgMCA4My4yLTI5LjUgMTE4LjYtNjguMmwxMjEgMTIxYzQuNyA0LjcgMTIuMyA0LjcgMTcgMGwyOC4yLTI4LjJjNC43LTQuNyA0LjctMTIuMyAwLTE3eiIvPjwvc3ZnPg==');
+      background-repeat: no-repeat;
+      background-position: 20px center;
+      background-size: 20px;
+      padding-left: 55px;
+    }
+
+    body.dark-mode .search-bar {
+      background-color: var(--dark-card);
+      color: var(--dark-text);
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZGNkZGUxIiBkPSJNNDE2IDIwOGMwLTYwLjYtNDIuOC0xMDkuMi05OS4yLTEwOS4yUzIxNy2IDE0Ny40IDIxNy42IDIwOHM0Mi44IDEwOS4yIDk5LjIgMTA5LjJTNDE2IDI2OC42IDQxNiAyMDh6TTUwMC44IDQ0Ny42bC0xMjEtMTIxQzQxOC41IDI5MS4yIDQ0OCAyNTMuMiA0NDggMjA4YzAtOTcuMi03OC44LTE3Ni0xNzYtMTc2Uzk2IDExMC44IDk2IDIwOHM3OC44IDE3NiAxNzYgMTc2YzQ1LjIgMCA4My4yLTI5LjUgMTE4LjYtNjguMmwxMjEgMTIxYzQuNyA0LjcgMTIuMyA0LjcgMTcgMGwyOC4yLTI4LjJjNC43LTQuNyA0LjctMTIuMyAwLTE3eiIvPjwvc3ZnPg==');
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: #6c5ce7;
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .link-container {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 25px;
+        margin: 80px auto 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.7rem;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+      }
+
+      .link-container {
+        grid-template-columns: 1fr;
+      }
+
+      .back-button, .theme-toggle {
+        padding: 12px 18px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.7rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      .scroll-button {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+      }
+
+      .scroll-button.bottom {
+        bottom: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Back to Home and Theme Toggle Buttons -->
+  <a href="/guides/importantlinks" class="back-button">Back to Home</a>
+  <button class="theme-toggle" onclick="toggleTheme()">Switch to Dark Mode</button>
+
+  <!-- Scroll to Top and Bottom Buttons -->
+  <button class="scroll-button" onclick="scrollToTop()">↑</button>
+  <button class="scroll-button bottom" onclick="scrollToBottom()">↓</button>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>University WhatsApp Links & Resources</h1>
+    
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-bar" placeholder="Search for groups or resources..." onkeyup="filterGroups()">
+    </div>
+
+    <!-- General University Groups Section -->
+    <h2>General University Groups</h2>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/FXEX5McPGmv0hxMYu1DS4X" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">باصات العلوم التطبيقيه🚎</a>
+      <a href="https://chat.whatsapp.com/GrPfNbuHJFi35hdlhf3S2d" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">باصات طلاب الجامعة</a>
+      <a href="https://chat.whatsapp.com/HrZqzeVh80OGuEinCokdSX" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">قروب تبع دريسه بس</a>
+      <a href="https://chat.whatsapp.com/KofrrWz7FrR2fM68370i9t" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الرياضة و الابتكار ( شعبة 3 )</a>
+      <a href="https://chat.whatsapp.com/DDRN4vkegzhEYTadtodJoT" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">C.S | ASU 👩🏻‍💻</a>
+      <a href="https://chat.whatsapp.com/Ipe11O8CpCCKrpUcTIqlQp" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">طلاب الجامعة (للدراسة) 2</a>
+      <a href="https://chat.whatsapp.com/KmTeJjk5a9uAV6cHct3SZ5" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">🩷👧🏻 Fiters Ladies👧🏻🩷</a>
+      <a href="https://chat.whatsapp.com/DTvlc3X0yB3LekC5pZlrCC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">XRGD - ASU</a>
+    </div>
+    <p class="arabic-translation">(مجموعة طلاب الجامعة، ناشطو الجامعة، مجموعة دردشة طلابية،)</p>
+
+    <!-- Pharmacy Section -->
+    <div class="pharmacy-section">
+      <h2>Pharmacy</h2>
+      
+      <h3>First Year</h3>
+      <div class="link-container">
+        <a href="https://chat.whatsapp.com/BnXyii3zklZ4a7NOZyAx1L" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">2025 pharmacists 💊🥼</a>
+        <a href="https://chat.whatsapp.com/CgQziiFMxKDFn2RCr8UaYu" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة 1</a>
+        <a href="https://chat.whatsapp.com/JbPcYR5PejYDSbHTCsUnC3" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مقدمة في ممارسة الصيدلية</a>
+        <a href="https://chat.whatsapp.com/JmupqsDMW621p3OQJpWIge" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء عامة عملي</a>
+        <a href="https://chat.whatsapp.com/CWHSt7MNPO48Hb5RTeEPMl" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">علوم حياتية 1</a>
+        <a href="https://chat.whatsapp.com/FAsnr5vDe88864EuiWTKSR" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الريادة و الابتكار شعبة(٥)</a>
+        <a href="https://chat.whatsapp.com/JlNqUSe8So5DepMFiJoAOY" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">القيادة و المسؤولية المجتمعية شعبة(٥)</a>
+        <a href="https://chat.whatsapp.com/CH0mMGcSzsCBrt34WSyDMP" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات الحياتية شعبة (٥)</a>
+        <a href="https://chat.whatsapp.com/KX4pGRzrkSf3rhcpDA9alM" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Cyber security 🫀</a>
+        <a href="https://chat.whatsapp.com/INLUwjqCsAvIkfY3JPRKzw" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء عامه شعبه (4)</a>
+        <a href="https://chat.whatsapp.com/JJyA2sHiY4GCclJtPacqjd" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء عامه ١ شعبه (2)</a>
+      </div>
+      
+      <h3>Second Year</h3>
+      <div class="link-container">
+        <a href="https://chat.whatsapp.com/BBmdm1iJpSt3JNuQsCgYEw" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Organic Chemistry 2</a>
+        <a href="https://chat.whatsapp.com/FLlGlNAZEmgLIeZ4cPc7Tp" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy and Physiology 2</a>
+        <a href="https://chat.whatsapp.com/BWwuMyJVcqoL6B5B7FfOaU" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry Lab</a>
+        <a href="https://chat.whatsapp.com/Gia6geI1S29FiLZv6XSyOl" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry</a>
+        <a href="https://chat.whatsapp.com/LUj2XjvZmLv9iOAY91UHZP" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Microbiology and Immunology</a>
+        <a href="https://chat.whatsapp.com/CsborT23sriHsVDpZe0LhE" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Microbiology Lab</a>
+        <a href="https://chat.whatsapp.com/H1uMHoE8fSe0SGWCLOMtkI" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">إحصاء حيوي تطبيقي</a>
+      </div>
+      
+      <h3>Third Year</h3>
+      <div class="link-container">
+        <a href="https://chat.whatsapp.com/HA7waBjQmfmCMMIZ7kyYPX" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تحليل آلي</a>
+        <a href="https://chat.whatsapp.com/DQm252YuMLvFO9nNOxsw7c" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء تحليلية وتحليل آلي عملي</a>
+        <a href="https://chat.whatsapp.com/G82a090e8TOHgTPUlXJeH1" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">كيمياء دوائية 1</a>
+        <a href="https://chat.whatsapp.com/Cg2YkW2Cmgq3sFQGM1XaQG" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">علم الأدوية 1</a>
+        <a href="https://chat.whatsapp.com/GGrAlYgxZ3r3UV7t5b6yfx" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلانيات 2</a>
+        <a href="https://chat.whatsapp.com/EGV9PZwsCI9BLXxr8P5h4R" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلانيات 2 عملي</a>
+      </div>
+      
+      <h3>Fourth Year</h3>
+      <div class="link-container">
+        <a href="https://chat.whatsapp.com/LBhjsj5ILk1K6K6BBbyrhb" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Drug Design</a>
+        <a href="https://chat.whatsapp.com/Cd6pEG5NTwgFCXlGEwSvUJ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacochemistry Lab</a>
+        <a href="https://chat.whatsapp.com/CTcsAT5dfceLQOtVuytXGM" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacochemistry</a>
+        <a href="https://chat.whatsapp.com/F2MNFr9Z6VD02KzMHXrZym" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacokinetics</a>
+        <a href="https://chat.whatsapp.com/BqaGt0mmeKU5GcqITXr5CC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmacokinetics Lab</a>
+        <a href="https://chat.whatsapp.com/LISxqTlYHXUL7cgdekh5Gk" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Training 2</a>
+        <a href="https://chat.whatsapp.com/GKxH8N3WVQUFkKVpX5p5Wd" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Pharmaceutical Technology</a>
+        <a href="https://chat.whatsapp.com/GJpEbHc5j1wBmxkpX25vSC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Immunology</a>
+      </div>
+      
+      <h3>Fifth Year</h3>
+      <div class="link-container">
+        <a href="https://chat.whatsapp.com/Dtsvq4szJ3fL2EQLM8Ldnf" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلية سريرية ومداواة 2</a>
+        <a href="https://chat.whatsapp.com/CHybspEQSzYDpQRopoxjYj" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">صيدلية سريرية ومداواة عملي</a>
+        <a href="https://chat.whatsapp.com/K5aHNurYgewHU5ANcriHRv" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">اقتصاديات صيدلانية</a>
+        <a href="https://chat.whatsapp.com/Gbx9DckqRk6IJRr9tth5it" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مستحضرات تجميل</a>
+        <a href="https://chat.whatsapp.com/JYIWpJzzK3D8m7uDHQ6uxh" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تسويق</a>
+        <a href="https://chat.whatsapp.com/By0ABI17znsLhQo4SeEHVb" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">المعلومات الدوائية</a>
+        <a href="https://chat.whatsapp.com/LuEGwzhpA0a3syWYrRooeG" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">انظمة إيصال الدواء المتطورة</a>
+      </div>
+    </div>
+
+    <!-- Clinical Nutrition and Dietetics Section -->
+    <h2>Clinical Nutrition and Dietetics</h2>
+    <h3>First Year</h3>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/EArT9uav9K561KPY0YxEwp" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biostatistics</a>
+      <a href="https://chat.whatsapp.com/FvWjkA193am6lQCoxu5hkq" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Organic Chemistry</a>
+      <a href="https://chat.whatsapp.com/JGvGZ0f1J7l0hqFJfQ0v5v" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Anatomy and Physiology</a>
+      <a href="https://chat.whatsapp.com/EGqJQ4QqJQqJQqJQqJQqJQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Principles of Nutrition</a>
+    </div>
+    
+    <h3>Second Year</h3>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/EGqJQ4QqJQqJQqJQqJQqJQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Nutrition Assessment</a>
+      <a href="https://chat.whatsapp.com/EGqJQ4QqJQqJQqJQqJQqJQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Food Science</a>
+      <a href="https://chat.whatsapp.com/EGqJQ4QqJQqJQqJQqJQqJQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Biochemistry</a>
+    </div>
+
+    <!-- IT and Computer Science Section -->
+    <h2>IT and Computer Science</h2>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/Hb1jON8CrpoK6nrG0TCO8z" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Fiters IT -2</a>
+      <a href="https://chat.whatsapp.com/K3XJo2k4F0O7ELC0th8LW9" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مقدمة نظم معلومات اداريه</a>
+      <a href="https://chat.whatsapp.com/F0aA22nXXJpEy3nqtb6Dp5" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تراسل البيانات -3</a>
+      <a href="https://chat.whatsapp.com/Fq8QJOkOzWmBMyTqQx2nKd" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">اساسيات الفيزيا الكهربائية-1</a>
+      <a href="https://chat.whatsapp.com/Iu4HzSTAoWvIdqTq0RE16U" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Engineering Materials</a>
+    </div>
+
+    <!-- Business and Finance Section -->
+    <h2>Business and Finance</h2>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/DIMyLhXUDnc8vKlnAxecAA" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">تسوق خدمات ماليه شعبه 1</a>
+    </div>
+
+    <!-- Life Skills Section -->
+    <h2>Life Skills</h2>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/Bbxeiq1sL3qEeDoPKqnbHt" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات الحياة والعمل د رفقه السالم</a>
+      <a href="https://chat.whatsapp.com/KCYHueaQCnc3ZfI7Y499wW" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">مهارات الحياة والعمل د هناء فريحات</a>
+    </div>
+
+    <!-- Science Groups Section -->
+    <h2>Science Groups</h2>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/FrfCv7CTcoxGCEFWeuKpSN" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 1</a>
+      <a href="https://chat.whatsapp.com/ECNdBtagN3K4p4ETuygtPm" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 2</a>
+      <a href="https://chat.whatsapp.com/J6Z1Uam6Y7JJzMeT0QVTNQ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 3</a>
+      <a href="https://chat.whatsapp.com/DSnlGaprvmpGrUnOxac2ce" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 4</a>
+      <a href="https://chat.whatsapp.com/IFkfNBG2CwM3tzLd22SHEV" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 5</a>
+      <a href="https://chat.whatsapp.com/HrO6vpRfclW3SajMHoGAoB" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 6</a>
+      <a href="https://chat.whatsapp.com/IZ7kmrrtHAx0AaPFUvqjRl" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 7</a>
+      <a href="https://chat.whatsapp.com/EVOPrx2HaBPAyHpe8cWt1J" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 8</a>
+      <a href="https://chat.whatsapp.com/Ju3G3RdJLdiLaUaCpbTTLC" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 9</a>
+      <a href="https://chat.whatsapp.com/EI3Pb9VvYjEIqy26Kmfst1" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 10</a>
+      <a href="https://chat.whatsapp.com/GvHW4iThlIKK7ZjjOEzgjZ" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 11</a>
+      <a href="https://chat.whatsapp.com/Gv6e9sKCmhPHIJIjYnW3LV" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">الكيمياء العامة شعبة 12</a>
+    </div>
+
+    <!-- Physiotherapy Section -->
+    <h2>Physiotherapy</h2>
+    <div class="link-container">
+      <a href="https://chat.whatsapp.com/F1GOtL3QWzmByCu19EBqg1" class="whatsapp-link group" target="_blank" rel="noopener noreferrer">Physiotherapy 2025</a>
+    </div>
+
+    <!-- Disclaimer Section -->
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> This page is created for educational purposes only. The WhatsApp group links are collected from various sources and may change over time. Please verify the group details before joining. If you find any broken links or have suggestions for additional groups, please contact the page administrator.
+    <!-- Educational Resources Section -->
+    <h2>Educational Resources</h2>
+
+    <h3>General University Resources</h3>
+    <div class="link-container">
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/ETGWZbRkPQ9EixYUBxYl6XYBiBWrqxWKf5fzW42rH9gCgg?e=zb8elB" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Week 1 Lecture 1: Importance of Probability and Statistics</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EfTVHS-oHa1NqVI-Twf0nzIB72Jg21cVcRQFR_1hhXnPqg?e=ORedW6" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Week 1 Lecture 2: Data Definitions and Classifications</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EelYjBJzE6lAgUdIPllL4KMB046P4vNqpIYmR6f7xUZ9Vw?e=x7P8pc" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Lecture 3: Counting Methods and Multiplication Rule</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EaxmTCPB9J9Nm5-616_x5BgBkPmHwj3IODhPiOZXEQeLJQ?e=5g1kV9" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Factorial</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/ESgvMPOOjVpLtuNHBnIRcskBVMB0-am2gQA-7YihurjQMg?e=7oJJIQ" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Combinations</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EVSQgALMUWxGr95-AmzTAysBgCGWrCaB1V_SRdYug0wd3w?e=YQs5Oi" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Combinations Example</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EXzz2roX0U1Jqkr-u8MAFdUBksie7xj3MiXOGf7qRrpAGw?e=Dfwsug" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Experiment and Sample Space</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EeywklXOlUpFl0Zv2dX6SA0BNe6v3r-cho8WLolmRSG-AA?e=Qzp8vw" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Event</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EZuTxioJeXZAissKOcrAWnsB53hrgHSi4A9PWgJE0BxV8Q?e=1tKqKi" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Operations on Events</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EUBQTN-01_xOj34hqScmQDoBjNAPzvgmyM5GyWbxJFZHJw?e=WJVesg" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Probability</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EV0dUqTQmDJElJnsyfMU44kBCVDTasRs1LVrP3CFoYEirw?e=Jlliae" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Probability Laws Example 1</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/ESETkrU5IidAus9mamp7R2IB3XNGw3sEgbxTUIeZ8madSQ?e=COq6yh" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Probability Laws Example 2</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EbM2FC4ZFjtGhqfICVIaks4B5kyrXJKCl9S-Zw47hE79ug?e=6Uc5tA" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Conditional Probability and Examples 1+2</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EQvKn9WLe-RLr6JJPAr2hzsBdO-Mf1RHoOMmRfyHQD2I3Q?e=Y16Jf7" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Conditional Probability (Continued)</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/ERAgIfEw0L9KvwPiI0RKFs4BVTJM-huaKfnD1N8d0bbdaQ?e=nWcOgm" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Independence</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EQQM1wWHlPdGkmVdfUjANaQBoZdd-NjSHhcyV4mrHGEyhg?e=dOIgOd" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Independence (Continued)</a>
+    </div>
+    <p class="arabic-translation">(فيديوهات الأسبوع الأول، تعريفات البيانات، طرق العد، المضروب، التوافيق، التجربة والفضاء العيني، الحدث، العمليات على الحوادث، الاحتمالات، قوانين الاحتمالات، الاحتمال الشرطي، الاستقلالية)</p>
+
+    <h3>Statistics and Probability</h3>
+    <div class="link-container">
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EQP0Zq1l1TtBhlaMEpWzU1sBOvxzrABYQJKevx1FeGQYpg?e=xmwI1X" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Descriptive Statistical Measures</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EdPScHQ-g7xMhTEbNX8JobkBNtm6-3MlyMGD9wHyeoDQNA?e=TA5Lq1" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Mean</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EQ4yFaJCwDRMsIr7C7DDfLoBnij8L6MTgFsp62uc3IMHPg?e=xKoe55" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Median</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EYFGQxFxlYtEttqM5zQB5eUBmkxMWru4jLWU2-0klm-6AQ?e=Ts8BX8" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Mode</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EfsCOWK52kFHuFO7EXaivQ8BU-gQYp8aJBB0A_qTrlfaZw?e=dhCqa7" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Measures of Variation (Dispersion)</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/Ean61uc2m0JGsbg-iXELKbkBBbfVNxsJuh0e5SexxbBS9Q?e=JizOVT" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Variance 1</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EaCreEReOhNOknE_OIrJLQ4BUKEQXt4_yiT6HMU-hqslpA?e=S6zvwE" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Variance 2</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EbgXgIo36_VAkXb9piWuRSEBJXhcrL8imoXzY34MJ6VFeg?e=vzXXJp" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Information About Frequency Table</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EQ_gT1Yqxg5LpPROKGufQa8BFomfoA8zOSMm9jJRvi3T3Q?e=BhyJoa" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">How to Construct Frequency Table</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EcG6fdgD_ktEsiik9oKWICgBRzMxG2mXEjOBxxw5u2zjHg?e=ScnplS" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Example of Frequency Table 1</a>
+    </div>
+    <p class="arabic-translation">(المقاييس الإحصائية الوصفية، المتوسط، الوسيط، المنوال، مقاييس التشتت، التباين، جدول التكرارات)</p>
+
+    <h3>Data Visualization</h3>
+    <div class="link-container">
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/ETyuwue9gQ1OoPtP-9Hycx4B2-fyL2ya9o9TgD9McVYhTA?e=jQl0gJ" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Graphical Representation of Data 1</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EUv6vKWvl21Nr8v7eoig5-IBRy4et1SiRNtwu_YJEKX6xg?e=gmXrNC" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Histogram</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EV7QQ1ym-kxDkTGTumpY6VUBCTaTiv6CNSPPQHbJkJ_LPg?e=MH7x29" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Polygon and Pie Chart 1</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EW70MSozJVNLsZwmSuIHf40BODIb3Gnw40bqRIgu96njBQ?e=A4xl4A" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Polygon and Pie Chart 2</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/Eb3au3iMne9LpL9wqxxOlmUBlAbxXGZR6rqJt81n7YkPyg?e=lVBF4d" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Pie Chart 3</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EWqH2SY-psBFosrQw6_kWY4BQ547IKpo-PPkPBagAj8fuQ?e=RfBqeH" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Ogive</a>
+    </div>
+    <p class="arabic-translation">(تمثيل البيانات بصرياً، الهيستوغرام، المضلع والمخطط الدائري، الأوجيف)</p>
+
+    <h3>Advanced Probability and Statistics</h3>
+    <div class="link-container">
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EX5ZR0ECv6ZPonl8tLk7mPAB1aPh25kJ_XJ5ABb_BQYPug?e=pvKxvF" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Chapter 4: PDF 1</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EXES9dqmcv5EsWW94v_yEhYBMWi9Xa00YeZXfNCwiHWrkg?e=KPECdq" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Chapter 4: PDF 2</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EaBopbNin8pDjKwtP5Ee7xwBq4XhOP0iG9OsPEolM4wBOw?e=ezS4K1" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Properties of Density Function</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/ESIgr1XFXHdHh6bf_EeYYagBS8yDzxWIrzHIRh4kD1vsFw?e=XxzG6Q" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Example of PDF</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/ESA4WAAtvKBGl5rcrSvkKI0BSjA3FmBy00nTmEudvPz87w?e=ljga2f" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Expected Value 1</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/Ee_UPaW-Z9dClA9BhD7u4-cBKDGuSefRBBBIuoUPMJqWWA?e=7PAb2L" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Expected Value 2</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/ER-yDyyrf3VGo1UXVQBBLA8BH8iml7anz5sUHxfS0V5pQA?e=IgrYBO" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Variance and Standard Deviation 1</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EafCAwVdJ41Pnb_1H74viHIBg5wZlRsKag5AXwcIM7vqog?e=oWtpL7" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Variance and Standard Deviation 2</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EWAldCF6OahDlVC-cMVE1vIBXKLOGi0BNA7PBLW0t28NHw?e=10FGcD" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Linear Properties for Expected Value and Variance</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EXjJi9widCtOh9EYuwr8DAQBu5GC9RirUGFtrimXKo3E1g?e=Fqbpjf" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Bivariate Distribution</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EWB0As8l2i5Hu-8dVExvq80B7xcsTXJli_NiCB_oF3YtbQ?e=PwyryC" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Covariance and Correlation</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EX0JE6LUN8xFtHWk0BVJUawB_3XavB74kpJ7J45DbVsgMw?e=DGolLx" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Linear Regression Equation</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/Edu1BWCUKkdDgriDREQ5legBXuI3UbRGp5DtbqTLEUYrPw?e=2Yxy7T" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Binomial PDF</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EdvXSXmJICRCilWrkPm2_qMB7MEOOniWi5D5_c_YiMDj6w?e=wifvqS" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Poisson</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/2_1414/EULWsMD2zNZGjykxTItUb-0BcCVrQ4LYGHZTYvzpZE_1HQ?e=FHYWvz" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Binomial and Poisson</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/2_1414/ETpxe2QF15lGoOTAQthX57MBg20WW_0IGaiJBG3cGmpBeQ?e=Y1Op79" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Normal Distribution</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EcptviUss9hAlQeEG7vCnD4B1reUPQhC_EQ20Lx4a4wK0g?e=xAt0Ji" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Normal Distribution (Continued 1)</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EbHS4oZ4-iJNloPGmrgKYs0BUOsYNPmFbOdg4ZLsF-y8Fg?e=pReKdm" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Normal Distribution (Continued 2)</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EbwSXfemXjRFvCLAd23SrhsBEZWssSnZG5L78PRhN2Ef0g?e=i5k7D8" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Normal Distribution (Continued 3)</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/probabilityandstatistics/EUV9nOzcVeZHquakGSmWWeIBIPS9bTfFZxAgly0tm9hwuw?e=IVuflp" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Central Limit Theorem</a>
+      <a href="https://asuedujo.sharepoint.com/:v:/s/2_1414/EffhncvAmNtGmifOR8W6QZYBw4ySYb-SUlGvAe3jZ6QgNw" class="whatsapp-link video" target="_blank" rel="noopener noreferrer">Continuous Distributions</a>
+    </div>
+    <p class="arabic-translation">(الفصل الرابع: دالة الكثافة، القيمة المتوقعة، التباين والانحراف المعياري، التوزيعات الثنائية، الانحدار الخطي، التوزيع الثنائي، توزيع بواسون، التوزيع الطبيعي، نظرية الحد المركزي، التوزيعات المستمرة)</p>	  
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle Function
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      const themeToggle = document.querySelector('.theme-toggle');
+      if (document.body.classList.contains('dark-mode')) {
+        themeToggle.textContent = 'Switch to Light Mode';
+      } else {
+        themeToggle.textContent = 'Switch to Dark Mode';
+      }
+    }
+
+    // Scroll to Top Function
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Scroll to Bottom Function
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    // Search Functionality
+    function filterGroups() {
+      const input = document.getElementById('searchInput');
+      const filter = input.value.toLowerCase();
+      const links = document.querySelectorAll('.whatsapp-link');
+      
+      links.forEach(link => {
+        const text = link.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          link.style.display = 'flex';
+        } else {
+          link.style.display = 'none';
+        }
+      });
+    }
+
+    // Initialize page with fade-in effect
+    window.addEventListener('load', () => {
+      document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.5s ease-in-out';
+      setTimeout(() => {
+        document.body.style.opacity = '1';
+      }, 100);
+    });
+  </script>
+</body>
+</html>

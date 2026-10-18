@@ -39,3 +39,24 @@ Special thanks to students and faculty who contribute their time and knowledge t
 ---
 
 📚 Study smart, succeed together!
+
+---
+
+## 🗂️ Project Structure
+
+| Folder | Contents |
+|---|---|
+| `/` | `index.html`, `404.html` (also redirects old URLs), `sw.js`, `manifest.json`, `sitemap.xml`, `CNAME` |
+| `banks/` | Test bank pages per college/subject |
+| `schedules/` | Calendars, countdowns, syllabi, exam/bus/Ramadan timetables |
+| `guides/` | FAQs, halls, links, groups, gallery, search, latest files, tutorials |
+| `portal/` | Device selection, agreement and refusal pages |
+| `legal/` | Terms of service and PDF access terms |
+| `upload/` | File upload and submission pages |
+| `requests/` | Material requests, matching, ratings |
+| `students_requests/` | Teacher rating / request portal (unchanged) |
+| `apps/` | Daftari, voting, photoshoot booking, donate, admin panel |
+| `archive/` | Old/test versions of pages (still reachable; a few, like the 2024 old style, are linked from the site) |
+| `assets/css`, `assets/js`, `assets/img`, `assets/media` | Shared styles, scripts, images, video |
+
+All internal links use root-absolute paths (e.g. `/banks/english`). Old URLs such as `/english` are redirected by `404.html`.

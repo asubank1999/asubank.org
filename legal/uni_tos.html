@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service</title>
+    <link rel="icon" href="/assets/img/ASU_Jordan_logo-removebg-preview.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+    <style>
+        /* Global Styles */
+        :root {
+            --background-color: #ffffff;
+            --text-color: #000000;
+            --box-background: #e7f3fe;
+            --primary-color: #007bff;
+            --secondary-color: #4CAF50;
+            --warning-color: #ffecb5;
+            --danger-color: #ffdddd;
+            --border-radius: 8px;
+            --spacing: 20px;
+            --max-width: 800px;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: var(--spacing);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.6;
+        }
+
+        body.dark-mode {
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --box-background: #333;
+            --warning-color: #ffcc80;
+            --danger-color: #660000;
+        }
+
+        /* Container */
+        .tos-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Header */
+        .tos-header {
+            margin-bottom: 40px;
+        }
+
+        .tos-header img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: var(--spacing);
+        }
+
+        .tos-header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing);
+            margin-bottom: var(--spacing);
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .button.primary {
+            background-color: var(--primary-color);
+        }
+
+        .button.primary:hover {
+            background-color: #0056b3;
+        }
+
+        .button.secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .button.secondary:hover {
+            background-color: #45a049;
+        }
+
+        .button.warning {
+            background-color: var(--warning-color);
+            color: #000;
+        }
+
+        .button.warning:hover {
+            background-color: #ffcc80;
+        }
+
+        .button.danger {
+            background-color: var(--danger-color);
+            color: #000;
+        }
+
+        .button.danger:hover {
+            background-color: #ff9999;
+        }
+
+        .translate-btn {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .translate-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Info and Warning Boxes */
+        .info-box, .warning-box, .danger-box {
+            border-radius: var(--border-radius);
+            padding: var(--spacing);
+            margin-bottom: var(--spacing);
+            background-color: var(--box-background);
+            border-left: 6px solid;
+            text-align: left;
+            position: relative;
+        }
+
+        .info-box {
+            border-color: var(--primary-color);
+        }
+
+        .warning-box {
+            border-color: var(--warning-color);
+        }
+
+        .danger-box {
+            border-color: var(--danger-color);
+            background-color: var(--danger-color);
+        }
+
+        /* Terms Sections */
+        .terms-section {
+            margin-bottom: 30px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+            position: relative;
+        }
+
+        .terms-section h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .terms-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .arabic-translation {
+            display: none;
+            background-color: rgba(0,0,0,0.05);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border-right: 3px solid var(--secondary-color);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            font-size: 0.875rem;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tos-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+	    <style>
+        #tos-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        #tos-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .tos-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .tos-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        #accept-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #exit-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        #tos-link {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="tos-container">
+    <div class="tos-header">
+        <img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="Website Icon">
+        <h1>Terms of Service <button class="translate-btn" onclick="toggleTranslation(this, 'tos-title')">Translate to Arabic</button></h1>
+        <div id="tos-title" class="arabic-translation">شروط الخدمة</div>
+        <p><strong>Last Updated:</strong> March 26, 2025 <button class="translate-btn" onclick="toggleTranslation(this, 'last-updated')">Translate to Arabic</button></p>
+        <div id="last-updated" class="arabic-translation">آخر تحديث: 26 مارس 2025</div>		<div id="last-updated" class="arabic-translation">آخر تحديث: 26 مارس 2025</div>    </div>
+
+    <div class="button-group">
+        <a href="/" class="button primary">Go Back to Main Menu</a>
+        <button class="button warning" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    </div>
+
+    <div class="danger-box">
+        <strong>IMPORTANT LEGAL NOTICE:</strong><button class="translate-btn" onclick="toggleTranslation(this, 'legal-notice-title')">Translate to Arabic</button>
+        <div id="legal-notice-title" class="arabic-translation">تنبيه قانوني مهم:</div>
+        <br>
+        By accessing or using this website, you agree to be bound by these Terms of Service in their entirety. If you do not agree with any part of these terms, you must immediately discontinue use of this website.
+        <button class="translate-btn" onclick="toggleTranslation(this, 'legal-notice-content')">Translate to Arabic</button>
+        <div id="legal-notice-content" class="arabic-translation">باستخدامك أو دخولك إلى هذا الموقع، فإنك توافق على الالتزام بشروط الخدمة هذه بالكامل. إذا كنت لا توافق على أي جزء من هذه الشروط، يجب عليك التوقف فورًا عن استخدام هذا الموقع.</div>
+    </div>
+
+    <div class="terms-section">
+        <h2>1. Acceptance of Terms <button class="translate-btn" onclick="toggleTranslation(this, 'acceptance-title')">Translate to Arabic</button></h2>
+        <div id="acceptance-title" class="arabic-translation">1. قبول الشروط</div>
+        <p>By accessing or using the website located at asubank.xyz ("the Website"), you agree to be bound by these Terms of Service ("Terms"), all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site. <button class="translate-btn" onclick="toggleTranslation(this, 'acceptance-content')">Translate to Arabic</button></p>
+        <div id="acceptance-content" class="arabic-translation">باستخدامك أو دخولك إلى الموقع الموجود على asubank.xyz ("الموقع")، فإنك توافق على الالتزام بشروط الخدمة هذه ("الشروط")، وجميع القوانين واللوائح المعمول بها، وتوافق على أنك مسؤول عن الامتثال لأي قوانين محلية معمول بها. إذا كنت لا توافق على أي من هذه الشروط، فإنه يُحظر عليك استخدام أو الوصول إلى هذا الموقع.</div>
+    </div>
+
+    <div class="terms-section">
+        <h2>2. Educational Use Only <button class="translate-btn" onclick="toggleTranslation(this, 'educational-use-title')">Translate to Arabic</button></h2>
+        <div id="educational-use-title" class="arabic-translation">2. للاستخدام التعليمي فقط</div>
+        <p>The materials contained on this website are provided for educational purposes only. The website owner makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights. <button class="translate-btn" onclick="toggleTranslation(this, 'educational-use-content')">Translate to Arabic</button></p>
+        <div id="educational-use-content" class="arabic-translation">المواد الواردة في هذا الموقع مقدمة لأغراض تعليمية فقط. لا يقدم مالك الموقع أي ضمانات، صريحة أو ضمنية، وينفي صراحة جميع الضمانات الأخرى بما في ذلك، على سبيل المثال لا الحصر، الضمانات الضمنية أو شروط القابلية للتسويق، الملاءمة لغرض معين، أو عدم انتهاك الملكية الفكرية أو أي انتهاك آخر للحقوق.</div>
+        
+        <div class="warning-box">
+            <strong>VERIFICATION REQUIRED:</strong><button class="translate-btn" onclick="toggleTranslation(this, 'verification-title')">Translate to Arabic</button>
+            <div id="verification-title" class="arabic-translation">مطلوب التحقق:</div>
+            <br>
+            Users must independently verify all information with their educational institution and instructors before relying on any materials provided. The website owner assumes no responsibility for discrepancies between provided materials and actual course requirements.
+            <button class="translate-btn" onclick="toggleTranslation(this, 'verification-content')">Translate to Arabic</button>
+            <div id="verification-content" class="arabic-translation">يجب على المستخدمين التحقق بشكل مستقل من جميع المعلومات مع مؤسستهم التعليمية ومعلميهم قبل الاعتماد على أي مواد مقدمة. لا يتحمل مالك الموقع أي مسؤولية عن التناقضات بين المواد المقدمة ومتطلبات الدورة الفعلية.</div>
+        </div>
+    </div>
+
+    <div class="terms-section">
+        <h2>3. No Guarantee of Accuracy <button class="translate-btn" onclick="toggleTranslation(this, 'accuracy-title')">Translate to Arabic</button></h2>
+        <div id="accuracy-title" class="arabic-translation">3. عدم ضمان الدقة</div>
+        <h3>3.1 Content Disclaimer <button class="translate-btn" onclick="toggleTranslation(this, 'content-disclaimer-title')">Translate to Arabic</button></h3>
+        <div id="content-disclaimer-title" class="arabic-translation">3.1 إخلاء مسؤولية المحتوى</div>
+        <p>The materials appearing on the Website could include technical, typographical, or photographic errors. The website owner does not warrant that any of the materials on its website are accurate, complete, or current. The website owner may make changes to the materials contained on its website at any time without notice. <button class="translate-btn" onclick="toggleTranslation(this, 'content-disclaimer-content')">Translate to Arabic</button></p>
+        <div id="content-disclaimer-content" class="arabic-translation">قد تحتوي المواد الظاهرة على الموقع على أخطاء تقنية أو مطبعية أو فوتوغرافية. لا يضمن مالك الموقع دقة أو اكتمال أو حداثة أي من المواد على موقعه. قد يقوم مالك الموقع بإجراء تغييرات على المواد الموجودة على موقعه في أي وقت دون إشعار.</div>
+        
+        <h3>3.2 No Academic Guarantees <button class="translate-btn" onclick="toggleTranslation(this, 'academic-title')">Translate to Arabic</button></h3>
+        <div id="academic-title" class="arabic-translation">3.2 لا توجد ضمانات أكاديمية</div>
+        <p>Use of this website does not guarantee any specific academic results, exam scores, or educational outcomes. The website owner expressly disclaims any responsibility for academic performance based on use of materials provided. <button class="translate-btn" onclick="toggleTranslation(this, 'academic-content')">Translate to Arabic</button></p>
+        <div id="academic-content" class="arabic-translation">لا يضمن استخدام هذا الموقع أي نتائج أكاديمية محددة أو درجات امتحانات أو مخرجات تعليمية. ينفي مالك الموقع صراحة أي مسؤولية عن الأداء الأكاديمي بناءً على استخدام المواد المقدمة.</div>
+    </div>
+
+    <div class="terms-section">
+        <h2>4. Intellectual Property Rights <button class="translate-btn" onclick="toggleTranslation(this, 'ip-title')">Translate to Arabic</button></h2>
+        <div id="ip-title" class="arabic-translation">4. حقوق الملكية الفكرية</div>
+        <h3>4.1 Copyright Notice <button class="translate-btn" onclick="toggleTranslation(this, 'copyright-title')">Translate to Arabic</button></h3>
+        <div id="copyright-title" class="arabic-translation">4.1 إشعار حقوق النشر</div>
+        <p>All materials on this website are provided for fair use educational purposes under international copyright laws. The website owner does not claim ownership of any copyrighted materials that may be displayed, linked to, or referenced on the Website. <button class="translate-btn" onclick="toggleTranslation(this, 'copyright-content')">Translate to Arabic</button></p>
+        <div id="copyright-content" class="arabic-translation">جميع المواد على هذا الموقع مقدمة لأغراض تعليمية للاستخدام العادل بموجب قوانين حقوق النشر الدولية. لا يدعي مالك الموقع ملكية أي مواد محمية بحقوق النشر قد يتم عرضها أو الربط بها أو الإشارة إليها على الموقع.</div>
+        
+        <h3>4.2 DMCA Compliance <button class="translate-btn" onclick="toggleTranslation(this, 'dmca-title')">Translate to Arabic</button></h3>
+        <div id="dmca-title" class="arabic-translation">4.2 الامتثال لـ DMCA</div>
+        <p>The website respects the intellectual property rights of others. If you believe that any content on the Website infringes your copyright, please contact us immediately at the provided contact information with a detailed DMCA takedown notice, and we will process your request in accordance with applicable law. <button class="translate-btn" onclick="toggleTranslation(this, 'dmca-content')">Translate to Arabic</button></p>
+        <div id="dmca-content" class="arabic-translation">يحترم الموقع حقوق الملكية الفكرية للآخرين. إذا كنت تعتقد أن أي محتوى على الموقع ينتهك حقوق النشر الخاصة بك، يرجى الاتصال بنا على الفور عبر معلومات الاتصال المقدمة مع إشعار إزالة مفصل وفقًا لـ DMCA، وسنعالج طلبك وفقًا للقانون المعمول به.</div>
+        
+        <div class="info-box">
+            <strong>CONTACT FOR COPYRIGHT ISSUES:</strong><button class="translate-btn" onclick="toggleTranslation(this, 'contact-title')">Translate to Arabic</button>
+            <div id="contact-title" class="arabic-translation">الاتصال لقضايا حقوق النشر:</div>
+            <br>
+            WhatsApp: +962799760271 or +962779352591<br>
+            Please include: (1) Your contact information, (2) Identification of the copyrighted work, (3) URL of the infringing material, (4) Statement of good faith belief, (5) Statement under penalty of perjury that you are authorized to act on behalf of the owner.
+            <button class="translate-btn" onclick="toggleTranslation(this, 'contact-content')">Translate to Arabic</button>
+            <div id="contact-content" class="arabic-translation">
+                واتساب: +962799760271 أو +962779352591<br>
+                يرجى تضمين: (1) معلومات الاتصال الخاصة بك، (2) تحديد العمل المحمي بحقوق النشر، (3) رابط URL للمادة المنتهكة، (4) بيان بالاعتقاد بحسن النية، (5) بيان تحت طائلة عقوبة الحنث باليمين بأنك مخول بالتصرف نيابة عن المالك.
+            </div>
+        </div>
+    </div>
+
+    <div class="terms-section">
+        <h2>5. User Responsibilities <button class="translate-btn" onclick="toggleTranslation(this, 'user-resp-title')">Translate to Arabic</button></h2>
+        <div id="user-resp-title" class="arabic-translation">5. مسؤوليات المستخدم</div>
+        <h3>5.1 Proper Use <button class="translate-btn" onclick="toggleTranslation(this, 'proper-use-title')">Translate to Arabic</button></h3>
+        <div id="proper-use-title" class="arabic-translation">5.1 الاستخدام الصحيح</div>
+        <p>You agree to use the Website only for lawful purposes and in a way that does not infringe the rights of, restrict or inhibit anyone else's use and enjoyment of the Website. <button class="translate-btn" onclick="toggleTranslation(this, 'proper-use-content')">Translate to Arabic</button></p>
+        <div id="proper-use-content" class="arabic-translation">أنت توافق على استخدام الموقع فقط لأغراض قانونية وبطريقة لا تنتهك حقوق الآخرين أو تقيد أو تمنع استخدامهم والاستمتاع بالموقع.</div>
+        
+        <h3>5.2 Prohibited Conduct <button class="translate-btn" onclick="toggleTranslation(this, 'prohibited-title')">Translate to Arabic</button></h3>
+        <div id="prohibited-title" class="arabic-translation">5.2 السلوك المحظور</div>
+        <p>You expressly agree not to: <button class="translate-btn" onclick="toggleTranslation(this, 'prohibited-content')">Translate to Arabic</button></p>
+        <div id="prohibited-content" class="arabic-translation">أنت توافق صراحة على عدم:</div>
+        <ul>
+            <li>Attempt to gain unauthorized access to any portion of the Website <button class="translate-btn" onclick="toggleTranslation(this, 'prohibited-1')">Translate to Arabic</button>
+                <div id="prohibited-1" class="arabic-translation">محاولة الحصول على وصول غير مصرح به إلى أي جزء من الموقع</div>
+            </li>
+            <li>Use any automated systems (e.g., bots, scrapers) to access the Website without express written permission <button class="translate-btn" onclick="toggleTranslation(this, 'prohibited-2')">Translate to Arabic</button>
+                <div id="prohibited-2" class="arabic-translation">استخدام أي أنظمة آلية (مثل الروبوتات، أداة الاستخراج) للوصول إلى الموقع دون إذن كتابي صريح</div>
+            </li>
+            <li>Distribute malicious software or engage in any activity that could damage, disable, or impair the Website <button class="translate-btn" onclick="toggleTranslation(this, 'prohibited-3')">Translate to Arabic</button>
+                <div id="prohibited-3" class="arabic-translation">توزيع برامج ضارة أو الانخراط في أي نشاط قد يتلف أو يعطل أو يضعف الموقع</div>
+            </li>
+            <li>Use the Website to violate any applicable laws or regulations <button class="translate-btn" onclick="toggleTranslation(this, 'prohibited-4')">Translate to Arabic</button>
+                <div id="prohibited-4" class="arabic-translation">استخدام الموقع لانتهاك أي قوانين أو لوائح سارية</div>
+            </li>
+            <li>Misrepresent your identity or affiliation with any person or entity <button class="translate-btn" onclick="toggleTranslation(this, 'prohibited-5')">Translate to Arabic</button>
+                <div id="prohibited-5" class="arabic-translation">تحريف هويتك أو انتمائك لأي شخص أو كيان</div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>6. Limitation of Liability <button class="translate-btn" onclick="toggleTranslation(this, 'liability-title')">Translate to Arabic</button></h2>
+        <div id="liability-title" class="arabic-translation">6. تحديد المسؤولية</div>
+        <p>In no event shall the website owner or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on the Website, even if the website owner or an authorized representative has been notified orally or in writing of the possibility of such damage. <button class="translate-btn" onclick="toggleTranslation(this, 'liability-content')">Translate to Arabic</button></p>
+        <div id="liability-content" class="arabic-translation">في أي حال من الأحوال لا يتحمل مالك الموقع أو موردوه أي أضرار (بما في ذلك، على سبيل المثال لا الحصر، الأضرار الناتجة عن فقدان البيانات أو الأرباح، أو بسبب انقطاع الأعمال) الناشئة عن استخدام أو عدم القدرة على استخدام المواد على الموقع، حتى لو تم إخطار مالك الموقع أو ممثله المصرح به شفهيًا أو كتابيًا بإمكانية حدوث مثل هذا الضرر.</div>
+        
+        <div class="danger-box">
+            <strong>NO WARRANTY:</strong><button class="translate-btn" onclick="toggleTranslation(this, 'no-warranty-title')">Translate to Arabic</button>
+            <div id="no-warranty-title" class="arabic-translation">لا توجد ضمانات:</div>
+            <br>
+            THE WEBSITE IS PROVIDED "AS IS" WITHOUT ANY REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED. THE WEBSITE OWNER MAKES NO REPRESENTATIONS OR WARRANTIES IN RELATION TO THIS WEBSITE OR THE INFORMATION AND MATERIALS PROVIDED.
+            <button class="translate-btn" onclick="toggleTranslation(this, 'no-warranty-content')">Translate to Arabic</button>
+            <div id="no-warranty-content" class="arabic-translation">يتم توفير الموقع "كما هو" دون أي تصريحات أو ضمانات، صريحة أو ضمنية. لا يقدم مالك الموقع أي تصريحات أو ضمانات فيما يتعلق بهذا الموقع أو المعلومات والمواد المقدمة.</div>
+        </div>
+    </div>
+
+    <div class="terms-section">
+        <h2>7. Indemnification <button class="translate-btn" onclick="toggleTranslation(this, 'indemnification-title')">Translate to Arabic</button></h2>
+        <div id="indemnification-title" class="arabic-translation">7. التعويض</div>
+        <p>You agree to defend, indemnify and hold harmless the website owner, its affiliates, officers, directors, employees and agents from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees) arising from: <button class="translate-btn" onclick="toggleTranslation(this, 'indemnification-content')">Translate to Arabic</button></p>
+        <div id="indemnification-content" class="arabic-translation">أنت توافق على الدفاع عن وتعويض وإبراء ذمة مالك الموقع، والشركات التابعة له، والمسؤولين، والمدراء، والموظفين والوكلاء من ومن ضد أي وجميع المطالبات، والأضرار، والالتزامات، والخسائر، والمسؤوليات، والتكاليف أو الديون، والمصروفات (بما في ذلك على سبيل المثال لا الحصر أتعاب المحاماة) الناشئة عن:</div>
+        <ul>
+            <li>Your use of and access to the Website <button class="translate-btn" onclick="toggleTranslation(this, 'indemnification-1')">Translate to Arabic</button>
+                <div id="indemnification-1" class="arabic-translation">استخدامك للوصول إلى الموقع</div>
+            </li>
+            <li>Your violation of any term of these Terms of Service <button class="translate-btn" onclick="toggleTranslation(this, 'indemnification-2')">Translate to Arabic</button>
+                <div id="indemnification-2" class="arabic-translation">انتهاكك لأي بند من بنود شروط الخدمة هذه</div>
+            </li>
+            <li>Your violation of any third party right, including without limitation any copyright, property, or privacy right <button class="translate-btn" onclick="toggleTranslation(this, 'indemnification-3')">Translate to Arabic</button>
+                <div id="indemnification-3" class="arabic-translation">انتهاكك لأي حق لطرف ثالث، بما في ذلك على سبيل المثال لا الحصر أي حقوق نشر، أو ملكية، أو خصوصية</div>
+            </li>
+            <li>Any claim that your use of the Website caused damage to a third party <button class="translate-btn" onclick="toggleTranslation(this, 'indemnification-4')">Translate to Arabic</button>
+                <div id="indemnification-4" class="arabic-translation">أي ادعاء بأن استخدامك للموقع تسبب في ضرر لطرف ثالث</div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>8. Modifications to Terms <button class="translate-btn" onclick="toggleTranslation(this, 'modifications-title')">Translate to Arabic</button></h2>
+        <div id="modifications-title" class="arabic-translation">8. تعديلات الشروط</div>
+        <p>The website owner may revise these Terms of Service at any time without notice. By using this website you are agreeing to be bound by the then current version of these Terms of Service. It is your responsibility to check this page periodically for changes. <button class="translate-btn" onclick="toggleTranslation(this, 'modifications-content')">Translate to Arabic</button></p>
+        <div id="modifications-content" class="arabic-translation">يجوز لمالك الموقع مراجعة شروط الخدمة هذه في أي وقت دون إشعار. باستخدامك لهذا الموقع، فإنك توافق على الالتزام بالنسخة الحالية من شروط الخدمة هذه. من مسؤوليتك التحقق من هذه الصفحة بشكل دوري للتغييرات.</div>
+    </div>
+
+    <div class="terms-section">
+        <h2>9. Governing Law <button class="translate-btn" onclick="toggleTranslation(this, 'governing-title')">Translate to Arabic</button></h2>
+        <div id="governing-title" class="arabic-translation">9. القانون الحاكم</div>
+        <p>These Terms shall be governed and construed in accordance with the laws of Jordan, without regard to its conflict of law provisions. Any disputes arising from these Terms or your use of the Website shall be resolved exclusively in the courts of Jordan. <button class="translate-btn" onclick="toggleTranslation(this, 'governing-content')">Translate to Arabic</button></p>
+        <div id="governing-content" class="arabic-translation">يخضع هذه الشروط ويتم تفسيرها وفقًا لقوانين الأردن، دون اعتبار لأحكام تنازع القوانين. يتم الفصل في أي نزاعات تنشأ عن هذه الشروط أو استخدامك للموقع حصريًا في محاكم الأردن.</div>
+    </div>
+
+    <div class="terms-section">
+        <h2>10. Security Provisions <button class="translate-btn" onclick="toggleTranslation(this, 'security-title')">Translate to Arabic</button></h2>
+        <div id="security-title" class="arabic-translation">10. أحكام الأمن</div>
+        <h3>10.1 Prohibition of Attacks <button class="translate-btn" onclick="toggleTranslation(this, 'attacks-title')">Translate to Arabic</button></h3>
+        <div id="attacks-title" class="arabic-translation">10.1 حظر الهجمات</div>
+        <p>Any attempt to disrupt, damage, or otherwise interfere with the operation of this website through hacking, denial-of-service attacks, or other malicious activities is strictly prohibited and may result in civil and criminal liability. <button class="translate-btn" onclick="toggleTranslation(this, 'attacks-content')">Translate to Arabic</button></p>
+        <div id="attacks-content" class="arabic-translation">أي محاولة لتعطيل أو إتلاف أو التدخل بطريقة أخرى في تشغيل هذا الموقع من خلال القرصنة أو هجمات حجب الخدمة أو غيرها من الأنشطة الخبيثة محظورة تمامًا وقد تؤدي إلى مسؤولية مدنية وجنائية.</div>
+        
+        <h3>10.2 Legal Consequences <button class="translate-btn" onclick="toggleTranslation(this, 'legal-cons-title')">Translate to Arabic</button></h3>
+        <div id="legal-cons-title" class="arabic-translation">10.2 العواقب القانونية</div>
+        <p>The website owner reserves the right to pursue legal action against any individual or entity that engages in unauthorized access, data scraping, or any other activity that may compromise the security or integrity of the Website. <button class="translate-btn" onclick="toggleTranslation(this, 'legal-cons-content')">Translate to Arabic</button></p>
+        <div id="legal-cons-content" class="arabic-translation">يحتفظ مالك الموقع بالحق في اتخاذ إجراءات قانونية ضد أي فرد أو كيان يشارك في الوصول غير المصرح به، أو استخراج البيانات، أو أي نشاط آخر قد يهدد أمن أو سلامة الموقع.</div>
+        
+        <div class="danger-box">
+            <strong>SECURITY WARNING:</strong><button class="translate-btn" onclick="toggleTranslation(this, 'security-warning-title')">Translate to Arabic</button>
+            <div id="security-warning-title" class="arabic-translation">تحذير أمني:</div>
+            <br>
+            ALL UNAUTHORIZED ACCESS ATTEMPTS WILL BE LOGGED AND MAY BE REPORTED TO THE APPROPRIATE LAW ENFORCEMENT AUTHORITIES. EVIDENCE OF CYBERCRIMES WILL BE PRESERVED FOR PROSECUTION.
+            <button class="translate-btn" onclick="toggleTranslation(this, 'security-warning-content')">Translate to Arabic</button>
+            <div id="security-warning-content" class="arabic-translation">سيتم تسجيل جميع محاولات الوصول غير المصرح بها وقد يتم الإبلاغ عنها إلى سلطات إنفاذ القانون المختصة. سيتم الاحتفاظ بأدلة الجرائم الإلكترونية للمقاضاة.</div>
+        </div>
+    </div>
+
+    <div class="terms-section">
+        <h2>11. Miscellaneous <button class="translate-btn" onclick="toggleTranslation(this, 'miscellaneous-title')">Translate to Arabic</button></h2>
+        <div id="miscellaneous-title" class="arabic-translation">11. أحكام متنوعة</div>
+        <h3>11.1 Severability <button class="translate-btn" onclick="toggleTranslation(this, 'severability-title')">Translate to Arabic</button></h3>
+        <div id="severability-title" class="arabic-translation">11.1 القابلية للفصل</div>
+        <p>If any provision of these Terms is found to be invalid or unenforceable by a court of competent jurisdiction, the remaining provisions will remain in full force and effect. <button class="translate-btn" onclick="toggleTranslation(this, 'severability-content')">Translate to Arabic</button></p>
+        <div id="severability-content" class="arabic-translation">إذا تم اعتبار أي حكم من هذه الشروط باطلاً أو غير قابل للتنفيذ من قبل محكمة ذات اختصاص، تظل الأحكام المتبقية سارية المفعول بالكامل.</div>
+        
+        <h3>11.2 No Waiver <button class="translate-btn" onclick="toggleTranslation(this, 'waiver-title')">Translate to Arabic</button></h3>
+        <div id="waiver-title" class="arabic-translation">11.2 عدم التنازل</div>
+        <p>Failure by the website owner to enforce any right or provision of these Terms will not be considered a waiver of those rights. <button class="translate-btn" onclick="toggleTranslation(this, 'waiver-content')">Translate to Arabic</button></p>
+        <div id="waiver-content" class="arabic-translation">لا يعتبر فشل مالك الموقع في فرض أي حق أو حكم من هذه الشروط تنازلاً عن تلك الحقوق.</div>
+        
+        <h3>11.3 Entire Agreement <button class="translate-btn" onclick="toggleTranslation(this, 'agreement-title')">Translate to Arabic</button></h3>
+        <div id="agreement-title" class="arabic-translation">11.3 الاتفاقية الكاملة</div>
+        <p>These Terms constitute the entire agreement between you and the website owner regarding use of the Website, superseding any prior agreements. <button class="translate-btn" onclick="toggleTranslation(this, 'agreement-content')">Translate to Arabic</button></p>
+        <div id="agreement-content" class="arabic-translation">تشكل هذه الشروط الاتفاقية الكاملة بينك وبين مالك الموقع فيما يتعلق باستخدام الموقع، وتلغي أي اتفاقات سابقة.</div>
+    </div>
+
+    <div class="warning-box">
+        <strong>ACKNOWLEDGEMENT:</strong><button class="translate-btn" onclick="toggleTranslation(this, 'acknowledgement-title')">Translate to Arabic</button>
+        <div id="acknowledgement-title" class="arabic-translation">إقرار:</div>
+        <br>
+        BY CONTINUING TO USE THIS WEBSITE, YOU ACKNOWLEDGE THAT YOU HAVE READ THESE TERMS OF SERVICE, UNDERSTAND THEM, AND AGREE TO BE BOUND BY THEM. YOU FURTHER ACKNOWLEDGE THAT THESE TERMS CONSTITUTE A BINDING LEGAL AGREEMENT BETWEEN YOU AND THE WEBSITE OWNER.
+        <button class="translate-btn" onclick="toggleTranslation(this, 'acknowledgement-content')">Translate to Arabic</button>
+        <div id="acknowledgement-content" class="arabic-translation">باستمرارك في استخدام هذا الموقع، فإنك تقر بأنك قد قرأت شروط الخدمة هذه، وتفهمها، وتوافق على الالتزام بها. كما تقر بأن هذه الشروط تشكل اتفاقًا قانونيًا ملزمًا بينك وبين مالك الموقع.</div>
+    </div>
+
+    <div class="info-box">
+        <strong>CONTACT INFORMATION:</strong><button class="translate-btn" onclick="toggleTranslation(this, 'contact-info-title')">Translate to Arabic</button>
+        <div id="contact-info-title" class="arabic-translation">معلومات الاتصال:</div>
+        <br>
+        For any questions about these Terms of Service, please contact:<br>
+        WhatsApp: +962799760271 or +962779352591<br>
+        <button class="translate-btn" onclick="toggleTranslation(this, 'contact-info-content')">Translate to Arabic</button>
+        <div id="contact-info-content" class="arabic-translation">
+            لأي أسئلة حول شروط الخدمة هذه، يرجى الاتصال:<br>
+            واتساب: +962799760271 أو +962779352591<br>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 University Test Banks made by Student QUSAI (English Literature). All rights reserved. <button class="translate-btn" onclick="toggleTranslation(this, 'footer-content')">Translate to Arabic</button></p>
+    <div id="footer-content" class="arabic-translation">© 2024 بنوك اختبارات الجامعة من صنع الطالب قصي (الأدب الإنجليزي). جميع الحقوق محفوظة.</div>
+    <p>This document was last updated on March 2025. <button class="translate-btn" onclick="toggleTranslation(this, 'footer-update')">Translate to Arabic</button></p>
+    <div id="footer-update" class="arabic-translation">تم تحديث هذه الوثيقة آخر مرة في  مارس 2025.</div>
+</footer>
+
+<script>
+    function switchToArabic() {
+        window.location.href = '/legal/uni_tos_ar'; // Ensure this path is correct
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        // Save user preference in localStorage
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+    }
+
+    function toggleTranslation(button, elementId) {
+        const translationElement = document.getElementById(elementId);
+        if (translationElement.style.display === 'none' || translationElement.style.display === '') {
+            translationElement.style.display = 'block';
+            button.textContent = 'Show English';
+        } else {
+            translationElement.style.display = 'none';
+            button.textContent = 'Translate to Arabic';
+        }
+    }
+
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+    
+    // Log terms acceptance
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('User accessed Terms of Service page');
+        // You could add more sophisticated tracking here if needed
+    });
+</script>
+</body>
+</html>

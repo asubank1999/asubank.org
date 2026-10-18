@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASU Test Banks - FAQs</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 80px auto 20px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    body.dark-mode .container {
+      background-color: #2d2d2d;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      color: #007bff;
+    }
+
+    .faq-item {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    body.dark-mode .faq-item {
+      background-color: #3a3a3a;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .faq-item h3 {
+      margin-bottom: 10px;
+      color: #007bff;
+      font-size: 1.25rem;
+    }
+
+    .faq-item p {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    /* Back to Home and Theme Toggle Buttons */
+    .back-button, .theme-toggle {
+      position: fixed;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      z-index: 1000;
+    }
+
+    .back-button {
+      top: 20px;
+      left: 20px;
+    }
+
+    .theme-toggle {
+      top: 20px;
+      right: 20px;
+    }
+
+    .back-button:hover, .theme-toggle:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    /* Scroll to Top and Bottom Buttons */
+    .scroll-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: #6c5ce7;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+    }
+
+    .scroll-button:hover {
+      background-color: #5a4acf;
+      transform: scale(1.1);
+    }
+
+    .scroll-button.bottom {
+      bottom: 70px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .faq-item h3 {
+        font-size: 1.1rem;
+      }
+
+      .faq-item p {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Back to Home and Theme Toggle Buttons -->
+  <a href="/" class="back-button">Back to Home</a>
+  <button class="theme-toggle" onclick="toggleDarkMode()">Switch to Dark Mode</button>
+
+  <!-- Scroll to Top and Bottom Buttons -->
+  <button class="scroll-button" onclick="scrollToTop()">↑</button>
+  <button class="scroll-button bottom" onclick="scrollToBottom()">↓</button>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>Frequently Asked Questions (FAQs)</h1>
+
+    <div class="faq-item">
+      <h3>What is ASU Test Banks?</h3>
+      <p>ASU Test Banks is a comprehensive online resource for students and educators, offering an extensive collection of test banks, PDFs, and quizzes.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How can I access the test banks?</h3>
+      <p>You don't need to create an account to access the test banks. Simply visit the website and browse the available resources.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Are the test banks free to use?</h3>
+      <p>Yes, all resources on ASU Test Banks are completely free to use.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I contribute my own test banks or quizzes?</h3>
+      <p>Yes, ASU Test Banks encourages contributions from students and educators. You can upload your own test banks or quizzes by following the submission guidelines on the website.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is ASU Test Banks mobile-friendly?</h3>
+      <p>Yes, the website is designed to be fully responsive and mobile-friendly, ensuring a seamless experience on all devices.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is there an iOS app for ASU Test Banks?</h3>
+      <p>There might be an iOS app in the future if students are willing to donate to support its development. Stay tuned for updates!</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is there an Android app for ASU Test Banks?</h3>
+      <p>An Android app might be developed, but there is no specific ETA at the moment. Check the website for updates.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do I switch between dark and light mode?</h3>
+      <p>You can toggle between dark and light mode using the "Switch to Dark Mode" button located at the top right corner of the page.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What if I can't find a specific test bank?</h3>
+      <p>If you can't find what you're looking for, contact us via our WhatsApp group, and we'll assist you.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I share the resources with others?</h3>
+      <p>Yes, you can share the resources by sending them the website link. Please avoid distributing downloaded files directly.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is my personal information safe on ASU Test Banks?</h3>
+      <p>Yes, your privacy is important to us. If you contribute materials like med/final exams or quizzes, your name and university ID number will be hidden to protect your identity.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I use ASU Test Banks on multiple devices?</h3>
+      <p>Yes, you can access the website and its resources from any device with an internet connection.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How often are new resources added?</h3>
+      <p>New resources are added regularly. Check the website frequently or join our WhatsApp group for updates.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What formats are the test banks available in?</h3>
+      <p>Most test banks are available in PDF format, but other formats may also be available depending on the resource.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do I contact support?</h3>
+      <p>You can contact support through the WhatsApp group linked on the website.</p>
+    </div>
+  </div>
+
+  <script>
+    // Function to toggle light/dark mode
+    function toggleDarkMode() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        themeToggle.textContent = 'Switch to Light Mode';
+      } else {
+        themeToggle.textContent = 'Switch to Dark Mode';
+      }
+    }
+
+    // Function to scroll to top
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Function to scroll to bottom
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    // Disable Right-Click and Keyboard Shortcuts
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('keydown', (e) => {
+      // Disable Ctrl+C, Ctrl+X, Ctrl+A, Ctrl+S, Ctrl+V
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'x' || e.key === 'a' || e.key === 's' || e.key === 'v')) {
+        e.preventDefault();
+      }
+      // Disable F12 (Developer Tools)
+      if (e.key === 'F12') {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
