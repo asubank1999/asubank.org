@@ -2,1271 +2,320 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Student Files">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#4361ee">
-    <meta name="description" content="Search and access your student files library">
-    
-    <title>Advanced Search</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" href="/assets/img/favicon2.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="/assets/img/favicon2.ico">
-    
-    <!-- Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlN0dWRlbnQgRmlsZXMgTGlicmFyeSIsCiAgInNob3J0X25hbWUiOiAiU3R1ZGVudCBGaWxlcyIsCiAgImRlc2NyaXB0aW9uIjogIlNlYXJjaCBhbmQgYWNjZXNzIHlvdXIgc3R1ZGVudCBmaWxlcyIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiIzQzNjFlZSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZmF2aWNvbjIuaWNvIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
-    
-    <style>
-        :root {
-            --primary: #4361ee;
-            --primary-light: #5a75f5;
-            --primary-dark: #3651d4;
-            --secondary: #7209b7;
-            --accent: #4cc9f0;
-            --success: #06d6a0;
-            --danger: #ef476f;
-            --warning: #ffd60a;
-            
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --glass-shadow: rgba(0, 0, 0, 0.1);
-            
-            --text-primary: #1a1a2e;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            
-            --bg-gradient-start: #667eea;
-            --bg-gradient-end: #764ba2;
-            
-            --border-radius-sm: 12px;
-            --border-radius-md: 16px;
-            --border-radius-lg: 24px;
-            
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            min-height: 100vh;
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .bg-animation::before,
-        .bg-animation::after {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.3;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .bg-animation::before {
-            background: var(--primary);
-            top: -250px;
-            right: -250px;
-            animation-delay: 0s;
-        }
-
-        .bg-animation::after {
-            background: var(--secondary);
-            bottom: -250px;
-            left: -250px;
-            animation-delay: -10s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(50px, 50px) scale(1.1); }
-            50% { transform: translate(100px, -50px) scale(0.9); }
-            75% { transform: translate(-50px, 100px) scale(1.05); }
-        }
-
-        /* Container */
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Logo & Header */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: fadeInDown 0.6s ease-out;
-        }
-
-        .logo {
-            width: 80px;
-            height: 80px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid var(--glass-border);
-            border-radius: var(--border-radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            box-shadow: 0 8px 32px var(--glass-shadow);
-        }
-
-        .logo i {
-            font-size: 36px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
-        }
-
-        /* Search Box */
-        .search-container {
-            width: 100%;
-            margin-bottom: 30px;
-            animation: fadeInUp 0.6s ease-out 0.2s both;
-        }
-
-        .search-box {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid var(--glass-border);
-            border-radius: var(--border-radius-lg);
-            padding: 8px;
-            box-shadow: 0 8px 32px var(--glass-shadow);
-            transition: var(--transition);
-        }
-
-        .search-box:focus-within {
-            border-color: white;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .search-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
-        }
-
-        .search-icon {
-            font-size: 20px;
-            color: var(--primary);
-        }
-
-        .search-input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            font-size: 16px;
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            outline: none;
-        }
-
-        .search-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .search-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: var(--border-radius-sm);
-            font-size: 15px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            transform: translateY(-2px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        /* Stats Bar */
-        .stats-bar {
-            width: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid var(--glass-border);
-            border-radius: var(--border-radius-md);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px var(--glass-shadow);
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .stats-bar.show {
-            display: block;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 20px;
-            text-align: center;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 4px;
-        }
-
-        /* Sort Controls */
-        .controls-container {
-            width: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid var(--glass-border);
-            border-radius: var(--border-radius-md);
-            padding: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px var(--glass-shadow);
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .controls-container.show {
-            display: block;
-        }
-
-        .control-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .control-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .control-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            min-width: 60px;
-        }
-
-        .control-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .control-btn {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.5);
-            border: 2px solid transparent;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .control-btn.active {
-            background: white;
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        /* View Toggle */
-        .view-toggle {
-            display: flex;
-            gap: 8px;
-        }
-
-        .view-btn {
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-        }
-
-        /* Results Container */
-        .results-container {
-            width: 100%;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .results-header {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid var(--glass-border);
-            border-radius: var(--border-radius-md);
-            padding: 16px 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 32px var(--glass-shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .results-count {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .results-count span {
-            color: var(--primary);
-        }
-
-        /* Files Grid */
-        .files-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .file-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid var(--glass-border);
-            border-radius: var(--border-radius-md);
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 16px var(--glass-shadow);
-        }
-
-        .file-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            border-color: white;
-        }
-
-        .file-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 12px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: white;
-        }
-
-        .file-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-            word-break: break-word;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .file-meta {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        /* Files List */
-        .files-list {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid var(--glass-border);
-            border-radius: var(--border-radius-md);
-            overflow: hidden;
-            box-shadow: 0 8px 32px var(--glass-shadow);
-        }
-
-        .list-header {
-            display: grid;
-            grid-template-columns: 50px 1fr 100px 120px;
-            gap: 12px;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.3);
-            border-bottom: 2px solid var(--glass-border);
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-primary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .list-row {
-            display: grid;
-            grid-template-columns: 50px 1fr 100px 120px;
-            gap: 12px;
-            padding: 14px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: var(--transition);
-            align-items: center;
-        }
-
-        .list-row:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .list-row:last-child {
-            border-bottom: none;
-        }
-
-        .list-icon-wrapper {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: white;
-        }
-
-        .list-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .list-size {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .list-date {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: white;
-        }
-
-        .empty-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            font-size: 24px;
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
-        .empty-state p {
-            font-size: 16px;
-            opacity: 0.9;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        /* Loading State */
-        .loading-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: white;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            margin: 0 auto 20px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-state p {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        /* Error State */
-        .error-state {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid var(--glass-border);
-            border-radius: var(--border-radius-md);
-            padding: 40px 20px;
-            text-align: center;
-            box-shadow: 0 8px 32px var(--glass-shadow);
-        }
-
-        .error-icon {
-            font-size: 60px;
-            color: var(--danger);
-            margin-bottom: 16px;
-        }
-
-        .error-state h3 {
-            font-size: 20px;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
-        .error-state p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        /* File Type Colors */
-        .icon-pdf { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-        .icon-folder { background: linear-gradient(135deg, #f39c12, #d68910); }
-        .icon-image { background: linear-gradient(135deg, #3498db, #2980b9); }
-        .icon-video { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
-        .icon-document { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-        .icon-spreadsheet { background: linear-gradient(135deg, #1abc9c, #16a085); }
-        .icon-presentation { background: linear-gradient(135deg, #e67e22, #d35400); }
-        .icon-archive { background: linear-gradient(135deg, #f1c40f, #f39c12); }
-        .icon-audio { background: linear-gradient(135deg, #1abc9c, #16a085); }
-        .icon-text { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
-        .icon-default { background: linear-gradient(135deg, #34495e, #2c3e50); }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 16px;
-            }
-
-            .header h1 {
-                font-size: 28px;
-            }
-
-            .logo {
-                width: 70px;
-                height: 70px;
-            }
-
-            .files-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 12px;
-            }
-
-            .list-header,
-            .list-row {
-                grid-template-columns: 40px 1fr 80px;
-            }
-
-            .list-date {
-                display: none;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .control-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .control-label {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .search-actions {
-                width: 100%;
-            }
-
-            .btn {
-                flex: 1;
-                justify-content: center;
-            }
-
-            .files-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
-        }
-
-        /* iOS Safe Area */
-        @supports (padding: max(0px)) {
-            .container {
-                padding-left: max(20px, env(safe-area-inset-left));
-                padding-right: max(20px, env(safe-area-inset-right));
-                padding-bottom: max(20px, env(safe-area-inset-bottom));
-            }
-        }
-
-        /* Prevent text selection on double-tap */
-        .file-card, .list-row, .btn, .control-btn {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            user-select: none;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Search materials | ASU Bank</title>
+    <meta name="description" content="Search every ASU Bank file: test banks, past exams, summaries and course folders for Applied Science Private University. Filter by subject, type and year.">
     <link rel="canonical" href="https://asubank.org/guides/search">
+    <meta name="theme-color" content="#f2f2f7">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/assets/img/favicon2.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="ASU Bank">
+    <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="preload" href="/assets/app/materials.json" as="fetch" crossorigin>
+    <link rel="stylesheet" href="/assets/app/app.css?v=1">
+    <script src="/assets/app/app.js?v=1" defer></script>
+    <style>
+        .filters { display: flex; gap: 8px; overflow-x: auto; padding: 4px 16px 6px; margin: 0 -16px; scrollbar-width: none; }
+        .filters::-webkit-scrollbar { display: none; }
+        @media (min-width: 700px) { .filters { margin: 0 -24px; padding: 4px 24px 6px; flex-wrap: wrap; } }
+        .filters .ab-select { max-width: 70vw; }
+        .filters .ab-select.on { background-color: var(--ab-accent-soft); color: var(--ab-accent); box-shadow: inset 0 0 0 1px var(--ab-accent); }
+        .res-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 4px 8px; }
+        .res-h h2 { font-size: 15px; font-weight: 600; color: var(--ab-label-2); text-transform: uppercase; letter-spacing: .03em; }
+        .res-h .ab-spinner { width: 16px; height: 16px; }
+        .more-btn { display: block; width: 100%; margin-top: 10px; }
+        .searches { display: flex; flex-wrap: wrap; gap: 8px; }
+        .layout { display: grid; gap: 0 28px; }
+        @media (min-width: 1000px) { .layout.has-results { grid-template-columns: 1fr 1fr; align-items: start; } }
+        .err { padding: 16px; border-radius: var(--ab-radius); background: var(--ab-surface); color: var(--ab-label-2); font-size: 15px; }
+        .err strong { color: var(--ab-label); }
+    </style>
 </head>
-<body>
-    <div class="bg-animation"></div>
-    
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <h1>Student Files Library</h1>
-            <p>Search your files quickly and easily</p>
+<body class="ab" data-ab-protect>
+    <a class="ab-skip" href="#q">Skip to search</a>
+    <header class="ab-nav">
+        <div class="ab-wrap ab-nav-row">
+            <div class="ab-nav-l"><a class="ab-brand" href="/"><img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="30" height="30"><span>ASU Bank</span></a></div>
+            <div class="ab-nav-title" aria-hidden="true">Search</div>
+            <div class="ab-nav-r"></div>
+        </div>
+    </header>
+
+    <main id="main" class="ab-wrap">
+        <div class="ab-head">
+            <h1 class="ab-large">Search</h1>
+            <p class="ab-sub">Every subject page and every file in the ASU Bank Drive. <span lang="ar" dir="rtl">ابحث بالعربي أو بالإنجليزي</span></p>
         </div>
 
-        <!-- Search Container -->
-        <div class="search-container">
-            <div class="search-box">
-                <div class="search-input-wrapper">
-                    <i class="fas fa-search search-icon"></i>
-                    <input 
-                        type="text" 
-                        class="search-input" 
-                        id="searchInput" 
-                        placeholder="Search for subjects, files, or keywords..."
-                        autocomplete="off"
-                    >
-                </div>
-                <div class="search-actions">
-                    <button class="btn btn-primary" id="searchBtn">
-                        <i class="fas fa-search"></i>
-                        Search
-                    </button>
-                    <button class="btn btn-secondary" id="clearBtn" style="display: none;">
-                        <i class="fas fa-times"></i>
-                        Clear
-                    </button>
-                </div>
-            </div>
+        <form class="ab-search big" role="search" id="form" action="/guides/search">
+            <svg class="ab-s-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <label class="ab-vh" for="q">Search materials</label>
+            <input type="search" id="q" name="q" placeholder="Course, code, doctor, e.g. calculus 1 final" autocomplete="off" enterkeyhint="search" autocapitalize="off" spellcheck="false">
+            <button class="ab-s-clear" type="button" id="clear" aria-label="Clear search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m15 9-6 6m0-6 6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+        </form>
+
+        <div class="filters" role="group" aria-label="Filters">
+            <label class="ab-vh" for="fSubject">Subject</label>
+            <select class="ab-select" id="fSubject"><option value="">All subjects</option></select>
+            <label class="ab-vh" for="fType">Type</label>
+            <select class="ab-select" id="fType">
+                <option value="">Any type</option>
+                <option value="folder">Folders</option>
+                <option value="pdf">PDF</option>
+                <option value="doc">Documents</option>
+                <option value="ppt">Slides</option>
+                <option value="video">Videos</option>
+                <option value="img">Images</option>
+                <option value="other">Links &amp; other</option>
+            </select>
+            <label class="ab-vh" for="fYear">Year</label>
+            <select class="ab-select" id="fYear"><option value="">Any year</option></select>
+            <label class="ab-vh" for="fSource">Source</label>
+            <select class="ab-select" id="fSource">
+                <option value="">All sources</option>
+                <option value="pages">Subject pages</option>
+                <option value="drive">Drive files</option>
+                <option value="archive">Archive</option>
+            </select>
+            <label class="ab-vh" for="fSort">Sort</label>
+            <select class="ab-select" id="fSort">
+                <option value="best">Best match</option>
+                <option value="new">Newest</option>
+                <option value="az">A–Z</option>
+            </select>
+        </div>
+        <p class="ab-foot" id="status" role="status" aria-live="polite"></p>
+
+        <!-- Start screen -->
+        <div id="start">
+            <section class="ab-section" id="recentSearchesBox" hidden>
+                <div class="ab-section-h"><h2>Recent searches</h2><button class="ab-link" type="button" id="clearSearches">Clear</button></div>
+                <div class="searches" id="recentSearches"></div>
+            </section>
+            <section class="ab-section">
+                <div class="ab-section-h"><h2>Try</h2></div>
+                <div class="searches" id="tries"></div>
+            </section>
+            <section class="ab-section" id="recentBox" hidden>
+                <div class="ab-section-h"><h2>Recently opened</h2><a href="/guides/saved">See all</a></div>
+                <ul class="ab-list" id="recentList"></ul>
+            </section>
+            <section class="ab-section">
+                <div class="ab-section-h"><h2>Browse by subject</h2><a href="/banks/subjects">All subjects</a></div>
+                <div class="ab-grid" id="subjectGrid"></div>
+            </section>
         </div>
 
-        <!-- Stats Bar (Hidden initially) -->
-        <div class="stats-bar" id="statsBar">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-number" id="totalFiles">0</span>
-                    <span class="stat-label">Total Files</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="totalSize">0 MB</span>
-                    <span class="stat-label">Total Size</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="resultsCount">0</span>
-                    <span class="stat-label">Results</span>
-                </div>
+        <!-- Results -->
+        <div class="layout" id="results" hidden>
+            <section class="ab-section" id="pagesBox">
+                <div class="res-h"><h2 id="pagesH">Subject pages</h2></div>
+                <ul class="ab-list" id="pagesList"></ul>
+                <button class="ab-btn gray sm more-btn" type="button" id="pagesMore" hidden>Show more</button>
+            </section>
+            <section class="ab-section" id="driveBox">
+                <div class="res-h"><h2 id="driveH">Drive files</h2><span id="driveSpin"></span></div>
+                <ul class="ab-list" id="driveList"></ul>
+                <div id="driveMsg"></div>
+            </section>
+        </div>
+        <div class="ab-empty" id="none" hidden>
+            <svg class="ab-empty-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <h3>No results</h3>
+            <p>Try fewer words, the course code, or Arabic. Still nothing? Ask for it.</p>
+            <div class="ab-btn-row" style="justify-content:center;margin-top:14px">
+                <a class="ab-btn sm" href="/requests/student_request_portal">Request this material</a>
+                <a class="ab-btn sm tinted" href="/guides/latest">Latest uploads</a>
             </div>
         </div>
-
-        <!-- Controls (Hidden initially) -->
-        <div class="controls-container" id="controlsContainer">
-            <div class="control-row">
-                <span class="control-label">Sort by:</span>
-                <div class="control-buttons">
-                    <button class="control-btn active" data-sort="date">
-                        <i class="fas fa-calendar"></i> Date
-                    </button>
-                    <button class="control-btn" data-sort="name">
-                        <i class="fas fa-font"></i> Name
-                    </button>
-                    <button class="control-btn" data-sort="size">
-                        <i class="fas fa-weight-hanging"></i> Size
-                    </button>
-                    <button class="control-btn" data-sort="type">
-                        <i class="fas fa-file"></i> Type
-                    </button>
-                </div>
-            </div>
-            <div class="control-row">
-                <span class="control-label">Order:</span>
-                <div class="control-buttons">
-                    <button class="control-btn active" data-order="desc">
-                        <i class="fas fa-arrow-down"></i> Newest
-                    </button>
-                    <button class="control-btn" data-order="asc">
-                        <i class="fas fa-arrow-up"></i> Oldest
-                    </button>
-                </div>
-            </div>
-            <div class="control-row">
-                <span class="control-label">View:</span>
-                <div class="view-toggle">
-                    <button class="control-btn view-btn active" data-view="grid">
-                        <i class="fas fa-th"></i>
-                    </button>
-                    <button class="control-btn view-btn" data-view="list">
-                        <i class="fas fa-list"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Results Container (Hidden initially) -->
-        <div class="results-container" id="resultsContainer" style="display: none;">
-            <div class="results-header">
-                <div class="results-count">
-                    Found <span id="resultNumber">0</span> results
-                </div>
-            </div>
-            <div id="filesContent"></div>
-        </div>
-
-        <!-- Empty State (Initial) -->
-        <div class="empty-state" id="emptyState">
-            <div class="empty-icon">
-                <i class="fas fa-search"></i>
-            </div>
-            <h3>Start Your Search</h3>
-            <p>Enter a subject name or keyword above to find your files</p>
-        </div>
-    </div>
+    </main>
 
     <script>
-        // ========================================
-        // CONFIGURATION
-        // ========================================
-        // Make sure your Google Apps Script is:
-        // 1. Deployed as a web app
-        // 2. Set to "Anyone" can access
-        // 3. Using the latest version
-        // 
-        // To get your script URL:
-        // 1. Open your Google Apps Script project
-        // 2. Click "Deploy" > "Manage deployments"
-        // 3. Copy the Web app URL
-        // ========================================
-        
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9_c0Hr4aOusP5Wskn9fIw6UO6m8k4Esps3wJqKvZv2LQf6qcNFqP99cgU5UFOskVHsQ/exec';
-        
-        // State
-        let allFiles = [];
-        let filteredFiles = [];
-        let currentSearch = '';
-        let currentSort = 'date';
-        let currentOrder = 'desc';
-        let currentView = 'grid';
-        let hasSearched = false;
+    document.addEventListener('DOMContentLoaded', function () {
+        'use strict';
+        // Google Apps Script that searches the ASU Bank Drive (unchanged backend; returns {success, files[]})
+        var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9_c0Hr4aOusP5Wskn9fIw6UO6m8k4Esps3wJqKvZv2LQf6qcNFqP99cgU5UFOskVHsQ/exec';
+        var $ = function (id) { return document.getElementById(id); };
+        var q = $('q'), fSubject = $('fSubject'), fType = $('fType'), fYear = $('fYear'), fSource = $('fSource'), fSort = $('fSort');
+        var idx = { items: [], subjects: [] }, drive = { q: '', files: [], state: 'idle' }, pageLimit = 40, driveTimer = null, reqId = 0;
+        var DRIVE_KIND = { pdf: 'pdf', document: 'doc', text: 'doc', presentation: 'ppt', spreadsheet: 'sheet', image: 'img', video: 'video', audio: 'video', archive: 'zip', folder: 'folder' };
+        var TRIES = ['calculus', 'physics', 'final', 'midterm', 'summary', 'quiz', 'pharmacy', 'english 102', 'statistics', 'تفاضل', 'ملخص', 'برمجة'];
 
-        // DOM Elements
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const statsBar = document.getElementById('statsBar');
-        const controlsContainer = document.getElementById('controlsContainer');
-        const resultsContainer = document.getElementById('resultsContainer');
-        const emptyState = document.getElementById('emptyState');
-        const filesContent = document.getElementById('filesContent');
+        function kindGroup(k) { return ['folder', 'pdf', 'doc', 'ppt', 'video', 'img'].indexOf(k) > -1 ? k : (k === 'sheet' ? 'doc' : 'other'); }
+        function fmtSize(b) { b = +b || 0; if (!b) return ''; var u = ['B', 'KB', 'MB', 'GB'], i = Math.min(3, Math.floor(Math.log(b) / Math.log(1024))); return (b / Math.pow(1024, i)).toFixed(i ? 1 : 0) + ' ' + u[i]; }
+        function fmtDate(s) { if (!s) return ''; var d = new Date(s); if (isNaN(d)) return ''; var days = Math.floor((Date.now() - d) / 864e5); if (days < 1) return 'Today'; if (days < 2) return 'Yesterday'; if (days < 30) return days + ' days ago'; return d.toLocaleDateString(undefined, { month: 'short', year: 'numeric' }); }
 
-        // Utility Functions
-        function formatFileSize(bytes) {
-            if (!bytes || bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        // ---------- URL state ----------
+        var P = new URLSearchParams(location.search);
+        q.value = P.get('q') || '';
+        function syncUrl() {
+            var p = new URLSearchParams();
+            if (q.value.trim()) p.set('q', q.value.trim());
+            [['s', fSubject], ['t', fType], ['y', fYear], ['src', fSource]].forEach(function (x) { if (x[1].value) p.set(x[0], x[1].value); });
+            if (fSort.value !== 'best') p.set('sort', fSort.value);
+            history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : ''));
         }
 
-        function formatDate(dateString) {
-            if (!dateString) return 'Unknown';
-            const date = new Date(dateString);
-            const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
-            if (diffDays < 1) return 'Today';
-            if (diffDays === 1) return 'Yesterday';
-            if (diffDays < 7) return `${diffDays} days ago`;
-            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-            if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
-            return date.toLocaleDateString();
+        // ---------- start screen ----------
+        function renderStart() {
+            var rs = AB.searches.all();
+            $('recentSearchesBox').hidden = !rs.length;
+            $('recentSearches').innerHTML = rs.map(function (s) { return '<button class="ab-chip" type="button" data-q="' + AB.esc(s) + '">' + AB.icon('clock') + AB.esc(s) + '</button>'; }).join('');
+            $('tries').innerHTML = TRIES.map(function (s) { return '<button class="ab-chip" type="button" data-q="' + AB.esc(s) + '">' + AB.esc(s) + '</button>'; }).join('');
+            var rec = AB.recent.all().slice(0, 5);
+            $('recentBox').hidden = !rec.length;
+            var ul = $('recentList'); ul.innerHTML = '';
+            rec.forEach(function (it) { ul.appendChild(AB.row(it)); });
         }
+        document.addEventListener('click', function (e) {
+            var b = e.target.closest('[data-q]'); if (!b) return;
+            q.value = b.getAttribute('data-q'); run(true); q.focus();
+        });
+        $('clearSearches').addEventListener('click', function () { AB.searches.clear(); renderStart(); });
 
-        function getFileIconHTML(iconType) {
-            const icons = {
-                'pdf': 'fa-file-pdf',
-                'folder': 'fa-folder',
-                'image': 'fa-image',
-                'video': 'fa-video',
-                'document': 'fa-file-word',
-                'spreadsheet': 'fa-file-excel',
-                'presentation': 'fa-file-powerpoint',
-                'archive': 'fa-file-zipper',
-                'audio': 'fa-file-audio',
-                'text': 'fa-file-lines'
-            };
-            return `<i class="fas ${icons[iconType] || 'fa-file'}"></i>`;
-        }
-
-        function getIconClass(iconType) {
-            return `icon-${iconType || 'default'}`;
-        }
-
-        // Sort Functions
-        function sortFiles(files) {
-            const sorted = [...files];
-            
-            sorted.sort((a, b) => {
-                let compareValue = 0;
-                
-                switch (currentSort) {
-                    case 'name':
-                        compareValue = a.name.localeCompare(b.name);
-                        break;
-                    case 'size':
-                        compareValue = (a.size || 0) - (b.size || 0);
-                        break;
-                    case 'type':
-                        compareValue = a.icon.localeCompare(b.icon);
-                        break;
-                    case 'date':
-                    default:
-                        compareValue = new Date(a.dateUploaded) - new Date(b.dateUploaded);
-                        break;
-                }
-                
-                return currentOrder === 'asc' ? compareValue : -compareValue;
+        // ---------- filters ----------
+        function fillSubjects() {
+            var groups = {};
+            idx.subjects.forEach(function (s) { (groups[s.c] = groups[s.c] || []).push(s); });
+            Object.keys(groups).forEach(function (c) {
+                var og = document.createElement('optgroup'); og.label = c;
+                groups[c].forEach(function (s) { var o = new Option(s.t + ' (' + s.n + ')', s.p); og.appendChild(o); });
+                fSubject.appendChild(og);
             });
-            
-            return sorted;
+            $('subjectGrid').innerHTML = idx.subjects.filter(function (s) { return s.n > 2; }).map(function (s) {
+                return '<a class="ab-card" href="' + s.p + '"><span class="ab-tile emoji" aria-hidden="true">' + s.e + '</span><h3>' + AB.esc(s.t) + '</h3><p>' + s.n + ' items</p></a>';
+            }).join('');
+            var years = {};
+            idx.items.forEach(function (it) { var y = AB.yearOf(it.t); if (y) years[y] = 1; });
+            for (var y = new Date().getFullYear(); y >= 2019; y--) years[y] = 1;
+            Object.keys(years).sort().reverse().forEach(function (y) { fYear.appendChild(new Option(y, y)); });
+            fSubject.value = P.get('s') || ''; fType.value = P.get('t') || ''; fYear.value = P.get('y') || '';
+            fSource.value = P.get('src') || ''; fSort.value = P.get('sort') || 'best';
+        }
+        [fSubject, fType, fYear, fSource, fSort].forEach(function (s) { s.addEventListener('change', function () { pageLimit = 40; run(false); }); });
+
+        function passFilters(it, k, year) {
+            if (fType.value && kindGroup(k) !== fType.value) return false;
+            if (fYear.value && year !== fYear.value) return false;
+            return true;
         }
 
-        // Render Functions
-        function updateStats(files) {
-            const totalSize = files.reduce((sum, file) => sum + (file.size || 0), 0);
-            
-            document.getElementById('totalFiles').textContent = allFiles.length;
-            document.getElementById('totalSize').textContent = formatFileSize(totalSize);
-            document.getElementById('resultsCount').textContent = files.length;
-            document.getElementById('resultNumber').textContent = files.length;
+        // ---------- results ----------
+        function run(commit) {
+            var text = q.value.trim();
+            $('form').classList.toggle('has-text', !!q.value);
+            [fSubject, fType, fYear, fSource].forEach(function (s) { s.classList.toggle('on', !!s.value); });
+            syncUrl();
+            var active = text || fSubject.value || fType.value || fYear.value;
+            $('start').hidden = !!active;
+            $('results').hidden = !active;
+            $('none').hidden = true;
+            if (!active) { $('status').textContent = ''; renderStart(); return; }
+            if (commit && text) AB.searches.add(text);
+
+            // subject pages (instant)
+            var src = fSource.value, list = idx.items;
+            if (fSubject.value) list = list.filter(function (it) { return it.p === fSubject.value; });
+            if (src === 'pages') list = list.filter(function (it) { return !it.arch; });
+            if (src === 'archive') list = list.filter(function (it) { return it.arch; });
+            var hits = text ? AB.match(list, text, 2000) : list.slice();
+            hits = hits.filter(function (it) { return passFilters(it, it.k, AB.yearOf(it.t)); });
+            if (fSort.value === 'az') hits.sort(function (a, b) { return a.t.localeCompare(b.t); });
+            if (fSort.value === 'new') hits.sort(function (a, b) { return (AB.yearOf(b.t) || '0').localeCompare(AB.yearOf(a.t) || '0') || (b.tag === 'new') - (a.tag === 'new'); });
+            var showPages = src !== 'drive';
+            $('pagesBox').hidden = !showPages || !hits.length;
+            var ul = $('pagesList'); ul.innerHTML = '';
+            var frag = document.createDocumentFragment();
+            hits.slice(0, pageLimit).forEach(function (it) { frag.appendChild(AB.row({ u: it.u, t: it.t, k: it.k, s: it.s, tag: it.tag })); });
+            ul.appendChild(frag);
+            $('pagesH').textContent = 'Subject pages · ' + hits.length;
+            $('pagesMore').hidden = hits.length <= pageLimit;
+            $('pagesMore').textContent = 'Show ' + Math.min(60, hits.length - pageLimit) + ' more';
+            pagesCount = showPages ? hits.length : 0;
+
+            // drive (debounced network)
+            var wantDrive = text.length >= 2 && (src === '' || src === 'drive') && !fSubject.value;
+            $('driveBox').hidden = !wantDrive;
+            clearTimeout(driveTimer);
+            if (wantDrive) {
+                if (drive.q === text && drive.state === 'done') renderDrive();
+                else { drive.state = 'wait'; $('driveSpin').innerHTML = '<span class="ab-spinner"></span>'; driveTimer = setTimeout(function () { fetchDrive(text); }, commit ? 0 : 450); }
+            } else { drive.state = 'idle'; }
+            updateStatus();
+            $('results').classList.toggle('has-results', !$('pagesBox').hidden && wantDrive);
         }
-
-        function renderGrid(files) {
-            if (files.length === 0) {
-                return `
-                    <div class="empty-state">
-                        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
-                        <h3>No Files Found</h3>
-                        <p>Try adjusting your search terms</p>
-                    </div>
-                `;
-            }
-
-            return `
-                <div class="files-grid">
-                    ${files.map(file => `
-                        <div class="file-card" onclick="openFile('${file.url}')">
-                            <div class="file-icon ${getIconClass(file.icon)}">
-                                ${getFileIconHTML(file.icon)}
-                            </div>
-                            <div class="file-name" title="${file.name.replace(/"/g, '&quot;')}">${file.name}</div>
-                            <div class="file-meta">${formatFileSize(file.size || 0)}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+        var pagesCount = 0, driveCount = 0;
+        function updateStatus() {
+            var wantDrive = !$('driveBox').hidden;
+            var loading = wantDrive && drive.state !== 'done' && drive.state !== 'error';
+            var total = pagesCount + (wantDrive ? driveCount : 0);
+            $('status').textContent = loading ? (pagesCount + ' on subject pages · searching Drive…') : total + ' result' + (total === 1 ? '' : 's');
+            $('none').hidden = loading || total > 0 || (wantDrive && drive.state === 'error');
+            if (!$('none').hidden) $('results').hidden = true; else if (q.value.trim() || fSubject.value || fType.value || fYear.value) $('results').hidden = false;
         }
+        $('pagesMore').addEventListener('click', function () { pageLimit += 60; run(false); });
 
-        function renderList(files) {
-            if (files.length === 0) {
-                return `
-                    <div class="empty-state">
-                        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
-                        <h3>No Files Found</h3>
-                        <p>Try adjusting your search terms</p>
-                    </div>
-                `;
-            }
+        function cacheGet(t) { try { var c = JSON.parse(sessionStorage.getItem('ab.drive.' + t)); return c && Date.now() - c.ts < 6e5 ? c.files : null; } catch (e) { return null; } }
+        function cacheSet(t, f) { try { sessionStorage.setItem('ab.drive.' + t, JSON.stringify({ ts: Date.now(), files: f })); } catch (e) {} }
 
-            return `
-                <div class="files-list">
-                    <div class="list-header">
-                        <div></div>
-                        <div>Name</div>
-                        <div>Size</div>
-                        <div>Date</div>
-                    </div>
-                    ${files.map(file => `
-                        <div class="list-row" onclick="openFile('${file.url}')">
-                            <div class="list-icon-wrapper ${getIconClass(file.icon)}">
-                                ${getFileIconHTML(file.icon)}
-                            </div>
-                            <div class="list-name" title="${file.name.replace(/"/g, '&quot;')}">${file.name}</div>
-                            <div class="list-size">${formatFileSize(file.size || 0)}</div>
-                            <div class="list-date">${formatDate(file.dateUploaded)}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        function renderFiles(files) {
-            const sorted = sortFiles(files);
-            updateStats(sorted);
-            
-            if (currentView === 'grid') {
-                filesContent.innerHTML = renderGrid(sorted);
-            } else {
-                filesContent.innerHTML = renderList(sorted);
-            }
-        }
-
-        // Search Functions
-        async function performSearch() {
-            currentSearch = searchInput.value.trim();
-            
-            if (!currentSearch) {
-                alert('Please enter a search term');
-                return;
-            }
-
-            hasSearched = true;
-            clearBtn.style.display = 'inline-flex';
-            
-            // Show loading
-            emptyState.style.display = 'none';
-            resultsContainer.style.display = 'block';
-            filesContent.innerHTML = `
-                <div class="loading-state">
-                    <div class="spinner"></div>
-                    <p>Searching files...</p>
-                </div>
-            `;
-
-            try {
-                const params = new URLSearchParams({
-                    search: currentSearch,
-                    sort: currentSort,
-                    order: currentOrder,
-                    t: Date.now()
+        function fetchDrive(text) {
+            var mine = ++reqId, cached = cacheGet(text);
+            if (cached) { drive = { q: text, files: cached, state: 'done' }; renderDrive(); return; }
+            var p = new URLSearchParams({ search: text, sort: 'date', order: 'desc', t: Date.now() });
+            fetch(SCRIPT_URL + '?' + p, { cache: 'no-store', redirect: 'follow' })
+                .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function (d) {
+                    if (mine !== reqId) return;
+                    if (!d || !d.success || !Array.isArray(d.files)) throw new Error('Unexpected reply');
+                    var files = d.files.map(function (f) {
+                        var k = /shortcut/.test(f.mimeType) ? AB.kind(f.url, f.name) : (DRIVE_KIND[f.icon] || AB.kind(f.url, f.name));
+                        return { u: f.url, t: f.name, k: k, size: typeof f.size === 'number' ? f.size : 0, date: f.dateUploaded || f.lastModified };
+                    });
+                    cacheSet(text, files);
+                    drive = { q: text, files: files, state: 'done' }; renderDrive();
+                })
+                .catch(function (err) {
+                    if (mine !== reqId) return;
+                    drive = { q: text, files: [], state: 'error' };
+                    $('driveSpin').innerHTML = ''; $('driveList').innerHTML = '';
+                    $('driveMsg').innerHTML = '<div class="err"><strong>Drive search is not answering.</strong> Check your connection and try again. If it keeps failing, contact the admin on WhatsApp necro144@yahoo.com.<div style="margin-top:10px"><button class="ab-btn sm" type="button" id="retry">Try again</button></div></div>';
+                    $('retry').addEventListener('click', function () { fetchDrive(text); });
+                    updateStatus();
                 });
-                
-                const response = await fetch(`${SCRIPT_URL}?${params.toString()}`, {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-cache',
-                    redirect: 'follow'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const text = await response.text();
-                const data = JSON.parse(text);
-                
-                if (data && data.success && Array.isArray(data.files)) {
-                    allFiles = data.files;
-                    
-                    // Filter files based on search
-                    const searchLower = currentSearch.toLowerCase();
-                    filteredFiles = allFiles.filter(file => 
-                        file.name.toLowerCase().includes(searchLower) ||
-                        file.icon.toLowerCase().includes(searchLower) ||
-                        file.mimeType.toLowerCase().includes(searchLower)
-                    );
-                    
-                    // Show controls and stats
-                    statsBar.classList.add('show');
-                    controlsContainer.classList.add('show');
-                    
-                    // Render results
-                    renderFiles(filteredFiles);
-                } else {
-                    throw new Error('Invalid data format received from server');
-                }
-                
-            } catch (error) {
-                console.error('Search error:', error);
-                
-                let errorMessage = error.message;
-                let troubleshooting = '';
-                
-                if (error.message === 'Failed to fetch') {
-                    errorMessage = 'Unable to connect to the file server';
-                    troubleshooting = `
-                        <div style="margin-top: 16px; padding: 16px; background: rgba(255,255,255,0.5); border-radius: 12px; text-align: left;">
-                            <strong style="display: block; margin-bottom: 8px;">Possible solutions:</strong>
-                            <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: var(--text-secondary);">
-                                <li>Check your internet connection</li>
-                                <li>Try refreshing the page</li>
-                                <li>Contact the admin necro144@yahoo.com</li>
-                            </ul>
-                        </div>
-                    `;
-                }
-                
-                filesContent.innerHTML = `
-                    <div class="error-state">
-                        <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                        <h3>Search Failed</h3>
-                        <p>${errorMessage}</p>
-                        ${troubleshooting}
-                        <button class="btn btn-primary" onclick="performSearch()" style="margin-top: 16px;">
-                            <i class="fas fa-redo"></i> Try Again
-                        </button>
-                    </div>
-                `;
-            }
+        }
+        function renderDrive() {
+            $('driveSpin').innerHTML = ''; $('driveMsg').innerHTML = '';
+            var files = drive.files.filter(function (f) { return passFilters(f, f.k, (f.date || '').slice(0, 4) || AB.yearOf(f.t)); });
+            if (fSort.value === 'az') files.sort(function (a, b) { return a.t.localeCompare(b.t); });
+            else if (fSort.value === 'new') files.sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+            var ul = $('driveList'); ul.innerHTML = '';
+            files.forEach(function (f) { ul.appendChild(AB.row({ u: f.u, t: f.t, k: f.k, meta: [fmtSize(f.size), fmtDate(f.date)].filter(Boolean).join(' · ') })); });
+            $('driveH').textContent = 'Drive files · ' + files.length;
+            ul.hidden = !files.length;
+            if (!files.length) $('driveMsg').innerHTML = '<p class="ab-foot">No Drive files match' + (drive.files.length ? ' these filters.' : '.') + '</p>';
+            driveCount = files.length;
+            updateStatus();
         }
 
-        function clearSearch() {
-            searchInput.value = '';
-            currentSearch = '';
-            hasSearched = false;
-            filteredFiles = [];
-            allFiles = [];
-            
-            clearBtn.style.display = 'none';
-            resultsContainer.style.display = 'none';
-            statsBar.classList.remove('show');
-            controlsContainer.classList.remove('show');
-            emptyState.style.display = 'block';
-        }
-
-        function openFile(url) {
-            window.open(url, '_blank');
-        }
-
-        // Control Functions
-        function setSort(sortBy) {
-            currentSort = sortBy;
-            updateControlButtons();
-            if (hasSearched && filteredFiles.length > 0) {
-                renderFiles(filteredFiles);
-            }
-        }
-
-        function setOrder(order) {
-            currentOrder = order;
-            updateControlButtons();
-            if (hasSearched && filteredFiles.length > 0) {
-                renderFiles(filteredFiles);
-            }
-        }
-
-        function setView(view) {
-            currentView = view;
-            updateControlButtons();
-            if (hasSearched && filteredFiles.length > 0) {
-                renderFiles(filteredFiles);
-            }
-        }
-
-        function updateControlButtons() {
-            document.querySelectorAll('[data-sort]').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.sort === currentSort);
-            });
-            
-            document.querySelectorAll('[data-order]').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.order === currentOrder);
-            });
-            
-            document.querySelectorAll('[data-view]').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.view === currentView);
-            });
-        }
-
-        // Event Listeners
-        searchBtn.addEventListener('click', performSearch);
-        clearBtn.addEventListener('click', clearSearch);
-        
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') performSearch();
+        // ---------- input ----------
+        q.addEventListener('input', function () { pageLimit = 40; run(false); });
+        $('form').addEventListener('submit', function (e) { e.preventDefault(); q.blur(); run(true); });
+        $('clear').addEventListener('click', function () { q.value = ''; run(false); q.focus(); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === '/' && document.activeElement !== q && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); q.focus(); }
         });
 
-        // Control button listeners
-        document.querySelectorAll('[data-sort]').forEach(btn => {
-            btn.addEventListener('click', () => setSort(btn.dataset.sort));
+        AB.index().then(function (d) {
+            idx = d; fillSubjects(); run(!!q.value);
+            if (!q.value && matchMedia('(pointer: fine)').matches) q.focus();
         });
-
-        document.querySelectorAll('[data-order]').forEach(btn => {
-            btn.addEventListener('click', () => setOrder(btn.dataset.order));
-        });
-
-        document.querySelectorAll('[data-view]').forEach(btn => {
-            btn.addEventListener('click', () => setView(btn.dataset.view));
-        });
-
-        // PWA Support
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZnVuY3Rpb24oZXZlbnQpIHt9KTs=')
-                    .catch(() => {}); // Silent fail for service worker
-            });
-        }
-
-        // iOS standalone mode detection
-        if (window.navigator.standalone) {
-            document.body.style.paddingTop = '20px';
-        }
-
-        // Make functions globally available
-        window.openFile = openFile;
-        window.performSearch = performSearch;
+        renderStart();
+        document.addEventListener('ab:ab.recent', function () { if (!$('start').hidden) setTimeout(renderStart, 400); });
+    });
     </script>
 
     <!-- Google Analytics -->

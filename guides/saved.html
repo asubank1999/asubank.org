@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Saved &amp; recent | ASU Bank</title>
+    <meta name="description" content="Your saved ASU Bank materials and recently opened files, stored on this device.">
+    <link rel="canonical" href="https://asubank.org/guides/saved">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#f2f2f7">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/assets/img/favicon2.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="ASU Bank">
+    <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
+    <link rel="stylesheet" href="/assets/app/app.css?v=1">
+    <script src="/assets/app/app.js?v=1" defer></script>
+</head>
+<body class="ab">
+    <a class="ab-skip" href="#main">Skip to content</a>
+    <header class="ab-nav">
+        <div class="ab-wrap ab-nav-row">
+            <div class="ab-nav-l"><a class="ab-brand" href="/"><img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="30" height="30"><span>ASU Bank</span></a></div>
+            <div class="ab-nav-title" aria-hidden="true">Saved</div>
+            <div class="ab-nav-r"></div>
+        </div>
+    </header>
+
+    <main id="main" class="ab-wrap">
+        <div class="ab-head">
+            <h1 class="ab-large">Saved</h1>
+            <p class="ab-sub">Tap ☆ on any file to keep it here. Saved on this device only. <span lang="ar" dir="rtl">المحفوظات</span></p>
+        </div>
+
+        <div class="ab-seg" role="group" aria-label="Show" style="margin:6px 0 4px">
+            <button type="button" data-tab="saved" aria-pressed="true">Saved <span id="nSaved"></span></button>
+            <button type="button" data-tab="recent" aria-pressed="false">Recent <span id="nRecent"></span></button>
+        </div>
+
+        <div class="ab-search" id="filterBox" role="search">
+            <svg class="ab-s-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <label class="ab-vh" for="f">Filter</label>
+            <input type="search" id="f" placeholder="Filter" autocomplete="off">
+            <button class="ab-s-clear" type="button" aria-label="Clear"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m15 9-6 6m0-6 6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+        </div>
+
+        <section class="ab-section" style="margin-top:12px">
+            <ul class="ab-list" id="list"></ul>
+            <div class="ab-empty" id="empty" hidden>
+                <svg class="ab-empty-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z"/></svg>
+                <h3 id="emptyH">Nothing saved yet</h3>
+                <p id="emptyP">Find a file and tap the star. It will be waiting here, even before exams when the Wi-Fi is slow.</p>
+                <div class="ab-btn-row" style="justify-content:center;margin-top:14px"><a class="ab-btn sm" href="/guides/search">Search materials</a><a class="ab-btn sm tinted" href="/banks/subjects">Browse subjects</a></div>
+            </div>
+            <div class="ab-btn-row" style="margin-top:14px" id="tools">
+                <button class="ab-btn gray sm" type="button" id="exportBtn">Copy all links</button>
+                <button class="ab-btn gray sm" type="button" id="clearBtn">Clear list</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var tab = location.hash === '#recent' ? 'recent' : 'saved';
+        var list = document.getElementById('list'), f = document.getElementById('f');
+        function store() { return tab === 'saved' ? AB.saved : AB.recent; }
+        function render() {
+            document.querySelectorAll('[data-tab]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-tab') === tab); });
+            document.getElementById('nSaved').textContent = AB.saved.all().length || '';
+            document.getElementById('nRecent').textContent = AB.recent.all().length || '';
+            var all = store().all(), q = AB.norm(f.value);
+            f.parentNode.classList.toggle('has-text', !!f.value);
+            var items = q ? all.filter(function (it) { return AB.norm(it.t + ' ' + it.s).indexOf(q) > -1; }) : all;
+            list.innerHTML = '';
+            items.forEach(function (it) {
+                var when = new Date(it.ts);
+                list.appendChild(AB.row({ u: it.u, t: it.t, k: it.k, s: it.s, meta: tab === 'recent' ? when.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '' }));
+            });
+            list.hidden = !items.length;
+            document.getElementById('empty').hidden = !!items.length;
+            document.getElementById('tools').hidden = !all.length;
+            document.getElementById('emptyH').textContent = all.length ? 'No matches' : tab === 'saved' ? 'Nothing saved yet' : 'Nothing opened yet';
+            document.getElementById('filterBox').hidden = all.length < 6;
+        }
+        document.querySelectorAll('[data-tab]').forEach(function (b) {
+            b.addEventListener('click', function () { tab = b.getAttribute('data-tab'); history.replaceState(null, '', tab === 'recent' ? '#recent' : location.pathname); render(); });
+        });
+        f.addEventListener('input', render);
+        f.parentNode.querySelector('.ab-s-clear').addEventListener('click', function () { f.value = ''; render(); });
+        document.getElementById('clearBtn').addEventListener('click', function () {
+            if (confirm(tab === 'saved' ? 'Remove all saved items from this device?' : 'Clear your recent history?')) { store().clear(); render(); }
+        });
+        document.getElementById('exportBtn').addEventListener('click', function () {
+            var txt = store().all().map(function (it) { return it.t + '\n' + AB.absUrl(it.u); }).join('\n\n');
+            if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { AB.toast('Links copied'); });
+        });
+        document.addEventListener('ab:ab.saved', render);
+        document.addEventListener('ab:ab.recent', function () { if (tab === 'recent') setTimeout(render, 400); });
+        render();
+    });
+    </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>ASU Test Bank | E-Library Hub for Applied Science Private University</title>
     <meta name="description" content="ASU Test Bank for Applied Science Private University in Amman, Jordan. Find test banks, previous exams, practice questions, course files, lecture notes, and PDF study materials.">
     <link rel="canonical" href="https://asubank.org/">
@@ -14,6 +14,7 @@
     <meta property="og:description" content="Test banks, previous exams, practice questions, course files, lecture notes, and PDF study materials for Applied Science Private University students.">
     <meta property="og:url" content="https://asubank.org/">
     <meta property="og:site_name" content="ASU Test Bank">
+    <meta property="og:image" content="https://asubank.org/icons/icon-512x512.png">
 
     <!-- Tell Google the preferred name of your website -->
     <script type="application/ld+json">
@@ -22,7 +23,12 @@
         "@type": "WebSite",
         "name": "ASU Test Bank",
         "alternateName": "ASU Bank",
-        "url": "https://asubank.org/"
+        "url": "https://asubank.org/",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://asubank.org/guides/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
     }
     </script>
 
@@ -32,469 +38,217 @@
     <!-- PWA / Add to Home -->
     <link rel="manifest" href="/manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#8C1D40">
+    <meta name="theme-color" content="#f2f2f7">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="ASU Library">
-    <link rel="apple-touch-icon" href="/assets/img/icon-xxxhdpi.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ASU Bank">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Apply saved dark mode before first paint (no flash) -->
-    <script>
-        try {
-            var dm = localStorage.getItem('darkMode');
-            if (dm === 'enabled' || (dm === null && matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            }
-        } catch (e) {}
-    </script>
-
+    <!-- Apply saved dark mode before first paint (no flash); same 'darkMode' key as before -->
+    <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
+    <link rel="preload" href="/assets/app/materials.json" as="fetch" crossorigin>
+    <link rel="stylesheet" href="/assets/app/app.css?v=1">
+    <script src="/assets/app/app.js?v=1" defer></script>
     <style>
-        :root {
-            --maroon: #8C1D40;
-            --maroon-dark: #6a1530;
-            --gold: #FFC627;
-            --bg: #f6f5f3;
-            --surface: #ffffff;
-            --surface-2: #faf7f8;
-            --text: #1b1b1f;
-            --muted: #55565c;
-            --border: #e4dfe1;
-            --link: #8C1D40;
-            --focus: #0b63ce;
-            --green: #1f7a3a;
-            --radius: 14px;
-            --shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 14px rgba(0,0,0,.05);
-            --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            --font-ar: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+        .steps { counter-reset: step; }
+        .steps .ab-row-main::before {
+            counter-increment: step; content: counter(step); flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+            display: grid; place-items: center; font-weight: 700; font-size: 15px; background: var(--ab-gold); color: #1b1b1f;
         }
-        html.dark {
-            --bg: #121214;
-            --surface: #1c1c20;
-            --surface-2: #232328;
-            --text: #ececf0;
-            --muted: #b3b3bb;
-            --border: #34343b;
-            --link: #ff9fbd;
-            --focus: #7db4ff;
-            --green: #5fd38a;
-            --shadow: 0 1px 2px rgba(0,0,0,.4);
-        }
-
-        *, *::before, *::after { box-sizing: border-box; }
-        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
-        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
-        body {
-            margin: 0;
-            font-family: var(--font);
-            font-size: 1.0625rem;
-            line-height: 1.6;
-            background: var(--bg);
-            color: var(--text);
-            -webkit-text-size-adjust: 100%;
-        }
-        [lang="ar"] { font-family: var(--font-ar); }
-        a { color: var(--link); }
-        img { max-width: 100%; height: auto; }
-        h1, h2, h3 { line-height: 1.25; margin: 0; }
-        p { margin: 0; }
-
-        :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
-
-        .skip-link {
-            position: absolute; left: 12px; top: -60px; z-index: 100;
-            background: var(--gold); color: #1b1b1f; padding: 10px 16px;
-            border-radius: 8px; font-weight: 600; text-decoration: none;
-        }
-        .skip-link:focus { top: 12px; }
-
-        .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
-
-        /* ---------- Header ---------- */
-        .site-header {
-            position: sticky; top: 0; z-index: 50;
-            background: var(--maroon); color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,.15);
-        }
-        .header-row { display: flex; align-items: center; gap: 12px; min-height: 64px; }
-        .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; margin-inline-end: auto; }
-        .brand img { width: 40px; height: 40px; object-fit: contain; background: #fff; border-radius: 50%; padding: 3px; }
-        .brand-name { font-weight: 700; font-size: 1.15rem; line-height: 1.1; }
-        .brand-name small { display: block; font-weight: 500; font-size: .78rem; opacity: .85; }
-        .main-nav ul { list-style: none; display: flex; gap: 4px; margin: 0; padding: 0; }
-        .main-nav a {
-            display: block; color: #fff; text-decoration: none; font-weight: 500;
-            padding: 8px 12px; border-radius: 8px; font-size: .95rem;
-        }
-        .main-nav a:hover { background: rgba(255,255,255,.14); }
-        .icon-btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-            min-width: 44px; min-height: 44px; padding: 0 12px;
-            border: 1px solid rgba(255,255,255,.35); border-radius: 10px;
-            background: transparent; color: #fff; font: inherit; font-size: .9rem; cursor: pointer;
-        }
-        .icon-btn:hover { background: rgba(255,255,255,.14); }
-        #menuBtn { display: none; }
-        @media (max-width: 860px) {
-            #menuBtn { display: inline-flex; }
-            .main-nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--maroon-dark); padding: 8px 16px 16px; }
-            .main-nav.open { display: block; }
-            .main-nav ul { flex-direction: column; }
-            .main-nav a { padding: 12px; font-size: 1rem; }
-            .mode-label { display: none; }
-        }
-
-        /* ---------- Hero ---------- */
-        .hero { background: linear-gradient(160deg, var(--maroon) 0%, var(--maroon-dark) 100%); color: #fff; padding: 40px 0 48px; }
-        .hero h1 { font-size: clamp(1.6rem, 4.5vw, 2.4rem); font-weight: 700; max-width: 760px; }
-        .hero .lead { margin-top: 10px; font-size: 1.1rem; opacity: .92; max-width: 700px; }
-        .hero .lead-ar { margin-top: 4px; opacity: .85; }
-        .search-box { position: relative; margin-top: 24px; max-width: 720px; }
-        .search-box label { display: block; font-weight: 600; margin-bottom: 8px; }
-        .search-box input {
-            width: 100%; min-height: 56px; padding: 0 52px 0 48px;
-            border: 2px solid transparent; border-radius: 12px;
-            font: inherit; font-size: 1.05rem; color: #1b1b1f; background: #fff;
-        }
-        .search-box input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 4px rgba(255,198,39,.35); }
-        .search-box .s-icon { position: absolute; left: 16px; bottom: 16px; pointer-events: none; font-size: 1.2rem; }
-        .search-box .s-clear {
-            position: absolute; right: 6px; bottom: 6px; width: 44px; height: 44px;
-            border: 0; border-radius: 8px; background: #eee; color: #333; font-size: 1.1rem; cursor: pointer; display: none;
-        }
-        .search-status { margin-top: 10px; min-height: 1.6em; font-weight: 500; }
-        .search-status a { color: var(--gold); }
-
-        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
-        .btn {
-            display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px;
-            border-radius: 12px; font-weight: 600; text-decoration: none; font-size: 1rem;
-        }
-        .btn-gold { background: var(--gold); color: #1b1b1f; }
-        .btn-light { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.4); }
-        .btn-wa { background: #1f9e4f; color: #fff; }
-        .btn:hover { filter: brightness(1.07); }
-
-        /* ---------- Notice ---------- */
-        .notice {
-            display: flex; gap: 12px; align-items: flex-start;
-            margin: 24px 0 0; padding: 14px 16px; border-radius: var(--radius);
-            background: #fff7da; color: #3d3100; border: 1px solid #f1d77b;
-        }
-        html.dark .notice { background: #2c2610; color: #f6e7a8; border-color: #5b4c14; }
-        .notice p + p { margin-top: 6px; }
-        .notice .close { margin-inline-start: auto; flex-shrink: 0; width: 40px; height: 40px; border: 0; background: transparent; color: inherit; font-size: 1.1rem; cursor: pointer; border-radius: 8px; }
-        .notice[hidden] { display: none; }
-
-        /* ---------- Sections ---------- */
-        main section { padding: 36px 0 8px; }
-        .section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 16px; }
-        .section-head h2 { font-size: 1.5rem; }
-        .section-head .ar { color: var(--muted); font-size: 1.05rem; }
-        .section-intro { color: var(--muted); margin: -8px 0 16px; max-width: 70ch; }
-
-        .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-        .grid.compact { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-
-        .card {
-            position: relative; display: flex; gap: 12px; align-items: flex-start;
-            padding: 16px; border-radius: var(--radius);
-            background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
-            color: var(--text); text-decoration: none;
-            transition: border-color .15s, transform .15s;
-        }
-        .card:hover { border-color: var(--maroon); transform: translateY(-2px); }
-        html.dark .card:hover { border-color: var(--link); }
-        .card .ico { font-size: 1.6rem; line-height: 1; flex-shrink: 0; width: 36px; text-align: center; }
-        .card h3 { font-size: 1.05rem; font-weight: 600; }
-        .card p { color: var(--muted); font-size: .95rem; margin-top: 2px; }
-        .card .ar { display: block; color: var(--muted); font-size: .95rem; margin-top: 2px; }
-        .tag {
-            display: inline-block; margin-inline-start: 6px; padding: 1px 8px; border-radius: 999px;
-            font-size: .72rem; font-weight: 700; letter-spacing: .02em; vertical-align: middle;
-            background: var(--maroon); color: #fff;
-        }
-        .tag.old { background: var(--border); color: var(--muted); }
-        .tag.new { background: var(--green); color: #fff; }
-        html.dark .tag.new { color: #0d2416; }
-
-        /* Steps for new students */
-        .steps { counter-reset: step; list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-        .steps li { counter-increment: step; }
-        .steps .card::before {
-            content: counter(step); flex-shrink: 0;
-            width: 32px; height: 32px; border-radius: 50%;
-            display: grid; place-items: center; font-weight: 700;
-            background: var(--gold); color: #1b1b1f;
-        }
-
-        .panel { background: var(--surface-2); border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px); padding: 20px 16px; }
-        @media (min-width: 700px) { .panel { padding: 24px; } }
-
-        .college { margin-top: 20px; }
-        .college h3 { font-size: 1.05rem; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
-        .college .card { padding: 12px 14px; align-items: center; }
-        .college .card .ico { font-size: 1.35rem; }
-        .college .card h3 { color: var(--text); margin: 0; }
-
-        .no-results { display: none; padding: 20px; border-radius: var(--radius); background: var(--surface); border: 1px dashed var(--border); margin-top: 24px; }
-        .no-results a { font-weight: 600; }
-
-        /* ---------- Footer ---------- */
-        .site-footer { margin-top: 48px; padding: 32px 0; background: var(--surface); border-top: 1px solid var(--border); color: var(--muted); font-size: .95rem; }
-        .footer-cols { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-        .site-footer h2 { font-size: 1rem; color: var(--text); margin-bottom: 8px; }
-        .site-footer ul { list-style: none; margin: 0; padding: 0; }
-        .site-footer li { padding: 4px 0; }
-        .site-footer a { color: var(--link); }
-        .footer-about p + p { margin-top: 6px; }
-        .copyright { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); }
-
-        .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-        [data-search-hidden] { display: none !important; }
+        .college-h { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--ab-label-2); margin: 18px 4px 8px; }
+        .ab-card .count { font-size: 12px; color: var(--ab-label-3); margin-top: auto; }
+        .tag { display: inline-block; margin-inline-start: 4px; padding: 0 6px; border-radius: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .03em; vertical-align: 2px; background: var(--ab-accent-soft); color: var(--ab-accent); }
+        .tag.new { background: rgba(31,138,62,.14); color: var(--ab-green); }
+        .tag.old { background: var(--ab-fill); color: var(--ab-label-2); }
+        #shelves[hidden] { display: none; }
+        .hero-ar { font-size: 16px; }
     </style>
 </head>
-<body>
-    <a class="skip-link" href="#main">Skip to content</a>
+<body class="ab" data-ab-protect>
+    <a class="ab-skip" href="#main">Skip to content</a>
 
-    <header class="site-header">
-        <div class="wrap header-row">
-            <a class="brand" href="/" aria-label="ASU E-Library Hub, home">
-                <img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="40" height="40">
-                <span class="brand-name">E-Library Hub <small>ASU Test Bank</small></span>
-            </a>
-            <nav class="main-nav" id="mainNav" aria-label="Main">
-                <ul>
-                    <li><a href="#subjects">Subjects</a></li>
-                    <li><a href="#new-students">New students</a></li>
-                    <li><a href="#quick-links">Quick links</a></li>
-                    <li><a href="#schedules">Schedules</a></li>
-                    <li><a href="#community">Community</a></li>
-                    <li><a href="/guides/faqs">Help</a></li>
-                </ul>
-            </nav>
-            <button class="icon-btn" id="modeBtn" type="button" aria-pressed="false">
-                <span aria-hidden="true" id="modeIcon">🌙</span><span class="mode-label" id="modeLabel">Dark</span>
-                <span class="visually-hidden">mode</span>
-            </button>
-            <button class="icon-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mainNav">
-                <span aria-hidden="true">☰</span><span class="visually-hidden">Menu</span>
-            </button>
+    <header class="ab-nav">
+        <div class="ab-wrap ab-nav-row">
+            <div class="ab-nav-l"><a class="ab-brand" href="/" aria-label="ASU Bank, home"><img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="30" height="30"><span>ASU Bank</span></a></div>
+            <div class="ab-nav-title" aria-hidden="true"></div>
+            <div class="ab-nav-r">
+                <nav class="ab-desk-links" aria-label="Main">
+                    <a href="#subjects">Subjects</a>
+                    <a href="#schedules">Schedules</a>
+                    <a href="#community">Community</a>
+                    <a href="/guides/faqs">Help</a>
+                </nav>
+                <button class="ab-icon-btn" id="modeBtn" type="button" aria-label="Dark mode" aria-pressed="false"></button>
+            </div>
         </div>
     </header>
 
-    <div class="hero">
-        <div class="wrap">
+    <main id="main" class="ab-wrap" tabindex="-1">
+        <div class="ab-hero ab-in">
             <h1>Summaries, past papers and test banks for ASU students</h1>
-            <p class="lead">Peer-verified study materials curated by Applied Science University students, for ASU students.</p>
-            <p class="lead lead-ar" lang="ar" dir="rtl">ملخصات وامتحانات سابقة وبنوك أسئلة لطلاب جامعة العلوم التطبيقية</p>
+            <p>Peer-verified study materials curated by Applied Science University students, for ASU students.</p>
+            <p class="hero-ar" lang="ar" dir="rtl">ملخصات وامتحانات سابقة وبنوك أسئلة لطلاب جامعة العلوم التطبيقية</p>
 
-            <div class="search-box" role="search">
-                <label for="siteSearch">Search this page <span lang="ar">· ابحث في الصفحة</span></label>
-                <span class="s-icon" aria-hidden="true">🔍</span>
-                <input type="search" id="siteSearch" placeholder="e.g. calculus, nursing, calendar, التقويم…" autocomplete="off" aria-describedby="searchStatus">
-                <button type="button" class="s-clear" id="searchClear" aria-label="Clear search">✕</button>
-            </div>
-            <p class="search-status" id="searchStatus" role="status" aria-live="polite"></p>
+            <form class="ab-search big" role="search" id="homeSearch" action="/guides/search" autocomplete="off">
+                <svg class="ab-s-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <label class="ab-vh" for="siteSearch">Search materials · ابحث عن المواد</label>
+                <input type="search" id="siteSearch" name="q" placeholder="Search 1,400+ files · ابحث" enterkeyhint="search"
+                       role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggest" autocapitalize="off" spellcheck="false">
+                <button type="button" class="ab-s-clear" id="searchClear" aria-label="Clear search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m15 9-6 6m0-6 6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+                <div class="ab-suggest" id="suggest" role="listbox" aria-label="Suggestions"></div>
+            </form>
 
-            <div class="hero-actions">
-                <a class="btn btn-gold" href="/guides/search"><span aria-hidden="true">⚡</span> Fast file search</a>
-                <a class="btn btn-light" href="#subjects"><span aria-hidden="true">📚</span> Browse subjects</a>
-                <a class="btn btn-wa" href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> WhatsApp community</a>
+            <div class="ab-btn-row">
+                <a class="ab-btn gold sm" href="#subjects">📚 Browse subjects</a>
+                <a class="ab-btn glass sm" href="/upload/uploadmethod">📤 Upload</a>
+                <a class="ab-btn glass sm" href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank" rel="noopener">💬 WhatsApp community</a>
             </div>
         </div>
-    </div>
 
-    <main id="main" class="wrap" tabindex="-1">
-
-        <div class="notice" id="adminNotice" role="note">
+        <div class="ab-notice" id="adminNotice" role="note" style="margin-top:14px">
             <span aria-hidden="true">📢</span>
             <div>
                 <p><strong>Note from the admin:</strong> this service may become available to paid users only. Your donations help us keep the site running and improve it. For more information, contact us through the WhatsApp community.</p>
                 <p lang="ar" dir="rtl">يرجى العلم بأن هذه الخدمة قد تصبح متاحة للمستخدمين المدفوعين فقط. نحتاج إلى تبرعاتكم ودعمكم لمساعدتنا على الاستمرار في تقديم خدماتنا وتطويرها. لمزيد من المعلومات، يرجى التواصل معنا عبر مجتمع الواتساب.</p>
             </div>
-            <button type="button" class="close" id="noticeClose" aria-label="Hide this note">✕</button>
+            <button type="button" class="ab-icon-btn" id="noticeClose" aria-label="Hide this note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
         </div>
 
-        <!-- ===== New students ===== -->
-        <section id="new-students" aria-labelledby="h-new">
-            <div class="panel">
-                <div class="section-head">
-                    <h2 id="h-new">New here? Start with these</h2>
-                    <span class="ar" lang="ar" dir="rtl">طالب جديد؟ ابدأ من هنا</span>
-                </div>
-                <p class="section-intro">Four steps that cover what most first-year students need in their first weeks.</p>
-                <ol class="steps">
-                    <li><a class="card" href="/guides/aspu_qa">
-                        <div><h3>Read the New Student Guide <span class="tag new">NEW</span></h3>
-                        <p>Admissions, tuition fees, majors, scholarships, MY ASU &amp; EduGate, campus life.</p>
-                        <span class="ar" lang="ar" dir="rtl">كل شي بحتاجه الطالب الجديد</span></div>
-                    </a></li>
-                    <li><a class="card" href="/guides/asu">
-                        <div><h3>Bookmark the ASU shortcuts</h3>
-                        <p>My ASU, EduGate, Teams, course list and your absence record in one place.</p>
-                        <span class="ar" lang="ar" dir="rtl">روابط الجامعة المهمة</span></div>
-                    </a></li>
-                    <li><a class="card" href="/guides/tutorial">
-                        <div><h3>Learn how to search for files</h3>
-                        <p>A short video showing three ways to find any material fast.</p>
-                        <span class="ar" lang="ar" dir="rtl">تعلّم كيف تبحث بسرعة وكفاءة</span></div>
-                    </a></li>
-                    <li><a class="card" href="/guides/groups">
-                        <div><h3>Join your course WhatsApp groups</h3>
-                        <p>Find groups for your courses, clubs and interests. Please read the <span class="visually-hidden">WhatsApp groups</span> rules first.</p>
-                        <span class="ar" lang="ar" dir="rtl">مجموعات الواتساب للمواد</span></div>
-                    </a></li>
-                </ol>
-                <div class="grid compact" style="margin-top:12px">
-                    <a class="card" href="/guides/grading-scale-asu"><span class="ico" aria-hidden="true">📊</span><div><h3>Grading scale</h3><span class="ar" lang="ar" dir="rtl">سُلّم التقديرات</span></div></a>
-                    <a class="card" href="/guides/placement"><span class="ico" aria-hidden="true">📝</span><div><h3>Placement tests</h3><span class="ar" lang="ar" dir="rtl">امتحانات المستوى</span></div></a>
-                    <a class="card" href="/guides/halls"><span class="ico" aria-hidden="true">🏫</span><div><h3>University halls</h3><span class="ar" lang="ar" dir="rtl">قاعات الجامعة</span></div></a>
-                    <a class="card" href="https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing" target="_blank" rel="noopener"><span class="ico" aria-hidden="true">🗺️</span><div><h3>Study plans</h3><span class="ar" lang="ar" dir="rtl">الخطة الدراسية</span></div></a>
-                    <a class="card" href="/legal/wa_tos"><span class="ico" aria-hidden="true">📜</span><div><h3>WhatsApp group rules</h3><span class="ar" lang="ar" dir="rtl">شروط مجموعات الواتساب</span></div></a>
-                    <a class="card" href="/legal/uni_tos"><span class="ico" aria-hidden="true">📋</span><div><h3>Terms of Service</h3><span class="ar" lang="ar" dir="rtl">شروط الخدمة</span></div></a>
-                </div>
-            </div>
-        </section>
+        <!-- Personal shelves (filled from this device) -->
+        <div id="shelves" hidden>
+            <section class="ab-section" id="recentShelfBox" hidden>
+                <div class="ab-section-h"><h2>Continue</h2><a href="/guides/saved#recent">See all</a></div>
+                <div class="ab-shelf" id="recentShelf"></div>
+            </section>
+            <section class="ab-section" id="savedShelfBox" hidden>
+                <div class="ab-section-h"><h2>Saved</h2><a href="/guides/saved">See all</a></div>
+                <div class="ab-shelf" id="savedShelf"></div>
+            </section>
+        </div>
 
         <!-- ===== Returning students ===== -->
-        <section id="quick-links" aria-labelledby="h-quick">
-            <div class="section-head">
-                <h2 id="h-quick">Quick links</h2>
-                <span class="ar" lang="ar" dir="rtl">روابط سريعة</span>
-            </div>
-            <p class="section-intro">The pages returning students use most.</p>
-            <div class="grid">
-                <a class="card" href="/guides/latest"><span class="ico" aria-hidden="true">🆕</span><div><h3>Latest uploads <span class="tag">ADVANCED</span></h3><p>Newest PDFs, Word files, midterms, finals and quizzes.</p></div></a>
-                <a class="card" href="/guides/search"><span class="ico" aria-hidden="true">⚡</span><div><h3>Google Drive materials <span class="tag">FAST SEARCH</span></h3><p>Search every uploaded file by name.</p><span class="ar" lang="ar" dir="rtl">ابحث عن المواد بسرعة</span></div></a>
-                <a class="card" href="/portal/confirm_device"><span class="ico" aria-hidden="true">📥</span><div><h3>Recent uploads</h3><p>Latest study materials and resources.</p><span class="ar" lang="ar" dir="rtl">آخر التحديثات</span></div></a>
-                <a class="card" href="/schedules/calendar27"><span class="ico" aria-hidden="true">📅</span><div><h3>Calendar 2026–2027 <span class="tag new">NEW</span></h3><p>This year's important dates.</p><span class="ar" lang="ar" dir="rtl">التقويم</span></div></a>
-                <a class="card" href="/requests/student_request_portal"><span class="ico" aria-hidden="true">📬</span><div><h3>Request a material</h3><p>Can't find it? Ask for it. We also offer PDF creation, summaries and test banks.</p><span class="ar" lang="ar" dir="rtl">اطلب مادة</span></div></a>
-                <a class="card" href="/upload/uploadmethod"><span class="ico" aria-hidden="true">📤</span><div><h3>Upload files</h3><p>Share your study materials with others.</p><span class="ar" lang="ar" dir="rtl">شارك ملفاتك</span></div></a>
-                <a class="card" href="/requests/portal_to_rating"><span class="ico" aria-hidden="true">📝</span><div><h3>Rate professors anonymously</h3><p>Help other students choose courses and professors.</p><span class="ar" lang="ar" dir="rtl">قيّم الدكاترة بدون اسم</span></div></a>
-                <a class="card" href="/guides/links"><span class="ico" aria-hidden="true">➕</span><div><h3>Useful gate</h3><p>All university resources, materials and tools in one place.</p></div></a>
-                <a class="card" href="https://drive.google.com/drive/folders/122Cjtd7s0jlJlkqMrD2_NmqOFE1ir91h" target="_blank" rel="noopener noreferrer"><span class="ico" aria-hidden="true">🔓</span><div><h3>3 university course PDFs</h3><p>Entrepreneurship &amp; Innovation · Leadership &amp; Social Accountability · Life Skills</p><span class="ar" lang="ar" dir="rtl">ريادة الأعمال والابتكار | القيادة والمسؤولية الاجتماعية | مهارات الحياة</span></div></a>
+        <section class="ab-section" id="quick-links" aria-labelledby="h-quick">
+            <div class="ab-section-h"><h2 id="h-quick">Quick links</h2><span class="ar" lang="ar" dir="rtl">روابط سريعة</span></div>
+            <div class="ab-grid wide">
+                <a class="ab-card row" href="/guides/latest"><span class="ab-tile emoji" aria-hidden="true">🆕</span><div><h3>Latest uploads <span class="tag">ADVANCED</span></h3><p>Newest PDFs, Word files, midterms, finals and quizzes.</p></div></a>
+                <a class="ab-card row" href="/guides/search"><span class="ab-tile emoji" aria-hidden="true">⚡</span><div><h3>Google Drive materials <span class="tag">FAST SEARCH</span></h3><p>Search every uploaded file by name, subject, type and year.</p><span class="ar" lang="ar" dir="rtl">ابحث عن المواد بسرعة</span></div></a>
+                <a class="ab-card row" href="/portal/confirm_device"><span class="ab-tile emoji" aria-hidden="true">📥</span><div><h3>Recent uploads</h3><p>Latest study materials and resources.</p><span class="ar" lang="ar" dir="rtl">آخر التحديثات</span></div></a>
+                <a class="ab-card row" href="/schedules/calendar27"><span class="ab-tile emoji" aria-hidden="true">📅</span><div><h3>Calendar 2026–2027 <span class="tag new">NEW</span></h3><p>This year's important dates.</p><span class="ar" lang="ar" dir="rtl">التقويم</span></div></a>
+                <a class="ab-card row" href="/requests/student_request_portal"><span class="ab-tile emoji" aria-hidden="true">📬</span><div><h3>Request a material</h3><p>Can't find it? Ask for it. We also offer PDF creation, summaries and test banks.</p><span class="ar" lang="ar" dir="rtl">اطلب مادة</span></div></a>
+                <a class="ab-card row" href="/upload/uploadmethod"><span class="ab-tile emoji" aria-hidden="true">📤</span><div><h3>Upload files</h3><p>Share your study materials with others.</p><span class="ar" lang="ar" dir="rtl">شارك ملفاتك</span></div></a>
+                <a class="ab-card row" href="/requests/portal_to_rating"><span class="ab-tile emoji" aria-hidden="true">📝</span><div><h3>Rate professors anonymously</h3><p>Help other students choose courses and professors.</p><span class="ar" lang="ar" dir="rtl">قيّم الدكاترة بدون اسم</span></div></a>
+                <a class="ab-card row" href="/guides/links"><span class="ab-tile emoji" aria-hidden="true">➕</span><div><h3>Useful gate</h3><p>All university resources, materials and tools in one place.</p></div></a>
+                <a class="ab-card row" href="https://drive.google.com/drive/folders/122Cjtd7s0jlJlkqMrD2_NmqOFE1ir91h" target="_blank" rel="noopener noreferrer"><span class="ab-tile emoji" aria-hidden="true">🔓</span><div><h3>3 university course PDFs</h3><p>Entrepreneurship &amp; Innovation · Leadership &amp; Social Accountability · Life Skills</p><span class="ar" lang="ar" dir="rtl">ريادة الأعمال والابتكار | القيادة والمسؤولية الاجتماعية | مهارات الحياة</span></div></a>
             </div>
         </section>
 
         <!-- ===== Subjects ===== -->
-        <section id="subjects" aria-labelledby="h-subjects">
-            <div class="section-head">
-                <h2 id="h-subjects">Browse by subject</h2>
-                <span class="ar" lang="ar" dir="rtl">تصفح حسب التخصص</span>
-            </div>
-            <p class="section-intro">Test banks, past exams and notes, grouped by college.</p>
+        <section class="ab-section" id="subjects" aria-labelledby="h-subjects">
+            <div class="ab-section-h"><h2 id="h-subjects">Browse by subject</h2><a href="/banks/subjects">All subjects</a></div>
+            <p class="ab-foot" style="padding:0 4px">Test banks, past exams and notes, grouped by college. <span lang="ar" dir="rtl">تصفح حسب التخصص</span></p>
 
-            <div class="college">
-                <h3>Popular &amp; general</h3>
-                <div class="grid compact">
-                    <a class="card" href="/banks/mostwanted"><span class="ico" aria-hidden="true">🔥</span><div><h3>Most wanted files</h3><span class="ar" lang="ar" dir="rtl">الملفات الأكثر طلباً</span></div></a>
-                    <a class="card" href="/banks/summaries"><span class="ico" aria-hidden="true">📚</span><div><h3>Summaries</h3><span class="ar" lang="ar" dir="rtl">الملخصات</span></div></a>
-                    <a class="card" href="/banks/presentations"><span class="ico" aria-hidden="true">📂</span><div><h3>Presentations</h3><span class="ar" lang="ar" dir="rtl">العروض التقديمية</span></div></a>
-                    <a class="card" href="/banks/others"><span class="ico" aria-hidden="true">📜</span><div><h3>Elective courses / other</h3><span class="ar" lang="ar" dir="rtl">المقررات الاختيارية / أخرى</span></div></a>
-                    <a class="card" href="/banks/unarranged"><span class="ico" aria-hidden="true">📋</span><div><h3>Unarranged – others</h3><span class="ar" lang="ar" dir="rtl">غير مصنف - أخرى</span></div></a>
-                </div>
+            <h3 class="college-h">Popular &amp; general</h3>
+            <div class="ab-grid">
+                <a class="ab-card" href="/banks/mostwanted"><span class="ab-tile emoji" aria-hidden="true">🔥</span><h3>Most wanted files</h3><span class="ar" lang="ar" dir="rtl">الملفات الأكثر طلباً</span></a>
+                <a class="ab-card" href="/banks/summaries"><span class="ab-tile emoji" aria-hidden="true">📚</span><h3>Summaries</h3><span class="ar" lang="ar" dir="rtl">الملخصات</span></a>
+                <a class="ab-card" href="/banks/presentations"><span class="ab-tile emoji" aria-hidden="true">📂</span><h3>Presentations</h3><span class="ar" lang="ar" dir="rtl">العروض التقديمية</span></a>
+                <a class="ab-card" href="/banks/others"><span class="ab-tile emoji" aria-hidden="true">📜</span><h3>Elective courses / other</h3><span class="ar" lang="ar" dir="rtl">المقررات الاختيارية / أخرى</span></a>
+                <a class="ab-card" href="/banks/unarranged"><span class="ab-tile emoji" aria-hidden="true">📋</span><h3>Unarranged – others</h3><span class="ar" lang="ar" dir="rtl">غير مصنف - أخرى</span></a>
             </div>
 
-            <div class="college">
-                <h3>Medical &amp; health sciences</h3>
-                <div class="grid compact">
-                    <a class="card" href="/banks/medical"><span class="ico" aria-hidden="true">🏥</span><div><h3>Health sciences</h3><span class="ar" lang="ar" dir="rtl">العلوم الصحية</span></div></a>
-                    <a class="card" href="/banks/pharmacy"><span class="ico" aria-hidden="true">💊</span><div><h3>Pharmacy</h3><span class="ar" lang="ar" dir="rtl">الصيدلة</span></div></a>
-                    <a class="card" href="/banks/dentistry"><span class="ico" aria-hidden="true">🦷</span><div><h3>Dentistry</h3><span class="ar" lang="ar" dir="rtl">طب الأسنان</span></div></a>
-                    <a class="card" href="/banks/nursing"><span class="ico" aria-hidden="true">🩺</span><div><h3>Nursing</h3><span class="ar" lang="ar" dir="rtl">التمريض</span></div></a>
-                    <a class="card" href="/banks/biology"><span class="ico" aria-hidden="true">🧬</span><div><h3>Biology</h3><span class="ar" lang="ar" dir="rtl">علم الأحياء</span></div></a>
-                    <a class="card" href="/banks/biochemistry"><span class="ico" aria-hidden="true">🧪</span><div><h3>Biochemistry</h3><span class="ar" lang="ar" dir="rtl">الكيمياء الحيوية</span></div></a>
-                    <a class="card" href="/banks/physiology"><span class="ico" aria-hidden="true">🫀</span><div><h3>Physiology</h3><span class="ar" lang="ar" dir="rtl">علم وظائف الأعضاء</span></div></a>
-                    <a class="card" href="/banks/lab_related"><span class="ico" aria-hidden="true">⚗️</span><div><h3>Lab materials</h3><span class="ar" lang="ar" dir="rtl">مواد المختبرات</span></div></a>
-                </div>
+            <h3 class="college-h">Medical &amp; health sciences</h3>
+            <div class="ab-grid">
+                <a class="ab-card" href="/banks/medical"><span class="ab-tile emoji" aria-hidden="true">🏥</span><h3>Health sciences</h3><span class="ar" lang="ar" dir="rtl">العلوم الصحية</span></a>
+                <a class="ab-card" href="/banks/pharmacy"><span class="ab-tile emoji" aria-hidden="true">💊</span><h3>Pharmacy</h3><span class="ar" lang="ar" dir="rtl">الصيدلة</span></a>
+                <a class="ab-card" href="/banks/dentistry"><span class="ab-tile emoji" aria-hidden="true">🦷</span><h3>Dentistry</h3><span class="ar" lang="ar" dir="rtl">طب الأسنان</span></a>
+                <a class="ab-card" href="/banks/nursing"><span class="ab-tile emoji" aria-hidden="true">🩺</span><h3>Nursing</h3><span class="ar" lang="ar" dir="rtl">التمريض</span></a>
+                <a class="ab-card" href="/banks/biology"><span class="ab-tile emoji" aria-hidden="true">🧬</span><h3>Biology</h3><span class="ar" lang="ar" dir="rtl">علم الأحياء</span></a>
+                <a class="ab-card" href="/banks/biochemistry"><span class="ab-tile emoji" aria-hidden="true">🧪</span><h3>Biochemistry</h3><span class="ar" lang="ar" dir="rtl">الكيمياء الحيوية</span></a>
+                <a class="ab-card" href="/banks/physiology"><span class="ab-tile emoji" aria-hidden="true">🫀</span><h3>Physiology</h3><span class="ar" lang="ar" dir="rtl">علم وظائف الأعضاء</span></a>
+                <a class="ab-card" href="/banks/lab_related"><span class="ab-tile emoji" aria-hidden="true">⚗️</span><h3>Lab materials</h3><span class="ar" lang="ar" dir="rtl">مواد المختبرات</span></a>
             </div>
 
-            <div class="college">
-                <h3>Engineering &amp; IT</h3>
-                <div class="grid compact">
-                    <a class="card" href="/banks/it"><span class="ico" aria-hidden="true">💻</span><div><h3>Information technology</h3><span class="ar" lang="ar" dir="rtl">تكنولوجيا المعلومات</span></div></a>
-                    <a class="card" href="/banks/engineering"><span class="ico" aria-hidden="true">⚙️</span><div><h3>Engineering</h3><span class="ar" lang="ar" dir="rtl">الهندسة</span></div></a>
-                    <a class="card" href="/banks/chemical"><span class="ico" aria-hidden="true">🧫</span><div><h3>Chemical engineering</h3><span class="ar" lang="ar" dir="rtl">الهندسة الكيميائية</span></div></a>
-                    <a class="card" href="/banks/electrical"><span class="ico" aria-hidden="true">⚡</span><div><h3>Electrical engineering</h3><span class="ar" lang="ar" dir="rtl">الهندسة الكهربائية</span></div></a>
-                    <a class="card" href="/banks/industrial"><span class="ico" aria-hidden="true">🏭</span><div><h3>Industrial engineering</h3><span class="ar" lang="ar" dir="rtl">الهندسة الصناعية</span></div></a>
-                </div>
+            <h3 class="college-h">Engineering &amp; IT</h3>
+            <div class="ab-grid">
+                <a class="ab-card" href="/banks/it"><span class="ab-tile emoji" aria-hidden="true">💻</span><h3>Information technology</h3><span class="ar" lang="ar" dir="rtl">تكنولوجيا المعلومات</span></a>
+                <a class="ab-card" href="/banks/engineering"><span class="ab-tile emoji" aria-hidden="true">⚙️</span><h3>Engineering</h3><span class="ar" lang="ar" dir="rtl">الهندسة</span></a>
+                <a class="ab-card" href="/banks/chemical"><span class="ab-tile emoji" aria-hidden="true">🧫</span><h3>Chemical engineering</h3><span class="ar" lang="ar" dir="rtl">الهندسة الكيميائية</span></a>
+                <a class="ab-card" href="/banks/electrical"><span class="ab-tile emoji" aria-hidden="true">⚡</span><h3>Electrical engineering</h3><span class="ar" lang="ar" dir="rtl">الهندسة الكهربائية</span></a>
+                <a class="ab-card" href="/banks/industrial"><span class="ab-tile emoji" aria-hidden="true">🏭</span><h3>Industrial engineering</h3><span class="ar" lang="ar" dir="rtl">الهندسة الصناعية</span></a>
             </div>
 
-            <div class="college">
-                <h3>Business, maths &amp; statistics</h3>
-                <div class="grid compact">
-                    <a class="card" href="/banks/business"><span class="ico" aria-hidden="true">💼</span><div><h3>Business</h3><span class="ar" lang="ar" dir="rtl">الأعمال</span></div></a>
-                    <a class="card" href="/banks/mathematics"><span class="ico" aria-hidden="true">📐</span><div><h3>Mathematics &amp; statistics</h3><span class="ar" lang="ar" dir="rtl">الرياضيات والإحصاء</span></div></a>
-                    <a class="card" href="/banks/calculus"><span class="ico" aria-hidden="true">🧮</span><div><h3>All calculus</h3><span class="ar" lang="ar" dir="rtl">حساب التفاضل والتكامل</span></div></a>
-                    <a class="card" href="/banks/demography"><span class="ico" aria-hidden="true">📊</span><div><h3>Demography</h3><span class="ar" lang="ar" dir="rtl">الديموغرافيا</span></div></a>
-                </div>
+            <h3 class="college-h">Business, maths &amp; statistics</h3>
+            <div class="ab-grid">
+                <a class="ab-card" href="/banks/business"><span class="ab-tile emoji" aria-hidden="true">💼</span><h3>Business</h3><span class="ar" lang="ar" dir="rtl">الأعمال</span></a>
+                <a class="ab-card" href="/banks/mathematics"><span class="ab-tile emoji" aria-hidden="true">📐</span><h3>Mathematics &amp; statistics</h3><span class="ar" lang="ar" dir="rtl">الرياضيات والإحصاء</span></a>
+                <a class="ab-card" href="/banks/calculus"><span class="ab-tile emoji" aria-hidden="true">🧮</span><h3>All calculus</h3><span class="ar" lang="ar" dir="rtl">حساب التفاضل والتكامل</span></a>
+                <a class="ab-card" href="/banks/demography"><span class="ab-tile emoji" aria-hidden="true">📊</span><h3>Demography</h3><span class="ar" lang="ar" dir="rtl">الديموغرافيا</span></a>
             </div>
 
-            <div class="college">
-                <h3>Arts, languages &amp; Shariah</h3>
-                <div class="grid compact">
-                    <a class="card" href="/banks/english"><span class="ico" aria-hidden="true">📖</span><div><h3>English literature / translation</h3><span class="ar" lang="ar" dir="rtl">الأدب الإنجليزي / الترجمة</span></div></a>
-                    <a class="card" href="/banks/arabicliterature"><span class="ico" aria-hidden="true">📚</span><div><h3>Arabic literature</h3><span class="ar" lang="ar" dir="rtl">الأدب العربي</span></div></a>
-                    <a class="card" href="/banks/artshumanities"><span class="ico" aria-hidden="true">🎨</span><div><h3>Arts &amp; humanities</h3><span class="ar" lang="ar" dir="rtl">الفنون والعلوم الإنسانية</span></div></a>
-                    <a class="card" href="/banks/hanafi"><span class="ico" aria-hidden="true">🕌</span><div><h3>Shariah</h3><span class="ar" lang="ar" dir="rtl">الشريعة</span></div></a>
-                    <a class="card" href="/archive/pass_protected_admin_sample"><span class="ico" aria-hidden="true">🔒</span><div><h3>TranslationNation <span class="tag old">PASSWORD</span></h3><span class="ar" lang="ar" dir="rtl">(محمي بكلمة مرور)</span></div></a>
-                </div>
+            <h3 class="college-h">Arts, languages &amp; Shariah</h3>
+            <div class="ab-grid">
+                <a class="ab-card" href="/banks/english"><span class="ab-tile emoji" aria-hidden="true">📖</span><h3>English literature / translation</h3><span class="ar" lang="ar" dir="rtl">الأدب الإنجليزي / الترجمة</span></a>
+                <a class="ab-card" href="/banks/arabicliterature"><span class="ab-tile emoji" aria-hidden="true">📚</span><h3>Arabic literature</h3><span class="ar" lang="ar" dir="rtl">الأدب العربي</span></a>
+                <a class="ab-card" href="/banks/artshumanities"><span class="ab-tile emoji" aria-hidden="true">🎨</span><h3>Arts &amp; humanities</h3><span class="ar" lang="ar" dir="rtl">الفنون والعلوم الإنسانية</span></a>
+                <a class="ab-card" href="/banks/hanafi"><span class="ab-tile emoji" aria-hidden="true">🕌</span><h3>Shariah</h3><span class="ar" lang="ar" dir="rtl">الشريعة</span></a>
+                <a class="ab-card" href="/archive/pass_protected_admin_sample"><span class="ab-tile emoji" aria-hidden="true">🔒</span><h3>TranslationNation <span class="tag old">PASSWORD</span></h3><span class="ar" lang="ar" dir="rtl">(محمي بكلمة مرور)</span></a>
             </div>
+        </section>
 
-            <div class="no-results" id="noResults" role="status">
-                <p><strong>Nothing on this page matches.</strong> Try <a href="/guides/search">Fast file search</a> to search every file, or <a href="/requests/student_request_portal">request the material</a>.</p>
-                <p lang="ar" dir="rtl">لم نجد نتائج. جرّب البحث السريع في الملفات أو اطلب المادة.</p>
+        <!-- ===== New students ===== -->
+        <section class="ab-section" id="new-students" aria-labelledby="h-new">
+            <div class="ab-section-h"><h2 id="h-new">New here? Start with these</h2><span class="ar" lang="ar" dir="rtl">طالب جديد؟ ابدأ من هنا</span></div>
+            <ul class="ab-list steps">
+                <li><a class="ab-row" href="/guides/aspu_qa"><span class="ab-row-main"><span class="ab-row-text"><span class="ab-row-title">Read the New Student Guide <span class="tag new">NEW</span></span><span class="ab-row-meta">Admissions, tuition fees, majors, scholarships, MY ASU &amp; EduGate, campus life · <span lang="ar">كل شي بحتاجه الطالب الجديد</span></span></span></span></a></li>
+                <li><a class="ab-row" href="/guides/asu"><span class="ab-row-main"><span class="ab-row-text"><span class="ab-row-title">Bookmark the ASU shortcuts</span><span class="ab-row-meta">My ASU, EduGate, Teams, course list and your absence record · <span lang="ar">روابط الجامعة المهمة</span></span></span></span></a></li>
+                <li><a class="ab-row" href="/guides/tutorial"><span class="ab-row-main"><span class="ab-row-text"><span class="ab-row-title">Learn how to search for files</span><span class="ab-row-meta">A short video showing three ways to find any material fast · <span lang="ar">تعلّم كيف تبحث بسرعة</span></span></span></span></a></li>
+                <li><a class="ab-row" href="/guides/groups"><span class="ab-row-main"><span class="ab-row-text"><span class="ab-row-title">Join your course WhatsApp groups</span><span class="ab-row-meta">Groups for your courses, clubs and interests. Read the rules first · <span lang="ar">مجموعات الواتساب للمواد</span></span></span></span></a></li>
+            </ul>
+            <div class="ab-grid" style="margin-top:10px">
+                <a class="ab-card" href="/guides/grading-scale-asu"><span class="ab-tile emoji" aria-hidden="true">📊</span><h3>Grading scale</h3><span class="ar" lang="ar" dir="rtl">سُلّم التقديرات</span></a>
+                <a class="ab-card" href="/guides/placement"><span class="ab-tile emoji" aria-hidden="true">📝</span><h3>Placement tests</h3><span class="ar" lang="ar" dir="rtl">امتحانات المستوى</span></a>
+                <a class="ab-card" href="/guides/halls"><span class="ab-tile emoji" aria-hidden="true">🏫</span><h3>University halls</h3><span class="ar" lang="ar" dir="rtl">قاعات الجامعة</span></a>
+                <a class="ab-card" href="https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing" target="_blank" rel="noopener"><span class="ab-tile emoji" aria-hidden="true">🗺️</span><h3>Study plans</h3><span class="ar" lang="ar" dir="rtl">الخطة الدراسية</span></a>
+                <a class="ab-card" href="/legal/wa_tos"><span class="ab-tile emoji" aria-hidden="true">📜</span><h3>WhatsApp group rules</h3><span class="ar" lang="ar" dir="rtl">شروط مجموعات الواتساب</span></a>
+                <a class="ab-card" href="/legal/uni_tos"><span class="ab-tile emoji" aria-hidden="true">📋</span><h3>Terms of Service</h3><span class="ar" lang="ar" dir="rtl">شروط الخدمة</span></a>
             </div>
         </section>
 
         <!-- ===== Schedules ===== -->
-        <section id="schedules" aria-labelledby="h-sched">
-            <div class="section-head">
-                <h2 id="h-sched">Calendars &amp; schedules</h2>
-                <span class="ar" lang="ar" dir="rtl">التقويم والجداول</span>
-            </div>
-            <div class="grid compact">
-                <a class="card" href="/schedules/calendar27"><span class="ico" aria-hidden="true">📅</span><div><h3>Calendar 2026–2027 <span class="tag new">NEW</span></h3><span class="ar" lang="ar" dir="rtl">التقويم</span></div></a>
-                <a class="card" href="/schedules/cal2026"><span class="ico" aria-hidden="true">🗓️</span><div><h3>Academic calendar 2026</h3><p>Important dates and deadlines.</p><span class="ar" lang="ar" dir="rtl">التقويم الأكاديمي</span></div></a>
-                <a class="card" href="/schedules/ramadan_timetable"><span class="ico" aria-hidden="true">🌙</span><div><h3>Ramadan lecture timetable</h3></div></a>
-                <a class="card" href="/schedules/asu_date_asu2025_2026"><span class="ico" aria-hidden="true">📅</span><div><h3>Calendar 2025–2026 <span class="tag old">OLD</span></h3></div></a>
-                <a class="card" href="/schedules/asu_date_asu"><span class="ico" aria-hidden="true">📅</span><div><h3>Calendar 2024–2025 <span class="tag old">OLD</span></h3></div></a>
-                <a class="card" href="/schedules/bus20251"><span class="ico" aria-hidden="true">🚌</span><div><h3>Bus times 20251 <span class="tag old">OUTDATED</span></h3><span class="ar" lang="ar" dir="rtl">مواعيد الحافلات</span></div></a>
-            </div>
+        <section class="ab-section" id="schedules" aria-labelledby="h-sched">
+            <div class="ab-section-h"><h2 id="h-sched">Calendars &amp; schedules</h2><span class="ar" lang="ar" dir="rtl">التقويم والجداول</span></div>
+            <ul class="ab-list">
+                <li><a class="ab-row" href="/schedules/calendar27"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📅</span><span class="ab-row-text"><span class="ab-row-title">Calendar 2026–2027 <span class="tag new">NEW</span></span><span class="ab-row-meta" lang="ar">التقويم</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                <li><a class="ab-row" href="/schedules/cal2026"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🗓️</span><span class="ab-row-text"><span class="ab-row-title">Academic calendar 2026</span><span class="ab-row-meta">Important dates and deadlines · <span lang="ar">التقويم الأكاديمي</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                <li><a class="ab-row" href="/schedules/ramadan_timetable"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🌙</span><span class="ab-row-text"><span class="ab-row-title">Ramadan lecture timetable</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                <li><a class="ab-row" href="/schedules/asu_date_asu2025_2026"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📅</span><span class="ab-row-text"><span class="ab-row-title">Calendar 2025–2026 <span class="tag old">OLD</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                <li><a class="ab-row" href="/schedules/asu_date_asu"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📅</span><span class="ab-row-text"><span class="ab-row-title">Calendar 2024–2025 <span class="tag old">OLD</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                <li><a class="ab-row" href="/schedules/bus20251"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🚌</span><span class="ab-row-text"><span class="ab-row-title">Bus times 20251 <span class="tag old">OUTDATED</span></span><span class="ab-row-meta" lang="ar">مواعيد الحافلات</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            </ul>
         </section>
 
         <!-- ===== Community & services ===== -->
-        <section id="community" aria-labelledby="h-comm">
-            <div class="section-head">
-                <h2 id="h-comm">Community &amp; services</h2>
-                <span class="ar" lang="ar" dir="rtl">المجتمع والخدمات</span>
-            </div>
-            <div class="grid">
-                <a class="card" href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank" rel="noopener"><span class="ico" aria-hidden="true">💬</span><div><h3>WhatsApp community</h3><p>Updates, shared files and help from other students.</p><span class="ar" lang="ar" dir="rtl">انضم إلى مجتمعنا على واتساب</span></div></a>
-                <a class="card" href="/requests/matcher_confirm"><span class="ico" aria-hidden="true">👥</span><div><h3>Course matcher</h3><p>Find classmates with similar schedules and interests (50%+ match).</p><span class="ar" lang="ar" dir="rtl">ابحث عن زملاء الدراسة</span></div></a>
-                <a class="card" href="/upload/submit_file"><span class="ico" aria-hidden="true">🖥️</span><div><h3>Upload your presentations</h3><p>Submit files for the campus display screen and see when they are approved.</p></div></a>
-                <a class="card" href="/upload/student_submissions_board"><span class="ico" aria-hidden="true">📋</span><div><h3>Submitted files (students)</h3><p>PDFs, presentations and documents uploaded by students.</p></div></a>
-                <a class="card" href="/requests/student_ads"><span class="ico" aria-hidden="true">📢</span><div><h3>Student ads &amp; services</h3><p>Offer tutoring, design help or items for sale.</p></div></a>
-                <a class="card" href="/guides/gallery"><span class="ico" aria-hidden="true">📸</span><div><h3>Campus event photos</h3><p>Highlights from university events, photographed by QUSAI.</p><span class="ar" lang="ar" dir="rtl">صور الفعاليات داخل الحرم الجامعي</span></div></a>
-                <a class="card" href="/apps/photoshoot_booking"><span class="ico" aria-hidden="true">📷</span><div><h3>Book a photoshoot</h3><p>Portraits, graduation and events with QUSAI. Get a live price estimate.</p><span class="ar" lang="ar" dir="rtl">احجز جلسة تصوير خاصة بك</span></div></a>
-                <a class="card" href="/requests/service_rating"><span class="ico" aria-hidden="true">⭐</span><div><h3>Rate our service</h3><p>10 quick questions, under 2 minutes.</p><span class="ar" lang="ar" dir="rtl">قيّم خدمتنا — رأيك يهمنا</span></div></a>
-                <a class="card" href="/apps/voting"><span class="ico" aria-hidden="true">🗳️</span><div><h3>Vote</h3><p>Community votes and polls.</p></div></a>
+        <section class="ab-section" id="community" aria-labelledby="h-comm">
+            <div class="ab-section-h"><h2 id="h-comm">Community &amp; services</h2><span class="ar" lang="ar" dir="rtl">المجتمع والخدمات</span></div>
+            <div class="ab-grid wide">
+                <a class="ab-card row" href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank" rel="noopener"><span class="ab-tile emoji" aria-hidden="true">💬</span><div><h3>WhatsApp community</h3><p>Updates, shared files and help from other students.</p><span class="ar" lang="ar" dir="rtl">انضم إلى مجتمعنا على واتساب</span></div></a>
+                <a class="ab-card row" href="/requests/matcher_confirm"><span class="ab-tile emoji" aria-hidden="true">👥</span><div><h3>Course matcher</h3><p>Find classmates with similar schedules and interests (50%+ match).</p><span class="ar" lang="ar" dir="rtl">ابحث عن زملاء الدراسة</span></div></a>
+                <a class="ab-card row" href="/upload/submit_file"><span class="ab-tile emoji" aria-hidden="true">🖥️</span><div><h3>Upload your presentations</h3><p>Submit files for the campus display screen and see when they are approved.</p></div></a>
+                <a class="ab-card row" href="/upload/student_submissions_board"><span class="ab-tile emoji" aria-hidden="true">📋</span><div><h3>Submitted files (students)</h3><p>PDFs, presentations and documents uploaded by students.</p></div></a>
+                <a class="ab-card row" href="/requests/student_ads"><span class="ab-tile emoji" aria-hidden="true">📢</span><div><h3>Student ads &amp; services</h3><p>Offer tutoring, design help or items for sale.</p></div></a>
+                <a class="ab-card row" href="/guides/gallery"><span class="ab-tile emoji" aria-hidden="true">📸</span><div><h3>Campus event photos</h3><p>Highlights from university events, photographed by QUSAI.</p><span class="ar" lang="ar" dir="rtl">صور الفعاليات داخل الحرم الجامعي</span></div></a>
+                <a class="ab-card row" href="/apps/photoshoot_booking"><span class="ab-tile emoji" aria-hidden="true">📷</span><div><h3>Book a photoshoot</h3><p>Portraits, graduation and events with QUSAI. Get a live price estimate.</p><span class="ar" lang="ar" dir="rtl">احجز جلسة تصوير خاصة بك</span></div></a>
+                <a class="ab-card row" href="/requests/service_rating"><span class="ab-tile emoji" aria-hidden="true">⭐</span><div><h3>Rate our service</h3><p>10 quick questions, under 2 minutes.</p><span class="ar" lang="ar" dir="rtl">قيّم خدمتنا — رأيك يهمنا</span></div></a>
+                <a class="ab-card row" href="/apps/voting"><span class="ab-tile emoji" aria-hidden="true">🗳️</span><div><h3>Vote</h3><p>Community votes and polls.</p></div></a>
             </div>
         </section>
 
-    </main>
-
-    <footer class="site-footer">
-        <div class="wrap">
-            <div class="footer-cols">
-                <div class="footer-about">
+        <footer class="ab-footer">
+            <div class="ab-footer-cols">
+                <div>
                     <h2>ASU E-Library Hub</h2>
                     <p>Your resource for study materials, academic support and student services at Applied Science Private University.</p>
-                    <p lang="ar" dir="rtl">مركز المكتبة الإلكترونية - مصدرك الشامل للمواد الدراسية والدعم الأكاديمي وخدمات الطلاب في جامعة العلوم التطبيقية الخاصة.</p>
+                    <p lang="ar" dir="rtl" style="margin-top:6px">مركز المكتبة الإلكترونية - مصدرك الشامل للمواد الدراسية والدعم الأكاديمي وخدمات الطلاب في جامعة العلوم التطبيقية الخاصة.</p>
                 </div>
                 <nav aria-label="Help">
                     <h2>Help</h2>
@@ -515,116 +269,104 @@
                     </ul>
                 </nav>
             </div>
-            <p class="copyright">&copy; 2026 ASU E-Library Hub. All rights reserved. Not an official university website.</p>
-        </div>
-    </footer>
+            <p class="ab-copy">&copy; 2026 ASU E-Library Hub. All rights reserved. Not an official university website.</p>
+        </footer>
+    </main>
 
     <script>
-        // ===== Dark mode (keeps the old 'darkMode' localStorage key) =====
-        (function () {
-            const root = document.documentElement;
-            const btn = document.getElementById('modeBtn');
-            const icon = document.getElementById('modeIcon');
-            const label = document.getElementById('modeLabel');
-            function sync() {
-                const dark = root.classList.contains('dark');
-                btn.setAttribute('aria-pressed', dark);
-                icon.textContent = dark ? '☀️' : '🌙';
-                label.textContent = dark ? 'Light' : 'Dark';
-                btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
-            }
-            btn.addEventListener('click', () => {
-                root.classList.toggle('dark');
-                try { localStorage.setItem('darkMode', root.classList.contains('dark') ? 'enabled' : 'disabled'); } catch (e) {}
-                sync();
-            });
-            sync();
-        })();
+    document.addEventListener('DOMContentLoaded', function () {
+        'use strict';
+        var $ = function (id) { return document.getElementById(id); };
 
-        // ===== Mobile menu =====
-        (function () {
-            const btn = document.getElementById('menuBtn');
-            const nav = document.getElementById('mainNav');
-            function setOpen(open) {
-                nav.classList.toggle('open', open);
-                btn.setAttribute('aria-expanded', open);
-            }
-            btn.addEventListener('click', () => setOpen(!nav.classList.contains('open')));
-            nav.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false); });
-            document.addEventListener('keydown', e => {
-                if (e.key === 'Escape' && nav.classList.contains('open')) { setOpen(false); btn.focus(); }
-            });
-        })();
+        // ===== Quick dark mode toggle (More tab has Automatic / Light / Dark) =====
+        var modeBtn = $('modeBtn');
+        function syncMode() {
+            var dark = document.documentElement.classList.contains('dark');
+            modeBtn.innerHTML = AB.icon(dark ? 'sun' : 'moon');
+            modeBtn.setAttribute('aria-pressed', dark);
+            modeBtn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+        }
+        modeBtn.addEventListener('click', function () { AB.setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark'); });
+        document.addEventListener('ab:theme', syncMode); syncMode();
 
         // ===== Admin note: stays until dismissed, remembered per version =====
-        (function () {
-            const KEY = 'noticeDismissed';
-            const VERSION = 'paid-users-2026';
-            const notice = document.getElementById('adminNotice');
-            try { if (localStorage.getItem(KEY) === VERSION) notice.hidden = true; } catch (e) {}
-            document.getElementById('noticeClose').addEventListener('click', () => {
-                notice.hidden = true;
-                try { localStorage.setItem(KEY, VERSION); } catch (e) {}
-            });
-        })();
+        var KEY = 'noticeDismissed', VERSION = 'paid-users-2026', notice = $('adminNotice');
+        try { if (localStorage.getItem(KEY) === VERSION) notice.hidden = true; } catch (e) {}
+        $('noticeClose').addEventListener('click', function () { notice.hidden = true; try { localStorage.setItem(KEY, VERSION); } catch (e) {} });
 
-        // ===== Page search: filters every card, English or Arabic =====
-        (function () {
-            const input = document.getElementById('siteSearch');
-            const clear = document.getElementById('searchClear');
-            const status = document.getElementById('searchStatus');
-            const noResults = document.getElementById('noResults');
-            const cards = Array.from(document.querySelectorAll('main .card'));
-            const groups = Array.from(document.querySelectorAll('main .college, main section, .steps li'));
-            const norm = s => s.toLowerCase().replace(/[ً-ْ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');
-            const texts = cards.map(c => norm(c.textContent));
-
-            function run() {
-                const q = norm(input.value.trim());
-                clear.style.display = q ? 'block' : 'none';
-                let n = 0;
-                cards.forEach((c, i) => {
-                    const hit = !q || texts[i].includes(q);
-                    c.toggleAttribute('data-search-hidden', !hit);
-                    if (hit) n++;
-                });
-                groups.forEach(g => {
-                    const any = !q || g.querySelector('.card:not([data-search-hidden])');
-                    g.toggleAttribute('data-search-hidden', !any);
-                });
-                const subjects = document.getElementById('subjects');
-                if (q && n === 0) subjects.removeAttribute('data-search-hidden');
-                noResults.style.display = q && n === 0 ? 'block' : 'none';
-                document.getElementById('adminNotice').style.display = q ? 'none' : '';
-                status.innerHTML = !q ? '' : n
-                    ? `${n} result${n === 1 ? '' : 's'} below`
-                    : 'No matches on this page. <a href="/guides/search">Try Fast file search</a>';
-            }
-            input.addEventListener('input', run);
-            input.addEventListener('keydown', e => {
-                if (e.key === 'Enter') {
-                    const first = document.querySelector('main .card:not([data-search-hidden])');
-                    if (first && input.value.trim()) { e.preventDefault(); first.scrollIntoView({ block: 'center' }); first.focus(); }
-                }
-            });
-            clear.addEventListener('click', () => { input.value = ''; run(); input.focus(); });
-        })();
-
-        // ===== Service worker (PWA) =====
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        // ===== Continue / Saved shelves =====
+        function shelf(boxId, listId, items) {
+            $(boxId).hidden = !items.length;
+            $(listId).innerHTML = items.slice(0, 10).map(function (it) {
+                var ext = AB.isExternal(it.u);
+                return '<a class="ab-card" href="' + AB.esc(it.u) + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + '>' + AB.tile(it.k || AB.kind(it.u, it.t)) +
+                    '<h3>' + AB.esc(it.t) + '</h3><p>' + AB.esc(it.s || AB.kindName(it.k)) + '</p></a>';
+            }).join('');
         }
+        function shelves() {
+            var r = AB.recent.all(), s = AB.saved.all();
+            shelf('recentShelfBox', 'recentShelf', r); shelf('savedShelfBox', 'savedShelf', s);
+            $('shelves').hidden = !r.length && !s.length;
+        }
+        shelves();
+        document.addEventListener('ab:ab.saved', shelves);
 
-        // ===== Copy protection (kept from the old page; text fields still work normally) =====
-        (function () {
-            const isField = el => el && el.closest && el.closest('input, textarea, [contenteditable]');
-            document.addEventListener('contextmenu', e => { if (!isField(e.target)) e.preventDefault(); });
-            document.addEventListener('copy', e => { if (!isField(e.target)) e.preventDefault(); });
-            document.addEventListener('keydown', e => {
-                if (isField(e.target)) return;
-                if (e.ctrlKey && ['c', 'x', 'u', 'a'].includes(e.key)) e.preventDefault();
+        // ===== Subject counts from the index =====
+        AB.index().then(function (d) {
+            var n = {}; d.subjects.forEach(function (s) { n[s.p] = s.n; });
+            document.querySelectorAll('#subjects .ab-card[href^="/banks/"]').forEach(function (a) {
+                var c = n[a.getAttribute('href')]; if (c) a.insertAdjacentHTML('beforeend', '<span class="count">' + c + ' item' + (c === 1 ? '' : 's') + '</span>');
             });
-        })();
+        });
+
+        // ===== Search with live suggestions (subjects, files, pages on this site) =====
+        var input = $('siteSearch'), box = $('suggest'), form = $('homeSearch'), sel = -1, opts = [];
+        var pageLinks = Array.prototype.map.call(document.querySelectorAll('main .ab-card, main .ab-row'), function (a) {
+            var h = a.querySelector('h3, .ab-row-title');
+            return { u: a.getAttribute('href'), t: (h ? h.textContent : a.textContent).replace(/\s+/g, ' ').trim(), q: AB.norm(a.textContent), k: 'page' };
+        });
+        function close() { box.classList.remove('open'); input.setAttribute('aria-expanded', 'false'); sel = -1; }
+        function render() {
+            var v = input.value.trim();
+            form.classList.toggle('has-text', !!input.value);
+            if (!v) { close(); return; }
+            AB.index().then(function (d) {
+                if (input.value.trim() !== v) return;
+                var nq = AB.norm(v);
+                var subs = d.subjects.filter(function (s) { return AB.norm(s.t + ' ' + s.ar).indexOf(nq) > -1; }).slice(0, 3);
+                var pages = pageLinks.filter(function (p) { return p.q.indexOf(nq) > -1 && !/^\/banks\//.test(p.u); }).slice(0, 3);
+                var files = AB.match(d.items, v, 6);
+                box.innerHTML = '';
+                opts = [];
+                function head(t) { box.insertAdjacentHTML('beforeend', '<div class="ab-suggest-h">' + t + '</div>'); }
+                function add(li) { li.setAttribute('role', 'option'); li.id = 'opt' + opts.length; opts.push(li); var ul = box.lastElementChild; if (!ul || ul.tagName !== 'UL') { ul = document.createElement('ul'); ul.className = 'ab-list'; ul.style.boxShadow = 'none'; box.appendChild(ul); } ul.appendChild(li); }
+                if (subs.length) { head('Subjects'); subs.forEach(function (s) { add(AB.el('<li><a class="ab-row" href="' + s.p + '"><span class="ab-row-main"><span class="ab-tile emoji">' + s.e + '</span><span class="ab-row-text"><span class="ab-row-title">' + AB.esc(s.t) + '</span><span class="ab-row-meta">' + s.n + ' items · ' + AB.esc(s.c) + '</span></span></span></a></li>')); }); }
+                if (files.length) { head('Files & folders'); files.forEach(function (it) { add(AB.row({ u: it.u, t: it.t, k: it.k, s: it.s, tag: it.tag })); }); }
+                if (pages.length) { head('On this site'); pages.forEach(function (p) { add(AB.el('<li><a class="ab-row" href="' + AB.esc(p.u) + '"><span class="ab-row-main">' + AB.tile('page') + '<span class="ab-row-text"><span class="ab-row-title">' + AB.esc(p.t) + '</span></span></span></a></li>')); }); }
+                var more = AB.el('<a class="ab-suggest-more" href="/guides/search?q=' + encodeURIComponent(v) + '">' + (files.length || subs.length || pages.length ? 'See all results' : 'No quick matches — search Drive') + ' for “' + AB.esc(v) + '” →</a>');
+                box.appendChild(more);
+                box.classList.add('open'); input.setAttribute('aria-expanded', 'true'); sel = -1;
+            });
+        }
+        input.addEventListener('input', render);
+        input.addEventListener('focus', function () { if (input.value.trim()) render(); });
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                if (!opts.length) return; e.preventDefault();
+                sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + opts.length) % opts.length;
+                opts.forEach(function (o, i) { o.firstElementChild.setAttribute('aria-selected', i === sel); });
+                input.setAttribute('aria-activedescendant', opts[sel].id); opts[sel].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'Escape') close();
+        });
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var v = input.value.trim();
+            if (sel > -1 && opts[sel]) { var a = opts[sel].querySelector('a'); a.click(); return; }
+            if (v) { AB.searches.add(v); location.href = '/guides/search?q=' + encodeURIComponent(v); }
+        });
+        $('searchClear').addEventListener('click', function () { input.value = ''; render(); input.focus(); });
+        document.addEventListener('click', function (e) { if (!form.contains(e.target)) close(); });
+    });
     </script>
 
     <!-- Google tag (gtag.js) -->

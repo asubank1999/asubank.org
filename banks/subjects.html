@@ -2,203 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found | ASU E-Library Hub</title>
-    <meta name="description" content="The page you're looking for doesn't exist on ASU E-Library Hub. Return to the homepage to find test banks, past exams, and study materials.">
-    <meta name="robots" content="noindex, follow">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>All subjects | ASU Bank</title>
+    <meta name="description" content="Every ASU Bank subject page: test banks, past exams and notes for Applied Science Private University, grouped by college.">
+    <link rel="canonical" href="https://asubank.org/banks/subjects">
+    <meta name="theme-color" content="#f2f2f7">
+    <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/assets/img/favicon2.ico" type="image/x-icon">
-    <link rel="icon" href="/assets/img/ASU_Jordan_logo-removebg-preview.png" type="image/png">
-    <style>
-        :root {
-            --primary: #8C1D40;
-            --secondary: #FFC627;
-            --accent: #00A3E0;
-            --light: #F8F9FA;
-            --dark: #191919;
-            --gray: #6C757D;
-            --card-radius: 12px;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html, body { overflow-x: hidden; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--light);
-            color: var(--dark);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, #5e1329 100%);
-            color: white;
-            padding: 1.25rem 1rem;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .logo-section img { height: 48px; width: auto; }
-        .logo-section h1 { font-size: 1.3rem; font-weight: 700; margin: 0; }
-
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem 1.25rem;
-        }
-
-        .error-card {
-            max-width: 560px;
-            width: 100%;
-            text-align: center;
-            background: white;
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            box-shadow: var(--shadow);
-            border-top: 4px solid var(--secondary);
-        }
-
-        .error-code {
-            font-size: 4.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .error-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-        }
-
-        .error-body {
-            color: var(--gray);
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .error-body-ar {
-            color: var(--gray);
-            font-size: 0.95rem;
-            margin-bottom: 2rem;
-            direction: rtl;
-        }
-
-        .error-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            justify-content: center;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.85rem 1.6rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: var(--transition);
-            border: 2px solid transparent;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        .btn-primary:hover { background: #6f1732; transform: translateY(-2px); }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-        .btn-secondary:hover { background: rgba(140, 29, 64, 0.08); transform: translateY(-2px); }
-
-        .btn:focus-visible {
-            outline: 3px solid var(--accent);
-            outline-offset: 2px;
-        }
-
-        footer {
-            background: var(--dark);
-            color: rgba(255,255,255,0.6);
-            text-align: center;
-            padding: 1.25rem 1rem;
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 480px) {
-            .error-card { padding: 2.25rem 1.5rem; }
-            .error-code { font-size: 3.5rem; }
-            .error-title { font-size: 1.2rem; }
-            .btn { width: 100%; justify-content: center; }
-            .error-actions { flex-direction: column; }
-        }
-    </style>
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ASU Bank">
+    <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
+    <link rel="stylesheet" href="/assets/app/app.css?v=1">
+    <script src="/assets/app/app.js?v=1" defer></script>
 </head>
-<body>
-    <header>
-        <div class="header-content">
-            <a href="/" class="logo-section" aria-label="ASU E-Library Hub — Go to homepage">
-                <img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="ASU E-Library Hub logo" width="48" height="48">
-                <h1>E-Library Hub</h1>
-            </a>
+<body class="ab" data-ab-protect data-ab-recent="All subjects" data-ab-group="">
+    <a class="ab-skip" href="#main">Skip to content</a>
+    <header class="ab-nav">
+        <div class="ab-wrap ab-nav-row">
+            <div class="ab-nav-l"><a class="ab-back" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Home</a></div>
+            <div class="ab-nav-title" aria-hidden="true">All subjects</div>
+            <div class="ab-nav-r"><button class="ab-icon-btn" type="button" data-share-page aria-label="Share this page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m8 7 4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg></button></div>
         </div>
     </header>
-
-    <main>
-        <div class="error-card">
-            <div class="error-code" aria-hidden="true">404</div>
-            <h2 class="error-title">Page Not Found</h2>
-            <p class="error-body">
-                Sorry, we couldn't find the page you were looking for. It may have been moved, renamed, or never existed.
-            </p>
-            <p class="error-body-ar">
-                عذرًا، لم نتمكن من العثور على الصفحة التي تبحث عنها. ربما تم نقلها أو حذفها.
-            </p>
-            <div class="error-actions">
-                <a href="/" class="btn btn-primary">
-                    <span aria-hidden="true">🏠</span> Back to Homepage
-                </a>
-                <a href="/guides/search" class="btn btn-secondary">
-                    <span aria-hidden="true">🔍</span> Search Materials
-                </a>
-            </div>
-        </div>
+    <main id="main" class="ab-wrap">
+        <div class="ab-head"><div class="ab-eyebrow">ASU Bank</div><h1 class="ab-large">All subjects</h1><p class="ab-sub-ar" lang="ar" dir="rtl">جميع التخصصات</p></div>
+        <ul class="ab-list"><li><a class="ab-row" href="/banks/subjects_mobile"><span class="ab-row-main"><span class="ab-tile emoji">🗄️</span><span class="ab-row-text"><span class="ab-row-title">Archived materials</span><span class="ab-row-meta">Older list of 1,200+ files</span></span></span></a></li></ul>
+        <section class="ab-section"><div class="ab-section-h"><h2>Popular &amp; general</h2></div>
+        <ul class="ab-list">
+            <li><a class="ab-row" href="/banks/mostwanted"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🔥</span><span class="ab-row-text"><span class="ab-row-title">Most wanted files</span><span class="ab-row-meta">21 items · <span lang="ar">الملفات الأكثر طلباً</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/summaries"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📚</span><span class="ab-row-text"><span class="ab-row-title">Summaries</span><span class="ab-row-meta">13 items · <span lang="ar">الملخصات</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/presentations"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📂</span><span class="ab-row-text"><span class="ab-row-title">Presentations</span><span class="ab-row-meta">21 items · <span lang="ar">العروض التقديمية</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/others"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📜</span><span class="ab-row-text"><span class="ab-row-title">Elective courses / other</span><span class="ab-row-meta">129 items · <span lang="ar">المقررات الاختيارية / أخرى</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/unarranged"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📋</span><span class="ab-row-text"><span class="ab-row-title">Unarranged – others</span><span class="ab-row-meta">1 items · <span lang="ar">غير مصنف - أخرى</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/thaqafahseheya"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🍎</span><span class="ab-row-text"><span class="ab-row-title">Health culture</span><span class="ab-row-meta">17 items · <span lang="ar">الثقافة الصحية</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/diploma"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🎓</span><span class="ab-row-text"><span class="ab-row-title">Diploma courses</span><span class="ab-row-meta">6 items · <span lang="ar">مواد الدبلوم</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        </ul></section>
+        <section class="ab-section"><div class="ab-section-h"><h2>Medical &amp; health sciences</h2></div>
+        <ul class="ab-list">
+            <li><a class="ab-row" href="/banks/medical"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🏥</span><span class="ab-row-text"><span class="ab-row-title">Health sciences</span><span class="ab-row-meta">24 items · <span lang="ar">العلوم الصحية</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/pharmacy"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">💊</span><span class="ab-row-text"><span class="ab-row-title">Pharmacy</span><span class="ab-row-meta">36 items · <span lang="ar">الصيدلة</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/dentistry"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🦷</span><span class="ab-row-text"><span class="ab-row-title">Dentistry</span><span class="ab-row-meta">1 items · <span lang="ar">طب الأسنان</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/nursing"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🩺</span><span class="ab-row-text"><span class="ab-row-title">Nursing</span><span class="ab-row-meta">12 items · <span lang="ar">التمريض</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/biology"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🧬</span><span class="ab-row-text"><span class="ab-row-title">Biology</span><span class="ab-row-meta">2 items · <span lang="ar">علم الأحياء</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/biochemistry"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🧪</span><span class="ab-row-text"><span class="ab-row-title">Biochemistry</span><span class="ab-row-meta">8 items · <span lang="ar">الكيمياء الحيوية</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/physiology"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🫀</span><span class="ab-row-text"><span class="ab-row-title">Physiology</span><span class="ab-row-meta">3 items · <span lang="ar">علم وظائف الأعضاء</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/lab_related"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">⚗️</span><span class="ab-row-text"><span class="ab-row-title">Lab materials</span><span class="ab-row-meta">25 items · <span lang="ar">مواد المختبرات</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        </ul></section>
+        <section class="ab-section"><div class="ab-section-h"><h2>Engineering &amp; IT</h2></div>
+        <ul class="ab-list">
+            <li><a class="ab-row" href="/banks/it"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">💻</span><span class="ab-row-text"><span class="ab-row-title">Information technology</span><span class="ab-row-meta">93 items · <span lang="ar">تكنولوجيا المعلومات</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/engineering"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">⚙️</span><span class="ab-row-text"><span class="ab-row-title">Engineering</span><span class="ab-row-meta">142 items · <span lang="ar">الهندسة</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/chemical"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🧫</span><span class="ab-row-text"><span class="ab-row-title">Chemical engineering</span><span class="ab-row-meta">39 items · <span lang="ar">الهندسة الكيميائية</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/electrical"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">⚡</span><span class="ab-row-text"><span class="ab-row-title">Electrical engineering</span><span class="ab-row-meta">23 items · <span lang="ar">الهندسة الكهربائية</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/industrial"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🏭</span><span class="ab-row-text"><span class="ab-row-title">Industrial engineering</span><span class="ab-row-meta">37 items · <span lang="ar">الهندسة الصناعية</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        </ul></section>
+        <section class="ab-section"><div class="ab-section-h"><h2>Business, maths &amp; statistics</h2></div>
+        <ul class="ab-list">
+            <li><a class="ab-row" href="/banks/business"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">💼</span><span class="ab-row-text"><span class="ab-row-title">Business</span><span class="ab-row-meta">2 items · <span lang="ar">الأعمال</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/mathematics"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📐</span><span class="ab-row-text"><span class="ab-row-title">Mathematics &amp; statistics</span><span class="ab-row-meta">55 items · <span lang="ar">الرياضيات والإحصاء</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/calculus"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🧮</span><span class="ab-row-text"><span class="ab-row-title">All calculus</span><span class="ab-row-meta">38 items · <span lang="ar">حساب التفاضل والتكامل</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/demography"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📊</span><span class="ab-row-text"><span class="ab-row-title">Demography</span><span class="ab-row-meta">2 items · <span lang="ar">الديموغرافيا</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/math"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">➗</span><span class="ab-row-text"><span class="ab-row-title">Math</span><span class="ab-row-meta">2 items · <span lang="ar">الرياضيات</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        </ul></section>
+        <section class="ab-section"><div class="ab-section-h"><h2>Arts, languages &amp; Shariah</h2></div>
+        <ul class="ab-list">
+            <li><a class="ab-row" href="/banks/english"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📖</span><span class="ab-row-text"><span class="ab-row-title">English literature / translation</span><span class="ab-row-meta">22 items · <span lang="ar">الأدب الإنجليزي / الترجمة</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/arabicliterature"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">📚</span><span class="ab-row-text"><span class="ab-row-title">Arabic literature</span><span class="ab-row-meta">1 items · <span lang="ar">الأدب العربي</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/artshumanities"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🎨</span><span class="ab-row-text"><span class="ab-row-title">Arts &amp; humanities</span><span class="ab-row-meta">15 items · <span lang="ar">الفنون والعلوم الإنسانية</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/hanafi"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🕌</span><span class="ab-row-text"><span class="ab-row-title">Shariah</span><span class="ab-row-meta">13 items · <span lang="ar">الشريعة</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        </ul></section>
+        <section class="ab-section"><div class="ab-section-h"><h2>Other faculties</h2></div>
+        <ul class="ab-list">
+            <li><a class="ab-row" href="/banks/agricultural"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🌱</span><span class="ab-row-text"><span class="ab-row-title">Agricultural technology</span><span class="ab-row-meta">1 items · <span lang="ar">التكنولوجيا الزراعية</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/special"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">✨</span><span class="ab-row-text"><span class="ab-row-title">Special request</span><span class="ab-row-meta">1 items · <span lang="ar">طلب خاص</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a class="ab-row" href="/banks/facultiescourseslist"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🏛️</span><span class="ab-row-text"><span class="ab-row-title">Faculty course lists</span><span class="ab-row-meta">11 items · <span lang="ar">قوائم مواد الكليات</span></span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        </ul></section>
+        <section class="ab-section" aria-label="Help">
+            <ul class="ab-list">
+                <li><a class="ab-row" href="/upload/uploadmethod"><span class="ab-row-main"><span class="ab-tile emoji">📤</span><span class="ab-row-text"><span class="ab-row-title">Have a file that is not here?</span><span class="ab-row-meta">Upload it and help other students</span></span></span></a></li>
+                <li><a class="ab-row" href="/requests/student_request_portal"><span class="ab-row-main"><span class="ab-tile emoji">📬</span><span class="ab-row-text"><span class="ab-row-title">Request a material</span><span class="ab-row-meta">We look for it or make a summary</span></span></span></a></li>
+                <li><a class="ab-row" href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank" rel="noopener"><span class="ab-row-main"><span class="ab-tile emoji">💬</span><span class="ab-row-text"><span class="ab-row-title">WhatsApp community</span><span class="ab-row-meta">Admin: necro144@yahoo.com</span></span></span></a></li>
+            </ul>
+            <p class="ab-foot">By using this website you agree to the <a href="/legal/uni_tos">Terms of Service</a>. The owner is not responsible for your exam marks. <span lang="ar" dir="rtl">باستخدام هذا الموقع فإنك توافق على <a href="/legal/uni_tos_ar">الشروط والأحكام</a>.</span></p>
+        </section>
     </main>
-
-    <footer>
-        &copy; 2026 ASU E-Library Hub. All rights reserved.
-    </footer>
-	
-	<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
-
 </body>
 </html>

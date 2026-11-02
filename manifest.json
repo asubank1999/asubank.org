@@ -1,28 +1,26 @@
 {
-  "name": "ASU E-Library Hub",
-  "short_name": "ASU Library",
-  "description": "Your comprehensive resource for study materials and academic support at Applied Science Private University.",
-  "start_url": "/",
+  "id": "/",
+  "name": "ASU Bank – E-Library Hub",
+  "short_name": "ASU Bank",
+  "description": "Test banks, past exams, summaries and course folders for Applied Science Private University students.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#F8F9FA",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#f2f2f7",
   "theme_color": "#8C1D40",
-  "orientation": "portrait-primary",
+  "orientation": "any",
+  "categories": ["education", "productivity"],
   "icons": [
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-512x512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-512x512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Search materials", "short_name": "Search", "url": "/guides/search?source=pwa", "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }] },
+    { "name": "Saved files", "short_name": "Saved", "url": "/guides/saved?source=pwa", "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }] },
+    { "name": "Upload a file", "short_name": "Upload", "url": "/upload/uploadmethod?source=pwa", "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }] }
   ]
 }
