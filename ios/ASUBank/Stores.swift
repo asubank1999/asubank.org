@@ -9,6 +9,14 @@ final class AppState: ObservableObject {
     @Published var tab: AppTab = .home
     @Published var pendingQuery: String?
 
+    init() {
+        // Launch arguments used by the CI screenshots, e.g. `-startTab search -startQuery calculus`
+        let d = UserDefaults.standard
+        let tabs: [String: AppTab] = ["home": .home, "search": .search, "upload": .upload, "saved": .saved, "more": .more]
+        if let t = d.string(forKey: "startTab"), let tab = tabs[t] { self.tab = tab }
+        pendingQuery = d.string(forKey: "startQuery")
+    }
+
     func search(_ q: String) {
         pendingQuery = q
         tab = .search

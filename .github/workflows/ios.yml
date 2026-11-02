@@ -22,21 +22,62 @@ on:
 jobs:
   build:
     runs-on: macos-15
+    permissions:
+      contents: write # pushes the screenshots branch
     defaults:
       run:
         working-directory: ios
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install XcodeGen
         run: brew install xcodegen xcbeautify
       - name: Generate Xcode project
         run: xcodegen generate
+      - name: Pick an iPhone simulator
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)['devices']
+          c=[(k,x) for k,v in d.items() if 'iOS' in k for x in v if 'Pro Max' in x['name']]
+          c.sort(key=lambda kx: [int(n) for n in kx[0].split('iOS-')[-1].split('-')])
+          print(c[-1][1]['udid'])")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl list devices | grep "$UDID"
       - name: Build for the simulator
         run: |
           set -o pipefail
           xcodebuild -project ASUBank.xcodeproj -scheme ASUBank -configuration Debug \
-            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -destination "id=$UDID" -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO build | xcbeautify --renderer github-actions
+      - name: Screenshots
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3 || true
+          xcrun simctl install "$UDID" build/Build/Products/Debug-iphonesimulator/ASUBank.app
+          mkdir -p "$RUNNER_TEMP/shots"
+          shot() { # name, wait, launch args...
+            name=$1; wait=$2; shift 2
+            xcrun simctl terminate "$UDID" org.asubank.app 2>/dev/null || true
+            xcrun simctl launch "$UDID" org.asubank.app "$@"
+            sleep "$wait"
+            xcrun simctl io "$UDID" screenshot "$RUNNER_TEMP/shots/$name.png"
+          }
+          shot 0-launch 25 -startTab home
+          shot 1-home 8 -startTab home
+          shot 2-home-dark 8 -startTab home -ab.appearance 2
+          shot 3-search 15 -startTab search -startQuery calculus
+          shot 4-search-dark 15 -startTab search -startQuery "pharmacology" -ab.appearance 2
+          shot 5-upload 6 -startTab upload
+          shot 6-saved 5 -startTab saved
+          shot 7-more 5 -startTab more
+          shot 8-more-dark 5 -startTab more -ab.appearance 2
+          cd "$RUNNER_TEMP/shots" && ls -la
+          git init -q && git checkout -q -b ios-screenshots
+          echo "Simulator screenshots of ${{ github.sha }} (made by .github/workflows/ios.yml)" > README.md
+          git add . && git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com commit -qm "Screenshots of ${{ github.sha }}"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ios-screenshots
 
   release:
     if: github.event_name == 'workflow_dispatch' && inputs.release
@@ -50,7 +91,7 @@ jobs:
       KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Check secrets
         run: |
           for v in TEAM_ID KEY_ID ISSUER_ID; do [ -n "${!v}" ] || { echo "::error::Missing secret for $v (see ios/PUBLISHING.md)"; exit 1; }; done
