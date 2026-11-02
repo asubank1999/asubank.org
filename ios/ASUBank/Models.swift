@@ -19,6 +19,7 @@ struct Material: Codable, Identifiable, Hashable {
     var p: String?
     var c: String?
     var tag: String?
+    var d: String? // date the link was added, "YYYY-MM-DD"
     var id: String { u }
 }
 
@@ -28,6 +29,7 @@ struct IndexedMaterial: Identifiable, Hashable {
     let q: String
     let kind: Kind
     let year: String
+    let isNew: Bool
     var id: String { m.u }
 }
 
@@ -170,7 +172,38 @@ enum AB {
     }
 
     static func index(_ m: Material) -> IndexedMaterial {
-        IndexedMaterial(m: m, q: norm(m.t + " " + (m.s ?? "") + " " + (m.c ?? "")), kind: kind(m.u, m.t), year: yearOf(m.t))
+        IndexedMaterial(m: m, q: norm(m.t + " " + (m.s ?? "") + " " + (m.c ?? "")), kind: kind(m.u, m.t), year: yearOf(m.t), isNew: isNew(m.d))
+    }
+
+    /// NEW badges last 30 days after a link is added (same rule as the website)
+    static let newDays = 30.0
+    private static let dayFormat: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "yyyy-MM-dd"
+        return f
+    }()
+    static func date(_ s: String?) -> Date? {
+        guard let s, s.count >= 10 else { return nil }
+        return dayFormat.date(from: String(s.prefix(10)))
+    }
+    static func isNew(_ d: String?) -> Bool {
+        guard let date = date(d) else { return false }
+        return Date().timeIntervalSince(date) < newDays * 86400
+    }
+
+    /// "https://asubank.org/guides/faqs.html#x" -> "/guides/faqs"; nil for other sites
+    static func sitePath(_ u: String) -> String? {
+        var p = u.trimmingCharacters(in: .whitespaces)
+        if let r = p.range(of: #"^https?://(www\.)?asubank\.org"#, options: [.regularExpression, .caseInsensitive]) {
+            p.removeSubrange(r)
+            if p.isEmpty { p = "/" }
+        }
+        guard p.hasPrefix("/"), !p.hasPrefix("//") else { return nil }
+        if let i = p.firstIndex(where: { $0 == "?" || $0 == "#" }) { p = String(p[..<i]) }
+        p = p.replacingOccurrences(of: #"\.html?$"#, with: "", options: .regularExpression)
+        while p.count > 1 && p.hasSuffix("/") { p.removeLast() }
+        return p == "/index" ? "/" : p
     }
 
     /// Score items for a query; every word must match (same ranking as the website)
@@ -191,7 +224,7 @@ enum AB {
             let tn = norm(it.m.t)
             if tn.hasPrefix(nq) { score += 8 } else if tn.contains(nq) { score += 4 }
             if it.kind == .folder { score += 1 }
-            if it.m.tag == "new" { score += 1 }
+            if it.isNew { score += 1 }
             out.append((score, it))
         }
         return out.sorted { $0.0 > $1.0 }.prefix(limit).map { $0.1 }

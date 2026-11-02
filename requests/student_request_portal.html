@@ -1,227 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StudyHub — Secure Payment Gateway</title>
-  <style>
-    :root {
-      --brand-800: #a31414;
-      --brand-600: #c41e1e;
-      --bg: #f9fafc;
-      --text: #1a1a1a;
-      --card: #fff;
-      --muted: #555;
-      --shadow: 0 6px 20px rgba(0,0,0,0.08);
-      --success: #2e7d32;
-      --danger: #c62828;
-    }
-    body.dark {
-      --bg: #121317;
-      --text: #f5f6f9;
-      --card: #1f1f24;
-      --muted: #b8bdc9;
-      --shadow: 0 6px 20px rgba(0,0,0,0.45);
-    }
-
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      transition: background .3s, color .3s, opacity .6s ease;
-      opacity: 1;
-      font-size: clamp(16px, 2.4vw, 18px);
-      text-align: center;
-      padding: 1rem;
-    }
-
-    .fade-out {
-      opacity: 0;
-      transition: opacity .5s ease;
-    }
-
-    .card {
-      background: var(--card);
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      max-width: 420px;
-      width: 100%;
-      animation: fadeIn 0.6s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h1 {
-      color: var(--brand-800);
-      margin-bottom: 0.75rem;
-    }
-
-    p {
-      color: var(--muted);
-      margin: 0.5rem 0 1rem;
-      line-height: 1.5;
-    }
-
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 1.5rem;
-    }
-
-    button {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 1rem;
-      transition: transform 0.1s, filter 0.2s;
-    }
-
-    button:hover {
-      filter: brightness(1.05);
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .yes-btn {
-      background: var(--success);
-      color: white;
-    }
-
-    .no-btn {
-      background: var(--danger);
-      color: white;
-    }
-
-    .toggle {
-      position: fixed;
-      top: 15px;
-      right: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      color: var(--muted);
-    }
-
-    .switch {
-      position: relative;
-      width: 44px;
-      height: 22px;
-    }
-
-    .switch input {
-      display: none;
-    }
-
-    .track {
-      position: absolute;
-      inset: 0;
-      background: #ccc;
-      border-radius: 999px;
-      transition: background .2s;
-    }
-
-    .thumb {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #fff;
-      transition: left .2s;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.25);
-    }
-
-    .switch input:checked + .track {
-      background: var(--brand-600);
-    }
-
-    .switch input:checked + .track .thumb {
-      left: calc(100% - 20px);
-    }
-
-    footer {
-      position: fixed;
-      bottom: 15px;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Request a material | ASU Bank</title>
+    <meta name="description" content="Request custom study materials from ASU Bank: summaries, Q&amp;A test banks and personalised PDFs for 3 JD.">
     <link rel="canonical" href="https://asubank.org/requests/student_request_portal">
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="theme-color" content="#f2f2f7">
     <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="/assets/app/app.css?v=2">
-    <script src="/assets/app/app.js?v=1" defer></script>
+    <link rel="icon" href="/assets/img/favicon2.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="ASU Bank">
+    <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
+    <link rel="stylesheet" href="/assets/app/app.css?v=3">
+    <script src="/assets/app/app.js?v=2" defer></script>
 </head>
-<body>
-  <!-- Theme toggle -->
-  <div class="toggle">
-    <span>Dark</span>
-    <label class="switch">
-      <input type="checkbox" id="modeSwitch">
-      <span class="track"><span class="thumb"></span></span>
-    </label>
-  </div>
+<body class="ab" data-ab-recent="Request">
+    <a class="ab-skip" href="#main">Skip to content</a>
+    <header class="ab-nav">
+        <div class="ab-wrap ab-nav-row">
+            <div class="ab-nav-l"><a class="ab-brand" href="/"><img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="30" height="30"><span>ASU Bank</span></a></div>
+            <div class="ab-nav-title" aria-hidden="true">Request</div>
+            <div class="ab-nav-r"></div>
+        </div>
+    </header>
 
-  <!-- Payment Confirmation Card -->
-  <div class="card">
-    <h1>Proceed to Payment</h1>
-    <p>You’re about to request <strong>custom study materials</strong>.</p>
-    <p>To continue, you must pay the <strong>service fee (3 JDs)</strong> on the next page.</p>
-    <p>If you don’t want to pay now, you can go back to the main page.</p>
+    <main id="main" class="ab-wrap">
+        <div class="ab-head">
+            <div class="ab-eyebrow">Requests</div>
+            <h1 class="ab-large">Request a material</h1>
+            <p class="ab-sub">Can&#x27;t find what you need? We&#x27;ll make it for you.</p>
+            <p class="ab-sub-ar" lang="ar" dir="rtl">اطلب ملخصاً أو بنك أسئلة مخصصاً لك</p>
+        </div>
+        <section class="ab-section">
+            <ul class="ab-list">
+                <li class="ab-row static"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">💳</span><span class="ab-row-text"><span class="ab-row-title">Service fee: 3 JD</span><span class="ab-row-meta">Summaries, Q&amp;A test banks or personalised PDFs. You pay on the next page.</span></span></span></li>
+            </ul>
+        </section>
+        <section class="ab-section">
+            <div class="ab-section-h"><h2>Continue</h2></div>
+            <ul class="ab-list">
+                <li><a class="ab-row" href="/requests/request"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">✅</span><span class="ab-row-text"><span class="ab-row-title">Proceed &amp; pay</span><span class="ab-row-meta">Open the request form</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                <li><a class="ab-row" href="/guides/search"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">🔎</span><span class="ab-row-text"><span class="ab-row-title">Search first</span><span class="ab-row-meta">The file may already be on ASU Bank.</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                <li><a class="ab-row" href="mailto:necro144@yahoo.com" target="_blank" rel="noopener"><span class="ab-row-main"><span class="ab-tile emoji" aria-hidden="true">💬</span><span class="ab-row-text"><span class="ab-row-title">Ask on WhatsApp</span><span class="ab-row-meta">Questions before you pay.</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            </ul>
+            <p class="ab-foot">Free alternative: ask in the <a href="https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ" target="_blank" rel="noopener">WhatsApp community</a> — someone may already have it.</p>
+        </section>
+    </main>
 
-    <div class="btn-group">
-      <button class="yes-btn" id="yesBtn">Proceed & Pay</button>
-      <button class="no-btn" id="noBtn">Cancel & Go Back</button>
-    </div>
-  </div>
-
-  <footer>© 2025 StudyHub — Secure Payment Gateway</footer>
-
-  <script>
-    // === DARK MODE ===
-    const modeSwitch = document.getElementById('modeSwitch');
-    const stored = localStorage.getItem('studyhub-theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialDark = stored ? stored === 'dark' : prefersDark;
-    document.body.classList.toggle('dark', initialDark);
-    modeSwitch.checked = initialDark;
-    modeSwitch.addEventListener('change', () => {
-      document.body.classList.toggle('dark', modeSwitch.checked);
-      localStorage.setItem('studyhub-theme', modeSwitch.checked ? 'dark' : 'light');
-    });
-
-    // === PAGE TRANSITION ===
-    function fadeRedirect(url) {
-      document.body.classList.add('fade-out');
-      setTimeout(() => {
-        window.location.href = url;
-      }, 500); // match CSS transition time
-    }
-// === BUTTON LOGIC ===
-document.getElementById('yesBtn').addEventListener('click', () => {
-  window.open("/requests/request"); // Opens link in a new tab
-});
-
-    document.getElementById('noBtn').addEventListener('click', () => {
-      fadeRedirect("https://asubank.org/");
-    });
-  </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4DE6YQ7Q2M');
+    </script>
 </body>
 </html>

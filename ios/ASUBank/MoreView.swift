@@ -2,8 +2,11 @@ import SwiftUI
 
 struct MoreView: View {
     @EnvironmentObject private var library: Library
+    @EnvironmentObject private var config: AppConfig
     @AppStorage("ab.appearance") private var appearance = 0 // 0 system, 1 light, 2 dark
     @Environment(\.openURL) private var openURL
+    @State private var showTerms = false
+    @State private var copied = false
 
     var body: some View {
         NavigationStack {
@@ -18,14 +21,54 @@ struct MoreView: View {
                 } header: { Text("Appearance") }
 
                 Section("All subjects") {
-                    NavigationLink(value: Route.web("All subjects", "/banks/subjects")) { Label("Subjects directory", systemImage: "square.grid.2x2") }
-                    NavigationLink(value: Route.web("Latest uploads", "/guides/latest")) { Label("Latest uploads", systemImage: "sparkles") }
-                    NavigationLink(value: Route.web("Request a material", "/requests/student_request_portal")) { Label("Request a material", systemImage: "tray.and.arrow.down") }
+                    NavigationLink(value: Route.page("/banks/subjects", "All subjects")) { Label("Subjects directory", systemImage: "square.grid.2x2") }
+                    NavigationLink(value: Route.page("/guides/latest", "Latest uploads")) { Label("Latest uploads", systemImage: "sparkles") }
+                    NavigationLink(value: Route.page("/requests/student_request_portal", "Request a material")) { Label("Request a material", systemImage: "tray.and.arrow.down") }
+                    NavigationLink(value: Route.page("/guides/links", "ASU resources")) { Label("ASU resources (Useful gate)", systemImage: "square.grid.3x3.fill") }
                 }
                 Section("New students") { ForEach(Links.newHere) { SiteLinkRow(link: $0) } }
                 Section("Calendars & schedules") { ForEach(Links.schedules) { SiteLinkRow(link: $0) } }
                 Section("Community & services") { ForEach(Links.community) { SiteLinkRow(link: $0) } }
-                Section("Help") { ForEach(Links.help) { SiteLinkRow(link: $0) } }
+                Section("Help") { ForEach(Links.help.filter { $0.title != "Support ASU Bank" }) { SiteLinkRow(link: $0) } }
+
+                if config.donate {
+                    Section {
+                        Button { openURL(URL(string: "https://www.paypal.com/paypalme/necro144")!) } label: {
+                            row("creditcard.fill", .blue, "Donate with PayPal", "paypal.me/necro144", external: true)
+                        }
+                        Button { openURL(URL(string: "mailto:necro144@yahoo.com?body=" + "Hi! I want to donate to ASU Bank with CliQ.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!) } label: {
+                            row("banknote.fill", .green, "Donate with CliQ", "Message the number ending in 71 on WhatsApp", external: true)
+                        }
+                        Button {
+                            UIPasteboard.general.string = "necro144@yahoo.com"
+                            Haptics.success()
+                            withAnimation { copied = true }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { withAnimation { copied = false } }
+                        } label: {
+                            row(copied ? "checkmark.circle.fill" : "doc.on.doc", .gray, copied ? "Copied" : "Copy CliQ number", "necro144@yahoo.com")
+                        }
+                    } header: { Text("Support ASU Bank") } footer: {
+                        Text("ASU Bank is a free, volunteer, non-profit project. Donations only help keep it running.")
+                    }
+                }
+
+                Section("About") {
+                    HStack {
+                        Label("Version", systemImage: "info.circle")
+                        Spacer()
+                        Text("\(AppConfig.current) (\(AppConfig.build))").foregroundStyle(.secondary)
+                    }
+                    Button { Task { await config.check(force: true); if !config.updateAvailable { Haptics.success() } } } label: {
+                        HStack {
+                            Label(config.updateAvailable ? "Update to \(config.latest ?? "")" : "Check for updates", systemImage: "arrow.down.app")
+                            Spacer()
+                            if config.checking { ProgressView() }
+                            else if config.latest != nil && !config.updateAvailable { Text("Up to date").foregroundStyle(.secondary) }
+                        }
+                    }
+                    Button { showTerms = true } label: { Label("About & terms", systemImage: "heart.text.square") }
+                    NavigationLink(value: Route.page("/guides/contact", "Contact us")) { Label("Contact us", systemImage: "envelope") }
+                }
 
                 Section {
                     Button { openURL(AB.site) } label: { Label("Open asubank.org in Safari", systemImage: "safari") }
@@ -42,7 +85,20 @@ struct MoreView: View {
             }
             .listStyle(.insetGrouped)
             .navigationTitle("More")
+            .sheet(isPresented: $showTerms) { WelcomeTermsView { showTerms = false } }
             .abDestinations()
+        }
+    }
+
+    private func row(_ symbol: String, _ color: Color, _ title: String, _ sub: String, external: Bool = false) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: symbol).foregroundStyle(.white).frame(width: 30, height: 30)
+                .background(color, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).foregroundStyle(.primary)
+                Text(sub).font(.footnote).foregroundStyle(.secondary)
+            }
+            if external { Spacer(); Image(systemName: "arrow.up.right").font(.footnote).foregroundStyle(.tertiary) }
         }
     }
 }

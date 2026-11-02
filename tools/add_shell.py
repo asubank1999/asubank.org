@@ -10,8 +10,8 @@ ROOT = Path(__file__).resolve().parent.parent
 SKIP_DIRS = {'archive', '.git', 'tools', 'assets', 'icons'}
 SKIP_FILES = {'guides/latest_updates.html', 'qrscan/scannow.html'}  # plain-text fragments, not full pages
 
-TAGS = ('    <link rel="stylesheet" href="/assets/app/app.css?v=2">\n'
-        '    <script src="/assets/app/app.js?v=1" defer></script>\n')
+TAGS = ('    <link rel="stylesheet" href="/assets/app/app.css?v=3">\n'
+        '    <script src="/assets/app/app.js?v=2" defer></script>\n')
 
 
 def main():

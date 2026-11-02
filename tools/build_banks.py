@@ -3,15 +3,19 @@
 How to add a material to a subject page (no need to run anything):
     open banks/<subject>.html and copy one line inside <ul class="ab-items">:
         <li><a class="ab-item" href="DRIVE LINK" target="_blank" rel="noopener">Title</a></li>
-    add data-tag="new" to show a NEW badge. Old <div class="subject-card"> snippets still work too.
+    A NEW badge shows by itself for 30 days after a link is first added (dates live in
+    tools/added-dates.json). Old <div class="subject-card"> snippets still work too.
 
 Then run this script (python tools/build_banks.py) so the new item also shows in
 site-wide search and the page gets tidied. It reads both the new and the old markup.
 """
+import datetime
 import html
 import json
 import re
 from pathlib import Path
+
+import added_dates
 
 ROOT = Path(__file__).resolve().parent.parent
 BANKS = ROOT / 'banks'
@@ -113,8 +117,10 @@ def item_line(it):
     u = it['u']
     ext = u.startswith('http')
     attrs = ' target="_blank" rel="noopener"' if ext else ''
-    if it.get('tag'):
+    if it.get('tag') in ('pin', 'warn'):
         attrs += f' data-tag="{it["tag"]}"'
+    if it.get('d'):
+        attrs += f' data-added="{it["d"]}"'
     return f'        <li><a class="ab-item" href="{html.escape(u, quote=True)}"{attrs}>{html.escape(it["t"], quote=False)}</a></li>'
 
 
@@ -135,8 +141,8 @@ HEAD = '''<!DOCTYPE html>
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ASU Bank">
     <script>try{{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}}catch(e){{}}</script>
-    <link rel="stylesheet" href="/assets/app/app.css?v=2">
-    <script src="/assets/app/app.js?v=1" defer></script>
+    <link rel="stylesheet" href="/assets/app/app.css?v=3">
+    <script src="/assets/app/app.js?v=2" defer></script>
 </head>
 '''
 
@@ -203,7 +209,7 @@ def page(slug, title, ar, college, emoji, items, archive=False):
                 'New files are in <a href="/guides/latest">Latest uploads</a> and <a href="/guides/search">Search</a>.</p>'
                 '<p lang="ar" dir="rtl">هذه الصفحة لم تعد محدثة. للمواد الجديدة استخدم البحث أو آخر الملفات.</p></div></div>\n')
     out += SEARCH.format(ph=html.escape(f'Search {n} item{"s" if n != 1 else ""}'))
-    out += ('        <!-- Add a material: copy one <li> line below and change the link and title. data-tag="new" shows a NEW badge. -->\n'
+    out += ('        <!-- Add a material: copy one <li> line below and change the link and title. NEW shows for 30 days after a link is added. -->\n'
             f'        <ul class="ab-items" id="items" data-source="{html.escape(title)}" data-ab-filter="q" data-ab-chips="chips" data-ab-count="count" data-ab-empty="empty" data-ab-legacy>\n')
     out += '\n'.join(item_line(it) for it in items) + '\n        </ul>\n'
     out += EMPTY + FOOT
@@ -236,9 +242,18 @@ def directory_page(subjects):
 
 def main():
     index_items, subjects, seen = [], [], set()
+    dates, today = added_dates.load(), datetime.date.today().isoformat()
+
+    def dated(items):
+        for it in items:
+            if it['u']:
+                it['d'] = dates.setdefault(it['u'], today)
+            if it.get('tag') == 'new':
+                it['tag'] = ''
+        return items
     for slug, (title, ar, college, emoji) in SUBJECTS.items():
         p = BANKS / f'{slug}.html'
-        items = MATH_ITEMS if slug == 'math' else parse_items(read(p))
+        items = MATH_ITEMS if slug == 'math' else dated(parse_items(read(p)))
         p.write_text(page(slug, title, ar, college, emoji, items), encoding='utf-8', newline='\n')
         subjects.append({'p': f'/banks/{slug}', 't': title, 'ar': ar, 'c': college, 'e': emoji, 'n': len(items)})
         for it in items:
@@ -248,14 +263,14 @@ def main():
             if key in seen or not it['u'] or it['u'] == '/':
                 continue
             seen.add(key)
-            index_items.append({'u': it['u'], 't': it['t'], 's': title, 'p': f'/banks/{slug}', 'c': college, 'tag': it['tag']})
+            index_items.append({'u': it['u'], 't': it['t'], 's': title, 'p': f'/banks/{slug}', 'c': college, 'tag': it['tag'], 'd': it.get('d', '')})
         print(f'{slug}: {len(items)}')
 
     archived_urls = {x['u'] for x in index_items}
     archive_cache = {}
     for slug, source in ARCHIVE.items():
         if source not in archive_cache:
-            archive_cache[source] = parse_items(read(BANKS / f'{source}.html'))
+            archive_cache[source] = dated(parse_items(read(BANKS / f'{source}.html')))
         items = archive_cache[source]
         (BANKS / f'{slug}.html').write_text(page(slug, 'Archived materials', 'المواد المؤرشفة', 'Archive', '🗄️', items, archive=True),
                                             encoding='utf-8', newline='\n')
@@ -265,12 +280,13 @@ def main():
             if it['u'] in archived_urls or not it['u'].startswith('http'):
                 continue
             archived_urls.add(it['u'])
-            index_items.append({'u': it['u'], 't': it['t'], 's': 'Archive', 'p': '/banks/subjects_mobile', 'c': 'Archive', 'tag': '', 'arch': 1})
+            index_items.append({'u': it['u'], 't': it['t'], 's': 'Archive', 'p': '/banks/subjects_mobile', 'c': 'Archive', 'tag': '', 'arch': 1, 'd': it.get('d', '')})
 
     (BANKS / 'subjects.html').write_text(directory_page(subjects), encoding='utf-8', newline='\n')
     data = {'subjects': subjects, 'items': index_items}
     out = ROOT / 'assets' / 'app' / 'materials.json'
     out.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+    added_dates.save(dates)
     print(f'index: {len(index_items)} items, {out.stat().st_size // 1024} KB')
 
 

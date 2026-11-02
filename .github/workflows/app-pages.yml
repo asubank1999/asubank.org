@@ -1,0 +1,35 @@
+# Keeps the iOS app's native pages in sync with the website:
+# when a page changes, rebuild assets/app/pages.json from the HTML.
+name: App pages sync
+
+on:
+  push:
+    branches: [main]
+    paths: ['**.html', 'assets/js/**', 'tools/build_app_pages.py']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app-pages
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build pages.json
+        run: python tools/build_app_pages.py
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- assets/app/pages.json; then echo "pages.json unchanged"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/app/pages.json
+          git commit -m "Sync app pages with the website"
+          git push

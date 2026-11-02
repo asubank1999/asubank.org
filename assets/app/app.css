@@ -480,3 +480,5 @@ body.ab-shell .ab-tabbar { font-size: 10.5px; line-height: 1.2; }
     body.ab-shell .ab-tabbar a, body.ab-shell .ab-tabbar button { color: #98989f !important; }
     body.ab-shell .ab-tabbar [aria-current="page"] { color: var(--ab-accent) !important; }
 }
+
+.ab-row.static { cursor: default; }

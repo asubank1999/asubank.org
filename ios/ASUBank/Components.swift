@@ -6,18 +6,26 @@ enum Route: Hashable {
     case subject(Subject)
     case material(Material)
     case web(String, String) // title, URL or site path
+    case page(String, String) // asubank.org path, title
+}
+
+struct RouteView: View {
+    let route: Route
+    var body: some View {
+        switch route {
+        case .subject(let s): SubjectView(subject: s)
+        case .material(let m): MaterialScreen(material: m)
+        case .web(let t, let u):
+            if let p = AB.sitePath(u) { SitePageView(path: p, title: t) } else { WebScreen(title: t, url: AB.absolute(u) ?? AB.site) }
+        case .page(let p, let t): SitePageView(path: p, title: t)
+        }
+    }
 }
 
 extension View {
     /// Every tab's NavigationStack understands the same routes
     func abDestinations() -> some View {
-        navigationDestination(for: Route.self) { r in
-            switch r {
-            case .subject(let s): SubjectView(subject: s)
-            case .material(let m): MaterialScreen(material: m)
-            case .web(let t, let u): WebScreen(title: t, url: AB.absolute(u) ?? AB.site)
-            }
-        }
+        navigationDestination(for: Route.self) { RouteView(route: $0) }
     }
 }
 
@@ -30,7 +38,7 @@ struct MaterialRow: View {
 
     var body: some View {
         let k = kind ?? AB.kind(m.u, m.t)
-        NavigationLink(value: Route.material(m)) {
+        NavigationLink(value: k == .page ? Route.page(AB.sitePath(m.u) ?? m.u, m.t) : Route.material(m)) {
             HStack(spacing: 12) {
                 KindTile(kind: k)
                 VStack(alignment: .leading, spacing: 3) {
@@ -39,7 +47,7 @@ struct MaterialRow: View {
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
                     HStack(spacing: 6) {
-                        if m.tag == "new" { Badge(text: "NEW", color: .green) }
+                        if AB.isNew(m.d) { Badge(text: "NEW", color: .green) }
                         if m.tag == "pin" { Badge(text: "ALL FILES") }
                         if m.tag == "warn" { Badge(text: "CLOSED", color: .orange) }
                         Text([k.name, meta ?? (showSource ? m.s : nil)].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · "))
@@ -112,25 +120,45 @@ struct MaterialScreen: View {
     }
 }
 
-/// A page of asubank.org shown inside the app
+/// A page of asubank.org that needs the web (Google forms, uploads...), shown inside the app.
+/// Links on it to other asubank.org pages open their native screens.
 struct WebScreen: View {
     let title: String
     let url: URL
+    @EnvironmentObject private var pages: SitePages
+    @EnvironmentObject private var app: AppState
     @Environment(\.openURL) private var openURL
+    @State private var next: Route?
 
     var body: some View {
-        WebView(url: url)
-            .ignoresSafeArea(edges: .bottom)
-            .navigationTitle(title)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu {
-                        ShareLink(item: url) { Label("Share", systemImage: "square.and.arrow.up") }
-                        Button { openURL(url) } label: { Label("Open in Safari", systemImage: "safari") }
-                    } label: { Image(systemName: "ellipsis.circle") }
-                }
+        WebView(url: url, allowZoom: false) { path in
+            guard path != AB.sitePath(url.absoluteString) else { return false }
+            switch SiteRouter.target(path, title: "") {
+            case .tab(let t):
+                app.tab = t
+                return true
+            case .push(let r):
+                if case .page(let p, _) = r, pages.page(p)?.web == 1 { return false }
+                next = r
+                return true
+            default:
+                return false
             }
+        }
+        .ignoresSafeArea(edges: .bottom)
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(isPresented: Binding(get: { next != nil }, set: { if !$0 { next = nil } })) {
+            if let next { RouteView(route: next) }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    ShareLink(item: url) { Label("Share", systemImage: "square.and.arrow.up") }
+                    Button { openURL(url) } label: { Label("Open in Safari", systemImage: "safari") }
+                } label: { Image(systemName: "ellipsis.circle") }
+            }
+        }
     }
 }
 
@@ -138,11 +166,15 @@ struct WebScreen: View {
 /// and links to other apps (WhatsApp, mail, phone) open outside.
 struct WebView: View {
     let url: URL
+    var allowZoom = true
+    /// Return true when the app handled a tapped asubank.org link natively
+    var onSiteLink: ((String) -> Bool)? = nil
     @StateObject private var model = WebModel()
 
     var body: some View {
         ZStack(alignment: .top) {
-            WebViewRepresentable(url: url, model: model)
+            WebViewRepresentable(url: url, allowZoom: allowZoom, model: model)
+                .onAppear { model.onSiteLink = onSiteLink }
             if model.progress < 1 {
                 ProgressView(value: model.progress)
                     .progressViewStyle(.linear)
@@ -165,10 +197,12 @@ struct WebView: View {
 }
 
 @MainActor
-final class WebModel: NSObject, ObservableObject, WKNavigationDelegate {
+final class WebModel: NSObject, ObservableObject, WKNavigationDelegate, WKUIDelegate {
     @Published var progress: Double = 0
     @Published var error: String?
     weak var web: WKWebView?
+    var onSiteLink: ((String) -> Bool)?
+    var allowZoom = true
     private var obs: NSKeyValueObservation?
 
     func attach(_ w: WKWebView) {
@@ -191,9 +225,62 @@ final class WebModel: NSObject, ObservableObject, WKNavigationDelegate {
             _ = await UIApplication.shared.open(u)
             return .cancel
         }
+        if action.navigationType == .linkActivated, action.targetFrame?.isMainFrame != false,
+           let path = AB.sitePath(u.absoluteString), onSiteLink?(path) == true {
+            return .cancel
+        }
         // target=_blank links: load them in this view
         if action.targetFrame == nil { webView.load(action.request); return .cancel }
         return .allow
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if !allowZoom { webView.scrollView.pinchGestureRecognizer?.isEnabled = false }
+    }
+
+    // window.open() and target=_blank: open in this same view (the request page's "Proceed" button used this)
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        if let u = navigationAction.request.url, let path = AB.sitePath(u.absoluteString), onSiteLink?(path) == true { return nil }
+        webView.load(navigationAction.request)
+        return nil
+    }
+
+    // alert(), confirm() and prompt() as native alerts
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo) async {
+        await withCheckedContinuation { (c: CheckedContinuation<Void, Never>) in
+            let a = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+            a.addAction(UIAlertAction(title: "OK", style: .default) { _ in c.resume() })
+            present(a) { c.resume() }
+        }
+    }
+
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo) async -> Bool {
+        await withCheckedContinuation { (c: CheckedContinuation<Bool, Never>) in
+            let a = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+            a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in c.resume(returning: false) })
+            a.addAction(UIAlertAction(title: "OK", style: .default) { _ in c.resume(returning: true) })
+            present(a) { c.resume(returning: false) }
+        }
+    }
+
+    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo) async -> String? {
+        await withCheckedContinuation { (c: CheckedContinuation<String?, Never>) in
+            let a = UIAlertController(title: nil, message: prompt, preferredStyle: .alert)
+            a.addTextField { $0.text = defaultText }
+            a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in c.resume(returning: nil) })
+            a.addAction(UIAlertAction(title: "OK", style: .default) { _ in c.resume(returning: a.textFields?.first?.text) })
+            present(a) { c.resume(returning: nil) }
+        }
+    }
+
+    /// Shows an alert over whatever is on screen; calls `failed` if nothing can present it
+    private func present(_ a: UIViewController, failed: () -> Void) {
+        let root = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            .flatMap(\.windows).first { $0.isKeyWindow }?.rootViewController
+        var top = root
+        while let p = top?.presentedViewController { top = p }
+        guard let top else { return failed() }
+        top.present(a, animated: true)
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) { fail(error) }
@@ -209,6 +296,7 @@ final class WebModel: NSObject, ObservableObject, WKNavigationDelegate {
 
 private struct WebViewRepresentable: UIViewRepresentable {
     let url: URL
+    let allowZoom: Bool
     let model: WebModel
 
     func makeUIView(context: Context) -> WKWebView {
@@ -219,8 +307,17 @@ private struct WebViewRepresentable: UIViewRepresentable {
             source: "document.documentElement.setAttribute('data-ab-notab','');document.documentElement.setAttribute('data-ab-app','ios');",
             injectionTime: .atDocumentStart, forMainFrameOnly: true)
         cfg.userContentController.addUserScript(hideTabbar)
+        if !allowZoom {
+            let noZoom = WKUserScript(source: """
+                var m=document.querySelector('meta[name=viewport]');if(!m){m=document.createElement('meta');m.name='viewport';document.head.appendChild(m);}
+                m.content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
+                """, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+            cfg.userContentController.addUserScript(noZoom)
+        }
         let w = WKWebView(frame: .zero, configuration: cfg)
         w.navigationDelegate = model
+        w.uiDelegate = model
+        model.allowZoom = allowZoom
         w.allowsBackForwardNavigationGestures = true
         w.isOpaque = false
         w.backgroundColor = .systemGroupedBackground

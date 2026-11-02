@@ -5,6 +5,8 @@ struct ASUBankApp: App {
     @StateObject private var app = AppState()
     @StateObject private var library = Library()
     @StateObject private var saved = SavedStore()
+    @StateObject private var pages = SitePages()
+    @StateObject private var config = AppConfig()
     @AppStorage("ab.appearance") private var appearance = 0
 
     var body: some Scene {
@@ -13,9 +15,12 @@ struct ASUBankApp: App {
                 .environmentObject(app)
                 .environmentObject(library)
                 .environmentObject(saved)
+                .environmentObject(pages)
+                .environmentObject(config)
                 .tint(.abAccent)
                 .preferredColorScheme(appearance == 1 ? .light : appearance == 2 ? .dark : nil)
                 .task { await library.load() }
+                .task { await pages.load() }
                 .onOpenURL { url in app.open(url) }
         }
     }
@@ -23,6 +28,10 @@ struct ASUBankApp: App {
 
 struct RootView: View {
     @EnvironmentObject private var app: AppState
+    @EnvironmentObject private var config: AppConfig
+    @Environment(\.scenePhase) private var phase
+    @Environment(\.openURL) private var openURL
+    @AppStorage(WelcomeTermsView.key) private var accepted = false
 
     var body: some View {
         TabView(selection: $app.tab) {
@@ -43,6 +52,22 @@ struct RootView: View {
                 .tag(AppTab.more)
         }
         .onChange(of: app.tab) { _ in Haptics.tap() }
+        .fullScreenCover(isPresented: Binding(get: { !accepted && !config.mustUpdate }, set: { _ in })) {
+            WelcomeTermsView()
+        }
+        .fullScreenCover(isPresented: Binding(get: { config.mustUpdate }, set: { _ in })) {
+            UpdateRequiredView().environmentObject(config)
+        }
+        .alert("Update available", isPresented: $config.offerUpdate) {
+            Button("Update") { if let u = config.storeURL { openURL(u) } }
+            Button("Later", role: .cancel) {}
+        } message: {
+            Text("ASU Bank \(config.latest ?? "") is out on the App Store. You have \(AppConfig.current).")
+        }
+        .task { await config.check() }
+        .onChange(of: phase) { p in
+            if p == .active { Task { await config.check() } }
+        }
     }
 }
 

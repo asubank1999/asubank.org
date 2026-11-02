@@ -131,6 +131,9 @@
     };
     AB.isExternal = function (u) { return /^https?:\/\//.test(u) && !/^https?:\/\/(www\.)?asubank\.org/.test(u) && u.indexOf(location.origin) !== 0; };
     // "2025", "2024/25" and semester codes like "20231" all count as a year
+    // NEW badges last 30 days after a link is added (d = "YYYY-MM-DD"); older ones disappear by themselves
+    AB.NEW_DAYS = 30;
+    AB.isNew = function (d) { var t = d ? Date.parse(d) : NaN; return !isNaN(t) && Date.now() - t < AB.NEW_DAYS * 864e5; };
     AB.yearOf = function (t) { var m = /(?:^|\D)(20[12]\d)[123]?(?!\d)/.exec(t || ''); return m ? m[1] : ''; };
 
     /* ---------- saved + recent ---------- */
@@ -246,14 +249,14 @@
     };
 
     /* ---------- material rows ---------- */
-    // item: {u, t, k?, s? (source/subject), y? (year), tag? ('new'|'pin'|'warn'|text)}
+    // item: {u, t, k?, s? (source/subject), y? (year), d? (date added), tag? ('pin'|'warn')}
     AB.row = function (it, opts) {
         opts = opts || {};
         var k = it.k || AB.kind(it.u, it.t);
         var ext = AB.isExternal(it.u);
         var canPrev = !!AB.previewUrl(it.u);
         var meta = [];
-        if (it.tag === 'new') meta.push('<span class="ab-badge new">NEW</span>');
+        if (AB.isNew(it.d)) meta.push('<span class="ab-badge new">NEW</span>');
         else if (it.tag === 'pin') meta.push('<span class="ab-badge accent">ALL FILES</span>');
         else if (it.tag === 'warn') meta.push('<span class="ab-badge warn">CLOSED</span>');
         meta.push('<span>' + AB.kindName(k) + '</span>');
@@ -304,11 +307,12 @@
         lists.forEach(function (ul) {
             var src = ul.getAttribute('data-source') || '';
             Array.prototype.slice.call(ul.querySelectorAll('a.ab-item')).forEach(function (a) {
-                var it = { u: a.getAttribute('href'), t: a.textContent.replace(/\s+/g, ' ').trim(), tag: a.getAttribute('data-tag') || '', s: a.getAttribute('data-source') || '' };
+                var it = { u: a.getAttribute('href'), t: a.textContent.replace(/\s+/g, ' ').trim(), tag: a.getAttribute('data-tag') || '', d: a.getAttribute('data-added') || '', s: a.getAttribute('data-source') || '' };
                 var li = AB.row(it, { showSource: !!it.s });
                 li.setAttribute('data-q', AB.norm(it.t + ' ' + src + ' ' + it.s));
                 li.setAttribute('data-k', li._item.k);
                 if (it.tag) li.setAttribute('data-tag', it.tag);
+                if (AB.isNew(it.d)) li.setAttribute('data-new', '');
                 a.closest('li').replaceWith(li);
             });
             ul.classList.add('ab-list');
@@ -320,7 +324,7 @@
         doc.querySelectorAll('main .subject-card').forEach(function (card) {
             var a = card.matches('a') ? card : card.querySelector('a[href]'); if (!a) return;
             var t = a.textContent.replace(/\s+/g, ' ').trim(); if (!t) return;
-            var tag = a.querySelector('img[src*="new.gif"]') ? 'new' : a.querySelector('img[src*="pin.png"]') ? 'pin' : a.querySelector('font[color]') ? 'warn' : '';
+            var tag = a.querySelector('img[src*="pin.png"]') ? 'pin' : a.querySelector('font[color]') ? 'warn' : '';
             var li = AB.row({ u: a.getAttribute('href'), t: t, tag: tag }, { showSource: false });
             li.setAttribute('data-q', AB.norm(t)); li.setAttribute('data-k', li._item.k); if (tag) li.setAttribute('data-tag', tag);
             ul.insertBefore(li, ul.firstChild); card.remove();
@@ -339,7 +343,7 @@
             var all = rows(), years = {}, nNew = 0, nFold = 0;
             all.forEach(function (li) {
                 var y = AB.yearOf(li._item && li._item.t); if (y) years[y] = (years[y] || 0) + 1;
-                if (li.getAttribute('data-tag') === 'new') nNew++;
+                if (li.hasAttribute('data-new')) nNew++;
                 if (li.getAttribute('data-k') === 'folder') nFold++;
             });
             var chips = [['all', 'All', all.length]];
@@ -366,7 +370,7 @@
                 if (ok && mode !== 'all') {
                     if (mode === 'folder') ok = k === 'folder';
                     else if (mode === 'file') ok = k !== 'folder';
-                    else if (mode === 'new') ok = li.getAttribute('data-tag') === 'new';
+                    else if (mode === 'new') ok = li.hasAttribute('data-new');
                     else if (mode === 'saved') ok = AB.saved.has(it.u);
                     else if (mode.charAt(0) === 'y') ok = AB.yearOf(it.t) === mode.slice(1);
                 }
@@ -430,8 +434,10 @@
             ['/guides/grading-scale-asu', 'Grading scale', 'sheet']]],
         ['Community', [
             ['/guides/groups', 'Course WhatsApp groups', 'chat'], ['/requests/portal_to_rating', 'Rate professors', 'star'],
-            ['/requests/matcher_confirm', 'Course matcher', 'people'], ['/guides/faqs', 'FAQs & help', 'help'],
-            ['/legal/uni_tos', 'Terms of Service', 'page']]]
+            ['/requests/matcher_confirm', 'Course matcher', 'people'], ['/guides/links', 'ASU resources', 'grid']]],
+        ['Help & support', [
+            ['/guides/contact', 'Contact us', 'chat'], ['/guides/faqs', 'FAQs', 'help'],
+            ['/apps/donate', 'Donate (PayPal or CliQ)', 'star'], ['/legal/uni_tos', 'Terms of Service', 'page']]]
     ];
     var installEvt = null;
     window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); installEvt = e; });
@@ -535,7 +541,7 @@
             var tn = AB.norm(it.t);
             if (tn.indexOf(nq) === 0) score += 8; else if (tn.indexOf(nq) > -1) score += 4;
             if (it.k === 'folder') score += 1;
-            if (it.tag === 'new') score += 1;
+            if (AB.isNew(it.d)) score += 1;
             if (it.arch) score -= 3;
             out.push([score, it]);
         }
@@ -547,6 +553,8 @@
     function boot() {
         // Pages built on this design follow the saved theme; older pages keep their own theme switch.
         if (doc.body.classList.contains('ab')) AB.applyTheme(); else doc.body.classList.add('ab-shell');
+        // hand-written NEW badges carry data-added too
+        doc.querySelectorAll('[data-added].new, [data-added].new-badge, .tag.new[data-added]').forEach(function (b) { if (!AB.isNew(b.getAttribute('data-added'))) b.remove(); });
         buildTabbar();
         navBar();
         AB.enhance();

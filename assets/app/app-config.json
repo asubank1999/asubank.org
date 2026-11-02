@@ -1,0 +1,9 @@
+{
+  "ios": {
+    "latest": "1.1.0",
+    "minimum": "1.0.0",
+    "store": "",
+    "notes": "Native pages, new calendar, donations and update alerts."
+  },
+  "donate": true
+}

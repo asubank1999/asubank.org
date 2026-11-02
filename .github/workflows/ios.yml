@@ -64,15 +64,15 @@ jobs:
             sleep "$wait"
             xcrun simctl io "$UDID" screenshot "$RUNNER_TEMP/shots/$name.png"
           }
-          shot 0-launch 25 -startTab home
-          shot 1-home 8 -startTab home
-          shot 2-home-dark 8 -startTab home -ab.appearance 2
-          shot 3-search 15 -startTab search -startQuery calculus
-          shot 4-search-dark 15 -startTab search -startQuery "pharmacology" -ab.appearance 2
-          shot 5-upload 6 -startTab upload
-          shot 6-saved 5 -startTab saved
-          shot 7-more 5 -startTab more
-          shot 8-more-dark 5 -startTab more -ab.appearance 2
+          shot 0-welcome-terms 25 -startTab home
+          shot 1-home 8 -ab.terms.accepted.v1 YES -startTab home
+          shot 2-home-dark 8 -ab.terms.accepted.v1 YES -startTab home -ab.appearance 2
+          shot 3-search 15 -ab.terms.accepted.v1 YES -startTab search -startQuery calculus
+          shot 4-search-dark 15 -ab.terms.accepted.v1 YES -startTab search -startQuery "pharmacology" -ab.appearance 2
+          shot 5-upload 6 -ab.terms.accepted.v1 YES -startTab upload
+          shot 6-saved 5 -ab.terms.accepted.v1 YES -startTab saved
+          shot 7-more 5 -ab.terms.accepted.v1 YES -startTab more
+          shot 8-more-dark 5 -ab.terms.accepted.v1 YES -startTab more -ab.appearance 2
           cd "$RUNNER_TEMP/shots" && ls -la
           git init -q && git checkout -q -b ios-screenshots
           echo "Simulator screenshots of ${{ github.sha }} (made by .github/workflows/ios.yml)" > README.md

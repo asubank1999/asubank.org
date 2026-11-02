@@ -15,7 +15,7 @@ struct SubjectView: View {
         let folders = all.filter { $0.kind == .folder }.count
         if folders > 0 { o.append(("folder", "Folders \(folders)")) }
         if folders < all.count { o.append(("file", "Files \(all.count - folders)")) }
-        let new = all.filter { $0.m.tag == "new" }.count
+        let new = all.filter { $0.isNew }.count
         if new > 0 { o.append(("new", "New \(new)")) }
         if all.contains(where: { saved.isSaved($0.m.u) }) { o.append(("saved", "★ Saved")) }
         for y in Array(Set(all.map(\.year).filter { !$0.isEmpty })).sorted(by: >) { o.append(("y" + y, y)) }
@@ -27,7 +27,7 @@ struct SubjectView: View {
         switch filter {
         case "folder": list = list.filter { $0.kind == .folder }
         case "file": list = list.filter { $0.kind != .folder }
-        case "new": list = list.filter { $0.m.tag == "new" }
+        case "new": list = list.filter { $0.isNew }
         case "saved": list = list.filter { saved.isSaved($0.m.u) }
         case let f where f.hasPrefix("y"): list = list.filter { $0.year == String(f.dropFirst()) }
         default: break

@@ -7,8 +7,11 @@ struct SiteLink: Identifiable {
     let title: String
     var subtitle: String? = nil
     var badge: String? = nil
+    /// yyyy-MM-dd the page was added; shows a NEW badge for 30 days
+    var added: String? = nil
     let target: Target
     var id: String { title }
+    var shownBadge: String? { AB.isNew(added) ? "NEW" : badge }
 }
 
 enum Links {
@@ -16,7 +19,7 @@ enum Links {
         .init(emoji: "🆕", title: "Latest uploads", subtitle: "Newest PDFs, midterms, finals and quizzes.", target: .web("/guides/latest")),
         .init(emoji: "⚡", title: "Google Drive materials", subtitle: "Search every uploaded file.", badge: "FAST", target: .tab(.search)),
         .init(emoji: "📥", title: "Recent uploads", subtitle: "Latest study materials and resources.", target: .web("/portal/confirm_device")),
-        .init(emoji: "📅", title: "Calendar 2026–2027", subtitle: "This year's important dates.", badge: "NEW", target: .web("/schedules/calendar27")),
+        .init(emoji: "📅", title: "Calendar 2026–2027", subtitle: "This year's important dates.", added: "2026-08-31", target: .web("/schedules/calendar27")),
         .init(emoji: "📬", title: "Request a material", subtitle: "Can't find it? Ask for it.", target: .web("/requests/student_request_portal")),
         .init(emoji: "📤", title: "Upload files", subtitle: "Share your study materials.", target: .tab(.upload)),
         .init(emoji: "📝", title: "Rate professors", subtitle: "Anonymously help other students.", target: .web("/requests/portal_to_rating")),
@@ -24,7 +27,7 @@ enum Links {
     ]
 
     static let newHere: [SiteLink] = [
-        .init(emoji: "🎓", title: "New Student Guide", subtitle: "Admissions, fees, majors, scholarships", badge: "NEW", target: .web("/guides/aspu_qa")),
+        .init(emoji: "🎓", title: "New Student Guide", subtitle: "Admissions, fees, majors, scholarships", added: "2026-09-13", target: .web("/guides/aspu_qa")),
         .init(emoji: "🔗", title: "ASU shortcuts", subtitle: "My ASU, EduGate, Teams, absences", target: .web("/guides/asu")),
         .init(emoji: "🎬", title: "How to search for files", subtitle: "Three ways to find any material", target: .web("/guides/tutorial")),
         .init(emoji: "👥", title: "Course WhatsApp groups", subtitle: "Groups for courses, clubs and interests", target: .web("/guides/groups")),
@@ -35,7 +38,7 @@ enum Links {
     ]
 
     static let schedules: [SiteLink] = [
-        .init(emoji: "📅", title: "Calendar 2026–2027", badge: "NEW", target: .web("/schedules/calendar27")),
+        .init(emoji: "📅", title: "Calendar 2026–2027", added: "2026-08-31", target: .web("/schedules/calendar27")),
         .init(emoji: "🗓️", title: "Academic calendar 2026", subtitle: "Important dates and deadlines", target: .web("/schedules/cal2026")),
         .init(emoji: "🌙", title: "Ramadan lecture timetable", target: .web("/schedules/ramadan_timetable")),
         .init(emoji: "📅", title: "Calendar 2025–2026", badge: "OLD", target: .web("/schedules/asu_date_asu2025_2026")),
@@ -57,6 +60,7 @@ enum Links {
     static let help: [SiteLink] = [
         .init(emoji: "❓", title: "FAQs", target: .web("/guides/faqs")),
         .init(emoji: "✉️", title: "Contact us", target: .web("/guides/contact")),
+        .init(emoji: "🤍", title: "Support ASU Bank", subtitle: "Donate with PayPal or CliQ", target: .web("/apps/donate")),
         .init(emoji: "🙏", title: "Thanks list", target: .web("/guides/thankslist")),
         .init(emoji: "📜", title: "WhatsApp group rules", target: .web("/legal/wa_tos")),
         .init(emoji: "📋", title: "Terms of Service", target: .web("/legal/uni_tos"))
@@ -91,7 +95,7 @@ struct SiteLinkRow: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Text(link.title).foregroundStyle(.primary)
-                        if let b = link.badge { Badge(text: b, color: b == "NEW" ? .green : .orange) }
+                        if let b = link.shownBadge { Badge(text: b, color: b == "NEW" ? .green : .orange) }
                     }
                     if let s = link.subtitle { Text(s).font(.footnote).foregroundStyle(.secondary) }
                 }
@@ -128,7 +132,7 @@ struct HomeView: View {
                     SectionHeader(title: "Quick links", arabic: "روابط سريعة")
                     LazyVGrid(columns: grid, spacing: 12) {
                         ForEach(Links.quick) { l in
-                            SiteLinkButton(link: l) { Card(emoji: l.emoji, title: l.title, subtitle: l.subtitle, badge: l.badge) }
+                            SiteLinkButton(link: l) { Card(emoji: l.emoji, title: l.title, subtitle: l.subtitle, badge: l.shownBadge) }
                                 .buttonStyle(PressStyle())
                         }
                     }
