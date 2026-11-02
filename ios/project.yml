@@ -1,0 +1,61 @@
+# XcodeGen spec: `xcodegen generate` (run by .github/workflows/ios.yml) creates ASUBank.xcodeproj.
+# The .xcodeproj is not committed; change settings here.
+name: ASUBank
+options:
+  bundleIdPrefix: org.asubank
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+targets:
+  ASUBank:
+    type: application
+    platform: iOS
+    sources:
+      - path: ASUBank
+        excludes:
+          - Info.plist
+    info:
+      path: ASUBank/Info.plist
+      properties:
+        CFBundleDisplayName: ASU Bank
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        ITSAppUsesNonExemptEncryption: false
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSCameraUsageDescription: ASU Bank uses the camera to scan paper notes and exams into a PDF you can upload.
+        NSPhotoLibraryUsageDescription: ASU Bank lets you pick photos of notes to upload.
+        CFBundleURLTypes:
+          - CFBundleURLName: org.asubank.app
+            CFBundleURLSchemes: [asubank]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.asubank.app
+        PRODUCT_NAME: ASUBank
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_PREVIEWS: YES
+schemes:
+  ASUBank:
+    build:
+      targets:
+        ASUBank: all
+    archive:
+      config: Release
