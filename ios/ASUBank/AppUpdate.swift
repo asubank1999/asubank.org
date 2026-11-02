@@ -1,4 +1,5 @@
 import SwiftUI
+import WebKit
 
 /// Remote switches in https://asubank.org/assets/app/app-config.json, plus the App Store version check
 @MainActor
@@ -190,5 +191,45 @@ struct WelcomeTermsView: View {
             }
         }
         .padding(.vertical, 3)
+    }
+}
+
+/// App size and the cache the More tab can clear (downloaded pages, materials index, web view and image caches).
+/// Saved materials and settings live in UserDefaults and are never touched.
+enum AppStorageInfo {
+    private static let fm = FileManager.default
+    private static var caches: URL { fm.urls(for: .cachesDirectory, in: .userDomainMask)[0] }
+    private static var library: URL { fm.urls(for: .libraryDirectory, in: .userDomainMask)[0] }
+
+    static func size(of dir: URL) -> Int64 {
+        guard let e = fm.enumerator(at: dir, includingPropertiesForKeys: [.totalFileAllocatedSizeKey, .fileAllocatedSizeKey]) else { return 0 }
+        var total: Int64 = 0
+        for case let u as URL in e {
+            let v = try? u.resourceValues(forKeys: [.totalFileAllocatedSizeKey, .fileAllocatedSizeKey])
+            total += Int64(v?.totalFileAllocatedSize ?? v?.fileAllocatedSize ?? 0)
+        }
+        return total
+    }
+
+    /// (app, cache, everything else the app keeps)
+    static func measure() async -> (app: Int64, cache: Int64, data: Int64) {
+        await Task.detached(priority: .utility) {
+            let app = size(of: Bundle.main.bundleURL)
+            let cache = size(of: caches) + size(of: fm.temporaryDirectory)
+            let all = size(of: library) + size(of: fm.urls(for: .documentDirectory, in: .userDomainMask)[0])
+            return (app, cache, max(0, all - size(of: caches)))
+        }.value
+    }
+
+    static func clear() async {
+        URLCache.shared.removeAllCachedResponses()
+        await WKWebsiteDataStore.default().removeData(
+            ofTypes: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache, WKWebsiteDataTypeFetchCache, WKWebsiteDataTypeOfflineWebApplicationCache],
+            modifiedSince: .distantPast)
+        await Task.detached(priority: .utility) {
+            for dir in [caches, fm.temporaryDirectory] {
+                for u in (try? fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)) ?? [] { try? fm.removeItem(at: u) }
+            }
+        }.value
     }
 }

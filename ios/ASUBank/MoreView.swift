@@ -7,6 +7,9 @@ struct MoreView: View {
     @Environment(\.openURL) private var openURL
     @State private var showTerms = false
     @State private var copied = false
+    @State private var sizes: (app: Int64, cache: Int64, data: Int64)?
+    @State private var clearing = false
+    @State private var confirmClear = false
 
     var body: some View {
         NavigationStack {
@@ -52,6 +55,36 @@ struct MoreView: View {
                     }
                 }
 
+                Section {
+                    sizeRow("App", "app.badge", sizes?.app)
+                    sizeRow("Documents & data", "internaldrive", sizes?.data)
+                    sizeRow("Cache", "archivebox", sizes?.cache)
+                    Button(role: .destructive) { confirmClear = true } label: {
+                        HStack {
+                            Label("Clear cache", systemImage: "trash")
+                            Spacer()
+                            if clearing { ProgressView() }
+                        }
+                    }
+                    .disabled(clearing)
+                } header: { Text("Storage") } footer: {
+                    Text("Clearing the cache frees space and reloads pages and the materials list from asubank.org. Your saved materials and settings stay.")
+                }
+                .confirmationDialog("Clear the cache?", isPresented: $confirmClear, titleVisibility: .visible) {
+                    Button("Clear cache", role: .destructive) {
+                        clearing = true
+                        Task {
+                            await AppStorageInfo.clear()
+                            await library.load()
+                            sizes = await AppStorageInfo.measure()
+                            clearing = false
+                            Haptics.success()
+                        }
+                    }
+                } message: {
+                    Text("Downloaded pages, images and web data will be fetched again when you need them.")
+                }
+
                 Section("About") {
                     HStack {
                         Label("Version", systemImage: "info.circle")
@@ -85,8 +118,18 @@ struct MoreView: View {
             }
             .listStyle(.insetGrouped)
             .navigationTitle("More")
+            .task { sizes = await AppStorageInfo.measure() }
             .sheet(isPresented: $showTerms) { WelcomeTermsView { showTerms = false } }
             .abDestinations()
+        }
+    }
+
+    private func sizeRow(_ title: String, _ symbol: String, _ bytes: Int64?) -> some View {
+        HStack {
+            Label(title, systemImage: symbol)
+            Spacer()
+            if let bytes { Text(ByteCountFormatter.string(fromByteCount: bytes, countStyle: .file)).foregroundStyle(.secondary) }
+            else { ProgressView() }
         }
     }
 
