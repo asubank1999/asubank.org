@@ -78,6 +78,23 @@ jobs:
           echo "Simulator screenshots of ${{ github.sha }} (made by .github/workflows/ios.yml)" > README.md
           git add . && git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com commit -qm "Screenshots of ${{ github.sha }}"
           git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ios-screenshots
+      - name: Unsigned IPA for sideloading (Sideloadly re-signs it with your Apple ID)
+        run: |
+          set -o pipefail
+          xcodebuild -project ASUBank.xcodeproj -scheme ASUBank -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build-device \
+            CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build | xcbeautify --renderer github-actions
+          rm -rf Payload && mkdir Payload
+          cp -R build-device/Build/Products/Release-iphoneos/ASUBank.app Payload/
+          zip -qry ASUBank-unsigned.ipa Payload
+          ls -la ASUBank-unsigned.ipa
+      - name: Keep the unsigned IPA as a download (Actions run page > Artifacts)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ASUBank-unsigned-ipa-${{ github.run_number }}
+          path: ios/ASUBank-unsigned.ipa
+          retention-days: 30
 
   release:
     if: github.event_name == 'workflow_dispatch' && inputs.release
