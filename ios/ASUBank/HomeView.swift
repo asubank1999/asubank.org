@@ -75,9 +75,9 @@ struct SiteLinkButton<Label: View>: View {
         case .web(let path):
             NavigationLink(value: Route.web(link.title, path)) { label() }
         case .tab(let t):
-            Button { app.tab = t; Haptics.tap() } label: { label() }
+            Button { app.tab = t; Haptics.tap() } label: { label() }.tint(.primary)
         case .external(let url):
-            Button { openURL(url) } label: { label() }
+            Button { openURL(url) } label: { label() }.tint(.primary)
         }
     }
 }
