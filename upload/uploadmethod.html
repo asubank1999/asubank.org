@@ -209,26 +209,29 @@
         }
         function send(x) {
             x.state = 'up'; x.pct = 0; render();
+            function setPct(p) {
+                x.pct = p;
+                var li = queue.children[files.indexOf(x)];
+                if (li) { li.querySelector('.ab-progress i').style.width = p + '%'; li.querySelector('.st').textContent = 'Uploading… ' + p + '%'; }
+            }
+            // Apps Script answers no CORS preflight, so this must stay a "simple" request:
+            // fetch with text/plain and no upload listeners. Progress is estimated (~300 KB/s, capped at 95%).
+            var t0 = Date.now(), tick = setInterval(function () {
+                setPct(Math.min(95, Math.round((1 - Math.exp(-(Date.now() - t0) / 1000 * 300e3 / Math.max(x.f.size, 50e3))) * 100)));
+            }, 250);
             return toBase64(x.f).then(function (b64) {
-                return new Promise(function (res) {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', UPLOAD_API);
-                    xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
-                    xhr.upload.onprogress = function (e) {
-                        if (!e.lengthComputable) return;
-                        x.pct = Math.min(99, Math.round(e.loaded / e.total * 100));
-                        var li = queue.children[files.indexOf(x)];
-                        if (li) { li.querySelector('.ab-progress i').style.width = x.pct + '%'; li.querySelector('.st').textContent = 'Uploading… ' + x.pct + '%'; }
-                    };
-                    xhr.onload = function () {
-                        var d = null; try { d = JSON.parse(xhr.responseText); } catch (e) {}
-                        if (d && d.success) { x.state = 'ok'; x.url = d.url; } else { x.state = 'err'; x.msg = (d && d.error) || 'Upload failed (' + xhr.status + ')'; }
-                        render(); res();
-                    };
-                    xhr.onerror = function () { x.state = 'err'; x.msg = 'Network error. Check your connection and try again.'; render(); res(); };
-                    xhr.send(JSON.stringify({ name: x.f.name, mimeType: x.f.type, data: b64, subject: $('mSubject').value, kind: $('mKind').value, year: $('mYear').value, note: $('mNote').value.trim() }));
+                return fetch(UPLOAD_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ name: x.f.name, mimeType: x.f.type, data: b64, subject: $('mSubject').value, kind: $('mKind').value, year: $('mYear').value, note: $('mNote').value.trim() })
+                }).then(function (r) {
+                    return r.json().catch(function () { return { error: 'Upload failed (' + r.status + ')' }; });
+                }, function () {
+                    throw new Error('Network error. Check your connection and try again.');
                 });
-            }).catch(function (err) { x.state = 'err'; x.msg = err.message; render(); });
+            }).then(function (d) {
+                if (d && d.success) { x.state = 'ok'; x.url = d.url; } else { x.state = 'err'; x.msg = (d && d.error) || 'Upload failed'; }
+            }).catch(function (err) { x.state = 'err'; x.msg = err.message; }).then(function () { clearInterval(tick); render(); });
         }
         $('startBtn').addEventListener('click', function () {
             if (busy) return; busy = true; updateStart(); render();
