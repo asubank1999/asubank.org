@@ -437,6 +437,9 @@ html.dark .ab-tabbar [aria-current="page"] { color: var(--ab-accent) !important;
 .ab-field { display: block; padding: 10px 14px; background: var(--ab-surface); }
 .ab-field + .ab-field { border-top: .5px solid var(--ab-sep); }
 .ab-field span { display: block; font-size: 13px; color: var(--ab-label-2); }
+/* Windows draws the open dropdown list itself (often white), and options inherit the select's
+   white dark-mode text, so give them explicit colors */
+body.ab select option, body.ab select optgroup, .ab-sheet select option { background-color: var(--ab-surface); color: var(--ab-label); }
 .ab-field input, .ab-field select, .ab-field textarea { width: 100%; border: 0; background: transparent; color: var(--ab-label); font: inherit; font-size: 17px; padding: 4px 0; outline: none; }
 
 /* ---------- Content pages (legal / guides text) ---------- */
