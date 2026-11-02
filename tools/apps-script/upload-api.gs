@@ -8,6 +8,10 @@
  *  3. Deploy > New deployment > type "Web app": Execute as "Me", Who has access "Anyone".
  *  4. Copy the Web app URL (ends in /exec) and paste it into UPLOAD_API in upload/uploadmethod.html.
  *
+ * Deployed: project "ASU Bank Upload API" (necro1442@gmail.com), web app
+ *   https://script.google.com/macros/s/AKfycbygD_bFuQN7k9zLKogIip_zEaXmsq9Vw-z6QPfMte1AAuLdq4Vf4-kGIgvy6hgVcOo/exec
+ *   After editing, use Deploy > Manage deployments > edit > New version so the URL stays the same.
+ *
  * The page sends one POST per file with Content-Type text/plain (avoids a CORS preflight):
  *   { name, mimeType, data (base64, no data: prefix), subject, kind, year, note }
  * and expects JSON back: { success: true, id, url } or { success: false, error }.
@@ -44,4 +48,10 @@ function doGet() {
 
 function reply(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+// Run once from the editor to grant Drive access and confirm the folder is reachable.
+function checkFolder() {
+  var f = DriveApp.getFolderById(FOLDER_ID);
+  Logger.log('Upload folder: ' + f.getName() + ' (owner: ' + f.getOwner().getEmail() + ')');
 }
