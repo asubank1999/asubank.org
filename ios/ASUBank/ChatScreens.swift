@@ -17,8 +17,8 @@ struct ChatTab: View {
             }
             .navigationTitle("Chat")
             .toolbar {
-                if account.isAdmin {
-                    ToolbarItem(placement: .primaryAction) {
+                ToolbarItem(placement: .primaryAction) {
+                    if account.isAdmin {
                         Button { addingRoom = true } label: { Image(systemName: "plus.bubble") }.accessibilityLabel(Text("Add a room"))
                     }
                 }
@@ -74,24 +74,7 @@ struct ChatTab: View {
             }
             Section("Rooms") {
                 ForEach(account.rooms) { r in
-                    Button { openRoom = r } label: {
-                        HStack(spacing: 12) {
-                            Text(r.emoji).font(.title2).frame(width: 44, height: 44)
-                                .background(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                                .opacity(r.archived == true ? 0.5 : 1)
-                            VStack(alignment: .leading, spacing: 2) {
-                                HStack(spacing: 6) {
-                                    Text(r.name).font(.body.weight(.semibold)).foregroundStyle(.primary)
-                                    if r.adminOnly == true { Badge(text: L("TEAM"), color: .orange) }
-                                    if r.locked == true { Image(systemName: "lock.fill").font(.caption).foregroundStyle(.secondary) }
-                                    if r.archived == true { Badge(text: L("ARCHIVED"), color: .gray) }
-                                }
-                                Text(r.about).font(.caption).foregroundStyle(.secondary).lineLimit(1)
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
-                        }
-                    }
+                    Button { openRoom = r } label: { roomLabel(r) }
                     .contextMenu {
                         if account.isAdmin {
                             Button { editingRoom = r } label: { Label("Edit room", systemImage: "slider.horizontal.3") }
@@ -108,6 +91,25 @@ struct ChatTab: View {
         }
         .listStyle(.insetGrouped)
         .refreshable { await account.refresh(); await loadOnline() }
+    }
+
+    private func roomLabel(_ r: ChatRoom) -> some View {
+        HStack(spacing: 12) {
+            Text(r.emoji).font(.title2).frame(width: 44, height: 44)
+                .background(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .opacity(r.archived == true ? 0.5 : 1)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 6) {
+                    Text(r.name).font(.body.weight(.semibold)).foregroundStyle(.primary)
+                    if r.adminOnly == true { Badge(text: L("TEAM"), color: .orange) }
+                    if r.locked == true { Image(systemName: "lock.fill").font(.caption).foregroundStyle(.secondary) }
+                    if r.archived == true { Badge(text: L("ARCHIVED"), color: .gray) }
+                }
+                Text(r.about).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+            }
+            Spacer()
+            Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+        }
     }
 }
 
@@ -436,8 +438,8 @@ struct ChatRoomView: View {
         .navigationTitle("\(model.room.emoji) \(model.room.name)")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if account.isAdmin {
-                ToolbarItem(placement: .primaryAction) {
+            ToolbarItem(placement: .primaryAction) {
+                if account.isAdmin {
                     Button { roomSettings = true } label: { Image(systemName: "slider.horizontal.3") }.accessibilityLabel(Text("Edit room"))
                 }
             }
