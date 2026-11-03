@@ -90,7 +90,7 @@ struct CalendarScreen: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if let url = AB.absolute(path) {
-                    ShareLink(item: url) { Image(systemName: "square.and.arrow.up") }
+                    ShareButton(item: url) { Image(systemName: "square.and.arrow.up") }
                 }
             }
         }

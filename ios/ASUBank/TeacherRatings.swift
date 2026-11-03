@@ -1,0 +1,489 @@
+import SwiftUI
+import WebKit
+
+/// Rate your teachers, natively. The ratings live in the "Rate Your Teacher" Apps Script, which only
+/// talks to its own page (google.script.run). A hidden web view loads that page and we call the
+/// script's functions inside it: bootstrap(query), getTeacherStats(name), addRating(name, rating, clientId).
+enum Ratings {
+    static let script = "https://script.google.com/macros/s/AKfycbwdw7QBPLeBz1X-xBP6JeZEF5t7i4Ru1VfWshVqanRKd6xN0J2gQqvvovnTrYI_bpKt/exec"
+    static let banned = ["fuck", "shit", "bitch", "asshole", "idiot", "dumb", "retard", "gay", "whore", "slut", "stupid", "kill", "suicide", "sex", "porn", "dick", "pussy", "cock", "boob"]
+
+    static func rude(_ s: String) -> Bool {
+        let t = s.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: nil).filter { $0.isASCII && ($0.isLetter || $0.isNumber) }
+        return banned.contains { t.contains($0) }
+    }
+
+    static func color(_ v: Double) -> Color {
+        if v <= 3 { return Color(UIColor(hex: 0xe5372d)) }
+        if v <= 6 { return Color(UIColor(hex: 0xf59f00)) }
+        return Color(UIColor(hex: 0x1f8a3e))
+    }
+
+    static var clientId: String {
+        let k = "ab.rate.clientId"
+        if let id = UserDefaults.standard.string(forKey: k) { return id }
+        let id = "cid_" + UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
+        UserDefaults.standard.set(id, forKey: k)
+        return id
+    }
+}
+
+struct Teacher: Identifiable, Hashable {
+    let name: String
+    let average: Double
+    let count: Int
+    var id: String { name.lowercased() }
+
+    init?(_ any: Any?) {
+        guard let d = any as? [String: Any], let n = (d["display"] as? String) ?? (d["name"] as? String), !n.isEmpty else { return nil }
+        name = n.trimmingCharacters(in: .whitespacesAndNewlines)
+        average = (d["average"] as? Double) ?? (d["average"] as? NSNumber)?.doubleValue ?? Double("\(d["average"] ?? "")") ?? 0
+        count = (d["count"] as? Int) ?? (d["count"] as? NSNumber)?.intValue ?? Int("\(d["count"] ?? "")") ?? 0
+    }
+}
+
+@MainActor
+final class RatingBridge: NSObject, ObservableObject, WKScriptMessageHandler, WKNavigationDelegate {
+    enum Status: Equatable { case connecting, ready, failed }
+
+    @Published var status: Status = .connecting
+    @Published var teachers: [Teacher] = []
+    @Published var loading = false
+
+    let web: WKWebView
+    private var frame: WKFrameInfo?
+    private var timeout: Task<Void, Never>?
+
+    override init() {
+        let config = WKWebViewConfiguration()
+        // runs in every frame; reports back from the frame that holds the rating page
+        let probe = """
+        (function(){var n=0;function go(){try{if(window.google&&google.script&&google.script.run&&document.getElementById('teacherInput')){window.webkit.messageHandlers.abRating.postMessage('ready');return;}}catch(e){}if(++n<120)setTimeout(go,250);}go();})();
+        """
+        config.userContentController.addUserScript(WKUserScript(source: probe, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
+        web = WKWebView(frame: CGRect(x: 0, y: 0, width: 2, height: 2), configuration: config)
+        super.init()
+        config.userContentController.add(WeakHandler(self), name: "abRating")
+        web.navigationDelegate = self
+    }
+
+    func connect() {
+        guard status != .ready else { return }
+        status = .connecting
+        frame = nil
+        web.load(URLRequest(url: URL(string: Ratings.script)!))
+        timeout?.cancel()
+        timeout = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 30_000_000_000)
+            if let self, self.status == .connecting { self.status = .failed }
+        }
+    }
+
+    nonisolated func userContentController(_ c: WKUserContentController, didReceive message: WKScriptMessage) {
+        let info = message.frameInfo
+        Task { @MainActor in
+            guard self.frame == nil else { return }
+            self.frame = info
+            self.timeout?.cancel()
+            self.status = .ready
+            await self.refresh()
+        }
+    }
+
+    nonisolated func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        Task { @MainActor in if self.status == .connecting { self.status = .failed } }
+    }
+
+    nonisolated func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        Task { @MainActor in if self.status == .connecting { self.status = .failed } }
+    }
+
+    /// Calls a function of the Apps Script and returns its JSON result
+    private func call(_ fn: String, _ args: [Any]) async throws -> Any? {
+        guard let frame else { throw NSError(domain: "rating", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not connected yet."]) }
+        let js = """
+        return await new Promise(function(res, rej){
+          var r = google.script.run.withSuccessHandler(function(v){ res(JSON.stringify(v === undefined ? null : v)); })
+            .withFailureHandler(function(e){ rej(new Error(e && e.message ? e.message : String(e))); });
+          r[fn].apply(r, args);
+        });
+        """
+        let out = try await web.callAsyncJavaScript(js, arguments: ["fn": fn, "args": args], in: frame, contentWorld: .page)
+        guard let s = out as? String, let data = s.data(using: .utf8) else { return nil }
+        return try JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])
+    }
+
+    func refresh() async {
+        loading = true
+        defer { loading = false }
+        if let r = try? await call("bootstrap", [""]) as? [String: Any],
+           let items = (r["data"] as? [String: Any])?["items"] as? [Any] {
+            var seen = Set<String>()
+            teachers = items.compactMap { Teacher($0) }.filter { seen.insert($0.id).inserted }
+        }
+    }
+
+    func stats(_ name: String) async -> Teacher? {
+        Teacher(try? await call("getTeacherStats", [name]))
+    }
+
+    /// Returns an error message, or nil when saved
+    func rate(_ name: String, _ rating: Int) async -> String? {
+        do {
+            _ = try await call("addRating", [name, rating, Ratings.clientId])
+            await refresh()
+            return nil
+        } catch {
+            let msg = (error as NSError).userInfo["WKJavaScriptExceptionMessage"] as? String ?? error.localizedDescription
+            return msg.replacingOccurrences(of: "Error: ", with: "")
+        }
+    }
+}
+
+/// Avoids a retain cycle between the web view's content controller and the bridge
+private final class WeakHandler: NSObject, WKScriptMessageHandler {
+    weak var target: WKScriptMessageHandler?
+    init(_ t: WKScriptMessageHandler) { target = t }
+    func userContentController(_ c: WKUserContentController, didReceive m: WKScriptMessage) { target?.userContentController(c, didReceive: m) }
+}
+
+private struct HiddenWeb: UIViewRepresentable {
+    let web: WKWebView
+    func makeUIView(context: Context) -> WKWebView { web }
+    func updateUIView(_ v: WKWebView, context: Context) {}
+}
+
+enum RatingSort: String, CaseIterable { case top = "Top rated", votes = "Most votes", name = "A–Z" }
+
+struct TeacherRatingsScreen: View {
+    @StateObject private var bridge = RatingBridge()
+    @AppStorage("ab.rate.intro.v1") private var introSeen = false
+    @State private var query = ""
+    @State private var sort: RatingSort = .votes
+    @State private var rating: RateTarget?
+
+    var body: some View {
+        Group {
+            if !introSeen {
+                RatingIntro { withAnimation { introSeen = true } }
+            } else {
+                list
+            }
+        }
+        .background(HiddenWeb(web: bridge.web).frame(width: 2, height: 2).opacity(0.01).allowsHitTesting(false))
+        .navigationTitle("Rate your teachers")
+        .navigationBarTitleDisplayMode(introSeen ? .large : .inline)
+        .onAppear { bridge.connect() }
+        .sheet(item: $rating) { t in
+            RateSheet(target: t, bridge: bridge, known: bridge.teachers)
+        }
+    }
+
+    private var shown: [Teacher] {
+        let q = AB.norm(query)
+        let f = bridge.teachers.filter { q.isEmpty || AB.norm($0.name).contains(q) }
+        switch sort {
+        case .top: return f.sorted { ($0.average, $0.count) > ($1.average, $1.count) }
+        case .votes: return f.sorted { ($0.count, $0.average) > ($1.count, $1.average) }
+        case .name: return f.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        }
+    }
+
+    @ViewBuilder private var list: some View {
+        List {
+            Section {
+                Button { rating = RateTarget(name: "") } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "star.bubble.fill")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 38, height: 38)
+                            .background(Color.abAccent, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Rate a teacher").font(.headline).foregroundStyle(.primary)
+                            Text("Anonymous · takes 5 seconds").font(.footnote).foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+                    }
+                }
+                .disabled(bridge.status != .ready)
+            }
+
+            switch bridge.status {
+            case .connecting:
+                Section { HStack { Spacer(); ProgressView("Loading ratings…"); Spacer() }.padding(.vertical, 24) }
+            case .failed:
+                Section {
+                    VStack(spacing: 10) {
+                        Image(systemName: "wifi.exclamationmark").font(.largeTitle).foregroundStyle(.secondary)
+                        Text("Couldn't load the ratings").font(.headline)
+                        Text("Check your connection and try again.").font(.footnote).foregroundStyle(.secondary)
+                        Button("Try again") { bridge.connect() }.buttonStyle(.borderedProminent).tint(.abAccent)
+                    }
+                    .frame(maxWidth: .infinity).padding(.vertical, 16)
+                }
+            case .ready:
+                Section {
+                    Picker("Sort", selection: $sort) {
+                        ForEach(RatingSort.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
+                }
+                Section {
+                    if shown.isEmpty {
+                        VStack(spacing: 8) {
+                            Text(query.isEmpty ? "No ratings yet" : "No teacher named “\(query)” yet").font(.headline)
+                            Text("Be the first to rate them.").font(.footnote).foregroundStyle(.secondary)
+                            Button("Rate \(query.isEmpty ? "a teacher" : query)") { rating = RateTarget(name: query) }
+                                .buttonStyle(.borderedProminent).tint(.abAccent)
+                        }
+                        .frame(maxWidth: .infinity).padding(.vertical, 12)
+                    }
+                    ForEach(shown) { t in
+                        Button { rating = RateTarget(name: t.name) } label: { TeacherRow(t: t) }
+                            .buttonStyle(.plain)
+                    }
+                } header: {
+                    Text("\(bridge.teachers.count) teachers rated")
+                } footer: {
+                    Text("Tap a teacher to add your rating. Averages are out of 10.")
+                }
+            }
+        }
+        .searchable(text: $query, prompt: "Search teachers")
+        .refreshable { await bridge.refresh() }
+        .animation(.easeInOut(duration: 0.25), value: bridge.status)
+    }
+}
+
+struct RateTarget: Identifiable { let name: String; var id: String { name } }
+
+private struct TeacherRow: View {
+    let t: Teacher
+    var body: some View {
+        HStack(spacing: 12) {
+            Text(String(format: "%.1f", t.average))
+                .font(.system(size: 16, weight: .bold, design: .rounded).monospacedDigit())
+                .foregroundStyle(.white)
+                .frame(width: 46, height: 38)
+                .background(Ratings.color(t.average), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            VStack(alignment: .leading, spacing: 5) {
+                Text(t.name).font(.body.weight(.medium)).lineLimit(2)
+                GeometryReader { g in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(Color.secondary.opacity(0.15))
+                        Capsule().fill(Ratings.color(t.average)).frame(width: max(4, g.size.width * min(1, t.average / 10)))
+                    }
+                }
+                .frame(height: 5)
+                Text("\(t.count) vote\(t.count == 1 ? "" : "s")").font(.caption).foregroundStyle(.secondary)
+            }
+            Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+        }
+        .contentShape(Rectangle())
+        .padding(.vertical, 3)
+    }
+}
+
+private struct RatingIntro: View {
+    let onContinue: () -> Void
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 18) {
+                Image(systemName: "star.bubble.fill")
+                    .font(.system(size: 40, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 84, height: 84)
+                    .background(Color.abAccent, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .padding(.top, 20)
+                Text("Rate your teachers").font(.largeTitle.weight(.bold))
+                Text("Share your experience and help other students choose their sections.")
+                    .multilineTextAlignment(.center).foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 16) {
+                    IntroPoint(symbol: "eye.slash.fill", title: "100% anonymous", text: "Nobody, not even the admins, can see who rated.")
+                    IntroPoint(symbol: "chart.bar.fill", title: "Real averages", text: "Every teacher shows an average out of 10 and how many students voted.")
+                    IntroPoint(symbol: "person.badge.plus", title: "Teacher not listed?", text: "Be the first to rate them, and others will join in.")
+                    IntroPoint(symbol: "heart.text.square.fill", title: "Be fair", text: "Rate the teaching, not the person. Rude names are blocked.")
+                }
+                .padding(18)
+                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                Button(action: onContinue) {
+                    Text("Continue").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
+                }
+                .buttonStyle(.borderedProminent).tint(.abAccent)
+                NavigationLink("Terms of Service") { SitePageView(path: "/legal/uni_tos", title: "Terms of Service") }
+                    .font(.footnote)
+                Text("By continuing you agree to the Terms of Service.").font(.caption).foregroundStyle(.secondary)
+            }
+            .padding(20)
+        }
+        .background(Color.abBackground.ignoresSafeArea())
+    }
+}
+
+private struct IntroPoint: View {
+    let symbol: String
+    let title: String
+    let text: String
+    var body: some View {
+        HStack(alignment: .top, spacing: 14) {
+            Image(systemName: symbol).font(.title3).foregroundStyle(Color.abAccent).frame(width: 28)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.headline)
+                Text(text).font(.subheadline).foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+private struct RateSheet: View {
+    let target: RateTarget
+    @ObservedObject var bridge: RatingBridge
+    let known: [Teacher]
+    @Environment(\.presentationMode) private var presentation
+    @State private var name = ""
+    @State private var score = 0
+    @State private var current: Teacher?
+    @State private var saving = false
+    @State private var message: String?
+    @State private var done = false
+
+    private var trimmed: String { name.trimmingCharacters(in: .whitespacesAndNewlines) }
+    private var suggestions: [Teacher] {
+        let q = AB.norm(trimmed)
+        guard q.count >= 2 else { return [] }
+        return known.filter { AB.norm($0.name).contains(q) && $0.name != trimmed }.prefix(5).map { $0 }
+    }
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section {
+                    TextField("Teacher's full name, e.g. Dr. Ahmad Malik", text: $name)
+                        .textInputAutocapitalization(.words)
+                        .disableAutocorrection(true)
+                        .disabled(done)
+                    ForEach(suggestions) { t in
+                        Button { name = t.name } label: {
+                            HStack {
+                                Image(systemName: "arrow.turn.down.right").foregroundStyle(.secondary)
+                                Text(t.name).foregroundStyle(.primary)
+                                Spacer()
+                                Text(String(format: "%.1f", t.average)).foregroundStyle(Ratings.color(t.average))
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Teacher")
+                } footer: {
+                    if !suggestions.isEmpty { Text("Pick the existing name so all ratings stay together.") }
+                }
+
+                if let c = current, c.count > 0 {
+                    Section("Current rating") {
+                        HStack {
+                            Text(String(format: "%.1f / 10", c.average)).font(.title3.weight(.bold)).foregroundStyle(Ratings.color(c.average))
+                            Spacer()
+                            Text("\(c.count) vote\(c.count == 1 ? "" : "s")").foregroundStyle(.secondary)
+                        }
+                    }
+                }
+
+                Section {
+                    VStack(spacing: 14) {
+                        Text(score == 0 ? "Tap a score" : "\(score) / 10 · \(label(score))")
+                            .font(.headline)
+                            .foregroundStyle(score == 0 ? Color.secondary : Ratings.color(Double(score)))
+                        ForEach([1, 6], id: \.self) { start in
+                            HStack(spacing: 8) {
+                                ForEach(start..<(start + 5), id: \.self) { n in
+                                    Button {
+                                        withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) { score = n }
+                                        UISelectionFeedbackGenerator().selectionChanged()
+                                    } label: {
+                                        Text("\(n)")
+                                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                                            .frame(maxWidth: .infinity, minHeight: 46)
+                                            .foregroundStyle(n <= score ? Color.white : Color.primary)
+                                            .background(n <= score ? Ratings.color(Double(score)) : Color.secondary.opacity(0.12),
+                                                        in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                                            .scaleEffect(n == score ? 1.08 : 1)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .disabled(done)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.vertical, 6)
+                } header: {
+                    Text("Your rating")
+                }
+
+                if let message {
+                    Section {
+                        Label(message, systemImage: done ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                            .foregroundStyle(done ? Color.green : Color.orange)
+                    }
+                }
+
+                Section {
+                    Button {
+                        if done { presentation.wrappedValue.dismiss() } else { save() }
+                    } label: {
+                        HStack {
+                            Spacer()
+                            if saving { ProgressView() } else { Text(done ? "Done" : "Save rating").font(.headline) }
+                            Spacer()
+                        }
+                    }
+                    .disabled(saving || (!done && (trimmed.count < 3 || score == 0)))
+                } footer: {
+                    Text("Your rating is anonymous.")
+                }
+            }
+            .navigationTitle(target.name.isEmpty ? "Rate a teacher" : "Rate")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Close") { presentation.wrappedValue.dismiss() } }
+            }
+        }
+        .onAppear {
+            if name.isEmpty { name = target.name }
+            current = known.first { $0.name == target.name }
+        }
+    }
+
+    private func label(_ n: Int) -> String {
+        switch n {
+        case 1...2: return "Very poor"
+        case 3...4: return "Poor"
+        case 5...6: return "OK"
+        case 7...8: return "Good"
+        default: return "Excellent"
+        }
+    }
+
+    private func save() {
+        guard !Ratings.rude(trimmed) else {
+            message = "That name isn't allowed."; Haptics.error(); return
+        }
+        saving = true
+        message = nil
+        Task {
+            let err = await bridge.rate(trimmed, score)
+            saving = false
+            if let err {
+                message = err; Haptics.error()
+            } else {
+                done = true
+                message = "Thanks! Your rating was saved."
+                current = bridge.teachers.first { $0.name.lowercased() == trimmed.lowercased() }
+                Haptics.success()
+            }
+        }
+    }
+}

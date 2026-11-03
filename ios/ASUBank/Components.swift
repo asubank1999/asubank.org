@@ -22,12 +22,6 @@ struct RouteView: View {
     }
 }
 
-extension View {
-    /// Every tab's NavigationStack understands the same routes
-    func abDestinations() -> some View {
-        navigationDestination(for: Route.self) { RouteView(route: $0) }
-    }
-}
 
 struct MaterialRow: View {
     let m: Material
@@ -38,7 +32,7 @@ struct MaterialRow: View {
 
     var body: some View {
         let k = kind ?? AB.kind(m.u, m.t)
-        NavigationLink(value: k == .page ? Route.page(AB.sitePath(m.u) ?? m.u, m.t) : Route.material(m)) {
+        RouteLink(k == .page ? Route.page(AB.sitePath(m.u) ?? m.u, m.t) : Route.material(m)) {
             HStack(spacing: 12) {
                 KindTile(kind: k)
                 VStack(alignment: .leading, spacing: 3) {
@@ -68,7 +62,7 @@ struct MaterialRow: View {
                 Label(saved.isSaved(m.u) ? "Remove from Saved" : "Save", systemImage: saved.isSaved(m.u) ? "star.slash" : "star")
             }
             if let url = AB.absolute(m.u) {
-                ShareLink(item: url, subject: Text(m.t)) { Label("Share", systemImage: "square.and.arrow.up") }
+                ShareButton(item: url, subject: Text(m.t)) { Label("Share", systemImage: "square.and.arrow.up") }
                 Button { UIPasteboard.general.url = url } label: { Label("Copy link", systemImage: "link") }
             }
         }
@@ -109,13 +103,13 @@ struct WebScreen: View {
         .ignoresSafeArea(edges: .bottom)
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: Binding(get: { next != nil }, set: { if !$0 { next = nil } })) {
+        .push(isPresented: Binding(get: { next != nil }, set: { if !$0 { next = nil } })) {
             if let next { RouteView(route: next) }
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
-                    ShareLink(item: url) { Label("Share", systemImage: "square.and.arrow.up") }
+                    ShareButton(item: url) { Label("Share", systemImage: "square.and.arrow.up") }
                     Button { openURL(url) } label: { Label("Open in Safari", systemImage: "safari") }
                 } label: { Image(systemName: "ellipsis.circle") }
             }

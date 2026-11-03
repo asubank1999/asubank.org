@@ -120,7 +120,7 @@ struct WelcomeTermsView: View {
     static let key = "ab.terms.accepted.v1"
 
     var body: some View {
-        NavigationStack {
+        ABStack {
             List {
                 Section {
                     VStack(spacing: 10) {

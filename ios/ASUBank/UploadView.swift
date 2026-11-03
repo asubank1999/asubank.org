@@ -68,7 +68,7 @@ struct UploadView: View {
     private var readyCount: Int { files.filter { $0.state == .ready }.count }
 
     var body: some View {
-        NavigationStack {
+        ABStack {
             Form {
                 Section {
                     VStack(alignment: .leading, spacing: 6) {
@@ -86,7 +86,7 @@ struct UploadView: View {
                         }
                     }
                     .tint(.abAccent)
-                    NavigationLink(value: Route.web("Terms of Service", "/legal/uni_tos")) { Text("Read the terms") }
+                    RouteLink(Route.web("Terms of Service", "/legal/uni_tos")) { Text("Read the terms") }
                 } header: { Text("Before you upload") }
 
                 Section {
@@ -147,10 +147,10 @@ struct UploadView: View {
                 }
 
                 Section("Other ways to share") {
-                    NavigationLink(value: Route.web("Instant upload", "/upload/gupload")) { Label("Instant upload (large files)", systemImage: "bolt.fill") }
-                    NavigationLink(value: Route.web("Structured submission", "/upload/submissions")) { Label("Structured submission", systemImage: "doc.text") }
-                    NavigationLink(value: Route.web("Campus display", "/upload/submit_file")) { Label("Campus display presentations", systemImage: "display") }
-                    NavigationLink(value: Route.web("Submitted files", "/upload/student_submissions_board")) { Label("Submitted files board", systemImage: "list.clipboard") }
+                    RouteLink(Route.web("Instant upload", "/upload/gupload")) { Label("Instant upload (large files)", systemImage: "bolt.fill") }
+                    RouteLink(Route.web("Structured submission", "/upload/submissions")) { Label("Structured submission", systemImage: "doc.text") }
+                    RouteLink(Route.web("Campus display", "/upload/submit_file")) { Label("Campus display presentations", systemImage: "display") }
+                    RouteLink(Route.web("Submitted files", "/upload/student_submissions_board")) { Label("Submitted files board", systemImage: "list.clipboard") }
                 }
             }
             .navigationTitle("Upload")

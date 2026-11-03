@@ -99,10 +99,10 @@ struct MaterialScreen: View {
                 .accessibilityLabel(saved.isSaved(material.u) ? "Remove from Saved" : "Save")
                 Menu {
                     if let f = loader.file {
-                        ShareLink(item: f) { Label("Save to Files / share file", systemImage: "square.and.arrow.down") }
+                        ShareButton(item: f) { Label("Save to Files / share file", systemImage: "square.and.arrow.down") }
                     }
                     if let url = AB.absolute(material.u) {
-                        ShareLink(item: url, subject: Text(material.t)) { Label("Share link", systemImage: "square.and.arrow.up") }
+                        ShareButton(item: url, subject: Text(material.t)) { Label("Share link", systemImage: "square.and.arrow.up") }
                         Button { openURL(url) } label: { Label("Open in Drive / Safari", systemImage: "safari") }
                         Button { UIPasteboard.general.url = url; Haptics.success() } label: { Label("Copy link", systemImage: "link") }
                     }
@@ -306,7 +306,7 @@ private struct FileCard: View {
             }
             Text(why).font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
             if let file {
-                ShareLink(item: file) {
+                ShareButton(item: file) {
                     Label("Save to Files", systemImage: "square.and.arrow.down").frame(maxWidth: 260).padding(.vertical, 6)
                 }
                 .buttonStyle(.borderedProminent).tint(.abAccent)
@@ -329,7 +329,7 @@ private struct BrokenCard: View {
             Text("This material isn't available").font(.title3.weight(.semibold))
             Text("The owner removed it or made it private (\(why)). Ask for it and we'll upload it again.")
                 .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
-            NavigationLink(value: Route.page("/requests/student_request_portal", "Request a material")) {
+            RouteLink(Route.page("/requests/student_request_portal", "Request a material")) {
                 Label("Request this material", systemImage: "tray.and.arrow.down").frame(maxWidth: 260).padding(.vertical, 6)
             }
             .buttonStyle(.borderedProminent).tint(.abAccent)

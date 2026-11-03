@@ -165,7 +165,7 @@ struct SiteLinkRowButton<Label: View>: View {
     var body: some View {
         switch SiteRouter.target(url, title: title) {
         case .push(let r):
-            NavigationLink(value: r) { label() }
+            RouteLink(r) { label() }
         case .tab(let t):
             Button { app.tab = t; Haptics.tap() } label: { label() }.tint(.primary)
         case .external(let u):
@@ -264,7 +264,7 @@ struct NativePageScreen: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if let url = AB.absolute(path) {
                     Menu {
-                        ShareLink(item: url) { Label("Share", systemImage: "square.and.arrow.up") }
+                        ShareButton(item: url) { Label("Share", systemImage: "square.and.arrow.up") }
                         Button { openURL(url) } label: { Label("Open in Safari", systemImage: "safari") }
                     } label: { Image(systemName: "ellipsis.circle") }
                 }
@@ -375,7 +375,7 @@ struct SubjectsDirectory: View {
             ForEach(library.categories, id: \.name) { cat in
                 Section(cat.name) {
                     ForEach(cat.subjects) { s in
-                        NavigationLink(value: Route.subject(s)) {
+                        RouteLink(Route.subject(s)) {
                             HStack(spacing: 12) {
                                 Text(s.e ?? "📁").font(.title3).frame(width: 30)
                                 VStack(alignment: .leading, spacing: 2) {

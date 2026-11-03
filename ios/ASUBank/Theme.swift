@@ -42,7 +42,7 @@ struct KindTile: View {
             .font(.system(size: size * 0.45, weight: .semibold))
             .foregroundStyle(.white)
             .frame(width: size, height: size)
-            .background(kind.color.gradient, in: RoundedRectangle(cornerRadius: size * 0.26, style: .continuous))
+            .background(kind.color.abGradient, in: RoundedRectangle(cornerRadius: size * 0.26, style: .continuous))
     }
 }
 

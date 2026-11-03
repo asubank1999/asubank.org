@@ -68,7 +68,7 @@ struct SubjectView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if let url = AB.absolute(subject.p) {
-                    ShareLink(item: url, subject: Text(subject.t)) { Image(systemName: "square.and.arrow.up") }
+                    ShareButton(item: url, subject: Text(subject.t)) { Image(systemName: "square.and.arrow.up") }
                 }
             }
         }

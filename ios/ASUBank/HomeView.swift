@@ -22,7 +22,7 @@ enum Links {
         .init(emoji: "📅", title: "Calendar 2026–2027", subtitle: "This year's important dates.", added: "2026-08-31", target: .web("/schedules/calendar27")),
         .init(emoji: "📬", title: "Request a material", subtitle: "Can't find it? Ask for it.", target: .web("/requests/student_request_portal")),
         .init(emoji: "📤", title: "Upload files", subtitle: "Share your study materials.", target: .tab(.upload)),
-        .init(emoji: "📝", title: "Rate professors", subtitle: "Anonymously help other students.", target: .web("/requests/portal_to_rating")),
+        .init(emoji: "📝", title: "Rate your teachers", subtitle: "See averages and rate anonymously.", target: .web("/requests/portal_to_rating")),
         .init(emoji: "➕", title: "Useful gate", subtitle: "University resources in one place.", target: .web("/guides/links"))
     ]
 
@@ -33,7 +33,7 @@ enum Links {
         .init(emoji: "👥", title: "Course WhatsApp groups", subtitle: "Groups for courses, clubs and interests", target: .web("/guides/groups")),
         .init(emoji: "📊", title: "Grading scale", target: .web("/guides/grading-scale-asu")),
         .init(emoji: "📝", title: "Placement tests", target: .web("/guides/placement")),
-        .init(emoji: "🏫", title: "University halls", target: .web("/guides/halls")),
+        .init(emoji: "🏫", title: "University halls", subtitle: "Type a hall number, find the building and floor", target: .web("/guides/halls")),
         .init(emoji: "🗺️", title: "Study plans", target: .external(URL(string: "https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing")!))
     ]
 
@@ -77,7 +77,7 @@ struct SiteLinkButton<Label: View>: View {
     var body: some View {
         switch link.target {
         case .web(let path):
-            NavigationLink(value: Route.web(link.title, path)) { label() }
+            RouteLink(Route.web(link.title, path)) { label() }
         case .tab(let t):
             Button { app.tab = t; Haptics.tap() } label: { label() }.tint(.primary)
         case .external(let url):
@@ -112,12 +112,11 @@ struct HomeView: View {
     @EnvironmentObject private var app: AppState
     @EnvironmentObject private var library: Library
     @EnvironmentObject private var saved: SavedStore
-    @State private var path = NavigationPath()
 
     private let grid = [GridItem(.adaptive(minimum: 158), spacing: 12)]
 
     var body: some View {
-        NavigationStack(path: $path) {
+        ABStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     hero
@@ -222,7 +221,7 @@ struct HomeView: View {
                 .padding(.horizontal, 20).padding(.top, 14).padding(.bottom, 6)
             LazyVGrid(columns: grid, spacing: 12) {
                 ForEach(cat.subjects) { s in
-                    NavigationLink(value: Route.subject(s)) {
+                    RouteLink(Route.subject(s)) {
                         Card(emoji: s.e ?? "📁", title: s.t, subtitle: [s.ar, s.n.map { "\($0) items" }].compactMap { $0 }.joined(separator: " · "))
                     }
                     .buttonStyle(PressStyle())

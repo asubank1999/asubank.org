@@ -5,7 +5,7 @@ struct SavedView: View {
     @State private var mode = 0
 
     var body: some View {
-        NavigationStack {
+        ABStack {
             List {
                 Section {
                     Picker("Show", selection: $mode) {

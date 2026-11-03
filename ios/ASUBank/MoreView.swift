@@ -12,7 +12,7 @@ struct MoreView: View {
     @State private var confirmClear = false
 
     var body: some View {
-        NavigationStack {
+        ABStack {
             List {
                 Section {
                     Picker("Appearance", selection: $appearance) {
@@ -24,10 +24,10 @@ struct MoreView: View {
                 } header: { Text("Appearance") }
 
                 Section("All subjects") {
-                    NavigationLink(value: Route.page("/banks/subjects", "All subjects")) { Label("Subjects directory", systemImage: "square.grid.2x2") }
-                    NavigationLink(value: Route.page("/guides/latest", "Latest uploads")) { Label("Latest uploads", systemImage: "sparkles") }
-                    NavigationLink(value: Route.page("/requests/student_request_portal", "Request a material")) { Label("Request a material", systemImage: "tray.and.arrow.down") }
-                    NavigationLink(value: Route.page("/guides/links", "ASU resources")) { Label("ASU resources (Useful gate)", systemImage: "square.grid.3x3.fill") }
+                    RouteLink(Route.page("/banks/subjects", "All subjects")) { Label("Subjects directory", systemImage: "square.grid.2x2") }
+                    RouteLink(Route.page("/guides/latest", "Latest uploads")) { Label("Latest uploads", systemImage: "sparkles") }
+                    RouteLink(Route.page("/requests/student_request_portal", "Request a material")) { Label("Request a material", systemImage: "tray.and.arrow.down") }
+                    RouteLink(Route.page("/guides/links", "ASU resources")) { Label("ASU resources (Useful gate)", systemImage: "square.grid.3x3.fill") }
                 }
                 Section("New students") { ForEach(Links.newHere) { SiteLinkRow(link: $0) } }
                 Section("Calendars & schedules") { ForEach(Links.schedules) { SiteLinkRow(link: $0) } }
@@ -100,12 +100,12 @@ struct MoreView: View {
                         }
                     }
                     Button { showTerms = true } label: { Label("About & terms", systemImage: "heart.text.square") }
-                    NavigationLink(value: Route.page("/guides/contact", "Contact us")) { Label("Contact us", systemImage: "envelope") }
+                    RouteLink(Route.page("/guides/contact", "Contact us")) { Label("Contact us", systemImage: "envelope") }
                 }
 
                 Section {
                     Button { openURL(AB.site) } label: { Label("Open asubank.org in Safari", systemImage: "safari") }
-                    ShareLink(item: AB.site, message: Text("ASU Bank — summaries, past papers and test banks for ASU students")) {
+                    ShareButton(item: AB.site, message: "ASU Bank — summaries, past papers and test banks for ASU students") {
                         Label("Share ASU Bank", systemImage: "square.and.arrow.up")
                     }
                     Button {

@@ -32,7 +32,7 @@ struct SearchView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        ABStack {
             List {
                 if query.trimmingCharacters(in: .whitespaces).isEmpty {
                     idle
@@ -54,7 +54,7 @@ struct SearchView: View {
                     if l.isEmpty && driveShown.isEmpty && driveState != .loading && driveState != .failed {
                         EmptyState(symbol: "magnifyingglass", title: "No results", text: "Try fewer words, another spelling, or Arabic/English. You can also request this material.")
                             .listRowBackground(Color.clear)
-                        NavigationLink(value: Route.web("Request a material", "/requests/student_request_portal")) {
+                        RouteLink(Route.web("Request a material", "/requests/student_request_portal")) {
                             Label("Request “\(query)”", systemImage: "tray.and.arrow.down")
                         }
                     }
