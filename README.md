@@ -60,16 +60,3 @@ Special thanks to students and faculty who contribute their time and knowledge t
 | `assets/css`, `assets/js`, `assets/img`, `assets/media` | Shared styles, scripts, images, video |
 
 All internal links use root-absolute paths (e.g. `/banks/english`). Old URLs such as `/english` are redirected by `404.html`.
-
----
-
-## 📱 App design (2026-11 redesign)
-
-Every page now runs on one shared design: `assets/app/app.css` + `assets/app/app.js` (iOS-style tab bar, search, Saved, preview sheets, dark mode, offline support via `sw.js`).
-
-- **Add a material to a subject page:** open `banks/<subject>.html` and copy one line inside `<ul class="ab-items">`:
-  `<li><a class="ab-item" href="DRIVE LINK" target="_blank" rel="noopener">Title</a></li>` (add `data-tag="new"` for a NEW badge).
-  Then run `python tools/build_banks.py` so it also appears in site-wide search (`assets/app/materials.json`).
-- **New page?** Run `python tools/add_shell.py` to give it the tab bar and offline support.
-- **Drag-and-drop uploads with progress:** live. `upload/uploadmethod.html` posts to the "ASU Bank Upload API" Apps Script (`tools/apps-script/upload-api.gs`, account necro1442@gmail.com), which saves into the Drive folder "asubank.xyz Upload". To change it, edit the script and publish a new version of the same deployment so the URL stays. Clear `UPLOAD_API` to fall back to the old Google uploader.
-- After changing `app.css` / `app.js`, bump `?v=1` in the pages (or the `VERSION` in `sw.js`) so phones fetch the new files.

@@ -450,11 +450,7 @@ fun SubjectScreen(s: Subject) {
                     }
                 }
             }
-            item {
-                Group(header = "${shown.size} materials") {
-                    shown.forEachIndexed { i, it -> if (i > 0) Divider(); MaterialRow(it.m, it.kind, showSource = false) }
-                }
-            }
+            groupItems(shown, header = "${shown.size} materials") { MaterialRow(it.m, it.kind, showSource = false) }
             if (shown.isEmpty()) item { EmptyState(Icons.Filled.FindInPage, "No materials", "Nothing matches these filters.") }
             item { Spacer(Modifier.height(24.dp)) }
         }

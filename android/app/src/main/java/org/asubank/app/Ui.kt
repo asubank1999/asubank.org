@@ -355,3 +355,33 @@ fun formatBytes(b: Long): String = when {
     b >= 1L shl 10 -> String.format("%.0f KB", b / 1024.0)
     else -> "$b B"
 }
+
+/**
+ * The same rounded group as [Group], but each row is its own lazy item, so long lists
+ * (subject pages, search results) only build the rows on screen and scroll smoothly.
+ */
+fun <T> androidx.compose.foundation.lazy.LazyListScope.groupItems(
+    list: List<T>,
+    header: String? = null,
+    key: ((T) -> Any)? = null,
+    row: @Composable (T) -> Unit,
+) {
+    if (list.isEmpty()) return
+    if (header != null) item(contentType = "groupHeader") {
+        Text(
+            header.uppercase(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 32.dp, bottom = 6.dp, top = 14.dp),
+        )
+    }
+    val last = list.lastIndex
+    items(list.size, key = key?.let { k -> { i: Int -> k(list[i]) } }, contentType = { "groupRow" }) { i ->
+        val r = 16.dp
+        val shape = RoundedCornerShape(topStart = if (i == 0) r else 0.dp, topEnd = if (i == 0) r else 0.dp, bottomStart = if (i == last) r else 0.dp, bottomEnd = if (i == last) r else 0.dp)
+        Surface(shape = shape, color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+            Column {
+                if (i > 0) Divider()
+                row(list[i])
+            }
+        }
+    }
+}

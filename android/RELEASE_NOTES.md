@@ -6,7 +6,14 @@
 - Calendar, schedules, FAQs and every asubank.org page as native screens
 - Light and dark mode
 
-**Install:** download `ASUBank-1.2.0.apk` below on your phone and open it. Android asks you to allow installing apps from your browser or files app the first time. Android 8.0 or newer.
+**New in 1.3.0**
+- Rate your teachers, fully native: search, sort, averages out of 10, and anonymous ratings in a few taps
+- University halls finder: type a hall number (e.g. 1206) to see the building, floor and room
+- Smoother: screens slide and fade, long lists scroll smoothly, and the app is pre-optimized on install
+- Fixed Google Drive folders that looked empty: every file inside a folder now shows up
+- Search no longer shows the same file several times
+
+**Install:** download `ASUBank-1.3.0.apk` below on your phone and open it. Android asks you to allow installing apps from your browser or files app the first time. Android 8.0 or newer.
 
 The app tells you when a new version is out.
 

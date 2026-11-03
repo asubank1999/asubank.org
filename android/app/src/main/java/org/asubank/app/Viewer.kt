@@ -433,9 +433,9 @@ data class Entry(val id: String, val url: String, val name: String, val type: St
         val t = type.lowercase()
         return when {
             t.contains("pdf") -> Kind.PDF
-            t.contains("powerpoint") || t.contains("slides") -> Kind.PPT
+            t.contains("powerpoint") || t.contains("presentation") || t.contains("slides") -> Kind.PPT
             t.contains("word") || t.contains("docs") -> Kind.DOC
-            t.contains("excel") || t.contains("sheets") -> Kind.SHEET
+            t.contains("excel") || t.contains("spreadsheet") || t.contains("sheets") -> Kind.SHEET
             t.contains("image") -> Kind.IMG
             t.contains("video") -> Kind.VIDEO
             t.contains("zip") || t.contains("archive") || t.contains("compressed") -> Kind.ZIP
@@ -445,7 +445,12 @@ data class Entry(val id: String, val url: String, val name: String, val type: St
 }
 
 object Folders {
-    private val re = Regex("""id="entry-([\w-]+)"[\s\S]*?href="([^"]+)"[\s\S]*?aria-label="([^"]*)"[\s\S]*?flip-entry-title">([\s\S]*?)</div>[\s\S]*?flip-entry-last-modified"><div>([^<]*)""")
+    private val titleRe = Regex("""flip-entry-title">([\s\S]*?)</div>""")
+    private val hrefRe = Regex("""href="([^"]+)"""")
+    private val labelRe = Regex("""aria-label="([^"]*)"""")
+    private val typeRe = Regex("""/type/([^"]+)"""")
+    private val altRe = Regex("""alt="([^"]+)"""")
+    private val modRe = Regex("""flip-entry-last-modified"><div>([^<]*)""")
 
     fun decode(s: String): String {
         var r = s.replace("&amp;", "&").replace("&quot;", "\"").replace("&#39;", "'").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ")
@@ -456,10 +461,17 @@ object Folders {
     suspend fun load(id: String): List<Entry>? {
         val html = Net.text("https://drive.google.com/embeddedfolderview?id=$id") ?: return null
         if (html.contains("accounts.google.com/ServiceLogin")) return null
-        return re.findAll(html).map { m ->
-            val g = m.groupValues.map { decode(it) }
-            Entry(g[1], g[2], g[4].trim(), g[3], g[5])
-        }.toList().sortedWith(compareBy<Entry>({ !it.isFolder }, { it.name.lowercase() }))
+        // each entry on its own: files with a thumbnail have no aria-label, so the type comes from the
+        // label, the file-type icon URL or the image alt
+        return html.split("class=\"flip-entry\" id=\"entry-").drop(1).mapNotNull { chunk ->
+            fun first(re: Regex) = re.find(chunk)?.groupValues?.get(1)?.let { decode(it) }
+            val name = first(titleRe) ?: return@mapNotNull null
+            val id = chunk.substringBefore('"')
+            Entry(
+                id, first(hrefRe) ?: "https://drive.google.com/file/d/$id/view", name.trim(),
+                first(labelRe) ?: first(typeRe) ?: first(altRe) ?: "", first(modRe) ?: "",
+            )
+        }.sortedWith(compareBy<Entry>({ !it.isFolder }, { it.name.lowercase() }))
     }
 }
 

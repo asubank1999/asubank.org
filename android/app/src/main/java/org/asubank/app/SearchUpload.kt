@@ -153,11 +153,7 @@ fun SearchScreen() {
                     }
                 } else item { EmptyState(Icons.Filled.Search, "Search ASU Bank", "Find summaries, past papers and test banks in ${items.size} materials and the shared Google Drive.") }
             } else {
-                if (localShown.isNotEmpty()) item {
-                    Group(header = "Materials · ${localShown.size}") {
-                        localShown.take(120).forEachIndexed { i, it -> if (i > 0) Divider(); MaterialRow(it.m, it.kind) }
-                    }
-                }
+                groupItems(localShown.take(120), header = "Materials · ${localShown.size}", key = { "l" + it.m.u }) { MaterialRow(it.m, it.kind) }
                 item {
                     Group(header = "Google Drive" + if (driveState == 2) " · ${driveShown.size}" else "") {
                         when (driveState) {

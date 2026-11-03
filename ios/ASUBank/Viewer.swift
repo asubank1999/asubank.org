@@ -361,9 +361,9 @@ struct DriveFolderList: View {
             if k != .file { return k }
             switch type.lowercased() {
             case let t where t.contains("pdf"): return .pdf
-            case let t where t.contains("powerpoint") || t.contains("slides"): return .ppt
-            case let t where t.contains("word") || t.contains("docs"): return .doc
-            case let t where t.contains("excel") || t.contains("sheets"): return .sheet
+            case let t where t.contains("powerpoint") || t.contains("presentation") || t.contains("slides"): return .ppt
+            case let t where t.contains("word") || t.contains("wordprocessing") || t.contains("docs"): return .doc
+            case let t where t.contains("excel") || t.contains("spreadsheet") || t.contains("sheets"): return .sheet
             case let t where t.contains("image"): return .img
             case let t where t.contains("video"): return .video
             case let t where t.contains("zip") || t.contains("archive") || t.contains("compressed"): return .zip
@@ -420,13 +420,22 @@ struct DriveFolderList: View {
         state = 1
     }
 
+    /// Reads each entry on its own. Files with a thumbnail have no aria-label (only folders and
+    /// icon-only files do), so the type comes from the label, the file-type icon URL or the image alt.
     static func parse(_ html: String) -> [Entry] {
-        let pattern = #"id="entry-([\w-]+)"[\s\S]*?href="([^"]+)"[\s\S]*?aria-label="([^"]*)"[\s\S]*?flip-entry-title">([\s\S]*?)</div>[\s\S]*?flip-entry-last-modified"><div>([^<]*)"#
-        guard let re = try? NSRegularExpression(pattern: pattern) else { return [] }
-        let ns = html as NSString
-        return re.matches(in: html, range: NSRange(location: 0, length: ns.length)).map { m in
-            func g(_ i: Int) -> String { decode(ns.substring(with: m.range(at: i))) }
-            return Entry(id: g(1), url: g(2), name: g(4), type: g(3), modified: g(5))
+        html.components(separatedBy: #"class="flip-entry" id="entry-"#).dropFirst().compactMap { chunk in
+            func first(_ pattern: String) -> String? {
+                guard let re = try? NSRegularExpression(pattern: pattern),
+                      let m = re.firstMatch(in: chunk, range: NSRange(chunk.startIndex..., in: chunk)),
+                      let r = Range(m.range(at: 1), in: chunk) else { return nil }
+                return decode(String(chunk[r]))
+            }
+            guard let name = first(#"flip-entry-title">([\s\S]*?)</div>"#) else { return nil }
+            let id = String(chunk.prefix { $0 != "\"" })
+            let type = first(#"aria-label="([^"]*)""#) ?? first(#"/type/([^"]+)""#) ?? first(#"alt="([^"]+)""#) ?? ""
+            return Entry(id: id, url: first(#"href="([^"]+)""#) ?? "https://drive.google.com/file/d/\(id)/view",
+                         name: name.trimmingCharacters(in: .whitespacesAndNewlines), type: type,
+                         modified: first(#"flip-entry-last-modified"><div>([^<]*)"#) ?? "")
         }
     }
 

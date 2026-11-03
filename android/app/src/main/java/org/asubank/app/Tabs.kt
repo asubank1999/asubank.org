@@ -262,15 +262,10 @@ fun SavedScreen() {
             if (saved.isEmpty() && recent.isEmpty()) {
                 item { EmptyState(Icons.Filled.StarBorder, "Nothing saved yet", "Tap the star on any material to keep it here, even offline.") }
             }
-            if (saved.isNotEmpty()) item {
-                Group(header = "Saved · ${saved.size}") {
-                    saved.forEachIndexed { i, s ->
-                        if (i > 0) Divider()
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(Modifier.weight(1f)) { MaterialRow(s.material) }
-                            IconButton(onClick = { Saved.remove(s.u) }) { Icon(Icons.Filled.Delete, "Remove", tint = MaterialTheme.colorScheme.onSurfaceVariant) }
-                        }
-                    }
+            groupItems(saved, header = "Saved · ${saved.size}", key = { "s" + it.u }) { s ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.weight(1f)) { MaterialRow(s.material) }
+                    IconButton(onClick = { Saved.remove(s.u) }) { Icon(Icons.Filled.Delete, "Remove", tint = MaterialTheme.colorScheme.onSurfaceVariant) }
                 }
             }
             if (recent.isNotEmpty()) item {
