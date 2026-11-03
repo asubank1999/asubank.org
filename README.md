@@ -1,5 +1,19 @@
 # Applied Science University - Test Bank & Resources
 
+## 📲 Download the app / حمّل التطبيق
+
+| | Download | How to install |
+|---|---|---|
+| 🤖 **Android app (v1.3.0)** | **[⬇️ Download for Android (APK)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.3.0/ASUBank-1.3.0.apk)** | Open the link on your phone, tap the downloaded file, then allow "Install unknown apps" if Android asks. Android 8 or newer. |
+| 🍎 **iPhone app (v1.3.0)** | **[⬇️ Download for iPhone (IPA)](https://github.com/asubank1999/asubank.org/releases/download/ios-v1.3.0/ASUBank-1.3.0-unsigned.ipa)** | Install it with [Sideloadly](https://sideloadly.io) or AltStore on a computer (they sign it with your Apple ID). iOS 15 or newer. |
+| 🌐 **Website** | **[asubank.org](https://asubank.org)** | Works on any phone or computer, nothing to install. |
+
+**بالعربي:** للأندرويد اضغط على رابط التحميل من جوالك، افتح الملف، ووافق على "تثبيت التطبيقات غير المعروفة". للآيفون ثبّت الملف عن طريق Sideloadly أو AltStore من الكمبيوتر. أو استخدم الموقع مباشرة: asubank.org
+
+The apps tell you when a new version is out. All versions: [Releases](https://github.com/asubank1999/asubank.org/releases).
+
+---
+
 This project is created to support students at **Applied Science University** by providing a centralized, organized collection of academic resources, including:
 
 - 📚 Past **final exams**

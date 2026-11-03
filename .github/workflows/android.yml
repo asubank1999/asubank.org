@@ -97,3 +97,15 @@ jobs:
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
           gh release create "$TAG" "ASUBank-$V.apk" --title "ASU Bank $V (Android)" --notes-file android/RELEASE_NOTES.md --latest=false
+      - name: Point the README download link at this version
+        if: startsWith(github.ref, 'refs/tags/android-v')
+        working-directory: .
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          V="${TAG#android-v}"
+          git fetch -q origin main && git checkout -q -B main origin/main
+          sed -i -E "s#releases/download/android-v[0-9.]+/ASUBank-[0-9.]+\.apk#releases/download/$TAG/ASUBank-$V.apk#; s#Android app \(v[0-9.]+\)#Android app (v$V)#" README.md
+          git diff --quiet && exit 0
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          git commit -qam "README: Android download link -> $V" && git push -q origin main
