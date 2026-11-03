@@ -1,0 +1,74 @@
+/* /account/, /chat/, /admin/ (assets/app/accounts.js) */
+.acc-intro { padding: 8px 0 4px; }
+.acc-card { background: var(--ab-surface,#fff); border-radius: 18px; padding: 18px; margin: 14px 0; box-shadow: var(--ab-shadow, 0 1px 3px rgba(0,0,0,.06)); }
+.acc-card h2 { margin: 0 0 10px; font-size: 19px; }
+.acc-auth { max-width: 440px; margin: 16px auto; text-align: center; }
+.acc-auth form { text-align: start; }
+.acc-logo { border-radius: 18px; }
+.acc-muted { color: var(--ab-label-2,#5e5e66); }
+.acc-small { font-size: 13px; }
+.acc-center { text-align: center; }
+.acc-err { color: var(--ab-red,#d70015); margin: 8px 0; }
+.acc-err:empty { display: none; }
+.acc-field { display: block; margin: 10px 0; }
+.acc-field span { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--ab-label-2,#5e5e66); }
+.acc-field small { display: block; font-size: 12px; color: var(--ab-label-3,#888); margin-top: 3px; }
+.acc-field input, .acc-card textarea, .acc-card input[type=search], .acc-card input[type=url], .acc-composer textarea {
+    width: 100%; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--ab-sep,#ddd);
+    background: var(--ab-surface-2,#f2f2f7); color: var(--ab-label,#000); font: inherit; font-size: 16px;
+}
+.acc-card textarea, .acc-card input[type=search], .acc-card input[type=url] { margin: 6px 0 10px; }
+.acc-wide { width: 100%; margin-top: 6px; }
+.acc-seg { display: flex; gap: 4px; padding: 3px; border-radius: 11px; background: var(--ab-fill,rgba(118,118,128,.12)); margin: 12px 0; }
+.acc-seg button { flex: 1; border: 0; background: transparent; padding: 8px; border-radius: 9px; font: inherit; font-weight: 600; color: var(--ab-label,#000); cursor: pointer; }
+.acc-seg button.on { background: var(--ab-surface,#fff); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.acc-code { background: var(--ab-accent-soft,#f7dce5); border-radius: 14px; padding: 12px 14px; margin: 10px 0; }
+.acc-code p { margin: 4px 0; font-size: 13px; }
+.acc-av { display: inline-grid; place-items: center; flex-shrink: 0; border-radius: 50%; color: #fff; font-weight: 700; position: relative; }
+.acc-av.admin::after { content: "★"; position: absolute; right: -3px; bottom: -3px; width: 40%; height: 40%; min-width: 12px; min-height: 12px; border-radius: 50%; background: var(--ab-gold,#FFC627); color: #000; font-size: 9px; display: grid; place-items: center; }
+.acc-profile { text-align: center; padding: 12px 0 0; }
+.acc-profile h1 { margin: 8px 0 0; }
+.acc-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.acc-danger { color: var(--ab-red,#d70015) !important; }
+.acc-rooms { padding: 6px; }
+.acc-room, .acc-user-row { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; color: inherit; text-decoration: none; width: 100%; border: 0; background: transparent; font: inherit; text-align: start; cursor: pointer; }
+.acc-room:hover, .acc-user-row:hover { background: var(--ab-fill,rgba(118,118,128,.12)); }
+.acc-emoji { font-size: 26px; width: 34px; text-align: center; }
+.acc-room-t { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.acc-room-t small { color: var(--ab-label-2,#5e5e66); overflow: hidden; text-overflow: ellipsis; }
+.acc-room em, .acc-banned { font-style: normal; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--ab-accent-soft); color: var(--ab-accent); white-space: nowrap; }
+.acc-banned { background: rgba(215,0,21,.12); color: var(--ab-red,#d70015); }
+.acc-room-head { display: flex; align-items: center; gap: 12px; padding: 6px 0; }
+.acc-room-title { font-size: 22px; margin: 0; }
+.acc-back { color: var(--ab-accent); text-decoration: none; font-weight: 600; white-space: nowrap; }
+.acc-feed { height: calc(100vh - 300px); height: calc(100dvh - 300px); min-height: 280px; overflow-y: auto; padding: 8px 4px; background: var(--ab-surface,#fff); border-radius: 18px; }
+.acc-day { text-align: center; font-size: 12px; color: var(--ab-label-2); margin: 12px 0 6px; }
+.acc-msg { display: flex; align-items: flex-end; gap: 6px; margin: 8px 6px 0; }
+.acc-msg.grouped { margin-top: 2px; }
+.acc-msg.mine { justify-content: flex-end; }
+.acc-av-space { width: 30px; flex-shrink: 0; }
+.acc-bubble { max-width: min(78%, 520px); padding: 8px 12px; border-radius: 18px; background: var(--ab-surface-2,#f2f2f7); }
+.acc-msg.mine .acc-bubble { background: var(--ab-accent,#8C1D40); color: #fff; }
+html.dark .acc-msg.mine .acc-bubble { color: #000; }
+.acc-from { font-size: 13px; font-weight: 600; display: flex; gap: 6px; align-items: center; }
+.acc-badge { font-size: 9px; font-weight: 800; background: var(--ab-gold,#FFC627); color: #000; padding: 1px 6px; border-radius: 99px; }
+.acc-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.acc-time { font-size: 10px; opacity: .65; text-align: end; }
+.acc-quote { border-inline-start: 3px solid currentColor; padding-inline-start: 8px; margin: 4px 0; font-size: 12px; opacity: .8; display: flex; flex-direction: column; }
+.acc-msg-actions { display: none; gap: 4px; margin-top: 4px; }
+.acc-msg:hover .acc-msg-actions, .acc-msg:focus-within .acc-msg-actions { display: flex; }
+@media (hover: none) { .acc-msg-actions { display: flex; } }
+.acc-msg-actions button { border: 0; border-radius: 8px; padding: 3px 8px; font-size: 12px; cursor: pointer; background: rgba(0,0,0,.08); color: inherit; }
+.acc-composer { margin-top: 10px; }
+.acc-compose-row { display: flex; gap: 8px; align-items: flex-end; }
+.acc-composer textarea { resize: none; max-height: 140px; }
+.acc-reply { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; padding: 6px 10px; margin-bottom: 6px; border-inline-start: 3px solid var(--ab-accent); background: var(--ab-surface,#fff); border-radius: 8px; }
+.acc-x { border: 0; background: transparent; font-size: 20px; cursor: pointer; color: inherit; }
+.acc-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin: 12px 0; }
+.acc-stat { background: var(--ab-surface,#fff); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; box-shadow: var(--ab-shadow, 0 1px 3px rgba(0,0,0,.06)); }
+.acc-stat b { font-size: 24px; color: var(--ab-accent); }
+.acc-stat small { color: var(--ab-label-2); }
+.acc-user-detail { padding: 0 12px 12px 60px; }
+.acc-user-detail p { margin: 4px 0; }
+.acc-log p { margin: 6px 0; }
+@media (max-width: 520px) { .acc-user-detail { padding-left: 12px; } }
