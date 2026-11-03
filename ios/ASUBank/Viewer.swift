@@ -27,13 +27,17 @@ final class DriveLinks {
             var req = URLRequest(url: url)
             req.cachePolicy = .reloadIgnoringLocalCacheData
             guard let (data, resp) = try? await URLSession.shared.data(for: req), (resp as? HTTPURLResponse)?.statusCode == 200 else { continue }
-            lock.lock()
-            if isMap, let m = try? JSONDecoder().decode([String: [String]].self, from: data) { changed = changed || m != map; map = m }
-            if !isMap, let b = try? JSONDecoder().decode([String: String].self, from: data) { changed = changed || b != broken; broken = b }
-            lock.unlock()
+            if store(data, isMap: isMap) { changed = true }
             try? data.write(to: dir.appendingPathComponent(name), options: .atomic)
         }
         return changed
+    }
+
+    private func store(_ data: Data, isMap: Bool) -> Bool {
+        lock.lock(); defer { lock.unlock() }
+        if isMap, let m = try? JSONDecoder().decode([String: [String]].self, from: data), m != map { map = m; return true }
+        if !isMap, let b = try? JSONDecoder().decode([String: String].self, from: data), b != broken { broken = b; return true }
+        return false
     }
 
     func target(_ id: String) -> (id: String, folder: Bool)? {
@@ -164,7 +168,8 @@ final class MaterialLoader: ObservableObject {
         // Dropbox files: direct download
         if u.contains("dropbox.com/scl/fi") || u.contains("dropbox.com/s/") {
             var c = URLComponents(string: u)
-            c?.queryItems = (c?.queryItems ?? []).filter { $0.name != "dl" } + [URLQueryItem(name: "dl", value: "1")]
+            let items = (c?.queryItems ?? []).filter { $0.name != "dl" } + [URLQueryItem(name: "dl", value: "1")]
+            c?.queryItems = items
             if let d = c?.url, await download(d, key: "dbx" + Self.stableHash(u), name: m.t) { return }
         }
 
