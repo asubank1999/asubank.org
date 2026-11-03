@@ -19,7 +19,7 @@ struct MoreView: View {
                     if let u = account.user {
                         NavigationLink { AccountScreen() } label: {
                             HStack(spacing: 12) {
-                                Avatar(name: u.displayName, color: u.color, size: 40, admin: u.isAdmin)
+                                Avatar(name: u.displayName, color: u.color, size: 40, admin: u.isAdmin, photo: u.avatar)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(u.displayName).font(.body.weight(.semibold))
                                     Text("@\(u.username)" + (u.isAdmin ? " · Admin" : "")).font(.caption).foregroundStyle(.secondary)
@@ -32,6 +32,13 @@ struct MoreView: View {
                         }
                     }
                     NavigationLink { ThemeScreen() } label: { Label("Theme", systemImage: "paintpalette") }
+                    NavigationLink { LanguageScreen() } label: {
+                        HStack {
+                            Label("Language", systemImage: "globe")
+                            Spacer()
+                            Text(LocalizedStringKey(AppLanguage.choices.first { $0.code == AppLanguage.choice }?.name ?? "")).foregroundStyle(.secondary)
+                        }
+                    }
                     Button { app.uploadShown = true } label: { Label("Upload files", systemImage: "arrow.up.circle") }
                     if account.isAdmin {
                         NavigationLink { SavedView(embedded: true) } label: { Label("Saved", systemImage: "star") }

@@ -6,11 +6,12 @@ options:
   deploymentTarget:
     iOS: "15.0"
   createIntermediateGroups: true
+  developmentLanguage: en
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "1.5.0"
-    CURRENT_PROJECT_VERSION: "3"
+    MARKETING_VERSION: "1.6.0"
+    CURRENT_PROJECT_VERSION: "4"
     DEVELOPMENT_TEAM: ""
 targets:
   ASUBank:
@@ -24,6 +25,8 @@ targets:
       path: ASUBank/Info.plist
       properties:
         CFBundleDisplayName: ASU Bank
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, ar, es]
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true

@@ -1,26 +1,159 @@
 import SwiftUI
+import PhotosUI
 
-/// A round colored avatar with the first letter of the name
+/// A round avatar: the profile photo, or the first letter of the name on the user's color.
+/// `online` adds a green (online) or grey (offline) dot.
 struct Avatar: View {
     let name: String
     let color: String
     var size: CGFloat = 36
     var admin = false
+    var photo: String? = nil
+    var online: Bool? = nil
     var body: some View {
         let c = Color(hexString: color)
-        Text(String(name.prefix(1)).uppercased())
+        let letter = Text(String(name.prefix(1)).uppercased())
             .font(.system(size: size * 0.44, weight: .bold)).foregroundStyle(.white)
             .frame(width: size, height: size)
             .background(c.abGradient, in: Circle())
-            .overlay(alignment: .bottomTrailing) {
-                if admin {
-                    Image(systemName: "checkmark.seal.fill").font(.system(size: size * 0.34)).foregroundStyle(Color.abGold)
-                        .background(Circle().fill(Color(UIColor.systemBackground)).padding(1))
-                        .offset(x: 2, y: 2)
+        Group {
+            if let photo, let url = URL(string: photo), !photo.isEmpty {
+                AsyncImage(url: url) { img in img.resizable().scaledToFill() } placeholder: { letter }
+                    .frame(width: size, height: size).clipShape(Circle())
+            } else { letter }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if admin {
+                Image(systemName: "checkmark.seal.fill").font(.system(size: size * 0.34)).foregroundStyle(Color.abGold)
+                    .background(Circle().fill(Color(UIColor.systemBackground)).padding(1))
+                    .offset(x: 2, y: 2)
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            if let online {
+                Circle().fill(online ? Color.green : Color.gray)
+                    .frame(width: max(9, size * 0.26), height: max(9, size * 0.26))
+                    .overlay(Circle().stroke(Color(UIColor.systemBackground), lineWidth: 2))
+                    .offset(x: 1, y: -1)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+}
+
+/// A user's badges as small pills ("🤝 Helper")
+struct BadgeRow: View {
+    let badges: [String]
+    var compact = false
+    var body: some View {
+        if !badges.isEmpty {
+            HStack(spacing: 4) {
+                ForEach(badges, id: \.self) { b in
+                    if compact { Text(ABBadges.emoji(b)).font(.caption2) }
+                    else {
+                        Text("\(ABBadges.emoji(b)) \(ABBadges.name(b))").font(.caption2.weight(.semibold))
+                            .padding(.horizontal, 7).padding(.vertical, 3)
+                            .background(Color.abAccentSoft, in: Capsule())
+                    }
                 }
             }
-            .accessibilityHidden(true)
+        }
     }
+}
+
+/// Picks a photo from the library (PHPicker works on iOS 15, PhotosPicker needs 16)
+struct PhotoPicker: UIViewControllerRepresentable {
+    var picked: (UIImage) -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var c = PHPickerConfiguration()
+        c.filter = .images
+        c.selectionLimit = 1
+        let p = PHPickerViewController(configuration: c)
+        p.delegate = context.coordinator
+        return p
+    }
+    func updateUIViewController(_ vc: PHPickerViewController, context: Context) {}
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+
+    final class Coordinator: NSObject, PHPickerViewControllerDelegate {
+        let parent: PhotoPicker
+        init(_ p: PhotoPicker) { parent = p }
+        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            parent.dismiss()
+            guard let item = results.first?.itemProvider, item.canLoadObject(ofClass: UIImage.self) else { return }
+            item.loadObject(ofClass: UIImage.self) { obj, _ in
+                if let img = obj as? UIImage { DispatchQueue.main.async { self.parent.picked(img) } }
+            }
+        }
+    }
+}
+
+/// Someone's profile: photo, badges, bio, online or last seen, phone if they share it
+struct ProfileScreen: View {
+    let userId: String
+    var fallbackName = ""
+    var fallbackColor = "#8C1D40"
+    @ObservedObject private var account = AccountStore.shared
+    @State private var user: ABUser?
+    @State private var error: String?
+
+    var body: some View {
+        List {
+            Section {
+                VStack(spacing: 8) {
+                    Avatar(name: user?.displayName ?? fallbackName, color: user?.color ?? fallbackColor, size: 96,
+                           admin: user?.isAdmin == true, photo: user?.avatar, online: user?.online)
+                    Text(user?.displayName ?? fallbackName).font(.title2.weight(.bold))
+                    if let u = user {
+                        Text("@\(u.username)").foregroundStyle(.secondary)
+                        Text(u.online == true ? L("Online now") : lastSeenText(u.lastSeen)).font(.caption)
+                            .foregroundStyle(u.online == true ? Color.green : .secondary)
+                        BadgeRow(badges: u.badges ?? [])
+                        if u.isAdmin { Badge(text: L("ADMIN"), color: .orange) }
+                    }
+                }
+                .frame(maxWidth: .infinity).padding(.vertical, 8)
+                .listRowBackground(Color.clear)
+            }
+            if let u = user {
+                if let b = u.bio, !b.isEmpty { Section("About") { Text(b) } }
+                if let p = u.phone, !p.isEmpty {
+                    Section("Phone") {
+                        Button { if let url = URL(string: "tel:" + p.filter { $0.isNumber || $0 == "+" }) { UIApplication.shared.open(url) } } label: {
+                            Label(p, systemImage: "phone.fill")
+                        }
+                        Button { if let url = URL(string: "https://wa.me/" + p.filter(\.isNumber)) { UIApplication.shared.open(url) } } label: {
+                            Label("WhatsApp", systemImage: "message.fill")
+                        }
+                    }
+                }
+                if account.isAdmin, u.id != account.user?.id {
+                    Section { NavigationLink { AdminUserScreen(user: u) { await load() } } label: { Label("Manage this user", systemImage: "checkmark.seal") } }
+                }
+            }
+            if let error { Section { Text(error).foregroundStyle(.red) } }
+        }
+        .listStyle(.insetGrouped)
+        .navigationTitle(user?.displayName ?? fallbackName)
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await load() }
+        .refreshable { await load() }
+    }
+
+    private func load() async {
+        do { user = decode(ABUser.self, try await account.call("profile", ["userId": userId])["user"]); error = nil }
+        catch { self.error = error.localizedDescription }
+    }
+}
+
+/// "Last seen 5 minutes ago"
+func lastSeenText(_ iso: String?) -> String {
+    guard let iso, let d = ISO8601DateFormatter.ab.date(from: iso) ?? ISO8601DateFormatter().date(from: iso) else { return L("Offline") }
+    let f = RelativeDateTimeFormatter()
+    f.unitsStyle = .full
+    return String(format: L("Last seen %@"), f.localizedString(for: d, relativeTo: Date()))
 }
 
 // MARK: - sign in / sign up
@@ -176,20 +309,39 @@ struct AccountScreen: View {
     @State private var changing = false
     @State private var deleting = false
     @State private var confirmSignOut = false
+    @State private var picking = false
+    @State private var photoBusy = false
+    @State private var photoError: String?
 
     var body: some View {
         List {
             if let u = account.user {
                 Section {
                     HStack(spacing: 14) {
-                        Avatar(name: u.displayName, color: u.color, size: 60, admin: u.isAdmin)
+                        Menu {
+                            Button { picking = true } label: { Label("Choose a photo", systemImage: "photo") }
+                            if u.avatar?.isEmpty == false {
+                                Button(role: .destructive) { setPhoto(nil) } label: { Label("Remove photo", systemImage: "trash") }
+                            }
+                        } label: {
+                            Avatar(name: u.displayName, color: u.color, size: 64, admin: u.isAdmin, photo: u.avatar)
+                                .overlay(alignment: .bottomLeading) {
+                                    Image(systemName: photoBusy ? "hourglass.circle.fill" : "camera.circle.fill").font(.system(size: 22))
+                                        .foregroundStyle(.white, Color.abAccent).offset(x: -2, y: 2)
+                                }
+                        }
                         VStack(alignment: .leading, spacing: 3) {
                             Text(u.displayName).font(.title3.weight(.semibold))
                             Text("@\(u.username)").foregroundStyle(.secondary)
-                            if u.isAdmin { Badge(text: "ADMIN", color: .orange) }
+                            HStack(spacing: 4) {
+                                if u.isAdmin { Badge(text: L("ADMIN"), color: .orange) }
+                                BadgeRow(badges: u.badges ?? [], compact: true)
+                            }
                         }
                     }
                     .padding(.vertical, 6)
+                    if let b = u.bio, !b.isEmpty { Text(b).font(.subheadline).foregroundStyle(.secondary) }
+                    if let photoError { Text(photoError).font(.caption).foregroundStyle(.red) }
                 }
                 if u.mustReset == true {
                     Section {
@@ -199,16 +351,25 @@ struct AccountScreen: View {
                 Section("Profile") {
                     row("Email", u.email?.isEmpty == false ? u.email! : "Not set")
                     row("University ID", u.uniId?.isEmpty == false ? u.uniId! : "Not set")
+                    row("Phone", u.phone?.isEmpty == false ? u.phone! + (u.showPhone == true ? "" : " 🔒") : "Not set")
                     Button { editing = true } label: { Label("Edit profile", systemImage: "pencil") }
                     Button { changing = true } label: { Label("Change password", systemImage: "key") }
                 }
                 Section {
-                    Picker(selection: $notifier.mode) {
-                        Text("Every new message").tag(0)
-                        Text("Announcements only").tag(1)
-                        Text("Off").tag(2)
-                    } label: { Label("Chat notifications", systemImage: "bell.badge") }
-                } footer: { Text("ASU Bank checks for new messages while it's open, and in the background when iOS allows it.") }
+                    Toggle(isOn: $notifier.messages) { Label("New chat messages", systemImage: "bubble.left.and.bubble.right") }
+                    Toggle(isOn: $notifier.replies) { Label("Replies to me", systemImage: "arrowshape.turn.up.left") }
+                    Toggle(isOn: $notifier.announcements) { Label("Announcements", systemImage: "megaphone") }
+                    Toggle(isOn: $notifier.uploads) { Label("New uploaded files", systemImage: "doc.badge.plus") }
+                    if notifier.messages {
+                        NavigationLink { MutedRoomsScreen() } label: {
+                            HStack {
+                                Label("Rooms", systemImage: "number")
+                                Spacer()
+                                Text(notifier.muted.isEmpty ? L("All") : String(format: L("%d muted"), notifier.muted.count)).foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                } header: { Text("Notifications") } footer: { Text("ASU Bank checks for new activity while it's open, and in the background when iOS allows it.") }
                 Section {
                     Button { confirmSignOut = true } label: { Label("Sign out", systemImage: "rectangle.portrait.and.arrow.right") }
                     Button(role: .destructive) { deleting = true } label: { Label("Delete my account", systemImage: "trash") }
@@ -221,14 +382,43 @@ struct AccountScreen: View {
         .sheet(isPresented: $editing) { EditProfileSheet() }
         .sheet(isPresented: $changing) { ChangePasswordSheet() }
         .sheet(isPresented: $deleting) { DeleteAccountSheet() }
+        .sheet(isPresented: $picking) { PhotoPicker { setPhoto($0) }.ignoresSafeArea() }
         .confirmationDialog("Sign out of ASU Bank?", isPresented: $confirmSignOut, titleVisibility: .visible) {
             Button("Sign out", role: .destructive) { Task { await account.signOut(); ChatNotifier.shared.stop() } }
         }
         .task { await account.refresh() }
     }
 
-    private func row(_ k: String, _ v: String) -> some View {
-        HStack { Text(k); Spacer(); Text(v).foregroundStyle(.secondary).lineLimit(1) }
+    private func row(_ k: LocalizedStringKey, _ v: String) -> some View {
+        HStack { Text(k); Spacer(); Text(v == "Not set" ? L(v) : v).foregroundStyle(.secondary).lineLimit(1) }
+    }
+
+    private func setPhoto(_ img: UIImage?) {
+        photoBusy = true; photoError = nil
+        Task {
+            do { try await account.setAvatar(img); Haptics.success() } catch { photoError = error.localizedDescription }
+            photoBusy = false
+        }
+    }
+}
+
+/// Which rooms may notify about new messages
+private struct MutedRoomsScreen: View {
+    @ObservedObject private var account = AccountStore.shared
+    @ObservedObject private var notifier = ChatNotifier.shared
+    var body: some View {
+        List {
+            Section {
+                ForEach(account.rooms.filter { $0.archived != true && $0.adminOnly != true }) { r in
+                    Toggle(isOn: Binding(get: { !notifier.muted.contains(r.id) },
+                                         set: { on in if on { notifier.muted.remove(r.id) } else { notifier.muted.insert(r.id) } })) {
+                        Text("\(r.emoji) \(r.name)")
+                    }
+                }
+            } footer: { Text("Turn a room off to stop its message notifications. Replies to you still notify if that's on.") }
+        }
+        .listStyle(.insetGrouped)
+        .navigationTitle("Rooms")
     }
 }
 
@@ -238,6 +428,9 @@ private struct EditProfileSheet: View {
     @State private var name = ""
     @State private var email = ""
     @State private var uniId = ""
+    @State private var phone = ""
+    @State private var showPhone = false
+    @State private var bio = ""
     @State private var busy = false
     @State private var error: String?
 
@@ -246,9 +439,16 @@ private struct EditProfileSheet: View {
             Form {
                 Section("Display name") { TextField("Your name", text: $name) }
                 Section {
+                    TextField("A line about you (optional)", text: $bio)
+                } header: { Text("About") } footer: { Text("\(bio.count)/160") }
+                Section {
+                    TextField("Phone number", text: $phone).keyboardType(.phonePad).textContentType(.telephoneNumber)
+                    Toggle("Show my number on my profile", isOn: $showPhone)
+                } header: { Text("Phone") } footer: { Text("Only admins see it unless you choose to show it.") }
+                Section {
                     TextField("University email", text: $email).keyboardType(.emailAddress).autocapitalization(.none)
                     TextField("University ID", text: $uniId).keyboardType(.numberPad)
-                } header: { Text("Optional") } footer: { Text("You can sign in with these too.") }
+                } header: { Text("Optional") } footer: { Text("You can sign in with these too. Only you and admins see them.") }
                 if let error { Section { Text(error).foregroundStyle(.red) } }
             }
             .navigationTitle("Edit profile").navigationBarTitleDisplayMode(.inline)
@@ -258,14 +458,20 @@ private struct EditProfileSheet: View {
                     Button(busy ? "Saving…" : "Save") {
                         Task {
                             busy = true
-                            do { try await account.updateProfile(displayName: name, email: email, uniId: uniId); dismiss() } catch { self.error = error.localizedDescription }
+                            do {
+                                try await account.updateProfile(displayName: name, email: email, uniId: uniId, phone: phone, showPhone: showPhone,
+                                                                bio: String(bio.prefix(160)))
+                                dismiss()
+                            } catch { self.error = error.localizedDescription }
                             busy = false
                         }
                     }.disabled(busy)
                 }
             }
             .onAppear {
-                name = account.user?.displayName ?? ""; email = account.user?.email ?? ""; uniId = account.user?.uniId ?? ""
+                let u = account.user
+                name = u?.displayName ?? ""; email = u?.email ?? ""; uniId = u?.uniId ?? ""
+                phone = u?.phone ?? ""; showPhone = u?.showPhone == true; bio = u?.bio ?? ""
             }
         }
     }

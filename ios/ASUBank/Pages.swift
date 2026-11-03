@@ -164,6 +164,12 @@ struct SitePageView: View {
             if AccountStore.shared.signedIn { AccountScreen() } else { SignInPrompt() }
         } else if path == "/app/theme" {
             ThemeScreen()
+        } else if path == "/app/language" {
+            LanguageScreen()
+        } else if path == "/requests/service_rating" {
+            ServiceRatingScreen()
+        } else if path == "/apps/voting" {
+            VotingScreen()
         } else if path == "/apps/donate" {
             DonateScreen()
         } else if path == "/guides/importantlinks", let page = pages.page("/guides/links") {

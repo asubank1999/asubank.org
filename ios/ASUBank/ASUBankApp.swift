@@ -25,6 +25,8 @@ struct ASUBankApp: App {
             ZStack {
                 RootView()
                     .id(themeRev)
+                    .environment(\.locale, AppLanguage.locale)
+                    .environment(\.layoutDirection, AppLanguage.isRTL ? .rightToLeft : .leftToRight)
                 if splash {
                     SplashView().transition(.opacity).zIndex(1)
                 }

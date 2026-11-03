@@ -51,9 +51,37 @@ struct ABUser: Codable, Identifiable, Hashable {
     var created: String?
     var lastSeen: String?
     var mustReset: Bool?
+    var avatar: String?
+    var phone: String?
+    var showPhone: Bool?
+    var bio: String?
+    var badges: [String]?
+    var online: Bool?
 
     var isAdmin: Bool { role == "admin" }
     var initial: String { String((displayName.isEmpty ? username : displayName).prefix(1)).uppercased() }
+}
+
+/// Badges an admin can give (same list as BADGES in accounts-api.gs)
+enum ABBadges {
+    static let all: [(id: String, name: String, emoji: String)] = [
+        ("founder", "Founder", "👑"), ("moderator", "Moderator", "🛡️"), ("support", "Support", "🛟"), ("helper", "Helper", "🤝"),
+        ("donor", "Donor", "💛"), ("contributor", "Contributor", "📚"), ("tutor", "Tutor", "🎓"), ("verified", "Verified", "✅"),
+        ("vip", "VIP", "⭐"), ("developer", "Developer", "💻"),
+    ]
+    static func emoji(_ id: String) -> String { all.first { $0.id == id }?.emoji ?? "" }
+    static func name(_ id: String) -> String { all.first { $0.id == id }.map { L($0.name) } ?? id }
+}
+
+/// What chat screens know about the people in a room
+struct ChatPerson: Codable, Hashable {
+    var avatar: String?
+    var badges: [String]?
+    var role: String?
+    var displayName: String?
+    var color: String?
+    var online: Bool?
+    var lastSeen: String?
 }
 
 struct ChatRoom: Codable, Identifiable, Hashable {
@@ -62,6 +90,24 @@ struct ChatRoom: Codable, Identifiable, Hashable {
     var emoji: String
     var about: String
     var adminOnly: Bool?
+    var locked: Bool?
+    var archived: Bool?
+    var pinned: String?
+    var order: Int?
+}
+
+/// Something the app may notify about (the `events` action)
+struct ABEvent: Codable, Hashable {
+    var id: String
+    var type: String
+    var room: String?
+    var roomName: String?
+    var userId: String?
+    var displayName: String?
+    var text: String
+    var created: String
+    var url: String?
+    var replyToUserId: String?
 }
 
 struct ChatMessage: Codable, Identifiable, Hashable {
@@ -75,6 +121,7 @@ struct ChatMessage: Codable, Identifiable, Hashable {
     var created: String
     var replyTo: String?
     var color: String
+    var edited: String?
 
     var date: Date { ISO8601DateFormatter.ab.date(from: created) ?? Date() }
 }
@@ -209,8 +256,34 @@ final class AccountStore: ObservableObject {
         adopt(r)
     }
 
-    func updateProfile(displayName: String, email: String, uniId: String) async throws {
-        adopt(try await call("updateProfile", ["displayName": displayName, "email": email, "uniId": uniId]))
+    func updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Bool, bio: String) async throws {
+        adopt(try await call("updateProfile", ["displayName": displayName, "email": email, "uniId": uniId,
+                                               "phone": phone, "showPhone": showPhone, "bio": bio]))
+    }
+
+    /// Uploads a profile photo (shrunk to 256 px JPEG first), or removes it with nil
+    func setAvatar(_ image: UIImage?) async throws {
+        guard let image else { adopt(try await call("setAvatar", ["remove": true])); return }
+        let side: CGFloat = 256
+        let scale = side / min(image.size.width, image.size.height)
+        let size = CGSize(width: side, height: side)
+        let fmt = UIGraphicsImageRendererFormat.default()
+        fmt.scale = 1
+        let square = UIGraphicsImageRenderer(size: size, format: fmt).image { _ in
+            let w = image.size.width * scale, h = image.size.height * scale
+            image.draw(in: CGRect(x: (side - w) / 2, y: (side - h) / 2, width: w, height: h))
+        }
+        guard let jpeg = square.jpegData(compressionQuality: 0.82) else { return }
+        adopt(try await call("setAvatar", ["data": jpeg.base64EncodedString(), "type": "image/jpeg"]))
+    }
+
+    /// Reloads the room list (after an admin changed it)
+    func reloadRooms() async {
+        if let r = try? await call("rooms"), let rs = decode([ChatRoom].self, r["rooms"]), !rs.isEmpty { rooms = rs }
+    }
+
+    func setRooms(_ any: Any?) {
+        if let rs = decode([ChatRoom].self, any), !rs.isEmpty { rooms = rs }
     }
 
     func changePassword(old: String, new: String) async throws {
@@ -238,16 +311,26 @@ final class AccountStore: ObservableObject {
 
 // MARK: - notifications
 
-/// Local notifications for new chat messages. The app checks the newest message while it is open and,
-/// when iOS allows it, in the background; a sideloaded app cannot get server push.
+/// Local notifications for new messages, replies, announcements and uploads. The app checks the server's
+/// event feed while it is open and, when iOS allows it, in the background; a sideloaded app cannot get server push.
 @MainActor
 final class ChatNotifier: ObservableObject {
     static let shared = ChatNotifier()
     static let task = "org.asubank.app.chat"
 
-    /// 0 every new message, 1 announcements only, 2 off
-    @Published var mode = UserDefaults.standard.integer(forKey: "ab.notify.mode") {
-        didSet { UserDefaults.standard.set(mode, forKey: "ab.notify.mode") }
+    private static func pref(_ key: String, _ fallback: Bool) -> Bool {
+        UserDefaults.standard.object(forKey: "ab.notify." + key) as? Bool ?? fallback
+    }
+    /// 1.5 had one setting: 0 every message, 1 announcements only, 2 off
+    private static let oldMode = UserDefaults.standard.integer(forKey: "ab.notify.mode")
+
+    @Published var messages = pref("messages", oldMode == 0) { didSet { UserDefaults.standard.set(messages, forKey: "ab.notify.messages") } }
+    @Published var replies = pref("replies", oldMode != 2) { didSet { UserDefaults.standard.set(replies, forKey: "ab.notify.replies") } }
+    @Published var announcements = pref("announcements", oldMode != 2) { didSet { UserDefaults.standard.set(announcements, forKey: "ab.notify.announcements") } }
+    @Published var uploads = pref("uploads", oldMode != 2) { didSet { UserDefaults.standard.set(uploads, forKey: "ab.notify.uploads") } }
+    /// Rooms whose messages never notify
+    @Published var muted = Set(UserDefaults.standard.stringArray(forKey: "ab.notify.muted") ?? []) {
+        didSet { UserDefaults.standard.set(Array(muted), forKey: "ab.notify.muted") }
     }
     /// The room on screen, which never notifies
     var openRoom: String?
@@ -274,28 +357,52 @@ final class ChatNotifier: ObservableObject {
     func stop() { timer?.cancel(); timer = nil }
 
     func check() async {
-        guard let token = AccountStore.shared.token,
-              let r = try? await AccountsAPI.call("latest", [:], token: token),
-              let l = decode(ChatLatest.self, r["latest"]) else { return }
-        await deliver(l)
+        guard let token = AccountStore.shared.token else { return }
+        let key = "ab.notify.lastSeenDate"
+        let seen = UserDefaults.standard.string(forKey: key)
+        guard let r = try? await AccountsAPI.call("events", ["since": seen ?? ""], token: token) else { return }
+        let events = decode([ABEvent].self, r["events"]) ?? []
+        let newest = events.map(\.created).max() ?? ""
+        // first check after install: remember, don't notify
+        guard let seen else { UserDefaults.standard.set(max(newest, r["now"] as? String ?? ""), forKey: key); return }
+        UserDefaults.standard.set(max(seen, newest), forKey: key)
+        for e in events where e.created > seen { await deliver(e) }
     }
 
-    func deliver(_ l: ChatLatest) async {
-        // first check after install: remember, don't notify
-        let seen = UserDefaults.standard.string(forKey: "ab.notify.lastSeenDate")
-        UserDefaults.standard.set(max(seen ?? "", l.created), forKey: "ab.notify.lastSeenDate")
-        guard let seen, l.created > seen else { return }
-        if l.userId == AccountStore.shared.user?.id || l.room == openRoom { return }
-        unread += 1
-        if mode == 2 || (mode == 1 && l.announcement != true) { return }
+    /// Whether the user wants a notification for this event
+    func wants(_ e: ABEvent) -> Bool {
+        let me = AccountStore.shared.user?.id
+        if e.userId != nil && e.userId == me { return false }
+        switch e.type {
+        case "upload": return uploads
+        case "announcement": return announcements
+        default:
+            if e.room == openRoom { return false }
+            if replies && me != nil && e.replyToUserId == me { return true }
+            return messages && !muted.contains(e.room ?? "")
+        }
+    }
+
+    func deliver(_ e: ABEvent) async {
+        guard wants(e) else { return }
+        if e.type != "upload" { unread += 1 }
+        let me = AccountStore.shared.user?.id
+        let who = e.displayName ?? ""
         let c = UNMutableNotificationContent()
-        c.title = l.announcement == true ? "📣 \(l.displayName)" : "New message from \(l.displayName)"
-        c.subtitle = l.roomName ?? ""
-        c.body = l.text
+        switch e.type {
+        case "upload":
+            c.title = L("📄 New upload on ASU Bank")
+        case "announcement":
+            c.title = "📣 \(who)"
+        default:
+            c.title = e.replyToUserId == me && me != nil ? String(format: L("%@ replied to you"), who) : String(format: L("New message from %@"), who)
+        }
+        c.subtitle = e.type == "upload" ? "" : (e.roomName ?? "")
+        c.body = e.text
         c.sound = .default
-        c.threadIdentifier = l.room
-        c.userInfo = ["room": l.room]
-        try? await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: l.id, content: c, trigger: nil))
+        c.threadIdentifier = e.room ?? e.type
+        c.userInfo = ["room": e.room ?? "", "url": e.url ?? ""]
+        try? await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: e.id, content: c, trigger: nil))
     }
 
     // background refresh (iOS decides when; usually a few times a day)
@@ -322,10 +429,18 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationDelegate()
     func userNotificationCenter(_ c: UNUserNotificationCenter, willPresent n: UNNotification) async -> UNNotificationPresentationOptions { [.banner, .sound, .list] }
     func userNotificationCenter(_ c: UNUserNotificationCenter, didReceive r: UNNotificationResponse) async {
-        let room = r.notification.request.content.userInfo["room"] as? String
+        let info = r.notification.request.content.userInfo
+        let room = info["room"] as? String ?? ""
+        let url = info["url"] as? String ?? ""
         await MainActor.run {
-            AppState.shared?.tab = .chat
-            AppState.shared?.pendingRoom = room
+            if room.isEmpty && !url.isEmpty {
+                // a new upload: show the latest uploads list
+                AppState.shared?.tab = .home
+                AppState.shared?.pendingRoute = .page("/guides/latest", "")
+            } else {
+                AppState.shared?.tab = .chat
+                AppState.shared?.pendingRoom = room
+            }
         }
     }
 }
