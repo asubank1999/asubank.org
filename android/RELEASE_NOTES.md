@@ -6,6 +6,18 @@
 - Calendar, schedules, FAQs and every asubank.org page as native screens
 - Light and dark mode
 
+**New in 1.6.0**
+- **Profiles**: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp.
+- **Who's online**: see who is online right now and when others were last seen, with a green dot on their photo.
+- **Edit your messages** after sending them (they show "edited").
+- **Choose your notifications**: chat messages, replies to you, announcements and new uploads, each on or off, and mute the rooms you don't want.
+- **Special badges** such as Helper, Support, Donor, Tutor and Verified, given by the team, shown on profiles and in the chat.
+- **Language**: English, Arabic, Spanish or your phone's language, in More > Language.
+- **Rate our service** and the **Discord voting** are now native screens, and they count together with the website.
+- For admins: add, rename, reorder, lock, archive, clear and delete chat rooms, pin a message to the top of a room, and give or remove badges.
+- **Notifications fixed**: the app now checks every 15 minutes in the background and right away when you open it, so you get new messages, replies, announcements and uploads.
+- **ASU shortcuts** (my.asu.edu.jo, e-learning, Outlook and more) now open in your browser so they always load.
+
 **New in 1.5.0**
 - **Accounts**: sign in or create an account with just a username and password (university email and ID are optional). The same account works in the iPhone app, the Android app and on asubank.org.
 - **Student chat**: real-time rooms (General, Study help, Materials and more) where signed-in students help each other. Reply to messages, copy them, and delete your own.

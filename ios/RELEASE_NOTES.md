@@ -3,6 +3,17 @@
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
 ASU Bank is a free, volunteer, non-profit project. It is not made by or affiliated with the university.
 
+### What's new in 1.6.0
+- **Profiles**: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp.
+- **Who's online**: see who is online right now and when others were last seen, with a green dot on their photo.
+- **Edit your messages** after sending them (they show "edited").
+- **Choose your notifications**: chat messages, replies to you, announcements and new uploads, each on or off, and mute the rooms you don't want.
+- **Special badges** such as Helper, Support, Donor, Tutor and Verified, given by the team, shown on profiles and in the chat.
+- **Language**: English, Arabic, Spanish or your phone's language, in More > Language.
+- **Rate our service** and the **Discord voting** are now native screens, and they count together with the website.
+- For admins: add, rename, reorder, lock, archive, clear and delete chat rooms, pin a message to the top of a room, and give or remove badges.
+- Notifications now also cover replies to you and new uploads. On iPhone they arrive when iOS lets the app check in the background.
+
 ### What's new in 1.5.0
 - **Accounts**: sign in or create an account with just a username and password (university email and ID are optional). The same account works in the iPhone app, the Android app and on asubank.org.
 - **Student chat**: real-time rooms (General, Study help, Materials and more) where signed-in students help each other. Reply to messages, copy them, and delete your own.
