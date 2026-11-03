@@ -5,5 +5,10 @@
     "store": "",
     "notes": "Every material opens natively: PDFs, slides, documents and Drive folders. Fixed files that showed No preview available."
   },
+  "android": {
+    "latest": "1.2.0",
+    "minimum": "1.0.0",
+    "notes": "First Android version: every material opens natively, plus search, saved, uploads and the calendar."
+  },
   "donate": true
 }

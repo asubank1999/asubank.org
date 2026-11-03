@@ -1,0 +1,94 @@
+# Builds the ASU Bank Android app (android/) on GitHub's Linux machines.
+#  - Every push that touches android/ builds the APK (Actions run page > Artifacts) and takes
+#    emulator screenshots into the android-screenshots branch.
+#  - Pushing a tag like android-v1.2.0 also publishes a public GitHub Release with the APK.
+#  - Optional signing secrets (otherwise the APK is signed with a debug key):
+#      ANDROID_KEYSTORE_BASE64  base64 of the .jks keystore file
+#      ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+#    See android/README.md.
+name: Android app
+
+on:
+  push:
+    branches: ['**']
+    paths: ['android/**', '.github/workflows/android.yml']
+    tags: ['android-v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # pushes the screenshots branch and the release
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Signing key (if the secrets are set)
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KS" ]; then
+            echo "$KS" | base64 -d > "$RUNNER_TEMP/release.jks"
+            echo "ANDROID_KEYSTORE_FILE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+            echo "Signing with the release keystore"
+          else
+            echo "No keystore secret: signing with a debug key"
+          fi
+      - name: Build the APK
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          gradle -p android --no-daemon assembleRelease
+          V=$(grep -oP 'versionName = "\K[^"]+' android/app/build.gradle.kts)
+          cp android/app/build/outputs/apk/release/app-release.apk "ASUBank-$V.apk"
+          echo "V=$V" >> "$GITHUB_ENV"
+          ls -la ASUBank-*.apk
+      - name: Keep the APK as a download (Actions run page > Artifacts)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ASUBank-apk-${{ github.run_number }}
+          path: ASUBank-*.apk
+          retention-days: 30
+
+      - name: Enable KVM for the emulator
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Screenshots on an emulator
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        continue-on-error: true
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          script: bash android/screenshots.sh "ASUBank-${{ env.V }}.apk"
+      - name: Push the screenshots to the android-screenshots branch
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        continue-on-error: true
+        run: |
+          [ -d shots ] || exit 0
+          cd shots
+          git init -q -b android-screenshots
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          git add . && git commit -qm "Android screenshots, run ${{ github.run_number }}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" android-screenshots
+
+      - name: Publish a GitHub Release (tags android-v*)
+        if: startsWith(github.ref, 'refs/tags/android-v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          gh release create "$TAG" "ASUBank-$V.apk" --title "ASU Bank $V (Android)" --notes-file android/RELEASE_NOTES.md --latest=false
