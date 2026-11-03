@@ -105,6 +105,7 @@ class MainActivity : ComponentActivity() {
         val startTab = intent?.getStringExtra("startTab")
         incoming.value = intent?.dataString ?: intent?.getStringExtra("startPath")?.let { AB.SITE + it }
         if (intent?.getBooleanExtra("rateIntro", false) == true) Saved.prefs.edit().putBoolean("rate.intro.v1", true).apply()
+        if (intent?.getBooleanExtra("matcherIntro", false) == true) Saved.prefs.edit().putBoolean("matcher.intro.v1", true).apply()
         setContent { AsuTheme { App(startTab, incoming) } }
     }
 

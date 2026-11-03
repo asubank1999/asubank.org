@@ -23,6 +23,16 @@ sleep 6
 shot 10-ratings --ez rateIntro true --es startPath /requests/portal_to_rating
 sleep 10
 adb exec-out screencap -p > shots/11-ratings-later.png
+shot 12-matcher --ez matcherIntro true --es startPath /requests/matcher_confirm
+shot 13-request --es startPath /requests/student_request_portal
+shot 14-grading --es startPath /guides/grading-scale-asu
+shot 15-groups --es startPath /guides/groups
+shot 16-thanks --es startPath /guides/thankslist
+shot 17-search-guide --es startPath /guides/tutorial
+shot 18-ads --es startPath /requests/student_ads
+shot 19-latest --es startPath /guides/latest
+sleep 10
+adb exec-out screencap -p > shots/19-latest-later.png
 adb shell pm clear org.asubank.app
 adb shell am start -n org.asubank.app/.MainActivity
 sleep 10
