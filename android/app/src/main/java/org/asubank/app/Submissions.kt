@@ -2,6 +2,7 @@ package org.asubank.app
 
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -158,7 +159,7 @@ fun SubmissionsScreen(admin: Boolean = false) {
                     leadingIcon = { Icon(Icons.Filled.Search, null) }, shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
                 )
-                Row(Modifier.padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf("all" to "All", "approved" to "Approved", "pending" to "Pending", "review" to "In review").forEach { (k, l) ->
                         FilterChip(selected = filter == k, onClick = { filter = k }, label = { Text(l) })
                     }
@@ -172,16 +173,15 @@ fun SubmissionsScreen(admin: Boolean = false) {
                     shown.forEachIndexed { i, s ->
                         if (i > 0) Divider()
                         Row(
-                            Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp),
+                            Modifier.fillMaxWidth().clickable { open = s }.padding(horizontal = 16.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             KindTile(s.kind)
-                            Column(Modifier.weight(1f)) {
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                                 Text(s.title, fontWeight = FontWeight.SemiBold, maxLines = 2)
                                 Text(listOfNotNull(s.name, s.day).joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                StatusBadge(s.status)
                             }
-                            StatusBadge(s.status)
-                            TextButton(onClick = { open = s }) { Text("Open") }
                         }
                     }
                 }

@@ -391,7 +391,18 @@ struct ThanksScreen: View {
     private let palette: [UInt32] = [0x8C1D40, 0x0a84ff, 0x1f8a3e, 0xaf52de, 0xe8590c, 0xff2d55, 0x5e5ce6, 0x00a3a3]
 
     private var names: [String] {
-        page?.b.compactMap(\.list).first ?? ["Qusai", "Lina", "Hxcker", "Osama", "Sama", "اعشق تمردي"]
+        (page?.b.compactMap(\.list).first ?? ["Qusai", "Lina", "Hxcker", "Osama", "Sama", "اعشق تمردي"]).map(Self.clean)
+    }
+
+    /// The web page's cards read "Q" + "Qusai" + "Contributor" as one line in pages.json
+    static func clean(_ raw: String) -> String {
+        var s = raw.trimmingCharacters(in: .whitespaces)
+        var card = false
+        for suffix in ["⭐ Founding contributor", "⭐ First contributor", "Contributor"] where s.hasSuffix(suffix) {
+            s = String(s.dropLast(suffix.count)).trimmingCharacters(in: .whitespaces); card = true; break
+        }
+        if card, s.count > 1, let a = s.first, let b = s.dropFirst().first, String(a).lowercased() == String(b).lowercased() { s.removeFirst() }
+        return s
     }
 
     var body: some View {

@@ -365,7 +365,7 @@ fun GroupsScreen(page: SitePage) {
 @Composable
 fun ThanksScreen(page: SitePage?) {
     val ctx = LocalContext.current
-    val names = page?.b?.firstNotNullOfOrNull { it.list } ?: listOf("Qusai", "Lina", "Hxcker", "Osama", "Sama", "اعشق تمردي")
+    val names = (page?.b?.firstNotNullOfOrNull { it.list } ?: listOf("Qusai", "Lina", "Hxcker", "Osama", "Sama", "اعشق تمردي")).map(::cleanThanksName)
     val palette = listOf(0xFF8C1D40, 0xFF0A84FF, 0xFF1F8A3E, 0xFFAF52DE, 0xFFE8590C, 0xFFFF2D55, 0xFF5E5CE6, 0xFF00A3A3)
     val items by Library.items.collectAsState()
     val subjects by Library.subjects.collectAsState()
@@ -440,4 +440,13 @@ fun ThanksScreen(page: SitePage?) {
             }
         }
     }
+}
+
+/** The web page's cards read "Q" + "Qusai" + "Contributor" as one line in pages.json */
+fun cleanThanksName(raw: String): String {
+    var s = raw.trim()
+    val suffix = listOf("⭐ Founding contributor", "⭐ First contributor", "Contributor").firstOrNull { s.endsWith(it) } ?: return s
+    s = s.removeSuffix(suffix).trim()
+    if (s.length > 1 && s[0].lowercaseChar() == s[1].lowercaseChar()) s = s.substring(1)
+    return s
 }

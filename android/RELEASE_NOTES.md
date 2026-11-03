@@ -6,6 +6,17 @@
 - Calendar, schedules, FAQs and every asubank.org page as native screens
 - Light and dark mode
 
+**New in 1.5.0**
+- **Accounts**: sign in or create an account with just a username and password (university email and ID are optional). The same account works in the iPhone app, the Android app and on asubank.org.
+- **Student chat**: real-time rooms (General, Study help, Materials and more) where signed-in students help each other. Reply to messages, copy them, and delete your own.
+- **Notifications** for new messages ("New message from …") and team announcements. Pick every message, announcements only, or off.
+- **Themes**: match your phone, Light, Dark, or Pitch black for OLED screens, plus 7 accent colors.
+- **Student submissions, now native**: browse the board, search it and submit your presentation from the app.
+- The ASU Bank logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.
+- When a new version is out, the app tells you as soon as you open it.
+- Enhanced **Thanks list** with stats and a founder card.
+- For admins: an **Admin tab** to see every registered student, ban or unban, reset passwords, make admins, delete accounts, delete chat messages and uploads, send announcements and see the activity log.
+
 **New in 1.4.0**
 - **Course matcher, now native**: courses, topics and free times on a simple grid, matched with classmates by email
 - **Request a material, now native**: pick a service, attach your PDF, pay by CliQ (alias ALANQ99) or in person
