@@ -58,6 +58,11 @@ final class Library: ObservableObject {
         subjects.first { $0.p == p }
     }
 
+    /// Re-applies the catalog after shortcut / broken-link data changed
+    func reindex() {
+        if let data = try? Data(contentsOf: cacheFile) { apply(data) }
+    }
+
     func load() async {
         if items.isEmpty, let data = try? Data(contentsOf: cacheFile) { apply(data) }
         loading = true
@@ -78,7 +83,8 @@ final class Library: ObservableObject {
     private func apply(_ data: Data) -> Bool {
         guard let c = try? JSONDecoder().decode(Catalog.self, from: data) else { return false }
         subjects = c.subjects
-        items = c.items.map(AB.index)
+        // Links the server found dead are hidden (tools/check_links.py -> broken.json)
+        items = c.items.filter { DriveLinks.shared.isBroken($0.u) == nil }.map(AB.index)
         return true
     }
 }
@@ -181,12 +187,25 @@ enum DriveSearch {
         let (data, _) = try await URLSession.shared.data(from: c.url!)
         let r = try JSONDecoder().decode(Reply.self, from: data)
         guard r.success == true, let files = r.files else { throw URLError(.cannotParseResponse) }
-        return files.map { f in
-            let mime = f.mimeType ?? ""
-            let k: Kind = mime.contains("folder") ? .folder : mime.contains("pdf") ? .pdf : AB.kind(f.url, f.name)
+        return files.filter { DriveLinks.shared.isBroken($0.url) == nil }.map { f in
+            let k = kind(mime: f.mimeType, url: f.url, name: f.name)
             return Result(m: Material(u: f.url, t: f.name, s: "Google Drive"), kind: k, date: f.dateUploaded ?? "", size: f.size ?? 0)
         }
     }
 
     private static var driveSearchURL: String { AB.driveSearchAPI }
+
+    /// Kind from Drive's mime type; shortcuts use the resolved target (drive-map.json)
+    static func kind(mime: String?, url: String, name: String) -> Kind {
+        let mime = mime ?? ""
+        if mime.contains("folder") { return .folder }
+        if mime.contains("pdf") { return .pdf }
+        if mime.contains("presentation") { return .ppt }
+        if mime.contains("wordprocessing") || mime.hasSuffix(".document") { return .doc }
+        if mime.contains("spreadsheet") { return .sheet }
+        if mime.hasPrefix("image/") { return .img }
+        if mime.hasPrefix("video/") { return .video }
+        if mime.contains("zip") || mime.contains("rar") { return .zip }
+        return AB.kind(url, name)
+    }
 }

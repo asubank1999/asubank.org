@@ -81,45 +81,6 @@ struct MaterialRow: View {
     }
 }
 
-/// Opens a material inside the app (Drive / Docs preview), with save, share and "open in" buttons
-struct MaterialScreen: View {
-    let material: Material
-    @EnvironmentObject private var saved: SavedStore
-    @Environment(\.openURL) private var openURL
-
-    var body: some View {
-        let kind = AB.kind(material.u, material.t)
-        Group {
-            if let url = AB.previewURL(material.u) {
-                WebView(url: url)
-            } else {
-                Text("This link can't be opened.").foregroundStyle(.secondary)
-            }
-        }
-        .ignoresSafeArea(edges: .bottom)
-        .navigationTitle(material.t)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button { saved.toggle(material); Haptics.tap() } label: {
-                    Image(systemName: saved.isSaved(material.u) ? "star.fill" : "star")
-                }
-                .accessibilityLabel(saved.isSaved(material.u) ? "Remove from Saved" : "Save")
-                Menu {
-                    if let url = AB.absolute(material.u) {
-                        ShareLink(item: url, subject: Text(material.t)) { Label("Share", systemImage: "square.and.arrow.up") }
-                        Button { openURL(url) } label: {
-                            Label(kind == .page ? "Open in Safari" : "Open in Drive / Safari", systemImage: "safari")
-                        }
-                        Button { UIPasteboard.general.url = url; Haptics.success() } label: { Label("Copy link", systemImage: "link") }
-                    }
-                } label: { Image(systemName: "ellipsis.circle") }
-            }
-        }
-        .onAppear { saved.opened(material) }
-    }
-}
-
 /// A page of asubank.org that needs the web (Google forms, uploads...), shown inside the app.
 /// Links on it to other asubank.org pages open their native screens.
 struct WebScreen: View {

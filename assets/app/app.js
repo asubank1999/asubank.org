@@ -124,10 +124,24 @@
         if (/drive\.google\.com\/(drive\/(u\/\d\/)?folders|embeddedfolderview)/.test(u) && id) return 'https://drive.google.com/embeddedfolderview?id=' + id + '#list';
         var m = /docs\.google\.com\/(document|presentation|spreadsheets)\/d\/([\w-]+)/.exec(u);
         if (m) return 'https://docs.google.com/' + m[1] + '/d/' + m[2] + '/preview';
-        if (/drive\.google\.com\/(file|open|uc)/.test(u) && id) return 'https://drive.google.com/file/d/' + id + '/preview';
+        if (/drive\.google\.com\/(file|open|uc)/.test(u) && id) {
+            // Drive shortcuts can't be previewed: use the real file or folder (tools/check_links.py -> drive-map.json)
+            var t = AB.driveMap[id];
+            if (t && t[1] === 'folder') return 'https://drive.google.com/embeddedfolderview?id=' + t[0] + '#list';
+            return 'https://drive.google.com/file/d/' + (t ? t[0] : id) + '/preview';
+        }
         var y = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{6,})/.exec(u);
         if (y) return 'https://www.youtube-nocookie.com/embed/' + y[1];
         return null;
+    };
+    AB.driveMap = {};
+    AB.broken = {};
+    var linksP = null;
+    AB.links = function () {
+        if (!linksP) linksP = Promise.all(['drive-map', 'broken'].map(function (n) {
+            return fetch('/assets/app/' + n + '.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; });
+        })).then(function (r) { AB.driveMap = r[0] || {}; AB.broken = r[1] || {}; });
+        return linksP;
     };
     AB.isExternal = function (u) { return /^https?:\/\//.test(u) && !/^https?:\/\/(www\.)?asubank\.org/.test(u) && u.indexOf(location.origin) !== 0; };
     // "2025", "2024/25" and semester codes like "20231" all count as a year
@@ -519,7 +533,10 @@
     /* ---------- materials index (built from the subject pages) ---------- */
     var idxP = null;
     AB.index = function () {
-        if (!idxP) idxP = fetch('/assets/app/materials.json').then(function (r) { return r.json(); }).then(function (d) {
+        if (!idxP) idxP = Promise.all([fetch('/assets/app/materials.json').then(function (r) { return r.json(); }), AB.links()]).then(function (x) {
+            var d = x[0];
+            // links the checker found dead are left out of search
+            d.items = d.items.filter(function (it) { return !AB.broken[it.u]; });
             d.items.forEach(function (it) { it.q = AB.norm(it.t + ' ' + it.s + ' ' + (it.c || '')); it.k = it.k || AB.kind(it.u, it.t); });
             return d;
         }).catch(function () { idxP = null; return { items: [], subjects: [] }; });
@@ -560,6 +577,7 @@
         AB.enhance();
         doc.querySelectorAll('ul[data-ab-filter]').forEach(function (ul) { if (ul.hasAttribute('data-ab-legacy')) AB.adoptLegacy(ul); AB.listFilter(ul); });
         prefetch();
+        AB.links();
         var rt = doc.body.getAttribute('data-ab-recent');
         if (rt) AB.recent.add({ u: cleanPath(), t: rt, k: 'page', s: doc.body.getAttribute('data-ab-group') || '' });
         if (doc.body.hasAttribute('data-ab-protect')) AB.protect();

@@ -142,6 +142,7 @@ enum AB {
         if has(#"\.(jpe?g|png|gif|webp|heic)\b"#, s) { return .img }
         if has(#"\.(mp4|mov|mkv)\b|youtube\.com|youtu\.be"#, s) { return .video }
         if has(#"\.(zip|rar|7z)\b"#, s) { return .zip }
+        if has(#"drive\.google\.com/(file|open|uc)"#, u), let id = driveId(u), DriveLinks.shared.target(id)?.folder == true { return .folder }
         if has(#"drive\.google\.com/(file|open|uc)"#, u) || has(#"dropbox\.com"#, u) { return .file }
         return .link
     }
@@ -229,4 +230,9 @@ enum AB {
         }
         return out.sorted { $0.0 > $1.0 }.prefix(limit).map { $0.1 }
     }
+}
+
+extension AB {
+    /// First capture group of a regex, for other files (firstGroup is private to this one)
+    static func group(_ pattern: String, _ s: String) -> String? { firstGroup(pattern, s) }
 }

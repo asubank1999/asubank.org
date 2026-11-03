@@ -1,9 +1,9 @@
 {
   "ios": {
-    "latest": "1.1.0",
+    "latest": "1.2.0",
     "minimum": "1.0.0",
     "store": "",
-    "notes": "Native pages, new calendar, donations and update alerts."
+    "notes": "Every material opens natively: PDFs, slides, documents and Drive folders. Fixed files that showed No preview available."
   },
   "donate": true
 }

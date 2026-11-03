@@ -36,9 +36,8 @@ final class LatestStore: ObservableObject {
             let (data, _) = try await URLSession.shared.data(from: url)
             let r = try JSONDecoder().decode(Reply.self, from: data)
             guard r.success == true, let list = r.files else { throw URLError(.cannotParseResponse) }
-            files = list.map { f in
-                let mime = f.mimeType ?? ""
-                let k: Kind = mime.contains("folder") ? .folder : mime.contains("pdf") ? .pdf : AB.kind(f.url, f.name)
+            files = list.filter { DriveLinks.shared.isBroken($0.url) == nil }.map { f in
+                let k = DriveSearch.kind(mime: f.mimeType, url: f.url, name: f.name)
                 return DriveSearch.Result(m: Material(u: f.url, t: f.name, s: "Latest uploads", d: f.dateUploaded), kind: k, date: f.dateUploaded ?? "", size: f.size ?? 0)
             }
             .sorted { $0.date > $1.date }

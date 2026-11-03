@@ -11,7 +11,9 @@ name: iOS app
 
 on:
   push:
+    branches: ['**']
     paths: ['ios/**', '.github/workflows/ios.yml']
+    tags: ['ios-v*'] # pushing a tag like ios-v1.2.0 also publishes a public GitHub Release with the IPA
   workflow_dispatch:
     inputs:
       release:
@@ -95,6 +97,16 @@ jobs:
           name: ASUBank-unsigned-ipa-${{ github.run_number }}
           path: ios/ASUBank-unsigned.ipa
           retention-days: 30
+      - name: Publish a GitHub Release (tags ios-v*)
+        if: startsWith(github.ref, 'refs/tags/ios-v')
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          V="${TAG#ios-v}"
+          cp ios/ASUBank-unsigned.ipa "ASUBank-$V-unsigned.ipa"
+          gh release create "$TAG" "ASUBank-$V-unsigned.ipa" --title "ASU Bank $V (iOS)" --notes-file ios/RELEASE_NOTES.md --latest
 
   release:
     if: github.event_name == 'workflow_dispatch' && inputs.release

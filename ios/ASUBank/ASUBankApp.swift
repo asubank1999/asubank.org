@@ -19,7 +19,10 @@ struct ASUBankApp: App {
                 .environmentObject(config)
                 .tint(.abAccent)
                 .preferredColorScheme(appearance == 1 ? .light : appearance == 2 ? .dark : nil)
-                .task { await library.load() }
+                .task {
+                    await library.load()
+                    if await DriveLinks.shared.refresh() { library.reindex() }
+                }
                 .task { await pages.load() }
                 .onOpenURL { url in app.open(url) }
         }
