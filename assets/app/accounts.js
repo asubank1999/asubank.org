@@ -57,9 +57,77 @@
         return el;
     }
     function safeColor(c) { return /^#[0-9a-fA-F]{3,8}$/.test(c || '') ? c : '#8C1D40'; }
-    function avatar(n, color, size, admin) {
+    function safePhoto(u) { return /^https:\/\/drive\.google\.com\/thumbnail\?/.test(u || '') ? u : ''; }
+    // photo (when set) over the coloured letter; online adds a green dot, false a grey one, null none
+    function avatar(n, color, size, admin, photo, online) {
         size = size || 40;
-        return h('span', { class: 'acc-av' + (admin ? ' admin' : ''), style: 'width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * .42) + 'px;background:' + safeColor(color), 'aria-hidden': 'true' }, (n || '?').charAt(0).toUpperCase());
+        var el = h('span', { class: 'acc-av' + (admin ? ' admin' : ''), style: 'width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * .42) + 'px;background:' + safeColor(color), 'aria-hidden': 'true' }, (n || '?').charAt(0).toUpperCase());
+        photo = safePhoto(photo);
+        if (photo) el.appendChild(h('img', { src: photo, alt: '', loading: 'lazy', referrerpolicy: 'no-referrer', onerror: function (e) { e.currentTarget.remove(); } }));
+        if (online != null) el.appendChild(h('i', { class: 'acc-dot' + (online ? ' on' : '') }));
+        return el;
+    }
+    var BADGES = { founder: ['👑', 'Founder'], moderator: ['🛡️', 'Moderator'], support: ['🛟', 'Support'], helper: ['🤝', 'Helper'], donor: ['💛', 'Donor'],
+        contributor: ['📚', 'Contributor'], tutor: ['🎓', 'Tutor'], verified: ['✅', 'Verified'], vip: ['⭐', 'VIP'], developer: ['💻', 'Developer'] };
+    function badgeRow(list, compact) {
+        list = (list || []).filter(function (b) { return BADGES[b]; });
+        if (!list.length) return null;
+        return h('span', { class: 'acc-badges' + (compact ? ' compact' : '') }, list.map(function (b) {
+            return h('span', { class: 'acc-pill', title: BADGES[b][1], text: compact ? BADGES[b][0] : BADGES[b][0] + ' ' + BADGES[b][1] });
+        }));
+    }
+    function lastSeenText(iso, online) {
+        if (online) return 'Online';
+        var d = new Date(iso); if (!iso || isNaN(d)) return 'Offline';
+        var m = Math.round((Date.now() - d) / 6e4);
+        return 'Last seen ' + (m < 60 ? Math.max(1, m) + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : d.toLocaleDateString([], { dateStyle: 'medium' }));
+    }
+    // a simple dialog layer; returns {box, close}
+    function sheet(title) {
+        var back = h('div', { class: 'acc-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': title });
+        var box = h('div', { class: 'acc-card acc-modal-box' });
+        function close() { back.remove(); document.removeEventListener('keydown', esc); }
+        function esc(e) { if (e.key === 'Escape') close(); }
+        back.addEventListener('click', function (e) { if (e.target === back) close(); });
+        document.addEventListener('keydown', esc);
+        box.appendChild(h('div', { class: 'acc-modal-head' }, h('h2', { text: title }), h('button', { type: 'button', class: 'acc-x', 'aria-label': 'Close', text: '×', onclick: close })));
+        back.appendChild(box); document.body.appendChild(back);
+        return { box: box, close: close };
+    }
+    function showProfile(userId, fallback) {
+        var s = sheet('Profile');
+        var body = h('div', { class: 'acc-profile' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        s.box.appendChild(body);
+        call('profile', { userId: userId }).then(function (r) {
+            var u = r.user; while (body.firstChild) body.removeChild(body.firstChild);
+            body.appendChild(avatar(nameOf(u), u.color, 96, u.role === 'admin', u.avatar, !!u.online));
+            body.appendChild(h('h2', { text: nameOf(u) }));
+            body.appendChild(h('p', { class: 'acc-muted', text: '@' + u.username + (u.role === 'admin' ? ' · Admin' : '') + ' · ' + lastSeenText(u.lastSeen, u.online) }));
+            var b = badgeRow(u.badges); if (b) body.appendChild(b);
+            if (u.bio) body.appendChild(h('p', { class: 'acc-bio', text: u.bio }));
+            if (u.phone) {
+                var digits = u.phone.replace(/[^0-9+]/g, '');
+                body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
+                    h('a', { class: 'ab-btn tinted', href: 'tel:' + digits, text: '📞 ' + u.phone }),
+                    h('a', { class: 'ab-btn tinted', href: 'https://wa.me/' + digits.replace('+', ''), target: '_blank', rel: 'noopener', text: 'WhatsApp' })));
+            }
+            if (isAdmin() && u.id !== user.id) body.appendChild(h('p', null, h('a', { href: '/admin/#' + encodeURIComponent(u.username), text: 'Manage this user in Admin ›' })));
+        }).catch(function (e) { body.textContent = (fallback ? fallback + ': ' : '') + e.message; });
+    }
+    // shrinks a picked photo to a 256 px square JPEG (base64, no data: prefix)
+    function photoData(file) {
+        return new Promise(function (ok, bad) {
+            var img = new Image(), url = URL.createObjectURL(file);
+            img.onload = function () {
+                var c = document.createElement('canvas'); c.width = c.height = 256;
+                var s = Math.min(img.width, img.height);
+                c.getContext('2d').drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 256, 256);
+                URL.revokeObjectURL(url);
+                ok(c.toDataURL('image/jpeg', .82).split(',')[1]);
+            };
+            img.onerror = function () { URL.revokeObjectURL(url); bad(new Error("That file isn't a photo we can read.")); };
+            img.src = url;
+        });
     }
     function field(label, type, value, hint) {
         var input = h('input', { type: type || 'text', value: value || '', autocomplete: type === 'password' ? 'current-password' : 'off', autocapitalize: 'off', spellcheck: 'false' });
@@ -144,16 +212,34 @@
         clear();
         var u = user;
         var err = errBox();
-        root.appendChild(h('div', { class: 'acc-profile' }, avatar(nameOf(u), u.color, 84, isAdmin()),
-            h('h1', { text: nameOf(u) }), h('p', { class: 'acc-muted', text: '@' + u.username + (isAdmin() ? ' · Admin' : '') })));
+        var pick = h('input', { type: 'file', accept: 'image/*', hidden: true, onchange: function () {
+            var f = pick.files && pick.files[0]; if (!f) return;
+            photoBtn.disabled = true; photoBtn.textContent = 'Uploading…';
+            photoData(f).then(function (d) { return call('setAvatar', { data: d, type: 'image/jpeg' }); })
+                .then(function (r) { adopt(r); accountView(); })
+                .catch(function (e) { showErr(err, e); photoBtn.disabled = false; photoBtn.textContent = 'Change photo'; });
+        } });
+        var photoBtn = h('button', { type: 'button', class: 'ab-btn tinted', text: u.avatar ? 'Change photo' : 'Add a photo', onclick: function () { pick.click(); } });
+        root.appendChild(h('div', { class: 'acc-profile' }, avatar(nameOf(u), u.color, 96, isAdmin(), u.avatar, true),
+            h('h1', { text: nameOf(u) }), h('p', { class: 'acc-muted', text: '@' + u.username + (isAdmin() ? ' · Admin' : '') }),
+            badgeRow(u.badges), u.bio ? h('p', { class: 'acc-bio', text: u.bio }) : null,
+            h('div', { class: 'acc-actions acc-center-row' }, photoBtn, pick,
+                u.avatar ? h('button', { type: 'button', class: 'ab-btn gray', text: 'Remove photo', onclick: function () {
+                    call('setAvatar', { remove: true }).then(function (r) { adopt(r); accountView(); }).catch(function (e) { showErr(err, e); });
+                } }) : null)));
         var dn = field('Display name', 'text', u.displayName), em = field('University email (optional)', 'email', u.email), uid = field('University ID (optional)', 'text', u.uniId);
+        var ph = field('Phone number (optional)', 'tel', u.phone, 'Like +962 79 123 4567');
+        var showPh = h('input', { type: 'checkbox' }); showPh.checked = !!u.showPhone;
+        var bio = h('textarea', { rows: 2, maxlength: 160, placeholder: 'A line about you: major, year, what you can help with' }); bio.value = u.bio || '';
         var save = h('button', { type: 'submit', class: 'ab-btn', text: 'Save profile' });
         root.appendChild(h('form', { class: 'acc-card', onsubmit: function (ev) {
             ev.preventDefault(); busy(save, true, 'Save profile');
-            call('updateProfile', { displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim() })
+            call('updateProfile', { displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(),
+                phone: ph.input.value.trim(), showPhone: showPh.checked, bio: bio.value.trim() })
                 .then(function (r) { adopt(r); showErr(err, null); save.textContent = 'Saved ✓'; save.disabled = false; })
                 .catch(function (e) { showErr(err, e); busy(save, false, 'Save profile'); });
-        } }, h('h2', { text: 'Profile' }), dn.el, em.el, uid.el, save));
+        } }, h('h2', { text: 'Profile' }), dn.el, h('label', { class: 'acc-field' }, h('span', { text: 'About you' }), bio), em.el, uid.el, ph.el,
+            h('label', { class: 'acc-check' }, showPh, ' Show my phone number on my profile'), save));
 
         var old = field('Current password', 'password'), nw = field('New password', 'password', '', 'At least 6 characters');
         nw.input.autocomplete = 'new-password';
@@ -190,24 +276,93 @@
         clear();
         root.appendChild(h('div', { class: 'acc-intro' }, h('h1', { class: 'ab-large', text: 'Chat' }),
             h('p', { class: 'ab-sub', text: 'Signed in as @' + user.username + '. Be kind and helpful; admins can remove messages and ban accounts.' })));
+        var strip = h('div', { class: 'acc-online' });
+        root.appendChild(strip);
+        call('online').then(function (r) {
+            var on = (r.users || []).filter(function (x) { return x.online; });
+            strip.appendChild(h('button', { type: 'button', class: 'acc-online-n', onclick: showOnline }, h('i', { class: 'acc-dot on' }), ' ' + (r.onlineCount || 0) + ' online'));
+            on.slice(0, 12).forEach(function (x) {
+                strip.appendChild(h('button', { type: 'button', class: 'acc-online-u', title: x.displayName, onclick: function () { showProfile(x.id); } },
+                    avatar(x.displayName, x.color, 34, x.role === 'admin', x.avatar, true)));
+            });
+        }).catch(function () {});
         var list = h('div', { class: 'acc-card acc-rooms' }, h('p', { class: 'acc-muted', text: 'Loading rooms…' }));
         root.appendChild(list);
-        call('rooms').then(function (r) {
+        function drawRooms(rooms) {
             while (list.firstChild) list.removeChild(list.firstChild);
-            (r.rooms || []).forEach(function (rm) {
-                list.appendChild(h('a', { class: 'acc-room', href: '#' + encodeURIComponent(rm.id) },
-                    h('span', { class: 'acc-emoji', text: rm.emoji || '💬' }),
-                    h('span', { class: 'acc-room-t' }, h('b', { text: rm.name }), h('small', { text: rm.about || '' })),
-                    rm.adminOnly ? h('em', { text: 'Admins post' }) : null));
+            rooms.forEach(function (rm) {
+                list.appendChild(h('div', { class: 'acc-room-wrap' },
+                    h('a', { class: 'acc-room' + (rm.archived ? ' archived' : ''), href: '#' + encodeURIComponent(rm.id) },
+                        h('span', { class: 'acc-emoji', text: rm.emoji || '💬' }),
+                        h('span', { class: 'acc-room-t' }, h('b', { text: (rm.locked ? '🔒 ' : '') + rm.name }), h('small', { text: rm.about || '' })),
+                        rm.archived ? h('em', { text: 'Archived' }) : rm.locked ? h('em', { text: 'Locked' }) : rm.adminOnly ? h('em', { text: 'Admins post' }) : null),
+                    isAdmin() ? h('button', { type: 'button', class: 'acc-room-edit', 'aria-label': 'Room settings', title: 'Room settings', text: '⚙︎', onclick: function () { roomEditor(rm, drawRooms); } }) : null));
             });
-        }).catch(function (e) { list.textContent = e.message; });
+            if (isAdmin()) list.appendChild(h('button', { type: 'button', class: 'acc-room acc-room-add', onclick: function () { roomEditor(null, drawRooms); } },
+                h('span', { class: 'acc-emoji', text: '＋' }), h('span', { class: 'acc-room-t' }, h('b', { text: 'New room' }), h('small', { text: 'Admins only' }))));
+        }
+        call('rooms').then(function (r) { drawRooms(r.rooms || []); }).catch(function (e) { list.textContent = e.message; });
+    }
+
+    function showOnline() {
+        var s = sheet('Who’s online');
+        var box = h('div', { class: 'acc-users' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        s.box.appendChild(box);
+        call('online').then(function (r) {
+            while (box.firstChild) box.removeChild(box.firstChild);
+            var users = r.users || [];
+            if (!users.length) box.appendChild(h('p', { class: 'acc-muted', text: 'Nobody has been around lately.' }));
+            users.forEach(function (x) {
+                box.appendChild(h('button', { type: 'button', class: 'acc-user-row', onclick: function () { s.close(); showProfile(x.id); } },
+                    avatar(x.displayName, x.color, 36, x.role === 'admin', x.avatar, !!x.online),
+                    h('span', { class: 'acc-room-t' }, h('b', null, x.displayName, ' ', badgeRow(x.badges, true)), h('small', { text: lastSeenText(x.lastSeen, x.online) }))));
+            });
+        }).catch(function (e) { box.textContent = e.message; });
+    }
+
+    // admins: add or change a room; done(rooms) gets the new list
+    function roomEditor(rm, done) {
+        var s = sheet(rm ? 'Room settings' : 'New room');
+        var err = errBox();
+        var name = field('Name', 'text', rm && rm.name), about = field('About (optional)', 'text', rm && rm.about);
+        var emoji = field('Emoji', 'text', (rm && rm.emoji) || '💬');
+        var emojis = h('div', { class: 'acc-emojis' }, '💬📚🧪🧮💻🩺⚖️🎨🏗️📐🎓📣🎮⚽🎵☕🆘🤝'.match(/\p{Extended_Pictographic}️?/gu).map(function (e) {
+            return h('button', { type: 'button', text: e, onclick: function () { emoji.input.value = e; } });
+        }));
+        function check(label, on, hint) {
+            var c = h('input', { type: 'checkbox' }); c.checked = !!on;
+            return { el: h('label', { class: 'acc-check' }, c, ' ' + label, hint ? h('small', { text: hint }) : null), input: c };
+        }
+        var ao = check('Only admins post', rm && rm.adminOnly), lk = check('Locked', rm && rm.locked, 'Everyone can read; nobody can post.'),
+            ar = check('Archived', rm && rm.archived, 'Hidden from students. Admins still see it.');
+        var order = field('Position in the list (0 = top)', 'number', rm ? String(rm.order || 0) : '');
+        var save = h('button', { type: 'submit', class: 'ab-btn', text: rm ? 'Save' : 'Create room' });
+        function finish(r) { s.close(); if (done) done(r.rooms || []); }
+        s.box.appendChild(h('form', { onsubmit: function (ev) {
+            ev.preventDefault(); busy(save, true, save.textContent);
+            var f = { name: name.input.value.trim(), about: about.input.value.trim(), emoji: emoji.input.value.trim(),
+                adminOnly: ao.input.checked, locked: lk.input.checked, archived: ar.input.checked };
+            if (rm) f.id = rm.id;
+            if (order.input.value !== '') f.order = Number(order.input.value);
+            call('adminRoomSave', f).then(finish).catch(function (e) { showErr(err, e); busy(save, false, rm ? 'Save' : 'Create room'); });
+        } }, name.el, about.el, emoji.el, emojis, ao.el, lk.el, ar.el, order.el, err, save));
+        if (rm) s.box.appendChild(h('div', { class: 'acc-actions acc-sep' },
+            h('button', { type: 'button', class: 'ab-btn gray', text: 'Clear all messages', onclick: function () {
+                if (!window.confirm('Remove every message in ' + rm.name + '? This can’t be undone.')) return;
+                call('adminClearRoom', { room: rm.id }).then(function (r) { showErr(err, new Error(r.removed + ' messages removed.')); }).catch(function (e) { showErr(err, e); });
+            } }),
+            rm.id !== 'announcements' ? h('button', { type: 'button', class: 'ab-btn gray acc-danger', text: 'Delete room', onclick: function () {
+                if (!window.confirm('Delete ' + rm.name + ' and hide its messages?')) return;
+                call('adminRoomDelete', { id: rm.id }).then(finish).catch(function (e) { showErr(err, e); });
+            } }) : null));
     }
 
     function roomView(roomId) {
         clear();
         var info = { id: roomId, name: roomId, emoji: '💬' };
-        var msgs = [], byId = {}, replyTo = null, last = null;
+        var msgs = [], byId = {}, people = {}, replyTo = null, editing = null, pinned = null, last = null;
         var title = h('h1', { class: 'acc-room-title', text: '💬 ' + roomId });
+        var pinBar = h('div', { class: 'acc-pinned', hidden: true });
         var feed = h('div', { class: 'acc-feed', 'aria-live': 'polite' });
         var err = errBox();
         var input = h('textarea', { rows: 1, maxlength: 1000, placeholder: 'Message' });
@@ -216,34 +371,72 @@
         var composer = h('form', { class: 'acc-composer', onsubmit: function (ev) {
             ev.preventDefault();
             var t = input.value.trim(); if (!t) return;
-            busy(send, true, 'Send');
-            call('send', { room: roomId, text: t, replyTo: replyTo ? replyTo.id : '' })
-                .then(function (r) { input.value = ''; setReply(null); if (r.message) add([r.message]); showErr(err, null); })
+            var label = editing ? 'Save' : 'Send';
+            busy(send, true, label);
+            var p = editing
+                ? call('editMessage', { id: editing.id, text: t }).then(function () { var m = editing; m.text = t; m.edited = new Date().toISOString(); setReply(null); render(); })
+                : call('send', { room: roomId, text: t, replyTo: replyTo ? replyTo.id : '' }).then(function (r) { setReply(null); if (r.message) add([r.message]); });
+            p.then(function () { input.value = ''; showErr(err, null); })
                 .catch(function (e) { showErr(err, e); })
-                .then(function () { busy(send, false, 'Send'); input.focus(); });
+                .then(function () { busy(send, false, editing ? 'Save' : 'Send'); input.focus(); });
         } }, replyBar, h('div', { class: 'acc-compose-row' }, input, send));
-        input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); composer.requestSubmit ? composer.requestSubmit() : send.click(); } });
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); composer.requestSubmit ? composer.requestSubmit() : send.click(); }
+            if (e.key === 'Escape' && (editing || replyTo)) { setReply(null); input.value = ''; }
+        });
         var readonly = h('p', { class: 'acc-muted acc-small acc-center', hidden: true, text: 'Only admins post here.' });
-        root.appendChild(h('div', { class: 'acc-room-head' }, h('a', { href: '#', class: 'acc-back', text: '‹ Rooms' }), title));
+        var settings = h('button', { type: 'button', class: 'acc-room-edit', hidden: true, 'aria-label': 'Room settings', title: 'Room settings', text: '⚙︎', onclick: function () {
+            roomEditor(info, function (rooms) {
+                var rm = rooms.filter(function (x) { return x.id === roomId; })[0];
+                if (rm) setInfo(rm); else location.hash = '';
+            });
+        } });
+        root.appendChild(h('div', { class: 'acc-room-head' }, h('a', { href: '#', class: 'acc-back', text: '‹ Rooms' }), title, settings));
+        root.appendChild(pinBar);
         root.appendChild(feed);
         root.appendChild(err);
         root.appendChild(composer);
         root.appendChild(readonly);
 
-        function setReply(m) {
-            replyTo = m;
+        function setInfo(rm) {
+            info = rm; title.textContent = (rm.emoji || '💬') + ' ' + (rm.locked ? '🔒 ' : '') + rm.name;
+            var canPost = isAdmin() || (!rm.adminOnly && !rm.locked && !rm.archived);
+            composer.hidden = !canPost; readonly.hidden = canPost;
+            readonly.textContent = rm.archived ? 'This room is archived.' : rm.locked ? 'This room is locked. You can still read it.' : 'Only admins post here.';
+            settings.hidden = !isAdmin();
+        }
+        // replying (m) or editing (m, true); null clears both
+        function setReply(m, edit) {
+            replyTo = edit ? null : m; editing = edit ? m : null;
             while (replyBar.firstChild) replyBar.removeChild(replyBar.firstChild);
             replyBar.hidden = !m;
-            if (m) replyBar.appendChild(h('span', null, h('b', { text: 'Replying to ' + nameOf(m) + ': ' }), m.text.slice(0, 80)),
-                h('button', { type: 'button', class: 'acc-x', 'aria-label': 'Cancel reply', text: '×', onclick: function () { setReply(null); } }));
+            send.textContent = editing ? 'Save' : 'Send';
+            if (m) replyBar.appendChild(h('span', null, h('b', { text: (edit ? 'Editing your message' : 'Replying to ' + nameOf(m)) + ': ' }), m.text.slice(0, 80)),
+                h('button', { type: 'button', class: 'acc-x', 'aria-label': 'Cancel', text: '×', onclick: function () { if (editing) input.value = ''; setReply(null); } }));
+        }
+        function drawPin() {
+            while (pinBar.firstChild) pinBar.removeChild(pinBar.firstChild);
+            pinBar.hidden = !pinned;
+            if (!pinned) return;
+            pinBar.appendChild(h('button', { type: 'button', class: 'acc-pinned-t', onclick: function () {
+                var el = feed.querySelector('[data-id="' + pinned.id + '"]'); if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            } }, h('b', { text: '📌 ' + nameOf(pinned) + ': ' }), pinned.text.slice(0, 140)));
+            if (isAdmin()) pinBar.appendChild(h('button', { type: 'button', class: 'acc-x', 'aria-label': 'Unpin', title: 'Unpin', text: '×', onclick: function () { pin(null); } }));
+        }
+        function pin(m) {
+            call('adminPin', { room: roomId, id: m ? m.id : '' }).then(function () { pinned = m; drawPin(); render(); }).catch(function (e) { showErr(err, e); });
         }
 
         function bubble(m, prev) {
             var mine = m.userId === user.id, admin = m.role === 'admin';
+            var p = people[m.userId] || {};
             var grouped = prev && prev.userId === m.userId && new Date(prev.created).toDateString() === new Date(m.created).toDateString();
             var reply = m.replyTo && byId[m.replyTo];
+            var who = function () { showProfile(m.userId, nameOf(m)); };
             var actions = h('span', { class: 'acc-msg-actions' },
                 h('button', { type: 'button', text: 'Reply', onclick: function () { setReply(m); input.focus(); } }),
+                mine ? h('button', { type: 'button', text: 'Edit', onclick: function () { setReply(m, true); input.value = m.text; input.focus(); } }) : null,
+                isAdmin() ? h('button', { type: 'button', text: pinned && pinned.id === m.id ? 'Unpin' : 'Pin', onclick: function () { pin(pinned && pinned.id === m.id ? null : m); } }) : null,
                 (mine || isAdmin()) ? h('button', { type: 'button', text: 'Delete', onclick: function () {
                     if (!window.confirm('Delete this message?')) return;
                     call('deleteMessage', { id: m.id }).then(function () { remove([m.id]); }).catch(function (e) { showErr(err, e); });
@@ -252,13 +445,16 @@
                     if (!window.confirm('Ban @' + m.username + '? They can’t sign in or chat until an admin unbans them.')) return;
                     call('adminBan', { userId: m.userId, banned: true, reason: 'Removed from the chat by an admin' }).then(function () { showErr(err, new Error('@' + m.username + ' is banned.')); }).catch(function (e) { showErr(err, e); });
                 } }) : null);
+            var av = !mine ? (grouped ? h('span', { class: 'acc-av-space' }) : h('button', { type: 'button', class: 'acc-av-btn', 'aria-label': 'Profile of ' + nameOf(m), onclick: who },
+                avatar(nameOf(m), m.color, 30, admin, p.avatar, p.online ? true : null))) : null;
             return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (grouped ? ' grouped' : ''), 'data-id': m.id },
-                !mine ? (grouped ? h('span', { class: 'acc-av-space' }) : avatar(nameOf(m), m.color, 30, admin)) : null,
+                av,
                 h('div', { class: 'acc-bubble' },
-                    (!mine && !grouped) ? h('div', { class: 'acc-from', style: 'color:' + safeColor(m.color) }, nameOf(m), admin ? h('span', { class: 'acc-badge', text: 'ADMIN' }) : null) : null,
+                    (!mine && !grouped) ? h('button', { type: 'button', class: 'acc-from', style: 'color:' + safeColor(m.color), onclick: who },
+                        nameOf(m), admin ? h('span', { class: 'acc-badge', text: 'ADMIN' }) : null, badgeRow(p.badges, true)) : null,
                     reply ? h('div', { class: 'acc-quote' }, h('b', { text: nameOf(reply) }), reply.text.slice(0, 120)) : null,
                     h('div', { class: 'acc-text', text: m.text }),
-                    h('div', { class: 'acc-time', text: fmtTime(m.created) }),
+                    h('div', { class: 'acc-time', text: (pinned && pinned.id === m.id ? '📌 ' : '') + (m.edited ? 'edited · ' : '') + fmtTime(m.created) }),
                     actions));
         }
 
@@ -287,22 +483,30 @@
             msgs = msgs.filter(function (m) { if (gone[m.id]) { delete byId[m.id]; return false; } return true; });
             if (msgs.length !== before) render();
         }
+        // returns true when something changed
+        function applyEdits(list) {
+            var changed = false;
+            (list || []).forEach(function (e) { var m = byId[e.id]; if (m && m.edited !== e.edited) { m.text = e.text; m.edited = e.edited; changed = true; } });
+            return changed;
+        }
         function poll() {
             var f = { room: roomId }; if (last) f.after = last;
             call('chat', f).then(function (r) {
-                remove(r.deleted); add(r.messages || []);
+                if (r.room) setInfo(r.room);
+                var changed = false;
+                if (r.people) { if (JSON.stringify(r.people) !== JSON.stringify(people)) changed = true; people = r.people; }
+                var pid = r.pinned ? r.pinned.id : null;
+                if (pid !== (pinned && pinned.id) || (pinned && r.pinned && pinned.text !== r.pinned.text)) { pinned = r.pinned || null; drawPin(); changed = true; }
+                remove(r.deleted);
+                var n = msgs.length;
+                add(r.messages || []);
+                if (applyEdits(r.edited)) changed = true;
+                if (changed && msgs.length === n) render();
                 if (!msgs.length) render();
                 showErr(err, null);
             }).catch(function (e) { showErr(err, e); })
               .then(function () { if (decodeURIComponent(location.hash.replace('#', '')) === roomId) pollTimer = setTimeout(poll, document.hidden ? 15000 : 3000); });
         }
-        call('rooms').then(function (r) {
-            var rm = (r.rooms || []).filter(function (x) { return x.id === roomId; })[0];
-            if (!rm) return;
-            info = rm; title.textContent = (rm.emoji || '💬') + ' ' + rm.name;
-            var canPost = !rm.adminOnly || isAdmin();
-            composer.hidden = !canPost; readonly.hidden = canPost;
-        }).catch(function () {});
         poll();
     }
 
@@ -316,7 +520,7 @@
         var stats = h('div', { class: 'acc-stats' });
         root.appendChild(stats);
         root.appendChild(err);
-        var labels = [['users', 'Students'], ['activeToday', 'Active today'], ['activeWeek', 'Active this week'], ['newWeek', 'New this week'], ['messagesToday', 'Messages today'], ['banned', 'Banned']];
+        var labels = [['users', 'Students'], ['online', 'Online now'], ['activeToday', 'Active today'], ['activeWeek', 'Active this week'], ['newWeek', 'New this week'], ['messagesToday', 'Messages today'], ['rooms', 'Chat rooms'], ['banned', 'Banned']];
         call('adminStats').then(function (r) {
             labels.forEach(function (l) { stats.appendChild(h('div', { class: 'acc-stat' }, h('b', { text: String((r.stats || {})[l[0]] != null ? r.stats[l[0]] : '–') }), h('small', { text: l[1] }))); });
         }).catch(function (e) { showErr(err, e); });
@@ -330,7 +534,23 @@
                 .catch(function (e) { showErr(err, e); busy(annBtn, false, 'Send announcement'); });
         } }, h('h2', { text: '📣 Announcement' }), h('p', { class: 'acc-muted acc-small', text: 'Posted in Announcements; everyone with notifications on gets it.' }), ann, annBtn));
 
-        var q = h('input', { type: 'search', placeholder: 'Search username, name, email or ID' });
+        var roomBox = h('div', { class: 'acc-rooms' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        function drawRooms(rooms) {
+            while (roomBox.firstChild) roomBox.removeChild(roomBox.firstChild);
+            rooms.forEach(function (rm) {
+                roomBox.appendChild(h('button', { type: 'button', class: 'acc-room' + (rm.archived ? ' archived' : ''), onclick: function () { roomEditor(rm, drawRooms); } },
+                    h('span', { class: 'acc-emoji', text: rm.emoji || '💬' }),
+                    h('span', { class: 'acc-room-t' }, h('b', { text: rm.name }), h('small', { text: rm.about || '' })),
+                    rm.archived ? h('em', { text: 'Archived' }) : rm.locked ? h('em', { text: 'Locked' }) : rm.adminOnly ? h('em', { text: 'Admins post' }) : null));
+            });
+        }
+        root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: '💬 Chat rooms' }),
+            h('p', { class: 'acc-muted acc-small', text: 'Add, rename, lock, archive or delete rooms. Locked rooms can be read but not posted in; archived rooms are hidden from students.' }),
+            roomBox, h('button', { type: 'button', class: 'ab-btn tinted', text: '＋ New room', onclick: function () { roomEditor(null, drawRooms); } })));
+        call('rooms').then(function (r) { drawRooms(r.rooms || []); }).catch(function (e) { roomBox.textContent = e.message; });
+
+        var q = h('input', { type: 'search', placeholder: 'Search username, name, email, ID or phone' });
+        q.value = decodeURIComponent((location.hash || '').replace('#', ''));
         var filter = 'all';
         var chips = h('div', { class: 'acc-seg' }, [['all', 'All'], ['admins', 'Admins'], ['banned', 'Banned']].map(function (f) {
             return h('button', { type: 'button', class: f[0] === 'all' ? 'on' : '', text: f[1], onclick: function (ev) {
@@ -338,7 +558,7 @@
             } });
         }));
         var table = h('div', { class: 'acc-users' });
-        var users = [];
+        var users = [], open = {};
         root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Users' }), q, chips, table));
         function draw() {
             while (table.firstChild) table.removeChild(table.firstChild);
@@ -348,10 +568,21 @@
         }
         function userRow(u) {
             var me = u.id === user.id;
-            var detail = h('div', { class: 'acc-user-detail', hidden: true },
+            var detail = h('div', { class: 'acc-user-detail', hidden: !open[u.id] },
                 h('p', { class: 'acc-small' }, 'Email: ' + (u.email || '–') + ' · Uni ID: ' + (u.uniId || '–')),
-                h('p', { class: 'acc-small' }, 'Joined ' + fmtDate(u.created) + ' · Last seen ' + fmtDate(u.lastSeen)),
+                h('p', { class: 'acc-small' }, 'Phone: ' + (u.phone || '–') + (u.phone ? (u.showPhone ? ' (shown on profile)' : ' (private)') : '')),
+                h('p', { class: 'acc-small' }, 'Joined ' + fmtDate(u.created) + ' · ' + (u.online ? 'Online now' : 'Last seen ' + fmtDate(u.lastSeen))),
+                u.bio ? h('p', { class: 'acc-small', text: 'About: ' + u.bio }) : null,
                 u.banReason ? h('p', { class: 'acc-small', text: 'Ban reason: ' + u.banReason }) : null,
+                h('p', { class: 'acc-small' }, h('b', { text: 'Badges' })),
+                h('div', { class: 'acc-badge-pick' }, Object.keys(BADGES).map(function (k) {
+                    var on = (u.badges || []).indexOf(k) >= 0;
+                    return h('button', { type: 'button', class: 'acc-pill' + (on ? ' on' : ''), 'aria-pressed': String(on), text: BADGES[k][0] + ' ' + BADGES[k][1], onclick: function () {
+                        var list = (u.badges || []).filter(function (x) { return x !== k; });
+                        if (!on) list.push(k);
+                        call('adminSetBadges', { userId: u.id, badges: list }).then(function (r) { u.badges = r.badges; open[u.id] = 1; draw(); }).catch(function (e) { showErr(err, e); });
+                    } });
+                })),
                 h('div', { class: 'acc-actions' },
                     !me ? h('button', { type: 'button', class: 'ab-btn gray', text: u.banned ? 'Unban' : 'Ban', onclick: function () {
                         var reason = '';
@@ -370,15 +601,15 @@
                         if (window.confirm('Delete @' + u.username + '? This can’t be undone.')) act('adminDeleteUser', { userId: u.id });
                     } }) : null));
             return h('div', { class: 'acc-user' },
-                h('button', { type: 'button', class: 'acc-user-row', onclick: function () { detail.hidden = !detail.hidden; } },
-                    avatar(nameOf(u), u.color, 36, u.role === 'admin'),
-                    h('span', { class: 'acc-room-t' }, h('b', { text: nameOf(u) }), h('small', { text: '@' + u.username + (u.email ? ' · ' + u.email : '') })),
+                h('button', { type: 'button', class: 'acc-user-row', onclick: function () { detail.hidden = !detail.hidden; if (detail.hidden) delete open[u.id]; else open[u.id] = 1; } },
+                    avatar(nameOf(u), u.color, 36, u.role === 'admin', u.avatar, !!u.online),
+                    h('span', { class: 'acc-room-t' }, h('b', null, nameOf(u), ' ', badgeRow(u.badges, true)), h('small', { text: '@' + u.username + (u.email ? ' · ' + u.email : '') })),
                     u.banned ? h('em', { class: 'acc-banned', text: 'BANNED' }) : null),
                 detail);
         }
         function act(action, f) { call(action, f).then(load).catch(function (e) { showErr(err, e); }); }
         var t = null;
-        function load() { return call('adminUsers', { q: q.value.trim() }).then(function (r) { users = r.users || []; draw(); }).catch(function (e) { showErr(err, e); }); }
+        function load() { return call('adminUsers', { q: q.value.trim() }).then(function (r) { users = r.users || []; if (users.length === 1) open[users[0].id] = 1; draw(); }).catch(function (e) { showErr(err, e); }); }
         q.addEventListener('input', function () { clearTimeout(t); t = setTimeout(load, 400); });
         load();
 
