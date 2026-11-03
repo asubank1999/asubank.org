@@ -284,7 +284,7 @@ fun UploadScreen() {
         }
     }
 
-    Screen("Upload", back = false, large = true) { pad ->
+    Screen("Upload", large = true) { pad ->
         LazyColumn(Modifier.padding(pad)) {
             item {
                 Group(footer = "Files go to the shared ASU Bank Drive and are checked before they appear.") {

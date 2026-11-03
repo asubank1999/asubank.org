@@ -1,5 +1,9 @@
 package org.asubank.app
 
+import android.widget.Toast
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.filled.Delete
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -336,6 +340,9 @@ fun LatestScreen() {
     var state by remember { mutableStateOf(0) } // 0 loading, 2 done, 3 failed
     var q by rememberSaveable { mutableStateOf("") }
     var type by rememberSaveable { mutableStateOf("all") }
+    val user by Account.user.collectAsState()
+    val ctx = LocalContext.current
+    var deleting by remember { mutableStateOf<DriveResult?>(null) }
     suspend fun load() {
         val r = DriveSearch.latest()
         if (r != null) { files = r; state = 2 } else if (files.isEmpty()) state = 3
@@ -384,7 +391,11 @@ fun LatestScreen() {
                             Group(header = "$g · ${list.size}") {
                                 list.forEachIndexed { i, r ->
                                     if (i > 0) Divider()
-                                    MaterialRow(r.m, r.kind, meta = listOfNotNull(if (r.size > 0) formatBytes(r.size) else null, r.date.take(10).ifEmpty { null }).joinToString(" · "))
+                                    val meta = listOfNotNull(if (r.size > 0) formatBytes(r.size) else null, r.date.take(10).ifEmpty { null }).joinToString(" · ")
+                                    if (user?.isAdmin == true) Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Box(Modifier.weight(1f)) { MaterialRow(r.m, r.kind, meta = meta) }
+                                        IconButton(onClick = { deleting = r }) { Icon(Icons.Filled.Delete, "Delete upload", tint = MaterialTheme.colorScheme.error) }
+                                    } else MaterialRow(r.m, r.kind, meta = meta)
                                 }
                             }
                         }
@@ -394,6 +405,23 @@ fun LatestScreen() {
             }
             item { Spacer(Modifier.height(24.dp)) }
         }
+    }
+    deleting?.let { r ->
+        AlertDialog(
+            onDismissRequest = { deleting = null },
+            title = { Text("Delete this upload?") },
+            text = { Text("“${r.m.t}” moves to the Drive trash and disappears from ASU Bank.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    deleting = null
+                    scope.launch {
+                        try { adminDeleteUpload(r.m.u); MyUploads.remove(r.m.u); files = files.filter { it.m.u != r.m.u }; Toast.makeText(ctx, "Deleted", Toast.LENGTH_SHORT).show() }
+                        catch (e: ApiError) { Toast.makeText(ctx, e.message ?: "Couldn't delete", Toast.LENGTH_LONG).show() }
+                    }
+                }) { Text("Delete", color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = { TextButton(onClick = { deleting = null }) { Text("Cancel") } },
+        )
     }
 }
 

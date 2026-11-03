@@ -1,0 +1,322 @@
+package org.asubank.app
+
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.provider.Settings
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.work.Constraints
+import androidx.work.CoroutineWorker
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.put
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.time.Instant
+import java.util.concurrent.TimeUnit
+
+// Accounts, chat and admin, through the "ASU Bank Accounts" Apps Script (tools/apps-script/accounts-api.gs).
+// The iOS app and the website use the same API, so accounts, chat and admin actions are shared.
+
+class ApiError(message: String, val needCode: Boolean = false) : Exception(message)
+
+object AccountsApi {
+    const val URL = "https://script.google.com/macros/s/AKfycbzXDE0Km2mxL_gAJFqspZeaADtugupeLN0YQlkEbXnrCkSTKBfImW_lLCKF8_SMI0i_/exec"
+
+    /** POSTs {action, ...fields} as text/plain JSON and returns the reply when ok */
+    suspend fun call(action: String, fields: Map<String, Any?> = emptyMap(), token: String? = null): JsonObject = withContext(Dispatchers.IO) {
+        val body = buildJsonObject {
+            put("action", action)
+            if (token != null) put("token", token)
+            for ((k, v) in fields) when (v) {
+                null -> Unit
+                is Boolean -> put(k, v)
+                is Number -> put(k, v)
+                else -> put(k, v.toString())
+            }
+        }
+        val req = Request.Builder().url(URL)
+            .post(body.toString().toRequestBody("text/plain;charset=utf-8".toMediaType()))
+            .build()
+        val text = try {
+            Net.http.newCall(req).execute().use { it.body?.string() }
+        } catch (e: Exception) { null } ?: throw ApiError("Couldn't reach ASU Bank. Check your connection and try again.")
+        val o = runCatching { json.parseToJsonElement(text) as JsonObject }.getOrNull()
+            ?: throw ApiError("The server sent something unexpected. Try again.")
+        if (o.bool("ok")) return@withContext o
+        throw ApiError(o.str("error") ?: "Something went wrong.", o.bool("needCode"))
+    }
+}
+
+fun JsonObject.str(k: String): String? = (this[k] as? JsonPrimitive)?.contentOrNull
+fun JsonObject.bool(k: String): Boolean = (this[k] as? JsonPrimitive)?.booleanOrNull == true
+inline fun <reified T> JsonElement?.decodeAs(): T? = this?.let { runCatching { json.decodeFromJsonElement<T>(it) }.getOrNull() }
+
+// MARK: models
+
+@Serializable
+data class AbUser(
+    val id: String,
+    val username: String,
+    val displayName: String = "",
+    val role: String = "user",
+    val color: String = "#8C1D40",
+    val email: String? = null,
+    val uniId: String? = null,
+    val banned: Boolean? = null,
+    val banReason: String? = null,
+    val created: String? = null,
+    val lastSeen: String? = null,
+) {
+    val isAdmin get() = role == "admin"
+    val name get() = displayName.ifEmpty { username }
+    val initial get() = name.take(1).uppercase()
+}
+
+@Serializable
+data class ChatRoom(val id: String, val name: String, val emoji: String = "💬", val about: String = "", val adminOnly: Boolean? = null)
+
+@Serializable
+data class ChatMessage(
+    val id: String,
+    val room: String,
+    val userId: String,
+    val username: String,
+    val displayName: String = "",
+    val role: String = "user",
+    val text: String,
+    val created: String,
+    val replyTo: String? = null,
+    val color: String = "#8C1D40",
+) {
+    val instant: Instant get() = runCatching { Instant.parse(created) }.getOrDefault(Instant.now())
+}
+
+@Serializable
+data class ChatLatest(
+    val id: String,
+    val room: String,
+    val roomName: String? = null,
+    val displayName: String = "",
+    val username: String = "",
+    val userId: String = "",
+    val text: String = "",
+    val created: String = "",
+    val announcement: Boolean? = null,
+)
+
+fun hexColor(s: String?): androidx.compose.ui.graphics.Color =
+    runCatching { androidx.compose.ui.graphics.Color(0xFF000000 or s!!.removePrefix("#").toLong(16)) }.getOrDefault(Brand.accent)
+
+// MARK: session
+
+/** The signed-in account (token and profile kept in private app storage, so the app opens signed in offline) */
+object Account {
+    val user = MutableStateFlow<AbUser?>(null)
+    val rooms = MutableStateFlow(defaultRooms)
+    val signInShown = MutableStateFlow(false)
+    var token: String? = null
+        private set
+
+    val signedIn get() = user.value != null && token != null
+    val isAdmin get() = user.value?.isAdmin == true
+
+    private val defaultRooms get() = listOf(
+        ChatRoom("general", "General", "💬", "Say hi, ask anything about ASU"),
+        ChatRoom("help", "Study help", "🆘", "Stuck on something? Ask other students"),
+        ChatRoom("materials", "Materials", "📚", "Ask for or share study files"),
+        ChatRoom("announcements", "Announcements", "📣", "News from the ASU Bank team", adminOnly = true),
+    )
+
+    fun init() {
+        token = Saved.prefs.getString("account.token", null)
+        user.value = if (token == null) null else Saved.prefs.getString("account.user", null)?.let { runCatching { json.decodeFromString<AbUser>(it) }.getOrNull() }
+    }
+
+    suspend fun call(action: String, fields: Map<String, Any?> = emptyMap()): JsonObject = try {
+        AccountsApi.call(action, fields, token)
+    } catch (e: ApiError) {
+        val m = e.message ?: ""
+        if ("sign in again" in m || "banned" in m || "no longer exists" in m) signOutLocally()
+        throw e
+    }
+
+    private fun adopt(r: JsonObject) {
+        r.str("token")?.let { token = it; Saved.prefs.edit().putString("account.token", it).apply() }
+        r["user"].decodeAs<AbUser>()?.let { u ->
+            user.value = u
+            Saved.prefs.edit().putString("account.user", json.encodeToString(u)).apply()
+        }
+        r["rooms"].decodeAs<List<ChatRoom>>()?.takeIf { it.isNotEmpty() }?.let { rooms.value = it }
+    }
+
+    private fun device() = runCatching { Settings.Secure.getString(Disk.ctx.contentResolver, Settings.Secure.ANDROID_ID) }.getOrNull() ?: ""
+
+    suspend fun signIn(login: String, password: String) {
+        adopt(AccountsApi.call("login", mapOf("login" to login.trim(), "password" to password, "platform" to "android")))
+        refresh()
+        ChatNotifier.start(Disk.ctx)
+    }
+
+    suspend fun register(username: String, password: String, displayName: String, email: String, uniId: String, code: String) {
+        adopt(AccountsApi.call("register", mapOf(
+            "username" to username.trim(), "password" to password, "displayName" to displayName.trim(),
+            "email" to email.trim(), "uniId" to uniId.trim(), "code" to code.trim(), "platform" to "android", "device" to device(),
+        )))
+        refresh()
+        ChatNotifier.start(Disk.ctx)
+    }
+
+    /** Emails the admin code (only for the owner's username, email or university ID) */
+    suspend fun sendAdminCode(username: String, email: String, uniId: String): String =
+        AccountsApi.call("adminCode", mapOf("username" to username.trim(), "email" to email.trim(), "uniId" to uniId.trim())).str("sentTo") ?: "the owner's email"
+
+    suspend fun refresh() {
+        if (token == null) return
+        runCatching { adopt(call("me")) }
+    }
+
+    suspend fun updateProfile(displayName: String, email: String, uniId: String) =
+        adopt(call("updateProfile", mapOf("displayName" to displayName, "email" to email, "uniId" to uniId)))
+
+    suspend fun changePassword(old: String, new: String) { call("changePassword", mapOf("old" to old, "password" to new)); refresh() }
+
+    suspend fun deleteAccount(password: String) { call("deleteAccount", mapOf("password" to password)); signOutLocally() }
+
+    suspend fun signOut() { runCatching { AccountsApi.call("logout", token = token) }; signOutLocally() }
+
+    fun signOutLocally() {
+        token = null
+        user.value = null
+        Saved.prefs.edit().remove("account.token").remove("account.user").apply()
+        ChatNotifier.stop(Disk.ctx)
+    }
+}
+
+// MARK: notifications
+
+/**
+ * Notifications for new chat messages. The app checks the newest message every 25 seconds while it's open,
+ * and WorkManager checks about every 15 minutes in the background (there is no server push for a sideloaded APK).
+ */
+object ChatNotifier {
+    private const val CHANNEL = "chat"
+    private const val CHANNEL_ANN = "announcements"
+    private const val WORK = "chat-check"
+
+    /** 0 every new message, 1 announcements only, 2 off */
+    val mode = MutableStateFlow(0)
+    /** The room on screen, which never notifies */
+    @Volatile var openRoom: String? = null
+    /** Room to open from a tapped notification */
+    val pendingRoom = MutableStateFlow<String?>(null)
+
+    fun init(ctx: Context) {
+        mode.value = Saved.prefs.getInt("notify.mode", 0)
+        if (Build.VERSION.SDK_INT >= 26) {
+            val nm = ctx.getSystemService(NotificationManager::class.java)
+            nm.createNotificationChannel(NotificationChannel(CHANNEL, "Chat messages", NotificationManager.IMPORTANCE_DEFAULT).apply { description = "New messages in the student chat" })
+            nm.createNotificationChannel(NotificationChannel(CHANNEL_ANN, "Announcements", NotificationManager.IMPORTANCE_HIGH).apply { description = "News from the ASU Bank team" })
+        }
+    }
+
+    fun setMode(v: Int) { mode.value = v; Saved.prefs.edit().putInt("notify.mode", v).apply() }
+
+    fun start(ctx: Context) {
+        if (!Account.signedIn) return
+        val req = PeriodicWorkRequestBuilder<ChatWorker>(15, TimeUnit.MINUTES)
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .build()
+        WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(WORK, ExistingPeriodicWorkPolicy.KEEP, req)
+    }
+
+    fun stop(ctx: Context) { runCatching { WorkManager.getInstance(ctx).cancelUniqueWork(WORK) } }
+
+    fun canNotify(ctx: Context) = Build.VERSION.SDK_INT < 33 ||
+        ContextCompat.checkSelfPermission(ctx, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+
+    suspend fun check(ctx: Context) {
+        val token = Account.token ?: return
+        val r = runCatching { AccountsApi.call("latest", token = token) }.getOrNull() ?: return
+        r["latest"].decodeAs<ChatLatest>()?.let { deliver(ctx, it) }
+    }
+
+    /** Remembers what a room screen has shown, so it never notifies about it */
+    fun markSeen(created: String) {
+        val seen = Saved.prefs.getString("notify.lastSeen", "") ?: ""
+        if (created > seen) Saved.prefs.edit().putString("notify.lastSeen", created).apply()
+    }
+
+    private fun deliver(ctx: Context, l: ChatLatest) {
+        // first check after install: remember, don't notify
+        val seen = Saved.prefs.getString("notify.lastSeen", null)
+        markSeen(l.created)
+        if (seen == null || l.created <= seen) return
+        if (l.userId == Account.user.value?.id || l.room == openRoom) return
+        val ann = l.announcement == true
+        if (mode.value == 2 || (mode.value == 1 && !ann) || !canNotify(ctx)) return
+        val tap = PendingIntent.getActivity(
+            ctx, l.room.hashCode(),
+            Intent(ctx, MainActivity::class.java).putExtra("openRoom", l.room).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        val n = NotificationCompat.Builder(ctx, if (ann) CHANNEL_ANN else CHANNEL)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setColor(0xFF8C1D40.toInt())
+            .setContentTitle(if (ann) "📣 ${l.displayName}" else "New message from ${l.displayName.ifEmpty { l.username }}")
+            .setContentText(l.text)
+            .setSubText(l.roomName)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(l.text))
+            .setGroup(l.room)
+            .setAutoCancel(true)
+            .setContentIntent(tap)
+            .build()
+        runCatching { NotificationManagerCompat.from(ctx).notify(l.room.hashCode(), n) }
+    }
+}
+
+class ChatWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
+    override suspend fun doWork(): Result {
+        Disk.ctx = applicationContext
+        Saved.init(applicationContext)
+        if (Account.token == null) Account.init()
+        if (ChatNotifier.mode.value == 0) ChatNotifier.mode.value = Saved.prefs.getInt("notify.mode", 0)
+        ChatNotifier.check(applicationContext)
+        return Result.success()
+    }
+}
+
+/** Moves an upload to the Drive trash (admins; only files in the upload folder) */
+suspend fun adminDeleteUpload(url: String) {
+    val id = AB.driveId(url) ?: throw ApiError("This isn't a Google Drive file.")
+    Account.call("adminDeleteUpload", mapOf("fileId" to id))
+}
+
+fun JsonArray?.objects(): List<JsonObject> = this?.mapNotNull { it as? JsonObject } ?: emptyList()
+fun JsonElement?.prim(): String? = runCatching { this?.jsonPrimitive?.contentOrNull }.getOrNull()

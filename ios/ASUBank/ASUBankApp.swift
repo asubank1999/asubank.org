@@ -110,14 +110,20 @@ struct RootView: View {
             Button("Update") { if let u = config.storeURL { openURL(u) } }
             Button("Later", role: .cancel) {}
         } message: {
-            Text("ASU Bank \(config.latest ?? "") is out. You have \(AppConfig.current).\(config.notes.map { "
-
-" + $0 } ?? "")")
+            Text(updateMessage)
         }
         .task { await config.check() }
         .onChange(of: phase) { p in
             if p == .active { Task { await config.check() } }
         }
+    }
+}
+
+extension RootView {
+    var updateMessage: String {
+        var m = "ASU Bank " + (config.latest ?? "") + " is out. You have " + AppConfig.current + "."
+        if let n = config.notes, !n.isEmpty { m += "\n\n" + n }
+        return m
     }
 }
 

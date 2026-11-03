@@ -49,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
@@ -87,25 +88,60 @@ private val dark: ColorScheme = darkColorScheme(
     primary = Brand.accentDark, onPrimary = Color(0xFF3A0618),
     primaryContainer = Color(0xFF5A1530), onPrimaryContainer = Color(0xFFFFD9E3),
     secondary = Color(0xFFE3BDC8), secondaryContainer = Color(0xFF3A2C31),
-    background = Color.Black, onBackground = Color(0xFFF2F2F7),
-    surface = Color.Black, onSurface = Color(0xFFF2F2F7),
-    surfaceContainerLowest = Color(0xFF1C1C1E), surfaceContainerLow = Color(0xFF1C1C1E),
-    surfaceContainer = Color(0xFF1C1C1E), surfaceContainerHigh = Color(0xFF2C2C2E),
+    background = Color(0xFF141416), onBackground = Color(0xFFF2F2F7),
+    surface = Color(0xFF141416), onSurface = Color(0xFFF2F2F7),
+    surfaceContainerLowest = Color(0xFF1F1F22), surfaceContainerLow = Color(0xFF1F1F22),
+    surfaceContainer = Color(0xFF232326), surfaceContainerHigh = Color(0xFF2E2E32),
     surfaceVariant = Color(0xFF2C2C2E), onSurfaceVariant = Color(0xFFA1A1AA),
-    outlineVariant = Color(0xFF38383A),
+    outlineVariant = Color(0xFF3A3A3E),
 )
 
+/** Pitch black for OLED screens: true black backgrounds, near-black cards */
+private val black: ColorScheme = dark.copy(
+    background = Color.Black, surface = Color.Black,
+    surfaceContainerLowest = Color(0xFF0E0E10), surfaceContainerLow = Color(0xFF0E0E10),
+    surfaceContainer = Color(0xFF111113), surfaceContainerHigh = Color(0xFF1C1C1E),
+    surfaceVariant = Color(0xFF1C1C1E), outlineVariant = Color(0xFF2A2A2D),
+)
+
+data class AccentChoice(val id: Int, val name: String, val light: Long, val dark: Long)
+
 object Prefs {
-    /** 0 system, 1 light, 2 dark */
+    /** 0 match the phone, 1 light, 2 dark, 3 pitch black (OLED) */
     val appearance = MutableStateFlow(0)
+    val accent = MutableStateFlow(0)
+    val accents = listOf(
+        AccentChoice(0, "ASU maroon", 0xFF8C1D40, 0xFFFF6F9A),
+        AccentChoice(1, "Ocean", 0xFF0A63C9, 0xFF4DA3FF),
+        AccentChoice(2, "Forest", 0xFF1F7A3A, 0xFF4CD07A),
+        AccentChoice(3, "Violet", 0xFF6E3FD1, 0xFFB18CFF),
+        AccentChoice(4, "Sunset", 0xFFD2510A, 0xFFFF9A52),
+        AccentChoice(5, "Teal", 0xFF00847F, 0xFF3FD6CF),
+        AccentChoice(6, "Graphite", 0xFF3A3A3C, 0xFFD1D1D6),
+    )
     fun setAppearance(v: Int) { appearance.value = v; Saved.prefs.edit().putInt("appearance", v).apply() }
+    fun setAccent(v: Int) { accent.value = v; Saved.prefs.edit().putInt("accent", v).apply() }
+}
+
+@Composable
+fun isDarkTheme(): Boolean {
+    val a by Prefs.appearance.collectAsState()
+    return when (a) { 1 -> false; 2, 3 -> true; else -> isSystemInDarkTheme() }
 }
 
 @Composable
 fun AsuTheme(content: @Composable () -> Unit) {
     val a by Prefs.appearance.collectAsState()
-    val isDark = when (a) { 1 -> false; 2 -> true; else -> isSystemInDarkTheme() }
-    MaterialTheme(colorScheme = if (isDark) dark else light, content = content)
+    val ac by Prefs.accent.collectAsState()
+    val isDark = isDarkTheme()
+    val base = if (!isDark) light else if (a == 3) black else dark
+    val choice = Prefs.accents.firstOrNull { it.id == ac } ?: Prefs.accents[0]
+    val scheme = if (choice.id == 0) base else {
+        val p = Color(if (isDark) choice.dark else choice.light)
+        if (isDark) base.copy(primary = p, onPrimary = Color.Black, primaryContainer = lerp(Color.Black, p, 0.32f), onPrimaryContainer = lerp(Color.White, p, 0.2f))
+        else base.copy(primary = p, onPrimary = Color.White, primaryContainer = lerp(Color.White, p, 0.16f), onPrimaryContainer = lerp(Color.Black, p, 0.6f))
+    }
+    MaterialTheme(colorScheme = scheme, content = content)
 }
 
 val accent: Color @Composable get() = MaterialTheme.colorScheme.primary
@@ -118,6 +154,8 @@ object Routes {
     const val UPLOAD = "upload"
     const val SAVED = "saved"
     const val MORE = "more"
+    const val CHAT = "chat"
+    const val ADMIN = "admin"
 }
 
 val LocalNav = staticCompositionLocalOf<NavController> { error("no nav") }

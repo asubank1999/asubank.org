@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status bar icon: the three books from the launcher icon -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="60" android:viewportHeight="60"
+    android:tint="#FFFFFF">
+    <group android:translateX="-30" android:translateY="-24">
+        <path android:fillColor="#FFFFFF" android:pathData="M36,38h9a2,2 0,0 1,2 2v30a2,2 0,0 1,-2 2h-9a2,2 0,0 1,-2 -2v-30a2,2 0,0 1,2 -2z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M51,34h9a2,2 0,0 1,2 2v34a2,2 0,0 1,-2 2h-9a2,2 0,0 1,-2 -2v-34a2,2 0,0 1,2 -2z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M64.6,38.6l8.6,-2.4a2,2 0,0 1,2.5 1.4l8.3,30.2a2,2 0,0 1,-1.4 2.5l-8.6,2.4a2,2 0,0 1,-2.5 -1.4l-8.3,-30.2a2,2 0,0 1,1.4 -2.5z" />
+    </group>
+</vector>

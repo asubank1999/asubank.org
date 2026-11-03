@@ -1,5 +1,10 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Slideshow
+import androidx.compose.material.icons.filled.CloudUpload
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.AccountCircle
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -252,10 +257,10 @@ fun HomeScreen() {
 // MARK: Saved
 
 @Composable
-fun SavedScreen() {
+fun SavedScreen(back: Boolean = false) {
     val saved by Saved.saved.collectAsState()
     val recent by Saved.recent.collectAsState()
-    Screen("Saved", back = false, large = true, actions = {
+    Screen("Saved", back = back, large = true, actions = {
         if (recent.isNotEmpty()) TextButton(onClick = { Saved.clearRecent() }) { Text("Clear recent") }
     }) { pad ->
         LazyColumn(Modifier.padding(pad)) {
@@ -284,6 +289,7 @@ fun MoreScreen() {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     val appearance by Prefs.appearance.collectAsState()
+    val user by Account.user.collectAsState()
     val donate by AppConfig.donate.collectAsState()
     val latest by AppConfig.latest.collectAsState()
     val checking by AppConfig.checking.collectAsState()
@@ -298,12 +304,25 @@ fun MoreScreen() {
     Screen("More", back = false, large = true) { pad ->
         LazyColumn(Modifier.padding(pad)) {
             item {
-                Group(header = "Appearance") {
-                    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(12.dp)) {
-                        listOf("Automatic", "Light", "Dark").forEachIndexed { i, label ->
-                            SegmentedButton(selected = appearance == i, onClick = { Prefs.setAppearance(i) }, shape = SegmentedButtonDefaults.itemShape(i, 3)) { Text(label) }
+                Group(header = "You") {
+                    val u = user
+                    if (u != null) Row(
+                        Modifier.fillMaxWidth().clickable { nav.navigate("account") }.padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp),
+                    ) {
+                        Avatar(u.name, u.color, 44.dp, u.isAdmin)
+                        Column(Modifier.weight(1f)) {
+                            Text(u.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                            Text("@${u.username}" + if (u.isAdmin) " · Admin" else "", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-                    }
+                    } else ListRow("Sign in or create an account", "Chat with students, synced with asubank.org", icon = Icons.Filled.AccountCircle) { Account.signInShown.value = true }
+                    Divider()
+                    ListRow("Theme", listOf("Match my phone", "Light", "Dark", "Pitch black")[appearance.coerceIn(0, 3)], icon = Icons.Filled.Palette) { nav.navigate("theme") }
+                    Divider()
+                    ListRow("Upload files", icon = Icons.Filled.CloudUpload) { nav.openTab(Routes.UPLOAD) }
+                    if (u?.isAdmin == true) { Divider(); ListRow("Saved", icon = Icons.Filled.Star) { nav.navigate("savedList") } }
+                    Divider()
+                    ListRow("Student submissions", "Presentations for the campus screen", icon = Icons.Filled.Slideshow) { nav.navigate("submissions?admin=") }
                 }
             }
             item {

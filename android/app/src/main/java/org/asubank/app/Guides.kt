@@ -1,5 +1,15 @@
 package org.asubank.app
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -357,6 +367,10 @@ fun ThanksScreen(page: SitePage?) {
     val ctx = LocalContext.current
     val names = page?.b?.firstNotNullOfOrNull { it.list } ?: listOf("Qusai", "Lina", "Hxcker", "Osama", "Sama", "اعشق تمردي")
     val palette = listOf(0xFF8C1D40, 0xFF0A84FF, 0xFF1F8A3E, 0xFFAF52DE, 0xFFE8590C, 0xFFFF2D55, 0xFF5E5CE6, 0xFF00A3A3)
+    val items by Library.items.collectAsState()
+    val subjects by Library.subjects.collectAsState()
+    var shown by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { shown = true }
     Screen("Thanks list") { pad ->
         LazyVerticalGrid(
             GridCells.Adaptive(130.dp), Modifier.padding(pad).fillMaxSize(),
@@ -373,9 +387,37 @@ fun ThanksScreen(page: SitePage?) {
                     Text("شكراً لكل من ساهم في بناء المنصة", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    listOf("${items.size}" to "Materials", "${subjects.size}" to "Subjects", "${names.size + 1}" to "Helpers").forEach { (n, l) ->
+                        Surface(shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.weight(1f)) {
+                            Column(Modifier.padding(vertical = 12.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(n, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = accent)
+                                Text(l, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                    }
+                }
+            }
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                // the founder, above everyone else
+                Surface(shape = RoundedCornerShape(20.dp), color = Color.Transparent) {
+                    Row(
+                        Modifier.fillMaxWidth().background(Brush.linearGradient(listOf(Brand.accent, Color(0xFFB8336A))), RoundedCornerShape(20.dp)).padding(18.dp),
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp),
+                    ) {
+                        Box(Modifier.size(60.dp).clip(CircleShape).background(Brand.gold), contentAlignment = Alignment.Center) { Text("👑", fontSize = 28.sp) }
+                        Column(Modifier.weight(1f)) {
+                            Text("Alan", color = Color.White, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                            Text("Founder · builds and runs ASU Bank", color = Color.White.copy(alpha = 0.85f), style = MaterialTheme.typography.bodyMedium)
+                        }
+                    }
+                }
+            }
             itemsIndexed(names) { i, n ->
                 val c = Color(palette[i % palette.size])
-                Surface(shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.surfaceContainer) {
+                val t by animateFloatAsState(if (shown) 1f else 0f, tween(420, delayMillis = 60 * (i % 12)), label = "card")
+                Surface(shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.graphicsLayer { alpha = t; scaleX = 0.85f + 0.15f * t; scaleY = 0.85f + 0.15f * t }) {
                     Column(Modifier.fillMaxWidth().padding(vertical = 18.dp, horizontal = 8.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Box(
                             Modifier.size(64.dp).clip(CircleShape).background(Brush.linearGradient(listOf(c.copy(alpha = 0.75f), c)))
@@ -383,7 +425,7 @@ fun ThanksScreen(page: SitePage?) {
                             contentAlignment = Alignment.Center,
                         ) { Text(n.take(1).uppercase(), color = Color.White, fontSize = 26.sp, fontWeight = FontWeight.Bold) }
                         Text(n, fontWeight = FontWeight.SemiBold, maxLines = 1)
-                        Text(if (i == 0) "⭐ Founding contributor" else "Contributor", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(if (i == 0) "⭐ First contributor" else "Contributor", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }

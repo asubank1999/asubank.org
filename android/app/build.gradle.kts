@@ -19,7 +19,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = (System.getenv("BUILD_NUMBER") ?: "1").toInt()
-        versionName = "1.4.0"
+        versionName = "1.5.0"
     }
 
     signingConfigs {
@@ -71,4 +71,6 @@ dependencies {
     // compiles the Compose code ahead of time on install, so the sideloaded APK scrolls smoothly from the first launch
     implementation("androidx.profileinstaller:profileinstaller:1.4.1")
     implementation("androidx.webkit:webkit:1.12.1")
+    // background checks for new chat messages
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
 }

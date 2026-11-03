@@ -1,5 +1,13 @@
 package org.asubank.app
 
+import kotlinx.coroutines.delay
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Forum
+import androidx.compose.animation.AnimatedVisibility
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.compose.rememberLauncherForActivityResult
+import android.os.Build
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -98,11 +106,18 @@ class MainActivity : ComponentActivity() {
         Saved.init(applicationContext)
         DriveLinks.init()
         Prefs.appearance.value = Saved.prefs.getInt("appearance", 0)
+        Prefs.accent.value = Saved.prefs.getInt("accent", 0)
+        Account.init()
+        ChatNotifier.init(applicationContext)
+        ChatNotifier.start(applicationContext)
+        intent?.getStringExtra("openRoom")?.let { ChatNotifier.pendingRoom.value = it }
         // CI screenshots: --es startTab search --es startQuery calculus --ez acceptTerms true
         intent?.getStringExtra("startQuery")?.let { AppState.pendingSearch.value = it }
         if (intent?.getBooleanExtra("acceptTerms", false) == true) Saved.prefs.edit().putBoolean(TERMS_KEY, true).apply()
         intent?.getIntExtra("appearance", -1)?.takeIf { it >= 0 }?.let { Prefs.appearance.value = it }
         val startTab = intent?.getStringExtra("startTab")
+        if (intent?.getStringExtra("openRoom") != null) splashDone = true
+        if (startTab != null || intent?.hasExtra("startPath") == true || intent?.getBooleanExtra("noSplash", false) == true) splashDone = true
         incoming.value = intent?.dataString ?: intent?.getStringExtra("startPath")?.let { AB.SITE + it }
         if (intent?.getBooleanExtra("rateIntro", false) == true) Saved.prefs.edit().putBoolean("rate.intro.v1", true).apply()
         if (intent?.getBooleanExtra("matcherIntro", false) == true) Saved.prefs.edit().putBoolean("matcher.intro.v1", true).apply()
@@ -111,9 +126,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        intent.getStringExtra("openRoom")?.let { ChatNotifier.pendingRoom.value = it }
         incoming.value = intent.dataString
     }
 }
+
+/** The logo splash shows once per process start */
+var splashDone = false
 
 const val TERMS_KEY = "terms.accepted.v1"
 
@@ -122,10 +141,13 @@ private data class Tab(val route: String, val label: String, val icon: ImageVect
 private val tabs = listOf(
     Tab(Routes.HOME, "Home", Icons.Filled.Home),
     Tab(Routes.SEARCH, "Search", Icons.Filled.Search),
-    Tab(Routes.UPLOAD, "Upload", Icons.Filled.CloudUpload),
+    Tab(Routes.CHAT, "Chat", Icons.Filled.Forum),
     Tab(Routes.SAVED, "Saved", Icons.Filled.Star),
     Tab(Routes.MORE, "More", Icons.Filled.MoreHoriz),
 )
+
+/** Admins get the Admin tab in place of Saved (Saved moves to More) */
+private val adminTabs = tabs.map { if (it.route == Routes.SAVED) Tab(Routes.ADMIN, "Admin", Icons.Filled.Shield) else it }
 
 @Composable
 fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
@@ -139,7 +161,23 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     val offerUpdate by AppConfig.offerUpdate.collectAsState()
     val link by incoming.collectAsState()
     var lastTab by remember { mutableStateOf(Routes.HOME) }
-    LaunchedEffect(route) { if (tabs.any { it.route == route }) lastTab = route ?: Routes.HOME }
+    val user by Account.user.collectAsState()
+    val signInShown by Account.signInShown.collectAsState()
+    val pendingRoom by ChatNotifier.pendingRoom.collectAsState()
+    val barTabs = if (user?.isAdmin == true) adminTabs else tabs
+    var splash by remember { mutableStateOf(!splashDone) }
+    LaunchedEffect(Unit) { if (splash) { delay(1500); splashDone = true; splash = false } }
+    LaunchedEffect(route) { if ((tabs + adminTabs).any { it.route == route }) lastTab = route ?: Routes.HOME }
+    LaunchedEffect(pendingRoom) { if (pendingRoom != null && route != Routes.CHAT) nav.openTab(Routes.CHAT) }
+    // Android 13+ asks before showing notifications
+    val askNotify = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    LaunchedEffect(user?.id) {
+        if (user != null && Build.VERSION.SDK_INT >= 33 && !ChatNotifier.canNotify(ctx) && !Saved.prefs.getBoolean("notify.asked", false)) {
+            Saved.prefs.edit().putBoolean("notify.asked", true).apply()
+            askNotify.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        if (user != null) ChatNotifier.start(ctx)
+    }
 
     LaunchedEffect(Unit) {
         launch { Library.load(); if (DriveLinks.refresh()) Library.reindex() }
@@ -148,6 +186,13 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     // Check for a new version on launch and whenever the app comes back
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(lifecycle) { lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) { AppConfig.check() } }
+    // New chat messages while the app is open (the background worker covers the rest)
+    LaunchedEffect(lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            Account.refresh()
+            while (true) { if (Account.signedIn) ChatNotifier.check(ctx); delay(25_000) }
+        }
+    }
     LaunchedEffect(startTab) { if (startTab != null && startTab != Routes.HOME) nav.openTab(startTab) }
     LaunchedEffect(link) {
         val l = link ?: return@LaunchedEffect
@@ -163,7 +208,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
             contentWindowInsets = WindowInsets(0),
             bottomBar = {
                 NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
-                    tabs.forEach { t ->
+                    barTabs.forEach { t ->
                         val selected = lastTab == t.route
                         NavigationBarItem(
                             selected = selected,
@@ -176,7 +221,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 }
             },
         ) { pad ->
-            val tabRoutes = remember { tabs.map { it.route }.toSet() }
+            val tabRoutes = remember { (tabs + adminTabs).map { it.route }.toSet() + Routes.UPLOAD }
             fun AnimatedContentTransitionScope<NavBackStackEntry>.betweenTabs() =
                 initialState.destination.route in tabRoutes && targetState.destination.route in tabRoutes
             NavHost(
@@ -192,6 +237,18 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable(Routes.UPLOAD) { UploadScreen() }
                 composable(Routes.SAVED) { SavedScreen() }
                 composable(Routes.MORE) { MoreScreen() }
+                composable(Routes.CHAT) { ChatTab() }
+                composable(Routes.ADMIN) { if (user?.isAdmin == true) AdminTab() else SignInPrompt("Admins only", "Sign in with an admin account to manage ASU Bank.") }
+                composable("room/{id}") { e -> ChatRoomScreen(e.arguments?.getString("id") ?: "general") }
+                composable("account") { AccountScreen() }
+                composable("theme") { ThemeScreen() }
+                composable("savedList") { SavedScreen(back = true) }
+                composable("adminUsers") { AdminUsersScreen() }
+                composable("adminUser") { AdminUserScreen() }
+                composable("adminLog") { AdminLogScreen() }
+                composable("submissions?admin={admin}", listOf(navArgument("admin") { defaultValue = "" })) { e ->
+                    SubmissionsScreen(admin = e.arguments?.getString("admin") == "1" && user?.isAdmin == true)
+                }
                 composable(
                     "material?u={u}&t={t}&s={s}",
                     listOf(navArgument("u") { type = NavType.StringType; defaultValue = "" }, navArgument("t") { defaultValue = "" }, navArgument("s") { defaultValue = "" }),
@@ -211,10 +268,12 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
             }
         }
 
+        if (signInShown) SignInDialog(onClose = { Account.signInShown.value = false })
+
         if (mustUpdate) UpdateRequired()
         else if (!accepted) WelcomeTerms(onAccept = { Saved.prefs.edit().putBoolean(TERMS_KEY, true).apply(); accepted = true })
 
-        if (offerUpdate && !mustUpdate) {
+        if (offerUpdate && !mustUpdate && !splash) {
             AlertDialog(
                 onDismissRequest = { AppConfig.offerUpdate.value = false },
                 icon = { Icon(Icons.Filled.SystemUpdate, null) },
@@ -226,6 +285,8 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 dismissButton = { TextButton(onClick = { AppConfig.offerUpdate.value = false }) { Text("Later") } },
             )
         }
+
+        AnimatedVisibility(visible = splash, enter = fadeIn(), exit = fadeOut(tween(350))) { Splash() }
     }
 }
 

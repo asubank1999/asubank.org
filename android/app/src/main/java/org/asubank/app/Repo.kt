@@ -289,6 +289,11 @@ object MyUploads {
         val list = (listOf(Item(name, url, now)) + all().filter { it.url != url }).take(50)
         Saved.prefs.edit().putString(KEY, json.encodeToString(list)).apply()
     }
+
+    fun remove(url: String) {
+        val id = AB.driveId(url) ?: url
+        Saved.prefs.edit().putString(KEY, json.encodeToString(all().filter { (AB.driveId(it.url) ?: it.url) != id })).apply()
+    }
 }
 
 /**
