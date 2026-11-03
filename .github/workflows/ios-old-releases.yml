@@ -1,6 +1,7 @@
 # One-time job: publishes the earlier app versions as GitHub Releases, using the unsigned IPAs
 # their builds already made (kept as workflow artifacts). Skips any version that already has a release.
 # Newer versions are released by ios.yml when a tag like ios-v1.3.0 is pushed.
+# The tags themselves are pushed from a maintainer machine (the workflow token may not create them).
 name: iOS old releases
 
 on:
