@@ -15,6 +15,11 @@ on:
     tags: ['android-v*']
   workflow_dispatch:
 
+# a newer push replaces a running build (they would race to push the screenshots branch)
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest

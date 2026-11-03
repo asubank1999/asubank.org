@@ -138,6 +138,10 @@ struct SitePageView: View {
             SubjectView(subject: s)
         } else if SiteRouter.latestPaths.contains(path) {
             LatestScreen()
+        } else if path == "/guides/halls" || path == "/guides/colleges_hall" {
+            HallsScreen()
+        } else if path == "/requests/portal_to_rating" || path == "/requests/rating" {
+            TeacherRatingsScreen()
         } else if let page = pages.page(path) {
             if let cal = page.cal, !cal.isEmpty {
                 CalendarScreen(title: page.t, path: path, events: cal)

@@ -21,6 +21,11 @@ on:
         type: boolean
         default: false
 
+# a newer push replaces a running build (they would race to push the screenshots branch)
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: macos-15
