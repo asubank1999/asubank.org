@@ -45,7 +45,6 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -96,6 +95,9 @@ fun SitePageScreen(path: String, title: String) {
         path == "/requests/student_ads" -> StudentAdsScreen()
         path == "/apps/donate" -> DonateScreen()
         path == "/app/theme" -> ThemeScreen()
+        path == "/app/language" -> LanguageScreen()
+        path == "/requests/service_rating" -> ServiceRatingScreen()
+        path == "/apps/voting" -> VotingScreen()
         path in setOf("/upload/submit_file", "/upload/student_submissions_board", "/upload/submissions") -> SubmissionsScreen()
         path == "/apps/adminpanel_subs" -> SubmissionsScreen(admin = Account.isAdmin)
         path in setOf("/account", "/account/", "/account/index") -> AccountScreen()

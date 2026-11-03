@@ -3,6 +3,7 @@ package org.asubank.app
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Slideshow
 import androidx.compose.material.icons.filled.CloudUpload
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.AccountCircle
 import android.content.ClipData
@@ -57,7 +58,6 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -310,7 +310,7 @@ fun MoreScreen() {
                         Modifier.fillMaxWidth().clickable { nav.navigate("account") }.padding(horizontal = 16.dp, vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp),
                     ) {
-                        Avatar(u.name, u.color, 44.dp, u.isAdmin)
+                        Avatar(u.name, u.color, 44.dp, u.isAdmin, u.avatar)
                         Column(Modifier.weight(1f)) {
                             Text(u.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                             Text("@${u.username}" + if (u.isAdmin) " · Admin" else "", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -318,6 +318,8 @@ fun MoreScreen() {
                     } else ListRow("Sign in or create an account", "Chat with students, synced with asubank.org", icon = Icons.Filled.AccountCircle) { Account.signInShown.value = true }
                     Divider()
                     ListRow("Theme", listOf("Match my phone", "Light", "Dark", "Pitch black")[appearance.coerceIn(0, 3)], icon = Icons.Filled.Palette) { nav.navigate("theme") }
+                    Divider()
+                    ListRow("Language", tr(Lang.choices.first { it.first == Lang.choice.value }.second), icon = Icons.Filled.Language) { nav.navigate("language") }
                     Divider()
                     ListRow("Upload files", icon = Icons.Filled.CloudUpload) { nav.openTab(Routes.UPLOAD) }
                     if (u?.isAdmin == true) { Divider(); ListRow("Saved", icon = Icons.Filled.Star) { nav.navigate("savedList") } }

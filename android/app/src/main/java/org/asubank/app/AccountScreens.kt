@@ -1,6 +1,29 @@
 package org.asubank.app
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Base64
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Campaign
+import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Tag
+import androidx.compose.material.icons.filled.UploadFile
+import androidx.compose.material.icons.automirrored.filled.Reply
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Switch
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
+import java.io.ByteArrayOutputStream
+import java.time.Duration
+import java.time.Instant
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +66,6 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -70,16 +92,141 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.launch
 
+/** A round avatar: the profile photo, or the first letter on the user's color. `online` adds a green or grey dot. */
 @Composable
-fun Avatar(name: String, color: String, size: Dp = 40.dp, admin: Boolean = false) {
+fun Avatar(name: String, color: String, size: Dp = 40.dp, admin: Boolean = false, photo: String? = null, online: Boolean? = null) {
     Box {
         Box(Modifier.size(size).clip(CircleShape).background(hexColor(color)), contentAlignment = Alignment.Center) {
             Text(name.take(1).uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = (size.value * 0.42f).sp)
+            if (!photo.isNullOrEmpty()) AsyncImage(photo, null, Modifier.matchParentSize(), contentScale = ContentScale.Crop)
         }
         if (admin) Box(
             Modifier.align(Alignment.BottomEnd).size(size * 0.4f).clip(CircleShape).background(Brand.gold),
             contentAlignment = Alignment.Center,
         ) { Icon(Icons.Filled.Shield, null, tint = Color.Black, modifier = Modifier.size(size * 0.26f)) }
+        if (online != null) Box(
+            Modifier.align(Alignment.TopEnd).size(maxOf(10.dp, size * 0.26f)).clip(CircleShape)
+                .background(if (online) Brand.green else Color.Gray)
+                .border(2.dp, MaterialTheme.colorScheme.background, CircleShape),
+        )
+    }
+}
+
+/** A user's badges: "🤝 Helper" pills, or just the emoji when compact */
+@Composable
+fun BadgeRow(badges: List<String>, compact: Boolean = false) {
+    if (badges.isEmpty()) return
+    Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+        badges.forEach { b ->
+            if (compact) Text(Badges.emoji(b), fontSize = 11.sp)
+            else Text(
+                "${Badges.emoji(b)} ${Badges.name(b)}", fontSize = 11.sp, fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.clip(RoundedCornerShape(50)).background(accent.copy(alpha = 0.12f)).padding(horizontal = 8.dp, vertical = 3.dp),
+            )
+        }
+    }
+}
+
+/** "Last seen 5 minutes ago" */
+fun lastSeenText(iso: String?): String {
+    val t = iso?.let { runCatching { Instant.parse(it) }.getOrNull() } ?: return tr("Offline")
+    val m = Duration.between(t, Instant.now()).toMinutes()
+    val ago = when {
+        m < 1 -> tr("just now")
+        m < 60 -> tr("%d min ago").format(m)
+        m < 60 * 24 -> tr("%d h ago").format(m / 60)
+        else -> tr("%d days ago").format(m / (60 * 24))
+    }
+    return tr("Last seen %s").format(ago)
+}
+
+/** Shrinks a picked photo to a 256 px square JPEG, as base64 */
+fun avatarJpeg(ctx: android.content.Context, uri: Uri): String? = runCatching {
+    val src = ctx.contentResolver.openInputStream(uri)!!.use { BitmapFactory.decodeStream(it) }
+    val side = minOf(src.width, src.height)
+    val square = Bitmap.createBitmap(src, (src.width - side) / 2, (src.height - side) / 2, side, side)
+    val small = Bitmap.createScaledBitmap(square, 256, 256, true)
+    val out = ByteArrayOutputStream()
+    small.compress(Bitmap.CompressFormat.JPEG, 82, out)
+    Base64.encodeToString(out.toByteArray(), Base64.NO_WRAP)
+}.getOrNull()
+
+@Composable
+fun SwitchRow(title: String, icon: androidx.compose.ui.graphics.vector.ImageVector?, checked: Boolean, onChange: (Boolean) -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().clickable { onChange(!checked) }.padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        if (icon != null) Icon(icon, null, tint = accent, modifier = Modifier.size(26.dp))
+        Text(title, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+        Switch(checked, onChange)
+    }
+}
+
+/** Someone's profile: photo, badges, bio, online or last seen, phone if they share it */
+@Composable
+fun ProfileScreen(userId: String) {
+    val nav = LocalNav.current
+    val ctx = LocalContext.current
+    var user by remember { mutableStateOf<AbUser?>(null) }
+    var error by remember { mutableStateOf<String?>(null) }
+    androidx.compose.runtime.LaunchedEffect(userId) {
+        try { user = Account.call("profile", mapOf("userId" to userId))["user"].decodeAs<AbUser>() } catch (e: ApiError) { error = e.message }
+    }
+    Screen(user?.name ?: tr("Profile")) { pad ->
+        LazyColumn(Modifier.padding(pad)) {
+            item {
+                Column(Modifier.fillMaxWidth().padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    val u = user
+                    if (u == null) { if (error == null) CircularProgressIndicator() else Text(error!!, color = MaterialTheme.colorScheme.error); return@Column }
+                    Avatar(u.name, u.color, 96.dp, u.isAdmin, u.avatar, u.online)
+                    Text(u.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                    Text("@${u.username}", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        if (u.online == true) tr("Online now") else lastSeenText(u.lastSeen), style = MaterialTheme.typography.bodySmall,
+                        color = if (u.online == true) Brand.green else MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    BadgeRow(u.badges)
+                    if (u.isAdmin) Badge(tr("ADMIN"), Brand.orange)
+                }
+            }
+            user?.let { u ->
+                if (!u.bio.isNullOrEmpty()) item { Group(header = tr("About")) { Text(u.bio, Modifier.padding(16.dp)) } }
+                if (!u.phone.isNullOrEmpty()) item {
+                    Group(header = tr("Phone")) {
+                        ListRow(u.phone, icon = Icons.Filled.Phone) {
+                            runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_DIAL, Uri.parse("tel:" + u.phone.filter { it.isDigit() || it == '+' }))) }
+                        }
+                        Divider()
+                        ListRow("WhatsApp", emoji = "💬") {
+                            runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://wa.me/" + u.phone.filter { it.isDigit() }))) }
+                        }
+                    }
+                }
+                if (Account.isAdmin && u.id != Account.user.value?.id) item {
+                    Group { ListRow(tr("Manage this user"), icon = Icons.Filled.Shield) { AdminSelection.user = u; nav.navigate("adminUser") } }
+                }
+            }
+        }
+    }
+}
+
+/** Which rooms may notify about new messages */
+@Composable
+fun MutedRoomsScreen() {
+    val rooms by Account.rooms.collectAsState()
+    val muted by ChatNotifier.muted.collectAsState()
+    Screen(tr("Rooms")) { pad ->
+        LazyColumn(Modifier.padding(pad)) {
+            item {
+                Group(footer = tr("Turn a room off to stop its message notifications. Replies to you still notify if that's on.")) {
+                    rooms.filter { it.archived != true && it.adminOnly != true }.forEachIndexed { i, r ->
+                        if (i > 0) Divider()
+                        SwitchRow("${r.emoji} ${r.name}", null, r.id !in muted) { on -> ChatNotifier.setMuted(r.id, !on) }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -216,7 +363,21 @@ fun AccountScreen() {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     val user by Account.user.collectAsState()
-    val mode by ChatNotifier.mode.collectAsState()
+    val nMessages by ChatNotifier.messages.collectAsState()
+    val nReplies by ChatNotifier.replies.collectAsState()
+    val nAnn by ChatNotifier.announcements.collectAsState()
+    val nUploads by ChatNotifier.uploads.collectAsState()
+    val muted by ChatNotifier.muted.collectAsState()
+    var photoMenu by remember { mutableStateOf(false) }
+    var photoBusy by remember { mutableStateOf(false) }
+    val pick = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) scope.launch {
+            photoBusy = true
+            val data = avatarJpeg(ctx, uri)
+            try { if (data != null) Account.setAvatar(data) } catch (e: ApiError) { Toast.makeText(ctx, e.message, Toast.LENGTH_LONG).show() }
+            photoBusy = false
+        }
+    }
     var editing by remember { mutableStateOf(false) }
     var changing by remember { mutableStateOf(false) }
     var deleting by remember { mutableStateOf(false) }
@@ -228,9 +389,27 @@ fun AccountScreen() {
         LazyColumn(Modifier.padding(pad)) {
             item {
                 Column(Modifier.fillMaxWidth().padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Avatar(u.name, u.color, 84.dp, u.isAdmin)
+                    Box {
+                        Box(Modifier.clip(CircleShape).clickable { photoMenu = true }) { Avatar(u.name, u.color, 96.dp, u.isAdmin, u.avatar) }
+                        Box(
+                            Modifier.align(Alignment.BottomStart).size(30.dp).clip(CircleShape).background(accent),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            if (photoBusy) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp, color = Color.White)
+                            else Icon(Icons.Filled.CameraAlt, tr("Change photo"), tint = Color.White, modifier = Modifier.size(17.dp))
+                        }
+                        DropdownMenu(photoMenu, { photoMenu = false }) {
+                            DropdownMenuItem(text = { Text("Choose a photo") }, onClick = { photoMenu = false; pick.launch("image/*") })
+                            if (!u.avatar.isNullOrEmpty()) DropdownMenuItem(text = { Text("Remove photo") }, onClick = {
+                                photoMenu = false
+                                scope.launch { photoBusy = true; runCatching { Account.setAvatar(null) }; photoBusy = false }
+                            })
+                        }
+                    }
                     Text(u.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                    Text("@${u.username}" + if (u.isAdmin) " · Admin" else "", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("@${u.username}" + if (u.isAdmin) " · " + tr("Admin") else "", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    BadgeRow(u.badges)
+                    if (!u.bio.isNullOrEmpty()) Text(u.bio, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
             item {
@@ -240,13 +419,33 @@ fun AccountScreen() {
                     ListRow("University email", trailing = u.email?.ifEmpty { null } ?: "–") { editing = true }
                     Divider()
                     ListRow("University ID", trailing = u.uniId?.ifEmpty { null } ?: "–") { editing = true }
+                    Divider()
+                    ListRow("Phone", trailing = u.phone?.ifEmpty { null }?.let { it + if (u.showPhone == true) "" else " 🔒" } ?: "–") { editing = true }
+                    Divider()
+                    ListRow("About", trailing = u.bio?.ifEmpty { null }?.take(24) ?: "–") { editing = true }
                 }
             }
             item {
-                Group(header = "Notifications", footer = "Android checks for new messages about every 15 minutes, and every few seconds while the app is open.") {
-                    listOf("Every new message", "Announcements only", "Off").forEachIndexed { i, l ->
-                        if (i > 0) Divider()
-                        ListRow(l, icon = if (i == 0) Icons.Filled.Notifications else null, trailing = if (mode == i) "✓" else null) { ChatNotifier.setMode(i) }
+                Group(header = "Notifications", footer = "Android checks about every 15 minutes, right when you open the app, and every few seconds while it's open.") {
+                    SwitchRow(tr("New chat messages"), Icons.Filled.Forum, nMessages) { ChatNotifier.set("messages", it) }
+                    Divider()
+                    SwitchRow(tr("Replies to me"), Icons.AutoMirrored.Filled.Reply, nReplies) { ChatNotifier.set("replies", it) }
+                    Divider()
+                    SwitchRow(tr("Announcements"), Icons.Filled.Campaign, nAnn) { ChatNotifier.set("announcements", it) }
+                    Divider()
+                    SwitchRow(tr("New uploaded files"), Icons.Filled.UploadFile, nUploads) { ChatNotifier.set("uploads", it) }
+                    if (nMessages) {
+                        Divider()
+                        ListRow("Rooms", icon = Icons.Filled.Tag, trailing = if (muted.isEmpty()) tr("All") else tr("%d muted").format(muted.size)) { nav.navigate("mutedRooms") }
+                    }
+                    if (!ChatNotifier.canNotify(ctx)) {
+                        Divider()
+                        ListRow(tr("Notifications are off for ASU Bank"), tr("Tap to turn them on in Android settings"), icon = Icons.Filled.Notifications, titleColor = MaterialTheme.colorScheme.error) {
+                            runCatching {
+                                ctx.startActivity(android.content.Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                    .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, ctx.packageName))
+                            }
+                        }
                     }
                 }
             }
@@ -267,19 +466,29 @@ fun AccountScreen() {
         var name by remember { mutableStateOf(u.displayName) }
         var email by remember { mutableStateOf(u.email ?: "") }
         var uni by remember { mutableStateOf(u.uniId ?: "") }
+        var phone by remember { mutableStateOf(u.phone ?: "") }
+        var showPhone by remember { mutableStateOf(u.showPhone == true) }
+        var bio by remember { mutableStateOf(u.bio ?: "") }
         var err by remember { mutableStateOf<String?>(null) }
         AlertDialog(
             onDismissRequest = { editing = false },
             title = { Text("Edit profile") },
             text = {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Field(name, { name = it }, "Display name")
+                    Field(bio, { if (it.length <= 160) bio = it }, "A line about you (optional)")
+                    Field(phone, { phone = it }, "Phone number (optional)", keyboard = KeyboardType.Phone)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Show my number on my profile", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+                        Switch(showPhone, { showPhone = it })
+                    }
                     Field(email, { email = it }, "University email (optional)", keyboard = KeyboardType.Email)
                     Field(uni, { uni = it }, "University ID (optional)", keyboard = KeyboardType.Number)
+                    Text("Only admins see your email, ID and number (unless you show the number).", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     err?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                 }
             },
-            confirmButton = { TextButton(onClick = { scope.launch { try { Account.updateProfile(name, email, uni); editing = false } catch (e: ApiError) { err = e.message } } }) { Text("Save") } },
+            confirmButton = { TextButton(onClick = { scope.launch { try { Account.updateProfile(name, email, uni, phone, showPhone, bio); editing = false } catch (e: ApiError) { err = e.message } } }) { Text("Save") } },
             dismissButton = { TextButton(onClick = { editing = false }) { Text("Cancel") } },
         )
     }

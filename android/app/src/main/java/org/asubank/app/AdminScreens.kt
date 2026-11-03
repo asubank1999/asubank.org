@@ -4,6 +4,18 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.collectAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +47,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -80,8 +91,8 @@ fun AdminTab() {
         } catch (e: ApiError) { error = e.message }
     }
     val tiles = listOf(
-        "users" to "Students", "activeToday" to "Active today", "activeWeek" to "Active this week",
-        "newWeek" to "New this week", "messagesToday" to "Messages today", "banned" to "Banned",
+        "users" to "Students", "online" to "Online now", "activeToday" to "Active today", "activeWeek" to "Active this week",
+        "newWeek" to "New this week", "messagesToday" to "Messages today", "banned" to "Banned", "rooms" to "Chat rooms",
     )
 
     Screen("Admin", back = false, large = true) { pad ->
@@ -109,6 +120,8 @@ fun AdminTab() {
                     Divider()
                     ListRow("Send an announcement", "Notifies everyone", icon = Icons.Filled.Campaign) { announcing = true }
                     Divider()
+                    ListRow("Chat rooms", "Add, rename, lock, archive or delete", icon = Icons.Filled.Forum) { nav.navigate("adminRooms") }
+                    Divider()
                     ListRow("Uploads", "Tap the bin next to an upload to delete it", icon = Icons.Filled.CloudUpload) { nav.openPage("/guides/latest", "Latest uploads") }
                     Divider()
                     ListRow("Student submissions", icon = Icons.Filled.ListAlt) { nav.navigate("submissions?admin=1") }
@@ -119,7 +132,7 @@ fun AdminTab() {
                 }
             }
             item {
-                Group(header = "Chat moderation", footer = "Open any chat room and long-press a message to delete it or ban its sender.") {
+                Group(header = "Chat moderation", footer = "Open any chat room and long-press a message to pin, delete it or ban its sender. Open a user to give them badges.") {
                     Account.rooms.value.forEachIndexed { i, r ->
                         if (i > 0) Divider()
                         ListRow(r.name, emoji = r.emoji) { nav.navigate("room/${r.id}") }
@@ -202,9 +215,12 @@ fun AdminUsersScreen() {
                             Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
-                            Avatar(u.name, u.color, 36.dp, u.isAdmin)
+                            Avatar(u.name, u.color, 36.dp, u.isAdmin, u.avatar, u.online)
                             Column(Modifier.weight(1f)) {
-                                Text(u.name, fontWeight = FontWeight.SemiBold)
+                                Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    Text(u.name, fontWeight = FontWeight.SemiBold)
+                                    BadgeRow(u.badges, compact = true)
+                                }
                                 Text("@${u.username}" + (u.email?.takeIf { it.isNotEmpty() }?.let { " · $it" } ?: ""), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                             if (u.banned == true) Badge("BANNED", MaterialTheme.colorScheme.error)
@@ -230,6 +246,7 @@ fun AdminUserScreen() {
     var error by remember { mutableStateOf<String?>(null) }
     var temp by remember { mutableStateOf<String?>(null) }
     var confirmDelete by remember { mutableStateOf(false) }
+    var badges by remember { mutableStateOf(user.badges) }
     val me = Account.user.value?.id == user.id
 
     fun act(action: String, fields: Map<String, Any?> = emptyMap(), done: () -> Unit) {
@@ -244,8 +261,9 @@ fun AdminUserScreen() {
         LazyColumn(Modifier.padding(pad)) {
             item {
                 Column(Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Avatar(user.name, user.color, 72.dp, admin)
+                    Avatar(user.name, user.color, 72.dp, admin, user.avatar, user.online)
                     Text(user.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                    BadgeRow(badges)
                     if (banned) Badge("BANNED", MaterialTheme.colorScheme.error)
                 }
             }
@@ -255,9 +273,22 @@ fun AdminUserScreen() {
                     ListRow("Username", trailing = user.username); Divider()
                     ListRow("University email", trailing = user.email?.ifEmpty { null } ?: "–"); Divider()
                     ListRow("University ID", trailing = user.uniId?.ifEmpty { null } ?: "–"); Divider()
+                    ListRow("Phone", trailing = user.phone?.ifEmpty { null } ?: "–"); Divider()
+                    if (!user.bio.isNullOrEmpty()) { ListRow("About", user.bio); Divider() }
                     ListRow("Joined", trailing = short(user.created)); Divider()
-                    ListRow("Last seen", trailing = short(user.lastSeen))
+                    ListRow("Last seen", trailing = if (user.online == true) tr("Online now") else short(user.lastSeen))
                     if (!user.banReason.isNullOrEmpty()) { Divider(); ListRow("Ban reason", user.banReason) }
+                }
+            }
+            item {
+                Group(header = "Badges", footer = "Badges show on their profile and next to their name in the chat.") {
+                    Badges.all.forEachIndexed { i, (id, name, emoji) ->
+                        if (i > 0) Divider()
+                        ListRow("$emoji  ${tr(name)}", trailing = if (id in badges) "✓" else null) {
+                            val next = if (id in badges) badges - id else badges + id
+                            act("adminSetBadges", mapOf("badges" to next)) { badges = next }
+                        }
+                    }
                 }
             }
             item {
@@ -331,5 +362,122 @@ fun AdminLogScreen() {
                 }
             }
         }
+    }
+}
+
+/** Admins: all chat rooms, tap one to edit it, + to add */
+@Composable
+fun AdminRoomsScreen() {
+    val rooms by Account.rooms.collectAsState()
+    var editing by remember { mutableStateOf<ChatRoom?>(null) }
+    var adding by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { Account.reloadRooms() }
+    Screen("Chat rooms", actions = { IconButton(onClick = { adding = true }) { Icon(Icons.Filled.Add, tr("Add a room")) } }) { pad ->
+        LazyColumn(Modifier.padding(pad)) {
+            item {
+                Group(footer = "Locked rooms are read-only. Archived rooms are hidden from students but kept.") {
+                    rooms.forEachIndexed { i, r ->
+                        if (i > 0) Divider()
+                        val flags = listOfNotNull(
+                            if (r.adminOnly == true) tr("admins post") else null, if (r.locked == true) "🔒" else null, if (r.archived == true) tr("archived") else null,
+                        ).joinToString(" · ")
+                        ListRow(r.name, r.about, emoji = r.emoji, trailing = flags.ifEmpty { null }) { editing = r }
+                    }
+                }
+            }
+        }
+    }
+    if (adding) RoomEditor(null) { adding = false }
+    editing?.let { r -> RoomEditor(r) { editing = null } }
+}
+
+/** Create or change a room (admins) */
+@Composable
+fun RoomEditor(room: ChatRoom?, onClose: () -> Unit) {
+    val scope = rememberCoroutineScope()
+    var name by remember { mutableStateOf(room?.name ?: "") }
+    var about by remember { mutableStateOf(room?.about ?: "") }
+    var emoji by remember { mutableStateOf(room?.emoji ?: "💬") }
+    var adminOnly by remember { mutableStateOf(room?.adminOnly == true) }
+    var locked by remember { mutableStateOf(room?.locked == true) }
+    var archived by remember { mutableStateOf(room?.archived == true) }
+    var order by remember { mutableStateOf(room?.order ?: Account.rooms.value.size) }
+    var err by remember { mutableStateOf<String?>(null) }
+    var confirm by remember { mutableStateOf<String?>(null) }
+    val emojis = listOf("💬", "🆘", "📚", "💊", "💻", "📈", "📣", "🎓", "🧪", "⚖️", "🎨", "🏀", "🎮", "🕌", "☕", "🔬", "🧮", "🌍")
+
+    fun run(action: String, fields: Map<String, Any?>) {
+        scope.launch {
+            try {
+                val r = Account.call(action, fields)
+                if (r["rooms"] != null) Account.setRooms(r["rooms"]) else Account.reloadRooms()
+                onClose()
+            } catch (e: ApiError) { err = e.message }
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onClose,
+        title = { Text(if (room == null) "New room" else "Edit room") },
+        text = {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(name, { name = it.take(40) }, label = { Text("Name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                OutlinedTextField(about, { about = it.take(100) }, label = { Text("What it's for") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    emojis.forEach { e ->
+                        Text(
+                            e, fontSize = 22.sp,
+                            modifier = Modifier.clip(RoundedCornerShape(10.dp)).background(if (e == emoji) accent.copy(alpha = 0.18f) else Color.Transparent)
+                                .clickable { emoji = e }.padding(6.dp),
+                        )
+                    }
+                }
+                SwitchRow(tr("Only admins can post"), null, adminOnly) { adminOnly = it }
+                SwitchRow(tr("Locked (read-only for now)"), null, locked) { locked = it }
+                SwitchRow(tr("Archived (hidden from students)"), null, archived) { archived = it }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(tr("Position %d").format(order + 1), Modifier.weight(1f))
+                    TextButton(onClick = { if (order > 0) order-- }) { Text("−") }
+                    TextButton(onClick = { order++ }) { Text("+") }
+                }
+                if (room != null) {
+                    TextButton(onClick = { confirm = "clear" }) { Text("Clear all messages", color = MaterialTheme.colorScheme.error) }
+                    if (room.id != "announcements") TextButton(onClick = { confirm = "delete" }) { Text("Delete room", color = MaterialTheme.colorScheme.error) }
+                }
+                err?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+            }
+        },
+        confirmButton = {
+            TextButton(enabled = name.isNotBlank(), onClick = {
+                val f = mutableMapOf<String, Any?>("name" to name, "about" to about, "emoji" to emoji, "adminOnly" to adminOnly,
+                    "locked" to locked, "archived" to archived, "order" to order)
+                room?.let { f["id"] = it.id }
+                run("adminRoomSave", f)
+            }) { Text("Save") }
+        },
+        dismissButton = { TextButton(onClick = onClose) { Text("Cancel") } },
+    )
+    confirm?.let { c ->
+        AlertDialog(
+            onDismissRequest = { confirm = null },
+            title = { Text(if (c == "delete") "Delete this room?" else "Clear every message in this room?") },
+            text = { Text("This can't be undone.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirm = null
+                    if (c == "delete") run("adminRoomDelete", mapOf("id" to room?.id)) else run("adminClearRoom", mapOf("room" to room?.id))
+                }) { Text(if (c == "delete") "Delete" else "Clear", color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = { TextButton(onClick = { confirm = null }) { Text("Cancel") } },
+        )
+    }
+}
+
+/** Quick lock / archive from a long-press on a room */
+suspend fun quickRoom(r: ChatRoom, locked: Boolean? = null, archived: Boolean? = null) {
+    runCatching {
+        val res = Account.call("adminRoomSave", mapOf("id" to r.id, "name" to r.name, "emoji" to r.emoji, "about" to r.about, "adminOnly" to (r.adminOnly == true),
+            "locked" to (locked ?: (r.locked == true)), "archived" to (archived ?: (r.archived == true)), "order" to (r.order ?: 0)))
+        Account.setRooms(res["rooms"])
     }
 }

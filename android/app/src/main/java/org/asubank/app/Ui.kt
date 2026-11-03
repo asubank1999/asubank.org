@@ -35,7 +35,6 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.darkColorScheme
@@ -203,6 +202,12 @@ object SiteRouter {
         val host = uri.host?.lowercase() ?: ""
         if (scheme == "http" || scheme == "https") {
             // chats and payments open in their own apps; files open in the in-app viewer
+            // ASU's own sites (my.asu.edu.jo, edugate...) send an incomplete certificate chain that Android's in-app
+            // viewer rejects, and Microsoft 365 needs its sign-in, so they open in the browser or their app
+            if (host == "asu.edu.jo" || host.endsWith(".asu.edu.jo") || host.endsWith("cloud.microsoft") || host.endsWith(".microsoft.com") ||
+                host.endsWith(".office.com") || host == "office.com") {
+                return SiteTarget.External(u)
+            }
             if (host.contains("whatsapp.com") || host == "wa.me" || host.contains("paypal.") || host.contains("t.me") || host.contains("instagram.com")) {
                 return SiteTarget.External(u)
             }
@@ -284,7 +289,7 @@ fun Badge(text: String, color: Color = accent) {
 fun Group(modifier: Modifier = Modifier, header: String? = null, footer: String? = null, content: @Composable ColumnScope.() -> Unit) {
     Column(modifier.padding(horizontal = 16.dp, vertical = 6.dp)) {
         if (header != null) Text(
-            header.uppercase(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
+            tr(header).uppercase(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 16.dp, bottom = 6.dp, top = 8.dp),
         )
         Surface(shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.fillMaxWidth()) {
@@ -409,7 +414,7 @@ fun <T> androidx.compose.foundation.lazy.LazyListScope.groupItems(
     if (list.isEmpty()) return
     if (header != null) item(contentType = "groupHeader") {
         Text(
-            header.uppercase(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
+            tr(header).uppercase(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 32.dp, bottom = 6.dp, top = 14.dp),
         )
     }

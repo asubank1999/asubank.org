@@ -22,6 +22,7 @@ import androidx.work.WorkerParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -35,6 +36,8 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonArray
+import kotlinx.serialization.json.add
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -58,6 +61,7 @@ object AccountsApi {
                 null -> Unit
                 is Boolean -> put(k, v)
                 is Number -> put(k, v)
+                is Collection<*> -> putJsonArray(k) { v.forEach { add(it.toString()) } }
                 else -> put(k, v.toString())
             }
         }
@@ -93,14 +97,81 @@ data class AbUser(
     val banReason: String? = null,
     val created: String? = null,
     val lastSeen: String? = null,
+    val mustReset: Boolean? = null,
+    val avatar: String? = null,
+    val phone: String? = null,
+    val showPhone: Boolean? = null,
+    val bio: String? = null,
+    val badges: List<String> = emptyList(),
+    val online: Boolean? = null,
 ) {
     val isAdmin get() = role == "admin"
     val name get() = displayName.ifEmpty { username }
     val initial get() = name.take(1).uppercase()
 }
 
+/** Badges an admin can give (same list as BADGES in accounts-api.gs) */
+object Badges {
+    val all = listOf(
+        Triple("founder", "Founder", "👑"), Triple("moderator", "Moderator", "🛡️"), Triple("support", "Support", "🛟"),
+        Triple("helper", "Helper", "🤝"), Triple("donor", "Donor", "💛"), Triple("contributor", "Contributor", "📚"),
+        Triple("tutor", "Tutor", "🎓"), Triple("verified", "Verified", "✅"), Triple("vip", "VIP", "⭐"), Triple("developer", "Developer", "💻"),
+    )
+    fun emoji(id: String) = all.firstOrNull { it.first == id }?.third ?: ""
+    fun name(id: String) = all.firstOrNull { it.first == id }?.second?.let { tr(it) } ?: id
+}
+
+/** What chat screens know about the people in a room */
 @Serializable
-data class ChatRoom(val id: String, val name: String, val emoji: String = "💬", val about: String = "", val adminOnly: Boolean? = null)
+data class ChatPerson(
+    val avatar: String? = null,
+    val badges: List<String> = emptyList(),
+    val role: String? = null,
+    val displayName: String? = null,
+    val color: String? = null,
+    val online: Boolean? = null,
+    val lastSeen: String? = null,
+)
+
+@Serializable
+data class OnlineUser(
+    val id: String,
+    val displayName: String = "",
+    val avatar: String? = null,
+    val color: String? = null,
+    val role: String? = null,
+    val badges: List<String> = emptyList(),
+    val lastSeen: String? = null,
+    val online: Boolean = false,
+)
+
+@Serializable
+data class ChatRoom(
+    val id: String,
+    val name: String,
+    val emoji: String = "💬",
+    val about: String = "",
+    val adminOnly: Boolean? = null,
+    val locked: Boolean? = null,
+    val archived: Boolean? = null,
+    val pinned: String? = null,
+    val order: Int? = null,
+)
+
+/** Something the app may notify about (the `events` action) */
+@Serializable
+data class AbEvent(
+    val id: String,
+    val type: String = "message",
+    val room: String? = null,
+    val roomName: String? = null,
+    val userId: String? = null,
+    val displayName: String? = null,
+    val text: String = "",
+    val created: String = "",
+    val url: String? = null,
+    val replyToUserId: String? = null,
+)
 
 @Serializable
 data class ChatMessage(
@@ -114,6 +185,7 @@ data class ChatMessage(
     val created: String,
     val replyTo: String? = null,
     val color: String = "#8C1D40",
+    val edited: String? = null,
 ) {
     val instant: Instant get() = runCatching { Instant.parse(created) }.getOrDefault(Instant.now())
 }
@@ -202,8 +274,20 @@ object Account {
         runCatching { adopt(call("me")) }
     }
 
-    suspend fun updateProfile(displayName: String, email: String, uniId: String) =
-        adopt(call("updateProfile", mapOf("displayName" to displayName, "email" to email, "uniId" to uniId)))
+    suspend fun updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Boolean, bio: String) =
+        adopt(call("updateProfile", mapOf("displayName" to displayName, "email" to email, "uniId" to uniId,
+            "phone" to phone, "showPhone" to showPhone, "bio" to bio.take(160))))
+
+    /** Uploads a profile photo (a 256 px JPEG, base64), or removes it with null */
+    suspend fun setAvatar(jpegBase64: String?) = adopt(
+        if (jpegBase64 == null) call("setAvatar", mapOf("remove" to true))
+        else call("setAvatar", mapOf("data" to jpegBase64, "type" to "image/jpeg"))
+    )
+
+    /** Reloads the room list (after an admin changed it) */
+    suspend fun reloadRooms() { runCatching { setRooms(call("rooms")["rooms"]) } }
+
+    fun setRooms(e: JsonElement?) { e.decodeAs<List<ChatRoom>>()?.takeIf { it.isNotEmpty() }?.let { rooms.value = it } }
 
     suspend fun changePassword(old: String, new: String) { call("changePassword", mapOf("old" to old, "password" to new)); refresh() }
 
@@ -222,38 +306,67 @@ object Account {
 // MARK: notifications
 
 /**
- * Notifications for new chat messages. The app checks the newest message every 25 seconds while it's open,
- * and WorkManager checks about every 15 minutes in the background (there is no server push for a sideloaded APK).
+ * Notifications for new messages, replies, announcements and uploads, from the server's event feed. The app checks
+ * every 25 seconds while it's open and right when it opens, and WorkManager checks about every 15 minutes in the
+ * background (there is no server push for a sideloaded APK). Each kind can be turned off, and rooms can be muted.
  */
 object ChatNotifier {
     private const val CHANNEL = "chat"
     private const val CHANNEL_ANN = "announcements"
+    private const val CHANNEL_REPLY = "replies"
+    private const val CHANNEL_UP = "uploads"
     private const val WORK = "chat-check"
 
-    /** 0 every new message, 1 announcements only, 2 off */
-    val mode = MutableStateFlow(0)
+    val messages = MutableStateFlow(true)
+    val replies = MutableStateFlow(true)
+    val announcements = MutableStateFlow(true)
+    val uploads = MutableStateFlow(true)
+    val muted = MutableStateFlow<Set<String>>(emptySet())
     /** The room on screen, which never notifies */
     @Volatile var openRoom: String? = null
     /** Room to open from a tapped notification */
     val pendingRoom = MutableStateFlow<String?>(null)
 
     fun init(ctx: Context) {
-        mode.value = Saved.prefs.getInt("notify.mode", 0)
+        val p = Saved.prefs
+        // 1.5 had one setting: 0 every message, 1 announcements only, 2 off
+        val old = p.getInt("notify.mode", 0)
+        messages.value = p.getBoolean("notify.messages", old == 0)
+        replies.value = p.getBoolean("notify.replies", old != 2)
+        announcements.value = p.getBoolean("notify.announcements", old != 2)
+        uploads.value = p.getBoolean("notify.uploads", old != 2)
+        muted.value = p.getStringSet("notify.muted", emptySet())?.toSet() ?: emptySet()
         if (Build.VERSION.SDK_INT >= 26) {
             val nm = ctx.getSystemService(NotificationManager::class.java)
-            nm.createNotificationChannel(NotificationChannel(CHANNEL, "Chat messages", NotificationManager.IMPORTANCE_DEFAULT).apply { description = "New messages in the student chat" })
-            nm.createNotificationChannel(NotificationChannel(CHANNEL_ANN, "Announcements", NotificationManager.IMPORTANCE_HIGH).apply { description = "News from the ASU Bank team" })
+            nm.createNotificationChannel(NotificationChannel(CHANNEL, tr("Chat messages"), NotificationManager.IMPORTANCE_DEFAULT).apply { description = tr("New messages in the student chat") })
+            nm.createNotificationChannel(NotificationChannel(CHANNEL_REPLY, tr("Replies to me"), NotificationManager.IMPORTANCE_HIGH).apply { description = tr("When someone replies to your message") })
+            nm.createNotificationChannel(NotificationChannel(CHANNEL_ANN, tr("Announcements"), NotificationManager.IMPORTANCE_HIGH).apply { description = tr("News from the ASU Bank team") })
+            nm.createNotificationChannel(NotificationChannel(CHANNEL_UP, tr("New uploaded files"), NotificationManager.IMPORTANCE_DEFAULT).apply { description = tr("When a new file is uploaded to ASU Bank") })
         }
     }
 
-    fun setMode(v: Int) { mode.value = v; Saved.prefs.edit().putInt("notify.mode", v).apply() }
+    fun set(key: String, v: Boolean) {
+        when (key) {
+            "messages" -> messages.value = v
+            "replies" -> replies.value = v
+            "announcements" -> announcements.value = v
+            "uploads" -> uploads.value = v
+        }
+        Saved.prefs.edit().putBoolean("notify.$key", v).apply()
+    }
+
+    fun setMuted(room: String, mute: Boolean) {
+        muted.value = if (mute) muted.value + room else muted.value - room
+        Saved.prefs.edit().putStringSet("notify.muted", muted.value).apply()
+    }
 
     fun start(ctx: Context) {
         if (!Account.signedIn) return
         val req = PeriodicWorkRequestBuilder<ChatWorker>(15, TimeUnit.MINUTES)
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()
-        WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(WORK, ExistingPeriodicWorkPolicy.KEEP, req)
+        // UPDATE so phones that had the 1.5 worker get this one
+        WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(WORK, ExistingPeriodicWorkPolicy.UPDATE, req)
     }
 
     fun stop(ctx: Context) { runCatching { WorkManager.getInstance(ctx).cancelUniqueWork(WORK) } }
@@ -261,43 +374,62 @@ object ChatNotifier {
     fun canNotify(ctx: Context) = Build.VERSION.SDK_INT < 33 ||
         ContextCompat.checkSelfPermission(ctx, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
 
-    suspend fun check(ctx: Context) {
-        val token = Account.token ?: return
-        val r = runCatching { AccountsApi.call("latest", token = token) }.getOrNull() ?: return
-        r["latest"].decodeAs<ChatLatest>()?.let { deliver(ctx, it) }
-    }
+    private val lock = kotlinx.coroutines.sync.Mutex()
 
-    /** Remembers what a room screen has shown, so it never notifies about it */
-    fun markSeen(created: String) {
-        val seen = Saved.prefs.getString("notify.lastSeen", "") ?: ""
-        if (created > seen) Saved.prefs.edit().putString("notify.lastSeen", created).apply()
-    }
-
-    private fun deliver(ctx: Context, l: ChatLatest) {
-        // first check after install: remember, don't notify
+    suspend fun check(ctx: Context) = lock.withLock {
+        val token = Account.token ?: return@withLock
         val seen = Saved.prefs.getString("notify.lastSeen", null)
-        markSeen(l.created)
-        if (seen == null || l.created <= seen) return
-        if (l.userId == Account.user.value?.id || l.room == openRoom) return
-        val ann = l.announcement == true
-        if (mode.value == 2 || (mode.value == 1 && !ann) || !canNotify(ctx)) return
-        val tap = PendingIntent.getActivity(
-            ctx, l.room.hashCode(),
-            Intent(ctx, MainActivity::class.java).putExtra("openRoom", l.room).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP),
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
-        val n = NotificationCompat.Builder(ctx, if (ann) CHANNEL_ANN else CHANNEL)
+        val r = runCatching { AccountsApi.call("events", mapOf("since" to (seen ?: "")), token = token) }.getOrNull() ?: return@withLock
+        val events = r["events"].decodeAs<List<AbEvent>>() ?: emptyList()
+        val newest = events.maxOfOrNull { it.created } ?: ""
+        // first check after install: remember, don't notify
+        if (seen == null) { Saved.prefs.edit().putString("notify.lastSeen", maxOf(newest, r.str("now") ?: "")).apply(); return@withLock }
+        if (newest > seen) Saved.prefs.edit().putString("notify.lastSeen", newest).apply()
+        events.filter { it.created > seen }.forEach { deliver(ctx, it) }
+    }
+
+    /** Whether the user wants a notification for this event */
+    fun wants(e: AbEvent): Boolean {
+        val me = Account.user.value?.id
+        if (e.userId != null && e.userId == me) return false
+        return when (e.type) {
+            "upload" -> uploads.value
+            "announcement" -> announcements.value
+            else -> when {
+                e.room == openRoom -> false
+                replies.value && me != null && e.replyToUserId == me -> true
+                else -> messages.value && e.room !in muted.value
+            }
+        }
+    }
+
+    private fun deliver(ctx: Context, e: AbEvent) {
+        if (!wants(e) || !canNotify(ctx)) return
+        val me = Account.user.value?.id
+        val reply = e.type == "message" && me != null && e.replyToUserId == me
+        val who = e.displayName ?: ""
+        val intent = Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        if (e.type == "upload") intent.putExtra("openPath", "/guides/latest") else intent.putExtra("openRoom", e.room)
+        val tap = PendingIntent.getActivity(ctx, e.id.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val channel = when { e.type == "upload" -> CHANNEL_UP; e.type == "announcement" -> CHANNEL_ANN; reply -> CHANNEL_REPLY; else -> CHANNEL }
+        val title = when {
+            e.type == "upload" -> tr("📄 New upload on ASU Bank")
+            e.type == "announcement" -> "📣 $who"
+            reply -> tr("%s replied to you").format(who)
+            else -> tr("New message from %s").format(who)
+        }
+        val n = NotificationCompat.Builder(ctx, channel)
             .setSmallIcon(R.drawable.ic_notification)
             .setColor(0xFF8C1D40.toInt())
-            .setContentTitle(if (ann) "📣 ${l.displayName}" else "New message from ${l.displayName.ifEmpty { l.username }}")
-            .setContentText(l.text)
-            .setSubText(l.roomName)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(l.text))
-            .setGroup(l.room)
+            .setContentTitle(title)
+            .setContentText(e.text)
+            .setSubText(if (e.type == "upload") null else e.roomName)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(e.text))
+            .setGroup(e.room ?: e.type)
             .setAutoCancel(true)
             .setContentIntent(tap)
             .build()
-        runCatching { NotificationManagerCompat.from(ctx).notify(l.room.hashCode(), n) }
+        runCatching { NotificationManagerCompat.from(ctx).notify(e.id.hashCode(), n) }
     }
 }
 
@@ -305,8 +437,9 @@ class ChatWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, 
     override suspend fun doWork(): Result {
         Disk.ctx = applicationContext
         Saved.init(applicationContext)
+        Lang.init(applicationContext)
         if (Account.token == null) Account.init()
-        if (ChatNotifier.mode.value == 0) ChatNotifier.mode.value = Saved.prefs.getInt("notify.mode", 0)
+        ChatNotifier.init(applicationContext)
         ChatNotifier.check(applicationContext)
         return Result.success()
     }

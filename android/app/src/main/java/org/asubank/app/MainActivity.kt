@@ -53,7 +53,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -104,6 +103,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Disk.ctx = applicationContext
         Saved.init(applicationContext)
+        Lang.init(applicationContext)
         DriveLinks.init()
         Prefs.appearance.value = Saved.prefs.getInt("appearance", 0)
         Prefs.accent.value = Saved.prefs.getInt("accent", 0)
@@ -118,16 +118,17 @@ class MainActivity : ComponentActivity() {
         val startTab = intent?.getStringExtra("startTab")
         if (intent?.getStringExtra("openRoom") != null) splashDone = true
         if (startTab != null || intent?.hasExtra("startPath") == true || intent?.getBooleanExtra("noSplash", false) == true) splashDone = true
-        incoming.value = intent?.dataString ?: intent?.getStringExtra("startPath")?.let { AB.SITE + it }
+        incoming.value = intent?.dataString ?: (intent?.getStringExtra("startPath") ?: intent?.getStringExtra("openPath"))?.let { AB.SITE + it }
+        if (intent?.hasExtra("openPath") == true) splashDone = true
         if (intent?.getBooleanExtra("rateIntro", false) == true) Saved.prefs.edit().putBoolean("rate.intro.v1", true).apply()
         if (intent?.getBooleanExtra("matcherIntro", false) == true) Saved.prefs.edit().putBoolean("matcher.intro.v1", true).apply()
-        setContent { AsuTheme { App(startTab, incoming) } }
+        setContent { AsuTheme { LangProvider { App(startTab, incoming) } } }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         intent.getStringExtra("openRoom")?.let { ChatNotifier.pendingRoom.value = it }
-        incoming.value = intent.dataString
+        incoming.value = intent.dataString ?: intent.getStringExtra("openPath")?.let { AB.SITE + it }
     }
 }
 
@@ -214,7 +215,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                             selected = selected,
                             onClick = { if (route == t.route) nav.popBackStack(t.route, false) else nav.openTab(t.route) },
                             icon = { Icon(t.icon, null) },
-                            label = { Text(t.label) },
+                            label = { Text(tr(t.label)) },
                             colors = NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.primaryContainer),
                         )
                     }
@@ -241,6 +242,13 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable(Routes.ADMIN) { if (user?.isAdmin == true) AdminTab() else SignInPrompt("Admins only", "Sign in with an admin account to manage ASU Bank.") }
                 composable("room/{id}") { e -> ChatRoomScreen(e.arguments?.getString("id") ?: "general") }
                 composable("account") { AccountScreen() }
+                composable("profile/{id}") { e -> ProfileScreen(e.arguments?.getString("id") ?: "") }
+                composable("online") { OnlineScreen() }
+                composable("mutedRooms") { MutedRoomsScreen() }
+                composable("adminRooms") { AdminRoomsScreen() }
+                composable("language") { LanguageScreen() }
+                composable("rating") { ServiceRatingScreen() }
+                composable("voting") { VotingScreen() }
                 composable("theme") { ThemeScreen() }
                 composable("savedList") { SavedScreen(back = true) }
                 composable("adminUsers") { AdminUsersScreen() }

@@ -62,7 +62,7 @@ struct BadgeRow: View {
 }
 
 /// Picks a photo from the library (PHPicker works on iOS 15, PhotosPicker needs 16)
-struct PhotoPicker: UIViewControllerRepresentable {
+struct AvatarPicker: UIViewControllerRepresentable {
     var picked: (UIImage) -> Void
     @Environment(\.dismiss) private var dismiss
 
@@ -78,8 +78,8 @@ struct PhotoPicker: UIViewControllerRepresentable {
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
     final class Coordinator: NSObject, PHPickerViewControllerDelegate {
-        let parent: PhotoPicker
-        init(_ p: PhotoPicker) { parent = p }
+        let parent: AvatarPicker
+        init(_ p: AvatarPicker) { parent = p }
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             parent.dismiss()
             guard let item = results.first?.itemProvider, item.canLoadObject(ofClass: UIImage.self) else { return }
@@ -382,7 +382,7 @@ struct AccountScreen: View {
         .sheet(isPresented: $editing) { EditProfileSheet() }
         .sheet(isPresented: $changing) { ChangePasswordSheet() }
         .sheet(isPresented: $deleting) { DeleteAccountSheet() }
-        .sheet(isPresented: $picking) { PhotoPicker { setPhoto($0) }.ignoresSafeArea() }
+        .sheet(isPresented: $picking) { AvatarPicker { setPhoto($0) }.ignoresSafeArea() }
         .confirmationDialog("Sign out of ASU Bank?", isPresented: $confirmSignOut, titleVisibility: .visible) {
             Button("Sign out", role: .destructive) { Task { await account.signOut(); ChatNotifier.shared.stop() } }
         }
