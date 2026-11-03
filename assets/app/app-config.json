@@ -1,14 +1,14 @@
 {
   "ios": {
-    "latest": "1.4.0",
+    "latest": "1.5.0",
     "minimum": "1.0.0",
     "store": "",
-    "notes": "Native course matcher and request a material, your uploads in Latest uploads, a GPA calculator, and new guide screens."
+    "notes": "Accounts and a live student chat with notifications, themes including pitch black, native student submissions, and an admin tab."
   },
   "android": {
-    "latest": "1.4.0",
+    "latest": "1.5.0",
     "minimum": "1.0.0",
-    "notes": "Native course matcher and request a material, your uploads in Latest uploads, a GPA calculator, and new guide screens."
+    "notes": "Accounts and a live student chat with notifications, themes including pitch black, native student submissions, and an admin tab."
   },
   "donate": true
 }
