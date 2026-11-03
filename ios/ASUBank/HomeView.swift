@@ -29,7 +29,7 @@ enum Links {
     static let newHere: [SiteLink] = [
         .init(emoji: "🎓", title: "New Student Guide", subtitle: "Admissions, fees, majors, scholarships", added: "2026-09-13", target: .web("/guides/aspu_qa")),
         .init(emoji: "🔗", title: "ASU shortcuts", subtitle: "My ASU, EduGate, Teams, absences", target: .web("/guides/asu")),
-        .init(emoji: "🎬", title: "How to search for files", subtitle: "Three ways to find any material", target: .web("/guides/tutorial")),
+        .init(emoji: "🎬", title: "How to search for files", subtitle: "Step by step, in the app and on the web", target: .web("/guides/tutorial")),
         .init(emoji: "👥", title: "Course WhatsApp groups", subtitle: "Groups for courses, clubs and interests", target: .web("/guides/groups")),
         .init(emoji: "📊", title: "Grading scale", target: .web("/guides/grading-scale-asu")),
         .init(emoji: "📝", title: "Placement tests", target: .web("/guides/placement")),

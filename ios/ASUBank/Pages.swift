@@ -142,6 +142,24 @@ struct SitePageView: View {
             HallsScreen()
         } else if path == "/requests/portal_to_rating" || path == "/requests/rating" {
             TeacherRatingsScreen()
+        } else if path == "/requests/matcher" || path == "/requests/matcher_confirm" {
+            CourseMatcherScreen()
+        } else if ["/requests/student_request_portal", "/requests/request", "/requests/student_request_main"].contains(path) {
+            RequestMaterialScreen()
+        } else if path == "/guides/tutorial" {
+            SearchGuideScreen()
+        } else if path == "/guides/grading-scale-asu" {
+            GradingScaleScreen()
+        } else if path == "/requests/student_ads" {
+            StudentAdsScreen()
+        } else if path == "/guides/thankslist" {
+            ThanksScreen(page: pages.page(path))
+        } else if path == "/apps/donate" {
+            DonateScreen()
+        } else if path == "/guides/importantlinks", let page = pages.page("/guides/links") {
+            NativePageScreen(path: "/guides/links", page: page)
+        } else if path == "/guides/groups", let page = pages.page(path) {
+            GroupsScreen(page: page)
         } else if let page = pages.page(path) {
             if let cal = page.cal, !cal.isEmpty {
                 CalendarScreen(title: page.t, path: path, events: cal)

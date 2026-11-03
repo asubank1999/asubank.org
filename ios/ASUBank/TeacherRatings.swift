@@ -43,117 +43,17 @@ struct Teacher: Identifiable, Hashable {
 }
 
 @MainActor
-final class RatingBridge: NSObject, ObservableObject, WKScriptMessageHandler, WKNavigationDelegate {
-    enum Status: Equatable { case connecting, ready, failed }
-
+final class RatingBridge: ScriptBridge {
     /// One connection for the whole app: reopening the screen is instant once it is ready
     static let shared = RatingBridge()
 
-    @Published var status: Status = .connecting
     @Published var teachers: [Teacher] = []
     @Published var loading = false
 
-    let web: WKWebView
-    private var frame: WKFrameInfo?
-    private var timeout: Task<Void, Never>?
+    init() { super.init(url: Ratings.script, marker: "teacherInput") }
 
-    override init() {
-        let config = WKWebViewConfiguration()
-        // runs in every frame; reports back from the frame that holds the rating page
-        let probe = """
-        (function(){var n=0;function go(){try{if(window.google&&google.script&&google.script.run&&document.getElementById('teacherInput')){window.webkit.messageHandlers.abRating.postMessage('ready');return;}}catch(e){}if(++n<120)setTimeout(go,250);}go();})();
-        """
-        config.userContentController.addUserScript(WKUserScript(source: probe, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
-        web = WKWebView(frame: CGRect(x: 0, y: 0, width: 320, height: 480), configuration: config)
-        super.init()
-        config.userContentController.add(WeakHandler(self), name: "abRating")
-        web.navigationDelegate = self
-    }
-
-    func connect(force: Bool = false) {
-        guard force || status == .failed || (status == .connecting && frame == nil && !web.isLoading) else { return }
-        status = .connecting
-        frame = nil
-        web.load(URLRequest(url: URL(string: Ratings.script)!, cachePolicy: .reloadIgnoringLocalCacheData))
-        timeout?.cancel()
-        timeout = Task { [weak self] in
-            try? await Task.sleep(nanoseconds: 45_000_000_000)
-            if let self, self.status == .connecting { self.status = .failed }
-        }
-    }
-
-    /// Waits (up to `seconds`) until the rating page is reachable
-    private func waitReady(_ seconds: Double) async -> Bool {
-        let end = Date().addingTimeInterval(seconds)
-        while status != .ready, Date() < end { try? await Task.sleep(nanoseconds: 200_000_000) }
-        return status == .ready
-    }
-
-    nonisolated func userContentController(_ c: WKUserContentController, didReceive message: WKScriptMessage) {
-        let info = message.frameInfo
-        Task { @MainActor in
-            // always use the newest rating frame: Google sometimes reloads it, and the old one stops answering
-            let first = self.status != .ready
-            self.frame = info
-            self.timeout?.cancel()
-            self.status = .ready
-            if first || self.teachers.isEmpty { await self.refresh() }
-        }
-    }
-
-    nonisolated func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        Task { @MainActor in if self.status == .connecting { self.status = .failed } }
-    }
-
-    nonisolated func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        Task { @MainActor in if self.status == .connecting { self.status = .failed } }
-    }
-
-    /// Calls a function of the Apps Script and returns its JSON result. Reconnects and retries once
-    /// when the page stopped answering.
-    private func call(_ fn: String, _ args: [Any]) async throws -> Any? {
-        do {
-            return try await callOnce(fn, args)
-        } catch let e as NSError where e.domain == "rating" {
-            connect(force: true)
-            guard await waitReady(30) else { throw e }
-            return try await callOnce(fn, args)
-        }
-    }
-
-    private func callOnce(_ fn: String, _ args: [Any]) async throws -> Any? {
-        if status != .ready { _ = await waitReady(30) }
-        guard let frame else { throw NSError(domain: "rating", code: 1, userInfo: [NSLocalizedDescriptionKey: "Couldn't reach the ratings. Check your connection and try again."]) }
-        return try await withThrowingTaskGroup(of: Any?.self) { group in
-            group.addTask { @MainActor in try await self.run(fn, args, in: frame) }
-            group.addTask {
-                try await Task.sleep(nanoseconds: 25_000_000_000)
-                throw NSError(domain: "rating", code: 2, userInfo: [NSLocalizedDescriptionKey: "The ratings server didn't answer. Try again."])
-            }
-            let first = try await group.next() ?? nil
-            group.cancelAll()
-            return first
-        }
-    }
-
-    private func run(_ fn: String, _ args: [Any], in frame: WKFrameInfo) async throws -> Any? {
-        let js = """
-        return await new Promise(function(res, rej){
-          var r = google.script.run.withSuccessHandler(function(v){ res(JSON.stringify(v === undefined ? null : v)); })
-            .withFailureHandler(function(e){ rej(new Error(e && e.message ? e.message : String(e))); });
-          r[fn].apply(r, args);
-        });
-        """
-        let out: Any?
-        do {
-            out = try await web.callAsyncJavaScript(js, arguments: ["fn": fn, "args": args], in: frame, contentWorld: .page)
-        } catch let e as NSError where e.domain == WKErrorDomain && e.code != WKError.Code.javaScriptExceptionOccurred.rawValue {
-            // the frame went away (e.g. Google reloaded it): reconnect. A script error (e.g. the server
-            // refusing a rating) is a real answer and is passed on as it is.
-            throw NSError(domain: "rating", code: 3, userInfo: [NSLocalizedDescriptionKey: e.localizedDescription])
-        }
-        guard let s = out as? String, let data = s.data(using: .utf8) else { return nil }
-        return try JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])
+    override func didConnect(first: Bool) async {
+        if first || teachers.isEmpty { await refresh() }
     }
 
     func refresh() async {
@@ -166,10 +66,6 @@ final class RatingBridge: NSObject, ObservableObject, WKScriptMessageHandler, WK
         }
     }
 
-    func stats(_ name: String) async -> Teacher? {
-        Teacher(try? await call("getTeacherStats", [name]))
-    }
-
     /// Returns an error message, or nil when saved
     func rate(_ name: String, _ rating: Int) async -> String? {
         do {
@@ -177,23 +73,9 @@ final class RatingBridge: NSObject, ObservableObject, WKScriptMessageHandler, WK
             await refresh()
             return nil
         } catch {
-            let msg = (error as NSError).userInfo["WKJavaScriptExceptionMessage"] as? String ?? error.localizedDescription
-            return msg.replacingOccurrences(of: "Error: ", with: "")
+            return ScriptBridge.message(error)
         }
     }
-}
-
-/// Avoids a retain cycle between the web view's content controller and the bridge
-private final class WeakHandler: NSObject, WKScriptMessageHandler {
-    weak var target: WKScriptMessageHandler?
-    init(_ t: WKScriptMessageHandler) { target = t }
-    func userContentController(_ c: WKUserContentController, didReceive m: WKScriptMessage) { target?.userContentController(c, didReceive: m) }
-}
-
-private struct HiddenWeb: UIViewRepresentable {
-    let web: WKWebView
-    func makeUIView(context: Context) -> WKWebView { web }
-    func updateUIView(_ v: WKWebView, context: Context) {}
 }
 
 enum RatingSort: String, CaseIterable { case top = "Top rated", votes = "Most votes", name = "A–Z" }
@@ -213,11 +95,9 @@ struct TeacherRatingsScreen: View {
                 list
             }
         }
-        // the page that talks to the ratings sheet: kept full size behind the screen so iOS keeps it running
-        .background(HiddenWeb(web: bridge.web).opacity(0.001).allowsHitTesting(false).accessibilityHidden(true))
+        .bridgeHost(bridge)
         .navigationTitle("Rate your teachers")
         .navigationBarTitleDisplayMode(introSeen ? .large : .inline)
-        .onAppear { bridge.connect() }
         .sheet(item: $rating) { t in
             RateSheet(target: t, bridge: bridge, known: bridge.teachers)
         }

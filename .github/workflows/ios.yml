@@ -83,6 +83,14 @@ jobs:
           shot 9-halls 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/halls
           shot 10-ratings-intro 6 -ab.terms.accepted.v1 YES -startTab home -startPath /requests/portal_to_rating
           shot 11-ratings 25 -ab.terms.accepted.v1 YES -ab.rate.intro.v1 YES -startTab home -startPath /requests/portal_to_rating
+          shot 12-matcher 20 -ab.terms.accepted.v1 YES -startTab home -ab.matcher.intro.v1 YES -startPath /requests/matcher_confirm
+          shot 13-request 20 -ab.terms.accepted.v1 YES -startTab home -startPath /requests/student_request_portal
+          shot 14-grading 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/grading-scale-asu
+          shot 15-groups 8 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/groups
+          shot 16-thanks 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/thankslist
+          shot 17-search-guide 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/tutorial
+          shot 18-ads 6 -ab.terms.accepted.v1 YES -startTab home -startPath /requests/student_ads
+          shot 19-latest 25 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/latest
           cd "$RUNNER_TEMP/shots" && ls -la
           git init -q && git checkout -q -b ios-screenshots
           echo "Simulator screenshots of ${{ github.sha }} (made by .github/workflows/ios.yml)" > README.md
