@@ -91,6 +91,11 @@ jobs:
           shot 17-search-guide 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/tutorial
           shot 18-ads 6 -ab.terms.accepted.v1 YES -startTab home -startPath /requests/student_ads
           shot 19-latest 25 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/latest
+          shot 20-chat 6 -ab.terms.accepted.v1 YES -startTab chat
+          shot 21-theme 6 -ab.terms.accepted.v1 YES -startTab home -startPath /app/theme
+          shot 22-submissions 14 -ab.terms.accepted.v1 YES -startTab home -startPath /upload/student_submissions_board
+          shot 23-account 6 -ab.terms.accepted.v1 YES -startTab home -startPath /account
+          shot 24-pitch-black 6 -ab.terms.accepted.v1 YES -ab.appearance 3 -startTab more
           cd "$RUNNER_TEMP/shots" && ls -la
           git init -q && git checkout -q -b ios-screenshots
           echo "Simulator screenshots of ${{ github.sha }} (made by .github/workflows/ios.yml)" > README.md

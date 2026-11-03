@@ -386,6 +386,8 @@ struct GroupsScreen: View {
 struct ThanksScreen: View {
     let page: SitePage?
     @Environment(\.openURL) private var openURL
+    @EnvironmentObject private var library: Library
+    @State private var shown = false
     private let palette: [UInt32] = [0x8C1D40, 0x0a84ff, 0x1f8a3e, 0xaf52de, 0xe8590c, 0xff2d55, 0x5e5ce6, 0x00a3a3]
 
     private var names: [String] {
@@ -404,6 +406,30 @@ struct ThanksScreen: View {
                 }
                 .padding(.top, 8)
 
+                HStack(spacing: 10) {
+                    ForEach([("\(library.items.count)", "Materials"), ("\(library.subjects.count)", "Subjects"), ("\(names.count + 1)", "Helpers")], id: \.1) { s in
+                        VStack(spacing: 2) {
+                            Text(s.0).font(.title2.weight(.bold)).foregroundStyle(Color.abAccent).monospacedDigit()
+                            Text(s.1).font(.caption).foregroundStyle(.secondary)
+                        }
+                        .frame(maxWidth: .infinity).padding(.vertical, 12)
+                        .background(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    }
+                }
+
+                // the founder, above everyone else
+                HStack(spacing: 14) {
+                    Text("👑").font(.system(size: 28)).frame(width: 60, height: 60).background(Color(UIColor(hex: 0xFFC627)), in: Circle())
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Alan").font(.title2.weight(.bold))
+                        Text("Founder · builds and runs ASU Bank").font(.subheadline).opacity(0.85)
+                    }
+                    Spacer()
+                }
+                .foregroundStyle(.white)
+                .padding(18)
+                .background(LinearGradient(colors: [Color(UIColor(hex: 0x8C1D40)), Color(UIColor(hex: 0xB8336A))], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 12)], spacing: 12) {
                     ForEach(Array(names.enumerated()), id: \.offset) { i, n in
                         let c = Color(UIColor(hex: palette[i % palette.count]))
@@ -415,11 +441,14 @@ struct ThanksScreen: View {
                                 .overlay(Circle().stroke(.white.opacity(0.6), lineWidth: 2))
                                 .shadow(color: c.opacity(0.35), radius: 8, y: 4)
                             Text(n).font(.headline).lineLimit(1).minimumScaleFactor(0.7)
-                            Text(i == 0 ? "⭐ Founding contributor" : "Contributor").font(.caption).foregroundStyle(.secondary)
+                            Text(i == 0 ? "⭐ First contributor" : "Contributor").font(.caption).foregroundStyle(.secondary)
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
                         .background(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .opacity(shown ? 1 : 0)
+                        .scaleEffect(shown ? 1 : 0.85)
+                        .animation(.spring(response: 0.45, dampingFraction: 0.75).delay(0.06 * Double(i % 12)), value: shown)
                     }
                 }
 
@@ -440,6 +469,7 @@ struct ThanksScreen: View {
         .background(Color.abBackground)
         .navigationTitle("Thanks list")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear { shown = true }
     }
 }
 

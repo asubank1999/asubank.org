@@ -33,6 +33,13 @@ shot 18-ads --es startPath /requests/student_ads
 shot 19-latest --es startPath /guides/latest
 sleep 10
 adb exec-out screencap -p > shots/19-latest-later.png
+shot 20-chat --es startTab chat
+shot 21-theme --es startPath /app/theme
+shot 22-submissions --es startPath /upload/student_submissions_board
+sleep 6
+adb exec-out screencap -p > shots/22-submissions-later.png
+shot 23-account --es startPath /account
+shot 24-pitch-black --es startTab more --ei appearance 3
 adb shell pm clear org.asubank.app
 adb shell am start -n org.asubank.app/.MainActivity
 sleep 10

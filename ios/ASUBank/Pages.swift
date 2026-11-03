@@ -107,6 +107,8 @@ enum SiteRouter {
             case "/": return .tab(.home)
             case "/guides/search": return .tab(.search)
             case "/guides/saved": return .tab(.saved)
+            case "/chat", "/chat/", "/chat/index": return .tab(.chat)
+            case "/admin", "/admin/", "/admin/index": return .tab(.admin) // non-admins are sent back by RootView
             case "/upload/uploadmethod", "/upload", "/upload/dupload", "/upload/gupload", "/upload/googledrive_fileupload", "/upload/discord_fileupload": return .tab(.upload)
             default: return .push(.page(path, title))
             }
@@ -160,6 +162,8 @@ struct SitePageView: View {
             SubmissionsScreen(admin: AccountStore.shared.isAdmin)
         } else if ["/account", "/account/", "/account/index"].contains(path) {
             if AccountStore.shared.signedIn { AccountScreen() } else { SignInPrompt() }
+        } else if path == "/app/theme" {
+            ThemeScreen()
         } else if path == "/apps/donate" {
             DonateScreen()
         } else if path == "/guides/importantlinks", let page = pages.page("/guides/links") {
