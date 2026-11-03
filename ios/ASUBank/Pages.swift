@@ -107,7 +107,7 @@ enum SiteRouter {
             case "/": return .tab(.home)
             case "/guides/search": return .tab(.search)
             case "/guides/saved": return .tab(.saved)
-            case "/upload/uploadmethod", "/upload": return .tab(.upload)
+            case "/upload/uploadmethod", "/upload", "/upload/dupload", "/upload/gupload", "/upload/googledrive_fileupload", "/upload/discord_fileupload": return .tab(.upload)
             default: return .push(.page(path, title))
             }
         }
@@ -154,6 +154,12 @@ struct SitePageView: View {
             StudentAdsScreen()
         } else if path == "/guides/thankslist" {
             ThanksScreen(page: pages.page(path))
+        } else if ["/upload/submit_file", "/upload/student_submissions_board", "/upload/submissions"].contains(path) {
+            SubmissionsScreen()
+        } else if path == "/apps/adminpanel_subs" {
+            SubmissionsScreen(admin: AccountStore.shared.isAdmin)
+        } else if ["/account", "/account/", "/account/index"].contains(path) {
+            if AccountStore.shared.signedIn { AccountScreen() } else { SignInPrompt() }
         } else if path == "/apps/donate" {
             DonateScreen()
         } else if path == "/guides/importantlinks", let page = pages.page("/guides/links") {

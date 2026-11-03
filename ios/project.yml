@@ -40,6 +40,10 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         NSCameraUsageDescription: ASU Bank uses the camera to scan paper notes and exams into a PDF you can upload.
         NSPhotoLibraryUsageDescription: ASU Bank lets you pick photos of notes to upload.
+        BGTaskSchedulerPermittedIdentifiers:
+          - org.asubank.app.chat
+        UIBackgroundModes:
+          - fetch
         CFBundleURLTypes:
           - CFBundleURLName: org.asubank.app
             CFBundleURLSchemes: [asubank]

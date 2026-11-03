@@ -48,6 +48,7 @@ enum Uploader {
 
 struct UploadView: View {
     @EnvironmentObject private var library: Library
+    @EnvironmentObject private var app: AppState
     @AppStorage("ab.upload.agreed") private var agreed = false
     @State private var files: [PendingFile] = []
     @State private var subject = ""
@@ -151,6 +152,9 @@ struct UploadView: View {
                 }
             }
             .navigationTitle("Upload")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Close") { app.uploadShown = false } }
+            }
             .fileImporter(isPresented: $showImporter, allowedContentTypes: [.item], allowsMultipleSelection: true) { result in
                 if case .success(let urls) = result { addFiles(urls) }
             }

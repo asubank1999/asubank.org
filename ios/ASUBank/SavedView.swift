@@ -3,9 +3,14 @@ import SwiftUI
 struct SavedView: View {
     @EnvironmentObject private var saved: SavedStore
     @State private var mode = 0
+    /// Pushed from More (for admins, whose tab bar has Admin instead of Saved)
+    var embedded = false
 
     var body: some View {
-        ABStack {
+        if embedded { list } else { ABStack { list.abDestinations() } }
+    }
+
+    private var list: some View {
             List {
                 Section {
                     Picker("Show", selection: $mode) {
@@ -48,7 +53,5 @@ struct SavedView: View {
                     }
                 }
             }
-            .abDestinations()
-        }
     }
 }

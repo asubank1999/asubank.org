@@ -65,6 +65,8 @@ final class AppConfig: ObservableObject {
 
         let newest = [store?.version, remote?.ios?.latest].compactMap { $0 }.max { Self.compare($0, $1) < 0 }
         latest = newest
+        // Sideloaded builds have no App Store page: send them to the GitHub release instead
+        if storeURL == nil, let n = newest { storeURL = URL(string: "https://github.com/asubank1999/asubank.org/releases/tag/ios-v\(n)") }
         notes = store?.releaseNotes ?? remote?.ios?.notes
         // Only nag when there is somewhere to update from
         guard storeURL != nil else { return }
@@ -92,16 +94,16 @@ struct UpdateRequiredView: View {
             Image(systemName: "arrow.down.app.fill")
                 .font(.system(size: 64)).foregroundStyle(Color.abAccent)
             Text("Update required").font(.largeTitle.weight(.bold))
-            Text("This version of ASU Bank (\(AppConfig.current)) no longer works. Please update to \(config.latest ?? "the latest version") from the App Store to keep using the app.")
+            Text("This version of ASU Bank (\(AppConfig.current)) no longer works. Please update to \(config.latest ?? "the latest version") to keep using the app.")
                 .multilineTextAlignment(.center).foregroundStyle(.secondary)
-            Text("يرجى تحديث التطبيق من App Store للاستمرار.")
+            Text("يرجى تحديث التطبيق للاستمرار.")
                 .multilineTextAlignment(.center).foregroundStyle(.secondary)
                 .environment(\.layoutDirection, .rightToLeft)
             Spacer()
             Button {
                 if let u = config.storeURL { openURL(u) }
             } label: {
-                Text("Update on the App Store").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
+                Text("Update now").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
             }
             .buttonStyle(.borderedProminent).tint(.abAccent)
         }

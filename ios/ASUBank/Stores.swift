@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-enum AppTab: Hashable { case home, search, upload, saved, more }
+enum AppTab: Hashable { case home, search, upload, chat, saved, admin, more }
 
 /// Shared app state: selected tab and a query handed from Home to Search
 @MainActor
@@ -10,14 +10,21 @@ final class AppState: ObservableObject {
     @Published var pendingQuery: String?
     /// An asubank.org page to open on the Home tab (shared links, `-startPath` in CI screenshots)
     @Published var pendingRoute: Route?
+    /// A chat room to open (from a notification)
+    @Published var pendingRoom: String?
+    /// Upload is a sheet now (the tab bar has Chat instead)
+    @Published var uploadShown = false
+    static weak var shared: AppState?
 
     init() {
         // Launch arguments used by the CI screenshots, e.g. `-startTab search -startQuery calculus`
         let d = UserDefaults.standard
-        let tabs: [String: AppTab] = ["home": .home, "search": .search, "upload": .upload, "saved": .saved, "more": .more]
+        let tabs: [String: AppTab] = ["home": .home, "search": .search, "upload": .upload, "chat": .chat, "saved": .saved, "admin": .admin, "more": .more]
         if let t = d.string(forKey: "startTab"), let tab = tabs[t] { self.tab = tab }
         pendingQuery = d.string(forKey: "startQuery")
         if let p = d.string(forKey: "startPath") { pendingRoute = .page(p, "") }
+        pendingRoom = d.string(forKey: "startRoom")
+        AppState.shared = self
     }
 
     func search(_ q: String) {

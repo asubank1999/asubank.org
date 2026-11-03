@@ -10,6 +10,10 @@ enum MyUploads {
         return (try? JSONDecoder().decode([Item].self, from: d)) ?? []
     }
 
+    static func remove(_ url: String) {
+        UserDefaults.standard.set(try? JSONEncoder().encode(all.filter { $0.url != url }), forKey: key)
+    }
+
     static func add(name: String, url: String) {
         guard !url.isEmpty else { return }
         let now = ISO8601DateFormatter().string(from: Date())
@@ -125,6 +129,8 @@ struct LatestScreen: View {
     @StateObject private var store = LatestStore()
     @State private var query = ""
     @State private var type = "all"
+    @ObservedObject private var account = AccountStore.shared
+    @State private var deleteError: String?
 
     private let types: [(String, String)] = [("all", "All"), ("pdf", "PDF"), ("ppt", "Slides"), ("doc", "Docs"), ("img", "Images")]
 
@@ -165,6 +171,11 @@ struct LatestScreen: View {
                     Section("\(g.0) · \(g.1.count)") {
                         ForEach(g.1) { r in
                             MaterialRow(m: r.m, kind: r.kind, meta: meta(r))
+                                .swipeActions(edge: .trailing) {
+                                    if account.isAdmin {
+                                        Button(role: .destructive) { Task { await deleteUpload(r) } } label: { Label("Delete", systemImage: "trash") }
+                                    }
+                                }
                         }
                     }
                 }
@@ -176,6 +187,9 @@ struct LatestScreen: View {
         .listStyle(.insetGrouped)
         .searchable(text: $query, prompt: "Search latest uploads")
         .navigationTitle("Latest uploads")
+        .alert("Couldn't delete", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: { Text(deleteError ?? "") }
         .refreshable { await store.load(force: true) }
         .task { await store.load() }
     }
@@ -185,5 +199,25 @@ struct LatestScreen: View {
         if r.size > 0 { parts.append(ByteCountFormatter.string(fromByteCount: Int64(r.size), countStyle: .file)) }
         if let d = AB.date(r.date) { parts.append(d.formatted(.relative(presentation: .named))) }
         return parts.joined(separator: " · ")
+    }
+}
+
+extension LatestScreen {
+    func deleteUpload(_ r: DriveSearch.Result) async {
+        do {
+            try await AdminUploads.delete(r.m.u)
+            Haptics.success()
+            await store.removeFile(r.m.u)
+        } catch {
+            deleteError = error.localizedDescription
+            Haptics.error()
+        }
+    }
+}
+
+extension LatestStore {
+    func removeFile(_ url: String) async {
+        files.removeAll { $0.m.u == url }
+        MyUploads.remove(url)
     }
 }

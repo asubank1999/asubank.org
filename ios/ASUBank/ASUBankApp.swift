@@ -1,4 +1,5 @@
 import SwiftUI
+import UserNotifications
 
 @main
 struct ASUBankApp: App {
@@ -8,17 +9,41 @@ struct ASUBankApp: App {
     @StateObject private var pages = SitePages()
     @StateObject private var config = AppConfig()
     @AppStorage("ab.appearance") private var appearance = 0
+    @AppStorage("ab.theme.rev") private var themeRev = 0
+    @State private var splash = !UserDefaults.standard.bool(forKey: "noSplash")
+        && UserDefaults.standard.string(forKey: "startTab") == nil
+        && UserDefaults.standard.string(forKey: "startPath") == nil
+
+    init() {
+        UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
+        ChatNotifier.register()
+        AppTheme.applyBars()
+    }
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            ZStack {
+                RootView()
+                    .id(themeRev)
+                if splash {
+                    SplashView().transition(.opacity).zIndex(1)
+                }
+            }
                 .environmentObject(app)
                 .environmentObject(library)
                 .environmentObject(saved)
                 .environmentObject(pages)
                 .environmentObject(config)
                 .tint(.abAccent)
-                .preferredColorScheme(appearance == 1 ? .light : appearance == 2 ? .dark : nil)
+                .preferredColorScheme(appearance == 1 ? .light : appearance >= 2 ? .dark : nil)
+                .task {
+                    try? await Task.sleep(nanoseconds: 1_500_000_000)
+                    withAnimation(.easeOut(duration: 0.35)) { splash = false }
+                }
+                .task {
+                    await AccountStore.shared.refresh()
+                    if AccountStore.shared.signedIn { ChatNotifier.shared.start() }
+                }
                 .task {
                     await library.load()
                     if await DriveLinks.shared.refresh() { library.reindex() }
@@ -35,6 +60,8 @@ struct RootView: View {
     @Environment(\.scenePhase) private var phase
     @Environment(\.openURL) private var openURL
     @AppStorage(WelcomeTermsView.key) private var accepted = false
+    @ObservedObject private var account = AccountStore.shared
+    @State private var lastTab: AppTab = .home
 
     var body: some View {
         TabView(selection: $app.tab) {
@@ -44,17 +71,35 @@ struct RootView: View {
             SearchView()
                 .tabItem { Label("Search", systemImage: "magnifyingglass") }
                 .tag(AppTab.search)
-            UploadView()
-                .tabItem { Label("Upload", systemImage: "arrow.up.circle.fill") }
-                .tag(AppTab.upload)
-            SavedView()
-                .tabItem { Label("Saved", systemImage: "star.fill") }
-                .tag(AppTab.saved)
+            ChatTab()
+                .tabItem { Label("Chat", systemImage: "bubble.left.and.bubble.right.fill") }
+                .tag(AppTab.chat)
+            if account.isAdmin {
+                AdminTab()
+                    .tabItem { Label("Admin", systemImage: "shield.lefthalf.filled") }
+                    .tag(AppTab.admin)
+            } else {
+                SavedView()
+                    .tabItem { Label("Saved", systemImage: "star.fill") }
+                    .tag(AppTab.saved)
+            }
             MoreView()
                 .tabItem { Label("More", systemImage: "ellipsis.circle.fill") }
                 .tag(AppTab.more)
         }
-        .onChange(of: app.tab) { _ in Haptics.tap() }
+        .onChange(of: app.tab) { t in
+            // Upload opens as a sheet over the tab you were on; admins find Saved under More
+            if t == .upload { app.tab = lastTab; app.uploadShown = true; return }
+            if t == .saved && account.isAdmin { app.tab = .more; return }
+            if t == .admin && !account.isAdmin { app.tab = lastTab; return }
+            lastTab = t
+            Haptics.tap()
+        }
+        .onAppear {
+            if app.tab == .upload { app.tab = .home; app.uploadShown = true }
+        }
+        .sheet(isPresented: $app.uploadShown) { UploadView() }
+        .sheet(isPresented: $account.signInShown) { SignInScreen() }
         .fullScreenCover(isPresented: Binding(get: { !accepted && !config.mustUpdate }, set: { _ in })) {
             WelcomeTermsView()
         }
@@ -65,7 +110,9 @@ struct RootView: View {
             Button("Update") { if let u = config.storeURL { openURL(u) } }
             Button("Later", role: .cancel) {}
         } message: {
-            Text("ASU Bank \(config.latest ?? "") is out on the App Store. You have \(AppConfig.current).")
+            Text("ASU Bank \(config.latest ?? "") is out. You have \(AppConfig.current).\(config.notes.map { "
+
+" + $0 } ?? "")")
         }
         .task { await config.check() }
         .onChange(of: phase) { p in

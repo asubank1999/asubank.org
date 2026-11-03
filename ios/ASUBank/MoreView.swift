@@ -3,7 +3,8 @@ import SwiftUI
 struct MoreView: View {
     @EnvironmentObject private var library: Library
     @EnvironmentObject private var config: AppConfig
-    @AppStorage("ab.appearance") private var appearance = 0 // 0 system, 1 light, 2 dark
+    @EnvironmentObject private var app: AppState
+    @ObservedObject private var account = AccountStore.shared
     @Environment(\.openURL) private var openURL
     @State private var showTerms = false
     @State private var copied = false
@@ -15,13 +16,28 @@ struct MoreView: View {
         ABStack {
             List {
                 Section {
-                    Picker("Appearance", selection: $appearance) {
-                        Text("Automatic").tag(0)
-                        Text("Light").tag(1)
-                        Text("Dark").tag(2)
+                    if let u = account.user {
+                        NavigationLink { AccountScreen() } label: {
+                            HStack(spacing: 12) {
+                                Avatar(name: u.displayName, color: u.color, size: 40, admin: u.isAdmin)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(u.displayName).font(.body.weight(.semibold))
+                                    Text("@\(u.username)" + (u.isAdmin ? " · Admin" : "")).font(.caption).foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    } else {
+                        Button { account.signInShown = true } label: {
+                            row("person.crop.circle.fill", .abAccent, "Sign in or create account", "Join the student chat")
+                        }
                     }
-                    .pickerStyle(.segmented)
-                } header: { Text("Appearance") }
+                    NavigationLink { ThemeScreen() } label: { Label("Theme", systemImage: "paintpalette") }
+                    Button { app.uploadShown = true } label: { Label("Upload files", systemImage: "arrow.up.circle") }
+                    if account.isAdmin {
+                        NavigationLink { SavedView(embedded: true) } label: { Label("Saved", systemImage: "star") }
+                    }
+                    RouteLink(Route.page("/upload/student_submissions_board", "Submissions")) { Label("Student submissions", systemImage: "rectangle.stack") }
+                } header: { Text("You") }
 
                 Section("All subjects") {
                     RouteLink(Route.page("/banks/subjects", "All subjects")) { Label("Subjects directory", systemImage: "square.grid.2x2") }

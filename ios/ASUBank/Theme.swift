@@ -9,10 +9,10 @@ extension UIColor {
 
 /// Colors from the website's design system (assets/app/app.css)
 extension Color {
-    static let abAccent = Color(UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: 0xff6f9a) : UIColor(hex: 0x8C1D40) })
-    static let abAccentSoft = Color(UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: 0xff6f9a, alpha: 0.16) : UIColor(hex: 0x8C1D40, alpha: 0.1) })
+    static var abAccent: Color { AppTheme.accent.color }
+    static var abAccentSoft: Color { AppTheme.accent.soft }
     static let abGold = Color(UIColor(hex: 0xFFC627))
-    static let abBackground = Color(UIColor.systemGroupedBackground)
+    static var abBackground: Color { AppTheme.appearance == 3 ? .black : Color(UIColor.systemGroupedBackground) }
     static let abSurface = Color(UIColor.secondarySystemGroupedBackground)
 }
 
@@ -97,4 +97,52 @@ enum Haptics {
     static func tap() { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
     static func success() { UINotificationFeedbackGenerator().notificationOccurred(.success) }
     static func error() { UINotificationFeedbackGenerator().notificationOccurred(.error) }
+}
+
+/// App theme: appearance (system, light, dark, pitch black) and the accent color, from More > Theme
+enum AppTheme {
+    struct Accent: Identifiable {
+        let id: Int
+        let name: String
+        let light: UInt32
+        let dark: UInt32
+        var color: Color { Color(UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: dark) : UIColor(hex: light) }) }
+        var soft: Color { Color(UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: dark, alpha: 0.16) : UIColor(hex: light, alpha: 0.1) }) }
+    }
+
+    static let accents: [Accent] = [
+        .init(id: 0, name: "ASU maroon", light: 0x8C1D40, dark: 0xff6f9a),
+        .init(id: 1, name: "Ocean", light: 0x0a63c9, dark: 0x4da3ff),
+        .init(id: 2, name: "Forest", light: 0x1f7a3a, dark: 0x4cd07a),
+        .init(id: 3, name: "Violet", light: 0x6e3fd1, dark: 0xb18cff),
+        .init(id: 4, name: "Sunset", light: 0xd2510a, dark: 0xff9a52),
+        .init(id: 5, name: "Teal", light: 0x00847f, dark: 0x3fd6cf),
+        .init(id: 6, name: "Graphite", light: 0x3a3a3c, dark: 0xd1d1d6),
+    ]
+
+    /// 0 system, 1 light, 2 dark, 3 pitch black (OLED)
+    static var appearance: Int { UserDefaults.standard.integer(forKey: "ab.appearance") }
+    static var accent: Accent { accents.first { $0.id == UserDefaults.standard.integer(forKey: "ab.accent") } ?? accents[0] }
+
+    static var scheme: ColorScheme? { appearance == 1 ? .light : appearance >= 2 ? .dark : nil }
+
+    /// Bar colors (pitch black makes the tab and navigation bars pure black too)
+    static func applyBars() {
+        let nav = UINavigationBarAppearance()
+        let tab = UITabBarAppearance()
+        if appearance == 3 {
+            nav.configureWithOpaqueBackground(); nav.backgroundColor = .black; nav.shadowColor = .clear
+            tab.configureWithOpaqueBackground(); tab.backgroundColor = .black
+            UITableView.appearance().backgroundColor = .black
+        } else {
+            nav.configureWithDefaultBackground()
+            tab.configureWithDefaultBackground()
+            UITableView.appearance().backgroundColor = nil
+        }
+        UINavigationBar.appearance().standardAppearance = nav
+        UINavigationBar.appearance().compactAppearance = nav
+        if appearance == 3 { UINavigationBar.appearance().scrollEdgeAppearance = nav } else { UINavigationBar.appearance().scrollEdgeAppearance = nil }
+        UITabBar.appearance().standardAppearance = tab
+        UITabBar.appearance().scrollEdgeAppearance = appearance == 3 ? tab : nil
+    }
 }
