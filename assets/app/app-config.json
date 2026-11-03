@@ -1,14 +1,14 @@
 {
   "ios": {
-    "latest": "1.5.0",
+    "latest": "1.6.0",
     "minimum": "1.0.0",
     "store": "",
-    "notes": "Accounts and a live student chat with notifications, themes including pitch black, native student submissions, and an admin tab."
+    "notes": "Profiles with photos, who's online, edit messages, choose your notifications, badges, languages (English, Arabic, Spanish), native rating and voting, and admin room tools."
   },
   "android": {
-    "latest": "1.5.0",
+    "latest": "1.6.0",
     "minimum": "1.0.0",
-    "notes": "Accounts and a live student chat with notifications, themes including pitch black, native student submissions, and an admin tab."
+    "notes": "Profiles with photos, who's online, edit messages, choose your notifications, badges, languages (English, Arabic, Spanish), native rating and voting, and admin room tools."
   },
   "donate": true
 }
