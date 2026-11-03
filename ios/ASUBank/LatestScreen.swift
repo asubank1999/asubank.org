@@ -50,7 +50,7 @@ enum UploadFolder {
               let (data, _) = try? await URLSession.shared.data(from: url),
               let html = String(data: data, encoding: .utf8) else { return [] }
         return DriveFolderList.parse(html).compactMap { e in
-            if e.name.hasPrefix("[TEST]") { return nil }
+            if e.name.hasPrefix("[TEST]") || e.name.localizedCaseInsensitiveContains("upload-test") { return nil }
             let d = isoDate(e.modified)
             return DriveSearch.Result(m: Material(u: e.url, t: e.name, s: "Shared by students", d: d.isEmpty ? nil : d), kind: e.kind, date: d, size: 0)
         }
@@ -88,28 +88,29 @@ final class LatestStore: ObservableObject {
     func load(force: Bool = false) async {
         if !force, let t = loadedAt, Date().timeIntervalSince(t) < 600, !files.isEmpty { return }
         state = files.isEmpty ? 1 : state
-        async let folder = UploadFolder.load()
-        var indexed: [DriveSearch.Result] = []
-        var failed = false
-        do {
-            let url = URL(string: "\(Self.api)?t=\(Int(Date().timeIntervalSince1970))&sort=date&order=desc")!
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let r = try JSONDecoder().decode(Reply.self, from: data)
-            guard r.success == true, let list = r.files else { throw URLError(.cannotParseResponse) }
-            indexed = list.filter { DriveLinks.shared.isBroken($0.url) == nil }.map { f in
-                let k = DriveSearch.kind(mime: f.mimeType, url: f.url, name: f.name)
-                return DriveSearch.Result(m: Material(u: f.url, t: f.name, s: "Latest uploads", d: f.dateUploaded), kind: k, date: f.dateUploaded ?? "", size: f.size ?? 0)
-            }
-        } catch {
-            failed = true
-        }
         let mine = MyUploads.all.map {
             DriveSearch.Result(m: Material(u: $0.url, t: $0.name, s: "Your upload", d: $0.date), kind: AB.kind($0.url, $0.name), date: $0.date, size: 0)
         }
-        let fresh = await folder
         // your uploads first, then the upload folder, then the indexed Drive; each file once
-        var seen = Set<String>()
-        let merged = (mine + fresh + indexed).filter { seen.insert(AB.driveId($0.m.u) ?? $0.m.u).inserted }
+        func merge(_ lists: [DriveSearch.Result]...) -> [DriveSearch.Result] {
+            var seen = Set<String>()
+            return lists.joined().filter { seen.insert(AB.driveId($0.m.u) ?? $0.m.u).inserted }.sorted { $0.date > $1.date }
+        }
+        let api = Task { () -> [DriveSearch.Result]? in
+            let url = URL(string: "\(Self.api)?t=\(Int(Date().timeIntervalSince1970))&sort=date&order=desc")!
+            guard let (data, _) = try? await URLSession.shared.data(from: url),
+                  let r = try? JSONDecoder().decode(Reply.self, from: data), r.success == true, let list = r.files else { return nil }
+            return list.filter { DriveLinks.shared.isBroken($0.url) == nil }.map { f in
+                let k = DriveSearch.kind(mime: f.mimeType, url: f.url, name: f.name)
+                return DriveSearch.Result(m: Material(u: f.url, t: f.name, s: "Latest uploads", d: f.dateUploaded), kind: k, date: f.dateUploaded ?? "", size: f.size ?? 0)
+            }
+        }
+        let fresh = await UploadFolder.load()
+        // show the newest uploads right away; the full index (slow to wake up) is merged in when it answers
+        if files.isEmpty, !(mine + fresh).isEmpty { files = merge(mine, fresh); state = 2 }
+        let indexed = await api.value
+        let failed = indexed == nil
+        let merged = merge(mine, fresh, indexed ?? [])
         if merged.isEmpty {
             if failed && files.isEmpty { state = 3 }
             return

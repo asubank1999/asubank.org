@@ -312,7 +312,7 @@ object UploadFolder {
         return ""
     }
 
-    suspend fun load(): List<DriveResult> = (Folders.load(ID) ?: emptyList()).filter { !it.name.startsWith("[TEST]") }.map { e ->
+    suspend fun load(): List<DriveResult> = (Folders.load(ID) ?: emptyList()).filter { !it.name.startsWith("[TEST]") && !it.name.contains("upload-test", true) }.map { e ->
         val d = isoDate(e.modified)
         DriveResult(Material(u = e.url, t = e.name, s = "Shared by students", d = d.ifEmpty { null }), e.kind, d, 0)
     }

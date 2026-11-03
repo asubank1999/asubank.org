@@ -404,7 +404,7 @@ struct ThanksScreen: View {
                 }
                 .padding(.top, 8)
 
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 12) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 12)], spacing: 12) {
                     ForEach(Array(names.enumerated()), id: \.offset) { i, n in
                         let c = Color(UIColor(hex: palette[i % palette.count]))
                         VStack(spacing: 10) {

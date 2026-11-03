@@ -359,7 +359,7 @@ fun ThanksScreen(page: SitePage?) {
     val palette = listOf(0xFF8C1D40, 0xFF0A84FF, 0xFF1F8A3E, 0xFFAF52DE, 0xFFE8590C, 0xFFFF2D55, 0xFF5E5CE6, 0xFF00A3A3)
     Screen("Thanks list") { pad ->
         LazyVerticalGrid(
-            GridCells.Adaptive(150.dp), Modifier.padding(pad).fillMaxSize(),
+            GridCells.Adaptive(130.dp), Modifier.padding(pad).fillMaxSize(),
             contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item(span = { GridItemSpan(maxLineSpan) }) {
