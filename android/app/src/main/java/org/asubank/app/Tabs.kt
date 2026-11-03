@@ -327,13 +327,9 @@ fun MoreScreen() {
                         openExternal(ctx, "https://www.paypal.com/paypalme/necro144")
                     }
                     Divider()
-                    ListRow("Donate with CliQ", "Message the number ending in 71 on WhatsApp", icon = Icons.Filled.Payments, iconColor = Color(0xFF25A244)) {
-                        openExternal(ctx, "mailto:necro144@yahoo.com?body=" + android.net.Uri.encode("Hi! I want to donate to ASU Bank with CliQ."))
-                    }
-                    Divider()
-                    ListRow("Copy CliQ number", "necro144@yahoo.com", icon = Icons.Filled.ContentCopy, iconColor = Color(0xFF8E8E93)) {
-                        (ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("CliQ", "necro144@yahoo.com"))
-                        Toast.makeText(ctx, "Copied", Toast.LENGTH_SHORT).show()
+                    ListRow("CliQ alias: ALANQ99", "Bank of Jordan · tap to copy", icon = Icons.Filled.Payments, iconColor = Color(0xFF25A244)) {
+                        (ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("CliQ alias", "ALANQ99"))
+                        Toast.makeText(ctx, "Copied ALANQ99", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -254,6 +254,7 @@ struct UploadView: View {
                         }
                     }
                     if let j = files.firstIndex(where: { $0.id == f.id }) { files[j].state = .done(url) }
+                    MyUploads.add(name: f.name, url: url)
                     ok += 1
                 } catch {
                     if let j = files.firstIndex(where: { $0.id == f.id }) {

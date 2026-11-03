@@ -3,6 +3,10 @@ package org.asubank.app
 import android.content.Context
 import android.content.SharedPreferences
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.builtins.ListSerializer
@@ -260,11 +264,57 @@ object DriveSearch {
         return map(r.files ?: emptyList(), "Google Drive")
     }
 
-    suspend fun latest(): List<DriveResult>? {
-        val t = Net.text("${AB.LATEST}?t=${System.currentTimeMillis() / 1000}&sort=date&order=desc") ?: return null
-        val r = runCatching { json.decodeFromString(DriveReply.serializer(), t) }.getOrNull() ?: return null
-        if (r.success != true) return null
-        return map(r.files ?: emptyList(), "Latest uploads").sortedByDescending { it.date }
+    /** Your uploads, then the upload folder, then the indexed Drive (each file once), newest first */
+    suspend fun latest(): List<DriveResult>? = coroutineScope {
+        val folder = async { UploadFolder.load() }
+        val indexed = Net.text("${AB.LATEST}?t=${System.currentTimeMillis() / 1000}&sort=date&order=desc")
+            ?.let { t -> runCatching { json.decodeFromString(DriveReply.serializer(), t) }.getOrNull() }
+            ?.takeIf { it.success == true }?.let { map(it.files ?: emptyList(), "Latest uploads") } ?: emptyList()
+        val mine = MyUploads.all().map { DriveResult(Material(u = it.url, t = it.name, s = "Your upload", d = it.date), AB.kind(it.url, it.name), it.date, 0) }
+        val merged = (mine + folder.await() + indexed).distinctBy { AB.driveId(it.m.u) ?: it.m.u }
+        if (merged.isEmpty()) null else merged.sortedByDescending { it.date }
+    }
+}
+
+/** Files this phone uploaded, shown in Latest uploads right away (before Drive indexes them) */
+object MyUploads {
+    @kotlinx.serialization.Serializable data class Item(val name: String, val url: String, val date: String)
+    private const val KEY = "myUploads.v1"
+
+    fun all(): List<Item> = Saved.prefs.getString(KEY, null)?.let { runCatching { json.decodeFromString<List<Item>>(it) }.getOrNull() } ?: emptyList()
+
+    fun add(name: String, url: String) {
+        if (url.isEmpty()) return
+        val now = java.time.OffsetDateTime.now().toString()
+        val list = (listOf(Item(name, url, now)) + all().filter { it.url != url }).take(50)
+        Saved.prefs.edit().putString(KEY, json.encodeToString(list)).apply()
+    }
+}
+
+/**
+ * The folder the upload form saves into ("asubank.xyz Upload+"), read like any shared folder.
+ * The latest-uploads script indexes the older Drive folders only, so new uploads come from here.
+ */
+object UploadFolder {
+    const val ID = "1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB"
+
+    /** Drive's folder view shows "3:45 PM" (today), "Nov 2" (this year) or "9/8/25" */
+    fun isoDate(s: String): String {
+        val t = s.trim()
+        val today = java.time.LocalDate.now()
+        if (t.contains(":")) return today.toString()
+        runCatching { return java.time.LocalDate.parse(t, java.time.format.DateTimeFormatter.ofPattern("M/d/yy", java.util.Locale.US)).toString() }
+        runCatching {
+            var d = java.time.LocalDate.parse("$t ${today.year}", java.time.format.DateTimeFormatter.ofPattern("MMM d yyyy", java.util.Locale.US))
+            if (d.isAfter(today)) d = d.minusYears(1)
+            return d.toString()
+        }
+        return ""
+    }
+
+    suspend fun load(): List<DriveResult> = (Folders.load(ID) ?: emptyList()).filter { !it.name.startsWith("[TEST]") }.map { e ->
+        val d = isoDate(e.modified)
+        DriveResult(Material(u = e.url, t = e.name, s = "Shared by students", d = d.ifEmpty { null }), e.kind, d, 0)
     }
 }
 

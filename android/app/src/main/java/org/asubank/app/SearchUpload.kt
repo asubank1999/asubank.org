@@ -270,15 +270,17 @@ fun UploadScreen() {
                             .build()
                         client.newCall(req).execute().use { r ->
                             val o = runCatching { json.parseToJsonElement(r.body?.string() ?: "").jsonObject }.getOrNull()
-                            if ((o?.get("success") as? JsonPrimitive)?.booleanOrNull == true) null
-                            else (o?.get("error") as? JsonPrimitive)?.contentOrNull ?: "Upload failed. Please try again."
+                            if ((o?.get("success") as? JsonPrimitive)?.booleanOrNull == true) {
+                                MyUploads.add(f.name, (o?.get("url") as? JsonPrimitive)?.contentOrNull ?: "")
+                                null
+                            } else (o?.get("error") as? JsonPrimitive)?.contentOrNull ?: "Upload failed. Please try again."
                         }
                     } catch (e: Exception) { "Upload failed: ${e.message ?: "no connection"}" }
                 }
                 if (result == null) { f.state = "done"; ok++ } else { f.state = "failed"; f.message = result }
             }
             busy = false
-            message = if (ok > 0) "Thank you! $ok file${if (ok == 1) "" else "s"} uploaded. They'll appear after a quick check." else "Nothing was uploaded."
+            message = if (ok > 0) "Thank you! $ok file${if (ok == 1) "" else "s"} uploaded. They're in Latest uploads now." else "Nothing was uploaded."
         }
     }
 

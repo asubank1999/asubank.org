@@ -46,6 +46,9 @@ struct Teacher: Identifiable, Hashable {
 final class RatingBridge: NSObject, ObservableObject, WKScriptMessageHandler, WKNavigationDelegate {
     enum Status: Equatable { case connecting, ready, failed }
 
+    /// One connection for the whole app: reopening the screen is instant once it is ready
+    static let shared = RatingBridge()
+
     @Published var status: Status = .connecting
     @Published var teachers: [Teacher] = []
     @Published var loading = false
@@ -61,32 +64,40 @@ final class RatingBridge: NSObject, ObservableObject, WKScriptMessageHandler, WK
         (function(){var n=0;function go(){try{if(window.google&&google.script&&google.script.run&&document.getElementById('teacherInput')){window.webkit.messageHandlers.abRating.postMessage('ready');return;}}catch(e){}if(++n<120)setTimeout(go,250);}go();})();
         """
         config.userContentController.addUserScript(WKUserScript(source: probe, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
-        web = WKWebView(frame: CGRect(x: 0, y: 0, width: 2, height: 2), configuration: config)
+        web = WKWebView(frame: CGRect(x: 0, y: 0, width: 320, height: 480), configuration: config)
         super.init()
         config.userContentController.add(WeakHandler(self), name: "abRating")
         web.navigationDelegate = self
     }
 
-    func connect() {
-        guard status != .ready else { return }
+    func connect(force: Bool = false) {
+        guard force || status == .failed || (status == .connecting && frame == nil && !web.isLoading) else { return }
         status = .connecting
         frame = nil
-        web.load(URLRequest(url: URL(string: Ratings.script)!))
+        web.load(URLRequest(url: URL(string: Ratings.script)!, cachePolicy: .reloadIgnoringLocalCacheData))
         timeout?.cancel()
         timeout = Task { [weak self] in
-            try? await Task.sleep(nanoseconds: 30_000_000_000)
+            try? await Task.sleep(nanoseconds: 45_000_000_000)
             if let self, self.status == .connecting { self.status = .failed }
         }
+    }
+
+    /// Waits (up to `seconds`) until the rating page is reachable
+    private func waitReady(_ seconds: Double) async -> Bool {
+        let end = Date().addingTimeInterval(seconds)
+        while status != .ready, Date() < end { try? await Task.sleep(nanoseconds: 200_000_000) }
+        return status == .ready
     }
 
     nonisolated func userContentController(_ c: WKUserContentController, didReceive message: WKScriptMessage) {
         let info = message.frameInfo
         Task { @MainActor in
-            guard self.frame == nil else { return }
+            // always use the newest rating frame: Google sometimes reloads it, and the old one stops answering
+            let first = self.status != .ready
             self.frame = info
             self.timeout?.cancel()
             self.status = .ready
-            await self.refresh()
+            if first || self.teachers.isEmpty { await self.refresh() }
         }
     }
 
@@ -98,9 +109,34 @@ final class RatingBridge: NSObject, ObservableObject, WKScriptMessageHandler, WK
         Task { @MainActor in if self.status == .connecting { self.status = .failed } }
     }
 
-    /// Calls a function of the Apps Script and returns its JSON result
+    /// Calls a function of the Apps Script and returns its JSON result. Reconnects and retries once
+    /// when the page stopped answering.
     private func call(_ fn: String, _ args: [Any]) async throws -> Any? {
-        guard let frame else { throw NSError(domain: "rating", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not connected yet."]) }
+        do {
+            return try await callOnce(fn, args)
+        } catch let e as NSError where e.domain == "rating" {
+            connect(force: true)
+            guard await waitReady(30) else { throw e }
+            return try await callOnce(fn, args)
+        }
+    }
+
+    private func callOnce(_ fn: String, _ args: [Any]) async throws -> Any? {
+        if status != .ready { _ = await waitReady(30) }
+        guard let frame else { throw NSError(domain: "rating", code: 1, userInfo: [NSLocalizedDescriptionKey: "Couldn't reach the ratings. Check your connection and try again."]) }
+        return try await withThrowingTaskGroup(of: Any?.self) { group in
+            group.addTask { @MainActor in try await self.run(fn, args, in: frame) }
+            group.addTask {
+                try await Task.sleep(nanoseconds: 25_000_000_000)
+                throw NSError(domain: "rating", code: 2, userInfo: [NSLocalizedDescriptionKey: "The ratings server didn't answer. Try again."])
+            }
+            let first = try await group.next() ?? nil
+            group.cancelAll()
+            return first
+        }
+    }
+
+    private func run(_ fn: String, _ args: [Any], in frame: WKFrameInfo) async throws -> Any? {
         let js = """
         return await new Promise(function(res, rej){
           var r = google.script.run.withSuccessHandler(function(v){ res(JSON.stringify(v === undefined ? null : v)); })
@@ -108,7 +144,14 @@ final class RatingBridge: NSObject, ObservableObject, WKScriptMessageHandler, WK
           r[fn].apply(r, args);
         });
         """
-        let out = try await web.callAsyncJavaScript(js, arguments: ["fn": fn, "args": args], in: frame, contentWorld: .page)
+        let out: Any?
+        do {
+            out = try await web.callAsyncJavaScript(js, arguments: ["fn": fn, "args": args], in: frame, contentWorld: .page)
+        } catch let e as NSError where e.domain == WKErrorDomain && e.code != WKError.Code.javaScriptExceptionOccurred.rawValue {
+            // the frame went away (e.g. Google reloaded it): reconnect. A script error (e.g. the server
+            // refusing a rating) is a real answer and is passed on as it is.
+            throw NSError(domain: "rating", code: 3, userInfo: [NSLocalizedDescriptionKey: e.localizedDescription])
+        }
         guard let s = out as? String, let data = s.data(using: .utf8) else { return nil }
         return try JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])
     }
@@ -116,7 +159,7 @@ final class RatingBridge: NSObject, ObservableObject, WKScriptMessageHandler, WK
     func refresh() async {
         loading = true
         defer { loading = false }
-        if let r = try? await call("bootstrap", [""]) as? [String: Any],
+        if let r = try? await callOnce("bootstrap", [""]) as? [String: Any],
            let items = (r["data"] as? [String: Any])?["items"] as? [Any] {
             var seen = Set<String>()
             teachers = items.compactMap { Teacher($0) }.filter { seen.insert($0.id).inserted }
@@ -156,7 +199,7 @@ private struct HiddenWeb: UIViewRepresentable {
 enum RatingSort: String, CaseIterable { case top = "Top rated", votes = "Most votes", name = "A–Z" }
 
 struct TeacherRatingsScreen: View {
-    @StateObject private var bridge = RatingBridge()
+    @ObservedObject private var bridge = RatingBridge.shared
     @AppStorage("ab.rate.intro.v1") private var introSeen = false
     @State private var query = ""
     @State private var sort: RatingSort = .votes
@@ -170,7 +213,8 @@ struct TeacherRatingsScreen: View {
                 list
             }
         }
-        .background(HiddenWeb(web: bridge.web).frame(width: 2, height: 2).opacity(0.01).allowsHitTesting(false))
+        // the page that talks to the ratings sheet: kept full size behind the screen so iOS keeps it running
+        .background(HiddenWeb(web: bridge.web).opacity(0.001).allowsHitTesting(false).accessibilityHidden(true))
         .navigationTitle("Rate your teachers")
         .navigationBarTitleDisplayMode(introSeen ? .large : .inline)
         .onAppear { bridge.connect() }
@@ -219,7 +263,8 @@ struct TeacherRatingsScreen: View {
                         Image(systemName: "wifi.exclamationmark").font(.largeTitle).foregroundStyle(.secondary)
                         Text("Couldn't load the ratings").font(.headline)
                         Text("Check your connection and try again.").font(.footnote).foregroundStyle(.secondary)
-                        Button("Try again") { bridge.connect() }.buttonStyle(.borderedProminent).tint(.abAccent)
+                        Button("Try again") { bridge.connect(force: true) }.buttonStyle(.borderedProminent).tint(.abAccent)
+                        RouteLink(Route.web("Rate your teachers", Ratings.script)) { Text("Open the web version").font(.footnote) }
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
                 }

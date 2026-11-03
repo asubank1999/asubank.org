@@ -1,5 +1,62 @@
 import SwiftUI
 
+/// Files this phone uploaded, shown in Latest uploads right away (before Drive indexes them)
+enum MyUploads {
+    struct Item: Codable { var name: String; var url: String; var date: String }
+    private static let key = "ab.myUploads.v1"
+
+    static var all: [Item] {
+        guard let d = UserDefaults.standard.data(forKey: key) else { return [] }
+        return (try? JSONDecoder().decode([Item].self, from: d)) ?? []
+    }
+
+    static func add(name: String, url: String) {
+        guard !url.isEmpty else { return }
+        let now = ISO8601DateFormatter().string(from: Date())
+        let list = [Item(name: name, url: url, date: now)] + all.filter { $0.url != url }
+        UserDefaults.standard.set(try? JSONEncoder().encode(Array(list.prefix(50))), forKey: key)
+    }
+}
+
+/// The folder the upload form saves into ("asubank.xyz Upload+"), read like any shared folder.
+/// The latest-uploads script indexes the older Drive folders only, so new uploads come from here.
+enum UploadFolder {
+    static let id = "1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB"
+
+    /// Drive's folder view shows "3:45 PM" (today), "Nov 2" (this year) or "9/8/25"
+    static func isoDate(_ s: String) -> String {
+        let t = s.trimmingCharacters(in: .whitespaces)
+        let cal = Calendar(identifier: .gregorian)
+        let now = Date()
+        let day = DateFormatter()
+        day.locale = Locale(identifier: "en_US_POSIX")
+        day.dateFormat = "yyyy-MM-dd"
+        if t.contains(":") { return day.string(from: now) }
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "M/d/yy"
+        if let d = f.date(from: t) { return day.string(from: d) }
+        f.dateFormat = "MMM d yyyy"
+        let y = cal.component(.year, from: now)
+        if var d = f.date(from: "\(t) \(y)") {
+            if d > now, let back = cal.date(byAdding: .year, value: -1, to: d) { d = back }
+            return day.string(from: d)
+        }
+        return ""
+    }
+
+    static func load() async -> [DriveSearch.Result] {
+        guard let url = URL(string: "https://drive.google.com/embeddedfolderview?id=\(id)"),
+              let (data, _) = try? await URLSession.shared.data(from: url),
+              let html = String(data: data, encoding: .utf8) else { return [] }
+        return DriveFolderList.parse(html).compactMap { e in
+            if e.name.hasPrefix("[TEST]") { return nil }
+            let d = isoDate(e.modified)
+            return DriveSearch.Result(m: Material(u: e.url, t: e.name, s: "Shared by students", d: d.isEmpty ? nil : d), kind: e.kind, date: d, size: 0)
+        }
+    }
+}
+
 /// Latest uploads (like /guides/latest): newest files in the shared Google Drive
 @MainActor
 final class LatestStore: ObservableObject {
@@ -31,21 +88,35 @@ final class LatestStore: ObservableObject {
     func load(force: Bool = false) async {
         if !force, let t = loadedAt, Date().timeIntervalSince(t) < 600, !files.isEmpty { return }
         state = files.isEmpty ? 1 : state
+        async let folder = UploadFolder.load()
+        var indexed: [DriveSearch.Result] = []
+        var failed = false
         do {
             let url = URL(string: "\(Self.api)?t=\(Int(Date().timeIntervalSince1970))&sort=date&order=desc")!
             let (data, _) = try await URLSession.shared.data(from: url)
             let r = try JSONDecoder().decode(Reply.self, from: data)
             guard r.success == true, let list = r.files else { throw URLError(.cannotParseResponse) }
-            files = list.filter { DriveLinks.shared.isBroken($0.url) == nil }.map { f in
+            indexed = list.filter { DriveLinks.shared.isBroken($0.url) == nil }.map { f in
                 let k = DriveSearch.kind(mime: f.mimeType, url: f.url, name: f.name)
                 return DriveSearch.Result(m: Material(u: f.url, t: f.name, s: "Latest uploads", d: f.dateUploaded), kind: k, date: f.dateUploaded ?? "", size: f.size ?? 0)
             }
-            .sorted { $0.date > $1.date }
-            loadedAt = Date()
-            state = 2
         } catch {
-            if files.isEmpty { state = 3 }
+            failed = true
         }
+        let mine = MyUploads.all.map {
+            DriveSearch.Result(m: Material(u: $0.url, t: $0.name, s: "Your upload", d: $0.date), kind: AB.kind($0.url, $0.name), date: $0.date, size: 0)
+        }
+        let fresh = await folder
+        // your uploads first, then the upload folder, then the indexed Drive; each file once
+        var seen = Set<String>()
+        let merged = (mine + fresh + indexed).filter { seen.insert(AB.driveId($0.m.u) ?? $0.m.u).inserted }
+        if merged.isEmpty {
+            if failed && files.isEmpty { state = 3 }
+            return
+        }
+        files = merged.sorted { $0.date > $1.date }
+        loadedAt = Date()
+        state = 2
     }
 }
 

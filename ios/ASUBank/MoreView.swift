@@ -39,16 +39,13 @@ struct MoreView: View {
                         Button { openURL(URL(string: "https://www.paypal.com/paypalme/necro144")!) } label: {
                             row("creditcard.fill", .blue, "Donate with PayPal", "paypal.me/necro144", external: true)
                         }
-                        Button { openURL(URL(string: "mailto:necro144@yahoo.com?body=" + "Hi! I want to donate to ASU Bank with CliQ.".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!) } label: {
-                            row("banknote.fill", .green, "Donate with CliQ", "Message the number ending in 71 on WhatsApp", external: true)
-                        }
                         Button {
-                            UIPasteboard.general.string = "necro144@yahoo.com"
+                            UIPasteboard.general.string = "ALANQ99"
                             Haptics.success()
                             withAnimation { copied = true }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) { withAnimation { copied = false } }
                         } label: {
-                            row(copied ? "checkmark.circle.fill" : "doc.on.doc", .gray, copied ? "Copied" : "Copy CliQ number", "necro144@yahoo.com")
+                            row(copied ? "checkmark.circle.fill" : "banknote.fill", .green, copied ? "Copied ALANQ99" : "CliQ alias: ALANQ99", "Bank of Jordan · tap to copy")
                         }
                     } header: { Text("Support ASU Bank") } footer: {
                         Text("ASU Bank is a free, volunteer, non-profit project. Donations only help keep it running.")
