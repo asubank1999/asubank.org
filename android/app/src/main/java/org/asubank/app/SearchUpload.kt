@@ -115,10 +115,11 @@ fun SearchScreen() {
         if (r == null) driveState = 3 else { drive = r; driveState = 2 }
         Saved.searched(q)
     }
-    val local = remember(q, items) { AB.match(items, q, 300) }
+    // the same link is often listed on several subject pages: show it once
+    val local = remember(q, items) { AB.match(items, q, 300).distinctBy { AB.driveId(it.m.u) ?: it.m.u } }
     val localShown = local.filter { kindMatches(it.kind, filter) }
-    val localUrls = remember(local) { local.map { it.m.u }.toSet() }
-    val driveShown = drive.filter { kindMatches(it.kind, filter) && it.m.u !in localUrls }
+    val localUrls = remember(local) { local.map { AB.driveId(it.m.u) ?: it.m.u }.toSet() }
+    val driveShown = drive.filter { kindMatches(it.kind, filter) && (AB.driveId(it.m.u) ?: it.m.u) !in localUrls }.distinctBy { it.m.u }
 
     Screen("Search", back = false) { pad ->
         LazyColumn(Modifier.padding(pad)) {

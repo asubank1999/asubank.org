@@ -160,8 +160,9 @@ struct WelcomeTermsView: View {
             .navigationTitle(onClose == nil ? "" : "About ASU Bank")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                if let onClose {
-                    ToolbarItem(placement: .confirmationAction) { Button("Done", action: onClose) }
+                // (an `if` around a ToolbarItem needs iOS 16)
+                ToolbarItem(placement: .confirmationAction) {
+                    if let onClose { Button("Done", action: onClose) }
                 }
             }
             .safeAreaInset(edge: .bottom) {

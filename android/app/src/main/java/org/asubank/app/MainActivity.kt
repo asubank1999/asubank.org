@@ -103,7 +103,8 @@ class MainActivity : ComponentActivity() {
         if (intent?.getBooleanExtra("acceptTerms", false) == true) Saved.prefs.edit().putBoolean(TERMS_KEY, true).apply()
         intent?.getIntExtra("appearance", -1)?.takeIf { it >= 0 }?.let { Prefs.appearance.value = it }
         val startTab = intent?.getStringExtra("startTab")
-        incoming.value = intent?.dataString
+        incoming.value = intent?.dataString ?: intent?.getStringExtra("startPath")?.let { AB.SITE + it }
+        if (intent?.getBooleanExtra("rateIntro", false) == true) Saved.prefs.edit().putBoolean("rate.intro.v1", true).apply()
         setContent { AsuTheme { App(startTab, incoming) } }
     }
 

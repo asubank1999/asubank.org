@@ -75,6 +75,9 @@ jobs:
           shot 6-saved 5 -ab.terms.accepted.v1 YES -startTab saved
           shot 7-more 5 -ab.terms.accepted.v1 YES -startTab more
           shot 8-more-dark 5 -ab.terms.accepted.v1 YES -startTab more -ab.appearance 2
+          shot 9-halls 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/halls
+          shot 10-ratings-intro 6 -ab.terms.accepted.v1 YES -startTab home -startPath /requests/portal_to_rating
+          shot 11-ratings 25 -ab.terms.accepted.v1 YES -ab.rate.intro.v1 YES -startTab home -startPath /requests/portal_to_rating
           cd "$RUNNER_TEMP/shots" && ls -la
           git init -q && git checkout -q -b ios-screenshots
           echo "Simulator screenshots of ${{ github.sha }} (made by .github/workflows/ios.yml)" > README.md

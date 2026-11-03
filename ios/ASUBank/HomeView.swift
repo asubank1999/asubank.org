@@ -113,6 +113,8 @@ struct HomeView: View {
     @EnvironmentObject private var library: Library
     @EnvironmentObject private var saved: SavedStore
 
+    @State private var linked: Route?
+
     private let grid = [GridItem(.adaptive(minimum: 158), spacing: 12)]
 
     var body: some View {
@@ -156,7 +158,19 @@ struct HomeView: View {
             .navigationTitle("ASU Bank")
             .refreshable { await library.load() }
             .abDestinations()
+            // asubank.org links opened from outside the app show their native screen here
+            .push(isPresented: Binding(get: { linked != nil }, set: { if !$0 { linked = nil } })) {
+                if let linked { RouteView(route: linked) }
+            }
+            .onAppear(perform: takeLink)
+            .onChange(of: app.pendingRoute) { _ in takeLink() }
         }
+    }
+
+    private func takeLink() {
+        guard let r = app.pendingRoute else { return }
+        app.pendingRoute = nil
+        linked = r
     }
 
     private var hero: some View {

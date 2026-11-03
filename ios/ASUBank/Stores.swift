@@ -8,6 +8,8 @@ enum AppTab: Hashable { case home, search, upload, saved, more }
 final class AppState: ObservableObject {
     @Published var tab: AppTab = .home
     @Published var pendingQuery: String?
+    /// An asubank.org page to open on the Home tab (shared links, `-startPath` in CI screenshots)
+    @Published var pendingRoute: Route?
 
     init() {
         // Launch arguments used by the CI screenshots, e.g. `-startTab search -startQuery calculus`
@@ -15,6 +17,7 @@ final class AppState: ObservableObject {
         let tabs: [String: AppTab] = ["home": .home, "search": .search, "upload": .upload, "saved": .saved, "more": .more]
         if let t = d.string(forKey: "startTab"), let tab = tabs[t] { self.tab = tab }
         pendingQuery = d.string(forKey: "startQuery")
+        if let p = d.string(forKey: "startPath") { pendingRoute = .page(p, "") }
     }
 
     func search(_ q: String) {

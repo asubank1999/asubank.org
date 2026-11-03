@@ -24,11 +24,14 @@ struct SearchView: View {
     }
 
     private var local: [IndexedMaterial] {
-        source == "drive" ? [] : AB.match(library.items, query, limit: 600).filter { pass($0.kind, $0.year) }
+        // the same link is often listed on several subject pages: show it once
+        var seen = Set<String>()
+        return source == "drive" ? [] : AB.match(library.items, query, limit: 600).filter { pass($0.kind, $0.year) && seen.insert(AB.driveId($0.m.u) ?? $0.m.u).inserted }
     }
 
     private var driveShown: [DriveSearch.Result] {
-        source == "pages" ? [] : drive.filter { pass($0.kind, $0.year) }
+        var seen = Set(local.map { AB.driveId($0.m.u) ?? $0.m.u })
+        return source == "pages" ? [] : drive.filter { pass($0.kind, $0.year) && seen.insert(AB.driveId($0.m.u) ?? $0.m.u).inserted }
     }
 
     var body: some View {

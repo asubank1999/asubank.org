@@ -83,7 +83,11 @@ extension AppState {
         case "/search", "/guides/search": if let q { search(q) } else { tab = .search }
         case "/upload", "/upload/uploadmethod": tab = .upload
         case "/saved", "/guides/saved": tab = .saved
-        default: tab = .home
+        default:
+            tab = .home
+            if url.host?.hasSuffix("asubank.org") == true, let p = AB.sitePath(url.absoluteString), p != "/" {
+                pendingRoute = .page(p, "")
+            }
         }
     }
 }

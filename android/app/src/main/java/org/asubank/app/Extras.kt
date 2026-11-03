@@ -380,7 +380,7 @@ object RatingBridge {
         if (!supported) { status.value = Status.FAILED; return }
         if (status.value == Status.READY) return
         status.value = Status.CONNECTING
-        web?.loadUrl(SCRIPT)
+        web?.loadUrl(Ratings.SCRIPT)
         val ok = withTimeoutOrNull(30_000) { while (status.value != Status.READY) delay(100) } != null
         if (!ok && status.value == Status.CONNECTING) status.value = Status.FAILED
         if (status.value == Status.READY) refresh()
