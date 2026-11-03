@@ -68,4 +68,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("io.coil-kt:coil-compose:2.7.0")
+    // compiles the Compose code ahead of time on install, so the sideloaded APK scrolls smoothly from the first launch
+    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
+    implementation("androidx.webkit:webkit:1.12.1")
 }

@@ -85,6 +85,8 @@ fun SitePageScreen(path: String, title: String) {
         path == "/banks/subjects" -> SubjectsDirectory()
         path.startsWith("/banks/") && subjects.any { it.p == path } -> SubjectScreen(subjects.first { it.p == path })
         path in SiteRouter.latestPaths -> LatestScreen()
+        path == "/guides/halls" || path == "/guides/colleges_hall" -> HallsScreen()
+        path == "/requests/portal_to_rating" || path == "/requests/rating" -> TeacherRatingsScreen()
         page != null && !page.cal.isNullOrEmpty() -> CalendarScreen(if (page.t.length > 24 || page.t.isEmpty()) "Academic calendar" else page.t, path, page.cal)
         page != null && page.web == 1 -> WebScreen(title.ifEmpty { page.t }, AB.absolute(path), allowZoom = false)
         page != null -> NativePage(path, page, title)
@@ -147,7 +149,7 @@ fun NativePage(path: String, page: SitePage, title: String) {
 }
 
 @Composable
-private fun BiText(s: String, style: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.bodyLarge, color: Color = MaterialTheme.colorScheme.onSurface, modifier: Modifier = Modifier) {
+fun BiText(s: String, style: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.bodyLarge, color: Color = MaterialTheme.colorScheme.onSurface, modifier: Modifier = Modifier) {
     val rtl = isArabic(s)
     Text(
         s, style = style.copy(textDirection = if (rtl) TextDirection.Rtl else TextDirection.Ltr), color = color,

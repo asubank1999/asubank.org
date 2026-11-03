@@ -72,6 +72,14 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
+import androidx.navigation.NavBackStackEntry
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -166,7 +174,17 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 }
             },
         ) { pad ->
-            NavHost(nav, startDestination = Routes.HOME, modifier = Modifier.padding(pad)) {
+            val tabRoutes = remember { tabs.map { it.route }.toSet() }
+            fun AnimatedContentTransitionScope<NavBackStackEntry>.betweenTabs() =
+                initialState.destination.route in tabRoutes && targetState.destination.route in tabRoutes
+            NavHost(
+                nav, startDestination = Routes.HOME, modifier = Modifier.padding(pad),
+                // tabs cross-fade; pushed screens slide in like iOS
+                enterTransition = { if (betweenTabs()) fadeIn(tween(180)) else slideInHorizontally(tween(320, easing = FastOutSlowInEasing)) { it / 3 } + fadeIn(tween(260)) },
+                exitTransition = { if (betweenTabs()) fadeOut(tween(140)) else slideOutHorizontally(tween(320, easing = FastOutSlowInEasing)) { -it / 8 } + fadeOut(tween(260)) },
+                popEnterTransition = { if (betweenTabs()) fadeIn(tween(180)) else slideInHorizontally(tween(320, easing = FastOutSlowInEasing)) { -it / 8 } + fadeIn(tween(260)) },
+                popExitTransition = { if (betweenTabs()) fadeOut(tween(140)) else slideOutHorizontally(tween(320, easing = FastOutSlowInEasing)) { it / 3 } + fadeOut(tween(220)) },
+            ) {
                 composable(Routes.HOME) { HomeScreen() }
                 composable(Routes.SEARCH) { SearchScreen() }
                 composable(Routes.UPLOAD) { UploadScreen() }

@@ -57,7 +57,7 @@ struct UploadView: View {
     @State private var busy = false
     @State private var showImporter = false
     @State private var showScanner = false
-    @State private var photos: [PhotosPickerItem] = []
+    @State private var showPhotos = false
     @State private var message: String?
 
     private let kinds = ["Final", "Midterm", "Quiz", "Summary", "Notes", "Slides", "Test bank", "Assignment"]
@@ -92,10 +92,7 @@ struct UploadView: View {
                 Section {
                     HStack(spacing: 10) {
                         sourceButton("Files", "folder") { showImporter = true }
-                        PhotosPicker(selection: $photos, maxSelectionCount: 20, matching: .images) {
-                            sourceLabel("Photos", "photo.on.rectangle")
-                        }
-                        .buttonStyle(PressStyle())
+                        sourceButton("Photos", "photo.on.rectangle") { showPhotos = true }
                         if VNDocumentCameraViewController.isSupported {
                             sourceButton("Scan", "doc.viewfinder") { showScanner = true }
                         }
@@ -164,7 +161,13 @@ struct UploadView: View {
                 }
                 .ignoresSafeArea()
             }
-            .onChange(of: photos) { items in Task { await addPhotos(items) } }
+            .sheet(isPresented: $showPhotos) {
+                PhotoPicker { images in
+                    showPhotos = false
+                    addPhotos(images)
+                }
+                .ignoresSafeArea()
+            }
             .alert("Upload", isPresented: Binding(get: { message != nil }, set: { if !$0 { message = nil } })) {
                 Button("OK", role: .cancel) {}
             } message: { Text(message ?? "") }
@@ -227,15 +230,12 @@ struct UploadView: View {
         }
     }
 
-    private func addPhotos(_ items: [PhotosPickerItem]) async {
-        guard !items.isEmpty else { return }
-        for (i, item) in items.enumerated() {
-            guard let data = try? await item.loadTransferable(type: Data.self),
-                  let img = UIImage(data: data), let jpg = img.jpegData(compressionQuality: 0.85) else { continue }
+    private func addPhotos(_ images: [UIImage]) {
+        for (i, img) in images.enumerated() {
+            guard let jpg = img.jpegData(compressionQuality: 0.85) else { continue }
             let stamp = Date().formatted(.dateTime.year().month().day().hour().minute().second())
-            add(name: "Photo \(stamp)\(items.count > 1 ? " \(i + 1)" : "").jpg", data: jpg, mime: "image/jpeg")
+            add(name: "Photo \(stamp)\(images.count > 1 ? " \(i + 1)" : "").jpg", data: jpg, mime: "image/jpeg")
         }
-        photos = []
     }
 
     // MARK: - Uploading
@@ -315,5 +315,40 @@ struct ScannerView: UIViewControllerRepresentable {
 
         func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) { done(nil) }
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFailWithError error: Error) { done(nil) }
+    }
+}
+
+/// The system photo picker (PHPicker), up to 20 photos
+struct PhotoPicker: UIViewControllerRepresentable {
+    let done: ([UIImage]) -> Void
+
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        config.selectionLimit = 20
+        let vc = PHPickerViewController(configuration: config)
+        vc.delegate = context.coordinator
+        return vc
+    }
+
+    func updateUIViewController(_ vc: PHPickerViewController, context: Context) {}
+    func makeCoordinator() -> Coordinator { Coordinator(done) }
+
+    final class Coordinator: NSObject, PHPickerViewControllerDelegate {
+        let done: ([UIImage]) -> Void
+        init(_ done: @escaping ([UIImage]) -> Void) { self.done = done }
+
+        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            guard !results.isEmpty else { done([]); return }
+            var images = [UIImage?](repeating: nil, count: results.count)
+            let group = DispatchGroup()
+            for (i, r) in results.enumerated() where r.itemProvider.canLoadObject(ofClass: UIImage.self) {
+                group.enter()
+                r.itemProvider.loadObject(ofClass: UIImage.self) { obj, _ in
+                    DispatchQueue.main.async { images[i] = obj as? UIImage; group.leave() }
+                }
+            }
+            group.notify(queue: .main) { self.done(images.compactMap { $0 }) }
+        }
     }
 }

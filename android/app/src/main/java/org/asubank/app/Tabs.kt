@@ -96,7 +96,7 @@ object Links {
         SiteLink("📅", "Calendar 2026–2027", "This year's important dates.", added = "2026-08-31", web = "/schedules/calendar27"),
         SiteLink("📬", "Request a material", "Can't find it? Ask for it.", web = "/requests/student_request_portal"),
         SiteLink("📤", "Upload files", "Share your study materials.", tab = Routes.UPLOAD),
-        SiteLink("📝", "Rate professors", "Anonymously help other students.", web = "/requests/portal_to_rating"),
+        SiteLink("📝", "Rate your teachers", "See averages and rate anonymously.", web = "/requests/portal_to_rating"),
         SiteLink("➕", "Useful gate", "University resources in one place.", web = "/guides/links"),
     )
     val newHere = listOf(
@@ -106,7 +106,7 @@ object Links {
         SiteLink("👥", "Course WhatsApp groups", "Groups for courses, clubs and interests", web = "/guides/groups"),
         SiteLink("📊", "Grading scale", web = "/guides/grading-scale-asu"),
         SiteLink("📝", "Placement tests", web = "/guides/placement"),
-        SiteLink("🏫", "University halls", web = "/guides/halls"),
+        SiteLink("🏫", "University halls", "Type a hall number, find the building and floor", web = "/guides/halls"),
         SiteLink("🗺️", "Study plans", external = "https://drive.google.com/drive/folders/1QNvzQm4TjBg4x-dRpFp9roUBxdu2dQRY?usp=sharing"),
     )
     val schedules = listOf(
