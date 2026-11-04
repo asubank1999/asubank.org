@@ -594,6 +594,15 @@
         if (rt) AB.recent.add({ u: cleanPath(), t: rt, k: 'page', s: doc.body.getAttribute('data-ab-group') || '' });
         if (doc.body.hasAttribute('data-ab-protect')) AB.protect();
         if ('serviceWorker' in navigator && window.isSecureContext) navigator.serviceWorker.register('/sw.js').catch(function () {});
+        // chat notifications, on every page, for people signed in
+        try {
+            if (localStorage.getItem('ab.acc.token')) {
+                var notify = doc.createElement('script');
+                notify.src = '/assets/app/chat-notify.js';
+                notify.defer = true;
+                doc.head.appendChild(notify);
+            }
+        } catch (e) {}
         doc.addEventListener('ab:ab.saved', syncStars);
     }
     if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', boot); else boot();

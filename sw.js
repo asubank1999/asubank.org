@@ -2,7 +2,7 @@
    - pages: network first (always fresh), cached copy when offline, offline page as last resort
    - app files, icons, images, materials index: served from cache instantly, refreshed in the background
    - other sites (Drive, Apps Script, analytics) are never cached */
-const VERSION = 'asubank-v4';
+const VERSION = 'asubank-v5';
 const PAGES = VERSION + '-pages';
 const ASSETS = VERSION + '-assets';
 
@@ -36,6 +36,19 @@ self.addEventListener('activate', event => {
             .then(() => self.registration.navigationPreload && self.registration.navigationPreload.enable())
             .then(() => self.clients.claim())
     );
+});
+
+// Tapping a chat notification opens that room, in a tab of this site if there is one
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    const url = (event.notification.data && event.notification.data.url) || '/chat/';
+    event.waitUntil((async () => {
+        const tabs = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+        const tab = tabs.find(t => new URL(t.url).origin === self.location.origin);
+        if (!tab) return self.clients.openWindow(url);
+        await tab.focus();
+        return tab.navigate(url).catch(() => self.clients.openWindow(url));
+    })());
 });
 
 async function trim(cacheName, max) {
