@@ -118,22 +118,22 @@
 "9 - College of Engineering" = "9 - كلية الهندسة";
 "@%@ is banned" = "تم حظر @%@";
 "A few letters are enough: \"calc\", \"MATH101\" or a doctor's name. Arabic names work too." = "تكفي بضعة أحرف: \"calc\" أو \"MATH101\" أو اسم الدكتور. الأسماء العربية تعمل أيضًا.";
+"A free, student-run project" = "مشروع طلابي مجاني";
 "A line about you (optional)" = "سطر عنك (اختياري)";
 "A plan to study it easily" = "خطة لدراستها بسهولة";
 "A ringtone from my phone…" = "نغمة من هاتفي…";
-"A volunteer, non-profit project" = "مشروع تطوعي غير ربحي";
 "ADMIN" = "مشرف";
 "ADMINS POST" = "للمشرفين فقط";
 "ALL FILES" = "كل الملفات";
 "APPROVED" = "مقبول";
 "ARCHIVED" = "مؤرشفة";
 "ASU Bank checks for new activity while it's open, and in the background when iOS allows it." = "يتحقق ASU Bank من النشاط الجديد أثناء فتحه، وفي الخلفية عندما يسمح iOS بذلك.";
-"ASU Bank is a free, volunteer, non-profit project. Donations only help keep it running." = "ASU Bank مشروع مجاني تطوعي وغير ربحي. التبرعات تساعد فقط في استمراره.";
 "ASU Bank is a free, volunteer, student-run project. It is not made by or owned by Applied Science Private University. Questions go to necro144@yahoo.com." = "بنك ASU مشروع طلابي تطوعي مجاني، وليس من صنع جامعة العلوم التطبيقية الخاصة ولا ملكًا لها. أرسل أسئلتك إلى necro144@yahoo.com.";
 "ASU Bank is built by students, for students. These people uploaded, sorted and shared the materials you use every day." = "ASU Bank من الطلاب وللطلاب. هؤلاء رفعوا ورتبوا وشاركوا المواد التي تستخدمها كل يوم.";
 "ASU Bank is for university students and isn’t meant for children under 13." = "بنك ASU مخصص لطلاب الجامعة وليس للأطفال دون 13 عامًا.";
 "ASU Bank is free and run by a volunteer student. Donations keep it online and growing." = "بنك ASU مجاني ويديره طالب متطوع. التبرعات تُبقيه متاحًا وتساعده على النمو.";
-"ASU Bank is free and run by volunteers. Nobody makes money from it." = "بنك ASU مجاني ويديره متطوعون، ولا أحد يربح منه.";
+"ASU Bank is free and student-run. Donations help keep it running." = "ASU Bank مشروع طلابي مجاني. التبرعات تساعد في استمراره.";
+"ASU Bank is free for students and run by a student. Ads on the website, sponsors and donations support it." = "ASU Bank مجاني للطلاب ويديره طالب. تدعمه الإعلانات على الموقع والرعاة والتبرعات.";
 "ASU Bank team" = "فريق بنك ASU";
 "ASU E-Library Hub" = "مركز مكتبة ASU الإلكترونية";
 "ASU E-Library Hub · Student Community Groups" = "مركز مكتبة ASU · مجموعات مجتمع الطلاب";
@@ -390,6 +390,7 @@
 "Change" = "تغيير";
 "Change password" = "تغيير كلمة المرور";
 "Change photo" = "تغيير الصورة";
+"Changing the app icon now works when the app is installed with TrollStore" = "تغيير أيقونة التطبيق يعمل الآن عند تثبيت التطبيق عبر TrollStore";
 "Chapter 4: PDF 1" = "الفصل 4: دالة الكثافة 1";
 "Chapter 4: PDF 2" = "الفصل 4: دالة الكثافة 2";
 "Chat" = "الدردشة";
@@ -827,6 +828,7 @@
 "Home and More always stay, and you can add up to %d more." = "تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.";
 "Home and More always stay, and you can add up to %lld more." = "تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %lld.";
 "Home and More always stay, and you can add up to %@ more." = "تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %@.";
+"Home can show a sponsor card, always clearly labelled" = "قد تعرض الصفحة الرئيسية بطاقة راعٍ، مع توضيح أنها إعلان دائماً";
 "Homework" = "الواجبات";
 "Hours passed before this term" = "الساعات المقطوعة قبل هذا الفصل";
 "How It Works" = "كيف تعمل";
@@ -1467,7 +1469,9 @@
 "Secure Payments" = "دفع آمن";
 "Security" = "الأمان";
 "See My Courses / Registered Subjects" = "موادي المسجلة";
+"See all versions" = "عرض كل الإصدارات";
 "See averages and rate anonymously." = "اطلع على المتوسطات وقيّم دون كشف هويتك.";
+"See what changed after every update, and every past version under More > What's New" = "شاهد ما تغيّر بعد كل تحديث، وكل الإصدارات السابقة في المزيد > ما الجديد";
 "Send" = "إرسال";
 "Send again" = "إرسال مرة أخرى";
 "Send an announcement" = "أرسل إعلاناً";
@@ -1673,6 +1677,7 @@
 "Thanks, your vote is in!" = "شكراً، تم تسجيل صوتك!";
 "That doesn't look like a hall number." = "لا يبدو هذا رقم قاعة.";
 "That name isn't allowed." = "هذا الاسم غير مسموح.";
+"The About text now says how ASU Bank is supported: ads on the website, sponsors and donations" = "صفحة «حول» توضّح الآن كيف يُدعم ASU Bank: الإعلانات على الموقع والرعاة والتبرعات";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "يتطوع مشرفو المجموعات بوقتهم لتنظيم المجتمع وإدارته. لا يضمن المشرفون دقة أي مادة يشاركها الأعضاء أو اكتمالها أو موثوقيتها، وليسوا مسؤولين عن النصائح أو الآراء أو المحتوى الذي ينشره الآخرون.";
 "The apps have no analytics. The website uses Google Analytics to count visits." = "لا توجد أدوات تحليل في التطبيقات. أما الموقع فيستخدم Google Analytics لإحصاء الزيارات.";
 "The end time must be after the start time." = "يجب أن يكون وقت النهاية بعد وقت البداية.";
@@ -1865,6 +1870,7 @@
 "Variance and Standard Deviation 2" = "التباين والانحراف المعياري 2";
 "Verified" = "موثّق";
 "Version" = "الإصدار";
+"Version %@" = "الإصدار %@";
 "Very good" = "جيد جدًا";
 "Very poor" = "ضعيف جدًا";
 "Video" = "فيديو";
@@ -1915,7 +1921,9 @@
 "What to share" = "ما الذي يمكن مشاركته";
 "What we collect when you make an account" = "ما نجمعه عند إنشاء حساب";
 "What you send us without an account" = "ما ترسله دون حساب";
+"What's New" = "ما الجديد";
 "What's my grade?" = "ما تقديري؟";
+"What's new in %@" = "ما الجديد في %@";
 "What's on your mind?" = "بماذا تفكر؟";
 "What's wrong?" = "ما المشكلة؟";
 "WhatsApp community" = "مجتمع واتساب";

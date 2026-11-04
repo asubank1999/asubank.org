@@ -37,6 +37,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.NewReleases
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.ContentCopy
@@ -365,7 +366,7 @@ fun MoreScreen() {
             item { Group(header = "Community & services") { LinkRows(Links.community) } }
             item { Group(header = "Help") { LinkRows(Links.help) } }
             if (donate) item {
-                Group(header = "Support ASU Bank", footer = "ASU Bank is a free, volunteer, non-profit project. Donations only help keep it running.") {
+                Group(header = "Support ASU Bank", footer = "ASU Bank is free and student-run. Donations help keep it running.") {
                     ListRow("Donate with PayPal", "paypal.me/necro144", icon = Icons.Filled.CreditCard, iconColor = Color(0xFF0070BA)) {
                         openExternal(ctx, "https://www.paypal.com/paypalme/necro144")
                     }
@@ -405,6 +406,8 @@ fun MoreScreen() {
                             if (!AppConfig.updateAvailable) Toast.makeText(ctx, "You have the latest version", Toast.LENGTH_SHORT).show()
                         }
                     }
+                    Divider()
+                    ListRow("What's New", icon = Icons.Filled.NewReleases) { nav.openPage("/app/whatsnew", "What's New") }
                     Divider()
                     ListRow("About & terms", icon = Icons.Filled.VolunteerActivism) { showTerms = true }
                     Divider()

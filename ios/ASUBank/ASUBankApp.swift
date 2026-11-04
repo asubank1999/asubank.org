@@ -73,6 +73,7 @@ struct RootView: View {
     @ObservedObject private var notices = NoticeStore.shared
     @AppStorage(TabBarPrefs.key) private var chosenTabs = TabBarPrefs.standard
     @State private var lastTab: AppTab = .home
+    @State private var whatsNew: WhatsNewEntry?
     /// Tapping the tab you are on rebuilds its stack, which goes back to its first screen
     @State private var resets: [AppTab: Int] = [:]
 
@@ -144,6 +145,8 @@ struct RootView: View {
         }
         .sheet(isPresented: $app.uploadShown) { UploadView() }
         .sheet(item: $app.overlayTab) { screen($0) }
+        .sheet(item: $whatsNew) { WhatsNewSheet(entry: $0) }
+        .task { whatsNew = WhatsNew.pending(accepted: accepted) }
         .task { LectureStore.shared.reschedule() }
         .sheet(isPresented: $account.signInShown) { SignInScreen() }
         .alert("Thank you for joining early! 🌱", isPresented: $account.earlyThanksShown) {
@@ -157,7 +160,7 @@ struct RootView: View {
         .fullScreenCover(isPresented: Binding(get: { config.mustUpdate }, set: { _ in })) {
             UpdateRequiredView().environmentObject(config)
         }
-        .alert("Update available", isPresented: $config.offerUpdate) {
+        .alert("Update available", isPresented: Binding(get: { config.offerUpdate && whatsNew == nil }, set: { config.offerUpdate = $0 })) {
             Button("Update") { if let u = config.storeURL { openURL(u) } }
             Button("Later", role: .cancel) {}
         } message: {

@@ -168,13 +168,13 @@ struct WelcomeTermsView: View {
                     .listRowBackground(Color.clear)
                 }
                 Section("About this app") {
-                    term("heart.fill", "A volunteer, non-profit project", "ASU Bank is free and run by volunteers. Nobody makes money from it.")
+                    term("heart.fill", "A free, student-run project", "ASU Bank is free for students and run by a student. Ads on the website, sponsors and donations support it.")
                     term("building.columns", "Not from the university", "This app is not made by, owned by, or affiliated with Applied Science Private University (ASPU).")
                     term("person.fill", "Made by a fellow student", "It's built by a college friend who studies English Language and Literature and wants to help all ASPU students search and find what they need.")
                     term("checkmark.shield", "Use materials responsibly", "Files are shared by students. Check them against your official course resources.")
                 }
                 Section("بالعربية") {
-                    Text("ASU Bank مشروع تطوعي غير ربحي، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.")
+                    Text("ASU Bank مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.")
                         .multilineTextAlignment(.trailing)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .environment(\.layoutDirection, .rightToLeft)

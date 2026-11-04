@@ -163,6 +163,8 @@ struct SitePageView: View {
             RequestMaterialScreen()
         } else if path == "/upload/suggest_to_whatsapp" {
             SuggestMaterialScreen()
+        } else if path == "/app/whatsnew" {
+            WhatsNewScreen()
         } else if path == "/app/coverage" {
             CollegeCoverageScreen()
         } else if path == "/guides/tutorial" {

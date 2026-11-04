@@ -95,6 +95,7 @@ fun SitePageScreen(path: String, title: String) {
         path == "/requests/matcher" || path == "/requests/matcher_confirm" -> CourseMatcherScreen()
         path in setOf("/requests/student_request_portal", "/requests/request", "/requests/student_request_main") -> RequestMaterialScreen()
         path == "/upload/suggest_to_whatsapp" -> SuggestMaterialScreen()
+        path == "/app/whatsnew" -> WhatsNewScreen()
         path == "/app/coverage" -> CollegeCoverageScreen()
         path == "/requests/student_ads" -> StudentAdsScreen()
         path == "/apps/donate" -> DonateScreen()

@@ -82,7 +82,7 @@ struct MoreView: View {
                             row(copied ? "checkmark.circle.fill" : "banknote.fill", .green, copied ? "Copied ALANQ99" : "CliQ alias: ALANQ99", "Bank of Jordan · tap to copy")
                         }
                     } header: { Text("Support ASU Bank") } footer: {
-                        Text("ASU Bank is a free, volunteer, non-profit project. Donations only help keep it running.")
+                        Text("ASU Bank is free and student-run. Donations help keep it running.")
                     }
                 }
 
@@ -116,6 +116,7 @@ struct MoreView: View {
                             else if config.latest != nil && !config.updateAvailable { Text("Up to date").foregroundStyle(.secondary) }
                         }
                     }
+                    RouteLink(Route.page("/app/whatsnew", "What's New")) { Label("What's New", systemImage: "sparkles") }
                     Button { showTerms = true } label: { Label("About & terms", systemImage: "heart.text.square") }
                     RouteLink(Route.page("/guides/contact", "Contact us")) { Label("Contact us", systemImage: "envelope") }
                     RouteLink(Route.page("/legal/privacy", "Privacy policy")) { Label("Privacy policy", systemImage: "hand.raised") }

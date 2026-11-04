@@ -123,7 +123,11 @@ class AppActivity : ComponentActivity() {
         intent?.getStringExtra("openRoom")?.let { ChatNotifier.pendingRoom.value = it }
         // CI screenshots: --es startTab search --es startQuery calculus --ez acceptTerms true
         intent?.getStringExtra("startQuery")?.let { AppState.pendingSearch.value = it }
-        if (intent?.getBooleanExtra("acceptTerms", false) == true) Saved.prefs.edit().putBoolean(TERMS_KEY, true).apply()
+        if (intent?.getBooleanExtra("acceptTerms", false) == true) {
+            Saved.prefs.edit().putBoolean(TERMS_KEY, true).apply()
+            WhatsNew.screenshotLaunch = true
+        }
+        WhatsNew.forceShow = intent?.getBooleanExtra("showWhatsNew", false) == true
         intent?.getIntExtra("appearance", -1)?.takeIf { it >= 0 }?.let { Prefs.appearance.value = it }
         val startTab = intent?.getStringExtra("startTab")
         if (intent?.getStringExtra("openRoom") != null) splashDone = true
@@ -175,6 +179,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     var accepted by remember { mutableStateOf(Saved.prefs.getBoolean(TERMS_KEY, false)) }
     val mustUpdate by AppConfig.mustUpdate.collectAsState()
     val offerUpdate by AppConfig.offerUpdate.collectAsState()
+    var whatsNew by remember { mutableStateOf(WhatsNew.pending(ctx, accepted)) }
     val link by incoming.collectAsState()
     var lastTab by remember { mutableStateOf(Routes.HOME) }
     val user by Account.user.collectAsState()
@@ -340,7 +345,11 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
         if (mustUpdate) UpdateRequired()
         else if (!accepted) WelcomeTerms(onAccept = { Saved.prefs.edit().putBoolean(TERMS_KEY, true).apply(); accepted = true })
 
-        if (offerUpdate && !mustUpdate && !splash) {
+        whatsNew?.takeIf { !mustUpdate && !splash }?.let { e ->
+            WhatsNewDialog(e, onClose = { whatsNew = null }, onSeeAll = { whatsNew = null; nav.openPage("/app/whatsnew", "What's New") })
+        }
+
+        if (offerUpdate && !mustUpdate && !splash && whatsNew == null) {
             AlertDialog(
                 onDismissRequest = { AppConfig.offerUpdate.value = false },
                 icon = { Icon(Icons.Filled.SystemUpdate, null) },
@@ -396,7 +405,7 @@ fun WelcomeTerms(onAccept: (() -> Unit)? = null, onClose: (() -> Unit)? = null) 
                         Text(if (onAccept != null) "Please read this before you start" else "About this app", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Group(header = "About this app") {
-                        Term(Icons.Filled.Favorite, "A volunteer, non-profit project", "ASU Bank is free and run by volunteers. Nobody makes money from it.")
+                        Term(Icons.Filled.Favorite, "A free, student-run project", "ASU Bank is free for students and run by a student. Ads on the website, sponsors and donations support it.")
                         Divider()
                         Term(Icons.Filled.AccountBalance, "Not from the university", "This app is not made by, owned by, or affiliated with Applied Science Private University (ASPU).")
                         Divider()
@@ -406,7 +415,7 @@ fun WelcomeTerms(onAccept: (() -> Unit)? = null, onClose: (() -> Unit)? = null) 
                     }
                     Group(header = "بالعربية") {
                         Text(
-                            "ASU Bank مشروع تطوعي غير ربحي، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.",
+                            "ASU Bank مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.",
                             style = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Rtl),
                             textAlign = TextAlign.Right,
                             modifier = Modifier.fillMaxWidth().padding(16.dp),

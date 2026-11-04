@@ -30,6 +30,8 @@ shot 15-groups --es startPath /guides/groups
 shot 25-official-links --es startPath /guides/asu
 shot 26-suggest --es startPath /upload/suggest_to_whatsapp
 shot 27-coverage --es startPath /app/coverage
+shot 29-whatsnew-all --es startPath /app/whatsnew
+shot 30-whatsnew-prompt --es startTab home --ez showWhatsNew true
 shot 28-notifications --es startTab notifications
 shot 16-thanks --es startPath /guides/thankslist
 shot 17-search-guide --es startPath /guides/tutorial

@@ -289,9 +289,6 @@
   "ar": "نغمة من هاتفي…",
   "es": "Un tono de mi teléfono…"
  },
- "A volunteer, non-profit project": {
-  "ar": "مشروع تطوعي غير ربحي"
- },
  "ADMIN": {
   "ar": "مشرف",
   "es": "ADMIN"
@@ -316,10 +313,6 @@
   "ar": "يتحقق ASU Bank من النشاط الجديد أثناء فتحه، وفي الخلفية عندما يسمح iOS بذلك.",
   "es": "ASU Bank busca actividad nueva mientras está abierto y en segundo plano cuando iOS lo permite."
  },
- "ASU Bank is a free, volunteer, non-profit project. Donations only help keep it running.": {
-  "ar": "ASU Bank مشروع مجاني تطوعي وغير ربحي. التبرعات تساعد فقط في استمراره.",
-  "es": "ASU Bank es un proyecto gratuito, voluntario y sin fines de lucro. Las donaciones solo ayudan a mantenerlo."
- },
  "ASU Bank is a free, volunteer, student-run project. It is not made by or owned by Applied Science Private University. Questions go to necro144@yahoo.com.": {
   "ar": "بنك ASU مشروع طلابي تطوعي مجاني، وليس من صنع جامعة العلوم التطبيقية الخاصة ولا ملكًا لها. أرسل أسئلتك إلى necro144@yahoo.com."
  },
@@ -332,9 +325,6 @@
  },
  "ASU Bank is free and run by a volunteer student. Donations keep it online and growing.": {
   "ar": "بنك ASU مجاني ويديره طالب متطوع. التبرعات تُبقيه متاحًا وتساعده على النمو."
- },
- "ASU Bank is free and run by volunteers. Nobody makes money from it.": {
-  "ar": "بنك ASU مجاني ويديره متطوعون، ولا أحد يربح منه."
  },
  "ASU Bank team": {
   "ar": "فريق بنك ASU",
@@ -7043,5 +7033,49 @@
  "Sponsored": {
   "ar": "إعلان ممول",
   "es": "Patrocinado"
+ },
+ "A free, student-run project": {
+  "ar": "مشروع طلابي مجاني",
+  "es": "Un proyecto gratuito de estudiantes"
+ },
+ "ASU Bank is free for students and run by a student. Ads on the website, sponsors and donations support it.": {
+  "ar": "ASU Bank مجاني للطلاب ويديره طالب. تدعمه الإعلانات على الموقع والرعاة والتبرعات.",
+  "es": "ASU Bank es gratis para los estudiantes y lo lleva un estudiante. Lo apoyan los anuncios del sitio web, los patrocinadores y las donaciones."
+ },
+ "ASU Bank is free and student-run. Donations help keep it running.": {
+  "ar": "ASU Bank مشروع طلابي مجاني. التبرعات تساعد في استمراره.",
+  "es": "ASU Bank es gratis y lo llevan estudiantes. Las donaciones ayudan a mantenerlo."
+ },
+ "What's New": {
+  "ar": "ما الجديد",
+  "es": "Novedades"
+ },
+ "What's new in %s": {
+  "ar": "ما الجديد في %s",
+  "es": "Novedades de la versión %s"
+ },
+ "Version %s": {
+  "ar": "الإصدار %s",
+  "es": "Versión %s"
+ },
+ "See all versions": {
+  "ar": "عرض كل الإصدارات",
+  "es": "Ver todas las versiones"
+ },
+ "See what changed after every update, and every past version under More > What's New": {
+  "ar": "شاهد ما تغيّر بعد كل تحديث، وكل الإصدارات السابقة في المزيد > ما الجديد",
+  "es": "Mira qué cambió tras cada actualización y todas las versiones anteriores en Más > Novedades"
+ },
+ "Home can show a sponsor card, always clearly labelled": {
+  "ar": "قد تعرض الصفحة الرئيسية بطاقة راعٍ، مع توضيح أنها إعلان دائماً",
+  "es": "Inicio puede mostrar una tarjeta de patrocinador, siempre bien señalada"
+ },
+ "The About text now says how ASU Bank is supported: ads on the website, sponsors and donations": {
+  "ar": "صفحة «حول» توضّح الآن كيف يُدعم ASU Bank: الإعلانات على الموقع والرعاة والتبرعات",
+  "es": "El texto de Acerca de ahora explica cómo se apoya ASU Bank: anuncios en el sitio web, patrocinadores y donaciones"
+ },
+ "Changing the app icon now works when the app is installed with TrollStore": {
+  "ar": "تغيير أيقونة التطبيق يعمل الآن عند تثبيت التطبيق عبر TrollStore",
+  "es": "Cambiar el icono de la app ya funciona cuando se instala con TrollStore"
  }
 }

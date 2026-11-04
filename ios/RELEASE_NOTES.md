@@ -1,7 +1,13 @@
 ## ASU Bank for iPhone
 
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
-ASU Bank is a free, volunteer, non-profit project. It is not made by or affiliated with the university.
+ASU Bank is free and student-run. It is not made by or affiliated with the university.
+
+### What's new in 1.11.0
+- See what changed after every update, and every past version under More > What's New
+- Changing the app icon now works when the app is installed with TrollStore
+- Home can show a sponsor card, always clearly labelled
+- The About text now says how ASU Bank is supported: ads on the website, sponsors and donations
 
 ### What's new in 1.10.2
 - New Notifications tab: friend requests, pokes, new uploads, announcements and admin requests in one list

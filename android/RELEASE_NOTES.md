@@ -1,5 +1,10 @@
 **ASU Bank for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.11.0
+- See what changed after every update, and every past version under More > What's New
+- Home can show a sponsor card, always clearly labelled
+- The About text now says how ASU Bank is supported: ads on the website, sponsors and donations
+
 ### What's new in 1.10.2
 - New Notifications tab: friend requests, pokes, new uploads, announcements and admin requests in one list
 - Suggest materials is now a real form in the app, saved in the same place as the website's form
@@ -94,4 +99,4 @@
 
 The app tells you when a new version is out.
 
-Volunteer, non-profit project by students. Not an official Applied Science University app.
+Free project by students. Not an official Applied Science University app.
