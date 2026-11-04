@@ -113,6 +113,23 @@ jobs:
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build | xcbeautify --renderer github-actions
           rm -rf Payload && mkdir Payload
           cp -R build-device/Build/Products/Release-iphoneos/ASUBank.app Payload/
+          # TrollStore keeps the entitlements of a fake signature; Sideloadly and AltStore replace them with their own.
+          # Without an app identity iOS may refuse the app icon change (error -54).
+          if brew install ldid; then
+            cat > ipa.entitlements <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+          <key>application-identifier</key><string>ASUBANK001.org.asubank.app</string>
+          <key>com.apple.developer.team-identifier</key><string>ASUBANK001</string>
+          </dict></plist>
+          PLIST
+            sed -i '' 's/^ *//' ipa.entitlements
+            ldid -Sipa.entitlements Payload/ASUBank.app/ASUBank
+            ldid -e Payload/ASUBank.app/ASUBank
+          else
+            echo "::warning::ldid could not be installed, so this IPA has no entitlements"
+          fi
           zip -qry ASUBank-unsigned.ipa Payload
           ls -la ASUBank-unsigned.ipa
       - name: Keep the unsigned IPA as a download (Actions run page > Artifacts)
