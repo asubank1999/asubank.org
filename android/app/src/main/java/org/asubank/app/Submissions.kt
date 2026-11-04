@@ -1,5 +1,6 @@
 package org.asubank.app
 
+import okhttp3.MediaType.Companion.toMediaType
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -242,33 +243,89 @@ private fun SubmissionDetail(item: Submissions.Item, admin: Boolean, onClose: ()
     )
 }
 
+private val submitAllowed = setOf("pdf", "pptx", "ppt", "docx", "doc", "png", "jpg", "jpeg", "webp", "heic", "mp4", "mov", "m4v", "webm")
+
+/** Stores the file with ASU Bank and returns its link. It doesn't appear in the public uploads list. */
+private suspend fun uploadSubmission(name: String, data: ByteArray, token: String?, progress: (Float) -> Unit): String = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+    val body = buildJsonObject {
+        put("action", "submissionFile"); put("name", name)
+        if (token != null) put("token", token)
+        put("data", android.util.Base64.encodeToString(data, android.util.Base64.NO_WRAP))
+    }.toString().toByteArray()
+    val client = Net.http.newBuilder().writeTimeout(5, java.util.concurrent.TimeUnit.MINUTES).readTimeout(5, java.util.concurrent.TimeUnit.MINUTES).build()
+    val req = okhttp3.Request.Builder().url(AccountsApi.URL).post(ProgressBody(body, "text/plain;charset=utf-8".toMediaType(), progress)).build()
+    val o = try {
+        client.newCall(req).execute().use { r -> runCatching { json.parseToJsonElement(r.body?.string() ?: "") as JsonObject }.getOrNull() }
+    } catch (e: Exception) { throw ApiError("Couldn't reach ASU Bank. Check your connection and try again.") }
+    if (o != null && o.bool("ok")) o.str("url") ?: throw ApiError("Upload failed. Please try again.")
+    else throw ApiError(o?.str("error") ?: "Upload failed. Please try again.")
+}
+
 @Composable
 private fun SubmitDialog(onClose: () -> Unit, done: () -> Unit) {
+    val ctx = androidx.compose.ui.platform.LocalContext.current
     val scope = rememberCoroutineScope()
     var name by remember { mutableStateOf(Saved.prefs.getString("subs.name", "") ?: "") }
     var title by remember { mutableStateOf("") }
-    var type by remember { mutableStateOf("pdf") }
-    var platform by remember { mutableStateOf("Google Drive") }
-    var url by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
-    val backups = remember { mutableStateListOf<String>() }
+    var fileUri by remember { mutableStateOf<Uri?>(null) }
+    var fileName by remember { mutableStateOf("") }
+    var fileSize by remember { mutableStateOf(0L) }
+    var progress by remember { mutableStateOf<Float?>(null) }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     var sent by remember { mutableStateOf(false) }
-    val valid = name.isNotBlank() && title.isNotBlank() && (url.startsWith("https://") || url.startsWith("http://"))
-    val types = listOf("pdf" to "📄 PDF", "pptx" to "📊 PowerPoint", "docx" to "📝 Word", "image" to "🖼️ Image", "video" to "🎬 Video")
+    val valid = name.isNotBlank() && title.isNotBlank() && fileUri != null
+    val maxBytes = 25L * 1024 * 1024
+    val picker = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.OpenDocument()) { u ->
+        if (u == null) return@rememberLauncherForActivityResult
+        var n = "file"
+        var s = 0L
+        ctx.contentResolver.query(u, null, null, null, null)?.use { c ->
+            if (c.moveToFirst()) {
+                val i = c.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                val j = c.getColumnIndex(android.provider.OpenableColumns.SIZE)
+                if (i >= 0) n = c.getString(i) ?: n
+                if (j >= 0) s = c.getLong(j)
+            }
+        }
+        error = null
+        when {
+            n.substringAfterLast('.', "").lowercase() !in submitAllowed -> error = tr("This file type isn't allowed.")
+            s > maxBytes -> error = tr("Bigger than 25 MB.")
+            else -> { fileUri = u; fileName = n; fileSize = s }
+        }
+    }
 
     fun submit() {
+        val uri = fileUri ?: return
         busy = true
         Saved.prefs.edit().putString("subs.name", name).apply()
-        val links = backups.filter { it.isNotBlank() }
-        val payload = buildJsonObject {
-            put("studentName", name.trim()); put("presentationTitle", title.trim()); put("fileType", type)
-            put("platform", platform); put("primaryUrl", url.trim()); put("notes", notes); put("isBackup", links.isNotEmpty())
-            putJsonArray("backupLinks") { links.forEach { l -> addJsonObject { put("url", l.trim()); put("platform", "Other"); put("type", type); put("label", title) } } }
+        val type = when (fileName.substringAfterLast('.', "").lowercase()) {
+            "pdf" -> "pdf"
+            "ppt", "pptx" -> "pptx"
+            "doc", "docx" -> "docx"
+            "mp4", "mov", "m4v", "webm" -> "video"
+            else -> "image"
         }
         scope.launch {
-            try { Submissions.get(mapOf("action" to "submit", "data" to payload.toString())); sent = true; done() } catch (e: ApiError) { error = e.message }
+            try {
+                progress = 0f
+                val data = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { ctx.contentResolver.openInputStream(uri)?.use { it.readBytes() } }
+                    ?: throw ApiError("Couldn't read this file.")
+                if (data.size > maxBytes) throw ApiError("Bigger than 25 MB.")
+                val url = uploadSubmission(fileName, data, Account.token) { p -> progress = p }
+                val payload = buildJsonObject {
+                    put("studentName", name.trim()); put("presentationTitle", title.trim()); put("fileType", type)
+                    put("platform", "ASU Bank"); put("primaryUrl", url); put("notes", notes); put("isBackup", false)
+                    putJsonArray("backupLinks") { }
+                }
+                Submissions.get(mapOf("action" to "submit", "data" to payload.toString()))
+                sent = true
+                error = null
+                done()
+            } catch (e: ApiError) { error = e.message?.let { tr(it) } }
+            progress = null
             busy = false
         }
     }
@@ -286,27 +343,24 @@ private fun SubmitDialog(onClose: () -> Unit, done: () -> Unit) {
                 } else Column(Modifier.padding(pad).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     OutlinedTextField(name, { name = it }, label = { Text("Your name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                     OutlinedTextField(title, { title = it }, label = { Text("Presentation title") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                    Text("Type", style = MaterialTheme.typography.labelLarge)
-                    Row(Modifier.fillMaxWidth().horizontalScrollRow(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        types.forEach { (k, l) -> FilterChip(selected = type == k, onClick = { type = k }, label = { Text(l) }) }
+                    Text("The file", style = MaterialTheme.typography.labelLarge)
+                    if (fileUri == null) {
+                        androidx.compose.material3.OutlinedButton(onClick = { picker.launch(arrayOf("*/*")) }, modifier = Modifier.fillMaxWidth()) { Icon(Icons.Filled.Add, null); Text(" " + tr("Choose a file")) }
+                    } else {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            KindTile(AB.kind("", fileName), 40.dp)
+                            Column(Modifier.weight(1f)) {
+                                Text(fileName, maxLines = 2)
+                                Text(android.text.format.Formatter.formatShortFileSize(ctx, fileSize), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            if (!busy) IconButton(onClick = { fileUri = null; fileName = "" }) { Icon(Icons.Filled.Delete, tr("Remove")) }
+                        }
+                        progress?.let { p ->
+                            androidx.compose.material3.LinearProgressIndicator(progress = { p }, modifier = Modifier.fillMaxWidth())
+                            Text(trf("Uploading… %d%%", (p * 100).toInt()), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                     }
-                    Text("Stored on", style = MaterialTheme.typography.labelLarge)
-                    Row(Modifier.fillMaxWidth().horizontalScrollRow(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        listOf("Google Drive", "OneDrive", "Dropbox", "Other").forEach { p -> FilterChip(selected = platform == p, onClick = { platform = p }, label = { Text(p) }) }
-                    }
-                    OutlinedTextField(
-                        url, { url = it.trim() }, label = { Text("Link to the file (https://…)") }, singleLine = true,
-                        supportingText = { Text("Share the file so anyone with the link can view it.") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri), modifier = Modifier.fillMaxWidth(),
-                    )
-                    backups.forEachIndexed { i, b ->
-                        OutlinedTextField(
-                            b, { backups[i] = it.trim() }, label = { Text(trf("Backup link %d", i + 1)) }, singleLine = true,
-                            trailingIcon = { IconButton(onClick = { backups.removeAt(i) }) { Icon(Icons.Filled.Delete, "Remove") } },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri), modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
-                    TextButton(onClick = { backups.add("") }) { Icon(Icons.Filled.Add, null); Text(" Add a backup link") }
+                    Text("PDF, PowerPoint, Word, images or video, up to 25 MB. It uploads right from the app.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     OutlinedTextField(notes, { notes = it }, label = { Text("Notes (optional)") }, modifier = Modifier.fillMaxWidth())
                     error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                 }

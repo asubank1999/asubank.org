@@ -1,5 +1,7 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Block
 import android.graphics.Bitmap
@@ -166,76 +168,6 @@ fun SwitchRow(title: String, icon: androidx.compose.ui.graphics.vector.ImageVect
 }
 
 /** Someone's profile: photo, badges, bio, online or last seen, phone if they share it */
-@Composable
-fun ProfileScreen(userId: String) {
-    val nav = LocalNav.current
-    val ctx = LocalContext.current
-    var user by remember { mutableStateOf<AbUser?>(null) }
-    var error by remember { mutableStateOf<String?>(null) }
-    val me by Account.user.collectAsState()
-    val blockScope = rememberCoroutineScope()
-    var reporting by remember { mutableStateOf<ReportTarget?>(null) }
-    var blocking by remember { mutableStateOf<BlockTarget?>(null) }
-    reporting?.let { t -> ReportDialog(t) { reporting = null } }
-    blocking?.let { t -> BlockDialog(t, { blocking = null }) }
-    androidx.compose.runtime.LaunchedEffect(userId) {
-        try { user = Account.call("profile", mapOf("userId" to userId))["user"].decodeAs<AbUser>() } catch (e: ApiError) { error = e.message }
-    }
-    Screen(user?.name ?: tr("Profile")) { pad ->
-        LazyColumn(Modifier.padding(pad)) {
-            item {
-                Column(Modifier.fillMaxWidth().padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    val u = user
-                    if (u == null) { if (error == null) CircularProgressIndicator() else Text(error!!, color = MaterialTheme.colorScheme.error); return@Column }
-                    Avatar(u.name, u.color, 96.dp, u.isAdmin, u.avatar, u.online)
-                    Text(u.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                    Text("@${u.username}", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(
-                        if (u.online == true) tr("Online now") else lastSeenText(u.lastSeen), style = MaterialTheme.typography.bodySmall,
-                        color = if (u.online == true) Brand.green else MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    BadgeRow(u.badges)
-                    if (u.isAdmin) Badge(tr("ADMIN"), Brand.orange)
-                }
-            }
-            user?.let { u ->
-                if (!u.bio.isNullOrEmpty()) item { Group(header = tr("About")) { Text(u.bio, Modifier.padding(16.dp)) } }
-                if (!u.college.isNullOrEmpty() || !u.major.isNullOrEmpty()) item {
-                    Group(header = "Studies") {
-                        if (!u.college.isNullOrEmpty()) ListRow(u.college, tr("College"))
-                        if (!u.college.isNullOrEmpty() && !u.major.isNullOrEmpty()) Divider()
-                        if (!u.major.isNullOrEmpty()) ListRow(u.major, tr("Major"))
-                    }
-                }
-                if (!u.phone.isNullOrEmpty()) item {
-                    Group(header = tr("Phone")) {
-                        ListRow(u.phone, icon = Icons.Filled.Phone) {
-                            runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_DIAL, Uri.parse("tel:" + u.phone.filter { it.isDigit() || it == '+' }))) }
-                        }
-                        Divider()
-                        ListRow("WhatsApp", emoji = "💬") {
-                            runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://wa.me/" + u.phone.filter { it.isDigit() }))) }
-                        }
-                    }
-                }
-                if (me != null && u.id != me?.id) item {
-                    Group {
-                        ListRow(tr("Report this person"), icon = Icons.Filled.Flag) { reporting = ReportTarget("user", u.id, u.name) }
-                        if (!u.isAdmin) {
-                            Divider()
-                            if (u.id in me?.blocked.orEmpty()) ListRow(tr("Unblock"), icon = Icons.Filled.Block) { blockScope.launch { runCatching { Moderation.setBlocked(u.id, false) } } }
-                            else ListRow(tr("Block"), icon = Icons.Filled.Block, titleColor = MaterialTheme.colorScheme.error) { blocking = BlockTarget(u.id, u.name) }
-                        }
-                    }
-                }
-                if (Account.isAdmin && u.id != Account.user.value?.id) item {
-                    Group { ListRow(tr("Manage this user"), icon = Icons.Filled.Shield) { AdminSelection.user = u; nav.navigate("adminUser") } }
-                }
-            }
-        }
-    }
-}
-
 /** Which rooms may notify about new messages */
 @Composable
 fun MutedRoomsScreen() {
@@ -392,6 +324,7 @@ fun AccountScreen() {
     val nReplies by ChatNotifier.replies.collectAsState()
     val nAnn by ChatNotifier.announcements.collectAsState()
     val nUploads by ChatNotifier.uploads.collectAsState()
+    val nSocial by ChatNotifier.social.collectAsState()
     val muted by ChatNotifier.muted.collectAsState()
     var photoMenu by remember { mutableStateOf(false) }
     var photoBusy by remember { mutableStateOf(false) }
@@ -463,6 +396,10 @@ fun AccountScreen() {
                     SwitchRow(tr("Announcements"), Icons.Filled.Campaign, nAnn) { ChatNotifier.set("announcements", it) }
                     Divider()
                     SwitchRow(tr("New uploaded files"), Icons.Filled.UploadFile, nUploads) { ChatNotifier.set("uploads", it) }
+                    Divider()
+                    SwitchRow(tr("Friends and pokes"), Icons.Filled.People, nSocial) { ChatNotifier.set("social", it) }
+                    Divider()
+                    ListRow("Notification sounds", icon = Icons.Filled.MusicNote) { nav.navigate("sounds") }
                     if (nMessages) {
                         Divider()
                         ListRow("Rooms", icon = Icons.Filled.Tag, trailing = if (muted.isEmpty()) tr("All") else tr("%d muted").format(muted.size)) { nav.navigate("mutedRooms") }
@@ -502,6 +439,9 @@ fun AccountScreen() {
         var bio by remember { mutableStateOf(u.bio ?: "") }
         var major by remember { mutableStateOf(u.major ?: "") }
         var college by remember { mutableStateOf(u.college ?: "") }
+        var year by remember { mutableStateOf(u.year ?: "") }
+        var yearOpen by remember { mutableStateOf(false) }
+        var interests by remember { mutableStateOf(u.interests ?: "") }
         var collegeOpen by remember { mutableStateOf(false) }
         var err by remember { mutableStateOf<String?>(null) }
         AlertDialog(
@@ -522,6 +462,17 @@ fun AccountScreen() {
                         }
                     }
                     Field(major, { if (it.length <= 60) major = it }, "Your major")
+                    androidx.compose.foundation.layout.Box {
+                        androidx.compose.material3.OutlinedButton(onClick = { yearOpen = true }, Modifier.fillMaxWidth()) {
+                            Text(tr("Year") + ": " + (if (year.isEmpty()) tr("Not set") else tr(year)))
+                        }
+                        androidx.compose.material3.DropdownMenu(yearOpen, { yearOpen = false }) {
+                            (listOf("") + StudyYears).forEach { c ->
+                                androidx.compose.material3.DropdownMenuItem(text = { Text(if (c.isEmpty()) "Not set" else c) }, onClick = { year = c; yearOpen = false })
+                            }
+                        }
+                    }
+                    Field(interests, { if (it.length <= 160) interests = it }, "Football, coding, photography…")
                     Field(phone, { phone = it }, "Phone number (optional)", keyboard = KeyboardType.Phone)
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Show my number on my profile", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
@@ -533,7 +484,7 @@ fun AccountScreen() {
                     err?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                 }
             },
-            confirmButton = { TextButton(onClick = { scope.launch { try { Account.updateProfile(name, email, uni, phone, showPhone, bio, major, college); editing = false } catch (e: ApiError) { err = e.message } } }) { Text("Save") } },
+            confirmButton = { TextButton(onClick = { scope.launch { try { Account.updateProfile(name, email, uni, phone, showPhone, bio, major, college, year, interests); editing = false } catch (e: ApiError) { err = e.message } } }) { Text("Save") } },
             dismissButton = { TextButton(onClick = { editing = false }) { Text("Cancel") } },
         )
     }

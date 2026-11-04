@@ -3,6 +3,17 @@
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
 ASU Bank is a free, volunteer, non-profit project. It is not made by or affiliated with the university.
 
+### What's new in 1.9.0
+- Friends: add classmates, accept requests, poke them or ask to meet, study or grab coffee, and share posts in a new Friends tab
+- Bigger profiles with a cover, counts, year, interests and posts
+- My lectures: add the subject, hall and time, and get a reminder 10 minutes before
+- Campus weather on Home, from 7 AM till 4 PM
+- Choose your notification sounds, and which tabs are in your tab bar
+- Life hacks: first aid, safety, studying, exams and saving money, plus 911 one tap away
+- Book a photoshoot and add your group's link right in the app; the owner accepts or rejects groups in Admin
+- Student submissions: upload the file itself instead of a link
+- 7 more themes
+
 ### What's new in 1.8.0
 - **Report anything**: press and hold a chat message, open a profile, or use the menu on any file to report it. Anyone can report a problem from More, even without an account.
 - **Block people**: you won't see their messages or get notifications from them. Undo it any time from your account.

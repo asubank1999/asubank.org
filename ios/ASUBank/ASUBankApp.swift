@@ -64,6 +64,8 @@ struct RootView: View {
     @Environment(\.openURL) private var openURL
     @AppStorage(WelcomeTermsView.key) private var accepted = false
     @ObservedObject private var account = AccountStore.shared
+    @ObservedObject private var notifier = ChatNotifier.shared
+    @AppStorage(TabBarPrefs.key) private var chosenTabs = TabBarPrefs.standard
     @State private var lastTab: AppTab = .home
     /// Tapping the tab you are on rebuilds its stack, which goes back to its first screen
     @State private var resets: [AppTab: Int] = [:]
@@ -75,25 +77,38 @@ struct RootView: View {
         })
     }
 
+    private var middleTabs: [AppTab] { TabBarPrefs.chosen(chosenTabs, admin: account.isAdmin) }
+
+    @ViewBuilder private func screen(_ t: AppTab) -> some View {
+        switch t {
+        case .search: SearchView()
+        case .chat: ChatTab()
+        case .friends: FriendsTab()
+        case .saved: SavedView()
+        case .lectures: LecturesTab()
+        case .hacks: LifeHacksTab()
+        case .admin: AdminTab()
+        case .more: MoreView()
+        default: HomeView()
+        }
+    }
+
     var body: some View {
         TabView(selection: tabSelection) {
             HomeView().id(resets[.home, default: 0])
                 .tabItem { Label("Home", systemImage: "house.fill") }
                 .tag(AppTab.home)
-            SearchView().id(resets[.search, default: 0])
-                .tabItem { Label("Search", systemImage: "magnifyingglass") }
-                .tag(AppTab.search)
-            ChatTab().id(resets[.chat, default: 0])
-                .tabItem { Label("Chat", systemImage: "bubble.left.and.bubble.right.fill") }
-                .tag(AppTab.chat)
+            ForEach(middleTabs) { t in
+                let o = TabBarPrefs.options.first { $0.tab == t }
+                screen(t).id(resets[t, default: 0])
+                    .tabItem { Label(LocalizedStringKey(o?.name ?? ""), systemImage: o?.icon ?? "circle") }
+                    .tag(t)
+                    .badge(t == .friends ? notifier.socialUnread : 0)
+            }
             if account.isAdmin {
                 AdminTab().id(resets[.admin, default: 0])
                     .tabItem { Label("Admin", systemImage: "shield.lefthalf.filled") }
                     .tag(AppTab.admin)
-            } else {
-                SavedView().id(resets[.saved, default: 0])
-                    .tabItem { Label("Saved", systemImage: "star.fill") }
-                    .tag(AppTab.saved)
             }
             MoreView().id(resets[.more, default: 0])
                 .tabItem { Label("More", systemImage: "ellipsis.circle.fill") }
@@ -102,15 +117,27 @@ struct RootView: View {
         .onChange(of: app.tab) { t in
             // Upload opens as a sheet over the tab you were on; admins find Saved under More
             if t == .upload { app.tab = lastTab; app.uploadShown = true; return }
-            if t == .saved && account.isAdmin { app.tab = .more; return }
             if t == .admin && !account.isAdmin { app.tab = lastTab; return }
+            // a tab that isn't in the bar opens over the one you're on
+            if t != .home && t != .more && t != .admin && !middleTabs.contains(t) {
+                app.tab = lastTab
+                app.overlayTab = t
+                return
+            }
             lastTab = t
             Haptics.tap()
         }
         .onAppear {
             if app.tab == .upload { app.tab = .home; app.uploadShown = true }
+            if app.tab != .home && app.tab != .more && app.tab != .admin && !middleTabs.contains(app.tab) {
+                let t = app.tab
+                app.tab = .home
+                app.overlayTab = t
+            }
         }
         .sheet(isPresented: $app.uploadShown) { UploadView() }
+        .sheet(item: $app.overlayTab) { screen($0) }
+        .task { LectureStore.shared.reschedule() }
         .sheet(isPresented: $account.signInShown) { SignInScreen() }
         .fullScreenCover(isPresented: Binding(get: { !accepted && !config.mustUpdate }, set: { _ in })) {
             WelcomeTermsView()

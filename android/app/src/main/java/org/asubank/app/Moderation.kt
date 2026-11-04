@@ -252,6 +252,14 @@ fun AdminReportsScreen() {
                         if (r.str("status") == "open") Row {
                             TextButton(onClick = { set(r, "done") }) { Text("Done") }
                             TextButton(onClick = { set(r, "dismissed") }) { Text("Dismiss") }
+                            if (r.str("kind") == "post") TextButton(onClick = {
+                                scope.launch {
+                                    try {
+                                        Account.call("postDelete", mapOf("id" to r.str("targetId")))
+                                        set(r, "done")
+                                    } catch (e: ApiError) { error = e.message }
+                                }
+                            }) { Text("Delete post", color = MaterialTheme.colorScheme.error) }
                             if (r.str("kind") == "message") TextButton(onClick = { set(r, "done", deleteMessage = true) }) {
                                 Text("Delete message", color = MaterialTheme.colorScheme.error)
                             }

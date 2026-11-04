@@ -246,7 +246,7 @@ private val allowed = setOf("pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx", 
 private val uploadKinds = listOf("Final", "Midterm", "Quiz", "Summary", "Notes", "Slides", "Test bank", "Assignment")
 
 /** Counts bytes as OkHttp writes them, for a real progress bar */
-private class ProgressBody(private val bytes: ByteArray, private val type: MediaType, private val onProgress: (Float) -> Unit) : RequestBody() {
+class ProgressBody(private val bytes: ByteArray, private val type: MediaType, private val onProgress: (Float) -> Unit) : RequestBody() {
     override fun contentType() = type
     override fun contentLength() = bytes.size.toLong()
     override fun writeTo(sink: BufferedSink) {

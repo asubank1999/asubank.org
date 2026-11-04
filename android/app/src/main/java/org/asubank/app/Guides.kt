@@ -304,6 +304,10 @@ fun GroupsScreen(page: SitePage) {
     val all = remember(page) { groupSections(page) }
     var kind by remember { mutableIntStateOf(0) }
     var q by remember { mutableStateOf("") }
+    var approved by remember { mutableStateOf<List<ApprovedGroup>>(emptyList()) }
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        runCatching { approved = AccountsApi.call("groupsApproved")["groups"].decodeAs<List<ApprovedGroup>>().orEmpty() }
+    }
     val shown = all.filter { it.resources == (kind == 1) }.mapNotNull { s ->
         if (q.isBlank() || s.title.contains(q.trim(), true)) s
         else s.copy(links = s.links.filter { it.t.contains(q.trim(), true) || (it.s ?: "").contains(q.trim(), true) }).takeIf { it.links.isNotEmpty() }
@@ -320,6 +324,15 @@ fun GroupsScreen(page: SitePage) {
                     q, { q = it }, placeholder = { Text("Search groups") }, singleLine = true, leadingIcon = { Icon(Icons.Filled.Search, null) },
                     shape = RoundedCornerShape(14.dp), modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp),
                 )
+            }
+            val addedShown = if (kind != 0) emptyList() else approved.filter { q.isBlank() || it.title.contains(q.trim(), true) || it.category.orEmpty().contains(q.trim(), true) }
+            if (addedShown.isNotEmpty()) item {
+                Group(header = "Added by students") {
+                    addedShown.forEachIndexed { i, g ->
+                        if (i > 0) Divider()
+                        ListRow(g.title, g.category?.ifEmpty { null }, icon = Icons.Filled.Forum, iconColor = Color(0xFF25D366)) { openExternal(ctx, g.url) }
+                    }
+                }
             }
             items(shown, key = { it.title + it.resources }) { s ->
                 Group(header = s.title) {
@@ -352,7 +365,7 @@ fun GroupsScreen(page: SitePage) {
             if (shown.isEmpty()) item { EmptyState(Icons.Filled.SearchOff, "No groups found", "Try another word.") }
             item {
                 Group(footer = "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules. Long-press a group to copy its link.") {
-                    ListRow("Add your group's link", icon = Icons.Filled.AddComment, iconColor = Brand.accent) { openExternal(ctx, waMessage("Hi ASU Bank, I'd like to add a WhatsApp group: ")) }
+                    ListRow("Add your group's link", icon = Icons.Filled.AddComment, iconColor = Brand.accent) { nav.navigate("groupRequest") }
                 }
                 Spacer(Modifier.height(24.dp))
             }

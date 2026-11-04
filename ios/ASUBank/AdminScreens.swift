@@ -6,6 +6,7 @@ struct AdminTab: View {
     @State private var stats: [String: Int] = [:]
     @State private var error: String?
     @State private var announcing = false
+    @State private var pendingGroups = 0
 
     private let tiles: [(String, String, String, UInt32)] = [
         ("users", "Users", "person.2.fill", 0x0a84ff), ("online", "Online now", "circle.fill", 0x34c759), ("activeToday", "Active today", "bolt.fill", 0x1f8a3e),
@@ -37,6 +38,13 @@ struct AdminTab: View {
                     } header: { Text("Overview") }
 
                     Section("Manage") {
+                        NavigationLink { AdminGroupRequestsScreen() } label: {
+                            HStack {
+                                Label("Group requests", systemImage: "plus.bubble")
+                                Spacer()
+                                if pendingGroups > 0 { Badge(text: "\(pendingGroups)", color: .orange) }
+                            }
+                        }
                         NavigationLink { AdminReportsScreen() } label: { Label("Reports", systemImage: "flag") }
                         NavigationLink { AdminUsersScreen() } label: { Label("Users", systemImage: "person.2") }
                         Button { announcing = true } label: { Label("Send an announcement", systemImage: "megaphone") }
@@ -65,6 +73,7 @@ struct AdminTab: View {
         do {
             let r = try await account.call("adminStats")
             stats = (r["stats"] as? [String: Any] ?? [:]).compactMapValues { ($0 as? NSNumber)?.intValue }
+            pendingGroups = ((try? await account.call("adminGroupRequests"))?["pending"] as? NSNumber)?.intValue ?? 0
             error = nil
         } catch { self.error = error.localizedDescription }
     }

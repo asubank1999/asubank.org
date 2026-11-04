@@ -1,7 +1,10 @@
 import Foundation
 import SwiftUI
 
-enum AppTab: Hashable { case home, search, upload, chat, saved, admin, more }
+enum AppTab: Hashable, Identifiable {
+    case home, search, upload, chat, saved, admin, more, friends, lectures, hacks
+    var id: Self { self }
+}
 
 /// Shared app state: selected tab and a query handed from Home to Search
 @MainActor
@@ -14,6 +17,8 @@ final class AppState: ObservableObject {
     @Published var pendingRoom: String?
     /// Upload is a sheet now (the tab bar has Chat instead)
     @Published var uploadShown = false
+    /// A tab that isn't in the person's tab bar right now, shown over the current one
+    @Published var overlayTab: AppTab?
     static weak var shared: AppState?
 
     init() {

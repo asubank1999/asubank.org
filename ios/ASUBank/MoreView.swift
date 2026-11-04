@@ -32,7 +32,11 @@ struct MoreView: View {
                             row("person.crop.circle.fill", .abAccent, "Sign in or create account", "Join the student chat")
                         }
                     }
+                    if let u = account.user {
+                        NavigationLink { ProfileScreen(userId: u.id, fallbackName: u.displayName, fallbackColor: u.color) } label: { Label("My profile", systemImage: "person.text.rectangle") }
+                    }
                     NavigationLink { ThemeScreen() } label: { Label("Theme", systemImage: "paintpalette") }
+                    NavigationLink { TabBarScreen() } label: { Label("Customize tab bar", systemImage: "rectangle.3.group") }
                     NavigationLink { LanguageScreen() } label: {
                         HStack {
                             Label("Language", systemImage: "globe")
@@ -41,9 +45,10 @@ struct MoreView: View {
                         }
                     }
                     Button { app.uploadShown = true } label: { Label("Upload files", systemImage: "arrow.up.circle") }
-                    if account.isAdmin {
-                        NavigationLink { SavedView(embedded: true) } label: { Label("Saved", systemImage: "star") }
-                    }
+                    NavigationLink { SavedView(embedded: true) } label: { Label("Saved", systemImage: "star") }
+                    NavigationLink { FriendsScreen() } label: { Label("Friends", systemImage: "person.2") }
+                    NavigationLink { LecturesScreen() } label: { Label("My lectures", systemImage: "alarm") }
+                    NavigationLink { LifeHacksScreen() } label: { Label("Life hacks", systemImage: "lightbulb") }
                     RouteLink(Route.page("/upload/student_submissions_board", "Submissions")) { Label("Student submissions", systemImage: "rectangle.stack") }
                 } header: { Text("You") }
 

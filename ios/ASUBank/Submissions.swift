@@ -5,6 +5,30 @@ import SwiftUI
 enum Submissions {
     static let api = "https://script.google.com/macros/s/AKfycbxT65oWO1Pve_9i4xThLiKBDZ1KTHlOoetrcOMo1A9QjoK8cm7djR077INB-yVSVaWN/exec"
 
+    private final class UploadProgress: NSObject, URLSessionTaskDelegate {
+        let onProgress: (Double) -> Void
+        init(_ p: @escaping (Double) -> Void) { onProgress = p }
+        func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+            guard totalBytesExpectedToSend > 0 else { return }
+            onProgress(Double(totalBytesSent) / Double(totalBytesExpectedToSend))
+        }
+    }
+
+    /// Stores the file with ASU Bank and returns its link. It doesn't appear in the public uploads list.
+    static func upload(name: String, data: Data, token: String?, progress: @escaping (Double) -> Void) async throws -> String {
+        var body: [String: Any] = ["action": "submissionFile", "name": name, "data": data.base64EncodedString()]
+        if let token { body["token"] = token }
+        var req = URLRequest(url: AccountsAPI.url)
+        req.httpMethod = "POST"
+        req.setValue("text/plain;charset=utf-8", forHTTPHeaderField: "Content-Type")
+        req.timeoutInterval = 300
+        let payload = try JSONSerialization.data(withJSONObject: body)
+        let (reply, _) = try await URLSession.shared.upload(for: req, from: payload, delegate: UploadProgress(progress))
+        let o = (try? JSONSerialization.jsonObject(with: reply)) as? [String: Any]
+        if o?["ok"] as? Bool == true, let url = o?["url"] as? String { return url }
+        throw NSError(domain: "upload", code: 1, userInfo: [NSLocalizedDescriptionKey: o?["error"] as? String ?? L("Upload failed. Please try again.")])
+    }
+
     struct Link: Codable, Hashable { var url: String; var platform: String?; var type: String?; var label: String? }
     struct Item: Codable, Identifiable, Hashable {
         var id: String
@@ -220,22 +244,34 @@ private struct SubmissionDetail: View {
 private struct SubmitPresentationSheet: View {
     var done: () async -> Void
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var account = AccountStore.shared
     @AppStorage("ab.subs.name") private var name = ""
     @State private var title = ""
-    @State private var type = "pdf"
-    @State private var platform = "Google Drive"
-    @State private var url = ""
     @State private var notes = ""
-    @State private var backups: [Submissions.Link] = []
+    @State private var fileName = ""
+    @State private var fileData: Data?
+    @State private var showImporter = false
+    @State private var showPhotos = false
+    @State private var progress: Double?
     @State private var busy = false
     @State private var error: String?
     @State private var sent = false
 
-    private let types = [("pdf", "📄 PDF"), ("pptx", "📊 PowerPoint"), ("docx", "📝 Word"), ("image", "🖼️ Image"), ("video", "🎬 Video")]
-    private let platforms = ["Google Drive", "OneDrive", "Dropbox", "Other"]
+    private let allowed = ["pdf", "pptx", "ppt", "docx", "doc", "png", "jpg", "jpeg", "webp", "heic", "mp4", "mov", "m4v", "webm"]
+    private let maxBytes = 25 * 1024 * 1024
 
     private var valid: Bool {
-        !name.trimmingCharacters(in: .whitespaces).isEmpty && !title.trimmingCharacters(in: .whitespaces).isEmpty && (url.hasPrefix("https://") || url.hasPrefix("http://"))
+        !name.trimmingCharacters(in: .whitespaces).isEmpty && !title.trimmingCharacters(in: .whitespaces).isEmpty && fileData != nil
+    }
+
+    private var fileType: String {
+        switch (fileName as NSString).pathExtension.lowercased() {
+        case "pdf": return "pdf"
+        case "ppt", "pptx": return "pptx"
+        case "doc", "docx": return "docx"
+        case "mp4", "mov", "m4v", "webm": return "video"
+        default: return "image"
+        }
     }
 
     var body: some View {
@@ -256,17 +292,28 @@ private struct SubmitPresentationSheet: View {
                         TextField("Presentation title", text: $title)
                     } header: { Text("About it") }
                     Section {
-                        Picker("Type", selection: $type) { ForEach(types, id: \.0) { Text($0.1).tag($0.0) } }
-                        Picker("Stored on", selection: $platform) { ForEach(platforms, id: \.self) { Text($0).tag($0) } }
-                        TextField("Link to the file (https://…)", text: $url).keyboardType(.URL).autocapitalization(.none).disableAutocorrection(true)
-                    } header: { Text("The file") } footer: { Text("Share the file so anyone with the link can view it.") }
-                    Section {
-                        ForEach(backups.indices, id: \.self) { i in
-                            TextField("Backup link", text: $backups[i].url).keyboardType(.URL).autocapitalization(.none)
+                        if let d = fileData {
+                            HStack(spacing: 12) {
+                                KindTile(kind: AB.kind("", fileName))
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(fileName).lineLimit(2)
+                                    Text(ByteCountFormatter.string(fromByteCount: Int64(d.count), countStyle: .file)).font(.caption).foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                if !busy {
+                                    Button { fileData = nil; fileName = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary) }
+                                        .buttonStyle(.borderless)
+                                }
+                            }
+                            if let progress {
+                                ProgressView(value: progress).tint(.abAccent)
+                                Text(String(format: L("Uploading… %d%%"), Int(progress * 100))).font(.caption).foregroundStyle(.secondary)
+                            }
+                        } else {
+                            Button { showImporter = true } label: { Label("Choose a file", systemImage: "doc.badge.plus") }
+                            Button { showPhotos = true } label: { Label("Choose a photo", systemImage: "photo") }
                         }
-                        .onDelete { backups.remove(atOffsets: $0) }
-                        Button { backups.append(.init(url: "", platform: "Other", type: type, label: title)) } label: { Label("Add a backup link", systemImage: "plus") }
-                    } header: { Text("Backup links (optional)") }
+                    } header: { Text("The file") } footer: { Text("PDF, PowerPoint, Word, images or video, up to 25 MB. It uploads right from the app.") }
                     Section("Notes (optional)") { TextField("Anything the team should know", text: $notes) }
                     if let error { Section { Text(error).foregroundStyle(.red) } }
                 }
@@ -278,21 +325,50 @@ private struct SubmitPresentationSheet: View {
                     if !sent { Button(busy ? "Sending…" : "Submit") { Task { await submit() } }.disabled(!valid || busy) }
                 }
             }
+            .fileImporter(isPresented: $showImporter, allowedContentTypes: [.item]) { result in
+                if case .success(let url) = result { pick(url) }
+            }
+            .sheet(isPresented: $showPhotos) {
+                AvatarPicker { image in
+                    if let d = image.jpegData(compressionQuality: 0.88) { take(name: "photo.jpg", data: d) }
+                }
+            }
         }
     }
 
+    private func pick(_ url: URL) {
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        guard let d = try? Data(contentsOf: url) else { error = L("Couldn't read this file."); return }
+        take(name: url.lastPathComponent, data: d)
+    }
+
+    private func take(name: String, data: Data) {
+        error = nil
+        guard allowed.contains((name as NSString).pathExtension.lowercased()) else { error = L("This file type isn't allowed."); return }
+        guard data.count <= maxBytes else { error = L("Bigger than 25 MB."); return }
+        guard !data.isEmpty else { error = L("This file is empty."); return }
+        fileName = name
+        fileData = data
+    }
+
     private func submit() async {
+        guard let data = fileData else { return }
         busy = true
-        let links = backups.filter { !$0.url.isEmpty }.map { ["url": $0.url, "platform": $0.platform ?? "Other", "type": type, "label": title] }
-        let payload: [String: Any] = ["studentName": name, "presentationTitle": title, "fileType": type, "platform": platform, "primaryUrl": url,
-                                      "notes": notes, "isBackup": !links.isEmpty, "backupLinks": links]
+        defer { busy = false; progress = nil }
         do {
-            let data = try JSONSerialization.data(withJSONObject: payload)
-            _ = try await Submissions.get([URLQueryItem(name: "action", value: "submit"), URLQueryItem(name: "data", value: String(data: data, encoding: .utf8))])
+            progress = 0
+            let url = try await Submissions.upload(name: fileName, data: data, token: account.token) { p in
+                Task { @MainActor in progress = p }
+            }
+            let payload: [String: Any] = ["studentName": name, "presentationTitle": title, "fileType": fileType, "platform": "ASU Bank", "primaryUrl": url,
+                                          "notes": notes, "isBackup": false, "backupLinks": [Any]()]
+            let json = try JSONSerialization.data(withJSONObject: payload)
+            _ = try await Submissions.get([URLQueryItem(name: "action", value: "submit"), URLQueryItem(name: "data", value: String(data: json, encoding: .utf8))])
             withAnimation { sent = true }
+            error = nil
             Haptics.success()
             await done()
         } catch { self.error = error.localizedDescription; Haptics.error() }
-        busy = false
     }
 }

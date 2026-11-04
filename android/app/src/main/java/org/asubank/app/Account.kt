@@ -104,6 +104,9 @@ data class AbUser(
     val bio: String? = null,
     val major: String? = null,
     val college: String? = null,
+    val year: String? = null,
+    val interests: String? = null,
+    val friendship: String? = null,
     val badges: List<String> = emptyList(),
     val online: Boolean? = null,
     val blocked: List<String> = emptyList(),
@@ -129,6 +132,7 @@ object Badges {
 }
 
 /** The colleges a student can pick on their profile */
+val StudyYears = listOf("First year", "Second year", "Third year", "Fourth year", "Fifth year", "Graduate", "Alumni")
 val Colleges = listOf("Information Technology", "Engineering", "Pharmacy", "Dentistry", "Nursing", "Allied Medical Sciences", "Business", "Law",
     "Arts & Sciences", "Arts & Design", "Other")
 
@@ -174,6 +178,7 @@ data class ChatRoom(
 data class AbEvent(
     val id: String,
     val type: String = "message",
+    val kind: String? = null,
     val room: String? = null,
     val roomName: String? = null,
     val userId: String? = null,
@@ -285,9 +290,9 @@ object Account {
         runCatching { adopt(call("me")) }
     }
 
-    suspend fun updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Boolean, bio: String, major: String, college: String) =
+    suspend fun updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Boolean, bio: String, major: String, college: String, year: String, interests: String) =
         adopt(call("updateProfile", mapOf("displayName" to displayName, "email" to email, "uniId" to uniId,
-            "phone" to phone, "showPhone" to showPhone, "bio" to bio.take(160), "major" to major.take(60), "college" to college)))
+            "phone" to phone, "showPhone" to showPhone, "bio" to bio.take(160), "major" to major.take(60), "college" to college, "year" to year, "interests" to interests.take(160))))
 
     /** Uploads a profile photo (a 256 px JPEG, base64), or removes it with null */
     suspend fun setAvatar(jpegBase64: String?) = adopt(
@@ -326,12 +331,18 @@ object ChatNotifier {
     private const val CHANNEL_ANN = "announcements"
     private const val CHANNEL_REPLY = "replies"
     private const val CHANNEL_UP = "uploads"
+    private const val CHANNEL_SOCIAL = "social"
     private const val WORK = "chat-check"
 
     val messages = MutableStateFlow(true)
     val replies = MutableStateFlow(true)
     val announcements = MutableStateFlow(true)
     val uploads = MutableStateFlow(true)
+    val social = MutableStateFlow(true)
+    /** New friend requests and pokes since the Friends tab was last open */
+    val socialUnread = MutableStateFlow(0)
+    /** A tab to open from a tapped notification */
+    val pendingTab = MutableStateFlow<String?>(null)
     val muted = MutableStateFlow<Set<String>>(emptySet())
     /** The room on screen, which never notifies */
     @Volatile var openRoom: String? = null
@@ -346,6 +357,7 @@ object ChatNotifier {
         replies.value = p.getBoolean("notify.replies", old != 2)
         announcements.value = p.getBoolean("notify.announcements", old != 2)
         uploads.value = p.getBoolean("notify.uploads", old != 2)
+        social.value = p.getBoolean("notify.social", true)
         muted.value = p.getStringSet("notify.muted", emptySet())?.toSet() ?: emptySet()
         if (Build.VERSION.SDK_INT >= 26) {
             val nm = ctx.getSystemService(NotificationManager::class.java)
@@ -362,6 +374,7 @@ object ChatNotifier {
             "replies" -> replies.value = v
             "announcements" -> announcements.value = v
             "uploads" -> uploads.value = v
+            "social" -> social.value = v
         }
         Saved.prefs.edit().putBoolean("notify.$key", v).apply()
     }
@@ -390,7 +403,7 @@ object ChatNotifier {
     suspend fun check(ctx: Context) = lock.withLock {
         val token = Account.token ?: return@withLock
         val seen = Saved.prefs.getString("notify.lastSeen", null)
-        val r = runCatching { AccountsApi.call("events", mapOf("since" to (seen ?: "")), token = token) }.getOrNull() ?: return@withLock
+        val r = runCatching { AccountsApi.call("events", mapOf("since" to (seen ?: ""), "social" to true), token = token) }.getOrNull() ?: return@withLock
         val events = r["events"].decodeAs<List<AbEvent>>() ?: emptyList()
         val newest = events.maxOfOrNull { it.created } ?: ""
         // first check after install: remember, don't notify
@@ -407,6 +420,8 @@ object ChatNotifier {
         return when (e.type) {
             "upload" -> uploads.value
             "announcement" -> announcements.value
+            "friend_request", "friend_accept", "poke" -> social.value
+            "group_request", "group_approved", "group_rejected" -> true
             else -> when {
                 e.room == openRoom -> false
                 replies.value && me != null && e.replyToUserId == me -> true
@@ -421,22 +436,45 @@ object ChatNotifier {
         val reply = e.type == "message" && me != null && e.replyToUserId == me
         val who = e.displayName ?: ""
         val intent = Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        if (e.type == "upload") intent.putExtra("openPath", "/guides/latest") else intent.putExtra("openRoom", e.room)
+        val isPrivate = e.type.startsWith("friend_") || e.type.startsWith("group_") || e.type == "poke"
+        if (isPrivate && !e.type.startsWith("group_")) socialUnread.value += 1
+        when {
+            e.type == "upload" -> intent.putExtra("openPath", "/guides/latest")
+            e.type == "group_request" -> intent.putExtra("openTab", Routes.ADMIN)
+            e.type.startsWith("group_") -> Unit
+            isPrivate -> intent.putExtra("openTab", Routes.FRIENDS)
+            else -> intent.putExtra("openRoom", e.room)
+        }
         val tap = PendingIntent.getActivity(ctx, e.id.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        val channel = when { e.type == "upload" -> CHANNEL_UP; e.type == "announcement" -> CHANNEL_ANN; reply -> CHANNEL_REPLY; else -> CHANNEL }
+        val base = when { isPrivate -> CHANNEL_SOCIAL; e.type == "upload" -> CHANNEL_UP; e.type == "announcement" -> CHANNEL_ANN; reply -> CHANNEL_REPLY; else -> CHANNEL }
+        val channelName = when (base) { CHANNEL_SOCIAL -> tr("Friends and pokes"); CHANNEL_UP -> tr("New uploaded files"); CHANNEL_ANN -> tr("Announcements"); CHANNEL_REPLY -> tr("Replies to me"); else -> tr("Chat messages") }
+        val channel = NotifySounds.channel(ctx, base, channelName, if (isPrivate || reply || e.type == "announcement") NotificationManager.IMPORTANCE_HIGH else NotificationManager.IMPORTANCE_DEFAULT, NotifySounds.MESSAGES)
         val title = when {
             e.type == "upload" -> tr("📄 New upload on ASU Bank")
             e.type == "announcement" -> "📣 $who"
+            e.type == "friend_request" -> tr("New friend request")
+            e.type == "friend_accept" -> tr("You have a new friend")
+            e.type == "poke" -> "👉 $who"
+            e.type == "group_request" -> tr("New group request")
+            e.type == "group_approved" -> tr("Your group was accepted")
+            e.type == "group_rejected" -> tr("Your group wasn't accepted")
             reply -> tr("%s replied to you").format(who)
             else -> tr("New message from %s").format(who)
+        }
+        val text = when (e.type) {
+            "friend_request" -> trf("%s wants to be your friend", who)
+            "friend_accept" -> trf("%s accepted your friend request", who)
+            "poke" -> Social.pokeText(e.kind ?: "poke", who, e.text)
+            "group_request" -> trf("%s asked to add: %s", who, e.text)
+            else -> e.text
         }
         val n = NotificationCompat.Builder(ctx, channel)
             .setSmallIcon(R.drawable.ic_notification)
             .setColor(0xFF8C1D40.toInt())
             .setContentTitle(title)
-            .setContentText(e.text)
+            .setContentText(text)
             .setSubText(if (e.type == "upload") null else e.roomName)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(e.text))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setGroup(e.room ?: e.type)
             .setAutoCancel(true)
             .setContentIntent(tap)

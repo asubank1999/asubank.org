@@ -1,5 +1,9 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Policy
 import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.filled.Star
@@ -208,6 +212,8 @@ fun HomeScreen() {
                 }
             }
         }
+        item { WeatherCard() }
+        item { NextLectureCard() }
         if (recent.isNotEmpty()) {
             item { SectionTitle("Continue") }
             item { Group { recent.take(4).forEachIndexed { i, s -> if (i > 0) Divider(); MaterialRow(s.material) } } }
@@ -321,10 +327,16 @@ fun MoreScreen() {
                     Divider()
                     ListRow("Theme", listOf("Match my phone", "Light", "Dark", "Pitch black")[appearance.coerceIn(0, 3)], icon = Icons.Filled.Palette) { nav.navigate("theme") }
                     Divider()
+                    ListRow("Customize tab bar", icon = Icons.Filled.Dashboard) { nav.navigate("tabBar") }
+                    Divider()
                     ListRow("Language", tr(Lang.choices.first { it.first == Lang.choice.value }.second), icon = Icons.Filled.Language) { nav.navigate("language") }
                     Divider()
                     ListRow("Upload files", icon = Icons.Filled.CloudUpload) { nav.openTab(Routes.UPLOAD) }
-                    if (u?.isAdmin == true) { Divider(); ListRow("Saved", icon = Icons.Filled.Star) { nav.navigate("savedList") } }
+                    Divider(); ListRow("Saved", icon = Icons.Filled.Star) { nav.navigate("savedList") }
+                    Divider(); ListRow("Friends", icon = Icons.Filled.People) { nav.navigate(Routes.FRIENDS) }
+                    Divider(); ListRow("My lectures", icon = Icons.Filled.Alarm) { nav.navigate(Routes.LECTURES) }
+                    Divider(); ListRow("Life hacks", icon = Icons.Filled.Lightbulb) { nav.navigate(Routes.HACKS) }
+                    if (u != null) { Divider(); ListRow("My profile", icon = Icons.Filled.AccountCircle) { nav.navigate("profile/${u.id}") } }
                     Divider()
                     ListRow("Student submissions", "Presentations for the campus screen", icon = Icons.Filled.Slideshow) { nav.navigate("submissions?admin=") }
                 }

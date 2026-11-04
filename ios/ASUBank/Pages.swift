@@ -138,6 +138,8 @@ struct SitePageView: View {
             SubjectsDirectory()
         } else if path == "/legal/uni_tos", AppLanguage.code == "ar", let page = pages.page("/legal/uni_tos_ar") {
             NativePageScreen(path: "/legal/uni_tos_ar", page: page)
+        } else if path == "/apps/photoshoot_booking" {
+            PhotoshootScreen()
         } else if AppConfig.isStore && Moderation.paidPaths.contains(path) {
             StoreNoticeView()
         } else if path.hasPrefix("/banks/"), let s = library.subject(forPath: path) {

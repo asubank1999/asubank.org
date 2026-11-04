@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 4;
+var SCHEMA = 5;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -62,12 +62,16 @@ var ONLINE_MS = 3 * 60000;
 
 var SHEETS = {
   Users: ['id', 'username', 'email', 'uniId', 'displayName', 'salt', 'hash', 'role', 'banned', 'banReason', 'created', 'lastSeen', 'color', 'mustReset',
-          'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college', 'blocked'],
+          'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college', 'blocked', 'year', 'interests'],
   Sessions: ['token', 'userId', 'created', 'lastUsed', 'platform'],
   Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited'],
   Rooms: ['id', 'name', 'emoji', 'about', 'adminOnly', 'locked', 'archived', 'pinned', 'order', 'created'],
   Log: ['time', 'adminId', 'action', 'target', 'detail'],
-  Reports: ['id', 'created', 'reporterId', 'reporterName', 'contact', 'kind', 'targetId', 'targetName', 'targetUser', 'reason', 'details', 'status', 'resolvedBy', 'resolvedAt']
+  Reports: ['id', 'created', 'reporterId', 'reporterName', 'contact', 'kind', 'targetId', 'targetName', 'targetUser', 'reason', 'details', 'status', 'resolvedBy', 'resolvedAt'],
+  GroupRequests: ['id', 'created', 'userId', 'username', 'title', 'category', 'url', 'notes', 'status', 'resolvedBy', 'resolvedAt'],
+  Friends: ['id', 'from', 'to', 'status', 'created', 'updated'],
+  Pokes: ['id', 'from', 'to', 'kind', 'place', 'created', 'read'],
+  Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes']
 };
 
 // MARK: - entry points
@@ -228,8 +232,8 @@ function badgeList(u) {
 
 /** What everyone may see about a user; `full` adds the private fields (the user themself and admins) */
 function publicUser(u, full) {
-  var o = { id: u.id, username: u.username, displayName: u.displayName || u.username, role: u.role || 'user', color: u.color || '#8C1D40',
-            avatar: u.avatar || '', bio: u.bio || '', major: u.major || '', college: u.college || '', badges: badgeList(u), lastSeen: lastActive(u) };
+  var o = { id: u.id, username: String(u.username), displayName: String(u.displayName || u.username), role: u.role || 'user', color: u.color || '#8C1D40',
+            avatar: u.avatar || '', bio: String(u.bio || ''), major: String(u.major || ''), college: String(u.college || ''), year: String(u.year || ''), interests: String(u.interests || ''), badges: badgeList(u), lastSeen: lastActive(u) };
   o.online = !!o.lastSeen && (new Date() - new Date(o.lastSeen)) < ONLINE_MS;
   if (truthy(u.showPhone)) o.phone = u.phone ? String(u.phone) : '';
   if (full) {
@@ -460,6 +464,74 @@ function avatarFolder() {
   return f;
 }
 
+// MARK: - friends, pokes, posts
+
+var POKE_KINDS = ['poke', 'meet', 'study', 'question', 'notes', 'coffee'];
+
+function cleanRow(r) { var o = {}; Object.keys(r).forEach(function (k) { if (k !== '_row') o[k] = String(r[k]); }); return o; }
+
+/** Keeps what people type as plain text in the sheet (never a formula) */
+function cell(s) { return /^[=+\-@]/.test(s) ? "'" + s : s; }
+
+function usersById() { var m = {}; rows('Users').forEach(function (u) { m[u.id] = u; }); return m; }
+
+/** A private event: only that person sees it (or only admins) */
+function privateEvent(to, type, from, text, kind) {
+  pushEvent({ id: newId(), type: type, toUserId: to.toUserId || '', toAdmin: !!to.toAdmin, kind: kind || '', room: '', roomName: '',
+              userId: from.id, displayName: from.displayName || from.username, text: text || '', created: new Date().toISOString() });
+}
+
+function friendRow(a, b) {
+  return rows('Friends').filter(function (f) { return (f.from === a && f.to === b) || (f.from === b && f.to === a); })[0] || null;
+}
+
+function relation(f, me) {
+  if (!f) return 'none';
+  if (f.status === 'accepted') return 'friends';
+  return f.from === me ? 'outgoing' : 'incoming';
+}
+
+/** The person I want to add or poke. Blocks work both ways, and they don't learn about it. */
+function friendTarget(s, id) {
+  var t = userById(String(id || ''));
+  if (!t || truthy(t.banned)) fail('User not found.');
+  if (t.id === s.id) fail("That's you!");
+  if (blockedIds(userById(s.id)).indexOf(t.id) >= 0 || blockedIds(t).indexOf(s.id) >= 0) fail("You can't do this with this person.");
+  return t;
+}
+
+function publicPosts(s, wanted, limit) {
+  var me = userById(s.id);
+  var map = usersById();
+  var mine = blockedIds(me);
+  return rows('Posts').filter(function (p) {
+    if (truthy(p.deleted) || !wanted(p)) return false;
+    var u = map[p.userId];
+    return u && !truthy(u.banned) && mine.indexOf(p.userId) < 0 && blockedIds(u).indexOf(s.id) < 0;
+  }).reverse().slice(0, limit).map(function (p) {
+    var likes = String(p.likes || '').split(',').filter(String);
+    return { id: p.id, text: String(p.text), created: p.created, likes: likes.length, liked: likes.indexOf(s.id) >= 0, user: publicUser(map[p.userId], false) };
+  });
+}
+
+/** Removes someone from friends, pokes and posts when the account goes away */
+function purgeSocial(id) {
+  [['Friends', function (r) { return r.from === id || r.to === id; }],
+   ['Pokes', function (r) { return r.from === id || r.to === id; }],
+   ['Posts', function (r) { return r.userId === id; }]].forEach(function (x) {
+    rows(x[0]).filter(x[1]).reverse().forEach(function (r) { sheet(x[0]).deleteRow(r._row); });
+  });
+}
+
+function submissionFolder() {
+  var p = PropertiesService.getScriptProperties();
+  var id = p.getProperty('SUBMISSION_FOLDER');
+  if (id) { try { return DriveApp.getFolderById(id); } catch (e) {} }
+  var f = DriveApp.createFolder('ASU Bank Submissions');
+  p.setProperty('SUBMISSION_FOLDER', f.getId());
+  return f;
+}
+
 function removeAvatarFile(url) {
   var m = String(url || '').match(/id=([-\w]{20,})/);
   if (!m) return;
@@ -549,7 +621,7 @@ var ACTIONS = {
 
   updateProfile: function (b) {
     var s = auth(b);
-    assertClean(b.displayName); assertClean(b.bio);
+    assertClean(b.displayName); assertClean(b.bio); assertClean(b.interests);
     return withLock(function () {
       var u = userById(s.id);
       var email = b.email === undefined ? u.email : String(b.email).trim();
@@ -567,10 +639,12 @@ var ACTIONS = {
                  phone: phone ? "'" + phone : '', showPhone: b.showPhone === undefined ? truthy(u.showPhone) : !!b.showPhone,
                  bio: b.bio === undefined ? (u.bio || '') : String(b.bio).trim().slice(0, 160),
                  major: b.major === undefined ? (u.major || '') : String(b.major).trim().slice(0, 60),
-                 college: b.college === undefined ? (u.college || '') : String(b.college).trim().slice(0, 60) };
+                 college: b.college === undefined ? (u.college || '') : String(b.college).trim().slice(0, 60),
+                 year: b.year === undefined ? (u.year || '') : String(b.year).trim().slice(0, 30),
+                 interests: b.interests === undefined ? (u.interests || '') : String(b.interests).trim().slice(0, 160) };
       update('Users', u._row, ch);
       forgetUser(u.id);
-      u.displayName = ch.displayName; u.email = email; u.uniId = uniId; u.phone = phone; u.showPhone = ch.showPhone; u.bio = ch.bio; u.major = ch.major; u.college = ch.college;
+      u.displayName = ch.displayName; u.email = email; u.uniId = uniId; u.phone = phone; u.showPhone = ch.showPhone; u.bio = ch.bio; u.major = ch.major; u.college = ch.college; u.year = ch.year; u.interests = ch.interests;
       return { ok: true, user: publicUser(u, true) };
     });
   },
@@ -605,7 +679,16 @@ var ACTIONS = {
     var s = auth(b);
     var u = userById(String(b.userId || ''));
     if (!u) fail('User not found.');
-    return { ok: true, user: publicUser(u, s.role === 'admin' || s.id === u.id) };
+    var o = { ok: true, user: publicUser(u, s.role === 'admin' || s.id === u.id) };
+    if (truthy(b.social)) {
+      var fr = rows('Friends');
+      o.friendship = u.id === s.id ? 'self' : relation(fr.filter(function (f) { return (f.from === s.id && f.to === u.id) || (f.to === s.id && f.from === u.id); })[0], s.id);
+      o.friendCount = fr.filter(function (f) { return f.status === 'accepted' && (f.from === u.id || f.to === u.id); }).length;
+      o.posts = publicPosts(s, function (p) { return p.userId === u.id; }, 20);
+      o.postCount = o.posts.length;
+      o.messageCount = rows('Messages').filter(function (m) { return m.userId === u.id && !truthy(m.deleted); }).length;
+    }
+    return o;
   },
 
   changePassword: function (b) {
@@ -627,6 +710,7 @@ var ACTIONS = {
       dropUserSessions(u.id);
       removeAvatarFile(u.avatar);
       anonymizeMessages(u.id);
+      purgeSocial(u.id);
       sheet('Users').deleteRow(userById(u.id)._row);
       CacheService.getScriptCache().remove('people');
       return { ok: true };
@@ -747,7 +831,7 @@ var ACTIONS = {
   report: function (b) {
     var me = b.token ? auth(b) : null;
     var kind = String(b.kind || '');
-    if (['message', 'user', 'file', 'other'].indexOf(kind) < 0) fail('Bad report.');
+    if (['message', 'user', 'file', 'post', 'other'].indexOf(kind) < 0) fail('Bad report.');
     var reason = String(b.reason || '');
     if (REPORT_REASONS.indexOf(reason) < 0) fail('Choose what is wrong first.');
     if (tooMany(me ? 'report:' + me.id : 'report:guest', me ? 15 : 40)) fail('Too many reports. Try again later.');
@@ -765,6 +849,12 @@ var ACTIONS = {
       if (!t) fail('User not found.');
       targetName = t.displayName || t.username;
       targetUser = t.username;
+    } else if (kind === 'post') {
+      var po = rows('Posts').filter(function (x) { return x.id === targetId; })[0];
+      if (!po) fail('Post not found.');
+      var pu = userById(po.userId);
+      targetName = String(po.text).slice(0, 300);
+      targetUser = pu ? pu.username : '';
     }
     return withLock(function () {
       if (me && rows('Reports').some(function (r) { return r.reporterId === me.id && r.kind === kind && r.targetId === targetId && r.status === 'open' && kind !== 'other'; })) return { ok: true };
@@ -796,6 +886,7 @@ var ACTIONS = {
       var list = blockedIds(u).filter(function (x) { return x !== target; });
       if (b.on !== false) list.push(target);
       update('Users', u._row, { blocked: list.join(',') });
+      if (b.on !== false) { var f = friendRow(s.id, target); if (f) sheet('Friends').deleteRow(f._row); }
       return { ok: true, blocked: list };
     });
   },
@@ -842,9 +933,264 @@ var ACTIONS = {
     var hidden = {};
     allRooms().forEach(function (r) { if (r.archived && u.role !== 'admin') hidden[r.id] = 1; });
     var list = JSON.parse(CacheService.getScriptCache().get('events') || '[]').filter(function (e) {
+      if (e.toUserId || e.toAdmin) {
+        // private events, only for apps that understand them
+        if (!truthy(b.social) || (since && e.created <= since)) return false;
+        return e.toAdmin ? u.role === 'admin' : e.toUserId === u.id;
+      }
       return (!since || e.created > since) && !hidden[e.room];
     });
     return { ok: true, events: list.slice(-30), now: new Date().toISOString() };
+  },
+
+  /** A file for a student submission (base64). Kept apart from the public uploads list. No account needed, like the submission itself. */
+  submissionFile: function (b) {
+    var me = b.token ? auth(b) : null;
+    var name = String(b.name || 'file').replace(/[\\/:*?"<>|]+/g, ' ').trim().slice(0, 120);
+    var ext = (name.split('.').pop() || '').toLowerCase();
+    if (['pdf', 'pptx', 'ppt', 'docx', 'doc', 'png', 'jpg', 'jpeg', 'webp', 'heic', 'mp4', 'mov', 'm4v', 'webm'].indexOf(ext) < 0) fail("This file type isn't allowed.");
+    var data = String(b.data || '').replace(/^data:[^,]+,/, '');
+    if (data.length < 8) fail('This file is empty.');
+    if (data.length > 34000000) fail('Bigger than 25 MB.');
+    if (tooMany(me ? 'subfile:' + me.id : 'subfile:guest', me ? 15 : 60)) fail('Too many uploads. Try again later.');
+    var blob = Utilities.newBlob(Utilities.base64Decode(data), String(b.type || 'application/octet-stream'), name);
+    var f = submissionFolder().createFile(blob);
+    f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return { ok: true, url: 'https://drive.google.com/file/d/' + f.getId() + '/view' };
+  },
+
+  // MARK: group links people ask to add
+
+  /** Someone asks for a group to be listed. The owner accepts or rejects it in the admin section. */
+  groupRequest: function (b) {
+    var s = auth(b);
+    var title = String(b.title || '').trim().slice(0, 80);
+    var category = String(b.category || '').trim().slice(0, 60);
+    var url = String(b.url || '').trim().slice(0, 300);
+    var notes = String(b.notes || '').trim().slice(0, 500);
+    if (title.length < 3) fail('Write the name of the group.');
+    if (!/^https:\/\/[^\s]+\.[^\s]+$/.test(url)) fail('Paste the full link, starting with https://');
+    assertClean(title); assertClean(notes); assertClean(category);
+    if (tooMany('group:' + s.id, 5)) fail('Too many requests. Try again later.');
+    return withLock(function () {
+      var same = rows('GroupRequests').filter(function (r) { return r.url === url && r.status !== 'rejected'; })[0];
+      if (same) fail(same.status === 'approved' ? 'This group is already listed.' : 'This group is already waiting for approval.');
+      var r = { id: newId(), created: new Date().toISOString(), userId: s.id, username: s.username, title: cell(title), category: cell(category), url: url,
+                notes: cell(notes), status: 'pending', resolvedBy: '', resolvedAt: '' };
+      append('GroupRequests', r);
+      privateEvent({ toAdmin: true }, 'group_request', s, title);
+      try {
+        MailApp.sendEmail(OWNER_EMAIL, 'ASU Bank group request: ' + title,
+          'From: @' + s.username + '\nGroup: ' + title + '\nCategory: ' + (category || 'none') + '\nLink: ' + url + '\nNotes: ' + (notes || 'none') +
+          '\n\nAccept or reject it in the app: Admin > Group requests.');
+      } catch (err) { /* the request is saved even when the daily email limit is used up */ }
+      return { ok: true, request: r };
+    });
+  },
+
+  /** Groups the owner accepted. Anyone can read these. */
+  groupsApproved: function (b) {
+    var list = rows('GroupRequests').filter(function (r) { return r.status === 'approved'; }).map(function (r) {
+      return { id: r.id, title: String(r.title), category: String(r.category), url: String(r.url) };
+    });
+    return { ok: true, groups: list };
+  },
+
+  /** What this person asked for, and what happened to it */
+  myGroupRequests: function (b) {
+    var s = auth(b);
+    return { ok: true, requests: rows('GroupRequests').filter(function (r) { return r.userId === s.id; }).reverse().slice(0, 20).map(cleanRow) };
+  },
+
+  adminGroupRequests: function (b) {
+    auth(b, { admin: true });
+    var all = rows('GroupRequests');
+    var pending = all.filter(function (r) { return r.status === 'pending'; }).length;
+    var list = truthy(b.all) ? all : all.filter(function (r) { return r.status === 'pending'; });
+    return { ok: true, pending: pending, requests: list.reverse().slice(0, 100).map(cleanRow) };
+  },
+
+  /** status: approved, rejected. Tells the person who asked. */
+  adminGroupSet: function (b) {
+    var a = auth(b, { admin: true });
+    var status = String(b.status || '');
+    if (['approved', 'rejected'].indexOf(status) < 0) fail('Bad status.');
+    return withLock(function () {
+      var r = rows('GroupRequests').filter(function (x) { return x.id === b.id; })[0];
+      if (!r) fail('Request not found.');
+      update('GroupRequests', r._row, { status: status, resolvedBy: a.username, resolvedAt: new Date().toISOString() });
+      log(a, 'group:' + status, r.url, r.title);
+      privateEvent({ toUserId: r.userId }, status === 'approved' ? 'group_approved' : 'group_rejected', a, r.title);
+      return { ok: true };
+    });
+  },
+
+  // MARK: friends and pokes
+
+  friendRequest: function (b) {
+    var s = auth(b);
+    var t = friendTarget(s, b.userId);
+    if (tooMany('friend:' + s.id, 40)) fail('Too many requests. Try again later.');
+    return withLock(function () {
+      var f = friendRow(s.id, t.id);
+      if (f && (f.status === 'accepted' || f.from === s.id)) return { ok: true, friendship: f.status === 'accepted' ? 'friends' : 'outgoing' };
+      var now = new Date().toISOString();
+      if (f) { // they already asked me, so we are friends now
+        update('Friends', f._row, { status: 'accepted', updated: now });
+        privateEvent({ toUserId: t.id }, 'friend_accept', s, '');
+        return { ok: true, friendship: 'friends' };
+      }
+      append('Friends', { id: newId(), from: s.id, to: t.id, status: 'pending', created: now, updated: now });
+      privateEvent({ toUserId: t.id }, 'friend_request', s, '');
+      return { ok: true, friendship: 'outgoing' };
+    });
+  },
+
+  /** Accepts or declines a request someone sent me */
+  friendRespond: function (b) {
+    var s = auth(b);
+    var other = String(b.userId || '');
+    return withLock(function () {
+      var f = friendRow(s.id, other);
+      if (!f || f.status !== 'pending' || f.to !== s.id) fail('This request is no longer there.');
+      if (b.accept === false) { sheet('Friends').deleteRow(f._row); return { ok: true, friendship: 'none' }; }
+      update('Friends', f._row, { status: 'accepted', updated: new Date().toISOString() });
+      privateEvent({ toUserId: other }, 'friend_accept', s, '');
+      return { ok: true, friendship: 'friends' };
+    });
+  },
+
+  /** Unfriends someone, or cancels a request I sent */
+  friendRemove: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      var f = friendRow(s.id, String(b.userId || ''));
+      if (f) sheet('Friends').deleteRow(f._row);
+      return { ok: true, friendship: 'none' };
+    });
+  },
+
+  /** My friends, requests both ways and the latest pokes */
+  friends: function (b) {
+    var s = auth(b);
+    var map = usersById();
+    var card = function (id) { var u = map[id]; return u && !truthy(u.banned) ? publicUser(u, false) : null; };
+    var friends = [], incoming = [], outgoing = [];
+    rows('Friends').forEach(function (f) {
+      if (f.from !== s.id && f.to !== s.id) return;
+      var c = card(f.from === s.id ? f.to : f.from);
+      if (!c) return;
+      if (f.status === 'accepted') friends.push(c);
+      else if (f.to === s.id) incoming.push(c);
+      else outgoing.push(c);
+    });
+    friends.sort(function (x, y) { return (y.online ? 1 : 0) - (x.online ? 1 : 0) || String(x.displayName).localeCompare(String(y.displayName)); });
+    var pokes = rows('Pokes').filter(function (p) { return p.to === s.id; }).reverse().slice(0, 50).map(function (p) {
+      return { id: p.id, kind: p.kind, place: String(p.place || ''), created: p.created, read: truthy(p.read), user: card(p.from) };
+    }).filter(function (p) { return p.user; });
+    return { ok: true, friends: friends, incoming: incoming, outgoing: outgoing, pokes: pokes };
+  },
+
+  /** Sends a friend a poke or a short message like "wants to meet you at the library" */
+  poke: function (b) {
+    var s = auth(b);
+    var t = friendTarget(s, b.userId);
+    var kind = String(b.kind || 'poke');
+    if (POKE_KINDS.indexOf(kind) < 0) fail('Bad poke.');
+    var place = String(b.place || '').trim().slice(0, 120);
+    assertClean(place);
+    var f = friendRow(s.id, t.id);
+    if (!f || f.status !== 'accepted') fail('You can only do this with friends.');
+    if (tooMany('poke:' + s.id, 40) || tooMany('poke:' + s.id + ':' + t.id, 8)) fail('Slow down a little. Try again later.');
+    return withLock(function () {
+      append('Pokes', { id: newId(), from: s.id, to: t.id, kind: kind, place: cell(place), created: new Date().toISOString(), read: false });
+      privateEvent({ toUserId: t.id }, 'poke', s, place, kind);
+      return { ok: true };
+    });
+  },
+
+  pokesRead: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      rows('Pokes').forEach(function (p) { if (p.to === s.id && !truthy(p.read)) update('Pokes', p._row, { read: true }); });
+      return { ok: true };
+    });
+  },
+
+  /** Finds people by name, username, major or college. With no words: people from the same college or major. */
+  searchUsers: function (b) {
+    var s = auth(b);
+    var me = userById(s.id);
+    var q = norm(b.q);
+    var mine = blockedIds(me);
+    var fr = rows('Friends');
+    var relationOf = function (id) {
+      var f = fr.filter(function (x) { return (x.from === s.id && x.to === id) || (x.to === s.id && x.from === id); })[0];
+      return relation(f, s.id);
+    };
+    var found = rows('Users').filter(function (u) {
+      if (u.id === s.id || truthy(u.banned) || mine.indexOf(u.id) >= 0 || blockedIds(u).indexOf(s.id) >= 0) return false;
+      if (q) return [u.username, u.displayName, u.major, u.college].some(function (x) { return norm(x).indexOf(q) >= 0; });
+      if (relationOf(u.id) !== 'none') return false;
+      return (me.college && norm(u.college) === norm(me.college)) || (me.major && norm(u.major) === norm(me.major));
+    }).slice(0, 25).map(function (u) {
+      var c = publicUser(u, false);
+      c.friendship = relationOf(u.id);
+      return c;
+    });
+    return { ok: true, people: found };
+  },
+
+  // MARK: posts
+
+  postCreate: function (b) {
+    var s = auth(b);
+    var text = String(b.text || '').trim().slice(0, 1000);
+    if (!text) fail('Write something first.');
+    assertClean(text);
+    if (tooMany('post:' + s.id, 10)) fail('Too many posts. Try again later.');
+    return withLock(function () {
+      var p = { id: newId(), userId: s.id, text: cell(text), created: new Date().toISOString(), deleted: false, likes: '' };
+      append('Posts', p);
+      return { ok: true, id: p.id };
+    });
+  },
+
+  postDelete: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      var p = rows('Posts').filter(function (x) { return x.id === b.id; })[0];
+      if (!p) fail('Post not found.');
+      if (p.userId !== s.id && s.role !== 'admin') fail('You can only delete your own posts.');
+      update('Posts', p._row, { deleted: true, text: '' });
+      if (p.userId !== s.id) log(s, 'deletePost', p.userId, '');
+      return { ok: true };
+    });
+  },
+
+  postLike: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      var p = rows('Posts').filter(function (x) { return x.id === b.id; })[0];
+      if (!p || truthy(p.deleted)) fail('Post not found.');
+      var list = String(p.likes || '').split(',').filter(String).filter(function (x) { return x !== s.id; });
+      if (b.on !== false) list.push(s.id);
+      update('Posts', p._row, { likes: list.join(',') });
+      return { ok: true, likes: list.length, liked: b.on !== false };
+    });
+  },
+
+  /** Latest posts from me and my friends */
+  feed: function (b) {
+    var s = auth(b);
+    var ids = {};
+    ids[s.id] = 1;
+    rows('Friends').forEach(function (f) {
+      if (f.status !== 'accepted') return;
+      if (f.from === s.id) ids[f.to] = 1;
+      if (f.to === s.id) ids[f.from] = 1;
+    });
+    return { ok: true, posts: publicPosts(s, function (p) { return ids[p.userId]; }, 50) };
   },
 
   /** Who is online now and who was recently */
@@ -952,6 +1298,7 @@ var ACTIONS = {
     return withLock(function () {
       dropUserSessions(u.id);
       removeAvatarFile(u.avatar);
+      purgeSocial(u.id);
       sheet('Users').deleteRow(userById(u.id)._row);
       CacheService.getScriptCache().remove('people');
       log(a, 'deleteUser', u.username, '');

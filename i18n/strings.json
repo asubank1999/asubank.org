@@ -5923,5 +5923,841 @@
  },
  "🧮 GPA & Term Average Calculator": {
   "ar": "🧮 حساب المعدل والمعدل الفصلي"
+ },
+ "First year": {
+  "ar": "السنة الأولى",
+  "es": "Primer año"
+ },
+ "Second year": {
+  "ar": "السنة الثانية",
+  "es": "Segundo año"
+ },
+ "Third year": {
+  "ar": "السنة الثالثة",
+  "es": "Tercer año"
+ },
+ "Fourth year": {
+  "ar": "السنة الرابعة",
+  "es": "Cuarto año"
+ },
+ "Fifth year": {
+  "ar": "السنة الخامسة",
+  "es": "Quinto año"
+ },
+ "Alumni": {
+  "ar": "خريج",
+  "es": "Egresado"
+ },
+ "New friend request": {
+  "ar": "طلب صداقة جديد",
+  "es": "Nueva solicitud de amistad"
+ },
+ "You have a new friend": {
+  "ar": "لديك صديق جديد",
+  "es": "Tienes un nuevo amigo"
+ },
+ "New group request": {
+  "ar": "طلب مجموعة جديد",
+  "es": "Nueva solicitud de grupo"
+ },
+ "Your group was accepted": {
+  "ar": "تم قبول مجموعتك",
+  "es": "Tu grupo fue aceptado"
+ },
+ "Your group wasn't accepted": {
+  "ar": "لم يتم قبول مجموعتك",
+  "es": "Tu grupo no fue aceptado"
+ },
+ "%s wants to be your friend": {
+  "ar": "%s يريد أن يكون صديقك",
+  "es": "%s quiere ser tu amigo"
+ },
+ "%s accepted your friend request": {
+  "ar": "%s قبل طلب صداقتك",
+  "es": "%s aceptó tu solicitud de amistad"
+ },
+ "%s asked to add: %s": {
+  "ar": "%s طلب إضافة: %s",
+  "es": "%s pidió añadir: %s"
+ },
+ "%s wants to meet you": {
+  "ar": "%s يريد مقابلتك",
+  "es": "%s quiere verte"
+ },
+ "%s wants to meet you at %s": {
+  "ar": "%s يريد مقابلتك في %s",
+  "es": "%s quiere verte en %s"
+ },
+ "%s wants to study with you": {
+  "ar": "%s يريد الدراسة معك",
+  "es": "%s quiere estudiar contigo"
+ },
+ "%s has a question for you": {
+  "ar": "%s لديه سؤال لك",
+  "es": "%s tiene una pregunta para ti"
+ },
+ "%s needs your notes": {
+  "ar": "%s يحتاج ملخصاتك",
+  "es": "%s necesita tus apuntes"
+ },
+ "%s wants to get coffee with you": {
+  "ar": "%s يريد شرب القهوة معك",
+  "es": "%s quiere tomar un café contigo"
+ },
+ "%s poked you": {
+  "ar": "%s نكزك",
+  "es": "%s te dio un toque"
+ },
+ "%d friends": {
+  "ar": "%d أصدقاء",
+  "es": "%d amigos"
+ },
+ "%d%% off applied": {
+  "ar": "تم تطبيق خصم %d%%",
+  "es": "%d%% de descuento aplicado"
+ },
+ "%s in 10 minutes": {
+  "ar": "%s بعد 10 دقائق",
+  "es": "%s en 10 minutos"
+ },
+ "JD": {
+  "ar": "د.أ",
+  "es": "JD"
+ },
+ "Friends and pokes": {
+  "ar": "الأصدقاء والنكزات",
+  "es": "Amigos y toques"
+ },
+ "Notification sounds": {
+  "ar": "أصوات الإشعارات",
+  "es": "Sonidos de notificación"
+ },
+ "Interests": {
+  "ar": "الاهتمامات",
+  "es": "Intereses"
+ },
+ "Football, coding, photography…": {
+  "ar": "كرة القدم، البرمجة، التصوير…",
+  "es": "Fútbol, programación, fotografía…"
+ },
+ "Group requests": {
+  "ar": "طلبات المجموعات",
+  "es": "Solicitudes de grupos"
+ },
+ "Added by students": {
+  "ar": "أضافها الطلاب",
+  "es": "Añadidos por estudiantes"
+ },
+ "Delete post": {
+  "ar": "حذف المنشور",
+  "es": "Eliminar publicación"
+ },
+ "My profile": {
+  "ar": "ملفي الشخصي",
+  "es": "Mi perfil"
+ },
+ "Customize tab bar": {
+  "ar": "تخصيص شريط التبويب",
+  "es": "Personalizar la barra de pestañas"
+ },
+ "Friends": {
+  "ar": "الأصدقاء",
+  "es": "Amigos"
+ },
+ "My lectures": {
+  "ar": "محاضراتي",
+  "es": "Mis clases"
+ },
+ "Life hacks": {
+  "ar": "نصائح حياتية",
+  "es": "Trucos útiles"
+ },
+ "Poke": {
+  "ar": "نكزة",
+  "es": "Toque"
+ },
+ "Ask to meet": {
+  "ar": "طلب مقابلة",
+  "es": "Pedir verse"
+ },
+ "Study together": {
+  "ar": "الدراسة معاً",
+  "es": "Estudiar juntos"
+ },
+ "I have a question": {
+  "ar": "لدي سؤال",
+  "es": "Tengo una pregunta"
+ },
+ "I need your notes": {
+  "ar": "أحتاج ملخصاتك",
+  "es": "Necesito tus apuntes"
+ },
+ "Coffee?": {
+  "ar": "قهوة؟",
+  "es": "¿Un café?"
+ },
+ "Requested": {
+  "ar": "تم الطلب",
+  "es": "Solicitado"
+ },
+ "Accept": {
+  "ar": "قبول",
+  "es": "Aceptar"
+ },
+ "Add friend": {
+  "ar": "إضافة صديق",
+  "es": "Añadir amigo"
+ },
+ "Remove this friend?": {
+  "ar": "إزالة هذا الصديق؟",
+  "es": "¿Eliminar a este amigo?"
+ },
+ "Remove friend": {
+  "ar": "إزالة الصديق",
+  "es": "Eliminar amigo"
+ },
+ "Couldn't do that": {
+  "ar": "تعذر تنفيذ ذلك",
+  "es": "No se pudo hacer"
+ },
+ "What do you want to say?": {
+  "ar": "ماذا تريد أن تقول؟",
+  "es": "¿Qué quieres decir?"
+ },
+ "Where and when? Like: the library at 2:00": {
+  "ar": "أين ومتى؟ مثل: المكتبة الساعة 2:00",
+  "es": "¿Dónde y cuándo? Ej.: la biblioteca a las 2:00"
+ },
+ "Where": {
+  "ar": "أين",
+  "es": "Dónde"
+ },
+ "They will see": {
+  "ar": "سيظهر له",
+  "es": "Verá"
+ },
+ "What's on your mind?": {
+  "ar": "بماذا تفكر؟",
+  "es": "¿Qué estás pensando?"
+ },
+ "New post": {
+  "ar": "منشور جديد",
+  "es": "Nueva publicación"
+ },
+ "Posting…": {
+  "ar": "جارٍ النشر…",
+  "es": "Publicando…"
+ },
+ "Post": {
+  "ar": "نشر",
+  "es": "Publicar"
+ },
+ "Feed": {
+  "ar": "المنشورات",
+  "es": "Publicaciones"
+ },
+ "Alerts": {
+  "ar": "التنبيهات",
+  "es": "Avisos"
+ },
+ "Find": {
+  "ar": "بحث",
+  "es": "Buscar"
+ },
+ "Add your classmates as friends": {
+  "ar": "أضف زملاءك كأصدقاء",
+  "es": "Añade a tus compañeros como amigos"
+ },
+ "Sign in to add friends, poke them and share posts.": {
+  "ar": "سجّل الدخول لإضافة الأصدقاء ونكزهم ومشاركة المنشورات.",
+  "es": "Inicia sesión para añadir amigos, darles un toque y compartir publicaciones."
+ },
+ "Write a post": {
+  "ar": "اكتب منشوراً",
+  "es": "Escribe una publicación"
+ },
+ "No posts yet. Add friends or write the first one.": {
+  "ar": "لا توجد منشورات بعد. أضف أصدقاء أو اكتب أول منشور.",
+  "es": "Aún no hay publicaciones. Añade amigos o escribe la primera."
+ },
+ "You haven't added any friends yet.": {
+  "ar": "لم تضف أي أصدقاء بعد.",
+  "es": "Aún no has añadido amigos."
+ },
+ "Find people": {
+  "ar": "ابحث عن أشخاص",
+  "es": "Buscar personas"
+ },
+ "Nothing new.": {
+  "ar": "لا جديد.",
+  "es": "Nada nuevo."
+ },
+ "Friend requests": {
+  "ar": "طلبات الصداقة",
+  "es": "Solicitudes de amistad"
+ },
+ "Decline": {
+  "ar": "رفض",
+  "es": "Rechazar"
+ },
+ "Pokes and messages": {
+  "ar": "النكزات والرسائل",
+  "es": "Toques y mensajes"
+ },
+ "Requests you sent": {
+  "ar": "الطلبات التي أرسلتها",
+  "es": "Solicitudes enviadas"
+ },
+ "Name, username, major or college": {
+  "ar": "الاسم أو اسم المستخدم أو التخصص أو الكلية",
+  "es": "Nombre, usuario, carrera o facultad"
+ },
+ "People from your college and major show up here. Add them to your profile to see more.": {
+  "ar": "يظهر هنا طلاب من كليتك وتخصصك. أضفهما إلى ملفك لترى المزيد.",
+  "es": "Aquí aparecen personas de tu facultad y carrera. Añádelas a tu perfil para ver más."
+ },
+ "No people found.": {
+  "ar": "لم يتم العثور على أشخاص.",
+  "es": "No se encontraron personas."
+ },
+ "Posts": {
+  "ar": "المنشورات",
+  "es": "Publicaciones"
+ },
+ "Messages": {
+  "ar": "الرسائل",
+  "es": "Mensajes"
+ },
+ "No posts yet": {
+  "ar": "لا توجد منشورات بعد",
+  "es": "Aún no hay publicaciones"
+ },
+ "Add friends or write the first one.": {
+  "ar": "أضف أصدقاء أو اكتب أول منشور.",
+  "es": "Añade amigos o escribe la primera."
+ },
+ "No friends yet": {
+  "ar": "لا يوجد أصدقاء بعد",
+  "es": "Aún no hay amigos"
+ },
+ "Nothing new": {
+  "ar": "لا جديد",
+  "es": "Nada nuevo"
+ },
+ "Friend requests and pokes show up here.": {
+  "ar": "تظهر هنا طلبات الصداقة والنكزات.",
+  "es": "Aquí aparecen las solicitudes y los toques."
+ },
+ "No people found": {
+  "ar": "لم يتم العثور على أشخاص",
+  "es": "No se encontraron personas"
+ },
+ "Try another name.": {
+  "ar": "جرّب اسماً آخر.",
+  "es": "Prueba con otro nombre."
+ },
+ "Sent": {
+  "ar": "تم الإرسال",
+  "es": "Enviado"
+ },
+ "Choose a file": {
+  "ar": "اختر ملفاً",
+  "es": "Elegir un archivo"
+ },
+ "PDF, PowerPoint, Word, images or video, up to 25 MB. It uploads right from the app.": {
+  "ar": "PDF أو PowerPoint أو Word أو صور أو فيديو، حتى 25 ميجابايت. يتم الرفع مباشرة من التطبيق.",
+  "es": "PDF, PowerPoint, Word, imágenes o video, hasta 25 MB. Se sube directamente desde la app."
+ },
+ "Couldn't read this file.": {
+  "ar": "تعذرت قراءة هذا الملف.",
+  "es": "No se pudo leer este archivo."
+ },
+ "This file is empty.": {
+  "ar": "هذا الملف فارغ.",
+  "es": "Este archivo está vacío."
+ },
+ "Rose": {
+  "ar": "وردي",
+  "es": "Rosa"
+ },
+ "Royal blue": {
+  "ar": "أزرق ملكي",
+  "es": "Azul real"
+ },
+ "Mint": {
+  "ar": "نعناعي",
+  "es": "Menta"
+ },
+ "Gold": {
+  "ar": "ذهبي",
+  "es": "Dorado"
+ },
+ "Crimson": {
+  "ar": "قرمزي",
+  "es": "Carmesí"
+ },
+ "Lavender": {
+  "ar": "خزامى",
+  "es": "Lavanda"
+ },
+ "Coffee": {
+  "ar": "قهوة",
+  "es": "Café"
+ },
+ "Club": {
+  "ar": "نادٍ",
+  "es": "Club"
+ },
+ "Dorm or housing": {
+  "ar": "السكن",
+  "es": "Residencia"
+ },
+ "Request sent": {
+  "ar": "تم إرسال الطلب",
+  "es": "Solicitud enviada"
+ },
+ "The owner will review your group. We'll notify you when it's accepted or rejected.": {
+  "ar": "سيراجع المالك مجموعتك، وسنخبرك عند قبولها أو رفضها.",
+  "es": "El propietario revisará tu grupo. Te avisaremos cuando sea aceptado o rechazado."
+ },
+ "Sign in so we can tell you when your group is accepted.": {
+  "ar": "سجّل الدخول لنخبرك عند قبول مجموعتك.",
+  "es": "Inicia sesión para avisarte cuando tu grupo sea aceptado."
+ },
+ "Group name": {
+  "ar": "اسم المجموعة",
+  "es": "Nombre del grupo"
+ },
+ "Category": {
+  "ar": "الفئة",
+  "es": "Categoría"
+ },
+ "About the group": {
+  "ar": "عن المجموعة",
+  "es": "Sobre el grupo"
+ },
+ "Invite link": {
+  "ar": "رابط الدعوة",
+  "es": "Enlace de invitación"
+ },
+ "Paste the group's invite link, starting with https://": {
+  "ar": "الصق رابط دعوة المجموعة، ويبدأ بـ https://",
+  "es": "Pega el enlace de invitación, que empieza por https://"
+ },
+ "Anything the owner should know": {
+  "ar": "أي شيء يجب أن يعرفه المالك",
+  "es": "Algo que el propietario deba saber"
+ },
+ "Your requests": {
+  "ar": "طلباتك",
+  "es": "Tus solicitudes"
+ },
+ "Add your group": {
+  "ar": "أضف مجموعتك",
+  "es": "Añade tu grupo"
+ },
+ "Accepted": {
+  "ar": "مقبول",
+  "es": "Aceptado"
+ },
+ "Rejected": {
+  "ar": "مرفوض",
+  "es": "Rechazado"
+ },
+ "Reject": {
+  "ar": "رفض",
+  "es": "Rechazar"
+ },
+ "Portrait": {
+  "ar": "صورة شخصية",
+  "es": "Retrato"
+ },
+ "Graduation": {
+  "ar": "تخرج",
+  "es": "Graduación"
+ },
+ "Group": {
+  "ar": "مجموعة",
+  "es": "Grupo"
+ },
+ "Product / Commercial": {
+  "ar": "منتج / تجاري",
+  "es": "Producto / Comercial"
+ },
+ "Booking submitted!": {
+  "ar": "تم إرسال الحجز!",
+  "es": "¡Reserva enviada!"
+ },
+ "The photographer will review your request and contact you on %s with the final invoice and payment details.": {
+  "ar": "سيراجع المصور طلبك ويتواصل معك على %s بالفاتورة النهائية وتفاصيل الدفع.",
+  "es": "El fotógrafo revisará tu solicitud y te contactará en %s con la factura final y los datos de pago."
+ },
+ "Book another session": {
+  "ar": "احجز جلسة أخرى",
+  "es": "Reservar otra sesión"
+ },
+ "Every frame, a story. Fill in your details and see the price as you go. The photographer reviews your request and sends the final invoice.": {
+  "ar": "كل لقطة حكاية. املأ بياناتك وشاهد السعر أثناء ذلك، وسيراجع المصور طلبك ويرسل الفاتورة النهائية.",
+  "es": "Cada imagen, una historia. Rellena tus datos y mira el precio al instante. El fotógrafo revisa tu solicitud y envía la factura final."
+ },
+ "Your details": {
+  "ar": "بياناتك",
+  "es": "Tus datos"
+ },
+ "First name": {
+  "ar": "الاسم الأول",
+  "es": "Nombre"
+ },
+ "Middle name (optional)": {
+  "ar": "الاسم الأوسط (اختياري)",
+  "es": "Segundo nombre (opcional)"
+ },
+ "Last name": {
+  "ar": "اسم العائلة",
+  "es": "Apellido"
+ },
+ "WhatsApp or phone": {
+  "ar": "واتساب أو هاتف",
+  "es": "WhatsApp o teléfono"
+ },
+ "Email (optional)": {
+  "ar": "البريد الإلكتروني (اختياري)",
+  "es": "Correo (opcional)"
+ },
+ "Session": {
+  "ar": "الجلسة",
+  "es": "Sesión"
+ },
+ "Session type": {
+  "ar": "نوع الجلسة",
+  "es": "Tipo de sesión"
+ },
+ "From": {
+  "ar": "من",
+  "es": "Desde"
+ },
+ "To": {
+  "ar": "إلى",
+  "es": "Hasta"
+ },
+ "The end time must be after the start time.": {
+  "ar": "يجب أن يكون وقت النهاية بعد وقت البداية.",
+  "es": "La hora de fin debe ser posterior a la de inicio."
+ },
+ "Location": {
+  "ar": "الموقع",
+  "es": "Lugar"
+ },
+ "ASU campus": {
+  "ar": "حرم الجامعة",
+  "es": "Campus de ASU"
+ },
+ "Outside ASU": {
+  "ar": "خارج الجامعة",
+  "es": "Fuera de ASU"
+ },
+ "Address": {
+  "ar": "العنوان",
+  "es": "Dirección"
+ },
+ "Where on campus? (optional)": {
+  "ar": "أين في الحرم؟ (اختياري)",
+  "es": "¿Dónde en el campus? (opcional)"
+ },
+ "Outside ASU adds a 5 JD travel fee.": {
+  "ar": "خارج الجامعة تضاف رسوم انتقال 5 دنانير.",
+  "es": "Fuera de ASU se añade un cargo de 5 JD por traslado."
+ },
+ "No travel fee on campus.": {
+  "ar": "لا رسوم انتقال داخل الحرم.",
+  "es": "Sin cargo por traslado en el campus."
+ },
+ "Photos to edit": {
+  "ar": "الصور المطلوب تعديلها",
+  "es": "Fotos para editar"
+ },
+ "Edit quality": {
+  "ar": "جودة التعديل",
+  "es": "Calidad de edición"
+ },
+ "Standard": {
+  "ar": "عادي",
+  "es": "Estándar"
+ },
+ "Premium": {
+  "ar": "مميز",
+  "es": "Premium"
+ },
+ "Photos and editing": {
+  "ar": "الصور والتعديل",
+  "es": "Fotos y edición"
+ },
+ "Photoshop and paid tools: skin retouching, compositing and advanced grading. 3 JD a photo as a base price; complex edits may cost more.": {
+  "ar": "فوتوشوب وأدوات مدفوعة: تنقية البشرة والدمج وتصحيح ألوان متقدم. 3 دنانير للصورة كسعر أساسي، وقد تكلف التعديلات المعقدة أكثر.",
+  "es": "Photoshop y herramientas de pago: retoque de piel, composición y color avanzado. 3 JD por foto como base; las ediciones complejas pueden costar más."
+ },
+ "Basic retouching, color grading, crop and export. 3 JD a photo.": {
+  "ar": "تعديل أساسي وتصحيح ألوان وقص وتصدير. 3 دنانير للصورة.",
+  "es": "Retoque básico, color, recorte y exportación. 3 JD por foto."
+ },
+ "Promo code": {
+  "ar": "رمز الخصم",
+  "es": "Código promocional"
+ },
+ "This promo code isn't valid.": {
+  "ar": "رمز الخصم غير صالح.",
+  "es": "Este código no es válido."
+ },
+ "Session (%s h × 5 JD)": {
+  "ar": "الجلسة (%s س × 5 د.أ)",
+  "es": "Sesión (%s h × 5 JD)"
+ },
+ "Editing (%d × 3 JD)": {
+  "ar": "التعديل (%d × 3 د.أ)",
+  "es": "Edición (%d × 3 JD)"
+ },
+ "Travel": {
+  "ar": "الانتقال",
+  "es": "Traslado"
+ },
+ "Free": {
+  "ar": "مجاني",
+  "es": "Gratis"
+ },
+ "Promo discount": {
+  "ar": "خصم الرمز",
+  "es": "Descuento"
+ },
+ "Estimated total": {
+  "ar": "الإجمالي التقديري",
+  "es": "Total estimado"
+ },
+ "Your estimate": {
+  "ar": "تقديرك",
+  "es": "Tu estimación"
+ },
+ "This is an estimate; the photographer confirms the final amount. You can pay by PayPal, CliQ or cash.": {
+  "ar": "هذا تقدير، ويؤكد المصور المبلغ النهائي. يمكنك الدفع عبر PayPal أو CliQ أو نقداً.",
+  "es": "Es una estimación; el fotógrafo confirma el importe final. Puedes pagar por PayPal, CliQ o en efectivo."
+ },
+ "Send booking request": {
+  "ar": "إرسال طلب الحجز",
+  "es": "Enviar solicitud de reserva"
+ },
+ "Couldn't send your booking. Check your connection and try again.": {
+  "ar": "تعذر إرسال حجزك. تحقق من اتصالك وحاول مرة أخرى.",
+  "es": "No se pudo enviar tu reserva. Revisa tu conexión e inténtalo de nuevo."
+ },
+ "Partly cloudy": {
+  "ar": "غائم جزئياً",
+  "es": "Parcialmente nublado"
+ },
+ "Cloudy": {
+  "ar": "غائم",
+  "es": "Nublado"
+ },
+ "Foggy": {
+  "ar": "ضباب",
+  "es": "Niebla"
+ },
+ "Drizzle": {
+  "ar": "رذاذ",
+  "es": "Llovizna"
+ },
+ "Rain": {
+  "ar": "مطر",
+  "es": "Lluvia"
+ },
+ "Snow": {
+  "ar": "ثلج",
+  "es": "Nieve"
+ },
+ "Thunderstorms": {
+  "ar": "عواصف رعدية",
+  "es": "Tormentas"
+ },
+ "Take an umbrella, rain is likely.": {
+  "ar": "خذ مظلة، فالمطر محتمل.",
+  "es": "Lleva paraguas, es probable que llueva."
+ },
+ "It's hot. Drink water and stay in the shade.": {
+  "ar": "الجو حار. اشرب الماء وابقَ في الظل.",
+  "es": "Hace calor. Bebe agua y busca la sombra."
+ },
+ "It's cold. Take a jacket.": {
+  "ar": "الجو بارد. خذ معطفاً.",
+  "es": "Hace frío. Lleva una chaqueta."
+ },
+ "Tomorrow on campus": {
+  "ar": "غداً في الجامعة",
+  "es": "Mañana en el campus"
+ },
+ "Today on campus": {
+  "ar": "اليوم في الجامعة",
+  "es": "Hoy en el campus"
+ },
+ "7 AM – 4 PM": {
+  "ar": "7 ص – 4 م",
+  "es": "7 AM – 4 PM"
+ },
+ "Call 911": {
+  "ar": "اتصل بالرقم 911",
+  "es": "Llamar al 911"
+ },
+ "Jordan's emergency number: ambulance, fire and police": {
+  "ar": "رقم الطوارئ في الأردن: الإسعاف والدفاع المدني والشرطة",
+  "es": "Número de emergencias de Jordania: ambulancia, bomberos y policía"
+ },
+ "In an emergency": {
+  "ar": "في حالات الطوارئ",
+  "es": "En una emergencia"
+ },
+ "Couldn't load the tips. Check your connection and try again.": {
+  "ar": "تعذر تحميل النصائح. تحقق من اتصالك وحاول مرة أخرى.",
+  "es": "No se pudieron cargar los consejos. Revisa tu conexión e inténtalo de nuevo."
+ },
+ "These are general tips, not medical or professional advice. In an emergency, call for help first.": {
+  "ar": "هذه نصائح عامة وليست استشارة طبية أو مهنية. في الطوارئ، اطلب المساعدة أولاً.",
+  "es": "Son consejos generales, no asesoramiento médico o profesional. En una emergencia, pide ayuda primero."
+ },
+ "Phone default": {
+  "ar": "صوت الهاتف الافتراضي",
+  "es": "Predeterminado del teléfono"
+ },
+ "Phone sound": {
+  "ar": "صوت من الهاتف",
+  "es": "Sonido del teléfono"
+ },
+ "Chime": {
+  "ar": "رنين",
+  "es": "Campanilla"
+ },
+ "Bell": {
+  "ar": "جرس",
+  "es": "Campana"
+ },
+ "Ping": {
+  "ar": "نغمة قصيرة",
+  "es": "Ping"
+ },
+ "Marimba": {
+  "ar": "ماريمبا",
+  "es": "Marimba"
+ },
+ "Soft": {
+  "ar": "هادئ",
+  "es": "Suave"
+ },
+ "Alert": {
+  "ar": "تنبيه",
+  "es": "Alerta"
+ },
+ "Drops": {
+  "ar": "قطرات",
+  "es": "Gotas"
+ },
+ "Lecture reminders": {
+  "ar": "تذكيرات المحاضرات",
+  "es": "Recordatorios de clases"
+ },
+ "Starts at %s": {
+  "ar": "تبدأ الساعة %s",
+  "es": "Empieza a las %s"
+ },
+ "Hall %s · starts at %s": {
+  "ar": "قاعة %s · تبدأ الساعة %s",
+  "es": "Aula %s · empieza a las %s"
+ },
+ "Notifications are off for ASU Bank, so reminders can't ring.": {
+  "ar": "الإشعارات متوقفة لتطبيق ASU Bank، لذا لن تعمل التذكيرات.",
+  "es": "Las notificaciones de ASU Bank están desactivadas, así que los recordatorios no sonarán."
+ },
+ "Open Settings": {
+  "ar": "فتح الإعدادات",
+  "es": "Abrir Ajustes"
+ },
+ "iPhones don't let apps use your own ringtones, so these sounds come with ASU Bank.": {
+  "ar": "لا يسمح iPhone للتطبيقات باستخدام نغماتك الخاصة، لذلك تأتي هذه الأصوات مع ASU Bank.",
+  "es": "El iPhone no deja a las apps usar tus tonos, así que estos sonidos vienen con ASU Bank."
+ },
+ "Never miss a lecture": {
+  "ar": "لا تفوّت أي محاضرة",
+  "es": "No te pierdas ninguna clase"
+ },
+ "Add your subject, hall and time. We'll remind you 10 minutes before it starts.": {
+  "ar": "أضف المادة والقاعة والوقت، وسنذكرك قبل البدء بـ 10 دقائق.",
+  "es": "Añade tu materia, aula y hora. Te avisaremos 10 minutos antes de empezar."
+ },
+ "Add a lecture": {
+  "ar": "أضف محاضرة",
+  "es": "Añadir una clase"
+ },
+ "Lecture": {
+  "ar": "المحاضرة",
+  "es": "Clase"
+ },
+ "Hall": {
+  "ar": "القاعة",
+  "es": "Aula"
+ },
+ "Starts at": {
+  "ar": "تبدأ الساعة",
+  "es": "Empieza a las"
+ },
+ "Days": {
+  "ar": "الأيام",
+  "es": "Días"
+ },
+ "We'll remind you 10 minutes before, every week on these days.": {
+  "ar": "سنذكرك قبلها بـ 10 دقائق، كل أسبوع في هذه الأيام.",
+  "es": "Te avisaremos 10 minutos antes, cada semana en estos días."
+ },
+ "Delete this lecture": {
+  "ar": "حذف هذه المحاضرة",
+  "es": "Eliminar esta clase"
+ },
+ "Edit lecture": {
+  "ar": "تعديل المحاضرة",
+  "es": "Editar clase"
+ },
+ "Next lecture": {
+  "ar": "المحاضرة التالية",
+  "es": "Próxima clase"
+ },
+ "In your tab bar": {
+  "ar": "في شريط التبويب",
+  "es": "En tu barra de pestañas"
+ },
+ "Drag to reorder. Home and More always stay, and you can add up to %d more.": {
+  "ar": "اسحب لتغيير الترتيب. تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.",
+  "es": "Arrastra para reordenar. Inicio y Más siempre se quedan, y puedes añadir hasta %d más."
+ },
+ "Home and More always stay, and you can add up to %d more.": {
+  "ar": "تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.",
+  "es": "Inicio y Más siempre se quedan, y puedes añadir hasta %d más."
+ },
+ "Add a tab": {
+  "ar": "أضف تبويباً",
+  "es": "Añadir una pestaña"
+ },
+ "Reset to the default": {
+  "ar": "استعادة الوضع الافتراضي",
+  "es": "Restablecer"
+ },
+ "A ringtone from my phone…": {
+  "ar": "نغمة من هاتفي…",
+  "es": "Un tono de mi teléfono…"
+ },
+ "Without this, Android may ring a few minutes late.": {
+  "ar": "بدون هذا، قد يتأخر Android بضع دقائق.",
+  "es": "Sin esto, Android puede sonar unos minutos tarde."
+ },
+ "Allow exact reminders": {
+  "ar": "السماح بالتذكيرات الدقيقة",
+  "es": "Permitir recordatorios exactos"
+ },
+ "Write the name of the group.": {
+  "ar": "اكتب اسم المجموعة.",
+  "es": "Escribe el nombre del grupo."
  }
 }

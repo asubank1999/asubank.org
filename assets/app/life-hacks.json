@@ -1,0 +1,132 @@
+{
+  "en": [
+    {
+      "emoji": "🩹",
+      "title": "First aid basics",
+      "items": [
+        {"t": "Someone fainted", "d": "Lay them on their back and raise their legs. Loosen tight clothes and give them air. If they don't wake up within a minute, call 911."},
+        {"t": "Someone is choking", "d": "If they can't speak or breathe, stand behind them and give firm upward thrusts under the ribs until the object comes out. Call 911 if it doesn't."},
+        {"t": "Heavy bleeding", "d": "Press hard on the wound with a clean cloth and don't lift it to check. Keep pressing and call 911."},
+        {"t": "A burn", "d": "Hold it under cool running water for 20 minutes. No ice, no toothpaste. See a doctor if it's large or blistered."},
+        {"t": "A panic attack", "d": "Sit down and breathe slowly: in for 4 seconds, out for 6. Name five things you can see. It passes. If chest pain is new or you're not sure, call 911."}
+      ]
+    },
+    {
+      "emoji": "🛡️",
+      "title": "Stay safe",
+      "items": [
+        {"t": "Share your plans", "d": "Going somewhere new or coming home late? Tell a friend where you're going and when you'll be back."},
+        {"t": "Crossing the road", "d": "Put the phone away and take out your earphones when you cross. Most near misses happen when people aren't looking."},
+        {"t": "Summer heat", "d": "Carry water, walk in the shade and rest if you feel dizzy or sick. Headache and confusion in the heat are a reason to get help."},
+        {"t": "Winter and rain", "d": "Roads get slippery at the first rain. Leave early, and never wait out a storm near a valley or a flooded road."},
+        {"t": "Protect your accounts", "d": "Use a different password for your university account, and never send a verification code to anyone, even a friend."}
+      ]
+    },
+    {
+      "emoji": "🧠",
+      "title": "Study smarter",
+      "items": [
+        {"t": "Test yourself", "d": "Closing the book and recalling from memory beats reading the same page again. Old exams are the best practice there is."},
+        {"t": "Space it out", "d": "Three short sessions over three days stick better than one long night."},
+        {"t": "25 minutes on, 5 off", "d": "Put the phone in another room, work for 25 minutes, then rest for 5. Take a longer break after four rounds."},
+        {"t": "Teach it", "d": "If you can explain it to a friend in simple words, you understand it. If you can't, you've found what to study next."},
+        {"t": "Start with the past exams", "d": "See how your teacher asks before you study. You'll know what matters and how deep to go."}
+      ]
+    },
+    {
+      "emoji": "📝",
+      "title": "Exam day",
+      "items": [
+        {"t": "Sleep beats one more hour", "d": "Your memory saves what you studied while you sleep. An all-nighter usually costs more than it gives."},
+        {"t": "Pack the night before", "d": "ID, pens, calculator and water. Check the hall and the time so there's no rush in the morning."},
+        {"t": "Read everything first", "d": "Spend one minute reading the whole paper. Start with what you know, and come back to the hard ones."},
+        {"t": "Watch the clock", "d": "Divide your time by the marks. Don't give ten minutes to a two-mark question."}
+      ]
+    },
+    {
+      "emoji": "💰",
+      "title": "Save money",
+      "items": [
+        {"t": "Bring water and a snack", "d": "A bottle and a sandwich from home add up to real savings over a semester."},
+        {"t": "Share books and notes", "d": "Check ASU Bank before you buy or print anything, and split printing with friends."},
+        {"t": "Write down what you spend", "d": "Just one week of tracking shows you where the money goes."},
+        {"t": "Ride together", "d": "Sharing a ride with classmates from your area cuts the cost and makes the trip better."}
+      ]
+    },
+    {
+      "emoji": "🌿",
+      "title": "Take care of yourself",
+      "items": [
+        {"t": "Keep a sleep routine", "d": "Going to bed and waking up at the same time helps your focus more than another coffee."},
+        {"t": "Eat before long days", "d": "A real breakfast keeps your energy steady. Energy drinks only borrow it from later."},
+        {"t": "Take walking breaks", "d": "Ten minutes of walking between lectures wakes up your brain and rests your eyes."},
+        {"t": "Talk to someone", "d": "Feeling down or overwhelmed is common and it's okay to say so. Tell a friend, a family member or a counselor."}
+      ]
+    }
+  ],
+  "ar": [
+    {
+      "emoji": "🩹",
+      "title": "أساسيات الإسعافات الأولية",
+      "items": [
+        {"t": "شخص أُغمي عليه", "d": "مدّده على ظهره وارفع قدميه، وفكّ الملابس الضيقة واترك له مجالاً للهواء. إذا لم يستيقظ خلال دقيقة، اتصل بالرقم 911."},
+        {"t": "شخص يختنق", "d": "إذا لم يستطع الكلام أو التنفس، قف خلفه واضغط بقوة إلى الأعلى تحت الأضلاع حتى يخرج الجسم العالق. اتصل بالرقم 911 إذا لم يخرج."},
+        {"t": "نزيف شديد", "d": "اضغط بقوة على الجرح بقطعة قماش نظيفة ولا ترفعها لتتفقده. استمر بالضغط واتصل بالرقم 911."},
+        {"t": "حرق", "d": "ضعه تحت ماء جارٍ بارد لمدة 20 دقيقة، دون ثلج أو معجون أسنان. راجع الطبيب إذا كان كبيراً أو ظهرت فقاعات."},
+        {"t": "نوبة هلع", "d": "اجلس وتنفس ببطء: شهيق 4 ثوانٍ وزفير 6 ثوانٍ، وسمِّ خمسة أشياء تراها. ستمر النوبة. إذا كان ألم الصدر جديداً أو لم تكن متأكداً، اتصل بالرقم 911."}
+      ]
+    },
+    {
+      "emoji": "🛡️",
+      "title": "حافظ على سلامتك",
+      "items": [
+        {"t": "أخبر أحداً بخططك", "d": "ذاهب إلى مكان جديد أو ستعود متأخراً؟ أخبر صديقاً إلى أين ستذهب ومتى ستعود."},
+        {"t": "عبور الطريق", "d": "ضع الهاتف جانباً وانزع السماعات عند العبور. معظم الحوادث الوشيكة تحدث عندما لا ينتبه الناس."},
+        {"t": "حرّ الصيف", "d": "احمل الماء وامشِ في الظل واسترح إذا شعرت بدوار أو غثيان. الصداع والتشوش في الحر يستدعيان طلب المساعدة."},
+        {"t": "الشتاء والمطر", "d": "تصبح الطرق زلقة مع أول مطر. اخرج مبكراً، ولا تنتظر العاصفة قرب وادٍ أو طريق غمرته المياه."},
+        {"t": "احمِ حساباتك", "d": "استخدم كلمة مرور مختلفة لحساب الجامعة، ولا ترسل رمز التحقق لأي شخص، حتى لو كان صديقاً."}
+      ]
+    },
+    {
+      "emoji": "🧠",
+      "title": "ادرس بذكاء",
+      "items": [
+        {"t": "اختبر نفسك", "d": "إغلاق الكتاب والتذكر من الذاكرة أفضل من قراءة الصفحة نفسها مراراً. والامتحانات السابقة أفضل تدريب."},
+        {"t": "وزّع دراستك", "d": "ثلاث جلسات قصيرة في ثلاثة أيام تثبت المعلومة أكثر من ليلة واحدة طويلة."},
+        {"t": "25 دقيقة عمل و5 راحة", "d": "ضع الهاتف في غرفة أخرى، وادرس 25 دقيقة ثم استرح 5. خذ استراحة أطول بعد أربع جولات."},
+        {"t": "اشرحها لغيرك", "d": "إذا استطعت شرحها لصديق بكلمات بسيطة فقد فهمتها، وإن لم تستطع فقد عرفت ما عليك دراسته."},
+        {"t": "ابدأ بالامتحانات السابقة", "d": "اعرف طريقة أسئلة مدرّسك قبل أن تدرس، وستعرف ما المهم وإلى أي عمق تذهب."}
+      ]
+    },
+    {
+      "emoji": "📝",
+      "title": "يوم الامتحان",
+      "items": [
+        {"t": "النوم أهم من ساعة إضافية", "d": "تحفظ ذاكرتك ما درسته أثناء نومك، والسهر طوال الليل يكلفك عادةً أكثر مما يعطيك."},
+        {"t": "جهّز أغراضك ليلاً", "d": "البطاقة والأقلام والآلة الحاسبة والماء. تأكد من القاعة والوقت حتى لا تستعجل صباحاً."},
+        {"t": "اقرأ الورقة كلها أولاً", "d": "خصص دقيقة لقراءة الورقة كاملة، وابدأ بما تعرفه ثم عُد إلى الأسئلة الصعبة."},
+        {"t": "انتبه للوقت", "d": "قسّم وقتك حسب العلامات، ولا تعطِ عشر دقائق لسؤال عليه علامتان."}
+      ]
+    },
+    {
+      "emoji": "💰",
+      "title": "وفّر مالك",
+      "items": [
+        {"t": "أحضر الماء والطعام معك", "d": "زجاجة ماء وشطيرة من البيت توفران مبلغاً حقيقياً خلال الفصل."},
+        {"t": "تشاركوا الكتب والملخصات", "d": "ابحث في ASU Bank قبل أن تشتري أو تطبع أي شيء، وتقاسم الطباعة مع أصدقائك."},
+        {"t": "اكتب ما تصرفه", "d": "أسبوع واحد من التسجيل يكفي لتعرف أين يذهب مالك."},
+        {"t": "تشاركوا المواصلات", "d": "الذهاب مع زملاء من منطقتك يقلل التكلفة ويجعل الطريق أجمل."}
+      ]
+    },
+    {
+      "emoji": "🌿",
+      "title": "اعتنِ بنفسك",
+      "items": [
+        {"t": "نظّم نومك", "d": "النوم والاستيقاظ في الوقت نفسه يساعد تركيزك أكثر من فنجان قهوة إضافي."},
+        {"t": "كُل قبل الأيام الطويلة", "d": "الفطور الجيد يبقي طاقتك ثابتة، أما مشروبات الطاقة فتستعير من طاقتك لاحقاً."},
+        {"t": "امشِ بين المحاضرات", "d": "عشر دقائق من المشي بين المحاضرات تنشّط عقلك وتريح عينيك."},
+        {"t": "تحدث مع أحد", "d": "الشعور بالضيق أو الضغط أمر شائع ولا بأس بقوله. أخبر صديقاً أو أحد أفراد عائلتك أو مرشداً."}
+      ]
+    }
+  ]
+}

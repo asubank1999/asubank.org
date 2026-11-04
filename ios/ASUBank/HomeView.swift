@@ -126,6 +126,8 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     hero
+                    WeatherCard()
+                    NextLectureCard()
                     if !saved.recent.isEmpty {
                         SectionHeader(title: "Continue")
                         list(saved.recent.prefix(4).map(\.material))

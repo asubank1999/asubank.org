@@ -118,6 +118,13 @@ enum AppTheme {
         .init(id: 4, name: "Sunset", light: 0xd2510a, dark: 0xff9a52),
         .init(id: 5, name: "Teal", light: 0x00847f, dark: 0x3fd6cf),
         .init(id: 6, name: "Graphite", light: 0x3a3a3c, dark: 0xd1d1d6),
+        .init(id: 7, name: "Rose", light: 0xc2185b, dark: 0xff7eb0),
+        .init(id: 8, name: "Royal blue", light: 0x2f3fc4, dark: 0x8c9bff),
+        .init(id: 9, name: "Mint", light: 0x0f8a6d, dark: 0x5be3bf),
+        .init(id: 10, name: "Gold", light: 0xa8780a, dark: 0xffc627),
+        .init(id: 11, name: "Crimson", light: 0xb3132b, dark: 0xff6b7d),
+        .init(id: 12, name: "Lavender", light: 0x7a5aa6, dark: 0xc9aefc),
+        .init(id: 13, name: "Coffee", light: 0x6f4e37, dark: 0xd2a77f),
     ]
 
     /// 0 system, 1 light, 2 dark, 3 pitch black (OLED)

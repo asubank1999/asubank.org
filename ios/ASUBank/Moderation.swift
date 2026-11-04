@@ -256,6 +256,16 @@ struct AdminReportsScreen: View {
                 if status == "open" {
                     Button("Done") { Task { await set(r, "done") } }
                     Button("Dismiss") { Task { await set(r, "dismissed") } }
+                    if kind == "post" {
+                        Button("Delete post", role: .destructive) {
+                            Task {
+                                do {
+                                    _ = try await AccountStore.shared.call("postDelete", ["id": r["targetId"] as? String ?? ""])
+                                    await set(r, "done")
+                                } catch { self.error = error.localizedDescription }
+                            }
+                        }
+                    }
                     if kind == "message" {
                         Button("Delete message", role: .destructive) {
                             Task {

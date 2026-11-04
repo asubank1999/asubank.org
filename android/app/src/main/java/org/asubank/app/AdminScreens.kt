@@ -1,5 +1,6 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.AddComment
 import androidx.compose.material.icons.filled.Flag
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -81,6 +82,8 @@ private fun short(iso: String?): String = iso?.let {
 
 @Composable
 fun AdminTab() {
+    var pendingGroups by remember { mutableStateOf(0) }
+    LaunchedEffect(Unit) { runCatching { pendingGroups = Account.call("adminGroupRequests")["pending"].prim()?.toDoubleOrNull()?.toInt() ?: 0 } }
     val nav = LocalNav.current
     var stats by remember { mutableStateOf<Map<String, Int>>(emptyMap()) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -117,6 +120,8 @@ fun AdminTab() {
             }
             item {
                 Group(header = "Manage") {
+                    ListRow("Group requests", icon = Icons.Filled.AddComment, trailing = if (pendingGroups > 0) "$pendingGroups" else null) { nav.navigate("adminGroups") }
+                    Divider()
                     ListRow("Reports", icon = Icons.Filled.Flag) { nav.navigate("adminReports") }
                     Divider()
                     ListRow("Users", "Ban, reset passwords, make admins", icon = Icons.Filled.People) { nav.navigate("adminUsers") }

@@ -117,6 +117,13 @@ object Prefs {
         AccentChoice(4, "Sunset", 0xFFD2510A, 0xFFFF9A52),
         AccentChoice(5, "Teal", 0xFF00847F, 0xFF3FD6CF),
         AccentChoice(6, "Graphite", 0xFF3A3A3C, 0xFFD1D1D6),
+        AccentChoice(7, "Rose", 0xFFC2185B, 0xFFFF7EB0),
+        AccentChoice(8, "Royal blue", 0xFF2F3FC4, 0xFF8C9BFF),
+        AccentChoice(9, "Mint", 0xFF0F8A6D, 0xFF5BE3BF),
+        AccentChoice(10, "Gold", 0xFFA8780A, 0xFFFFC627),
+        AccentChoice(11, "Crimson", 0xFFB3132B, 0xFFFF6B7D),
+        AccentChoice(12, "Lavender", 0xFF7A5AA6, 0xFFC9AEFC),
+        AccentChoice(13, "Coffee", 0xFF6F4E37, 0xFFD2A77F),
     )
     fun setAppearance(v: Int) { appearance.value = v; Saved.prefs.edit().putInt("appearance", v).apply() }
     fun setAccent(v: Int) { accent.value = v; Saved.prefs.edit().putInt("accent", v).apply() }
@@ -155,6 +162,9 @@ object Routes {
     const val MORE = "more"
     const val CHAT = "chat"
     const val ADMIN = "admin"
+    const val FRIENDS = "friends"
+    const val LECTURES = "lectures"
+    const val HACKS = "hacks"
 }
 
 val LocalNav = staticCompositionLocalOf<NavController> { error("no nav") }

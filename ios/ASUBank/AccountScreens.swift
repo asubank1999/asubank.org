@@ -91,84 +91,6 @@ struct AvatarPicker: UIViewControllerRepresentable {
 }
 
 /// Someone's profile: photo, badges, bio, online or last seen, phone if they share it
-struct ProfileScreen: View {
-    let userId: String
-    var fallbackName = ""
-    var fallbackColor = "#8C1D40"
-    @ObservedObject private var account = AccountStore.shared
-    @State private var user: ABUser?
-    @State private var error: String?
-    @State private var reporting: ReportTarget?
-    @State private var blocking: BlockTarget?
-
-    var body: some View {
-        List {
-            Section {
-                VStack(spacing: 8) {
-                    Avatar(name: user?.displayName ?? fallbackName, color: user?.color ?? fallbackColor, size: 96,
-                           admin: user?.isAdmin == true, photo: user?.avatar, online: user?.online)
-                    Text(user?.displayName ?? fallbackName).font(.title2.weight(.bold))
-                    if let u = user {
-                        Text("@\(u.username)").foregroundStyle(.secondary)
-                        Text(u.online == true ? L("Online now") : lastSeenText(u.lastSeen)).font(.caption)
-                            .foregroundStyle(u.online == true ? Color.green : .secondary)
-                        BadgeRow(badges: u.badges ?? [])
-                        if u.isAdmin { Badge(text: L("ADMIN"), color: .orange) }
-                    }
-                }
-                .frame(maxWidth: .infinity).padding(.vertical, 8)
-                .listRowBackground(Color.clear)
-            }
-            if let u = user {
-                if let b = u.bio, !b.isEmpty { Section("About") { Text(b) } }
-                if u.major?.isEmpty == false || u.college?.isEmpty == false {
-                    Section("Studies") {
-                        if let c = u.college, !c.isEmpty { Label(c, systemImage: "building.columns") }
-                        if let m = u.major, !m.isEmpty { Label(m, systemImage: "graduationcap") }
-                    }
-                }
-                if let p = u.phone, !p.isEmpty {
-                    Section("Phone") {
-                        Button { if let url = URL(string: "tel:" + p.filter { $0.isNumber || $0 == "+" }) { UIApplication.shared.open(url) } } label: {
-                            Label(p, systemImage: "phone.fill")
-                        }
-                        Button { if let url = URL(string: "https://wa.me/" + p.filter(\.isNumber)) { UIApplication.shared.open(url) } } label: {
-                            Label("WhatsApp", systemImage: "message.fill")
-                        }
-                    }
-                }
-                if account.signedIn, u.id != account.user?.id {
-                    Section {
-                        Button { reporting = ReportTarget(kind: "user", targetId: u.id, name: u.displayName) } label: { Label("Report this person", systemImage: "flag") }
-                        if !u.isAdmin {
-                            if account.user?.blocked?.contains(u.id) == true {
-                                Button { Task { try? await Moderation.setBlocked(u.id, false) } } label: { Label("Unblock", systemImage: "checkmark.circle") }
-                            } else {
-                                Button(role: .destructive) { blocking = BlockTarget(userId: u.id, name: u.displayName) } label: { Label("Block", systemImage: "nosign") }
-                            }
-                        }
-                    }
-                }
-                if account.isAdmin, u.id != account.user?.id {
-                    Section { NavigationLink { AdminUserScreen(user: u) { await load() } } label: { Label("Manage this user", systemImage: "checkmark.seal") } }
-                }
-            }
-            if let error { Section { Text(error).foregroundStyle(.red) } }
-        }
-        .listStyle(.insetGrouped)
-        .modifier(ModerationDialogs(report: $reporting, block: $blocking))
-        .navigationTitle(user?.displayName ?? fallbackName)
-        .navigationBarTitleDisplayMode(.inline)
-        .task { await load() }
-        .refreshable { await load() }
-    }
-
-    private func load() async {
-        do { user = decode(ABUser.self, try await account.call("profile", ["userId": userId])["user"]); error = nil }
-        catch { self.error = error.localizedDescription }
-    }
-}
-
 /// "Last seen 5 minutes ago"
 func lastSeenText(_ iso: String?) -> String {
     guard let iso, let d = ISO8601DateFormatter.ab.date(from: iso) ?? ISO8601DateFormatter().date(from: iso) else { return L("Offline") }
@@ -384,6 +306,8 @@ struct AccountScreen: View {
                     Toggle(isOn: $notifier.replies) { Label("Replies to me", systemImage: "arrowshape.turn.up.left") }
                     Toggle(isOn: $notifier.announcements) { Label("Announcements", systemImage: "megaphone") }
                     Toggle(isOn: $notifier.uploads) { Label("New uploaded files", systemImage: "doc.badge.plus") }
+                    Toggle(isOn: $notifier.social) { Label("Friends and pokes", systemImage: "person.2") }
+                    NavigationLink { SoundsScreen() } label: { Label("Notification sounds", systemImage: "speaker.wave.2") }
                     if notifier.messages {
                         NavigationLink { MutedRoomsScreen() } label: {
                             HStack {
@@ -446,7 +370,7 @@ private struct MutedRoomsScreen: View {
     }
 }
 
-private struct EditProfileSheet: View {
+struct EditProfileSheet: View {
     @ObservedObject private var account = AccountStore.shared
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
@@ -457,6 +381,8 @@ private struct EditProfileSheet: View {
     @State private var bio = ""
     @State private var major = ""
     @State private var college = ""
+    @State private var year = ""
+    @State private var interests = ""
     @State private var busy = false
     @State private var error: String?
 
@@ -473,7 +399,12 @@ private struct EditProfileSheet: View {
                         ForEach(ABColleges.all, id: \.self) { Text($0).tag($0) }
                     }
                     TextField("Your major", text: $major)
+                    Picker("Year", selection: $year) {
+                        Text("Not set").tag("")
+                        ForEach(ABColleges.years, id: \.self) { Text(L($0)).tag($0) }
+                    }
                 }
+                Section("Interests") { TextField("Football, coding, photography…", text: $interests) }
                 Section {
                     TextField("Phone number", text: $phone).keyboardType(.phonePad).textContentType(.telephoneNumber)
                     Toggle("Show my number on my profile", isOn: $showPhone)
@@ -493,7 +424,8 @@ private struct EditProfileSheet: View {
                             busy = true
                             do {
                                 try await account.updateProfile(displayName: name, email: email, uniId: uniId, phone: phone, showPhone: showPhone,
-                                                                bio: String(bio.prefix(160)), major: String(major.prefix(60)), college: college)
+                                                                bio: String(bio.prefix(160)), major: String(major.prefix(60)), college: college,
+                                                                year: year, interests: String(interests.prefix(160)))
                                 dismiss()
                             } catch { self.error = error.localizedDescription }
                             busy = false
@@ -505,7 +437,7 @@ private struct EditProfileSheet: View {
                 let u = account.user
                 name = u?.displayName ?? ""; email = u?.email ?? ""; uniId = u?.uniId ?? ""
                 phone = u?.phone ?? ""; showPhone = u?.showPhone == true; bio = u?.bio ?? ""
-                major = u?.major ?? ""; college = u?.college ?? ""
+                major = u?.major ?? ""; college = u?.college ?? ""; year = u?.year ?? ""; interests = u?.interests ?? ""
             }
         }
     }

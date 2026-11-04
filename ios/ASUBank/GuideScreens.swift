@@ -289,6 +289,13 @@ struct GroupsScreen: View {
     @Environment(\.openURL) private var openURL
     @State private var query = ""
     @State private var kind = 0
+    @State private var approved: [ApprovedGroup] = []
+    @State private var requesting = false
+
+    private var approvedShown: [ApprovedGroup] {
+        let q = query.trimmingCharacters(in: .whitespaces)
+        return q.isEmpty ? approved : approved.filter { $0.title.localizedCaseInsensitiveContains(q) || ($0.category ?? "").localizedCaseInsensitiveContains(q) }
+    }
 
     private var sections: [GroupSection] {
         var out: [GroupSection] = []
@@ -333,6 +340,13 @@ struct GroupsScreen: View {
             .pickerStyle(.segmented)
             .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
 
+            if kind == 0 && !approvedShown.isEmpty {
+                Section("Added by students") {
+                    ForEach(approvedShown) { g in
+                        row(PageLink(t: g.title, u: g.url, s: g.category?.isEmpty == false ? g.category : nil))
+                    }
+                }
+            }
             ForEach(shown) { s in
                 Section {
                     ForEach(Array(s.links.enumerated()), id: \.offset) { _, l in row(l) }
@@ -342,7 +356,7 @@ struct GroupsScreen: View {
                 Text(query.isEmpty ? "Nothing here yet." : "No group matches \"\(query)\".").foregroundStyle(.secondary)
             }
             Section {
-                Button { openURL(waMessage("Hi ASU Bank, I'd like to add a WhatsApp group: ")) } label: {
+                Button { requesting = true } label: {
                     Label("Add your group's link", systemImage: "plus.bubble")
                 }
             } footer: { Text("Groups are run by students, not by ASU Bank. Be kind and follow each group's rules.") }
@@ -351,6 +365,10 @@ struct GroupsScreen: View {
         .navigationTitle("Groups & resources")
         .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $query, prompt: "Search groups")
+        .sheet(isPresented: $requesting) { GroupRequestSheet() }
+        .task {
+            approved = decode([ApprovedGroup].self, (try? await AccountsAPI.call("groupsApproved"))?["groups"]) ?? []
+        }
     }
 
     @ViewBuilder private func row(_ l: PageLink) -> some View {

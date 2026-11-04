@@ -1,5 +1,9 @@
 package org.asubank.app
 
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.People
 import kotlinx.coroutines.delay
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Forum
@@ -110,6 +114,10 @@ class MainActivity : ComponentActivity() {
         Account.init()
         ChatNotifier.init(applicationContext)
         ChatNotifier.start(applicationContext)
+        TabPrefs.init()
+        Lectures.init()
+        Lectures.schedule(applicationContext)
+        intent?.getStringExtra("openTab")?.let { ChatNotifier.pendingTab.value = it; splashDone = true }
         intent?.getStringExtra("openRoom")?.let { ChatNotifier.pendingRoom.value = it }
         // CI screenshots: --es startTab search --es startQuery calculus --ez acceptTerms true
         intent?.getStringExtra("startQuery")?.let { AppState.pendingSearch.value = it }
@@ -128,6 +136,7 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         intent.getStringExtra("openRoom")?.let { ChatNotifier.pendingRoom.value = it }
+        intent.getStringExtra("openTab")?.let { ChatNotifier.pendingTab.value = it }
         incoming.value = intent.dataString ?: intent.getStringExtra("openPath")?.let { AB.SITE + it }
     }
 }
@@ -139,16 +148,19 @@ const val TERMS_KEY = "terms.accepted.v1"
 
 private data class Tab(val route: String, val label: String, val icon: ImageVector)
 
-private val tabs = listOf(
-    Tab(Routes.HOME, "Home", Icons.Filled.Home),
+private val homeTab = Tab(Routes.HOME, "Home", Icons.Filled.Home)
+private val moreTab = Tab(Routes.MORE, "More", Icons.Filled.MoreHoriz)
+private val adminTab = Tab(Routes.ADMIN, "Admin", Icons.Filled.Shield)
+/** What people can put between Home and More (More > Customize tab bar) */
+private val choosableTabs = listOf(
     Tab(Routes.SEARCH, "Search", Icons.Filled.Search),
     Tab(Routes.CHAT, "Chat", Icons.Filled.Forum),
+    Tab(Routes.FRIENDS, "Friends", Icons.Filled.People),
     Tab(Routes.SAVED, "Saved", Icons.Filled.Star),
-    Tab(Routes.MORE, "More", Icons.Filled.MoreHoriz),
+    Tab(Routes.LECTURES, "My lectures", Icons.Filled.Alarm),
+    Tab(Routes.HACKS, "Life hacks", Icons.Filled.Lightbulb),
 )
-
-/** Admins get the Admin tab in place of Saved (Saved moves to More) */
-private val adminTabs = tabs.map { if (it.route == Routes.SAVED) Tab(Routes.ADMIN, "Admin", Icons.Filled.Shield) else it }
+private val allTabs = listOf(homeTab, moreTab, adminTab) + choosableTabs
 
 @Composable
 fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
@@ -165,10 +177,22 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     val user by Account.user.collectAsState()
     val signInShown by Account.signInShown.collectAsState()
     val pendingRoom by ChatNotifier.pendingRoom.collectAsState()
-    val barTabs = if (user?.isAdmin == true) adminTabs else tabs
+    val chosenTabs by TabPrefs.chosen.collectAsState()
+    val socialUnread by ChatNotifier.socialUnread.collectAsState()
+    val pendingTab by ChatNotifier.pendingTab.collectAsState()
+    val isAdmin = user?.isAdmin == true
+    val middleTabs = chosenTabs.take(if (isAdmin) 2 else 3).mapNotNull { id -> choosableTabs.firstOrNull { it.route == id } }
+    val barTabs = listOf(homeTab) + middleTabs + (if (isAdmin) listOf(adminTab) else emptyList()) + moreTab
+    val inBar: (String) -> Boolean = { r -> barTabs.any { it.route == r } }
+    LaunchedEffect(pendingTab) {
+        pendingTab?.let { t ->
+            ChatNotifier.pendingTab.value = null
+            if (inBar(t)) { lastTab = t; nav.openTab(t) } else nav.navigate(t)
+        }
+    }
     var splash by remember { mutableStateOf(!splashDone) }
     LaunchedEffect(Unit) { if (splash) { delay(1500); splashDone = true; splash = false } }
-    LaunchedEffect(route) { if ((tabs + adminTabs).any { it.route == route }) lastTab = route ?: Routes.HOME }
+    LaunchedEffect(route) { if (allTabs.any { it.route == route }) lastTab = route ?: Routes.HOME }
     LaunchedEffect(pendingRoom) { if (pendingRoom != null && route != Routes.CHAT) nav.openTab(Routes.CHAT) }
     // Android 13+ asks before showing notifications
     val askNotify = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
@@ -219,7 +243,10 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                                 if (lastTab == t.route) { if (!nav.popBackStack(t.route, false)) nav.openTab(t.route) }
                                 else { lastTab = t.route; nav.openTab(t.route) }
                             },
-                            icon = { Icon(t.icon, null) },
+                            icon = {
+                                if (t.route == Routes.FRIENDS && socialUnread > 0) BadgedBox(badge = { androidx.compose.material3.Badge { Text("$socialUnread") } }) { Icon(t.icon, null) }
+                                else Icon(t.icon, null)
+                            },
                             label = { Text(tr(t.label)) },
                             colors = NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.primaryContainer),
                         )
@@ -227,7 +254,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 }
             },
         ) { pad ->
-            val tabRoutes = remember { (tabs + adminTabs).map { it.route }.toSet() + Routes.UPLOAD }
+            val tabRoutes = remember { allTabs.map { it.route }.toSet() + Routes.UPLOAD }
             fun AnimatedContentTransitionScope<NavBackStackEntry>.betweenTabs() =
                 initialState.destination.route in tabRoutes && targetState.destination.route in tabRoutes
             NavHost(
@@ -241,7 +268,14 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable(Routes.HOME) { HomeScreen() }
                 composable(Routes.SEARCH) { SearchScreen() }
                 composable(Routes.UPLOAD) { UploadScreen() }
-                composable(Routes.SAVED) { SavedScreen() }
+                composable(Routes.SAVED) { SavedScreen(back = !inBar(Routes.SAVED)) }
+                composable(Routes.FRIENDS) { FriendsScreen(back = !inBar(Routes.FRIENDS)) }
+                composable(Routes.LECTURES) { LecturesScreen(back = !inBar(Routes.LECTURES)) }
+                composable(Routes.HACKS) { LifeHacksScreen(back = !inBar(Routes.HACKS)) }
+                composable("tabBar") { TabBarScreen() }
+                composable("sounds") { SoundsScreen() }
+                composable("groupRequest") { GroupRequestScreen() }
+                composable("adminGroups") { AdminGroupRequestsScreen() }
                 composable(Routes.MORE) { MoreScreen() }
                 composable(Routes.CHAT) { ChatTab() }
                 composable(Routes.ADMIN) { if (user?.isAdmin == true) AdminTab() else SignInPrompt("Admins only", "Sign in with an admin account to manage ASU Bank.") }

@@ -57,6 +57,9 @@ struct ABUser: Codable, Identifiable, Hashable {
     var bio: String?
     var major: String?
     var college: String?
+    var year: String?
+    var interests: String?
+    var friendship: String?
     var blocked: [String]?
     var badges: [String]?
     var online: Bool?
@@ -83,6 +86,7 @@ enum ABBadges {
 enum ABColleges {
     static let all = ["Information Technology", "Engineering", "Pharmacy", "Dentistry", "Nursing", "Allied Medical Sciences", "Business", "Law",
                       "Arts & Sciences", "Arts & Design", "Other"]
+    static let years = ["First year", "Second year", "Third year", "Fourth year", "Fifth year", "Graduate", "Alumni"]
 }
 
 /// What chat screens know about the people in a room
@@ -110,6 +114,7 @@ struct ChatRoom: Codable, Identifiable, Hashable {
 
 /// Something the app may notify about (the `events` action)
 struct ABEvent: Codable, Hashable {
+    var kind: String?
     var id: String
     var type: String
     var room: String?
@@ -268,9 +273,9 @@ final class AccountStore: ObservableObject {
         adopt(r)
     }
 
-    func updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Bool, bio: String, major: String, college: String) async throws {
+    func updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Bool, bio: String, major: String, college: String, year: String, interests: String) async throws {
         adopt(try await call("updateProfile", ["displayName": displayName, "email": email, "uniId": uniId,
-                                               "phone": phone, "showPhone": showPhone, "bio": bio, "major": major, "college": college]))
+                                               "phone": phone, "showPhone": showPhone, "bio": bio, "major": major, "college": college, "year": year, "interests": interests]))
     }
 
     /// Uploads a profile photo (shrunk to 256 px JPEG first), or removes it with nil
@@ -340,6 +345,9 @@ final class ChatNotifier: ObservableObject {
     @Published var replies = pref("replies", oldMode != 2) { didSet { UserDefaults.standard.set(replies, forKey: "ab.notify.replies") } }
     @Published var announcements = pref("announcements", oldMode != 2) { didSet { UserDefaults.standard.set(announcements, forKey: "ab.notify.announcements") } }
     @Published var uploads = pref("uploads", oldMode != 2) { didSet { UserDefaults.standard.set(uploads, forKey: "ab.notify.uploads") } }
+    @Published var social = pref("social", true) { didSet { UserDefaults.standard.set(social, forKey: "ab.notify.social") } }
+    /// New friend requests and pokes since the Friends tab was last open
+    @Published var socialUnread = 0
     /// Rooms whose messages never notify
     @Published var muted = Set(UserDefaults.standard.stringArray(forKey: "ab.notify.muted") ?? []) {
         didSet { UserDefaults.standard.set(Array(muted), forKey: "ab.notify.muted") }
@@ -372,7 +380,7 @@ final class ChatNotifier: ObservableObject {
         guard let token = AccountStore.shared.token else { return }
         let key = "ab.notify.lastSeenDate"
         let seen = UserDefaults.standard.string(forKey: key)
-        guard let r = try? await AccountsAPI.call("events", ["since": seen ?? ""], token: token) else { return }
+        guard let r = try? await AccountsAPI.call("events", ["since": seen ?? "", "social": true], token: token) else { return }
         let events = decode([ABEvent].self, r["events"]) ?? []
         let newest = events.map(\.created).max() ?? ""
         // first check after install: remember, don't notify
@@ -389,6 +397,8 @@ final class ChatNotifier: ObservableObject {
         switch e.type {
         case "upload": return uploads
         case "announcement": return announcements
+        case "friend_request", "friend_accept", "poke": return social
+        case "group_request", "group_approved", "group_rejected": return true
         default:
             if e.room == openRoom { return false }
             if replies && me != nil && e.replyToUserId == me { return true }
@@ -398,7 +408,9 @@ final class ChatNotifier: ObservableObject {
 
     func deliver(_ e: ABEvent) async {
         guard wants(e) else { return }
-        if e.type != "upload" { unread += 1 }
+        let isPrivate = e.type.hasPrefix("friend_") || e.type.hasPrefix("group_") || e.type == "poke"
+        if isPrivate { socialUnread += e.type.hasPrefix("group_") ? 0 : 1 }
+        else if e.type != "upload" { unread += 1 }
         let me = AccountStore.shared.user?.id
         let who = e.displayName ?? ""
         let c = UNMutableNotificationContent()
@@ -407,14 +419,33 @@ final class ChatNotifier: ObservableObject {
             c.title = L("📄 New upload on ASU Bank")
         case "announcement":
             c.title = "📣 \(who)"
+        case "friend_request":
+            c.title = L("New friend request")
+        case "friend_accept":
+            c.title = L("You have a new friend")
+        case "poke":
+            c.title = "👉 " + who
+        case "group_request":
+            c.title = L("New group request")
+        case "group_approved":
+            c.title = L("Your group was accepted")
+        case "group_rejected":
+            c.title = L("Your group wasn't accepted")
         default:
             c.title = e.replyToUserId == me && me != nil ? String(format: L("%@ replied to you"), who) : String(format: L("New message from %@"), who)
         }
         c.subtitle = e.type == "upload" ? "" : (e.roomName ?? "")
         c.body = e.text
-        c.sound = .default
+        switch e.type {
+        case "friend_request": c.body = String(format: L("%@ wants to be your friend"), who)
+        case "friend_accept": c.body = String(format: L("%@ accepted your friend request"), who)
+        case "poke": c.body = Social.pokeText(kind: e.kind ?? "poke", name: who, place: e.text)
+        case "group_request": c.body = String(format: L("%@ asked to add: %@"), who, e.text)
+        default: break
+        }
+        c.sound = NotificationSounds.sound(NotificationSounds.messageKey)
         c.threadIdentifier = e.room ?? e.type
-        c.userInfo = ["room": e.room ?? "", "url": e.url ?? ""]
+        c.userInfo = ["room": e.room ?? "", "url": e.url ?? "", "open": e.type == "group_request" ? "admin" : isPrivate && !e.type.hasPrefix("group_") ? "friends" : ""]
         try? await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: e.id, content: c, trigger: nil))
     }
 
@@ -445,8 +476,15 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         let info = r.notification.request.content.userInfo
         let room = info["room"] as? String ?? ""
         let url = info["url"] as? String ?? ""
+        let open = info["open"] as? String ?? ""
         await MainActor.run {
-            if room.isEmpty && !url.isEmpty {
+            if open == "lectures" {
+                AppState.shared?.tab = .lectures
+            } else if open == "friends" {
+                AppState.shared?.tab = .friends
+            } else if open == "admin" {
+                AppState.shared?.tab = .admin
+            } else if room.isEmpty && !url.isEmpty {
                 // a new upload: show the latest uploads list
                 AppState.shared?.tab = .home
                 AppState.shared?.pendingRoute = .page("/guides/latest", "")
