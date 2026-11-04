@@ -521,7 +521,9 @@ struct WeatherCard: View {
     @StateObject private var store = WeatherStore()
 
     var body: some View {
-        Group {
+        // Not a Group: .task on an empty Group never runs, so nothing would ever load.
+        VStack(spacing: 0) {
+            Color.clear.frame(height: 0).task { await store.load() }
             if !store.hours.isEmpty {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
@@ -554,7 +556,6 @@ struct WeatherCard: View {
                 .padding(.top, 14)
             }
         }
-        .task { await store.load() }
     }
 }
 
