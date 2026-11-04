@@ -695,13 +695,13 @@ var ACTIONS = {
     if (text.length < 2) return { ok: true, text: '' };
     var to = /[\u0600-\u06FF]/.test(text) ? 'en' : 'ar';
     var c = CacheService.getScriptCache();
-    var key = 'tr:' + Utilities.base64EncodeWebSafe(text.toLowerCase()).slice(0, 200);
+    var key = 'tr2:' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, text.toLowerCase(), Utilities.Charset.UTF_8));
     var hit = c.get(key);
     if (hit !== null) return { ok: true, text: hit, to: to };
     if (tooMany('translate', 600)) return { ok: true, text: '', to: to };
     var out = '';
     try { out = LanguageApp.translate(text, '', to); } catch (err) { return { ok: true, text: '', to: to }; }
-    if (norm(out) === norm(text)) out = '';
+    if (norm(out) === norm(text) || /^[\s?؟]*$/.test(out)) out = '';
     c.put(key, out, 86400);
     return { ok: true, text: out, to: to };
   },
