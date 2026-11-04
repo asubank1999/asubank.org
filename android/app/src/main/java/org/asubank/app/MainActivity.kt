@@ -77,7 +77,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.Lifecycle
@@ -158,7 +157,7 @@ private val adminTab = Tab(Routes.ADMIN, "Admin", Icons.Filled.Shield)
 private val choosableTabs = listOf(
     Tab(Routes.SEARCH, "Search", Icons.Filled.Search),
     Tab(Routes.CHAT, "Chat", Icons.Filled.Forum),
-    Tab(Routes.NOTIFICATIONS, "Notifications", Icons.Filled.Notifications),
+    Tab(Routes.NOTIFICATIONS, "Alerts", Icons.Filled.Notifications),
     Tab(Routes.FRIENDS, "Friends", Icons.Filled.People),
     Tab(Routes.SAVED, "Saved", Icons.Filled.Star),
     Tab(Routes.LECTURES, "My lectures", Icons.Filled.Alarm),
@@ -263,9 +262,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                                 else if (t.route == Routes.FRIENDS && socialUnread > 0) BadgedBox(badge = { androidx.compose.material3.Badge { Text("$socialUnread") } }) { Icon(t.icon, null) }
                                 else Icon(t.icon, null)
                             },
-                            // "Notifications" is the longest name and must stay on one line
-                            label = { Text(tr(t.label), maxLines = 1, softWrap = false, fontSize = if (t.route == Routes.NOTIFICATIONS) 10.sp else androidx.compose.ui.unit.TextUnit.Unspecified) },
-                            alwaysShowLabel = true,
+                            label = { Text(tr(t.label), maxLines = 1, softWrap = false) },
                             colors = NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.primaryContainer),
                         )
                     }
