@@ -77,6 +77,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.Lifecycle
@@ -262,7 +263,9 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                                 else if (t.route == Routes.FRIENDS && socialUnread > 0) BadgedBox(badge = { androidx.compose.material3.Badge { Text("$socialUnread") } }) { Icon(t.icon, null) }
                                 else Icon(t.icon, null)
                             },
-                            label = { Text(tr(t.label)) },
+                            // "Notifications" is the longest name and must stay on one line
+                            label = { Text(tr(t.label), maxLines = 1, softWrap = false, fontSize = if (t.route == Routes.NOTIFICATIONS) 10.sp else androidx.compose.ui.unit.TextUnit.Unspecified) },
+                            alwaysShowLabel = true,
                             colors = NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.primaryContainer),
                         )
                     }

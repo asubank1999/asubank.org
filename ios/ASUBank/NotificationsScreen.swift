@@ -81,7 +81,7 @@ struct NotificationsScreen: View {
                 .listStyle(.insetGrouped)
                 .refreshable { await store.load() }
             } else {
-                SignInPrompt()
+                SignInPrompt(forNotifications: true)
             }
         }
         .navigationTitle("Notifications")

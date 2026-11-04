@@ -573,17 +573,24 @@ private struct DeleteAccountSheet: View {
     }
 }
 
-/// Shown in Chat when signed out
+/// Shown in Chat and Notifications when signed out
 struct SignInPrompt: View {
+    var forNotifications = false
     @ObservedObject private var account = AccountStore.shared
     var body: some View {
         VStack(spacing: 14) {
             Spacer()
-            Image(systemName: "bubble.left.and.bubble.right.fill").font(.system(size: 54)).foregroundStyle(Color.abAccent)
-            Text("Student chat").font(.title.weight(.bold))
-            Text("Ask other ASU students for help, share materials and get news from the team. Sign in or create a free account to join.")
-                .multilineTextAlignment(.center).foregroundStyle(.secondary).padding(.horizontal, 30)
-            Text("اسأل زملاءك وشارك المواد — سجّل الدخول للانضمام").font(.footnote).foregroundStyle(.secondary)
+            Image(systemName: forNotifications ? "bell.fill" : "bubble.left.and.bubble.right.fill").font(.system(size: 54)).foregroundStyle(Color.abAccent)
+            if forNotifications {
+                Text("Sign in to see your notifications").font(.title3.weight(.bold)).multilineTextAlignment(.center).padding(.horizontal, 30)
+                Text("Friend requests, pokes, new uploads and announcements will show up here.")
+                    .multilineTextAlignment(.center).foregroundStyle(.secondary).padding(.horizontal, 30)
+            } else {
+                Text("Student chat").font(.title.weight(.bold))
+                Text("Ask other ASU students for help, share materials and get news from the team. Sign in or create a free account to join.")
+                    .multilineTextAlignment(.center).foregroundStyle(.secondary).padding(.horizontal, 30)
+                Text("اسأل زملاءك وشارك المواد — سجّل الدخول للانضمام").font(.footnote).foregroundStyle(.secondary)
+            }
             Button { account.signInShown = true } label: {
                 Text("Sign in or create account").font(.headline).frame(maxWidth: 280).padding(.vertical, 6)
             }
