@@ -51,6 +51,7 @@ struct ASUBankApp: App {
                     if await DriveLinks.shared.refresh() { library.reindex() }
                 }
                 .task { await pages.load() }
+                .task { await SearchHelp.shared.load() }
                 .onOpenURL { url in app.open(url) }
         }
     }
@@ -64,28 +65,37 @@ struct RootView: View {
     @AppStorage(WelcomeTermsView.key) private var accepted = false
     @ObservedObject private var account = AccountStore.shared
     @State private var lastTab: AppTab = .home
+    /// Tapping the tab you are on rebuilds its stack, which goes back to its first screen
+    @State private var resets: [AppTab: Int] = [:]
+
+    private var tabSelection: Binding<AppTab> {
+        Binding(get: { app.tab }, set: { t in
+            if t == app.tab { resets[t, default: 0] += 1; Haptics.tap() }
+            app.tab = t
+        })
+    }
 
     var body: some View {
-        TabView(selection: $app.tab) {
-            HomeView()
+        TabView(selection: tabSelection) {
+            HomeView().id(resets[.home, default: 0])
                 .tabItem { Label("Home", systemImage: "house.fill") }
                 .tag(AppTab.home)
-            SearchView()
+            SearchView().id(resets[.search, default: 0])
                 .tabItem { Label("Search", systemImage: "magnifyingglass") }
                 .tag(AppTab.search)
-            ChatTab()
+            ChatTab().id(resets[.chat, default: 0])
                 .tabItem { Label("Chat", systemImage: "bubble.left.and.bubble.right.fill") }
                 .tag(AppTab.chat)
             if account.isAdmin {
-                AdminTab()
+                AdminTab().id(resets[.admin, default: 0])
                     .tabItem { Label("Admin", systemImage: "shield.lefthalf.filled") }
                     .tag(AppTab.admin)
             } else {
-                SavedView()
+                SavedView().id(resets[.saved, default: 0])
                     .tabItem { Label("Saved", systemImage: "star.fill") }
                     .tag(AppTab.saved)
             }
-            MoreView()
+            MoreView().id(resets[.more, default: 0])
                 .tabItem { Label("More", systemImage: "ellipsis.circle.fill") }
                 .tag(AppTab.more)
         }

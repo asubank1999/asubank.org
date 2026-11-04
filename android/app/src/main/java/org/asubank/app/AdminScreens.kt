@@ -208,7 +208,7 @@ fun AdminUsersScreen() {
             error?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
             if (loading && users.isEmpty()) item { Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
             item {
-                Group(footer = "${shown.size} account${if (shown.size == 1) "" else "s"}") {
+                Group(footer = trf("%d accounts", shown.size)) {
                     shown.forEachIndexed { i, u ->
                         if (i > 0) Divider()
                         Row(
@@ -275,6 +275,8 @@ fun AdminUserScreen() {
                     ListRow("University ID", trailing = user.uniId?.ifEmpty { null } ?: "–"); Divider()
                     ListRow("Phone", trailing = user.phone?.ifEmpty { null } ?: "–"); Divider()
                     if (!user.bio.isNullOrEmpty()) { ListRow("About", user.bio); Divider() }
+                    if (!user.college.isNullOrEmpty()) { ListRow("College", trailing = tr(user.college)); Divider() }
+                    if (!user.major.isNullOrEmpty()) { ListRow("Major", user.major); Divider() }
                     ListRow("Joined", trailing = short(user.created)); Divider()
                     ListRow("Last seen", trailing = if (user.online == true) tr("Online now") else short(user.lastSeen))
                     if (!user.banReason.isNullOrEmpty()) { Divider(); ListRow("Ban reason", user.banReason) }
@@ -322,7 +324,7 @@ fun AdminUserScreen() {
         AlertDialog(
             onDismissRequest = { temp = null },
             title = { Text("Temporary password") },
-            text = { Text("Send this to @${user.username}. They should change it after signing in.\n\n$p", fontWeight = FontWeight.Medium) },
+            text = { Text(trf("Send this to @%s. They should change it after signing in.", user.username) + "\n\n$p", fontWeight = FontWeight.Medium) },
             confirmButton = {
                 TextButton(onClick = {
                     (ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("Password", p))
@@ -335,7 +337,7 @@ fun AdminUserScreen() {
     }
     if (confirmDelete) AlertDialog(
         onDismissRequest = { confirmDelete = false },
-        title = { Text("Delete @${user.username}?") },
+        title = { Text(trf("Delete @%s?", user.username)) },
         text = { Text("This can't be undone.") },
         confirmButton = { TextButton(onClick = { confirmDelete = false; act("adminDeleteUser") { nav.popBackStack() } }) { Text("Delete", color = MaterialTheme.colorScheme.error) } },
         dismissButton = { TextButton(onClick = { confirmDelete = false }) { Text("Cancel") } },

@@ -206,18 +206,22 @@ object AB {
     fun index(m: Material) = Indexed(m, norm(m.t + " " + (m.s ?: "") + " " + (m.c ?: "")), kind(m.u, m.t), yearOf(m.t), isNew(m.d))
 
     /** Score items for a query; every word must match (same ranking as the website) */
-    fun match(items: List<Indexed>, q: String, limit: Int = 200): List<Indexed> {
+    fun match(items: List<Indexed>, q: String, limit: Int = 200, alts: Map<String, List<String>> = emptyMap(), skip: Set<String> = emptySet()): List<Indexed> {
         val nq = norm(q)
         if (nq.isEmpty()) return emptyList()
-        val toks = nq.split(" ")
+        val toks = nq.split(" ").filter { it !in skip }
         val out = ArrayList<Pair<Int, Indexed>>()
         for (it in items) {
             var score = 0
             var ok = true
             for (t in toks) {
-                val p = it.q.indexOf(t)
-                if (p < 0) { ok = false; break }
-                score += if (p == 0) 6 else if (it.q[p - 1] == ' ') 4 else 1
+                var best = 0
+                for (form in listOf(t) + alts[t].orEmpty()) {
+                    val p = it.q.indexOf(form)
+                    if (p >= 0) best = maxOf(best, if (p == 0) 6 else if (it.q[p - 1] == ' ') 4 else 1)
+                }
+                if (best == 0) { ok = false; break }
+                score += best
             }
             if (!ok) continue
             val tn = norm(it.m.t)

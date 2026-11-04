@@ -68,6 +68,9 @@ object Lang {
 /** A translated string (English text stays as it is when there's no translation) */
 fun tr(s: String): String = Lang.t(s)
 
+/** A translated string with values in it: trf("Page %d", 3) */
+fun trf(s: String, vararg args: Any?): String = runCatching { String.format(java.util.Locale.ENGLISH, tr(s), *args) }.getOrDefault(s)
+
 /** Right-to-left for Arabic, and rebuilds the screens when the language changes */
 @Composable
 fun LangProvider(content: @Composable () -> Unit) {

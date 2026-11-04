@@ -41,6 +41,28 @@ enum AppLanguage {
 /// A translated string, for text that is built in code (SwiftUI Text("literal") is translated by itself)
 func L(_ s: String) -> String { AppLanguage.bundle.localizedString(forKey: s, value: s, table: nil) }
 
+// SwiftUI only translates string literals. These overloads win over its generic String versions, so text that comes
+// from a variable (page content, link titles, subject names) is looked up too; text without a translation stays as it is.
+extension Text {
+    @_disfavoredOverload init(_ s: String) { self.init(verbatim: L(s)) }
+}
+
+extension Label where Title == Text, Icon == Image {
+    @_disfavoredOverload init(_ s: String, systemImage: String) {
+        self.init { Text(verbatim: L(s)) } icon: { Image(systemName: systemImage) }
+    }
+}
+
+extension Section where Parent == Text, Content: View, Footer == EmptyView {
+    @_disfavoredOverload init(_ s: String, @ViewBuilder content: () -> Content) {
+        self.init(content: content) { Text(verbatim: L(s)) }
+    }
+}
+
+extension View {
+    @_disfavoredOverload func navigationTitle(_ s: String) -> some View { navigationTitle(Text(verbatim: L(s))) }
+}
+
 struct LanguageScreen: View {
     @AppStorage(AppLanguage.key) private var choice = "system"
     @AppStorage("ab.theme.rev") private var themeRev = 0

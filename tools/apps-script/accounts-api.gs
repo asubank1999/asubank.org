@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 2;
+var SCHEMA = 3;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -41,7 +41,19 @@ var BADGES = {
   tutor: { name: 'Tutor', emoji: '🎓' },
   verified: { name: 'Verified', emoji: '✅' },
   vip: { name: 'VIP', emoji: '⭐' },
-  developer: { name: 'Developer', emoji: '💻' }
+  developer: { name: 'Developer', emoji: '💻' },
+  team: { name: 'ASU Bank team', emoji: '🏦' },
+  mentor: { name: 'Mentor', emoji: '🧭' },
+  ambassador: { name: 'Ambassador', emoji: '📣' },
+  top_student: { name: 'Top student', emoji: '🏅' },
+  class_rep: { name: 'Class rep', emoji: '🙋' },
+  translator: { name: 'Translator', emoji: '🌐' },
+  designer: { name: 'Designer', emoji: '🎨' },
+  researcher: { name: 'Researcher', emoji: '🔬' },
+  organizer: { name: 'Organizer', emoji: '🎉' },
+  early_supporter: { name: 'Early supporter', emoji: '🌱' },
+  sponsor: { name: 'Sponsor', emoji: '💎' },
+  legend: { name: 'Legend', emoji: '🔥' }
 };
 var SESSION_DAYS = 120;
 var MAX_TEXT = 1000;
@@ -50,7 +62,7 @@ var ONLINE_MS = 3 * 60000;
 
 var SHEETS = {
   Users: ['id', 'username', 'email', 'uniId', 'displayName', 'salt', 'hash', 'role', 'banned', 'banReason', 'created', 'lastSeen', 'color', 'mustReset',
-          'avatar', 'phone', 'showPhone', 'bio', 'badges'],
+          'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college'],
   Sessions: ['token', 'userId', 'created', 'lastUsed', 'platform'],
   Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited'],
   Rooms: ['id', 'name', 'emoji', 'about', 'adminOnly', 'locked', 'archived', 'pinned', 'order', 'created'],
@@ -187,7 +199,7 @@ function badgeList(u) {
 /** What everyone may see about a user; `full` adds the private fields (the user themself and admins) */
 function publicUser(u, full) {
   var o = { id: u.id, username: u.username, displayName: u.displayName || u.username, role: u.role || 'user', color: u.color || '#8C1D40',
-            avatar: u.avatar || '', bio: u.bio || '', badges: badgeList(u), lastSeen: lastActive(u) };
+            avatar: u.avatar || '', bio: u.bio || '', major: u.major || '', college: u.college || '', badges: badgeList(u), lastSeen: lastActive(u) };
   o.online = !!o.lastSeen && (new Date() - new Date(o.lastSeen)) < ONLINE_MS;
   if (truthy(u.showPhone)) o.phone = u.phone ? String(u.phone) : '';
   if (full) {
@@ -521,10 +533,12 @@ var ACTIONS = {
       if (u.role !== 'admin' && isAdminIdentity({ email: email, uniId: uniId })) fail('That email or ID is reserved.');
       var ch = { displayName: String(b.displayName || u.displayName).trim().slice(0, 40) || u.username, email: email, uniId: uniId ? "'" + uniId : '',
                  phone: phone ? "'" + phone : '', showPhone: b.showPhone === undefined ? truthy(u.showPhone) : !!b.showPhone,
-                 bio: b.bio === undefined ? (u.bio || '') : String(b.bio).trim().slice(0, 160) };
+                 bio: b.bio === undefined ? (u.bio || '') : String(b.bio).trim().slice(0, 160),
+                 major: b.major === undefined ? (u.major || '') : String(b.major).trim().slice(0, 60),
+                 college: b.college === undefined ? (u.college || '') : String(b.college).trim().slice(0, 60) };
       update('Users', u._row, ch);
       forgetUser(u.id);
-      u.displayName = ch.displayName; u.email = email; u.uniId = uniId; u.phone = phone; u.showPhone = ch.showPhone; u.bio = ch.bio;
+      u.displayName = ch.displayName; u.email = email; u.uniId = uniId; u.phone = phone; u.showPhone = ch.showPhone; u.bio = ch.bio; u.major = ch.major; u.college = ch.college;
       return { ok: true, user: publicUser(u, true) };
     });
   },
@@ -675,6 +689,23 @@ var ACTIONS = {
   },
 
   /** What the 1.5 apps check in the background for notifications */
+  /** Translates a search between Arabic and English (no sign-in; answers are cached for a day) */
+  translate: function (b) {
+    var text = String(b.text || '').trim().slice(0, 80);
+    if (text.length < 2) return { ok: true, text: '' };
+    var to = /[\u0600-\u06FF]/.test(text) ? 'en' : 'ar';
+    var c = CacheService.getScriptCache();
+    var key = 'tr:' + Utilities.base64EncodeWebSafe(text.toLowerCase()).slice(0, 200);
+    var hit = c.get(key);
+    if (hit !== null) return { ok: true, text: hit, to: to };
+    if (tooMany('translate', 600)) return { ok: true, text: '', to: to };
+    var out = '';
+    try { out = LanguageApp.translate(text, '', to); } catch (err) { return { ok: true, text: '', to: to }; }
+    if (norm(out) === norm(text)) out = '';
+    c.put(key, out, 86400);
+    return { ok: true, text: out, to: to };
+  },
+
   latest: function (b) {
     auth(b);
     return { ok: true, latest: latestMeta() };

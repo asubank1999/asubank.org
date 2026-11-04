@@ -186,7 +186,7 @@ fun HomeScreen() {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("ASU Bank", color = Color.White, fontSize = 34.sp, fontWeight = FontWeight.Bold)
                     Text(
-                        "Summaries, past papers and test banks for ASU students." + if (items.isNotEmpty()) " ${items.size} materials in ${subjects.size} subjects." else "",
+                        "Summaries, past papers and test banks for ASU students." + if (items.isNotEmpty()) " " + trf("%d materials in %d subjects.", items.size, subjects.size) else "",
                         color = Color.White.copy(alpha = 0.85f), style = MaterialTheme.typography.bodyMedium,
                     )
                     OutlinedTextField(
@@ -239,7 +239,7 @@ fun HomeScreen() {
         item { SectionTitle("Subjects", "المواد") }
         item {
             Group {
-                ListRow("All subjects", "${subjects.size} subjects by faculty", icon = Icons.Filled.GridView) { nav.openPage("/banks/subjects", "All subjects") }
+                ListRow("All subjects", trf("%d subjects by faculty", subjects.size), icon = Icons.Filled.GridView) { nav.openPage("/banks/subjects", "All subjects") }
             }
         }
         item { SectionTitle("New here?", "طالب جديد") }
@@ -267,7 +267,7 @@ fun SavedScreen(back: Boolean = false) {
             if (saved.isEmpty() && recent.isEmpty()) {
                 item { EmptyState(Icons.Filled.StarBorder, "Nothing saved yet", "Tap the star on any material to keep it here, even offline.") }
             }
-            groupItems(saved, header = "Saved · ${saved.size}", key = { "s" + it.u }) { s ->
+            groupItems(saved, header = trf("Saved · %d", saved.size), key = { "s" + it.u }) { s ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(Modifier.weight(1f)) { MaterialRow(s.material) }
                     IconButton(onClick = { Saved.remove(s.u) }) { Icon(Icons.Filled.Delete, "Remove", tint = MaterialTheme.colorScheme.onSurfaceVariant) }
@@ -373,7 +373,7 @@ fun MoreScreen() {
                     ListRow("Version", icon = Icons.Filled.Info, trailing = "${AppConfig.current} (${BuildConfig.VERSION_CODE})")
                     Divider()
                     ListRow(
-                        if (AppConfig.updateAvailable) "Update to ${latest ?: ""}" else "Check for updates",
+                        if (AppConfig.updateAvailable) trf("Update to %s", latest ?: "") else "Check for updates",
                         icon = Icons.Filled.SystemUpdate,
                         trailing = if (checking) "Checking…" else if (latest != null && !AppConfig.updateAvailable) "Up to date" else null,
                     ) {
@@ -390,7 +390,7 @@ fun MoreScreen() {
                 }
             }
             item {
-                Group(footer = "ASU Bank ${AppConfig.current} · ${items.size} materials in ${subjects.size} subjects.\nPeer-verified study materials by Applied Science University students, for ASU students.") {
+                Group(footer = "ASU Bank ${AppConfig.current} · " + trf("%d materials in %d subjects.", items.size, subjects.size) + "\n" + tr("Peer-verified study materials by Applied Science University students, for ASU students.")) {
                     ListRow("Open asubank.org in the browser", icon = Icons.Filled.OpenInBrowser) { openExternal(ctx, AB.SITE) }
                     Divider()
                     ListRow("Share ASU Bank", icon = Icons.Filled.Share) {

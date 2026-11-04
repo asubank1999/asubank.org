@@ -140,7 +140,7 @@ fun NativePage(path: String, page: SitePage, title: String) {
                 Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     head.eyebrow?.let { Text(it.uppercase(), style = MaterialTheme.typography.labelMedium, color = accent, fontWeight = FontWeight.Bold) }
                     head.sub?.let { Text(it, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant) }
-                    head.ar?.let { Text(it, style = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Rtl), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Right) }
+                    head.ar?.takeIf { !Lang.rtl }?.let { Text(it, style = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Rtl), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Right) }
                 }
             }
             if (page.b.any { b -> b.faq?.any { it.qa != null } == true }) item {
@@ -169,9 +169,10 @@ fun NativePage(path: String, page: SitePage, title: String) {
 
 @Composable
 fun BiText(s: String, style: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.bodyLarge, color: Color = MaterialTheme.colorScheme.onSurface, modifier: Modifier = Modifier) {
-    val rtl = isArabic(s)
+    val shown = tr(s)
+    val rtl = isArabic(shown)
     Text(
-        s, style = style.copy(textDirection = if (rtl) TextDirection.Rtl else TextDirection.Ltr), color = color,
+        shown, style = style.copy(textDirection = if (rtl) TextDirection.Rtl else TextDirection.Ltr), color = color,
         textAlign = if (rtl) TextAlign.Right else TextAlign.Left, modifier = modifier.fillMaxWidth(),
     )
 }
@@ -293,7 +294,7 @@ fun CalendarScreen(title: String, path: String, events: List<CalEvent>) {
                 }
             }
             if (shown.isEmpty()) item {
-                EmptyState(Icons.Filled.CalendarMonth, "No events", if (q.isEmpty()) "Turn on “Show past events” to see the whole year." else "Nothing matches “$q”.")
+                EmptyState(Icons.Filled.CalendarMonth, "No events", if (q.isEmpty()) "Turn on “Show past events” to see the whole year." else trf("Nothing matches “%s”.", q))
             }
             item { Spacer(Modifier.height(24.dp)) }
         }
@@ -319,7 +320,7 @@ private fun CalRow(date: LocalDate, e: CalEvent, today: LocalDate) {
                 Text(if (isToday) "Today" else countdown(date, today), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold,
                     color = if (past) MaterialTheme.colorScheme.onSurfaceVariant else accent)
                 Spacer(Modifier.weight(1f))
-                Text(listOfNotNull(e.day.ifEmpty { null }, e.w?.takeIf { it > 0 }?.let { "Week $it" }).joinToString(" · "),
+                Text(listOfNotNull(e.day.ifEmpty { null }, e.w?.takeIf { it > 0 }?.let { trf("Week %d", it) }).joinToString(" · "),
                     style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
@@ -331,9 +332,9 @@ private fun countdown(d: LocalDate, today: LocalDate): String {
     return when {
         days == 0L -> "Today"
         days == 1L -> "Tomorrow"
-        days > 1 -> "In $days days"
+        days > 1 -> trf("In %d days", days)
         days == -1L -> "Yesterday"
-        else -> "${-days} days ago"
+        else -> trf("%d days ago", -days)
     }
 }
 
@@ -416,7 +417,7 @@ fun LatestScreen() {
         AlertDialog(
             onDismissRequest = { deleting = null },
             title = { Text("Delete this upload?") },
-            text = { Text("“${r.m.t}” moves to the Drive trash and disappears from ASU Bank.") },
+            text = { Text(trf("“%s” moves to the Drive trash and disappears from ASU Bank.", r.m.t)) },
             confirmButton = {
                 TextButton(onClick = {
                     deleting = null
@@ -456,7 +457,7 @@ fun SubjectsDirectory() {
                     Group(header = cat) {
                         list.forEachIndexed { i, s ->
                             if (i > 0) Divider()
-                            ListRow(s.t, listOfNotNull(s.ar, s.n?.let { "$it materials" }).joinToString(" · "), emoji = s.e ?: "📚") { nav.openPage(s.p, s.t) }
+                            ListRow(s.t, listOfNotNull(s.ar.takeIf { Lang.code != "ar" }, s.n?.let { trf("%d materials", it) }).joinToString(" · "), emoji = s.e ?: "📚") { nav.openPage(s.p, s.t) }
                         }
                     }
                 }
@@ -481,7 +482,7 @@ fun SubjectScreen(s: Subject) {
             s.ar?.let { ar -> item { Text(ar, Modifier.fillMaxWidth().padding(horizontal = 20.dp), textAlign = TextAlign.Right, color = MaterialTheme.colorScheme.onSurfaceVariant) } }
             item {
                 OutlinedTextField(
-                    value = q, onValueChange = { q = it }, singleLine = true, placeholder = { Text("Search in ${s.t}") },
+                    value = q, onValueChange = { q = it }, singleLine = true, placeholder = { Text(trf("Search in %s", tr(s.t))) },
                     leadingIcon = { Icon(Icons.Filled.Search, null) }, shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
                 )
@@ -493,7 +494,7 @@ fun SubjectScreen(s: Subject) {
                     }
                 }
             }
-            groupItems(shown, header = "${shown.size} materials") { MaterialRow(it.m, it.kind, showSource = false) }
+            groupItems(shown, header = trf("%d materials", shown.size)) { MaterialRow(it.m, it.kind, showSource = false) }
             if (shown.isEmpty()) item { EmptyState(Icons.Filled.FindInPage, "No materials", "Nothing matches these filters.") }
             item { Spacer(Modifier.height(24.dp)) }
         }

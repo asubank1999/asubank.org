@@ -136,6 +136,8 @@ struct SitePageView: View {
     var body: some View {
         if path == "/banks/subjects" {
             SubjectsDirectory()
+        } else if path == "/legal/uni_tos", AppLanguage.code == "ar", let page = pages.page("/legal/uni_tos_ar") {
+            NativePageScreen(path: "/legal/uni_tos_ar", page: page)
         } else if path.hasPrefix("/banks/"), let s = library.subject(forPath: path) {
             SubjectView(subject: s)
         } else if SiteRouter.latestPaths.contains(path) {
@@ -230,12 +232,13 @@ struct BiText: View {
     var color: Color = .primary
     var selectable = false
     var body: some View {
-        let ar = isArabic(text)
-        let t = Text(text)
+        let shown = L(text)
+        let ar = isArabic(shown)
+        let t = Text(verbatim: shown)
             .font(font)
             .foregroundStyle(color)
-            .multilineTextAlignment(ar ? .trailing : .leading)
-            .frame(maxWidth: .infinity, alignment: ar ? .trailing : .leading)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .environment(\.layoutDirection, ar ? .rightToLeft : .leftToRight)
         if selectable { t.textSelection(.enabled) } else { t }
     }
@@ -254,7 +257,7 @@ struct NativePageScreen: View {
     let page: SitePage
     @EnvironmentObject private var pages: SitePages
     @Environment(\.openURL) private var openURL
-    @State private var arabic = false
+    @State private var arabic = AppLanguage.code == "ar"
 
     private var sections: [PageSection] {
         var out: [PageSection] = [PageSection(id: 0, blocks: [])]
@@ -288,7 +291,7 @@ struct NativePageScreen: View {
                         HStack {
                             Text([sec.emoji, t].compactMap { $0 }.joined(separator: " "))
                             Spacer()
-                            if let ar = sec.ar { Text(ar).textCase(nil) }
+                            if let ar = sec.ar, AppLanguage.code != "ar" { Text(verbatim: ar).textCase(nil) }
                         }
                     }
                 }
@@ -315,7 +318,7 @@ struct NativePageScreen: View {
             VStack(alignment: .leading, spacing: 6) {
                 if let e = h.eyebrow { Text(e.uppercased()).font(.caption.weight(.bold)).foregroundStyle(Color.abAccent) }
                 if let s = h.sub { BiText(text: s, font: .body, color: .secondary) }
-                if let a = h.ar { BiText(text: a, font: .subheadline, color: .secondary) }
+                if let a = h.ar, AppLanguage.code != "ar" || h.sub == nil { BiText(text: a, font: .subheadline, color: .secondary) }
             }
             .padding(.vertical, 4)
         } else if let p = b.p {
@@ -418,7 +421,7 @@ struct SubjectsDirectory: View {
                                 Text(s.e ?? "📁").font(.title3).frame(width: 30)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(s.t)
-                                    Text([s.ar, s.n.map { "\($0) items" }].compactMap { $0 }.joined(separator: " · "))
+                                    Text([AppLanguage.code == "ar" ? nil : s.ar, s.n.map { String(format: L("%d items"), $0) }].compactMap { $0 }.joined(separator: " · "))
                                         .font(.footnote).foregroundStyle(.secondary)
                                 }
                             }

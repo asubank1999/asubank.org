@@ -68,7 +68,11 @@
         return el;
     }
     var BADGES = { founder: ['👑', 'Founder'], moderator: ['🛡️', 'Moderator'], support: ['🛟', 'Support'], helper: ['🤝', 'Helper'], donor: ['💛', 'Donor'],
-        contributor: ['📚', 'Contributor'], tutor: ['🎓', 'Tutor'], verified: ['✅', 'Verified'], vip: ['⭐', 'VIP'], developer: ['💻', 'Developer'] };
+        contributor: ['📚', 'Contributor'], tutor: ['🎓', 'Tutor'], verified: ['✅', 'Verified'], vip: ['⭐', 'VIP'], developer: ['💻', 'Developer'],
+        team: ['🏦', 'ASU Bank team'], mentor: ['🧭', 'Mentor'], ambassador: ['📣', 'Ambassador'], top_student: ['🏅', 'Top student'], class_rep: ['🙋', 'Class rep'],
+        translator: ['🌐', 'Translator'], designer: ['🎨', 'Designer'], researcher: ['🔬', 'Researcher'], organizer: ['🎉', 'Organizer'],
+        early_supporter: ['🌱', 'Early supporter'], sponsor: ['💎', 'Sponsor'], legend: ['🔥', 'Legend'] };
+    var COLLEGES = ['Information Technology', 'Engineering', 'Pharmacy', 'Dentistry', 'Nursing', 'Allied Medical Sciences', 'Business', 'Law', 'Arts & Sciences', 'Arts & Design', 'Other'];
     function badgeRow(list, compact) {
         list = (list || []).filter(function (b) { return BADGES[b]; });
         if (!list.length) return null;
@@ -105,6 +109,7 @@
             body.appendChild(h('p', { class: 'acc-muted', text: '@' + u.username + (u.role === 'admin' ? ' · Admin' : '') + ' · ' + lastSeenText(u.lastSeen, u.online) }));
             var b = badgeRow(u.badges); if (b) body.appendChild(b);
             if (u.bio) body.appendChild(h('p', { class: 'acc-bio', text: u.bio }));
+            if (u.college || u.major) body.appendChild(h('p', { class: 'acc-muted', text: '🎓 ' + [u.college, u.major].filter(Boolean).join(' · ') }));
             if (u.phone) {
                 var digits = u.phone.replace(/[^0-9+]/g, '');
                 body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
@@ -228,6 +233,9 @@
                     call('setAvatar', { remove: true }).then(function (r) { adopt(r); accountView(); }).catch(function (e) { showErr(err, e); });
                 } }) : null)));
         var dn = field('Display name', 'text', u.displayName), em = field('University email (optional)', 'email', u.email), uid = field('University ID (optional)', 'text', u.uniId);
+        var major = field('Your major', 'text', u.major);
+        var college = h('select', null, h('option', { value: '', text: 'Not set' }), COLLEGES.map(function (c) { return h('option', { value: c, text: c }); }));
+        college.value = u.college || '';
         var ph = field('Phone number (optional)', 'tel', u.phone, 'Like +962 79 123 4567');
         var showPh = h('input', { type: 'checkbox' }); showPh.checked = !!u.showPhone;
         var bio = h('textarea', { rows: 2, maxlength: 160, placeholder: 'A line about you: major, year, what you can help with' }); bio.value = u.bio || '';
@@ -235,10 +243,10 @@
         root.appendChild(h('form', { class: 'acc-card', onsubmit: function (ev) {
             ev.preventDefault(); busy(save, true, 'Save profile');
             call('updateProfile', { displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(),
-                phone: ph.input.value.trim(), showPhone: showPh.checked, bio: bio.value.trim() })
+                phone: ph.input.value.trim(), showPhone: showPh.checked, bio: bio.value.trim(), major: major.input.value.trim(), college: college.value })
                 .then(function (r) { adopt(r); showErr(err, null); save.textContent = 'Saved ✓'; save.disabled = false; })
                 .catch(function (e) { showErr(err, e); busy(save, false, 'Save profile'); });
-        } }, h('h2', { text: 'Profile' }), dn.el, h('label', { class: 'acc-field' }, h('span', { text: 'About you' }), bio), em.el, uid.el, ph.el,
+        } }, h('h2', { text: 'Profile' }), dn.el, h('label', { class: 'acc-field' }, h('span', { text: 'About you' }), bio), h('label', { class: 'acc-field' }, h('span', { text: 'College' }), college), major.el, em.el, uid.el, ph.el,
             h('label', { class: 'acc-check' }, showPh, ' Show my phone number on my profile'), save));
 
         var old = field('Current password', 'password'), nw = field('New password', 'password', '', 'At least 6 characters');
@@ -573,6 +581,7 @@
                 h('p', { class: 'acc-small' }, 'Phone: ' + (u.phone || '–') + (u.phone ? (u.showPhone ? ' (shown on profile)' : ' (private)') : '')),
                 h('p', { class: 'acc-small' }, 'Joined ' + fmtDate(u.created) + ' · ' + (u.online ? 'Online now' : 'Last seen ' + fmtDate(u.lastSeen))),
                 u.bio ? h('p', { class: 'acc-small', text: 'About: ' + u.bio }) : null,
+                (u.college || u.major) ? h('p', { class: 'acc-small', text: 'Studies: ' + [u.college, u.major].filter(Boolean).join(' · ') }) : null,
                 u.banReason ? h('p', { class: 'acc-small', text: 'Ban reason: ' + u.banReason }) : null,
                 h('p', { class: 'acc-small' }, h('b', { text: 'Badges' })),
                 h('div', { class: 'acc-badge-pick' }, Object.keys(BADGES).map(function (k) {

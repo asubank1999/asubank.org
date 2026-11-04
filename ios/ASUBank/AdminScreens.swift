@@ -202,6 +202,8 @@ struct AdminUserScreen: View {
                 info("University ID", user.uniId)
                 info("Phone", user.phone)
                 if let b = user.bio, !b.isEmpty { info("About", b) }
+                if let c = user.college, !c.isEmpty { info("College", L(c)) }
+                if let m = user.major, !m.isEmpty { info("Major", m) }
                 info("Joined", user.created.map(short))
                 info("Last seen", user.online == true ? Optional(L("Online now")) : user.lastSeen.map(short))
                 if banned, let r = user.banReason, !r.isEmpty { info("Ban reason", r) }

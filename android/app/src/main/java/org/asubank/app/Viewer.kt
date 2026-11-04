@@ -175,7 +175,7 @@ object Opener {
         if (ext in setOf("jpg", "jpeg", "png", "webp", "gif", "heic", "bmp")) return VState.Img(f)
         if (ext in setOf("doc", "docx", "ppt", "pptx", "xls", "xlsx", "txt", "rtf", "odt") && drivePreview != null) return VState.Web(drivePreview)
         val why = when (ext) {
-            "zip", "rar", "7z" -> "This is a compressed ${ext.uppercase()} file. Open it with a files app."
+            "zip", "rar", "7z" -> trf("This is a compressed %s file. Open it with a files app.", ext.uppercase())
             "doc", "docx", "ppt", "pptx", "xls", "xlsx" -> "Open it with Word, PowerPoint, Excel or Google Docs."
             else -> "Open it with another app on your phone."
         }
@@ -284,7 +284,7 @@ fun MaterialScreen(m: Material) {
                     Spacer(Modifier.height(16.dp))
                     if (s.p > 0) LinearProgressIndicator(progress = { s.p }, modifier = Modifier.width(220.dp)) else LinearProgressIndicator(Modifier.width(220.dp))
                     Spacer(Modifier.height(8.dp))
-                    Text(if (s.p > 0) "Downloading ${(s.p * 100).toInt()}%" else "Downloading…", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(if (s.p > 0) trf("Downloading %d%%", (s.p * 100).toInt()) else "Downloading…", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 is VState.Folder -> DriveFolderList(s.id, m.t)
                 is VState.Pdf -> PdfViewer(s.file)
@@ -308,7 +308,7 @@ fun MaterialScreen(m: Material) {
                         Spacer(Modifier.height(12.dp))
                         Text("This material isn't available", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
                         Spacer(Modifier.height(8.dp))
-                        Text("The owner removed it or made it private (${s.why}). Ask for it and we'll upload it again.", textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(trf("The owner removed it or made it private (%s). Ask for it and we'll upload it again.", s.why), textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Spacer(Modifier.height(20.dp))
                         Button(onClick = { nav.openPage("/requests/student_request_portal", "Request a material") }) { Text("Request this material") }
                     }
@@ -508,7 +508,7 @@ fun DriveFolderList(id: String, title: String) {
                 }
                 item {
                     val shown = all.filter { nq.isEmpty() || AB.norm(it.name).contains(nq) }
-                    Group(header = "${all.size} item${if (all.size == 1) "" else "s"}") {
+                    Group(header = trf("%d items", all.size)) {
                         shown.forEachIndexed { i, e ->
                             if (i > 0) Divider()
                             MaterialRow(Material(u = e.url, t = e.name, s = title), e.kind, meta = e.modified.ifEmpty { null }, showSource = false)

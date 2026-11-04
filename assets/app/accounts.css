@@ -13,7 +13,7 @@
 .acc-field { display: block; margin: 10px 0; }
 .acc-field span { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--ab-label-2,#5e5e66); }
 .acc-field small { display: block; font-size: 12px; color: var(--ab-label-3,#888); margin-top: 3px; }
-.acc-field input, .acc-card textarea, .acc-card input[type=search], .acc-card input[type=url], .acc-composer textarea {
+.acc-field input, .acc-field select, .acc-card textarea, .acc-card input[type=search], .acc-card input[type=url], .acc-composer textarea {
     width: 100%; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--ab-sep,#ddd);
     background: var(--ab-surface-2,#f2f2f7); color: var(--ab-label,#000); font: inherit; font-size: 16px;
 }

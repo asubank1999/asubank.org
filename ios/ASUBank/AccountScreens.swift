@@ -119,6 +119,12 @@ struct ProfileScreen: View {
             }
             if let u = user {
                 if let b = u.bio, !b.isEmpty { Section("About") { Text(b) } }
+                if u.major?.isEmpty == false || u.college?.isEmpty == false {
+                    Section("Studies") {
+                        if let c = u.college, !c.isEmpty { Label(c, systemImage: "building.columns") }
+                        if let m = u.major, !m.isEmpty { Label(m, systemImage: "graduationcap") }
+                    }
+                }
                 if let p = u.phone, !p.isEmpty {
                     Section("Phone") {
                         Button { if let url = URL(string: "tel:" + p.filter { $0.isNumber || $0 == "+" }) { UIApplication.shared.open(url) } } label: {
@@ -341,6 +347,8 @@ struct AccountScreen: View {
                     }
                     .padding(.vertical, 6)
                     if let b = u.bio, !b.isEmpty { Text(b).font(.subheadline).foregroundStyle(.secondary) }
+                    if let c = u.college, !c.isEmpty { Label(c, systemImage: "building.columns").font(.subheadline).foregroundStyle(.secondary) }
+                    if let m = u.major, !m.isEmpty { Label(m, systemImage: "graduationcap").font(.subheadline).foregroundStyle(.secondary) }
                     if let photoError { Text(photoError).font(.caption).foregroundStyle(.red) }
                 }
                 if u.mustReset == true {
@@ -431,6 +439,8 @@ private struct EditProfileSheet: View {
     @State private var phone = ""
     @State private var showPhone = false
     @State private var bio = ""
+    @State private var major = ""
+    @State private var college = ""
     @State private var busy = false
     @State private var error: String?
 
@@ -441,6 +451,13 @@ private struct EditProfileSheet: View {
                 Section {
                     TextField("A line about you (optional)", text: $bio)
                 } header: { Text("About") } footer: { Text("\(bio.count)/160") }
+                Section("Studies") {
+                    Picker("College", selection: $college) {
+                        Text("Not set").tag("")
+                        ForEach(ABColleges.all, id: \.self) { Text($0).tag($0) }
+                    }
+                    TextField("Your major", text: $major)
+                }
                 Section {
                     TextField("Phone number", text: $phone).keyboardType(.phonePad).textContentType(.telephoneNumber)
                     Toggle("Show my number on my profile", isOn: $showPhone)
@@ -460,7 +477,7 @@ private struct EditProfileSheet: View {
                             busy = true
                             do {
                                 try await account.updateProfile(displayName: name, email: email, uniId: uniId, phone: phone, showPhone: showPhone,
-                                                                bio: String(bio.prefix(160)))
+                                                                bio: String(bio.prefix(160)), major: String(major.prefix(60)), college: college)
                                 dismiss()
                             } catch { self.error = error.localizedDescription }
                             busy = false
@@ -472,6 +489,7 @@ private struct EditProfileSheet: View {
                 let u = account.user
                 name = u?.displayName ?? ""; email = u?.email ?? ""; uniId = u?.uniId ?? ""
                 phone = u?.phone ?? ""; showPhone = u?.showPhone == true; bio = u?.bio ?? ""
+                major = u?.major ?? ""; college = u?.college ?? ""
             }
         }
     }

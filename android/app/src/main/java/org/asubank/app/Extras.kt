@@ -146,7 +146,7 @@ object Halls {
         return Decoded(d.substring(0, b).trimStart('0').ifEmpty { "0" }, d.substring(0, b), d[b].digitToInt(), d.substring(b + 1))
     }
 
-    fun floorName(f: Int) = when (f) { 0 -> "Ground floor"; 1 -> "1st floor"; 2 -> "2nd floor"; 3 -> "3rd floor"; else -> "${f}th floor" }
+    fun floorName(f: Int) = when (f) { 0 -> "Ground floor"; 1 -> "1st floor"; 2 -> "2nd floor"; 3 -> "3rd floor"; else -> trf("Floor %d", f) }
     fun floorAr(f: Int) = listOf("الطابق الأرضي", "الطابق الأول", "الطابق الثاني", "الطابق الثالث", "الطابق الرابع", "الطابق الخامس", "الطابق السادس", "الطابق السابع", "الطابق الثامن", "الطابق التاسع").getOrElse(f) { "الطابق $f" }
 }
 
@@ -240,9 +240,9 @@ private fun HallResult(d: Halls.Decoded) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Digit(d.buildingDigits, BuildingBlue); Spacer(Modifier.width(4.dp)); Digit(d.floor.toString(), FloorOrange); Spacer(Modifier.width(4.dp)); Digit(d.room, RoomGreen)
             }
-            ResultRow(BuildingBlue, Icons.Filled.Domain, d.place?.name ?: "Unknown building ${d.building}", d.place?.ar ?: "Not in the list of buildings")
+            ResultRow(BuildingBlue, Icons.Filled.Domain, d.place?.name ?: trf("Unknown building %s", d.building), d.place?.ar ?: "Not in the list of buildings")
             ResultRow(FloorOrange, Icons.Filled.Layers, Halls.floorName(d.floor), Halls.floorAr(d.floor))
-            ResultRow(RoomGreen, Icons.Filled.MeetingRoom, "Room ${d.room}", "القاعة ${d.room}")
+            ResultRow(RoomGreen, Icons.Filled.MeetingRoom, trf("Room %s", d.room.toString()), if (Lang.code == "ar") "" else "القاعة ${d.room}")
         }
     }
 }
@@ -490,15 +490,15 @@ fun TeacherRatingsScreen() {
                         }
                         item {
                             Text(
-                                "${teachers.size} TEACHERS RATED", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                trf("%d TEACHERS RATED", teachers.size), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(start = 32.dp, top = 14.dp, bottom = 6.dp),
                             )
                         }
                         if (shown.isEmpty()) item {
                             Column(Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text(if (query.isEmpty()) "No ratings yet" else "No teacher named “$query” yet", style = MaterialTheme.typography.titleMedium)
+                                Text(if (query.isEmpty()) "No ratings yet" else trf("No teacher named “%s” yet", query), style = MaterialTheme.typography.titleMedium)
                                 Text("Be the first to rate them.", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                Button(onClick = { rating = query }) { Text(if (query.isEmpty()) "Rate a teacher" else "Rate $query") }
+                                Button(onClick = { rating = query }) { Text(if (query.isEmpty()) "Rate a teacher" else trf("Rate %s", query)) }
                             }
                         }
                         items(shown, key = { it.name.lowercase() }) { t ->
@@ -543,7 +543,7 @@ private fun TeacherRow(t: Teacher, modifier: Modifier, onClick: () -> Unit) {
                     trackColor = MaterialTheme.colorScheme.surfaceVariant, drawStopIndicator = {}, gapSize = 0.dp,
                     modifier = Modifier.fillMaxWidth().height(5.dp),
                 )
-                Text("${t.count} vote${if (t.count == 1) "" else "s"}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(trf("%d votes", t.count), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Icon(Icons.Filled.ChevronRight, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
@@ -618,7 +618,7 @@ private fun RateSheet(start: String, known: List<Teacher>, close: () -> Unit) {
             }
         }
         if (current != null && current.count > 0) {
-            Text("Current: ${String.format(java.util.Locale.US, "%.1f", current.average)} / 10 · ${current.count} vote${if (current.count == 1) "" else "s"}",
+            Text("${tr("Current:")} ${String.format(java.util.Locale.US, "%.1f", current.average)} / 10 · ${trf("%d votes", current.count)}",
                 color = Ratings.color(current.average), fontWeight = FontWeight.SemiBold)
         }
         val tone by animateColorAsState(if (score == 0) MaterialTheme.colorScheme.onSurfaceVariant else Ratings.color(score.toDouble()), label = "tone")

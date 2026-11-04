@@ -55,6 +55,8 @@ struct ABUser: Codable, Identifiable, Hashable {
     var phone: String?
     var showPhone: Bool?
     var bio: String?
+    var major: String?
+    var college: String?
     var badges: [String]?
     var online: Bool?
 
@@ -67,10 +69,19 @@ enum ABBadges {
     static let all: [(id: String, name: String, emoji: String)] = [
         ("founder", "Founder", "👑"), ("moderator", "Moderator", "🛡️"), ("support", "Support", "🛟"), ("helper", "Helper", "🤝"),
         ("donor", "Donor", "💛"), ("contributor", "Contributor", "📚"), ("tutor", "Tutor", "🎓"), ("verified", "Verified", "✅"),
-        ("vip", "VIP", "⭐"), ("developer", "Developer", "💻"),
+        ("vip", "VIP", "⭐"), ("developer", "Developer", "💻"), ("team", "ASU Bank team", "🏦"), ("mentor", "Mentor", "🧭"),
+        ("ambassador", "Ambassador", "📣"), ("top_student", "Top student", "🏅"), ("class_rep", "Class rep", "🙋"),
+        ("translator", "Translator", "🌐"), ("designer", "Designer", "🎨"), ("researcher", "Researcher", "🔬"),
+        ("organizer", "Organizer", "🎉"), ("early_supporter", "Early supporter", "🌱"), ("sponsor", "Sponsor", "💎"), ("legend", "Legend", "🔥"),
     ]
     static func emoji(_ id: String) -> String { all.first { $0.id == id }?.emoji ?? "" }
     static func name(_ id: String) -> String { all.first { $0.id == id }.map { L($0.name) } ?? id }
+}
+
+/// The colleges a student can pick on their profile
+enum ABColleges {
+    static let all = ["Information Technology", "Engineering", "Pharmacy", "Dentistry", "Nursing", "Allied Medical Sciences", "Business", "Law",
+                      "Arts & Sciences", "Arts & Design", "Other"]
 }
 
 /// What chat screens know about the people in a room
@@ -256,9 +267,9 @@ final class AccountStore: ObservableObject {
         adopt(r)
     }
 
-    func updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Bool, bio: String) async throws {
+    func updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Bool, bio: String, major: String, college: String) async throws {
         adopt(try await call("updateProfile", ["displayName": displayName, "email": email, "uniId": uniId,
-                                               "phone": phone, "showPhone": showPhone, "bio": bio]))
+                                               "phone": phone, "showPhone": showPhone, "bio": bio, "major": major, "college": college]))
     }
 
     /// Uploads a profile photo (shrunk to 256 px JPEG first), or removes it with nil

@@ -204,7 +204,7 @@ private struct TeacherRow: View {
                     }
                 }
                 .frame(height: 5)
-                Text("\(t.count) vote\(t.count == 1 ? "" : "s")").font(.caption).foregroundStyle(.secondary)
+                Text(String(format: L("%d votes"), t.count)).font(.caption).foregroundStyle(.secondary)
             }
             Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
         }
@@ -312,7 +312,7 @@ private struct RateSheet: View {
                         HStack {
                             Text(String(format: "%.1f / 10", c.average)).font(.title3.weight(.bold)).foregroundStyle(Ratings.color(c.average))
                             Spacer()
-                            Text("\(c.count) vote\(c.count == 1 ? "" : "s")").foregroundStyle(.secondary)
+                            Text(String(format: L("%d votes"), c.count)).foregroundStyle(.secondary)
                         }
                     }
                 }

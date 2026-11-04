@@ -208,18 +208,24 @@ enum AB {
     }
 
     /// Score items for a query; every word must match (same ranking as the website)
-    static func match(_ items: [IndexedMaterial], _ q: String, limit: Int = 200) -> [IndexedMaterial] {
+    /// alts: other spellings or languages of a word; skip: filler words titles need not contain
+    static func match(_ items: [IndexedMaterial], _ q: String, limit: Int = 200, alts: [String: [String]] = [:], skip: Set<String> = []) -> [IndexedMaterial] {
         let nq = norm(q)
         guard !nq.isEmpty else { return [] }
-        let toks = nq.split(separator: " ").map(String.init)
+        let toks = nq.split(separator: " ").map(String.init).filter { !skip.contains($0) }
         var out: [(Int, IndexedMaterial)] = []
         for it in items {
             var score = 0, ok = true
             for t in toks {
-                guard let r = it.q.range(of: t) else { ok = false; break }
-                if r.lowerBound == it.q.startIndex { score += 6 }
-                else if it.q[it.q.index(before: r.lowerBound)] == " " { score += 4 }
-                else { score += 1 }
+                var best = 0
+                for form in [t] + (alts[t] ?? []) {
+                    guard let r = it.q.range(of: form) else { continue }
+                    if r.lowerBound == it.q.startIndex { best = max(best, 6) }
+                    else if it.q[it.q.index(before: r.lowerBound)] == " " { best = max(best, 4) }
+                    else { best = max(best, 1) }
+                }
+                if best == 0 { ok = false; break }
+                score += best
             }
             if !ok { continue }
             let tn = norm(it.m.t)

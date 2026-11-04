@@ -102,7 +102,21 @@ fun SearchScreen() {
     var drive by remember { mutableStateOf<List<DriveResult>>(emptyList()) }
     var driveState by remember { mutableStateOf(0) } // 0 idle, 1 loading, 2 done, 3 failed
     var retry by remember { mutableStateOf(0) }
+    val subjects by Library.subjects.collectAsState()
+    var hints by remember { mutableStateOf(SearchHints()) }
+    var onlineAlt by remember { mutableStateOf<String?>(null) }
+    val otherLanguage = hints.translated ?: onlineAlt
+    val nav = LocalNav.current
 
+    LaunchedEffect(q, items) {
+        onlineAlt = null
+        delay(150)
+        val h = withContext(Dispatchers.Default) { SearchHelp.hints(q, items, subjects) }
+        hints = h
+        // words the list does not know go to the translator once typing pauses
+        val t = q.trim()
+        if (h.translated == null && t.length >= 3 && t.any { it.isLetter() }) { delay(800); onlineAlt = SearchHelp.translate(t) }
+    }
     LaunchedEffect(pending) { pending?.let { q = it; AppState.pendingSearch.value = null } }
     // Drive search waits for the student to stop typing
     LaunchedEffect(q, retry) {
@@ -114,8 +128,15 @@ fun SearchScreen() {
         if (r == null) driveState = 3 else { drive = r; driveState = 2 }
         Saved.searched(q)
     }
+    // Drive results for the translated search join the ones already shown
+    LaunchedEffect(otherLanguage, driveState) {
+        val alt = otherLanguage
+        if (alt != null && driveState == 2) DriveSearch.search(alt)?.let { r -> drive = (drive + r).distinctBy { it.m.u } }
+    }
     // the same link is often listed on several subject pages: show it once
-    val local = remember(q, items) { AB.match(items, q, 300).distinctBy { AB.driveId(it.m.u) ?: it.m.u } }
+    val local = remember(q, items, hints, otherLanguage) {
+        (AB.match(items, q, 300, hints.alts, hints.skip) + (otherLanguage?.let { AB.match(items, it, 120) } ?: emptyList())).distinctBy { AB.driveId(it.m.u) ?: it.m.u }
+    }
     val localShown = local.filter { kindMatches(it.kind, filter) }
     val localUrls = remember(local) { local.map { AB.driveId(it.m.u) ?: it.m.u }.toSet() }
     val driveShown = drive.filter { kindMatches(it.kind, filter) && (AB.driveId(it.m.u) ?: it.m.u) !in localUrls }.distinctBy { it.m.u }
@@ -150,9 +171,34 @@ fun SearchScreen() {
                         Divider()
                         ListRow("Clear recent searches", titleColor = MaterialTheme.colorScheme.error) { Saved.clearSearches() }
                     }
-                } else item { EmptyState(Icons.Filled.Search, "Search ASU Bank", "Find summaries, past papers and test banks in ${items.size} materials and the shared Google Drive.") }
+                } else item { EmptyState(Icons.Filled.Search, "Search ASU Bank", trf("Find summaries, past papers and test banks in %d materials and the shared Google Drive.", items.size)) }
+                item {
+                    Group(header = "What are you looking for?", footer = "Type the course name in Arabic or English, with mistakes too. We translate it, suggest the right word and search both languages.") {
+                        listOf("Past exams and finals" to "final", "Summaries" to "summary", "Slides" to "slides", "Test banks" to "test bank").forEachIndexed { i, (label, word) ->
+                            if (i > 0) Divider()
+                            ListRow(label, icon = Icons.Filled.Search) { q = word }
+                        }
+                        Divider()
+                        ListRow("Not sure of the name? Browse by college", icon = Icons.Filled.NoteAdd) { nav.openPage("/banks/subjects", "All subjects") }
+                    }
+                }
             } else {
-                groupItems(localShown.take(120), header = "Materials · ${localShown.size}", key = { "l" + it.m.u }) { MaterialRow(it.m, it.kind) }
+                hints.fixes.firstOrNull()?.let { fix -> item { HelpChips(tr("Did you mean?"), listOf(fix)) { q = it } } }
+                if (hints.completions.isNotEmpty()) item { HelpChips(tr("Suggestions"), hints.completions) { q = it } }
+                otherLanguage?.let { alt -> item { HelpChips(tr("Also searching for"), listOf(alt)) { q = it } } }
+                if (hints.subjects.isNotEmpty()) item {
+                    Group(header = "Subject") {
+                        hints.subjects.forEachIndexed { i, s ->
+                            if (i > 0) Divider()
+                            ListRow(s.t, emoji = s.e ?: "📚") { nav.openPage(s.p, s.t) }
+                        }
+                    }
+                }
+                item {
+                    val narrow = listOf("Final", "Midterm", "Quiz", "Summary", "Slides", "Test bank").filter { AB.norm(it) !in AB.norm(q) }
+                    HelpChips(tr("Narrow it down"), narrow) { w -> q = q.trim() + " " + w }
+                }
+                groupItems(localShown.take(120), header = trf("Materials · %d", localShown.size), key = { "l" + it.m.u }) { MaterialRow(it.m, it.kind) }
                 item {
                     Group(header = "Google Drive" + if (driveState == 2) " · ${driveShown.size}" else "") {
                         when (driveState) {
@@ -170,10 +216,15 @@ fun SearchScreen() {
                     }
                 }
                 if (localShown.isEmpty() && driveState == 2 && driveShown.isEmpty()) item {
-                    val nav = LocalNav.current
                     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                         EmptyState(Icons.Filled.SearchOff, "Nothing found", "Try fewer words, or ask for this material.")
-                        Button(onClick = { nav.openPage("/requests/student_request_portal", "Request a material") }) { Text("Request a material") }
+                        Group(header = "Still can't find it?") {
+                            ListRow("Browse every subject by college", icon = Icons.Filled.Search) { nav.openPage("/banks/subjects", "All subjects") }
+                            Divider()
+                            ListRow("Ask other students in the chat", icon = Icons.Filled.NoteAdd) { ChatNotifier.pendingRoom.value = "materials"; nav.openTab(Routes.CHAT) }
+                            Divider()
+                            ListRow("Request a material", icon = Icons.Filled.CloudUpload) { nav.openPage("/requests/student_request_portal", "Request a material") }
+                        }
                     }
                 }
             }
@@ -274,12 +325,12 @@ fun UploadScreen() {
                                 null
                             } else (o?.get("error") as? JsonPrimitive)?.contentOrNull ?: "Upload failed. Please try again."
                         }
-                    } catch (e: Exception) { "Upload failed: ${e.message ?: "no connection"}" }
+                    } catch (e: Exception) { trf("Upload failed: %s", e.message ?: tr("no connection")) }
                 }
                 if (result == null) { f.state = "done"; ok++ } else { f.state = "failed"; f.message = result }
             }
             busy = false
-            message = if (ok > 0) "Thank you! $ok file${if (ok == 1) "" else "s"} uploaded. They're in Latest uploads now." else "Nothing was uploaded."
+            message = if (ok > 0) trf("Thank you! %d files uploaded. They're in Latest uploads now.", ok) else "Nothing was uploaded."
         }
     }
 
@@ -342,7 +393,7 @@ fun UploadScreen() {
                     Button(onClick = { uploadAll() }, enabled = agreed && !busy && ready > 0, modifier = Modifier.fillMaxWidth().height(50.dp)) {
                         Icon(Icons.Filled.CloudUpload, null)
                         Spacer(Modifier.padding(4.dp))
-                        Text(if (busy) "Uploading…" else if (ready > 1) "Upload $ready files" else "Upload")
+                        Text(if (busy) "Uploading…" else if (ready > 1) trf("Upload %d files", ready) else "Upload")
                     }
                     message?.let { Text(it, fontWeight = FontWeight.Medium) }
                     if (files.any { it.state == "done" }) OutlinedButton(onClick = { files.clear(); message = null }) { Text("Upload more") }

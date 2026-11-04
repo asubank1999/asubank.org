@@ -191,7 +191,7 @@ fun CourseMatcherScreen() {
             sending = false
             r.onSuccess { v ->
                 val n = ((v as? JsonObject)?.get("matchesFound") as? JsonPrimitive)?.intOrNull ?: 0
-                dlg = if (n > 0) Dlg("You have $n match${if (n == 1) "" else "es"}!", "Check your email ($email) for their contact details.", true)
+                dlg = if (n > 0) Dlg(trf("Matches found: %d", n), trf("Check your email (%s) for their contact details.", email), true)
                 else Dlg("Profile saved", "We'll email you as soon as a classmate with similar courses and times signs up.", true)
                 courses.clear(); topics.clear(); free.clear()
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)

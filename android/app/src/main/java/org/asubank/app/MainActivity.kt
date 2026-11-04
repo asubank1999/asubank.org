@@ -183,6 +183,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     LaunchedEffect(Unit) {
         launch { Library.load(); if (DriveLinks.refresh()) Library.reindex() }
         launch { Pages.load() }
+        launch { SearchHelp.load() }
     }
     // Check for a new version on launch and whenever the app comes back
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -213,7 +214,11 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                         val selected = lastTab == t.route
                         NavigationBarItem(
                             selected = selected,
-                            onClick = { if (route == t.route) nav.popBackStack(t.route, false) else nav.openTab(t.route) },
+                            // the tab you are already on goes back to its first screen
+                            onClick = {
+                                if (lastTab == t.route) { if (!nav.popBackStack(t.route, false)) nav.openTab(t.route) }
+                                else { lastTab = t.route; nav.openTab(t.route) }
+                            },
                             icon = { Icon(t.icon, null) },
                             label = { Text(tr(t.label)) },
                             colors = NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.primaryContainer),
@@ -307,7 +312,7 @@ private fun UpdateRequired() {
                 Icon(Icons.Filled.SystemUpdate, null, tint = accent, modifier = Modifier.size(64.dp))
                 Text("Update required", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
                 Text(
-                    "This version of ASU Bank (${AppConfig.current}) no longer works. Please install ${AppConfig.latest.value ?: "the latest version"} to keep using the app.",
+                    trf("This version of ASU Bank (%s) no longer works. Please install %s to keep using the app.", AppConfig.current, AppConfig.latest.value ?: tr("the latest version")),
                     textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text("يرجى تحديث التطبيق للاستمرار.", textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)

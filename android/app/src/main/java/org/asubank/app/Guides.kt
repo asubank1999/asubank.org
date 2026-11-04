@@ -208,7 +208,7 @@ fun GradingScaleScreen() {
                 Group(header = "Term average calculator", footer = "Enter each course's credit hours and mark out of 100.") {
                     rows.forEachIndexed { i, r ->
                         Row(Modifier.padding(start = 16.dp, end = 4.dp, top = 4.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            OutlinedTextField(r.name, { rows[i] = r.copy(name = it) }, placeholder = { Text("Course ${i + 1}") }, singleLine = true, modifier = Modifier.weight(1f))
+                            OutlinedTextField(r.name, { rows[i] = r.copy(name = it) }, placeholder = { Text(trf("Course %d", i + 1)) }, singleLine = true, modifier = Modifier.weight(1f))
                             HoursPicker(r.hours) { rows[i] = r.copy(hours = it) }
                             OutlinedTextField(
                                 r.mark, { rows[i] = r.copy(mark = it) }, placeholder = { Text("Mark") }, singleLine = true,
@@ -257,7 +257,7 @@ private fun HoursPicker(h: Int, set: (Int) -> Unit) {
     Box {
         TextButton({ open = true }) { Text("$h h") }
         DropdownMenu(open, { open = false }) {
-            (1..6).forEach { v -> DropdownMenuItem(text = { Text("$v hours") }, onClick = { set(v); open = false }) }
+            (1..6).forEach { v -> DropdownMenuItem(text = { Text(trf("%d hours", v)) }, onClick = { set(v); open = false }) }
         }
     }
 }

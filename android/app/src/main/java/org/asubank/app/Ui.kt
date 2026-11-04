@@ -331,7 +331,7 @@ fun ListRow(
             ) { Icon(icon, null, tint = Color.White, modifier = Modifier.size(18.dp)) }
             icon != null -> Icon(icon, null, tint = accent, modifier = Modifier.size(26.dp))
         }
-        Column(Modifier.weight(1f), horizontalAlignment = if (rtl) Alignment.End else Alignment.Start) {
+        Column(Modifier.weight(1f), horizontalAlignment = if (rtl && !Lang.rtl) Alignment.End else Alignment.Start) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(title, style = MaterialTheme.typography.bodyLarge, color = titleColor ?: MaterialTheme.colorScheme.onSurface, textAlign = if (rtl) TextAlign.End else TextAlign.Start)
                 if (badge != null) Badge(badge, if (badge == "NEW") Brand.green else Brand.orange)

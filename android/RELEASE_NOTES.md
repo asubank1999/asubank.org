@@ -6,6 +6,13 @@
 - Calendar, schedules, FAQs and every asubank.org page as native screens
 - Light and dark mode
 
+**New in 1.7.0**
+- **Search help**: type a course in Arabic or English, even with mistakes. The app translates it, suggests the right word and subject, and searches both languages.
+- **Major and college** on your profile, set in Edit profile and shown to other students.
+- **More badges**, such as Mentor, Top student, Class rep, Translator and Legend.
+- **Arabic everywhere**: the student guide, FAQs, shortcuts, halls, rules and every other page now switch to Arabic, not only the buttons. Material names stay as they were uploaded.
+- **Tabs fixed**: tap a tab you are already in, like More, to go back to its first page.
+
 **New in 1.6.0**
 - **Profiles**: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp.
 - **Who's online**: see who is online right now and when others were last seen, with a green dot on their photo.

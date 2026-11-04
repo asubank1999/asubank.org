@@ -206,13 +206,13 @@ private fun SubmissionDetail(item: Submissions.Item, admin: Boolean, onClose: ()
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) { Text(item.name); StatusBadge(item.status) }
-                item.day?.let { Text("Submitted $it", style = MaterialTheme.typography.bodySmall) }
+                item.day?.let { Text(trf("Submitted %s", it), style = MaterialTheme.typography.bodySmall) }
                 item.notes?.takeIf { it.isNotEmpty() }?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
                 item.primaryUrl?.takeIf { it.isNotEmpty() }?.let { u ->
-                    TextButton(onClick = { onClose(); openLink(nav, ctx, u, item.title) }) { Text("Open the file (${item.platform ?: "link"})") }
+                    TextButton(onClick = { onClose(); openLink(nav, ctx, u, item.title) }) { Text(trf("Open the file (%s)", item.platform ?: tr("link"))) }
                 }
                 item.backupLinks.orEmpty().filter { it.url.isNotEmpty() }.forEachIndexed { i, l ->
-                    TextButton(onClick = { onClose(); openLink(nav, ctx, l.url, item.title) }) { Text("Backup ${i + 1} (${l.platform ?: "link"})") }
+                    TextButton(onClick = { onClose(); openLink(nav, ctx, l.url, item.title) }) { Text(trf("Backup %d (%s)", i + 1, l.platform ?: tr("link"))) }
                 }
                 if (admin) {
                     OutlinedTextField(
@@ -301,7 +301,7 @@ private fun SubmitDialog(onClose: () -> Unit, done: () -> Unit) {
                     )
                     backups.forEachIndexed { i, b ->
                         OutlinedTextField(
-                            b, { backups[i] = it.trim() }, label = { Text("Backup link ${i + 1}") }, singleLine = true,
+                            b, { backups[i] = it.trim() }, label = { Text(trf("Backup link %d", i + 1)) }, singleLine = true,
                             trailingIcon = { IconButton(onClick = { backups.removeAt(i) }) { Icon(Icons.Filled.Delete, "Remove") } },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri), modifier = Modifier.fillMaxWidth(),
                         )

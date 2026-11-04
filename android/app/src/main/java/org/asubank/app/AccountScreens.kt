@@ -192,6 +192,13 @@ fun ProfileScreen(userId: String) {
             }
             user?.let { u ->
                 if (!u.bio.isNullOrEmpty()) item { Group(header = tr("About")) { Text(u.bio, Modifier.padding(16.dp)) } }
+                if (!u.college.isNullOrEmpty() || !u.major.isNullOrEmpty()) item {
+                    Group(header = "Studies") {
+                        if (!u.college.isNullOrEmpty()) ListRow(u.college, tr("College"))
+                        if (!u.college.isNullOrEmpty() && !u.major.isNullOrEmpty()) Divider()
+                        if (!u.major.isNullOrEmpty()) ListRow(u.major, tr("Major"))
+                    }
+                }
                 if (!u.phone.isNullOrEmpty()) item {
                     Group(header = tr("Phone")) {
                         ListRow(u.phone, icon = Icons.Filled.Phone) {
@@ -310,7 +317,7 @@ fun SignInDialog(onClose: () -> Unit) {
                                 Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                     Text("Admin verification", fontWeight = FontWeight.SemiBold)
                                     Text(
-                                        codeSentTo?.let { "We sent a 6-digit code to $it." } ?: "This name belongs to an ASU Bank admin. Send a code to the owner's email to prove it's you.",
+                                        codeSentTo?.let { trf("We sent a 6-digit code to %s.", it) } ?: "This name belongs to an ASU Bank admin. Send a code to the owner's email to prove it's you.",
                                         style = MaterialTheme.typography.bodySmall,
                                     )
                                     Field(code, { code = it }, "6-digit code", keyboard = KeyboardType.Number)
@@ -423,6 +430,10 @@ fun AccountScreen() {
                     ListRow("Phone", trailing = u.phone?.ifEmpty { null }?.let { it + if (u.showPhone == true) "" else " 🔒" } ?: "–") { editing = true }
                     Divider()
                     ListRow("About", trailing = u.bio?.ifEmpty { null }?.take(24) ?: "–") { editing = true }
+                    Divider()
+                    ListRow("College", trailing = u.college?.ifEmpty { null }?.let { tr(it) } ?: "–") { editing = true }
+                    Divider()
+                    ListRow("Major", trailing = u.major?.ifEmpty { null }?.take(24) ?: "–") { editing = true }
                 }
             }
             item {
@@ -469,6 +480,9 @@ fun AccountScreen() {
         var phone by remember { mutableStateOf(u.phone ?: "") }
         var showPhone by remember { mutableStateOf(u.showPhone == true) }
         var bio by remember { mutableStateOf(u.bio ?: "") }
+        var major by remember { mutableStateOf(u.major ?: "") }
+        var college by remember { mutableStateOf(u.college ?: "") }
+        var collegeOpen by remember { mutableStateOf(false) }
         var err by remember { mutableStateOf<String?>(null) }
         AlertDialog(
             onDismissRequest = { editing = false },
@@ -477,6 +491,17 @@ fun AccountScreen() {
                 Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Field(name, { name = it }, "Display name")
                     Field(bio, { if (it.length <= 160) bio = it }, "A line about you (optional)")
+                    androidx.compose.foundation.layout.Box {
+                        androidx.compose.material3.OutlinedButton(onClick = { collegeOpen = true }, Modifier.fillMaxWidth()) {
+                            Text(tr("College") + ": " + (if (college.isEmpty()) tr("Not set") else tr(college)))
+                        }
+                        androidx.compose.material3.DropdownMenu(collegeOpen, { collegeOpen = false }) {
+                            (listOf("") + Colleges).forEach { c ->
+                                androidx.compose.material3.DropdownMenuItem(text = { Text(if (c.isEmpty()) "Not set" else c) }, onClick = { college = c; collegeOpen = false })
+                            }
+                        }
+                    }
+                    Field(major, { if (it.length <= 60) major = it }, "Your major")
                     Field(phone, { phone = it }, "Phone number (optional)", keyboard = KeyboardType.Phone)
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Show my number on my profile", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
@@ -488,7 +513,7 @@ fun AccountScreen() {
                     err?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                 }
             },
-            confirmButton = { TextButton(onClick = { scope.launch { try { Account.updateProfile(name, email, uni, phone, showPhone, bio); editing = false } catch (e: ApiError) { err = e.message } } }) { Text("Save") } },
+            confirmButton = { TextButton(onClick = { scope.launch { try { Account.updateProfile(name, email, uni, phone, showPhone, bio, major, college); editing = false } catch (e: ApiError) { err = e.message } } }) { Text("Save") } },
             dismissButton = { TextButton(onClick = { editing = false }) { Text("Cancel") } },
         )
     }

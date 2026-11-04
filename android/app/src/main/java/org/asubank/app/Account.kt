@@ -102,6 +102,8 @@ data class AbUser(
     val phone: String? = null,
     val showPhone: Boolean? = null,
     val bio: String? = null,
+    val major: String? = null,
+    val college: String? = null,
     val badges: List<String> = emptyList(),
     val online: Boolean? = null,
 ) {
@@ -116,10 +118,18 @@ object Badges {
         Triple("founder", "Founder", "👑"), Triple("moderator", "Moderator", "🛡️"), Triple("support", "Support", "🛟"),
         Triple("helper", "Helper", "🤝"), Triple("donor", "Donor", "💛"), Triple("contributor", "Contributor", "📚"),
         Triple("tutor", "Tutor", "🎓"), Triple("verified", "Verified", "✅"), Triple("vip", "VIP", "⭐"), Triple("developer", "Developer", "💻"),
+        Triple("team", "ASU Bank team", "🏦"), Triple("mentor", "Mentor", "🧭"), Triple("ambassador", "Ambassador", "📣"),
+        Triple("top_student", "Top student", "🏅"), Triple("class_rep", "Class rep", "🙋"), Triple("translator", "Translator", "🌐"),
+        Triple("designer", "Designer", "🎨"), Triple("researcher", "Researcher", "🔬"), Triple("organizer", "Organizer", "🎉"),
+        Triple("early_supporter", "Early supporter", "🌱"), Triple("sponsor", "Sponsor", "💎"), Triple("legend", "Legend", "🔥"),
     )
     fun emoji(id: String) = all.firstOrNull { it.first == id }?.third ?: ""
     fun name(id: String) = all.firstOrNull { it.first == id }?.second?.let { tr(it) } ?: id
 }
+
+/** The colleges a student can pick on their profile */
+val Colleges = listOf("Information Technology", "Engineering", "Pharmacy", "Dentistry", "Nursing", "Allied Medical Sciences", "Business", "Law",
+    "Arts & Sciences", "Arts & Design", "Other")
 
 /** What chat screens know about the people in a room */
 @Serializable
@@ -274,9 +284,9 @@ object Account {
         runCatching { adopt(call("me")) }
     }
 
-    suspend fun updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Boolean, bio: String) =
+    suspend fun updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Boolean, bio: String, major: String, college: String) =
         adopt(call("updateProfile", mapOf("displayName" to displayName, "email" to email, "uniId" to uniId,
-            "phone" to phone, "showPhone" to showPhone, "bio" to bio.take(160))))
+            "phone" to phone, "showPhone" to showPhone, "bio" to bio.take(160), "major" to major.take(60), "college" to college)))
 
     /** Uploads a profile photo (a 256 px JPEG, base64), or removes it with null */
     suspend fun setAvatar(jpegBase64: String?) = adopt(
