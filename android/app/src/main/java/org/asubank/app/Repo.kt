@@ -241,9 +241,16 @@ object Saved {
     fun clearSearches() { searches.value = emptyList(); prefs.edit().remove("searches").apply() }
 }
 
+/** A paid card on Home. No "sponsor" entry in app-config.json means no card. */
+data class Sponsor(val title: String, val text: String?, val url: String, val until: String?) {
+    /** until is the last day to show, as yyyy-MM-dd */
+    val isLive: Boolean get() = until == null || java.time.LocalDate.now().toString() <= until
+}
+
 /** Remote switches in app-config.json and the newest APK on GitHub Releases */
 object AppConfig {
     val donate = MutableStateFlow(true)
+    val sponsor = MutableStateFlow<Sponsor?>(null)
     val latest = MutableStateFlow<String?>(null)
     val mustUpdate = MutableStateFlow(false)
     val offerUpdate = MutableStateFlow(false)
@@ -255,6 +262,14 @@ object AppConfig {
     val current: String get() = BuildConfig.VERSION_NAME
     val updateAvailable: Boolean get() = latest.value?.let { AB.compare(current, it) < 0 } ?: false
 
+    /** Needs a title and an https link, or there's no card */
+    private fun readSponsor(o: JsonObject?): Sponsor? {
+        fun text(key: String) = (o?.get(key) as? JsonPrimitive)?.contentOrNull?.trim()?.takeIf { it.isNotEmpty() }
+        val title = text("title") ?: return null
+        val url = text("url")?.takeIf { it.startsWith("https://", ignoreCase = true) } ?: return null
+        return Sponsor(title, text("text"), url, text("until"))
+    }
+
     suspend fun check(force: Boolean = false) {
         if (!force && System.currentTimeMillis() - checkedAt < 30 * 60_000) return
         checkedAt = System.currentTimeMillis()
@@ -265,6 +280,7 @@ object AppConfig {
             runCatching {
                 val o = json.parseToJsonElement(t).jsonObject
                 donate.value = !BuildConfig.STORE_BUILD && (o["donate"] as? JsonPrimitive)?.booleanOrNull ?: !BuildConfig.STORE_BUILD
+                sponsor.value = if (BuildConfig.STORE_BUILD) null else readSponsor(o["sponsor"] as? JsonObject)
                 (o["android"] as? JsonObject)?.let { a ->
                     minimum = (a["minimum"] as? JsonPrimitive)?.contentOrNull
                     configLatest = (a["latest"] as? JsonPrimitive)?.contentOrNull

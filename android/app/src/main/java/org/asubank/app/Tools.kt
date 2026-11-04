@@ -519,6 +519,26 @@ fun WeatherCard() {
     }
 }
 
+// MARK: - sponsor
+
+/** A paid card from app-config.json, always labelled as sponsored. Opens outside the app. */
+@Composable
+fun SponsorCard() {
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    val sponsor by AppConfig.sponsor.collectAsState()
+    val s = sponsor?.takeIf { it.isLive } ?: return
+    Column(
+        Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 14.dp).clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .clickable { openExternal(ctx, s.url) }.padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(3.dp),
+    ) {
+        Text("Sponsored", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(s.title, fontWeight = FontWeight.SemiBold)
+        s.text?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+    }
+}
+
 // MARK: - life hacks
 
 @Serializable data class HackItem(val t: String = "", val d: String = "")

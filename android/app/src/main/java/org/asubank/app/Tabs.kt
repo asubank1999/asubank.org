@@ -216,6 +216,7 @@ fun HomeScreen() {
         }
         item { WeatherCard() }
         item { NextLectureCard() }
+        item { SponsorCard() }
         if (recent.isNotEmpty()) {
             item { SectionTitle("Continue") }
             item { Group { recent.take(4).forEachIndexed { i, s -> if (i > 0) Divider(); MaterialRow(s.material) } } }

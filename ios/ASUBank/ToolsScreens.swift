@@ -593,6 +593,39 @@ struct WeatherCard: View {
     }
 }
 
+// MARK: - sponsor
+
+/// A paid card from app-config.json, always labelled as sponsored. Opens outside the app.
+struct SponsorCard: View {
+    @EnvironmentObject private var config: AppConfig
+    @Environment(\.openURL) private var openURL
+
+    var body: some View {
+        if let s = config.sponsor, s.isLive {
+            Button { openURL(s.url) } label: {
+                HStack(spacing: 10) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Sponsored").font(.caption2.weight(.semibold)).foregroundStyle(.secondary)
+                        Text(verbatim: s.title).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
+                        if let t = s.text, !t.isEmpty {
+                            Text(verbatim: t).font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                    .multilineTextAlignment(.leading)
+                    Spacer(minLength: 0)
+                    Image(systemName: "arrow.up.right").font(.footnote).foregroundStyle(.tertiary)
+                }
+                .padding(14)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+            .buttonStyle(PressStyle())
+            .padding(.horizontal, 16)
+            .padding(.top, 14)
+        }
+    }
+}
+
 // MARK: - life hacks
 
 struct HackSection: Decodable, Identifiable {

@@ -6,8 +6,27 @@ import WebKit
 final class AppConfig: ObservableObject {
     struct Remote: Decodable {
         struct IOS: Decodable { var latest: String?; var minimum: String?; var store: String?; var notes: String? }
+        /// Every field is optional so a badly filled entry can't break the update check
+        struct Sponsor: Decodable { var title: String?; var text: String?; var url: String?; var until: String? }
         var ios: IOS?
         var donate: Bool?
+        var sponsor: Sponsor?
+    }
+    /// A paid card on Home. No "sponsor" entry in app-config.json means no card.
+    struct SponsorInfo: Equatable {
+        let title: String
+        let text: String?
+        let url: URL
+        /// Last day to show, as yyyy-MM-dd
+        let until: String?
+
+        var isLive: Bool {
+            guard let until = until else { return true }
+            let f = DateFormatter()
+            f.locale = Locale(identifier: "en_US_POSIX")
+            f.dateFormat = "yyyy-MM-dd"
+            return f.string(from: Date()) <= until
+        }
     }
     struct Lookup: Decodable {
         struct R: Decodable { var version: String; var trackViewUrl: String?; var releaseNotes: String? }
@@ -15,6 +34,7 @@ final class AppConfig: ObservableObject {
     }
 
     @Published private(set) var donate = true
+    @Published private(set) var sponsor: SponsorInfo?
     @Published private(set) var latest: String?
     @Published private(set) var notes: String?
     @Published private(set) var mustUpdate = false
@@ -52,6 +72,8 @@ final class AppConfig: ObservableObject {
         req.cachePolicy = .reloadIgnoringLocalCacheData
         if let (data, _) = try? await URLSession.shared.data(for: req) { remote = try? JSONDecoder().decode(Remote.self, from: data) }
         donate = !Self.isStore && (remote?.donate ?? true)
+        // Offline keeps the last sponsor; only a config that really has none removes it
+        if let remote = remote { sponsor = Self.isStore ? nil : Self.sponsorInfo(remote.sponsor) }
 
         // The App Store is the truth for the newest version; app-config.json covers the time before review ends
         var store: Lookup.R?
@@ -83,6 +105,13 @@ final class AppConfig: ObservableObject {
     }
 
     var updateAvailable: Bool { latest.map { Self.compare(Self.current, $0) < 0 } ?? false }
+
+    /// Needs a title and an https link, or there's no card
+    private static func sponsorInfo(_ s: Remote.Sponsor?) -> SponsorInfo? {
+        guard let title = s?.title?.trimmingCharacters(in: .whitespacesAndNewlines), !title.isEmpty,
+              let link = s?.url, let url = URL(string: link), url.scheme?.lowercased() == "https" else { return nil }
+        return SponsorInfo(title: title, text: s?.text, url: url, until: s?.until)
+    }
 }
 
 /// Shown over everything when this version is below app-config.json's "minimum"

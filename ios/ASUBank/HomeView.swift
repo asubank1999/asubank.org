@@ -128,6 +128,7 @@ struct HomeView: View {
                     hero
                     WeatherCard()
                     NextLectureCard()
+                    SponsorCard()
                     if !saved.recent.isEmpty {
                         SectionHeader(title: "Continue")
                         list(saved.recent.prefix(4).map(\.material))
