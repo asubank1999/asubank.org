@@ -29,8 +29,15 @@ struct MaterialRow: View {
     var meta: String? = nil
     var showSource = true
     @EnvironmentObject private var saved: SavedStore
+    @ObservedObject private var removed = RemovedFiles.shared
+    @State private var confirmDelete = false
+    @State private var deleteError: String?
 
     var body: some View {
+        if !DriveLinks.shared.isDeleted(m.u) { row }
+    }
+
+    @ViewBuilder private var row: some View {
         let k = kind ?? AB.kind(m.u, m.t)
         RouteLink(k == .page ? Route.page(AB.sitePath(m.u) ?? m.u, m.t) : Route.material(m)) {
             HStack(spacing: 12) {
@@ -76,7 +83,31 @@ struct MaterialRow: View {
                     Label("Report this file", systemImage: "flag")
                 }
             }
+            if AccountStore.shared.isAdmin, k != .page, AB.driveId(m.u) != nil {
+                Button(role: .destructive) {
+                    Task { @MainActor in
+                        // once the menu has closed
+                        try? await Task.sleep(nanoseconds: 350_000_000)
+                        confirmDelete = true
+                    }
+                } label: {
+                    Label(L(k == .folder ? "Remove from ASU Bank" : "Delete from Drive"), systemImage: "trash")
+                }
+            }
         }
+        .confirmationDialog(L(k == .folder ? "Remove from ASU Bank?" : "Delete from Drive?"), isPresented: $confirmDelete, titleVisibility: .visible) {
+            Button(L(k == .folder ? "Remove from ASU Bank" : "Delete from Drive"), role: .destructive) {
+                Task {
+                    do { try await AdminUploads.delete(m.u); Haptics.success() }
+                    catch { deleteError = error.localizedDescription; Haptics.error() }
+                }
+            }
+        } message: {
+            Text(L(k == .folder ? "It disappears from ASU Bank for everyone. The folder itself stays in Drive." : "It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank."))
+        }
+        .alert("Couldn't delete", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: { Text(deleteError ?? "") }
         .swipeActions(edge: .leading) {
             Button { saved.toggle(m); Haptics.tap() } label: {
                 Label("Save", systemImage: saved.isSaved(m.u) ? "star.slash.fill" : "star.fill")

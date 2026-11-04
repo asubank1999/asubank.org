@@ -285,17 +285,25 @@ fun FriendsScreen(back: Boolean = false) {
     var poking by remember { mutableStateOf<AbUser?>(null) }
     var composing by remember { mutableStateOf(false) }
 
-    suspend fun loadFeed() { runCatching { feed = Account.call("feed")["posts"].decodeAs<List<FeedPost>>().orEmpty() } }
+    suspend fun loadFeed() { runCatching { feed = Account.callSaving("feed")["posts"].decodeAs<List<FeedPost>>().orEmpty() } }
+    fun readFriends(r: kotlinx.serialization.json.JsonObject) {
+        friends = r["friends"].decodeAs<List<AbUser>>().orEmpty()
+        incoming = r["incoming"].decodeAs<List<AbUser>>().orEmpty()
+        outgoing = r["outgoing"].decodeAs<List<AbUser>>().orEmpty()
+        pokes = r["pokes"].decodeAs<List<Poke>>().orEmpty()
+    }
     suspend fun load() {
+        // what we knew last time, straight away
+        if (loading) {
+            Account.saved("friends")?.let { readFriends(it); loading = false }
+            Account.saved("feed")?.let { feed = it["posts"].decodeAs<List<FeedPost>>().orEmpty() }
+        }
+        // the feed doesn't hold up the friends list
+        scope.launch { loadFeed() }
         try {
-            val r = Account.call("friends")
-            friends = r["friends"].decodeAs<List<AbUser>>().orEmpty()
-            incoming = r["incoming"].decodeAs<List<AbUser>>().orEmpty()
-            outgoing = r["outgoing"].decodeAs<List<AbUser>>().orEmpty()
-            pokes = r["pokes"].decodeAs<List<Poke>>().orEmpty()
+            readFriends(Account.callSaving("friends"))
             error = null
         } catch (e: ApiError) { error = e.message }
-        loadFeed()
         loading = false
     }
     suspend fun search() {
@@ -451,15 +459,18 @@ fun ProfileScreen(userId: String) {
     var poking by remember { mutableStateOf<AbUser?>(null) }
     var composing by remember { mutableStateOf(false) }
 
+    fun readProfile(r: kotlinx.serialization.json.JsonObject) {
+        user = r["user"].decodeAs<AbUser>()
+        friendship = r.str("friendship") ?: "none"
+        friendCount = r.str("friendCount")?.toDoubleOrNull()?.toInt() ?: 0
+        postCount = r.str("postCount")?.toDoubleOrNull()?.toInt() ?: 0
+        messageCount = r.str("messageCount")?.toDoubleOrNull()?.toInt() ?: 0
+        posts = r["posts"].decodeAs<List<FeedPost>>().orEmpty()
+    }
     suspend fun load() {
+        if (user == null) Account.saved("profile", userId)?.let { readProfile(it) }
         try {
-            val r = Account.call("profile", mapOf("userId" to userId, "social" to true))
-            user = r["user"].decodeAs<AbUser>()
-            friendship = r.str("friendship") ?: "none"
-            friendCount = r.str("friendCount")?.toDoubleOrNull()?.toInt() ?: 0
-            postCount = r.str("postCount")?.toDoubleOrNull()?.toInt() ?: 0
-            messageCount = r.str("messageCount")?.toDoubleOrNull()?.toInt() ?: 0
-            posts = r["posts"].decodeAs<List<FeedPost>>().orEmpty()
+            readProfile(Account.callSaving("profile", mapOf("userId" to userId, "social" to true), userId))
             error = null
         } catch (e: ApiError) { error = e.message }
     }

@@ -28,6 +28,8 @@ shot 13-request --es startPath /requests/student_request_portal
 shot 14-grading --es startPath /guides/grading-scale-asu
 shot 15-groups --es startPath /guides/groups
 shot 25-official-links --es startPath /guides/asu
+shot 26-suggest --es startPath /upload/suggest_to_whatsapp
+shot 27-coverage --es startPath /app/coverage
 shot 16-thanks --es startPath /guides/thankslist
 shot 17-search-guide --es startPath /guides/tutorial
 shot 18-ads --es startPath /requests/student_ads

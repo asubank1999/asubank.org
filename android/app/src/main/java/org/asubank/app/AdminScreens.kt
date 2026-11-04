@@ -1,6 +1,7 @@
 package org.asubank.app
 
 import androidx.compose.material.icons.filled.AddComment
+import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Flag
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -82,16 +83,20 @@ private fun short(iso: String?): String = iso?.let {
 
 @Composable
 fun AdminTab() {
-    var pendingGroups by remember { mutableStateOf(0) }
-    LaunchedEffect(Unit) { runCatching { pendingGroups = Account.call("adminGroupRequests")["pending"].prim()?.toDoubleOrNull()?.toInt() ?: 0 } }
+    fun pending(r: JsonObject?) = r?.get("pending").prim()?.toDoubleOrNull()?.toInt() ?: 0
+    var pendingGroups by remember { mutableStateOf(pending(Account.saved("adminGroupRequests", "open"))) }
+    var pendingSuggestions by remember { mutableStateOf(pending(Account.saved("adminSuggestions", "open"))) }
+    LaunchedEffect(Unit) { runCatching { pendingGroups = pending(Account.callSaving("adminGroupRequests", mapOf("all" to false), "open")) } }
+    LaunchedEffect(Unit) { runCatching { pendingSuggestions = pending(Account.callSaving("adminSuggestions", mapOf("all" to false), "open")) } }
     val nav = LocalNav.current
-    var stats by remember { mutableStateOf<Map<String, Int>>(emptyMap()) }
+    fun readStats(r: JsonObject?): Map<String, Int> =
+        (r?.get("stats") as? JsonObject)?.mapNotNull { (k, v) -> (v as? JsonPrimitive)?.intOrNull?.let { k to it } }?.toMap() ?: emptyMap()
+    var stats by remember { mutableStateOf(readStats(Account.saved("adminStats"))) }
     var error by remember { mutableStateOf<String?>(null) }
     var announcing by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         try {
-            val s = Account.call("adminStats")["stats"] as? JsonObject
-            stats = s?.mapNotNull { (k, v) -> (v as? JsonPrimitive)?.intOrNull?.let { k to it } }?.toMap() ?: emptyMap()
+            stats = readStats(Account.callSaving("adminStats"))
         } catch (e: ApiError) { error = e.message }
     }
     val tiles = listOf(
@@ -122,6 +127,8 @@ fun AdminTab() {
                 Group(header = "Manage") {
                     ListRow("Group requests", icon = Icons.Filled.AddComment, trailing = if (pendingGroups > 0) "$pendingGroups" else null) { nav.navigate("adminGroups") }
                     Divider()
+                    ListRow("Suggestions", icon = Icons.Filled.Lightbulb, trailing = if (pendingSuggestions > 0) "$pendingSuggestions" else null) { nav.navigate("adminSuggestions") }
+                    Divider()
                     ListRow("Reports", icon = Icons.Filled.Flag) { nav.navigate("adminReports") }
                     Divider()
                     ListRow("Users", "Ban, reset passwords, make admins", icon = Icons.Filled.People) { nav.navigate("adminUsers") }
@@ -130,7 +137,7 @@ fun AdminTab() {
                     Divider()
                     ListRow("Chat rooms", "Add, rename, lock, archive or delete", icon = Icons.Filled.Forum) { nav.navigate("adminRooms") }
                     Divider()
-                    ListRow("Uploads", "Tap the bin next to an upload to delete it", icon = Icons.Filled.CloudUpload) { nav.openPage("/guides/latest", "Latest uploads") }
+                    ListRow("Uploads", "Tap the bin, or hold any file, to delete it", icon = Icons.Filled.CloudUpload) { nav.openPage("/guides/latest", "Latest uploads") }
                     Divider()
                     ListRow("Student submissions", icon = Icons.Filled.ListAlt) { nav.navigate("submissions?admin=1") }
                     Divider()
@@ -189,13 +196,16 @@ fun AdminUsersScreen() {
     val nav = LocalNav.current
     var query by remember { mutableStateOf("") }
     var filter by remember { mutableStateOf(0) }
-    var users by remember { mutableStateOf<List<AbUser>>(emptyList()) }
+    var users by remember { mutableStateOf(Account.saved("adminUsers")?.get("users").decodeAs<List<AbUser>>().orEmpty()) }
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(query) {
         delay(if (query.isEmpty()) 0 else 400)
         loading = true
-        try { users = Account.call("adminUsers", mapOf("q" to query))["users"].decodeAs<List<AbUser>>().orEmpty(); error = null }
+        try {
+            val r = if (query.isEmpty()) Account.callSaving("adminUsers", mapOf("q" to "")) else Account.call("adminUsers", mapOf("q" to query))
+            users = r["users"].decodeAs<List<AbUser>>().orEmpty(); error = null
+        }
         catch (e: ApiError) { error = e.message }
         loading = false
     }

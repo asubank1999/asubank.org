@@ -112,6 +112,7 @@ class AppActivity : ComponentActivity() {
         Prefs.appearance.value = Saved.prefs.getInt("appearance", 0)
         Prefs.accent.value = Saved.prefs.getInt("accent", 0)
         Account.init()
+        RemovedFiles.init()
         ChatNotifier.init(applicationContext)
         ChatNotifier.start(applicationContext)
         TabPrefs.init()
@@ -212,7 +213,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     }
 
     LaunchedEffect(Unit) {
-        launch { Library.load(); if (DriveLinks.refresh()) Library.reindex() }
+        launch { Library.load(); val links = DriveLinks.refresh(); val removed = RemovedFiles.refresh(); if (links || removed) Library.reindex() }
         launch { Pages.load() }
         launch { SearchHelp.load() }
     }
@@ -302,6 +303,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable("adminUser") { AdminUserScreen() }
                 composable("adminLog") { AdminLogScreen() }
                 composable("adminReports") { AdminReportsScreen() }
+                composable("adminSuggestions") { AdminSuggestionsScreen() }
                 composable("blocked") { BlockedScreen() }
                 composable("submissions?admin={admin}", listOf(navArgument("admin") { defaultValue = "" })) { e ->
                     SubmissionsScreen(admin = e.arguments?.getString("admin") == "1" && user?.isAdmin == true)

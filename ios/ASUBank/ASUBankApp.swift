@@ -48,7 +48,9 @@ struct ASUBankApp: App {
                 }
                 .task {
                     await library.load()
-                    if await DriveLinks.shared.refresh() { await library.reindex() }
+                    let links = await DriveLinks.shared.refresh()
+                    let removed = await RemovedFiles.shared.refresh()
+                    if links || removed { await library.reindex() }
                 }
                 .task { await pages.load() }
                 .task { await SearchHelp.shared.load() }

@@ -255,6 +255,17 @@ object Account {
         throw e
     }
 
+    private fun replyName(action: String, tag: String) = "${user.value?.id ?: "guest"}-$action-$tag".replace(Regex("[^\\w-]"), "_") + ".json"
+
+    /** The answer saved the last time, if any */
+    fun saved(action: String, tag: String = ""): JsonObject? = ReplyCache.read(replyName(action, tag))
+
+    /** A normal call that also saves its answer */
+    suspend fun callSaving(action: String, fields: Map<String, Any?> = emptyMap(), tag: String = ""): JsonObject {
+        val name = replyName(action, tag)
+        return call(action, fields).also { ReplyCache.write(name, it) }
+    }
+
     private fun adopt(r: JsonObject) {
         r.str("token")?.let { token = it; Saved.prefs.edit().putString("account.token", it).apply() }
         r["user"].decodeAs<AbUser>()?.let { u ->
@@ -320,6 +331,7 @@ object Account {
         token = null
         user.value = null
         Saved.prefs.edit().remove("account.token").remove("account.user").apply()
+        ReplyCache.clear()
         ChatNotifier.stop(Disk.ctx)
     }
 }
@@ -500,10 +512,25 @@ class ChatWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, 
     }
 }
 
-/** Moves an upload to the Drive trash (admins; only files in the upload folder) */
+/** Removes a file from ASU Bank for everyone and moves it to the Drive trash (admins) */
 suspend fun adminDeleteUpload(url: String) {
     val id = AB.driveId(url) ?: throw ApiError("This isn't a Google Drive file.")
-    Account.call("adminDeleteUpload", mapOf("fileId" to id))
+    val r = Account.call("adminDeleteUpload", mapOf("fileId" to id))
+    RemovedFiles.add((r["ids"] as? JsonArray)?.mapNotNull { it.prim() }.orEmpty() + id)
+    MyUploads.remove(url)
+}
+
+/**
+ * The last answer to the slower calls, kept on this phone so Friends and the admin screens open at once and update
+ * when the new answer arrives. Removed on sign out.
+ */
+object ReplyCache {
+    private val dir get() = java.io.File(Disk.ctx.cacheDir, "replies")
+    fun read(name: String): JsonObject? = runCatching {
+        java.io.File(dir, name).takeIf { it.exists() }?.readText()?.let { json.parseToJsonElement(it) as? JsonObject }
+    }.getOrNull()
+    fun write(name: String, r: JsonObject) { runCatching { dir.mkdirs(); java.io.File(dir, name).writeText(r.toString()) } }
+    fun clear() { runCatching { dir.deleteRecursively() } }
 }
 
 fun JsonArray?.objects(): List<JsonObject> = this?.mapNotNull { it as? JsonObject } ?: emptyList()

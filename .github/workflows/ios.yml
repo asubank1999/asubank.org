@@ -89,6 +89,8 @@ jobs:
           shot 15-groups 8 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/groups
           shot 16-thanks 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/thankslist
           shot 17-search-guide 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/tutorial
+          shot 40-suggest 6 -ab.terms.accepted.v1 YES -startTab home -startPath /upload/suggest_to_whatsapp
+          shot 41-coverage 8 -ab.terms.accepted.v1 YES -startTab home -startPath /app/coverage
           shot 18-ads 6 -ab.terms.accepted.v1 YES -startTab home -startPath /requests/student_ads
           shot 19-latest 25 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/latest
           shot 20-chat 6 -ab.terms.accepted.v1 YES -startTab chat

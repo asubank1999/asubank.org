@@ -331,6 +331,48 @@ final class AccountStore: ObservableObject {
         user = nil
         Keychain.set(nil, for: "ab.token")
         UserDefaults.standard.removeObject(forKey: userKey)
+        ReplyCache.clear()
+    }
+}
+
+// MARK: - saved answers
+
+/// The last answer to the slower calls, kept on this phone so Friends and the admin screens open at once and update
+/// when the new answer arrives. Removed on sign out.
+enum ReplyCache {
+    private static var dir: URL {
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("ab-replies", isDirectory: true)
+    }
+
+    static func read(_ name: String) -> [String: Any]? {
+        guard let d = try? Data(contentsOf: dir.appendingPathComponent(name)) else { return nil }
+        return (try? JSONSerialization.jsonObject(with: d)) as? [String: Any]
+    }
+
+    static func write(_ name: String, _ reply: [String: Any]) {
+        guard JSONSerialization.isValidJSONObject(reply), let d = try? JSONSerialization.data(withJSONObject: reply) else { return }
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        try? d.write(to: dir.appendingPathComponent(name), options: [.atomic, .completeFileProtection])
+    }
+
+    static func clear() { try? FileManager.default.removeItem(at: dir) }
+}
+
+extension AccountStore {
+    private func replyName(_ action: String, _ tag: String) -> String {
+        let raw = "\(user?.id ?? "guest")-\(action)-\(tag)"
+        return String(raw.map { $0.isLetter || $0.isNumber || $0 == "-" ? $0 : "_" }) + ".json"
+    }
+
+    /// The answer saved the last time, if any
+    func saved(_ action: String, tag: String = "") -> [String: Any]? { ReplyCache.read(replyName(action, tag)) }
+
+    /// A normal call that also saves its answer
+    func callSaving(_ action: String, _ fields: [String: Any] = [:], tag: String = "") async throws -> [String: Any] {
+        let name = replyName(action, tag)
+        let r = try await call(action, fields)
+        ReplyCache.write(name, r)
+        return r
     }
 }
 

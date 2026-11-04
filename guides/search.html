@@ -271,7 +271,7 @@
                 .then(function (d) {
                     if (mine !== reqId) return;
                     if (!d || !d.success || !Array.isArray(d.files)) throw new Error('Unexpected reply');
-                    var files = d.files.map(function (f) {
+                    var files = d.files.filter(function (f) { return !AB.isRemoved(f.url); }).map(function (f) {
                         var k = /shortcut/.test(f.mimeType) ? AB.kind(f.url, f.name) : (DRIVE_KIND[f.icon] || AB.kind(f.url, f.name));
                         return { u: f.url, t: f.name, k: k, size: typeof f.size === 'number' ? f.size : 0, date: f.dateUploaded || f.lastModified };
                     });

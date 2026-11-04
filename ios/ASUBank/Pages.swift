@@ -161,6 +161,10 @@ struct SitePageView: View {
             CourseMatcherScreen()
         } else if ["/requests/student_request_portal", "/requests/request", "/requests/student_request_main"].contains(path) {
             RequestMaterialScreen()
+        } else if path == "/upload/suggest_to_whatsapp" {
+            SuggestMaterialScreen()
+        } else if path == "/app/coverage" {
+            CollegeCoverageScreen()
         } else if path == "/guides/tutorial" {
             SearchGuideScreen()
         } else if path == "/guides/grading-scale-asu" {

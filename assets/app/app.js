@@ -143,6 +143,33 @@
         })).then(function (r) { AB.driveMap = r[0] || {}; AB.broken = r[1] || {}; });
         return linksP;
     };
+    // Files admins removed (accounts API). Remembered for 10 minutes and never holds a page up for long.
+    AB.deletedIds = {};
+    var removedP = null;
+    AB.removed = function () {
+        if (removedP) return removedP;
+        function use(ids) { AB.deletedIds = {}; ids.forEach(function (i) { AB.deletedIds[i] = 1; }); }
+        var saved = null;
+        try { saved = JSON.parse(localStorage.getItem('ab.removed')); } catch (e) { saved = null; }
+        if (saved && saved.ids) use(saved.ids);
+        if (saved && Date.now() - saved.at < 6e5) { removedP = Promise.resolve(); return removedP; }
+        var live = fetch('https://script.google.com/macros/s/AKfycbzXDE0Km2mxL_gAJFqspZeaADtugupeLN0YQlkEbXnrCkSTKBfImW_lLCKF8_SMI0i_/exec', {
+            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: '{"action":"deletedFiles"}'
+        }).then(function (r) { return r.json(); }).then(function (o) {
+            if (!o || !o.ids) return;
+            use(o.ids);
+            try { localStorage.setItem('ab.removed', JSON.stringify({ at: Date.now(), ids: o.ids })); } catch (e) {}
+        }).catch(function () {});
+        removedP = Promise.race([live, new Promise(function (ok) { setTimeout(ok, 1500); })]);
+        return removedP;
+    };
+    AB.isRemoved = function (u) {
+        var m = String(u || '').match(/(?:\/d\/|\/folders\/|[?&]id=)([-\w]{10,})/);
+        if (!m) return false;
+        if (AB.deletedIds[m[1]]) return true;
+        var t = AB.driveMap[m[1]];
+        return !!(t && AB.deletedIds[t[0]]);
+    };
     AB.isExternal = function (u) { return /^https?:\/\//.test(u) && !/^https?:\/\/(www\.)?asubank\.org/.test(u) && u.indexOf(location.origin) !== 0; };
     // "2025", "2024/25" and semester codes like "20231" all count as a year
     // NEW badges last 30 days after a link is added (d = "YYYY-MM-DD"); older ones disappear by themselves
@@ -545,10 +572,10 @@
     /* ---------- materials index (built from the subject pages) ---------- */
     var idxP = null;
     AB.index = function () {
-        if (!idxP) idxP = Promise.all([fetch('/assets/app/materials.json').then(function (r) { return r.json(); }), AB.links()]).then(function (x) {
+        if (!idxP) idxP = Promise.all([fetch('/assets/app/materials.json').then(function (r) { return r.json(); }), AB.links(), AB.removed()]).then(function (x) {
             var d = x[0];
             // links the checker found dead are left out of search
-            d.items = d.items.filter(function (it) { return !AB.broken[it.u]; });
+            d.items = d.items.filter(function (it) { return !AB.broken[it.u] && !AB.isRemoved(it.u); });
             d.items.forEach(function (it) { it.q = AB.norm(it.t + ' ' + it.s + ' ' + (it.c || '')); it.k = it.k || AB.kind(it.u, it.t); });
             return d;
         }).catch(function () { idxP = null; return { items: [], subjects: [] }; });
@@ -590,6 +617,12 @@
         doc.querySelectorAll('ul[data-ab-filter]').forEach(function (ul) { if (ul.hasAttribute('data-ab-legacy')) AB.adoptLegacy(ul); AB.listFilter(ul); });
         prefetch();
         AB.links();
+        // subject pages list their files in the page itself
+        if (doc.querySelector('ul[data-ab-filter] a[href*="google.com"]')) Promise.all([AB.links(), AB.removed()]).then(function () {
+            doc.querySelectorAll('ul[data-ab-filter] a[href*="google.com"]').forEach(function (a) {
+                if (AB.isRemoved(a.href)) { var li = a.closest('li'); if (li) li.remove(); }
+            });
+        });
         var rt = doc.body.getAttribute('data-ab-recent');
         if (rt) AB.recent.add({ u: cleanPath(), t: rt, k: 'page', s: doc.body.getAttribute('data-ab-group') || '' });
         if (doc.body.hasAttribute('data-ab-protect')) AB.protect();

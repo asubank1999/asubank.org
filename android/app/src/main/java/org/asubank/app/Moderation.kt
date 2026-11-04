@@ -212,7 +212,9 @@ fun AdminReportsScreen() {
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     suspend fun load() {
-        try { reports = (Account.call("adminReports", mapOf("all" to showAll))["reports"] as? JsonArray).objects(); error = null } catch (e: ApiError) { error = e.message }
+        val tag = if (showAll) "all" else "open"
+        if (reports.isEmpty()) Account.saved("adminReports", tag)?.let { reports = (it["reports"] as? JsonArray).objects(); loading = false }
+        try { reports = (Account.callSaving("adminReports", mapOf("all" to showAll), tag)["reports"] as? JsonArray).objects(); error = null } catch (e: ApiError) { error = e.message }
         loading = false
     }
     fun set(r: JsonObject, status: String, deleteMessage: Boolean = false) {

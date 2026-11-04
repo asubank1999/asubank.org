@@ -7,6 +7,7 @@ struct AdminTab: View {
     @State private var error: String?
     @State private var announcing = false
     @State private var pendingGroups = 0
+    @State private var pendingSuggestions = 0
 
     private let tiles: [(String, String, String, UInt32)] = [
         ("users", "Users", "person.2.fill", 0x0a84ff), ("online", "Online now", "circle.fill", 0x34c759), ("activeToday", "Active today", "bolt.fill", 0x1f8a3e),
@@ -45,11 +46,18 @@ struct AdminTab: View {
                                 if pendingGroups > 0 { Badge(text: "\(pendingGroups)", color: .orange) }
                             }
                         }
+                        NavigationLink { AdminSuggestionsScreen() } label: {
+                            HStack {
+                                Label("Suggestions", systemImage: "lightbulb")
+                                Spacer()
+                                if pendingSuggestions > 0 { Badge(text: "\(pendingSuggestions)", color: .orange) }
+                            }
+                        }
                         NavigationLink { AdminReportsScreen() } label: { Label("Reports", systemImage: "flag") }
                         NavigationLink { AdminUsersScreen() } label: { Label("Users", systemImage: "person.2") }
                         Button { announcing = true } label: { Label("Send an announcement", systemImage: "megaphone") }
                         NavigationLink { AdminRoomsScreen() } label: { Label("Chat rooms (add, lock, archive)", systemImage: "bubble.left.and.bubble.right") }
-                        NavigationLink { LatestScreen() } label: { Label("Uploads (long-press a file to delete)", systemImage: "tray.full") }
+                        NavigationLink { LatestScreen() } label: { Label("Uploads (swipe or long-press a file to delete)", systemImage: "tray.full") }
                         NavigationLink { SubmissionsScreen(admin: true) } label: { Label("Student submissions", systemImage: "rectangle.stack") }
                         NavigationLink { AdminLogScreen() } label: { Label("Admin activity", systemImage: "clock.arrow.circlepath") }
                     }
@@ -70,10 +78,19 @@ struct AdminTab: View {
     }
 
     private func load() async {
+        func count(_ r: [String: Any]?) -> Int { (r?["pending"] as? NSNumber)?.intValue ?? 0 }
+        func read(_ r: [String: Any]) { stats = (r["stats"] as? [String: Any] ?? [:]).compactMapValues { ($0 as? NSNumber)?.intValue } }
+        // what we knew last time, straight away
+        if stats.isEmpty {
+            if let r = account.saved("adminStats") { read(r) }
+            pendingGroups = count(account.saved("adminGroupRequests", tag: "open"))
+            pendingSuggestions = count(account.saved("adminSuggestions", tag: "open"))
+        }
+        // these don't wait for each other
+        Task { pendingGroups = count(try? await account.callSaving("adminGroupRequests", ["all": false], tag: "open")) }
+        Task { pendingSuggestions = count(try? await account.callSaving("adminSuggestions", ["all": false], tag: "open")) }
         do {
-            let r = try await account.call("adminStats")
-            stats = (r["stats"] as? [String: Any] ?? [:]).compactMapValues { ($0 as? NSNumber)?.intValue }
-            pendingGroups = ((try? await account.call("adminGroupRequests"))?["pending"] as? NSNumber)?.intValue ?? 0
+            read(try await account.callSaving("adminStats"))
             error = nil
         } catch { self.error = error.localizedDescription }
     }
@@ -135,7 +152,7 @@ struct AdminUsersScreen: View {
             .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             if loading && users.isEmpty { HStack { Spacer(); ProgressView(); Spacer() } }
             if let error { Text(error).foregroundStyle(.red) }
-            Section("\(shown.count) users") {
+            if !(loading && users.isEmpty) { Section("\(shown.count) users") {
                 ForEach(shown) { u in
                     NavigationLink { AdminUserScreen(user: u) { await load() } } label: {
                         HStack(spacing: 12) {
@@ -151,7 +168,7 @@ struct AdminUsersScreen: View {
                         }
                     }
                 }
-            }
+            } }
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Users")
@@ -163,9 +180,12 @@ struct AdminUsersScreen: View {
     }
 
     private func load() async {
+        let account = AccountStore.shared
+        if users.isEmpty, query.isEmpty, let r = account.saved("adminUsers") { users = decode([ABUser].self, r["users"]) ?? [] }
         loading = true
         do {
-            let r = try await AccountStore.shared.call("adminUsers", ["q": query])
+            let r: [String: Any]
+            if query.isEmpty { r = try await account.callSaving("adminUsers", ["q": ""]) } else { r = try await account.call("adminUsers", ["q": query]) }
             users = decode([ABUser].self, r["users"]) ?? []
             error = nil
         } catch { self.error = error.localizedDescription }
@@ -325,11 +345,13 @@ struct AdminLogScreen: View {
     }
 }
 
-/// Moves an upload to the Drive trash (admins; only files in the upload folder)
+/// Removes a file from ASU Bank for everyone and moves it to the Drive trash (admins)
 enum AdminUploads {
     @MainActor static func delete(_ url: String) async throws {
         guard let id = AB.driveId(url) else { throw AccountsAPI.Failure(message: "This isn't a Google Drive file.") }
-        _ = try await AccountStore.shared.call("adminDeleteUpload", ["fileId": id])
+        let r = try await AccountStore.shared.call("adminDeleteUpload", ["fileId": id])
+        RemovedFiles.shared.add(((r["ids"] as? [String]) ?? []) + [id])
+        MyUploads.remove(url)
     }
 }
 

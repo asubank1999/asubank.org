@@ -249,7 +249,7 @@ struct AdminReportsScreen: View {
             }
             .pickerStyle(.segmented)
             if let error { Text(error).foregroundStyle(.red) }
-            if loading { ProgressView() }
+            if loading { HStack { Spacer(); ProgressView(); Spacer() } }
             else if reports.isEmpty && error == nil { Text("Nothing to review.").foregroundStyle(.secondary) }
             ForEach(Array(reports.enumerated()), id: \.offset) { _, r in row(r) }
         }
@@ -311,8 +311,15 @@ struct AdminReportsScreen: View {
     }
 
     private func load() async {
+        let tag = showAll ? "all" : "open"
+        let account = AccountStore.shared
+        if reports.isEmpty, let r = account.saved("adminReports", tag: tag) {
+            reports = (r["reports"] as? [[String: Any]]) ?? []
+            loading = false
+        }
         do {
-            reports = (try await AccountStore.shared.call("adminReports", ["all": showAll])["reports"] as? [[String: Any]]) ?? []
+            let r = try await account.callSaving("adminReports", ["all": showAll], tag: tag)
+            reports = (r["reports"] as? [[String: Any]]) ?? []
             error = nil
         } catch { self.error = error.localizedDescription }
         loading = false

@@ -56,6 +56,7 @@ enum UploadFolder {
         return DriveFolderList.parse(html).compactMap { e in
             if e.name.hasPrefix("[TEST]") || e.name.localizedCaseInsensitiveContains("upload-test") { return nil }
             let d = isoDate(e.modified)
+            if DriveLinks.shared.isBroken(e.url) != nil { return nil }
             return DriveSearch.Result(m: Material(u: e.url, t: e.name, s: "Shared by students", d: d.isEmpty ? nil : d), kind: e.kind, date: d, size: 0)
         }
     }
@@ -90,6 +91,7 @@ final class LatestStore: ObservableObject {
     static let api = "https://script.google.com/macros/s/AKfycbyuzws_2LcDC8nb2KU-02swjehyRf1ivY14EbX1qcJC1chCUTLTOAAwtQ5JlXvNcLez/exec"
 
     func load(force: Bool = false) async {
+        if files.isEmpty { let c = Self.readSaved(); if !c.isEmpty { files = c; state = 2 } }
         if !force, let t = loadedAt, Date().timeIntervalSince(t) < 600, !files.isEmpty { return }
         state = files.isEmpty ? 1 : state
         let mine = MyUploads.all.map {
@@ -98,7 +100,7 @@ final class LatestStore: ObservableObject {
         // your uploads first, then the upload folder, then the indexed Drive; each file once
         func merge(_ lists: [DriveSearch.Result]...) -> [DriveSearch.Result] {
             var seen = Set<String>()
-            return lists.joined().filter { seen.insert(AB.driveId($0.m.u) ?? $0.m.u).inserted }.sorted { $0.date > $1.date }
+            return lists.joined().filter { DriveLinks.shared.isBroken($0.m.u) == nil && seen.insert(AB.driveId($0.m.u) ?? $0.m.u).inserted }.sorted { $0.date > $1.date }
         }
         let api = Task { () -> [DriveSearch.Result]? in
             let url = URL(string: "\(Self.api)?t=\(Int(Date().timeIntervalSince1970))&sort=date&order=desc")!
@@ -109,10 +111,12 @@ final class LatestStore: ObservableObject {
                 return DriveSearch.Result(m: Material(u: f.url, t: f.name, s: "Latest uploads", d: f.dateUploaded), kind: k, date: f.dateUploaded ?? "", size: f.size ?? 0)
             }
         }
+        let removedList = Task { await RemovedFiles.shared.refresh() }
         let fresh = await UploadFolder.load()
         // show the newest uploads right away; the full index (slow to wake up) is merged in when it answers
         if files.isEmpty, !(mine + fresh).isEmpty { files = merge(mine, fresh); state = 2 }
         let indexed = await api.value
+        _ = await removedList.value
         let failed = indexed == nil
         let merged = merge(mine, fresh, indexed ?? [])
         if merged.isEmpty {
@@ -120,6 +124,7 @@ final class LatestStore: ObservableObject {
             return
         }
         files = merged.sorted { $0.date > $1.date }
+        Self.save(files)
         loadedAt = Date()
         state = 2
     }
@@ -131,6 +136,7 @@ struct LatestScreen: View {
     @State private var type = "all"
     @ObservedObject private var account = AccountStore.shared
     @State private var deleteError: String?
+    @State private var confirming: DriveSearch.Result?
 
     private let types: [(String, String)] = [("all", "All"), ("pdf", "PDF"), ("ppt", "Slides"), ("doc", "Docs"), ("img", "Images")]
 
@@ -173,7 +179,7 @@ struct LatestScreen: View {
                             MaterialRow(m: r.m, kind: r.kind, meta: meta(r))
                                 .swipeActions(edge: .trailing) {
                                     if account.isAdmin {
-                                        Button(role: .destructive) { Task { await deleteUpload(r) } } label: { Label("Delete", systemImage: "trash") }
+                                        Button { confirming = r } label: { Label("Delete", systemImage: "trash") }.tint(.red)
                                     }
                                 }
                         }
@@ -187,6 +193,11 @@ struct LatestScreen: View {
         .listStyle(.insetGrouped)
         .searchable(text: $query, prompt: "Search latest uploads")
         .navigationTitle("Latest uploads")
+        .confirmationDialog(L("Delete from Drive?"), isPresented: Binding(get: { confirming != nil }, set: { if !$0 { confirming = nil } }), titleVisibility: .visible, presenting: confirming) { r in
+            Button(L("Delete from Drive"), role: .destructive) { Task { await deleteUpload(r) } }
+        } message: { _ in
+            Text(L("It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank."))
+        }
         .alert("Couldn't delete", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
             Button("OK", role: .cancel) {}
         } message: { Text(deleteError ?? "") }
@@ -219,5 +230,22 @@ extension LatestStore {
     func removeFile(_ url: String) async {
         files.removeAll { $0.m.u == url }
         MyUploads.remove(url)
+        Self.save(files)
+    }
+
+    /// The list from last time, so the screen opens with files in it while the new list loads
+    private struct SavedFile: Codable { var m: Material; var kind: String; var date: String; var size: Double }
+    private static var savedURL: URL { FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("latest-uploads.json") }
+
+    static func readSaved() -> [DriveSearch.Result] {
+        guard let d = try? Data(contentsOf: savedURL), let list = try? JSONDecoder().decode([SavedFile].self, from: d) else { return [] }
+        return list.filter { DriveLinks.shared.isBroken($0.m.u) == nil }.map {
+            DriveSearch.Result(m: $0.m, kind: Kind(rawValue: $0.kind) ?? .file, date: $0.date, size: $0.size)
+        }
+    }
+
+    static func save(_ files: [DriveSearch.Result]) {
+        let list = files.prefix(400).map { SavedFile(m: $0.m, kind: $0.kind.rawValue, date: $0.date, size: $0.size) }
+        if let d = try? JSONEncoder().encode(list) { try? d.write(to: savedURL, options: .atomic) }
     }
 }

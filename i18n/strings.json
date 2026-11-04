@@ -15,6 +15,14 @@
   "ar": "منذ %d أيام",
   "es": "hace %d días"
  },
+ "%d files": {
+  "ar": "%d ملف",
+  "es": "%d archivos"
+ },
+ "%d friends": {
+  "ar": "%d أصدقاء",
+  "es": "%d amigos"
+ },
  "%d h ago": {
   "ar": "منذ %d ساعة",
   "es": "hace %d h"
@@ -83,9 +91,57 @@
   "ar": "%d صوت",
   "es": "%d votos"
  },
+ "%d%% off applied": {
+  "ar": "تم تطبيق خصم %d%%",
+  "es": "%d%% de descuento aplicado"
+ },
+ "%s accepted your friend request": {
+  "ar": "%s قبل طلب صداقتك",
+  "es": "%s aceptó tu solicitud de amistad"
+ },
+ "%s asked to add: %s": {
+  "ar": "%s طلب إضافة: %s",
+  "es": "%s pidió añadir: %s"
+ },
+ "%s has a question for you": {
+  "ar": "%s لديه سؤال لك",
+  "es": "%s tiene una pregunta para ti"
+ },
+ "%s in 10 minutes": {
+  "ar": "%s بعد 10 دقائق",
+  "es": "%s en 10 minutos"
+ },
+ "%s needs your notes": {
+  "ar": "%s يحتاج ملخصاتك",
+  "es": "%s necesita tus apuntes"
+ },
+ "%s poked you": {
+  "ar": "%s نكزك",
+  "es": "%s te dio un toque"
+ },
  "%s replied to you": {
   "ar": "%s ردّ عليك",
   "es": "%s te respondió"
+ },
+ "%s wants to be your friend": {
+  "ar": "%s يريد أن يكون صديقك",
+  "es": "%s quiere ser tu amigo"
+ },
+ "%s wants to get coffee with you": {
+  "ar": "%s يريد شرب القهوة معك",
+  "es": "%s quiere tomar un café contigo"
+ },
+ "%s wants to meet you": {
+  "ar": "%s يريد مقابلتك",
+  "es": "%s quiere verte"
+ },
+ "%s wants to meet you at %s": {
+  "ar": "%s يريد مقابلتك في %s",
+  "es": "%s quiere verte en %s"
+ },
+ "%s wants to study with you": {
+  "ar": "%s يريد الدراسة معك",
+  "es": "%s quiere estudiar contigo"
  },
  "06 = Hall Number (Hall 06)": {
   "ar": "06 = رقم القاعة (القاعة 06)"
@@ -197,6 +253,10 @@
  "7 - College of Nursing": {
   "ar": "7 - كلية التمريض"
  },
+ "7 AM – 4 PM": {
+  "ar": "7 ص – 4 م",
+  "es": "7 AM – 4 PM"
+ },
  "8 - College of Arts": {
   "ar": "8 - كلية الآداب"
  },
@@ -216,6 +276,10 @@
  },
  "A plan to study it easily": {
   "ar": "خطة لدراستها بسهولة"
+ },
+ "A ringtone from my phone…": {
+  "ar": "نغمة من هاتفي…",
+  "es": "Un tono de mi teléfono…"
  },
  "A volunteer, non-profit project": {
   "ar": "مشروع تطوعي غير ربحي"
@@ -286,6 +350,10 @@
  "ASU Test Banks is a comprehensive online resource for students and educators, offering an extensive collection of test banks, PDFs, and quizzes.": {
   "ar": "بنك اختبارات ASU مصدر شامل على الإنترنت للطلاب والمدرسين، يضم مجموعة كبيرة من بنوك الأسئلة وملفات PDF والكويزات."
  },
+ "ASU campus": {
+  "ar": "حرم الجامعة",
+  "es": "Campus de ASU"
+ },
  "ASU maroon": {
   "ar": "عنابي ASU"
  },
@@ -314,6 +382,10 @@
   "ar": "عنه",
   "es": "Sobre esto"
  },
+ "About the group": {
+  "ar": "عن المجموعة",
+  "es": "Sobre el grupo"
+ },
  "About this app": {
   "ar": "حول هذا التطبيق",
   "es": "Acerca de esta app"
@@ -338,9 +410,17 @@
   "ar": "لون التمييز",
   "es": "Color de acento"
  },
+ "Accept": {
+  "ar": "قبول",
+  "es": "Aceptar"
+ },
  "Accept and continue": {
   "ar": "موافق ومتابعة",
   "es": "Aceptar y continuar"
+ },
+ "Accepted": {
+  "ar": "مقبول",
+  "es": "Aceptado"
  },
  "Accepted formats: PDF, DOCX, PPTX, JPG, PNG": {
   "ar": "الصيغ المقبولة: PDF وDOCX وPPTX وJPG وPNG"
@@ -387,9 +467,17 @@
   "ar": "أضف مادة، مثل Calculus 1",
   "es": "Añade un curso, p. ej. Calculus 1"
  },
+ "Add a lecture": {
+  "ar": "أضف محاضرة",
+  "es": "Añadir una clase"
+ },
  "Add a room": {
   "ar": "أضف غرفة",
   "es": "Añadir una sala"
+ },
+ "Add a tab": {
+  "ar": "أضف تبويباً",
+  "es": "Añadir una pestaña"
  },
  "Add a topic, e.g. Integrals, Midterm review": {
   "ar": "أضف موضوعًا، مثل التكامل أو مراجعة الميد"
@@ -403,16 +491,44 @@
  "Add at least one topic you want to study.": {
   "ar": "أضف موضوعًا واحدًا على الأقل تريد دراسته."
  },
+ "Add friend": {
+  "ar": "إضافة صديق",
+  "es": "Añadir amigo"
+ },
+ "Add friends or write the first one.": {
+  "ar": "أضف أصدقاء أو اكتب أول منشور.",
+  "es": "Añade amigos o escribe la primera."
+ },
+ "Add your classmates as friends": {
+  "ar": "أضف زملاءك كأصدقاء",
+  "es": "Añade a tus compañeros como amigos"
+ },
+ "Add your group": {
+  "ar": "أضف مجموعتك",
+  "es": "Añade tu grupo"
+ },
  "Add your group's link": {
   "ar": "أضف رابط مجموعتك",
   "es": "Añade el enlace de tu grupo"
+ },
+ "Add your subject, hall and time. We'll remind you 10 minutes before it starts.": {
+  "ar": "أضف المادة والقاعة والوقت، وسنذكرك قبل البدء بـ 10 دقائق.",
+  "es": "Añade tu materia, aula y hora. Te avisaremos 10 minutos antes de empezar."
  },
  "Add, rename, lock, archive or delete": {
   "ar": "إضافة أو إعادة تسمية أو قفل أو أرشفة أو حذف",
   "es": "Añadir, renombrar, bloquear, archivar o eliminar"
  },
+ "Added by students": {
+  "ar": "أضافها الطلاب",
+  "es": "Añadidos por estudiantes"
+ },
  "Additional Resources": {
   "ar": "مصادر إضافية"
+ },
+ "Address": {
+  "ar": "العنوان",
+  "es": "Dirección"
  },
  "Admin": {
   "ar": "الإدارة",
@@ -488,6 +604,14 @@
   "ar": "التكنولوجيا الزراعية",
   "es": "Tecnología agrícola"
  },
+ "Alert": {
+  "ar": "تنبيه",
+  "es": "Alerta"
+ },
+ "Alerts": {
+  "ar": "التنبيهات",
+  "es": "Avisos"
+ },
  "Alias ALANQ99 · Bank of Jordan": {
   "ar": "الاسم المستعار ALANQ99 · بنك الأردن"
  },
@@ -525,6 +649,10 @@
   "ar": "العلوم الطبية المساندة",
   "es": "Ciencias médicas aplicadas"
  },
+ "Allow exact reminders": {
+  "ar": "السماح بالتذكيرات الدقيقة",
+  "es": "Permitir recordatorios exactos"
+ },
  "Almost there": {
   "ar": "اقتربت",
   "es": "Ya casi"
@@ -532,6 +660,14 @@
  "Also searching for": {
   "ar": "نبحث أيضًا عن",
   "es": "También buscamos"
+ },
+ "Alumni": {
+  "ar": "خريج",
+  "es": "Egresado"
+ },
+ "Alumni Follow-up Platform | منصة متابعة الخريجين": {
+  "ar": "منصة متابعة الخريجين",
+  "es": "Plataforma de seguimiento de egresados"
  },
  "Always dark": {
   "ar": "داكن دائمًا",
@@ -612,6 +748,10 @@
   "ar": "أي",
   "es": "Cualquiera"
  },
+ "Any file size, as many files as you like.": {
+  "ar": "أي حجم للملف، وبالعدد الذي تريده.",
+  "es": "Cualquier tamaño de archivo y tantos archivos como quieras."
+ },
  "Any illegal activity, including academic dishonesty in violation of university policy.": {
   "ar": "أي نشاط غير قانوني، بما في ذلك الغش الأكاديمي المخالف لسياسة الجامعة."
  },
@@ -622,6 +762,10 @@
  "Anything special? (optional)": {
   "ar": "أي طلب خاص؟ (اختياري)",
   "es": "¿Algo especial? (opcional)"
+ },
+ "Anything the owner should know": {
+  "ar": "أي شيء يجب أن يعرفه المالك",
+  "es": "Algo que el propietario deba saber"
  },
  "Anything the team should know": {
   "ar": "أي شيء يجب أن يعرفه الفريق",
@@ -635,12 +779,20 @@
   "ar": "التطبيق",
   "es": "App"
  },
+ "App icon": {
+  "ar": "أيقونة التطبيق",
+  "es": "Icono de la app"
+ },
  "Appearance": {
   "ar": "المظهر",
   "es": "Apariencia"
  },
  "Applied Science Private University — Student & Parent Login": {
   "ar": "جامعة العلوم التطبيقية الخاصة: دخول الطلاب وأولياء الأمور"
+ },
+ "Applied Science University's official platform for keeping in touch with its graduates.": {
+  "ar": "المنصة الرسمية لجامعة العلوم التطبيقية للبقاء على تواصل مع خريجيها.",
+  "es": "La plataforma oficial de la Universidad de Ciencias Aplicadas para mantener el contacto con sus egresados."
  },
  "Approved": {
   "ar": "مقبول",
@@ -716,6 +868,10 @@
  "Ask the WhatsApp community for free": {
   "ar": "اسأل مجتمع واتساب مجاناً",
   "es": "Pregunta gratis en la comunidad de WhatsApp"
+ },
+ "Ask to meet": {
+  "ar": "طلب مقابلة",
+  "es": "Pedir verse"
  },
  "Ask your college's WhatsApp group": {
   "ar": "اسأل مجموعة واتساب لكليتك",
@@ -811,6 +967,10 @@
   "ar": "محظورون",
   "es": "Bloqueados"
  },
+ "Basic retouching, color grading, crop and export. 3 JD a photo.": {
+  "ar": "تعديل أساسي وتصحيح ألوان وقص وتصدير. 3 دنانير للصورة.",
+  "es": "Retoque básico, color, recorte y exportación. 3 JD por foto."
+ },
  "Be fair": {
   "ar": "كن منصفًا",
   "es": "Sé justo"
@@ -844,6 +1004,10 @@
  "Before you upload": {
   "ar": "قبل الرفع",
   "es": "Antes de subir"
+ },
+ "Bell": {
+  "ar": "جرس",
+  "es": "Campana"
  },
  "Below 60 the average is under the passing limit.": {
   "ar": "المعدل تحت 60 أقل من حد النجاح.",
@@ -891,6 +1055,18 @@
  "Book a photoshoot": {
   "ar": "احجز جلسة تصوير",
   "es": "Reserva una sesión de fotos"
+ },
+ "Book and cap": {
+  "ar": "كتاب وقبعة تخرج",
+  "es": "Libro y birrete"
+ },
+ "Book another session": {
+  "ar": "احجز جلسة أخرى",
+  "es": "Reservar otra sesión"
+ },
+ "Booking submitted!": {
+  "ar": "تم إرسال الحجز!",
+  "es": "¡Reserva enviada!"
  },
  "Browse by subject": {
   "ar": "تصفح حسب المادة",
@@ -992,6 +1168,10 @@
   "ar": "التقويمات والجداول",
   "es": "Calendarios y horarios"
  },
+ "Call 911": {
+  "ar": "اتصل بالرقم 911",
+  "es": "Llamar al 911"
+ },
  "Campus & study": {
   "ar": "الحرم والدراسة"
  },
@@ -1041,6 +1221,10 @@
  },
  "Can’t sign in?": {
   "ar": "لا تستطيع تسجيل الدخول؟"
+ },
+ "Category": {
+  "ar": "الفئة",
+  "es": "Categoría"
  },
  "Central Limit Theorem": {
   "ar": "نظرية النهاية المركزية"
@@ -1115,6 +1299,10 @@
  "Children": {
   "ar": "الأطفال"
  },
+ "Chime": {
+  "ar": "رنين",
+  "es": "Campanilla"
+ },
  "Choose": {
   "ar": "اختر",
   "es": "Elegir"
@@ -1129,6 +1317,10 @@
  "Choose a PDF": {
   "ar": "اختر ملف PDF",
   "es": "Elige un PDF"
+ },
+ "Choose a file": {
+  "ar": "اختر ملفاً",
+  "es": "Elegir un archivo"
  },
  "Choose a photo": {
   "ar": "اختر صورة",
@@ -1156,6 +1348,10 @@
  "Class rep": {
   "ar": "ممثل الشعبة",
   "es": "Delegado"
+ },
+ "Classic": {
+  "ar": "الكلاسيكية",
+  "es": "Clásico"
  },
  "Classical Literature — Class Schedule": {
   "ar": "الأدب الكلاسيكي: جدول المحاضرات"
@@ -1210,6 +1406,10 @@
   "ar": "مقبول",
   "es": "Aceptable"
  },
+ "Clearly label documents with course information": {
+  "ar": "اكتب معلومات المادة بوضوح على الملفات",
+  "es": "Etiqueta los documentos con los datos del curso"
+ },
  "CliQ alias": {
   "ar": "اسم CliQ المستعار",
   "es": "Alias CliQ"
@@ -1234,6 +1434,22 @@
  "Close and reopen ASU Bank to finish switching the language.": {
   "ar": "أغلق ASU Bank وافتحه من جديد لإكمال تغيير اللغة.",
   "es": "Cierra y vuelve a abrir ASU Bank para terminar de cambiar el idioma."
+ },
+ "Cloudy": {
+  "ar": "غائم",
+  "es": "Nublado"
+ },
+ "Club": {
+  "ar": "نادٍ",
+  "es": "Club"
+ },
+ "Coffee": {
+  "ar": "قهوة",
+  "es": "Café"
+ },
+ "Coffee?": {
+  "ar": "قهوة؟",
+  "es": "¿Un café?"
  },
  "College": {
   "ar": "الكلية",
@@ -1392,11 +1608,19 @@
  "Couldn't block": {
   "ar": "تعذر الحظر"
  },
+ "Couldn't change the icon": {
+  "ar": "تعذّر تغيير الأيقونة",
+  "es": "No se pudo cambiar el icono"
+ },
  "Couldn't connect. Check your connection and try again.": {
   "ar": "تعذر الاتصال. تحقق من اتصالك وحاول مجددًا."
  },
  "Couldn't delete": {
   "ar": "تعذر الحذف"
+ },
+ "Couldn't do that": {
+  "ar": "تعذر تنفيذ ذلك",
+  "es": "No se pudo hacer"
  },
  "Couldn't load the latest files.": {
   "ar": "تعذر تحميل أحدث الملفات.",
@@ -1405,6 +1629,10 @@
  "Couldn't load the ratings": {
   "ar": "تعذر تحميل التقييمات",
   "es": "No se pudieron cargar las valoraciones"
+ },
+ "Couldn't load the tips. Check your connection and try again.": {
+  "ar": "تعذر تحميل النصائح. تحقق من اتصالك وحاول مرة أخرى.",
+  "es": "No se pudieron cargar los consejos. Revisa tu conexión e inténtalo de nuevo."
  },
  "Couldn't open": {
   "ar": "تعذر الفتح"
@@ -1426,11 +1654,19 @@
  "Couldn't read that file. Try another PDF.": {
   "ar": "تعذرت قراءة الملف. جرّب ملف PDF آخر."
  },
+ "Couldn't read this file.": {
+  "ar": "تعذرت قراءة هذا الملف.",
+  "es": "No se pudo leer este archivo."
+ },
  "Couldn't save": {
   "ar": "تعذر الحفظ"
  },
  "Couldn't send": {
   "ar": "تعذر الإرسال"
+ },
+ "Couldn't send your booking. Check your connection and try again.": {
+  "ar": "تعذر إرسال حجزك. تحقق من اتصالك وحاول مرة أخرى.",
+  "es": "No se pudo enviar tu reserva. Revisa tu conexión e inténtalo de nuevo."
  },
  "Countdown Timer": {
   "ar": "العد التنازلي"
@@ -1485,6 +1721,10 @@
  "Create your account": {
   "ar": "أنشئ حسابك"
  },
+ "Crimson": {
+  "ar": "قرمزي",
+  "es": "Carmesí"
+ },
  "Cumulative average": {
   "ar": "المعدل التراكمي",
   "es": "Promedio acumulado"
@@ -1503,6 +1743,10 @@
  "Custom summaries and test banks made for you (3 JD).": {
   "ar": "ملخصات وبنوك أسئلة مخصصة لك (3 دنانير)."
  },
+ "Customize tab bar": {
+  "ar": "تخصيص شريط التبويب",
+  "es": "Personalizar la barra de pestañas"
+ },
  "Cyber security 🫀": {
   "ar": "الأمن السيبراني 🫀"
  },
@@ -1519,8 +1763,16 @@
  "Day": {
   "ar": "اليوم"
  },
+ "Days": {
+  "ar": "الأيام",
+  "es": "Días"
+ },
  "Deanship": {
   "ar": "العمادة"
+ },
+ "Decline": {
+  "ar": "رفض",
+  "es": "Rechazar"
  },
  "Delete": {
   "ar": "حذف",
@@ -1536,6 +1788,14 @@
   "ar": "حذف الحساب",
   "es": "Eliminar cuenta"
  },
+ "Delete from Drive": {
+  "ar": "حذف من درايف",
+  "es": "Eliminar de Drive"
+ },
+ "Delete from Drive?": {
+  "ar": "حذف من درايف؟",
+  "es": "¿Eliminar de Drive?"
+ },
  "Delete message": {
   "ar": "حذف الرسالة"
  },
@@ -1543,12 +1803,20 @@
   "ar": "حذف حسابي",
   "es": "Eliminar mi cuenta"
  },
+ "Delete post": {
+  "ar": "حذف المنشور",
+  "es": "Eliminar publicación"
+ },
  "Delete room": {
   "ar": "حذف الغرفة",
   "es": "Eliminar sala"
  },
  "Delete submission": {
   "ar": "حذف المشاركة"
+ },
+ "Delete this lecture": {
+  "ar": "حذف هذه المحاضرة",
+  "es": "Eliminar esta clase"
  },
  "Delete this room?": {
   "ar": "حذف هذه الغرفة؟",
@@ -1589,6 +1857,10 @@
  "Dentistry": {
   "ar": "طب الأسنان",
   "es": "Odontología"
+ },
+ "Describe what you're suggesting": {
+  "ar": "صف ما تقترحه",
+  "es": "Describe lo que sugieres"
  },
  "Descriptive Statistical Measures": {
   "ar": "المقاييس الإحصائية الوصفية"
@@ -1666,6 +1938,10 @@
   "ar": "لا تفتحوه",
   "es": "No abrir"
  },
+ "Don't share current semester exams that might still be in use": {
+  "ar": "لا تشارك امتحانات الفصل الحالي التي قد تكون قيد الاستخدام",
+  "es": "No compartas exámenes del semestre actual que aún se usen"
+ },
  "Don't share other people's private information.": {
   "ar": "لا تشارك المعلومات الخاصة بالآخرين."
  },
@@ -1701,6 +1977,10 @@
  "Dorm Common Area": {
   "ar": "القاعة المشتركة في السكن"
  },
+ "Dorm or housing": {
+  "ar": "السكن",
+  "es": "Residencia"
+ },
  "Download": {
   "ar": "تنزيل",
   "es": "Descargar"
@@ -1724,6 +2004,10 @@
  "Downloading…": {
   "ar": "جارٍ التنزيل…"
  },
+ "Drag to reorder. Home and More always stay, and you can add up to %d more.": {
+  "ar": "اسحب لتغيير الترتيب. تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.",
+  "es": "Arrastra para reordenar. Inicio y Más siempre se quedan, y puedes añadir hasta %d más."
+ },
  "Drive search failed. Tap to try again.": {
   "ar": "فشل البحث في Drive. اضغط للمحاولة مجدداً.",
   "es": "Falló la búsqueda en Drive. Toca para reintentar."
@@ -1731,6 +2015,14 @@
  "Drive search is not answering.": {
   "ar": "البحث في Drive لا يستجيب.",
   "es": "La búsqueda en Drive no responde."
+ },
+ "Drizzle": {
+  "ar": "رذاذ",
+  "es": "Llovizna"
+ },
+ "Drops": {
+  "ar": "قطرات",
+  "es": "Gotas"
  },
  "Drug Design": {
   "ar": "تصميم الأدوية"
@@ -1740,6 +2032,10 @@
  },
  "E-Services & Learning Platforms": {
   "ar": "الخدمات الإلكترونية ومنصات التعلم"
+ },
+ "Each college's share of the files sorted by college. It shows where we have the most, not how much of a college's courses is covered. General files and the archive aren't counted, and search covers them too.": {
+  "ar": "حصة كل كلية من الملفات المصنفة حسب الكلية. توضح أين يتوفر لدينا أكثر، وليس نسبة ما تغطيه من مواد الكلية. الملفات العامة والأرشيف غير محسوبة، والبحث يشملها أيضاً.",
+  "es": "La parte de cada facultad entre los archivos ordenados por facultad. Muestra dónde tenemos más, no cuánto de los cursos de una facultad está cubierto. Los archivos generales y el archivo histórico no cuentan, y la búsqueda también los incluye."
  },
  "Earlier": {
   "ar": "سابقًا",
@@ -1757,13 +2053,25 @@
   "ar": "تعديل",
   "es": "Editar"
  },
+ "Edit lecture": {
+  "ar": "تعديل المحاضرة",
+  "es": "Editar clase"
+ },
  "Edit profile": {
   "ar": "تعديل الملف الشخصي",
   "es": "Editar perfil"
  },
+ "Edit quality": {
+  "ar": "جودة التعديل",
+  "es": "Calidad de edición"
+ },
  "Edit room": {
   "ar": "تعديل الغرفة",
   "es": "Editar sala"
+ },
+ "Editing (%d × 3 JD)": {
+  "ar": "التعديل (%d × 3 د.أ)",
+  "es": "Edición (%d × 3 JD)"
  },
  "Editing your message": {
   "ar": "تعديل رسالتك",
@@ -1794,6 +2102,10 @@
   "ar": "البريد الإلكتروني (تُرسل النتائج إليه)",
   "es": "Correo (aquí se envían las coincidencias)"
  },
+ "Email (optional)": {
+  "ar": "البريد الإلكتروني (اختياري)",
+  "es": "Correo (opcional)"
+ },
  "Email (your matches are sent here)": {
   "ar": "البريد الإلكتروني (تُرسل نتائجك إليه)",
   "es": "Correo (aquí recibirás tus coincidencias)"
@@ -1803,6 +2115,10 @@
  },
  "Email necro144@yahoo.com from the address on your account and we will delete it for you.": {
   "ar": "راسل necro144@yahoo.com من البريد المسجل في حسابك وسنحذفه لك."
+ },
+ "Email, WhatsApp or ASU ID": {
+  "ar": "البريد أو واتساب أو الرقم الجامعي",
+  "es": "Correo, WhatsApp o ID de ASU"
  },
  "Empty folder": {
   "ar": "مجلد فارغ",
@@ -1889,11 +2205,19 @@
  "Enter your phone number.": {
   "ar": "أدخل رقم هاتفك."
  },
+ "Estimated total": {
+  "ar": "الإجمالي التقديري",
+  "es": "Total estimado"
+ },
  "Evening": {
   "ar": "مساءً"
  },
  "Event": {
   "ar": "الحدث"
+ },
+ "Every frame, a story. Fill in your details and see the price as you go. The photographer reviews your request and sends the final invoice.": {
+  "ar": "كل لقطة حكاية. املأ بياناتك وشاهد السعر أثناء ذلك، وسيراجع المصور طلبك ويرسل الفاتورة النهائية.",
+  "es": "Cada imagen, una historia. Rellena tus datos y mira el precio al instante. El fotógrafo revisa tu solicitud y envía la factura final."
  },
  "Every teacher shows an average out of 10 and how many students voted.": {
   "ar": "يظهر لكل مدرس متوسط من 10 وعدد المصوتين."
@@ -1920,6 +2244,10 @@
  },
  "Example of PDF": {
   "ar": "مثال على دالة الكثافة"
+ },
+ "Example: [PHY 202] Dr. Smith, Fall 2023 midterm with solutions.": {
+  "ar": "مثال: [PHY 202] د. سميث، امتحان منتصف الفصل خريف 2023 مع الحلول.",
+  "es": "Ejemplo: [PHY 202] Dr. Smith, parcial de otoño de 2023 con soluciones."
  },
  "Excellent": {
   "ar": "ممتاز"
@@ -1966,6 +2294,10 @@
  "False": {
   "ar": "خطأ"
  },
+ "Feed": {
+  "ar": "المنشورات",
+  "es": "Publicaciones"
+ },
  "Feels safe": {
   "ar": "أشعر بالأمان",
   "es": "Se siente seguro"
@@ -1976,6 +2308,10 @@
  },
  "Fifth Year": {
   "ar": "السنة الخامسة"
+ },
+ "Fifth year": {
+  "ar": "السنة الخامسة",
+  "es": "Quinto año"
  },
  "File": {
   "ar": "ملف",
@@ -2043,6 +2379,10 @@
  "Final Exam Timings with Countdown": {
   "ar": "مواعيد الامتحانات النهائية مع العد التنازلي"
  },
+ "Find": {
+  "ar": "بحث",
+  "es": "Buscar"
+ },
  "Find a hall": {
   "ar": "ابحث عن قاعة",
   "es": "Buscar un aula"
@@ -2067,6 +2407,10 @@
  "Find my study buddies": {
   "ar": "ابحث عن زملاء دراسة"
  },
+ "Find people": {
+  "ar": "ابحث عن أشخاص",
+  "es": "Buscar personas"
+ },
  "Find study buddies": {
   "ar": "ابحث عن زملاء دراسة",
   "es": "Encuentra compañeros de estudio"
@@ -2084,6 +2428,14 @@
  "First Year": {
   "ar": "السنة الأولى"
  },
+ "First name": {
+  "ar": "الاسم الأول",
+  "es": "Nombre"
+ },
+ "First year": {
+  "ar": "السنة الأولى",
+  "es": "Primer año"
+ },
  "Flexible": {
   "ar": "مرن",
   "es": "Flexible"
@@ -2095,6 +2447,10 @@
  "Floor %d": {
   "ar": "الطابق %d",
   "es": "Planta %d"
+ },
+ "Foggy": {
+  "ar": "ضباب",
+  "es": "Niebla"
  },
  "Folder": {
   "ar": "مجلد",
@@ -2112,6 +2468,10 @@
  },
  "Food Science": {
   "ar": "علوم الأغذية"
+ },
+ "Football, coding, photography…": {
+  "ar": "كرة القدم، البرمجة، التصوير…",
+  "es": "Fútbol, programación, fotografía…"
  },
  "For the campus display screen": {
   "ar": "لشاشة العرض في الحرم الجامعي"
@@ -2143,6 +2503,14 @@
  "Fourth Year": {
   "ar": "السنة الرابعة"
  },
+ "Fourth year": {
+  "ar": "السنة الرابعة",
+  "es": "Cuarto año"
+ },
+ "Free": {
+  "ar": "مجاني",
+  "es": "Gratis"
+ },
  "Free alternative: ask in the WhatsApp community — someone may already have it.": {
   "ar": "بديل مجاني: اسأل في مجتمع واتساب، فقد يكون الملف عند أحدهم."
  },
@@ -2154,6 +2522,26 @@
  },
  "Friday": {
   "ar": "الجمعة"
+ },
+ "Friend requests": {
+  "ar": "طلبات الصداقة",
+  "es": "Solicitudes de amistad"
+ },
+ "Friend requests and pokes show up here.": {
+  "ar": "تظهر هنا طلبات الصداقة والنكزات.",
+  "es": "Aquí aparecen las solicitudes y los toques."
+ },
+ "Friends": {
+  "ar": "الأصدقاء",
+  "es": "Amigos"
+ },
+ "Friends and pokes": {
+  "ar": "الأصدقاء والنكزات",
+  "es": "Amigos y toques"
+ },
+ "From": {
+  "ar": "من",
+  "es": "Desde"
  },
  "From your phone, Drive or Downloads": {
   "ar": "من هاتفك أو Drive أو التنزيلات",
@@ -2191,6 +2579,10 @@
   "ar": "يمنحه كلمة مرور مؤقتة",
   "es": "Le da una contraseña temporal"
  },
+ "Gold": {
+  "ar": "ذهبي",
+  "es": "Dorado"
+ },
  "Good": {
   "ar": "جيد",
   "es": "Bien"
@@ -2215,6 +2607,14 @@
   "ar": "خرّيج",
   "es": "Graduado"
  },
+ "Graduation": {
+  "ar": "تخرج",
+  "es": "Graduación"
+ },
+ "Graduation cap": {
+  "ar": "قبعة التخرج",
+  "es": "Birrete"
+ },
  "Graphical Representation of Data 1": {
   "ar": "التمثيل البياني للبيانات 1"
  },
@@ -2224,6 +2624,18 @@
  },
  "Ground floor": {
   "ar": "الطابق الأرضي"
+ },
+ "Group": {
+  "ar": "مجموعة",
+  "es": "Grupo"
+ },
+ "Group name": {
+  "ar": "اسم المجموعة",
+  "es": "Nombre del grupo"
+ },
+ "Group requests": {
+  "ar": "طلبات المجموعات",
+  "es": "Solicitudes de grupos"
  },
  "Groups & resources": {
   "ar": "المجموعات والموارد",
@@ -2240,8 +2652,20 @@
  "Groups for courses, clubs and interests": {
   "ar": "مجموعات للمواد والنوادي والاهتمامات"
  },
+ "Guidelines": {
+  "ar": "الإرشادات",
+  "es": "Normas"
+ },
  "Gymnasium": {
   "ar": "الصالة الرياضية"
+ },
+ "Hall": {
+  "ar": "القاعة",
+  "es": "Aula"
+ },
+ "Hall %s · starts at %s": {
+  "ar": "قاعة %s · تبدأ الساعة %s",
+  "es": "Aula %s · empieza a las %s"
  },
  "Hall numbers follow a specific format to help you locate them easily. For example:": {
   "ar": "تتبع أرقام القاعات نمطًا محددًا لتسهيل الوصول إليها. مثال:"
@@ -2292,12 +2716,20 @@
   "ar": "أخفِ رقمك الجامعي واسمك في الصور الممسوحة.",
   "es": "Oculta tu número universitario y nombre en los escaneos."
  },
+ "High %d° · Low %d°": {
+  "ar": "العظمى %d° · الصغرى %d°",
+  "es": "Máx. %d° · Mín. %d°"
+ },
  "Histogram": {
   "ar": "المدرج التكراري"
  },
  "Home": {
   "ar": "الرئيسية",
   "es": "Inicio"
+ },
+ "Home and More always stay, and you can add up to %d more.": {
+  "ar": "تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.",
+  "es": "Inicio y Más siempre se quedan, y puedes añadir hasta %d más."
  },
  "Homework": {
   "ar": "الواجبات",
@@ -2312,6 +2744,10 @@
  },
  "How can I access the test banks?": {
   "ar": "كيف أصل إلى بنوك الأسئلة؟"
+ },
+ "How can we contact you? (optional)": {
+  "ar": "كيف نتواصل معك؟ (اختياري)",
+  "es": "¿Cómo podemos contactarte? (opcional)"
  },
  "How do I contact support?": {
   "ar": "كيف أتواصل مع الدعم؟"
@@ -2364,9 +2800,21 @@
   "ar": "أوافق على شروط الخدمة",
   "es": "Acepto los Términos del servicio"
  },
+ "I agree to the upload rules": {
+  "ar": "أوافق على قواعد الرفع",
+  "es": "Acepto las normas de subida"
+ },
  "I agree to these rules": {
   "ar": "أوافق على هذه القوانين",
   "es": "Acepto estas normas"
+ },
+ "I have a question": {
+  "ar": "لدي سؤال",
+  "es": "Tengo una pregunta"
+ },
+ "I need your notes": {
+  "ar": "أحتاج ملخصاتك",
+  "es": "Necesito tus apuntes"
  },
  "IN REVIEW": {
   "ar": "قيد المراجعة",
@@ -2446,6 +2894,10 @@
   "ar": "بعد %d أيام",
   "es": "En %d días"
  },
+ "In an emergency": {
+  "ar": "في حالات الطوارئ",
+  "es": "En una emergencia"
+ },
  "In person": {
   "ar": "حضوريًا"
  },
@@ -2457,8 +2909,16 @@
   "ar": "في التطبيق",
   "es": "En la app"
  },
+ "In your tab bar": {
+  "ar": "في شريط التبويب",
+  "es": "En tu barra de pestañas"
+ },
  "In-Person": {
   "ar": "حضوريًا"
+ },
+ "Include the course code, professor name and semester if you know them. At least 20 characters.": {
+  "ar": "اذكر رمز المادة واسم المدرّس والفصل إن كنت تعرفها. 20 حرفاً على الأقل.",
+  "es": "Incluye el código del curso, el profesor y el semestre si los conoces. Al menos 20 caracteres."
  },
  "Independence": {
   "ar": "الاستقلال"
@@ -2494,6 +2954,14 @@
  "Instructor": {
   "ar": "المدرس"
  },
+ "Interests": {
+  "ar": "الاهتمامات",
+  "es": "Intereses"
+ },
+ "Invite link": {
+  "ar": "رابط الدعوة",
+  "es": "Enlace de invitación"
+ },
  "Is ASU Test Banks mobile-friendly?": {
   "ar": "هل الموقع مناسب للجوال؟"
  },
@@ -2506,13 +2974,33 @@
  "Is there an iOS app for ASU Test Banks?": {
   "ar": "هل يوجد تطبيق iOS؟"
  },
+ "It disappears from ASU Bank for everyone. The folder itself stays in Drive.": {
+  "ar": "يختفي من ASU Bank للجميع. يبقى المجلد نفسه في درايف.",
+  "es": "Desaparece de ASU Bank para todos. La carpeta sigue en Drive."
+ },
  "It may already be there, for free": {
   "ar": "قد يكون موجوداً مجاناً",
   "es": "Puede que ya esté, gratis"
  },
+ "It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank.": {
+  "ar": "ينتقل إلى سلة درايف ويختفي من ASU Bank للجميع. الملف المملوك لحساب درايف آخر يُزال من ASU Bank فقط.",
+  "es": "Va a la papelera de Drive y desaparece de ASU Bank para todos. Un archivo de otra cuenta de Drive solo se quita de ASU Bank."
+ },
+ "It's cold. Take a jacket.": {
+  "ar": "الجو بارد. خذ معطفاً.",
+  "es": "Hace frío. Lleva una chaqueta."
+ },
+ "It's hot. Drink water and stay in the shade.": {
+  "ar": "الجو حار. اشرب الماء وابقَ في الظل.",
+  "es": "Hace calor. Bebe agua y busca la sombra."
+ },
  "Its messages disappear from the apps. This can't be undone.": {
   "ar": "ستختفي رسائلها من التطبيقات. لا يمكن التراجع عن ذلك.",
   "es": "Sus mensajes desaparecen de las apps. No se puede deshacer."
+ },
+ "JD": {
+  "ar": "د.أ",
+  "es": "JD"
  },
  "Join": {
   "ar": "انضم",
@@ -2548,11 +3036,23 @@
   "ar": "تاريخ الانضمام",
   "es": "Se unió"
  },
+ "Jordan's emergency number: ambulance, fire and police": {
+  "ar": "رقم الطوارئ في الأردن: الإسعاف والدفاع المدني والشرطة",
+  "es": "Número de emergencias de Jordania: ambulancia, bomberos y policía"
+ },
  "Junior": {
   "ar": "سنة ثالثة"
  },
  "Keep discussions relevant to university/academic matters.": {
   "ar": "إبقاء النقاشات متعلقة بالشؤون الجامعية والأكاديمية."
+ },
+ "Keep the app open until your files finish. You can close this screen.": {
+  "ar": "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك إغلاق هذه الشاشة.",
+  "es": "Mantén la app abierta hasta que terminen tus archivos. Puedes cerrar esta pantalla."
+ },
+ "Keep the app open until your files finish. You can leave this screen.": {
+  "ar": "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك مغادرة هذه الشاشة.",
+  "es": "Mantén la app abierta hasta que terminen tus archivos. Puedes salir de esta pantalla."
  },
  "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21).": {
   "ar": "تابع الكتابة: أرقام القاعات من 4 أرقام (5 للمبنيين 10 و21)."
@@ -2574,6 +3074,10 @@
  },
  "Large files with no size limit.": {
   "ar": "ملفات كبيرة دون حد للحجم."
+ },
+ "Last name": {
+  "ar": "اسم العائلة",
+  "es": "Apellido"
  },
  "Last seen": {
   "ar": "آخر ظهور",
@@ -2607,15 +3111,27 @@
   "ar": "أحدث الملفات",
   "es": "Últimas subidas"
  },
+ "Lavender": {
+  "ar": "خزامى",
+  "es": "Lavanda"
+ },
  "Law": {
   "ar": "الحقوق",
   "es": "Derecho"
+ },
+ "Lecture": {
+  "ar": "المحاضرة",
+  "es": "Clase"
  },
  "Lecture #": {
   "ar": "رقم المحاضرة"
  },
  "Lecture 3: Counting Methods and Multiplication Rule": {
   "ar": "المحاضرة 3: طرق العد وقاعدة الضرب"
+ },
+ "Lecture reminders": {
+  "ar": "تذكيرات المحاضرات",
+  "es": "Recordatorios de clases"
  },
  "Legend": {
   "ar": "أسطورة",
@@ -2640,6 +3156,10 @@
  },
  "Life Skills": {
   "ar": "المهارات الحياتية"
+ },
+ "Life hacks": {
+  "ar": "نصائح حياتية",
+  "es": "Trucos útiles"
  },
  "Light": {
   "ar": "فاتح",
@@ -2691,6 +3211,10 @@
   "ar": "يُحمّل بسرعة",
   "es": "Carga rápido"
  },
+ "Location": {
+  "ar": "الموقع",
+  "es": "Lugar"
+ },
  "Lock": {
   "ar": "قفل",
   "es": "Bloquear"
@@ -2710,6 +3234,10 @@
  "Long-press a chat message to pin or delete it, or ban its sender.": {
   "ar": "اضغط مطولاً على رسالة لتثبيتها أو حذفها أو حظر مرسلها.",
   "es": "Mantén pulsado un mensaje para fijarlo, borrarlo o bloquear a quien lo envió."
+ },
+ "Looking for something specific? Request it": {
+  "ar": "تبحث عن شيء محدد؟ اطلبه",
+  "es": "¿Buscas algo concreto? Solicítalo"
  },
  "MCQs with or without answers": {
   "ar": "اختيار من متعدد بإجابات أو دونها"
@@ -2763,6 +3291,10 @@
   "ar": "إدارة هذا المستخدم",
   "es": "Gestionar este usuario"
  },
+ "Marimba": {
+  "ar": "ماريمبا",
+  "es": "Marimba"
+ },
  "Mark": {
   "ar": "العلامة",
   "es": "Nota"
@@ -2777,6 +3309,10 @@
  "Materials": {
   "ar": "المواد",
   "es": "Materiales"
+ },
+ "Materials by college": {
+  "ar": "المواد حسب الكلية",
+  "es": "Materiales por facultad"
  },
  "Materials · %d": {
   "ar": "المواد · %d",
@@ -2830,6 +3366,10 @@
   "ar": "راسلنا على واتساب",
   "es": "Escríbenos por WhatsApp"
  },
+ "Messages": {
+  "ar": "الرسائل",
+  "es": "Mensajes"
+ },
  "Messages today": {
   "ar": "رسائل اليوم",
   "es": "Mensajes hoy"
@@ -2843,9 +3383,21 @@
  "Microsoft Teams": {
   "ar": "Microsoft Teams"
  },
+ "Middle name (optional)": {
+  "ar": "الاسم الأوسط (اختياري)",
+  "es": "Segundo nombre (opcional)"
+ },
+ "Midnight book": {
+  "ar": "كتاب ليلي",
+  "es": "Libro nocturno"
+ },
  "Midterm": {
   "ar": "ميد",
   "es": "Parcial"
+ },
+ "Mint": {
+  "ar": "نعناعي",
+  "es": "Menta"
  },
  "Mobile-friendly design": {
   "ar": "تصميم مناسب للجوال",
@@ -2905,6 +3457,14 @@
  "My ASU, EduGate, Teams, absences": {
   "ar": "My ASU وإيديوجيت وTeams والغياب"
  },
+ "My lectures": {
+  "ar": "محاضراتي",
+  "es": "Mis clases"
+ },
+ "My profile": {
+  "ar": "ملفي الشخصي",
+  "es": "Mi perfil"
+ },
  "NEW": {
   "ar": "جديد",
   "es": "NUEVO"
@@ -2927,6 +3487,10 @@
  "Name files clearly (e.g., \"Assignment1_JohnDoe.pdf\")": {
   "ar": "سمِّ الملفات بوضوح (مثل Assignment1_JohnDoe.pdf)"
  },
+ "Name, username, major or college": {
+  "ar": "الاسم أو اسم المستخدم أو التخصص أو الكلية",
+  "es": "Nombre, usuario, carrera o facultad"
+ },
  "Narrow it down": {
   "ar": "حدّد بحثك",
   "es": "Afina la búsqueda"
@@ -2936,6 +3500,10 @@
  },
  "Network error. Check your connection and try again.": {
   "ar": "خطأ في الشبكة. تحقق من اتصالك وحاول مجددًا."
+ },
+ "Never miss a lecture": {
+  "ar": "لا تفوّت أي محاضرة",
+  "es": "No te pierdas ninguna clase"
  },
  "New %d": {
   "ar": "الجديد %d"
@@ -2961,6 +3529,14 @@
  "New files show up in Latest uploads on the Home tab.": {
   "ar": "تظهر الملفات الجديدة في أحدث الملفات في الصفحة الرئيسية.",
   "es": "Los archivos nuevos aparecen en Últimas subidas en Inicio."
+ },
+ "New friend request": {
+  "ar": "طلب صداقة جديد",
+  "es": "Nueva solicitud de amistad"
+ },
+ "New group request": {
+  "ar": "طلب مجموعة جديد",
+  "es": "Nueva solicitud de grupo"
  },
  "New here?": {
   "ar": "جديد هنا؟",
@@ -2989,6 +3565,10 @@
  "New password (6+ characters)": {
   "ar": "كلمة المرور الجديدة (6 أحرف أو أكثر)",
   "es": "Contraseña nueva (6+ caracteres)"
+ },
+ "New post": {
+  "ar": "منشور جديد",
+  "es": "Nueva publicación"
  },
  "New resources are added regularly. Check the website frequently or join our WhatsApp group for updates.": {
   "ar": "تضاف مصادر جديدة بانتظام. تابع الموقع أو انضم إلى مجموعة واتساب لمعرفة الجديد."
@@ -3019,6 +3599,10 @@
  "News from the team will show up here.": {
   "ar": "ستظهر أخبار الفريق هنا."
  },
+ "Next lecture": {
+  "ar": "المحاضرة التالية",
+  "es": "Próxima clase"
+ },
  "No": {
   "ar": "لا",
   "es": "No"
@@ -3048,6 +3632,10 @@
  "No files match “%@”.": {
   "ar": "لا ملفات تطابق «%@»."
  },
+ "No friends yet": {
+  "ar": "لا يوجد أصدقاء بعد",
+  "es": "Aún no hay amigos"
+ },
  "No group matches \"%@\".": {
   "ar": "لا توجد مجموعة تطابق \"%@\"."
  },
@@ -3074,6 +3662,22 @@
   "ar": "لا ملفات أخرى على Drive",
   "es": "No hay más archivos en Drive"
  },
+ "No people found": {
+  "ar": "لم يتم العثور على أشخاص",
+  "es": "No se encontraron personas"
+ },
+ "No people found.": {
+  "ar": "لم يتم العثور على أشخاص.",
+  "es": "No se encontraron personas."
+ },
+ "No posts yet": {
+  "ar": "لا توجد منشورات بعد",
+  "es": "Aún no hay publicaciones"
+ },
+ "No posts yet. Add friends or write the first one.": {
+  "ar": "لا توجد منشورات بعد. أضف أصدقاء أو اكتب أول منشور.",
+  "es": "Aún no hay publicaciones. Añade amigos o escribe la primera."
+ },
  "No ratings yet": {
   "ar": "لا تقييمات بعد"
  },
@@ -3090,6 +3694,10 @@
  "No spam or advertising.": {
   "ar": "لا رسائل مزعجة أو إعلانات."
  },
+ "No spam or unrelated content": {
+  "ar": "ممنوع الرسائل المزعجة أو المحتوى غير المتعلق",
+  "es": "Sin spam ni contenido no relacionado"
+ },
  "No submissions here yet.": {
   "ar": "لا توجد مشاركات هنا بعد.",
   "es": "Aún no hay envíos aquí."
@@ -3100,6 +3708,10 @@
  "No teacher named “%s” yet": {
   "ar": "لا يوجد مدرس باسم «%s» بعد",
   "es": "Aún no hay profesor llamado “%s”"
+ },
+ "No travel fee on campus.": {
+  "ar": "لا رسوم انتقال داخل الحرم.",
+  "es": "Sin cargo por traslado en el campus."
  },
  "Nobody, not even the admins, can see who rated.": {
   "ar": "لا أحد، حتى المشرفون، يمكنه معرفة من قيّم."
@@ -3175,6 +3787,14 @@
   "ar": "لا شيء يطابق «%s».",
   "es": "Nada coincide con “%s”."
  },
+ "Nothing new": {
+  "ar": "لا جديد",
+  "es": "Nada nuevo"
+ },
+ "Nothing new.": {
+  "ar": "لا جديد.",
+  "es": "Nada nuevo."
+ },
  "Nothing opened yet": {
   "ar": "لم تفتح شيئًا بعد"
  },
@@ -3196,6 +3816,10 @@
   "ar": "لا شيء بعد.",
   "es": "Nada todavía."
  },
+ "Notification sounds": {
+  "ar": "أصوات الإشعارات",
+  "es": "Sonidos de notificación"
+ },
  "Notifications": {
   "ar": "الإشعارات",
   "es": "Notificaciones"
@@ -3203,6 +3827,10 @@
  "Notifications are off for ASU Bank": {
   "ar": "الإشعارات متوقفة لـ ASU Bank",
   "es": "Las notificaciones de ASU Bank están desactivadas"
+ },
+ "Notifications are off for ASU Bank, so reminders can't ring.": {
+  "ar": "الإشعارات متوقفة لتطبيق ASU Bank، لذا لن تعمل التذكيرات.",
+  "es": "Las notificaciones de ASU Bank están desactivadas, así que los recordatorios no sonarán."
  },
  "Notifies everyone": {
   "ar": "يُشعر الجميع",
@@ -3224,6 +3852,10 @@
  },
  "Off-Campus": {
   "ar": "خارج الحرم الجامعي"
+ },
+ "Official ASU alumni portal | Register as a graduate or sign in": {
+  "ar": "بوابة الخريجين الرسمية للجامعة | سجّل كخريج أو ادخل إلى حسابك",
+  "es": "Portal oficial de egresados de ASU | Regístrate como egresado o inicia sesión"
  },
  "Official ASU average calculator": {
   "ar": "حاسبة المعدل الرسمية للجامعة",
@@ -3300,6 +3932,10 @@
  "Only share files you have the right to share.": {
   "ar": "شارك فقط الملفات التي يحق لك مشاركتها."
  },
+ "Only share materials you're permitted to distribute": {
+  "ar": "شارك فقط ما يُسمح لك بنشره",
+  "es": "Comparte solo lo que puedas distribuir"
+ },
  "Only the ASU Bank team posts here.": {
   "ar": "ينشر فريق ASU Bank فقط هنا.",
   "es": "Aquí solo publica el equipo de ASU Bank."
@@ -3310,6 +3946,10 @@
  },
  "Open Search": {
   "ar": "افتح البحث"
+ },
+ "Open Settings": {
+  "ar": "فتح الإعدادات",
+  "es": "Abrir Ajustes"
  },
  "Open a user to give them badges like Helper, Support or Donor.": {
   "ar": "افتح مستخدماً لتمنحه شارات مثل مساعد أو دعم أو متبرّع.",
@@ -3419,6 +4059,14 @@
  "Our support hours are Sun-Thu": {
   "ar": "ساعات الدعم من الأحد إلى الخميس"
  },
+ "Outside ASU": {
+  "ar": "خارج الجامعة",
+  "es": "Fuera de ASU"
+ },
+ "Outside ASU adds a 5 JD travel fee.": {
+  "ar": "خارج الجامعة تضاف رسوم انتقال 5 دنانير.",
+  "es": "Fuera de ASU se añade un cargo de 5 JD por traslado."
+ },
  "Outstanding work": {
   "ar": "عمل متميز"
  },
@@ -3429,6 +4077,10 @@
  "PDF Summary": {
   "ar": "ملخص PDF",
   "es": "Resumen PDF"
+ },
+ "PDF, PowerPoint, Word, images or video, up to 25 MB. It uploads right from the app.": {
+  "ar": "PDF أو PowerPoint أو Word أو صور أو فيديو، حتى 25 ميجابايت. يتم الرفع مباشرة من التطبيق.",
+  "es": "PDF, PowerPoint, Word, imágenes o video, hasta 25 MB. Se sube directamente desde la app."
  },
  "PDF, Word, PowerPoint, Excel, images or ZIP, up to 25 MB each.": {
   "ar": "PDF أو Word أو PowerPoint أو Excel أو صور أو ZIP، حتى 25 ميغابايت لكل ملف.",
@@ -3449,6 +4101,10 @@
   "ar": "الصفحات و Drive",
   "es": "Páginas y Drive"
  },
+ "Partly cloudy": {
+  "ar": "غائم جزئياً",
+  "es": "Parcialmente nublado"
+ },
  "Pass": {
   "ar": "ناجح",
   "es": "Aprobado"
@@ -3468,6 +4124,14 @@
   "ar": "امتحانات سابقة ونهائية",
   "es": "Exámenes anteriores y finales"
  },
+ "Past exams or quizzes (with solutions if possible)": {
+  "ar": "امتحانات أو كويزات سابقة (مع الحلول إن أمكن)",
+  "es": "Exámenes o pruebas anteriores (con soluciones si es posible)"
+ },
+ "Paste the group's invite link, starting with https://": {
+  "ar": "الصق رابط دعوة المجموعة، ويبدأ بـ https://",
+  "es": "Pega el enlace de invitación, que empieza por https://"
+ },
  "Pay on campus": {
   "ar": "ادفع في الجامعة"
  },
@@ -3485,6 +4149,10 @@
  "Pending": {
   "ar": "معلّق",
   "es": "Pendiente"
+ },
+ "People from your college and major show up here. Add them to your profile to see more.": {
+  "ar": "يظهر هنا طلاب من كليتك وتخصصك. أضفهما إلى ملفك لترى المزيد.",
+  "es": "Aquí aparecen personas de tu facultad y carrera. Añádelas a tu perfil para ver más."
  },
  "People who helped ASU Bank": {
   "ar": "أشخاص ساعدوا ASU Bank",
@@ -3531,6 +4199,10 @@
   "ar": "الهاتف (اختياري)",
   "es": "Teléfono (opcional)"
  },
+ "Phone default": {
+  "ar": "صوت الهاتف الافتراضي",
+  "es": "Predeterminado del teléfono"
+ },
  "Phone number": {
   "ar": "رقم الهاتف",
   "es": "Número de teléfono"
@@ -3538,6 +4210,10 @@
  "Phone number (optional)": {
   "ar": "رقم الهاتف (اختياري)",
   "es": "Número de teléfono (opcional)"
+ },
+ "Phone sound": {
+  "ar": "صوت من الهاتف",
+  "es": "Sonido del teléfono"
  },
  "Phone, e.g. 079 123 4567": {
   "ar": "الهاتف، مثل 079 123 4567",
@@ -3549,6 +4225,18 @@
  "Photos": {
   "ar": "الصور",
   "es": "Fotos"
+ },
+ "Photos and editing": {
+  "ar": "الصور والتعديل",
+  "es": "Fotos y edición"
+ },
+ "Photos to edit": {
+  "ar": "الصور المطلوب تعديلها",
+  "es": "Fotos para editar"
+ },
+ "Photoshop and paid tools: skin retouching, compositing and advanced grading. 3 JD a photo as a base price; complex edits may cost more.": {
+  "ar": "فوتوشوب وأدوات مدفوعة: تنقية البشرة والدمج وتصحيح ألوان متقدم. 3 دنانير للصورة كسعر أساسي، وقد تكلف التعديلات المعقدة أكثر.",
+  "es": "Photoshop y herramientas de pago: retoque de piel, composición y color avanzado. 3 JD por foto como base; las ediciones complejas pueden costar más."
  },
  "Physics lab": {
   "ar": "مختبر فيزياء"
@@ -3574,12 +4262,24 @@
   "ar": "اختر الاسم الموجود لتبقى كل التقييمات معاً.",
   "es": "Elige el nombre existente para que todas las valoraciones queden juntas."
  },
+ "Pick the icon you want on your Home Screen. Your iPhone shows a short message when it changes.": {
+  "ar": "اختر الأيقونة التي تريدها على الشاشة الرئيسية. سيعرض iPhone رسالة قصيرة عند تغييرها.",
+  "es": "Elige el icono que quieras en tu pantalla de inicio. Tu iPhone mostrará un breve mensaje al cambiarlo."
+ },
+ "Pick the icon you want on your home screen. It can take a few seconds to change, and you may need to add it to your home screen again.": {
+  "ar": "اختر الأيقونة التي تريدها على الشاشة الرئيسية. قد يستغرق التغيير بضع ثوانٍ، وقد تحتاج إلى إضافتها إلى الشاشة الرئيسية من جديد.",
+  "es": "Elige el icono que quieras en tu pantalla de inicio. Puede tardar unos segundos en cambiar y quizá tengas que volver a añadirlo a la pantalla de inicio."
+ },
  "Pie Chart 3": {
   "ar": "المخطط الدائري 3"
  },
  "Pin": {
   "ar": "تثبيت",
   "es": "Fijar"
+ },
+ "Ping": {
+  "ar": "نغمة قصيرة",
+  "es": "Ping"
  },
  "Pinned message": {
   "ar": "رسالة مثبّتة",
@@ -3616,6 +4316,14 @@
  "Poisson": {
   "ar": "توزيع بواسون"
  },
+ "Poke": {
+  "ar": "نكزة",
+  "es": "Toque"
+ },
+ "Pokes and messages": {
+  "ar": "النكزات والرسائل",
+  "es": "Toques y mensajes"
+ },
  "Polygon and Pie Chart 1": {
   "ar": "المضلع والمخطط الدائري 1"
  },
@@ -3630,9 +4338,17 @@
   "ar": "الأكثر طلبًا وعام",
   "es": "Popular y general"
  },
+ "Portrait": {
+  "ar": "صورة شخصية",
+  "es": "Retrato"
+ },
  "Position %d": {
   "ar": "الترتيب %d",
   "es": "Posición %d"
+ },
+ "Post": {
+  "ar": "نشر",
+  "es": "Publicar"
  },
  "Posted in 📣 Announcements. Everyone with notifications on gets it, even if they only want announcements.": {
   "ar": "يُنشر في 📣 الإعلانات. يصل لكل من فعّل الإشعارات، حتى لو اختار الإعلانات فقط.",
@@ -3642,8 +4358,20 @@
   "ar": "يُنشر في 📣 الإعلانات. يصل لكل من فعّل الإشعارات.",
   "es": "Se publica en 📣 Anuncios. Lo recibe todo el que tenga avisos activos."
  },
+ "Posting…": {
+  "ar": "جارٍ النشر…",
+  "es": "Publicando…"
+ },
+ "Posts": {
+  "ar": "المنشورات",
+  "es": "Publicaciones"
+ },
  "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between.": {
   "ar": "دليل عملي للطلاب الجدد في عمّان، الأردن: الرسوم، التخصصات، الخدمات الإلكترونية وكل ما بينها."
+ },
+ "Practice problems with answers": {
+  "ar": "تمارين مع الإجابات",
+  "es": "Ejercicios con respuestas"
  },
  "Practice questions": {
   "ar": "أسئلة للتدريب"
@@ -3652,8 +4380,16 @@
   "ar": "التفضيلات",
   "es": "Preferencias"
  },
+ "Premium": {
+  "ar": "مميز",
+  "es": "Premium"
+ },
  "Prepare for your university placement exams": {
   "ar": "استعد لامتحانات المستوى في الجامعة"
+ },
+ "Preparing files…": {
+  "ar": "جارٍ تجهيز الملفات…",
+  "es": "Preparando archivos…"
  },
  "Presentation title": {
   "ar": "عنوان العرض",
@@ -3709,6 +4445,14 @@
  "Proceed to Upload": {
   "ar": "متابعة الرفع"
  },
+ "Product / Commercial": {
+  "ar": "منتج / تجاري",
+  "es": "Producto / Comercial"
+ },
+ "Professor-specific materials": {
+  "ar": "مواد خاصة بمدرّس معيّن",
+  "es": "Materiales de un profesor concreto"
+ },
  "Profile": {
   "ar": "الملف الشخصي",
   "es": "Perfil"
@@ -3724,6 +4468,14 @@
  "Projects": {
   "ar": "المشاريع",
   "es": "Proyectos"
+ },
+ "Promo code": {
+  "ar": "رمز الخصم",
+  "es": "Código promocional"
+ },
+ "Promo discount": {
+  "ar": "خصم الرمز",
+  "es": "Descuento"
  },
  "Properties of Density Function": {
   "ar": "خصائص دالة الكثافة"
@@ -3760,6 +4512,10 @@
  "Quiz": {
   "ar": "كويز",
   "es": "Prueba"
+ },
+ "Rain": {
+  "ar": "مطر",
+  "es": "Lluvia"
  },
  "Ramadan Time": {
   "ar": "توقيت رمضان"
@@ -3848,12 +4604,32 @@
  "Regular Semester": {
   "ar": "الفصل العادي"
  },
+ "Reject": {
+  "ar": "رفض",
+  "es": "Rechazar"
+ },
+ "Rejected": {
+  "ar": "مرفوض",
+  "es": "Rechazado"
+ },
  "Remove": {
   "ar": "إزالة",
   "es": "Quitar"
  },
  "Remove admin": {
   "ar": "إزالة صلاحية المشرف"
+ },
+ "Remove friend": {
+  "ar": "إزالة الصديق",
+  "es": "Eliminar amigo"
+ },
+ "Remove from ASU Bank": {
+  "ar": "إزالة من ASU Bank",
+  "es": "Quitar de ASU Bank"
+ },
+ "Remove from ASU Bank?": {
+  "ar": "إزالة من ASU Bank؟",
+  "es": "¿Quitar de ASU Bank?"
  },
  "Remove from Saved": {
   "ar": "إزالة من المحفوظات",
@@ -3862,6 +4638,10 @@
  "Remove photo": {
   "ar": "إزالة الصورة",
   "es": "Quitar foto"
+ },
+ "Remove this friend?": {
+  "ar": "إزالة هذا الصديق؟",
+  "es": "¿Eliminar a este amigo?"
  },
  "Removed from the chat by an admin": {
   "ar": "أزاله مشرف من الدردشة",
@@ -3928,6 +4708,10 @@
   "ar": "اطلبه منا",
   "es": "Pídenoslo"
  },
+ "Request sent": {
+  "ar": "تم إرسال الطلب",
+  "es": "Solicitud enviada"
+ },
  "Request sent!": {
   "ar": "تم إرسال الطلب!"
  },
@@ -3939,8 +4723,16 @@
   "ar": "اطلب «%s»",
   "es": "Solicitar “%s”"
  },
+ "Requested": {
+  "ar": "تم الطلب",
+  "es": "Solicitado"
+ },
  "Requests": {
   "ar": "الطلبات"
+ },
+ "Requests you sent": {
+  "ar": "الطلبات التي أرسلتها",
+  "es": "Solicitudes enviadas"
  },
  "Researcher": {
   "ar": "باحث",
@@ -3949,6 +4741,14 @@
  "Reset password": {
   "ar": "إعادة تعيين كلمة المرور",
   "es": "Restablecer contraseña"
+ },
+ "Reset to the default": {
+  "ar": "استعادة الوضع الافتراضي",
+  "es": "Restablecer"
+ },
+ "Respect copyright and academic integrity policies": {
+  "ar": "احترم حقوق النشر وسياسات النزاهة الأكاديمية",
+  "es": "Respeta los derechos de autor y la integridad académica"
  },
  "Results from every subject page appear instantly, then files from Google Drive. Arabic and English both work.": {
   "ar": "تظهر نتائج كل صفحات المواد فورًا، ثم ملفات Google Drive. تعمل العربية والإنجليزية معًا."
@@ -3977,6 +4777,14 @@
  "Rooms": {
   "ar": "الغرف",
   "es": "Salas"
+ },
+ "Rose": {
+  "ar": "وردي",
+  "es": "Rosa"
+ },
+ "Royal blue": {
+  "ar": "أزرق ملكي",
+  "es": "Azul real"
  },
  "Safe and reliable payment process": {
   "ar": "عملية دفع آمنة وموثوقة"
@@ -4125,6 +4933,10 @@
  "Second Year": {
   "ar": "السنة الثانية"
  },
+ "Second year": {
+  "ar": "السنة الثانية",
+  "es": "Segundo año"
+ },
  "Secure Payments": {
   "ar": "دفع آمن"
  },
@@ -4149,6 +4961,14 @@
   "ar": "أرسل إعلاناً",
   "es": "Enviar un anuncio"
  },
+ "Send another": {
+  "ar": "إرسال اقتراح آخر",
+  "es": "Enviar otra"
+ },
+ "Send booking request": {
+  "ar": "إرسال طلب الحجز",
+  "es": "Enviar solicitud de reserva"
+ },
  "Send code": {
   "ar": "إرسال الرمز"
  },
@@ -4166,6 +4986,10 @@
  "Send request": {
   "ar": "أرسل الطلب",
   "es": "Enviar solicitud"
+ },
+ "Send suggestion": {
+  "ar": "إرسال الاقتراح",
+  "es": "Enviar sugerencia"
  },
  "Send the code": {
   "ar": "أرسل الرمز"
@@ -4189,8 +5013,24 @@
  "Senior": {
   "ar": "سنة رابعة"
  },
+ "Sent": {
+  "ar": "تم الإرسال",
+  "es": "Enviado"
+ },
  "Service fee: 3 JD": {
   "ar": "رسوم الخدمة: 3 دنانير"
+ },
+ "Session": {
+  "ar": "الجلسة",
+  "es": "Sesión"
+ },
+ "Session (%s h × 5 JD)": {
+  "ar": "الجلسة (%s س × 5 د.أ)",
+  "es": "Sesión (%s h × 5 JD)"
+ },
+ "Session type": {
+  "ar": "نوع الجلسة",
+  "es": "Tipo de sesión"
  },
  "Settings": {
   "ar": "الإعدادات",
@@ -4234,6 +5074,10 @@
  },
  "Share your notes, slides and past papers.": {
   "ar": "شارك ملاحظاتك وسلايداتك وامتحانات السنوات السابقة."
+ },
+ "Share your study files": {
+  "ar": "شارك ملفاتك الدراسية",
+  "es": "Comparte tus archivos de estudio"
  },
  "Share your study materials.": {
   "ar": "شارك موادك الدراسية.",
@@ -4314,6 +5158,14 @@
   "ar": "سجّل الدخول أو أنشئ حساباً",
   "es": "Inicia sesión o crea una cuenta"
  },
+ "Sign in so we can tell you when your group is accepted.": {
+  "ar": "سجّل الدخول لنخبرك عند قبول مجموعتك.",
+  "es": "Inicia sesión para avisarte cuando tu grupo sea aceptado."
+ },
+ "Sign in to add friends, poke them and share posts.": {
+  "ar": "سجّل الدخول لإضافة الأصدقاء ونكزهم ومشاركة المنشورات.",
+  "es": "Inicia sesión para añadir amigos, darles un toque y compartir publicaciones."
+ },
  "Sign in to chat": {
   "ar": "سجّل الدخول للدردشة",
   "es": "Inicia sesión para chatear"
@@ -4359,8 +5211,16 @@
   "ar": "تنزيل سلس",
   "es": "Descarga fluida"
  },
+ "Snow": {
+  "ar": "ثلج",
+  "es": "Nieve"
+ },
  "So we can reply to you": {
   "ar": "لنتمكن من الرد عليك"
+ },
+ "Soft": {
+  "ar": "هادئ",
+  "es": "Suave"
  },
  "Something else": {
   "ar": "شيء آخر"
@@ -4401,8 +5261,20 @@
   "ar": "راعٍ",
   "es": "Patrocinador"
  },
+ "Standard": {
+  "ar": "عادي",
+  "es": "Estándar"
+ },
  "Start the conversation!": {
   "ar": "ابدأ المحادثة!"
+ },
+ "Starts at": {
+  "ar": "تبدأ الساعة",
+  "es": "Empieza a las"
+ },
+ "Starts at %s": {
+  "ar": "تبدأ الساعة %s",
+  "es": "Empieza a las %s"
  },
  "Statistics": {
   "ar": "الإحصاء"
@@ -4490,6 +5362,14 @@
  "Study Plans": {
   "ar": "الخطط الدراسية"
  },
+ "Study cards": {
+  "ar": "بطاقات دراسية",
+  "es": "Tarjetas de estudio"
+ },
+ "Study guides or cheat sheets": {
+  "ar": "ملخصات أو أوراق مراجعة",
+  "es": "Guías de estudio o resúmenes"
+ },
  "Study help": {
   "ar": "مساعدة دراسية",
   "es": "Ayuda de estudio"
@@ -4508,6 +5388,10 @@
  "Study resources": {
   "ar": "مصادر الدراسة",
   "es": "Recursos de estudio"
+ },
+ "Study together": {
+  "ar": "الدراسة معاً",
+  "es": "Estudiar juntos"
  },
  "Study topics": {
   "ar": "مواضيع الدراسة",
@@ -4638,6 +5522,10 @@
   "ar": "الفريق",
   "es": "EQUIPO"
  },
+ "Take an umbrella, rain is likely.": {
+  "ar": "خذ مظلة، فالمطر محتمل.",
+  "es": "Lleva paraguas, es probable que llueva."
+ },
  "Takes about a minute": {
   "ar": "يستغرق دقيقة تقريباً",
   "es": "Tarda un minuto"
@@ -4669,6 +5557,10 @@
  "Tap the bin next to an upload to delete it": {
   "ar": "اضغط على سلة المهملات بجانب الملف لحذفه",
   "es": "Toca la papelera junto a un archivo para borrarlo"
+ },
+ "Tap the bin, or hold any file, to delete it": {
+  "ar": "اضغط سلة المهملات أو اضغط مطولاً على أي ملف لحذفه",
+  "es": "Toca la papelera o mantén pulsado un archivo para eliminarlo"
  },
  "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline.": {
   "ar": "اضغط علامة الحفظ على أي ملف أو مادة ليظهر في تبويب المحفوظات، حتى دون إنترنت."
@@ -4719,6 +5611,10 @@
  "Tell us what to add, straight to WhatsApp.": {
   "ar": "أخبرنا بما نضيفه، مباشرة على واتساب."
  },
+ "Tell us what to add.": {
+  "ar": "أخبرنا بما نضيفه.",
+  "es": "Dinos qué añadir."
+ },
  "Temporary password": {
   "ar": "كلمة مرور مؤقتة",
   "es": "Contraseña temporal"
@@ -4751,6 +5647,10 @@
  "Test banks": {
   "ar": "بنوك الأسئلة",
   "es": "Bancos de preguntas"
+ },
+ "Thank you for joining early! 🌱": {
+  "ar": "شكراً لانضمامك مبكراً! 🌱",
+  "es": "¡Gracias por unirte pronto! 🌱"
  },
  "Thank you!": {
   "ar": "شكراً لك!",
@@ -4786,9 +5686,17 @@
  "The apps have no analytics. The website uses Google Analytics to count visits.": {
   "ar": "لا توجد أدوات تحليل في التطبيقات. أما الموقع فيستخدم Google Analytics لإحصاء الزيارات."
  },
+ "The end time must be after the start time.": {
+  "ar": "يجب أن يكون وقت النهاية بعد وقت البداية.",
+  "es": "La hora de fin debe ser posterior a la de inicio."
+ },
  "The file": {
   "ar": "الملف",
   "es": "El archivo"
+ },
+ "The file changed while uploading. Please add it again.": {
+  "ar": "تغيّر الملف أثناء الرفع. يرجى إضافته مرة أخرى.",
+  "es": "El archivo cambió durante la subida. Vuelve a añadirlo."
  },
  "The file is empty.": {
   "ar": "الملف فارغ.",
@@ -4809,9 +5717,17 @@
  "The owner removed it or made it private (%s). Ask for it and we'll upload it again.": {
   "ar": "أزاله صاحبه أو جعله خاصًا (%s). اطلبه وسنرفعه مجددًا."
  },
+ "The owner will review your group. We'll notify you when it's accepted or rejected.": {
+  "ar": "سيراجع المالك مجموعتك، وسنخبرك عند قبولها أو رفضها.",
+  "es": "El propietario revisará tu grupo. Te avisaremos cuando sea aceptado o rechazado."
+ },
  "The passwords don't match.": {
   "ar": "كلمتا المرور غير متطابقتين.",
   "es": "Las contraseñas no coinciden."
+ },
+ "The photographer will review your request and contact you on %s with the final invoice and payment details.": {
+  "ar": "سيراجع المصور طلبك ويتواصل معك على %s بالفاتورة النهائية وتفاصيل الدفع.",
+  "es": "El fotógrafo revisará tu solicitud y te contactará en %s con la factura final y los datos de pago."
  },
  "The ratings server didn't answer. Try again.": {
   "ar": "لم يرد خادم التقييمات. حاول مجددًا."
@@ -4836,6 +5752,10 @@
   "ar": "يراجعه الفريق قبل عرضه على شاشة الحرم الجامعي.",
   "es": "El equipo lo revisa antes de mostrarlo en la pantalla del campus."
  },
+ "The upload expired. Please try again.": {
+  "ar": "انتهت صلاحية الرفع. يرجى المحاولة مرة أخرى.",
+  "es": "La subida caducó. Inténtalo de nuevo."
+ },
  "Theme": {
   "ar": "السمة",
   "es": "Tema"
@@ -4849,6 +5769,10 @@
  "These WhatsApp groups are informal, student-run spaces created to help ASPU students share study materials, past exams, test banks, and academic support with one another by cohort year.": {
   "ar": "مجموعات واتساب هذه مساحات غير رسمية يديرها الطلاب، أُنشئت لمساعدة طلبة الجامعة على مشاركة المواد الدراسية وامتحانات السنوات السابقة وبنوك الأسئلة والدعم الأكاديمي بحسب سنة الدفعة."
  },
+ "These are general tips, not medical or professional advice. In an emergency, call for help first.": {
+  "ar": "هذه نصائح عامة وليست استشارة طبية أو مهنية. في الطوارئ، اطلب المساعدة أولاً.",
+  "es": "Son consejos generales, no asesoramiento médico o profesional. En una emergencia, pide ayuda primero."
+ },
  "These groups are independently run by students and are not official channels of the university. Materials shared are for peer-to-peer study support only and are not endorsed, verified, or issued by any academic department or institution.": {
   "ar": "يدير هذه المجموعات طلاب بشكل مستقل وليست قنوات رسمية للجامعة. المواد المشتركة للدعم الدراسي بين الطلاب فقط، ولا يعتمدها أو يتحقق منها أو يصدرها أي قسم أكاديمي أو مؤسسة."
  },
@@ -4856,12 +5780,20 @@
   "ar": "لا يمكنه تسجيل الدخول أو الدردشة حتى يرفع مشرف الحظر من تبويب الإدارة.",
   "es": "No podrá entrar ni chatear hasta que un admin lo desbloquee en la pestaña Admin."
  },
+ "They will see": {
+  "ar": "سيظهر له",
+  "es": "Verá"
+ },
  "They're signed out and can't sign in again until an admin unbans them.": {
   "ar": "سيتم تسجيل خروجه ولن يستطيع الدخول حتى يرفع مشرف الحظر.",
   "es": "Se cerrará su sesión y no podrá volver a entrar hasta que un admin lo desbloquee."
  },
  "Third Year": {
   "ar": "السنة الثالثة"
+ },
+ "Third year": {
+  "ar": "السنة الثالثة",
+  "es": "Tercer año"
  },
  "This PDF can't be opened.": {
   "ar": "لا يمكن فتح ملف PDF هذا.",
@@ -4878,11 +5810,19 @@
   "ar": "سيُحذف حسابك نهائياً. تبقى رسائلك في الدردشة دون حسابك.",
   "es": "Esto elimina tu cuenta para siempre. Tus mensajes se quedan en el chat sin tu cuenta."
  },
+ "This file is empty.": {
+  "ar": "هذا الملف فارغ.",
+  "es": "Este archivo está vacío."
+ },
  "This file type is not accepted.": {
   "ar": "نوع الملف غير مقبول."
  },
  "This file type isn't allowed.": {
   "ar": "نوع الملف غير مسموح."
+ },
+ "This file was removed from ASU Bank.": {
+  "ar": "أُزيل هذا الملف من ASU Bank.",
+  "es": "Este archivo se quitó de ASU Bank."
  },
  "This image can't be shown.": {
   "ar": "لا يمكن عرض هذه الصورة.",
@@ -4890,6 +5830,10 @@
  },
  "This is a compressed %s file. Open it with a files app.": {
   "ar": "هذا ملف %s مضغوط، افتحه بتطبيق ملفات."
+ },
+ "This is an estimate; the photographer confirms the final amount. You can pay by PayPal, CliQ or cash.": {
+  "ar": "هذا تقدير، ويؤكد المصور المبلغ النهائي. يمكنك الدفع عبر PayPal أو CliQ أو نقداً.",
+  "es": "Es una estimación; el fotógrafo confirma el importe final. Puedes pagar por PayPal, CliQ o en efectivo."
  },
  "This isn't a Google Drive file.": {
   "ar": "هذا ليس ملفًا من Google Drive."
@@ -4909,6 +5853,10 @@
  },
  "This page is created for educational purposes only. The WhatsApp group links are collected from various sources and may change over time. Please verify the group details before joining. If you find any broken links or have suggestions for additional groups, please contact the page administrator.": {
   "ar": "أُنشئت هذه الصفحة لأغراض تعليمية فقط. جُمعت روابط مجموعات واتساب من مصادر مختلفة وقد تتغير مع الوقت. يُرجى التحقق من تفاصيل المجموعة قبل الانضمام. إذا وجدت رابطًا معطلًا أو لديك اقتراحات لمجموعات إضافية، فتواصل مع مشرف الصفحة."
+ },
+ "This promo code isn't valid.": {
+  "ar": "رمز الخصم غير صالح.",
+  "es": "Este código no es válido."
  },
  "This room is archived.": {
   "ar": "هذه الغرفة مؤرشفة.",
@@ -4937,6 +5885,10 @@
  "Three ways to find any material": {
   "ar": "ثلاث طرق لإيجاد أي مادة"
  },
+ "Thunderstorms": {
+  "ar": "عواصف رعدية",
+  "es": "Tormentas"
+ },
  "Thursday": {
   "ar": "الخميس"
  },
@@ -4949,6 +5901,10 @@
  },
  "Title or student": {
   "ar": "العنوان أو الطالب"
+ },
+ "To": {
+  "ar": "إلى",
+  "es": "Hasta"
  },
  "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.": {
   "ar": "للاستفادة من الخدمة يجب أن يكون لديك بريد إلكتروني يعمل. عند إيجاد تطابق (50% فأكثر) ستصلك أنت وزميلك رسالة بالتعليمات وبيانات الاتصال."
@@ -4966,9 +5922,17 @@
   "ar": "اليوم",
   "es": "Hoy"
  },
+ "Today on campus": {
+  "ar": "اليوم في الجامعة",
+  "es": "Hoy en el campus"
+ },
  "Tomorrow": {
   "ar": "غدًا",
   "es": "Mañana"
+ },
+ "Tomorrow on campus": {
+  "ar": "غداً في الجامعة",
+  "es": "Mañana en el campus"
  },
  "Top of the scale": {
   "ar": "أعلى السلم",
@@ -5001,6 +5965,10 @@
   "ar": "مترجم",
   "es": "Traductor"
  },
+ "Travel": {
+  "ar": "الانتقال",
+  "es": "Traslado"
+ },
  "True": {
   "ar": "صح"
  },
@@ -5018,6 +5986,10 @@
  "Try again": {
   "ar": "حاول مرة أخرى",
   "es": "Reintentar"
+ },
+ "Try another name.": {
+  "ar": "جرّب اسماً آخر.",
+  "es": "Prueba con otro nombre."
  },
  "Try another word.": {
   "ar": "جرّب كلمة أخرى."
@@ -5237,6 +6209,10 @@
  "Upload Your Materials": {
   "ar": "ارفع موادك"
  },
+ "Upload could not start. Please try again.": {
+  "ar": "تعذّر بدء الرفع. يرجى المحاولة مرة أخرى.",
+  "es": "No se pudo iniciar la subida. Inténtalo de nuevo."
+ },
  "Upload failed. Please try again.": {
   "ar": "فشل الرفع. يُرجى المحاولة مجددًا."
  },
@@ -5258,6 +6234,10 @@
  "Upload more": {
   "ar": "رفع المزيد",
   "es": "Subir más"
+ },
+ "Upload rules": {
+  "ar": "قواعد الرفع",
+  "es": "Normas de subida"
  },
  "Upload your presentations": {
   "ar": "ارفع عروضك التقديمية"
@@ -5283,6 +6263,10 @@
  "Uploads (long-press a file to delete)": {
   "ar": "الملفات المرفوعة (اضغط مطولاً على ملف لحذفه)",
   "es": "Subidas (mantén pulsado un archivo para borrarlo)"
+ },
+ "Uploads (swipe or long-press a file to delete)": {
+  "ar": "الملفات المرفوعة (اسحب ملفاً أو اضغط عليه مطولاً لحذفه)",
+  "es": "Subidas (desliza o mantén pulsado un archivo para eliminarlo)"
  },
  "Use a clear name, e.g. “Calculus 1 Midterm 2025 Dr Ahmad.pdf”.": {
   "ar": "استخدم اسماً واضحاً، مثل “Calculus 1 Midterm 2025 Dr Ahmad.pdf”.",
@@ -5426,6 +6410,10 @@
  "We got your request. Message us on WhatsApp to confirm the payment.": {
   "ar": "وصلنا طلبك. راسلنا على واتساب لتأكيد الدفع."
  },
+ "We got your suggestion. The ASU Bank team will look at it soon.": {
+  "ar": "وصلنا اقتراحك. سيطّلع عليه فريق ASU Bank قريباً.",
+  "es": "Recibimos tu sugerencia. El equipo de ASU Bank la revisará pronto."
+ },
  "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules, without warning.": {
   "ar": "لا نتسامح مطلقًا مع الإساءة. يمكن للمشرفين إزالة المحتوى وحظر الحسابات المخالفة دون إنذار."
  },
@@ -5449,6 +6437,10 @@
  },
  "We'll email you as soon as a classmate with similar courses and times signs up.": {
   "ar": "سنراسلك فور تسجيل زميل بمواد وأوقات مشابهة."
+ },
+ "We'll remind you 10 minutes before, every week on these days.": {
+  "ar": "سنذكرك قبلها بـ 10 دقائق، كل أسبوع في هذه الأيام.",
+  "es": "Te avisaremos 10 minutos antes, cada semana en estos días."
  },
  "We're building a dedicated platform for students to advertise their services,\nproducts, and talents to the university community. Affordable, targeted, and effective\nadvertising tailored specifically for the student market.": {
   "ar": "نبني منصة مخصصة ليعلن الطلاب عن خدماتهم ومنتجاتهم ومواهبهم لمجتمع الجامعة.\nإعلانات بسعر مناسب وموجهة وفعالة،\nمصممة خصيصًا للطلاب."
@@ -5488,6 +6480,10 @@
   "ar": "عمّ تبحث؟",
   "es": "¿Qué estás buscando?"
  },
+ "What do you want to say?": {
+  "ar": "ماذا تريد أن تقول؟",
+  "es": "¿Qué quieres decir?"
+ },
  "What do you want to study together? e.g. Exam prep, Homework, Labs": {
   "ar": "ماذا تريد أن تدرس معاً؟ مثل التحضير للامتحان، الواجبات، المختبرات",
   "es": "¿Qué quieren estudiar juntos? p. ej. exámenes, tareas, laboratorios"
@@ -5514,6 +6510,10 @@
  "What other students can see": {
   "ar": "ما يراه الطلاب الآخرون"
  },
+ "What to share": {
+  "ar": "ما الذي يمكن مشاركته",
+  "es": "Qué compartir"
+ },
  "What we collect when you make an account": {
   "ar": "ما نجمعه عند إنشاء حساب"
  },
@@ -5523,6 +6523,10 @@
  "What's my grade?": {
   "ar": "ما تقديري؟",
   "es": "¿Cuál es mi nota?"
+ },
+ "What's on your mind?": {
+  "ar": "بماذا تفكر؟",
+  "es": "¿Qué estás pensando?"
  },
  "What's wrong?": {
   "ar": "ما المشكلة؟"
@@ -5540,6 +6544,10 @@
  },
  "WhatsApp or email the admin.": {
   "ar": "راسل المشرف على واتساب أو بالبريد."
+ },
+ "WhatsApp or phone": {
+  "ar": "واتساب أو هاتف",
+  "es": "WhatsApp o teléfono"
  },
  "WhatsApp the admin": {
   "ar": "راسل المشرف على واتساب"
@@ -5562,12 +6570,24 @@
  "When you send your ad": {
   "ar": "عند إرسال إعلانك"
  },
+ "Where": {
+  "ar": "أين",
+  "es": "Dónde"
+ },
  "Where and how": {
   "ar": "أين وكيف",
   "es": "Dónde y cómo"
  },
+ "Where and when? Like: the library at 2:00": {
+  "ar": "أين ومتى؟ مثل: المكتبة الساعة 2:00",
+  "es": "¿Dónde y cuándo? Ej.: la biblioteca a las 2:00"
+ },
  "Where it is kept and who gets it": {
   "ar": "أين تُحفظ ومن يحصل عليها"
+ },
+ "Where on campus? (optional)": {
+  "ar": "أين في الحرم؟ (اختياري)",
+  "es": "¿Dónde en el campus? (opcional)"
  },
  "Which games would you play?": {
   "ar": "أي الألعاب ستلعب؟",
@@ -5596,6 +6616,10 @@
   "ar": "بطريقة التواصل التي اخترتها",
   "es": "Con el método de contacto que elegiste"
  },
+ "Without this, Android may ring a few minutes late.": {
+  "ar": "بدون هذا، قد يتأخر Android بضع دقائق.",
+  "es": "Sin esto, Android puede sonar unos minutos tarde."
+ },
  "Workshops": {
   "ar": "المشاغل",
   "es": "Talleres"
@@ -5607,6 +6631,14 @@
  "Would you personally be interested in joining?": {
   "ar": "هل أنت مهتم شخصياً بالانضمام؟",
   "es": "¿Te interesaría unirte?"
+ },
+ "Write a post": {
+  "ar": "اكتب منشوراً",
+  "es": "Escribe una publicación"
+ },
+ "Write the name of the group.": {
+  "ar": "اكتب اسم المجموعة.",
+  "es": "Escribe el nombre del grupo."
  },
  "Wrong, broken or misleading file": {
   "ar": "ملف خاطئ أو معطل أو مضلل"
@@ -5672,14 +6704,26 @@
  "You don't need to create an account to access the test banks. Simply visit the website and browse the available resources.": {
   "ar": "لا تحتاج إلى إنشاء حساب للوصول إلى بنوك الأسئلة. ادخل الموقع وتصفح المصادر المتاحة."
  },
+ "You have a new friend": {
+  "ar": "لديك صديق جديد",
+  "es": "Tienes un nuevo amigo"
+ },
  "You have not agreed to the Terms of Service.\nTo continue using the site or access the documents, you must read and accept the terms first.": {
   "ar": "لم توافق على شروط الخدمة.\nلمتابعة استخدام الموقع أو الوصول إلى المستندات، يجب قراءة الشروط وقبولها أولًا."
  },
  "You have the latest version": {
   "ar": "لديك أحدث إصدار"
  },
+ "You haven't added any friends yet.": {
+  "ar": "لم تضف أي أصدقاء بعد.",
+  "es": "Aún no has añadido amigos."
+ },
  "You haven't blocked anyone.": {
   "ar": "لم تحظر أحدًا."
+ },
+ "You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.": {
+  "ar": "انضممت إلى ASU Bank في أيامه الأولى، لذا أصبحت شارة «داعم مبكر» على ملفك الشخصي. شكراً لمساعدتك طلاب الجامعة.",
+  "es": "Te uniste a ASU Bank en sus primeros días, así que tu perfil ya tiene la insignia de Early supporter. Gracias por ayudar a los estudiantes de ASU."
  },
  "You pay the second half only if your ad is accepted.": {
   "ar": "تدفع النصف الثاني فقط إذا قُبل إعلانك.",
@@ -5691,6 +6735,18 @@
  "You'll stay signed in here; other devices are signed out.": {
   "ar": "ستبقى مسجّلاً هنا؛ وسيُسجّل خروج الأجهزة الأخرى.",
   "es": "Seguirás con la sesión aquí; los demás dispositivos se cerrarán."
+ },
+ "You're sending this as @%@.": {
+  "ar": "أنت ترسل هذا باسم @%@.",
+  "es": "Lo envías como @%@."
+ },
+ "You're sending this as @%s.": {
+  "ar": "أنت ترسل هذا باسم @%s.",
+  "es": "Lo envías como @%s."
+ },
+ "You're welcome": {
+  "ar": "على الرحب والسعة",
+  "es": "De nada"
  },
  "Your Edugate | Quizzes, course materials, and assignment submissions": {
   "ar": "إيديوجيت الخاص بك: الكويزات ومواد المساق وتسليم الواجبات"
@@ -5723,6 +6779,10 @@
  "Your data is stored on Google services (Sheets, Drive and Apps Script) in the project owner’s account. Only admins can open it. We don’t sell it or use it for advertising.": {
   "ar": "تُحفظ بياناتك على خدمات Google (Sheets وDrive وApps Script) في حساب صاحب المشروع، ولا يطلع عليها سوى المشرفين. لا نبيعها ولا نستخدمها للإعلانات."
  },
+ "Your details": {
+  "ar": "بياناتك",
+  "es": "Tus datos"
+ },
  "Your details are only shared with students you match with.": {
   "ar": "تُشارك بياناتك فقط مع الطلاب الذين تتوافق معهم.",
   "es": "Tus datos solo se comparten con quienes coincidas."
@@ -5730,9 +6790,25 @@
  "Your email or phone (optional)": {
   "ar": "بريدك أو هاتفك (اختياري)"
  },
+ "Your estimate": {
+  "ar": "تقديرك",
+  "es": "Tu estimación"
+ },
  "Your files": {
   "ar": "ملفاتك",
   "es": "Tus archivos"
+ },
+ "Your group was accepted": {
+  "ar": "تم قبول مجموعتك",
+  "es": "Tu grupo fue aceptado"
+ },
+ "Your group wasn't accepted": {
+  "ar": "لم يتم قبول مجموعتك",
+  "es": "Tu grupo no fue aceptado"
+ },
+ "Your iPhone blocked this change (error -54). Restart the iPhone and try again. If it keeps happening, the way this copy of the app was installed is the likely reason.": {
+  "ar": "منع جهاز iPhone هذا التغيير (الخطأ 54-). أعد تشغيل الجهاز وحاول مرة أخرى. إذا تكرر الأمر فالسبب المرجّح هو طريقة تثبيت هذه النسخة من التطبيق.",
+  "es": "Tu iPhone bloqueó este cambio (error -54). Reinícialo e inténtalo de nuevo. Si sigue pasando, la causa probable es cómo se instaló esta copia de la app."
  },
  "Your major": {
   "ar": "تخصصك",
@@ -5774,6 +6850,10 @@
   "ar": "تقييمك مجهول الهوية.",
   "es": "Tu valoración es anónima."
  },
+ "Your requests": {
+  "ar": "طلباتك",
+  "es": "Tus solicitudes"
+ },
  "Your studies": {
   "ar": "دراستك",
   "es": "Tus estudios"
@@ -5807,6 +6887,10 @@
  },
  "for details.": {
   "ar": "لمزيد من التفاصيل."
+ },
+ "iPhones don't let apps use your own ringtones, so these sounds come with ASU Bank.": {
+  "ar": "لا يسمح iPhone للتطبيقات باستخدام نغماتك الخاصة، لذلك تأتي هذه الأصوات مع ASU Bank.",
+  "es": "El iPhone no deja a las apps usar tus tonos, así que estos sonidos vienen con ASU Bank."
  },
  "just now": {
   "ar": "الآن",
@@ -5923,945 +7007,5 @@
  },
  "🧮 GPA & Term Average Calculator": {
   "ar": "🧮 حساب المعدل والمعدل الفصلي"
- },
- "First year": {
-  "ar": "السنة الأولى",
-  "es": "Primer año"
- },
- "Second year": {
-  "ar": "السنة الثانية",
-  "es": "Segundo año"
- },
- "Third year": {
-  "ar": "السنة الثالثة",
-  "es": "Tercer año"
- },
- "Fourth year": {
-  "ar": "السنة الرابعة",
-  "es": "Cuarto año"
- },
- "Fifth year": {
-  "ar": "السنة الخامسة",
-  "es": "Quinto año"
- },
- "Alumni": {
-  "ar": "خريج",
-  "es": "Egresado"
- },
- "New friend request": {
-  "ar": "طلب صداقة جديد",
-  "es": "Nueva solicitud de amistad"
- },
- "You have a new friend": {
-  "ar": "لديك صديق جديد",
-  "es": "Tienes un nuevo amigo"
- },
- "New group request": {
-  "ar": "طلب مجموعة جديد",
-  "es": "Nueva solicitud de grupo"
- },
- "Your group was accepted": {
-  "ar": "تم قبول مجموعتك",
-  "es": "Tu grupo fue aceptado"
- },
- "Your group wasn't accepted": {
-  "ar": "لم يتم قبول مجموعتك",
-  "es": "Tu grupo no fue aceptado"
- },
- "%s wants to be your friend": {
-  "ar": "%s يريد أن يكون صديقك",
-  "es": "%s quiere ser tu amigo"
- },
- "%s accepted your friend request": {
-  "ar": "%s قبل طلب صداقتك",
-  "es": "%s aceptó tu solicitud de amistad"
- },
- "%s asked to add: %s": {
-  "ar": "%s طلب إضافة: %s",
-  "es": "%s pidió añadir: %s"
- },
- "%s wants to meet you": {
-  "ar": "%s يريد مقابلتك",
-  "es": "%s quiere verte"
- },
- "%s wants to meet you at %s": {
-  "ar": "%s يريد مقابلتك في %s",
-  "es": "%s quiere verte en %s"
- },
- "%s wants to study with you": {
-  "ar": "%s يريد الدراسة معك",
-  "es": "%s quiere estudiar contigo"
- },
- "%s has a question for you": {
-  "ar": "%s لديه سؤال لك",
-  "es": "%s tiene una pregunta para ti"
- },
- "%s needs your notes": {
-  "ar": "%s يحتاج ملخصاتك",
-  "es": "%s necesita tus apuntes"
- },
- "%s wants to get coffee with you": {
-  "ar": "%s يريد شرب القهوة معك",
-  "es": "%s quiere tomar un café contigo"
- },
- "%s poked you": {
-  "ar": "%s نكزك",
-  "es": "%s te dio un toque"
- },
- "%d friends": {
-  "ar": "%d أصدقاء",
-  "es": "%d amigos"
- },
- "%d%% off applied": {
-  "ar": "تم تطبيق خصم %d%%",
-  "es": "%d%% de descuento aplicado"
- },
- "%s in 10 minutes": {
-  "ar": "%s بعد 10 دقائق",
-  "es": "%s en 10 minutos"
- },
- "JD": {
-  "ar": "د.أ",
-  "es": "JD"
- },
- "Friends and pokes": {
-  "ar": "الأصدقاء والنكزات",
-  "es": "Amigos y toques"
- },
- "Notification sounds": {
-  "ar": "أصوات الإشعارات",
-  "es": "Sonidos de notificación"
- },
- "Interests": {
-  "ar": "الاهتمامات",
-  "es": "Intereses"
- },
- "Football, coding, photography…": {
-  "ar": "كرة القدم، البرمجة، التصوير…",
-  "es": "Fútbol, programación, fotografía…"
- },
- "Group requests": {
-  "ar": "طلبات المجموعات",
-  "es": "Solicitudes de grupos"
- },
- "Added by students": {
-  "ar": "أضافها الطلاب",
-  "es": "Añadidos por estudiantes"
- },
- "Delete post": {
-  "ar": "حذف المنشور",
-  "es": "Eliminar publicación"
- },
- "My profile": {
-  "ar": "ملفي الشخصي",
-  "es": "Mi perfil"
- },
- "Customize tab bar": {
-  "ar": "تخصيص شريط التبويب",
-  "es": "Personalizar la barra de pestañas"
- },
- "Friends": {
-  "ar": "الأصدقاء",
-  "es": "Amigos"
- },
- "My lectures": {
-  "ar": "محاضراتي",
-  "es": "Mis clases"
- },
- "Life hacks": {
-  "ar": "نصائح حياتية",
-  "es": "Trucos útiles"
- },
- "Poke": {
-  "ar": "نكزة",
-  "es": "Toque"
- },
- "Ask to meet": {
-  "ar": "طلب مقابلة",
-  "es": "Pedir verse"
- },
- "Study together": {
-  "ar": "الدراسة معاً",
-  "es": "Estudiar juntos"
- },
- "I have a question": {
-  "ar": "لدي سؤال",
-  "es": "Tengo una pregunta"
- },
- "I need your notes": {
-  "ar": "أحتاج ملخصاتك",
-  "es": "Necesito tus apuntes"
- },
- "Coffee?": {
-  "ar": "قهوة؟",
-  "es": "¿Un café?"
- },
- "Requested": {
-  "ar": "تم الطلب",
-  "es": "Solicitado"
- },
- "Accept": {
-  "ar": "قبول",
-  "es": "Aceptar"
- },
- "Add friend": {
-  "ar": "إضافة صديق",
-  "es": "Añadir amigo"
- },
- "Remove this friend?": {
-  "ar": "إزالة هذا الصديق؟",
-  "es": "¿Eliminar a este amigo?"
- },
- "Remove friend": {
-  "ar": "إزالة الصديق",
-  "es": "Eliminar amigo"
- },
- "Couldn't do that": {
-  "ar": "تعذر تنفيذ ذلك",
-  "es": "No se pudo hacer"
- },
- "What do you want to say?": {
-  "ar": "ماذا تريد أن تقول؟",
-  "es": "¿Qué quieres decir?"
- },
- "Where and when? Like: the library at 2:00": {
-  "ar": "أين ومتى؟ مثل: المكتبة الساعة 2:00",
-  "es": "¿Dónde y cuándo? Ej.: la biblioteca a las 2:00"
- },
- "Where": {
-  "ar": "أين",
-  "es": "Dónde"
- },
- "They will see": {
-  "ar": "سيظهر له",
-  "es": "Verá"
- },
- "What's on your mind?": {
-  "ar": "بماذا تفكر؟",
-  "es": "¿Qué estás pensando?"
- },
- "New post": {
-  "ar": "منشور جديد",
-  "es": "Nueva publicación"
- },
- "Posting…": {
-  "ar": "جارٍ النشر…",
-  "es": "Publicando…"
- },
- "Post": {
-  "ar": "نشر",
-  "es": "Publicar"
- },
- "Feed": {
-  "ar": "المنشورات",
-  "es": "Publicaciones"
- },
- "Alerts": {
-  "ar": "التنبيهات",
-  "es": "Avisos"
- },
- "Find": {
-  "ar": "بحث",
-  "es": "Buscar"
- },
- "Add your classmates as friends": {
-  "ar": "أضف زملاءك كأصدقاء",
-  "es": "Añade a tus compañeros como amigos"
- },
- "Sign in to add friends, poke them and share posts.": {
-  "ar": "سجّل الدخول لإضافة الأصدقاء ونكزهم ومشاركة المنشورات.",
-  "es": "Inicia sesión para añadir amigos, darles un toque y compartir publicaciones."
- },
- "Write a post": {
-  "ar": "اكتب منشوراً",
-  "es": "Escribe una publicación"
- },
- "No posts yet. Add friends or write the first one.": {
-  "ar": "لا توجد منشورات بعد. أضف أصدقاء أو اكتب أول منشور.",
-  "es": "Aún no hay publicaciones. Añade amigos o escribe la primera."
- },
- "You haven't added any friends yet.": {
-  "ar": "لم تضف أي أصدقاء بعد.",
-  "es": "Aún no has añadido amigos."
- },
- "Find people": {
-  "ar": "ابحث عن أشخاص",
-  "es": "Buscar personas"
- },
- "Nothing new.": {
-  "ar": "لا جديد.",
-  "es": "Nada nuevo."
- },
- "Friend requests": {
-  "ar": "طلبات الصداقة",
-  "es": "Solicitudes de amistad"
- },
- "Decline": {
-  "ar": "رفض",
-  "es": "Rechazar"
- },
- "Pokes and messages": {
-  "ar": "النكزات والرسائل",
-  "es": "Toques y mensajes"
- },
- "Requests you sent": {
-  "ar": "الطلبات التي أرسلتها",
-  "es": "Solicitudes enviadas"
- },
- "Name, username, major or college": {
-  "ar": "الاسم أو اسم المستخدم أو التخصص أو الكلية",
-  "es": "Nombre, usuario, carrera o facultad"
- },
- "People from your college and major show up here. Add them to your profile to see more.": {
-  "ar": "يظهر هنا طلاب من كليتك وتخصصك. أضفهما إلى ملفك لترى المزيد.",
-  "es": "Aquí aparecen personas de tu facultad y carrera. Añádelas a tu perfil para ver más."
- },
- "No people found.": {
-  "ar": "لم يتم العثور على أشخاص.",
-  "es": "No se encontraron personas."
- },
- "Posts": {
-  "ar": "المنشورات",
-  "es": "Publicaciones"
- },
- "Messages": {
-  "ar": "الرسائل",
-  "es": "Mensajes"
- },
- "No posts yet": {
-  "ar": "لا توجد منشورات بعد",
-  "es": "Aún no hay publicaciones"
- },
- "Add friends or write the first one.": {
-  "ar": "أضف أصدقاء أو اكتب أول منشور.",
-  "es": "Añade amigos o escribe la primera."
- },
- "No friends yet": {
-  "ar": "لا يوجد أصدقاء بعد",
-  "es": "Aún no hay amigos"
- },
- "Nothing new": {
-  "ar": "لا جديد",
-  "es": "Nada nuevo"
- },
- "Friend requests and pokes show up here.": {
-  "ar": "تظهر هنا طلبات الصداقة والنكزات.",
-  "es": "Aquí aparecen las solicitudes y los toques."
- },
- "No people found": {
-  "ar": "لم يتم العثور على أشخاص",
-  "es": "No se encontraron personas"
- },
- "Try another name.": {
-  "ar": "جرّب اسماً آخر.",
-  "es": "Prueba con otro nombre."
- },
- "Sent": {
-  "ar": "تم الإرسال",
-  "es": "Enviado"
- },
- "Choose a file": {
-  "ar": "اختر ملفاً",
-  "es": "Elegir un archivo"
- },
- "PDF, PowerPoint, Word, images or video, up to 25 MB. It uploads right from the app.": {
-  "ar": "PDF أو PowerPoint أو Word أو صور أو فيديو، حتى 25 ميجابايت. يتم الرفع مباشرة من التطبيق.",
-  "es": "PDF, PowerPoint, Word, imágenes o video, hasta 25 MB. Se sube directamente desde la app."
- },
- "Couldn't read this file.": {
-  "ar": "تعذرت قراءة هذا الملف.",
-  "es": "No se pudo leer este archivo."
- },
- "This file is empty.": {
-  "ar": "هذا الملف فارغ.",
-  "es": "Este archivo está vacío."
- },
- "Rose": {
-  "ar": "وردي",
-  "es": "Rosa"
- },
- "Royal blue": {
-  "ar": "أزرق ملكي",
-  "es": "Azul real"
- },
- "Mint": {
-  "ar": "نعناعي",
-  "es": "Menta"
- },
- "Gold": {
-  "ar": "ذهبي",
-  "es": "Dorado"
- },
- "Crimson": {
-  "ar": "قرمزي",
-  "es": "Carmesí"
- },
- "Lavender": {
-  "ar": "خزامى",
-  "es": "Lavanda"
- },
- "Coffee": {
-  "ar": "قهوة",
-  "es": "Café"
- },
- "Club": {
-  "ar": "نادٍ",
-  "es": "Club"
- },
- "Dorm or housing": {
-  "ar": "السكن",
-  "es": "Residencia"
- },
- "Request sent": {
-  "ar": "تم إرسال الطلب",
-  "es": "Solicitud enviada"
- },
- "The owner will review your group. We'll notify you when it's accepted or rejected.": {
-  "ar": "سيراجع المالك مجموعتك، وسنخبرك عند قبولها أو رفضها.",
-  "es": "El propietario revisará tu grupo. Te avisaremos cuando sea aceptado o rechazado."
- },
- "Sign in so we can tell you when your group is accepted.": {
-  "ar": "سجّل الدخول لنخبرك عند قبول مجموعتك.",
-  "es": "Inicia sesión para avisarte cuando tu grupo sea aceptado."
- },
- "Group name": {
-  "ar": "اسم المجموعة",
-  "es": "Nombre del grupo"
- },
- "Category": {
-  "ar": "الفئة",
-  "es": "Categoría"
- },
- "About the group": {
-  "ar": "عن المجموعة",
-  "es": "Sobre el grupo"
- },
- "Invite link": {
-  "ar": "رابط الدعوة",
-  "es": "Enlace de invitación"
- },
- "Paste the group's invite link, starting with https://": {
-  "ar": "الصق رابط دعوة المجموعة، ويبدأ بـ https://",
-  "es": "Pega el enlace de invitación, que empieza por https://"
- },
- "Anything the owner should know": {
-  "ar": "أي شيء يجب أن يعرفه المالك",
-  "es": "Algo que el propietario deba saber"
- },
- "Your requests": {
-  "ar": "طلباتك",
-  "es": "Tus solicitudes"
- },
- "Add your group": {
-  "ar": "أضف مجموعتك",
-  "es": "Añade tu grupo"
- },
- "Accepted": {
-  "ar": "مقبول",
-  "es": "Aceptado"
- },
- "Rejected": {
-  "ar": "مرفوض",
-  "es": "Rechazado"
- },
- "Reject": {
-  "ar": "رفض",
-  "es": "Rechazar"
- },
- "Portrait": {
-  "ar": "صورة شخصية",
-  "es": "Retrato"
- },
- "Graduation": {
-  "ar": "تخرج",
-  "es": "Graduación"
- },
- "Group": {
-  "ar": "مجموعة",
-  "es": "Grupo"
- },
- "Product / Commercial": {
-  "ar": "منتج / تجاري",
-  "es": "Producto / Comercial"
- },
- "Booking submitted!": {
-  "ar": "تم إرسال الحجز!",
-  "es": "¡Reserva enviada!"
- },
- "The photographer will review your request and contact you on %s with the final invoice and payment details.": {
-  "ar": "سيراجع المصور طلبك ويتواصل معك على %s بالفاتورة النهائية وتفاصيل الدفع.",
-  "es": "El fotógrafo revisará tu solicitud y te contactará en %s con la factura final y los datos de pago."
- },
- "Book another session": {
-  "ar": "احجز جلسة أخرى",
-  "es": "Reservar otra sesión"
- },
- "Every frame, a story. Fill in your details and see the price as you go. The photographer reviews your request and sends the final invoice.": {
-  "ar": "كل لقطة حكاية. املأ بياناتك وشاهد السعر أثناء ذلك، وسيراجع المصور طلبك ويرسل الفاتورة النهائية.",
-  "es": "Cada imagen, una historia. Rellena tus datos y mira el precio al instante. El fotógrafo revisa tu solicitud y envía la factura final."
- },
- "Your details": {
-  "ar": "بياناتك",
-  "es": "Tus datos"
- },
- "First name": {
-  "ar": "الاسم الأول",
-  "es": "Nombre"
- },
- "Middle name (optional)": {
-  "ar": "الاسم الأوسط (اختياري)",
-  "es": "Segundo nombre (opcional)"
- },
- "Last name": {
-  "ar": "اسم العائلة",
-  "es": "Apellido"
- },
- "WhatsApp or phone": {
-  "ar": "واتساب أو هاتف",
-  "es": "WhatsApp o teléfono"
- },
- "Email (optional)": {
-  "ar": "البريد الإلكتروني (اختياري)",
-  "es": "Correo (opcional)"
- },
- "Session": {
-  "ar": "الجلسة",
-  "es": "Sesión"
- },
- "Session type": {
-  "ar": "نوع الجلسة",
-  "es": "Tipo de sesión"
- },
- "From": {
-  "ar": "من",
-  "es": "Desde"
- },
- "To": {
-  "ar": "إلى",
-  "es": "Hasta"
- },
- "The end time must be after the start time.": {
-  "ar": "يجب أن يكون وقت النهاية بعد وقت البداية.",
-  "es": "La hora de fin debe ser posterior a la de inicio."
- },
- "Location": {
-  "ar": "الموقع",
-  "es": "Lugar"
- },
- "ASU campus": {
-  "ar": "حرم الجامعة",
-  "es": "Campus de ASU"
- },
- "Outside ASU": {
-  "ar": "خارج الجامعة",
-  "es": "Fuera de ASU"
- },
- "Address": {
-  "ar": "العنوان",
-  "es": "Dirección"
- },
- "Where on campus? (optional)": {
-  "ar": "أين في الحرم؟ (اختياري)",
-  "es": "¿Dónde en el campus? (opcional)"
- },
- "Outside ASU adds a 5 JD travel fee.": {
-  "ar": "خارج الجامعة تضاف رسوم انتقال 5 دنانير.",
-  "es": "Fuera de ASU se añade un cargo de 5 JD por traslado."
- },
- "No travel fee on campus.": {
-  "ar": "لا رسوم انتقال داخل الحرم.",
-  "es": "Sin cargo por traslado en el campus."
- },
- "Photos to edit": {
-  "ar": "الصور المطلوب تعديلها",
-  "es": "Fotos para editar"
- },
- "Edit quality": {
-  "ar": "جودة التعديل",
-  "es": "Calidad de edición"
- },
- "Standard": {
-  "ar": "عادي",
-  "es": "Estándar"
- },
- "Premium": {
-  "ar": "مميز",
-  "es": "Premium"
- },
- "Photos and editing": {
-  "ar": "الصور والتعديل",
-  "es": "Fotos y edición"
- },
- "Photoshop and paid tools: skin retouching, compositing and advanced grading. 3 JD a photo as a base price; complex edits may cost more.": {
-  "ar": "فوتوشوب وأدوات مدفوعة: تنقية البشرة والدمج وتصحيح ألوان متقدم. 3 دنانير للصورة كسعر أساسي، وقد تكلف التعديلات المعقدة أكثر.",
-  "es": "Photoshop y herramientas de pago: retoque de piel, composición y color avanzado. 3 JD por foto como base; las ediciones complejas pueden costar más."
- },
- "Basic retouching, color grading, crop and export. 3 JD a photo.": {
-  "ar": "تعديل أساسي وتصحيح ألوان وقص وتصدير. 3 دنانير للصورة.",
-  "es": "Retoque básico, color, recorte y exportación. 3 JD por foto."
- },
- "Promo code": {
-  "ar": "رمز الخصم",
-  "es": "Código promocional"
- },
- "This promo code isn't valid.": {
-  "ar": "رمز الخصم غير صالح.",
-  "es": "Este código no es válido."
- },
- "Session (%s h × 5 JD)": {
-  "ar": "الجلسة (%s س × 5 د.أ)",
-  "es": "Sesión (%s h × 5 JD)"
- },
- "Editing (%d × 3 JD)": {
-  "ar": "التعديل (%d × 3 د.أ)",
-  "es": "Edición (%d × 3 JD)"
- },
- "Travel": {
-  "ar": "الانتقال",
-  "es": "Traslado"
- },
- "Free": {
-  "ar": "مجاني",
-  "es": "Gratis"
- },
- "Promo discount": {
-  "ar": "خصم الرمز",
-  "es": "Descuento"
- },
- "Estimated total": {
-  "ar": "الإجمالي التقديري",
-  "es": "Total estimado"
- },
- "Your estimate": {
-  "ar": "تقديرك",
-  "es": "Tu estimación"
- },
- "This is an estimate; the photographer confirms the final amount. You can pay by PayPal, CliQ or cash.": {
-  "ar": "هذا تقدير، ويؤكد المصور المبلغ النهائي. يمكنك الدفع عبر PayPal أو CliQ أو نقداً.",
-  "es": "Es una estimación; el fotógrafo confirma el importe final. Puedes pagar por PayPal, CliQ o en efectivo."
- },
- "Send booking request": {
-  "ar": "إرسال طلب الحجز",
-  "es": "Enviar solicitud de reserva"
- },
- "Couldn't send your booking. Check your connection and try again.": {
-  "ar": "تعذر إرسال حجزك. تحقق من اتصالك وحاول مرة أخرى.",
-  "es": "No se pudo enviar tu reserva. Revisa tu conexión e inténtalo de nuevo."
- },
- "Partly cloudy": {
-  "ar": "غائم جزئياً",
-  "es": "Parcialmente nublado"
- },
- "Cloudy": {
-  "ar": "غائم",
-  "es": "Nublado"
- },
- "Foggy": {
-  "ar": "ضباب",
-  "es": "Niebla"
- },
- "Drizzle": {
-  "ar": "رذاذ",
-  "es": "Llovizna"
- },
- "Rain": {
-  "ar": "مطر",
-  "es": "Lluvia"
- },
- "Snow": {
-  "ar": "ثلج",
-  "es": "Nieve"
- },
- "Thunderstorms": {
-  "ar": "عواصف رعدية",
-  "es": "Tormentas"
- },
- "Take an umbrella, rain is likely.": {
-  "ar": "خذ مظلة، فالمطر محتمل.",
-  "es": "Lleva paraguas, es probable que llueva."
- },
- "It's hot. Drink water and stay in the shade.": {
-  "ar": "الجو حار. اشرب الماء وابقَ في الظل.",
-  "es": "Hace calor. Bebe agua y busca la sombra."
- },
- "It's cold. Take a jacket.": {
-  "ar": "الجو بارد. خذ معطفاً.",
-  "es": "Hace frío. Lleva una chaqueta."
- },
- "Tomorrow on campus": {
-  "ar": "غداً في الجامعة",
-  "es": "Mañana en el campus"
- },
- "Today on campus": {
-  "ar": "اليوم في الجامعة",
-  "es": "Hoy en el campus"
- },
- "7 AM – 4 PM": {
-  "ar": "7 ص – 4 م",
-  "es": "7 AM – 4 PM"
- },
- "Call 911": {
-  "ar": "اتصل بالرقم 911",
-  "es": "Llamar al 911"
- },
- "Jordan's emergency number: ambulance, fire and police": {
-  "ar": "رقم الطوارئ في الأردن: الإسعاف والدفاع المدني والشرطة",
-  "es": "Número de emergencias de Jordania: ambulancia, bomberos y policía"
- },
- "In an emergency": {
-  "ar": "في حالات الطوارئ",
-  "es": "En una emergencia"
- },
- "Couldn't load the tips. Check your connection and try again.": {
-  "ar": "تعذر تحميل النصائح. تحقق من اتصالك وحاول مرة أخرى.",
-  "es": "No se pudieron cargar los consejos. Revisa tu conexión e inténtalo de nuevo."
- },
- "These are general tips, not medical or professional advice. In an emergency, call for help first.": {
-  "ar": "هذه نصائح عامة وليست استشارة طبية أو مهنية. في الطوارئ، اطلب المساعدة أولاً.",
-  "es": "Son consejos generales, no asesoramiento médico o profesional. En una emergencia, pide ayuda primero."
- },
- "Phone default": {
-  "ar": "صوت الهاتف الافتراضي",
-  "es": "Predeterminado del teléfono"
- },
- "Phone sound": {
-  "ar": "صوت من الهاتف",
-  "es": "Sonido del teléfono"
- },
- "Chime": {
-  "ar": "رنين",
-  "es": "Campanilla"
- },
- "Bell": {
-  "ar": "جرس",
-  "es": "Campana"
- },
- "Ping": {
-  "ar": "نغمة قصيرة",
-  "es": "Ping"
- },
- "Marimba": {
-  "ar": "ماريمبا",
-  "es": "Marimba"
- },
- "Soft": {
-  "ar": "هادئ",
-  "es": "Suave"
- },
- "Alert": {
-  "ar": "تنبيه",
-  "es": "Alerta"
- },
- "Drops": {
-  "ar": "قطرات",
-  "es": "Gotas"
- },
- "Lecture reminders": {
-  "ar": "تذكيرات المحاضرات",
-  "es": "Recordatorios de clases"
- },
- "Starts at %s": {
-  "ar": "تبدأ الساعة %s",
-  "es": "Empieza a las %s"
- },
- "Hall %s · starts at %s": {
-  "ar": "قاعة %s · تبدأ الساعة %s",
-  "es": "Aula %s · empieza a las %s"
- },
- "Notifications are off for ASU Bank, so reminders can't ring.": {
-  "ar": "الإشعارات متوقفة لتطبيق ASU Bank، لذا لن تعمل التذكيرات.",
-  "es": "Las notificaciones de ASU Bank están desactivadas, así que los recordatorios no sonarán."
- },
- "Open Settings": {
-  "ar": "فتح الإعدادات",
-  "es": "Abrir Ajustes"
- },
- "iPhones don't let apps use your own ringtones, so these sounds come with ASU Bank.": {
-  "ar": "لا يسمح iPhone للتطبيقات باستخدام نغماتك الخاصة، لذلك تأتي هذه الأصوات مع ASU Bank.",
-  "es": "El iPhone no deja a las apps usar tus tonos, así que estos sonidos vienen con ASU Bank."
- },
- "Never miss a lecture": {
-  "ar": "لا تفوّت أي محاضرة",
-  "es": "No te pierdas ninguna clase"
- },
- "Add your subject, hall and time. We'll remind you 10 minutes before it starts.": {
-  "ar": "أضف المادة والقاعة والوقت، وسنذكرك قبل البدء بـ 10 دقائق.",
-  "es": "Añade tu materia, aula y hora. Te avisaremos 10 minutos antes de empezar."
- },
- "Add a lecture": {
-  "ar": "أضف محاضرة",
-  "es": "Añadir una clase"
- },
- "Lecture": {
-  "ar": "المحاضرة",
-  "es": "Clase"
- },
- "Hall": {
-  "ar": "القاعة",
-  "es": "Aula"
- },
- "Starts at": {
-  "ar": "تبدأ الساعة",
-  "es": "Empieza a las"
- },
- "Days": {
-  "ar": "الأيام",
-  "es": "Días"
- },
- "We'll remind you 10 minutes before, every week on these days.": {
-  "ar": "سنذكرك قبلها بـ 10 دقائق، كل أسبوع في هذه الأيام.",
-  "es": "Te avisaremos 10 minutos antes, cada semana en estos días."
- },
- "Delete this lecture": {
-  "ar": "حذف هذه المحاضرة",
-  "es": "Eliminar esta clase"
- },
- "Edit lecture": {
-  "ar": "تعديل المحاضرة",
-  "es": "Editar clase"
- },
- "Next lecture": {
-  "ar": "المحاضرة التالية",
-  "es": "Próxima clase"
- },
- "In your tab bar": {
-  "ar": "في شريط التبويب",
-  "es": "En tu barra de pestañas"
- },
- "Drag to reorder. Home and More always stay, and you can add up to %d more.": {
-  "ar": "اسحب لتغيير الترتيب. تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.",
-  "es": "Arrastra para reordenar. Inicio y Más siempre se quedan, y puedes añadir hasta %d más."
- },
- "Home and More always stay, and you can add up to %d more.": {
-  "ar": "تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.",
-  "es": "Inicio y Más siempre se quedan, y puedes añadir hasta %d más."
- },
- "Add a tab": {
-  "ar": "أضف تبويباً",
-  "es": "Añadir una pestaña"
- },
- "Reset to the default": {
-  "ar": "استعادة الوضع الافتراضي",
-  "es": "Restablecer"
- },
- "A ringtone from my phone…": {
-  "ar": "نغمة من هاتفي…",
-  "es": "Un tono de mi teléfono…"
- },
- "Without this, Android may ring a few minutes late.": {
-  "ar": "بدون هذا، قد يتأخر Android بضع دقائق.",
-  "es": "Sin esto, Android puede sonar unos minutos tarde."
- },
- "Allow exact reminders": {
-  "ar": "السماح بالتذكيرات الدقيقة",
-  "es": "Permitir recordatorios exactos"
- },
- "Write the name of the group.": {
-  "ar": "اكتب اسم المجموعة.",
-  "es": "Escribe el nombre del grupo."
- },
- "Alumni Follow-up Platform | منصة متابعة الخريجين": {
-  "ar": "منصة متابعة الخريجين",
-  "es": "Plataforma de seguimiento de egresados"
- },
- "Any file size, as many files as you like.": {
-  "ar": "أي حجم للملف، وبالعدد الذي تريده.",
-  "es": "Cualquier tamaño de archivo y tantos archivos como quieras."
- },
- "App icon": {
-  "ar": "أيقونة التطبيق",
-  "es": "Icono de la app"
- },
- "Applied Science University's official platform for keeping in touch with its graduates.": {
-  "ar": "المنصة الرسمية لجامعة العلوم التطبيقية للبقاء على تواصل مع خريجيها.",
-  "es": "La plataforma oficial de la Universidad de Ciencias Aplicadas para mantener el contacto con sus egresados."
- },
- "Book and cap": {
-  "ar": "كتاب وقبعة تخرج",
-  "es": "Libro y birrete"
- },
- "Classic": {
-  "ar": "الكلاسيكية",
-  "es": "Clásico"
- },
- "Couldn't change the icon": {
-  "ar": "تعذّر تغيير الأيقونة",
-  "es": "No se pudo cambiar el icono"
- },
- "Graduation cap": {
-  "ar": "قبعة التخرج",
-  "es": "Birrete"
- },
- "I agree to the upload rules": {
-  "ar": "أوافق على قواعد الرفع",
-  "es": "Acepto las normas de subida"
- },
- "Keep the app open until your files finish. You can close this screen.": {
-  "ar": "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك إغلاق هذه الشاشة.",
-  "es": "Mantén la app abierta hasta que terminen tus archivos. Puedes cerrar esta pantalla."
- },
- "Keep the app open until your files finish. You can leave this screen.": {
-  "ar": "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك مغادرة هذه الشاشة.",
-  "es": "Mantén la app abierta hasta que terminen tus archivos. Puedes salir de esta pantalla."
- },
- "Midnight book": {
-  "ar": "كتاب ليلي",
-  "es": "Libro nocturno"
- },
- "Official ASU alumni portal | Register as a graduate or sign in": {
-  "ar": "بوابة الخريجين الرسمية للجامعة | سجّل كخريج أو ادخل إلى حسابك",
-  "es": "Portal oficial de egresados de ASU | Regístrate como egresado o inicia sesión"
- },
- "Pick the icon you want on your Home Screen. Your iPhone shows a short message when it changes.": {
-  "ar": "اختر الأيقونة التي تريدها على الشاشة الرئيسية. سيعرض iPhone رسالة قصيرة عند تغييرها.",
-  "es": "Elige el icono que quieras en tu pantalla de inicio. Tu iPhone mostrará un breve mensaje al cambiarlo."
- },
- "Pick the icon you want on your home screen. It can take a few seconds to change, and you may need to add it to your home screen again.": {
-  "ar": "اختر الأيقونة التي تريدها على الشاشة الرئيسية. قد يستغرق التغيير بضع ثوانٍ، وقد تحتاج إلى إضافتها إلى الشاشة الرئيسية من جديد.",
-  "es": "Elige el icono que quieras en tu pantalla de inicio. Puede tardar unos segundos en cambiar y quizá tengas que volver a añadirlo a la pantalla de inicio."
- },
- "Preparing files…": {
-  "ar": "جارٍ تجهيز الملفات…",
-  "es": "Preparando archivos…"
- },
- "Share your study files": {
-  "ar": "شارك ملفاتك الدراسية",
-  "es": "Comparte tus archivos de estudio"
- },
- "Study cards": {
-  "ar": "بطاقات دراسية",
-  "es": "Tarjetas de estudio"
- },
- "Thank you for joining early! 🌱": {
-  "ar": "شكراً لانضمامك مبكراً! 🌱",
-  "es": "¡Gracias por unirte pronto! 🌱"
- },
- "The file changed while uploading. Please add it again.": {
-  "ar": "تغيّر الملف أثناء الرفع. يرجى إضافته مرة أخرى.",
-  "es": "El archivo cambió durante la subida. Vuelve a añadirlo."
- },
- "The upload expired. Please try again.": {
-  "ar": "انتهت صلاحية الرفع. يرجى المحاولة مرة أخرى.",
-  "es": "La subida caducó. Inténtalo de nuevo."
- },
- "Upload could not start. Please try again.": {
-  "ar": "تعذّر بدء الرفع. يرجى المحاولة مرة أخرى.",
-  "es": "No se pudo iniciar la subida. Inténtalo de nuevo."
- },
- "Upload rules": {
-  "ar": "قواعد الرفع",
-  "es": "Normas de subida"
- },
- "You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.": {
-  "ar": "انضممت إلى ASU Bank في أيامه الأولى، لذا أصبحت شارة «داعم مبكر» على ملفك الشخصي. شكراً لمساعدتك طلاب الجامعة.",
-  "es": "Te uniste a ASU Bank en sus primeros días, así que tu perfil ya tiene la insignia de Early supporter. Gracias por ayudar a los estudiantes de ASU."
- },
- "You're welcome": {
-  "ar": "على الرحب والسعة",
-  "es": "De nada"
- },
- "High %d° · Low %d°": {
-  "ar": "العظمى %d° · الصغرى %d°",
-  "es": "Máx. %d° · Mín. %d°"
  }
 }

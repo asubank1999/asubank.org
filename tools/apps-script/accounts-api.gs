@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 5;
+var SCHEMA = 6;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -75,7 +75,9 @@ var SHEETS = {
   GroupRequests: ['id', 'created', 'userId', 'username', 'title', 'category', 'url', 'notes', 'status', 'resolvedBy', 'resolvedAt'],
   Friends: ['id', 'from', 'to', 'status', 'created', 'updated'],
   Pokes: ['id', 'from', 'to', 'kind', 'place', 'created', 'read'],
-  Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes']
+  Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes'],
+  Suggestions: ['id', 'created', 'userId', 'username', 'note', 'contact', 'status', 'resolvedBy', 'resolvedAt'],
+  DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed']
 };
 
 // MARK: - entry points
@@ -156,8 +158,10 @@ function ensureSchema() {
 
 // MARK: - storage
 
-function book() { return SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SHEET_ID')); }
-function sheet(name) { return book().getSheetByName(name); }
+// Opened once per request: opening the spreadsheet again for every read was a big part of why lists were slow
+var openBook = null, openSheets = {};
+function book() { return openBook || (openBook = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SHEET_ID'))); }
+function sheet(name) { return openSheets[name] || (openSheets[name] = book().getSheetByName(name)); }
 
 function rows(name) {
   var sh = sheet(name);
@@ -290,7 +294,9 @@ function tooMany(key, max) {
 
 // MARK: - presence (who is online)
 
-function presence() { return JSON.parse(CacheService.getScriptCache().get('presence') || '{}'); }
+// Read once per request: building a list of users used to ask the cache again for every user
+var presenceNow = null;
+function presence() { return presenceNow || (presenceNow = JSON.parse(CacheService.getScriptCache().get('presence') || '{}')); }
 
 /** Marks a user as active now (at most every 30 seconds per user) */
 function touch(u) {
@@ -319,7 +325,7 @@ function newSession(u, platform) {
   return token;
 }
 
-/** The signed-in user for a request (cached for a minute), or throws */
+/** The signed-in user for a request (cached for 10 minutes; changes clear it), or throws */
 function auth(b, opts) {
   var t = String(b.token || '');
   if (t.length < 30) fail('Please sign in.');
@@ -335,7 +341,7 @@ function auth(b, opts) {
     if (!full) fail('This account no longer exists.');
     u = { id: full.id, username: full.username, displayName: full.displayName, role: full.role, color: full.color,
           banned: truthy(full.banned), banReason: full.banReason, _row: full._row };
-    cache.put('s:' + t, JSON.stringify(u), 60);
+    cache.put('s:' + t, JSON.stringify(u), 600);
     if (!full.lastSeen || new Date() - new Date(full.lastSeen) > 10 * 60000) update('Users', full._row, { lastSeen: new Date().toISOString() });
   }
   if (u.banned) fail('This account is banned' + (u.banReason ? ': ' + u.banReason : '.'));
@@ -1399,19 +1405,91 @@ var ACTIONS = {
     });
   },
 
-  /** Moves an uploaded file to the Drive trash (only files in the upload folder) */
+  /**
+   * Removes a file from ASU Bank for everyone and moves it to the Drive trash when this account may do that.
+   * The file's id goes on the deleted list that the apps and the site hide, because the other indexes keep listing a file for a while.
+   * Folders, sheets, forms and scripts are only hidden, never trashed: the backend's own files live in this Drive.
+   */
   adminDeleteUpload: function (b) {
     var a = auth(b, { admin: true });
     var id = String(b.fileId || '');
-    var f;
-    try { f = DriveApp.getFileById(id); } catch (e) { fail('File not found.'); }
-    var inFolder = false;
-    var parents = f.getParents();
-    while (parents.hasNext()) if (parents.next().getId() === UPLOAD_FOLDER_ID) inFolder = true;
-    if (!inFolder) fail('Only files in the upload folder can be deleted from the app.');
-    f.setTrashed(true);
-    log(a, 'deleteUpload', f.getName(), id);
-    return { ok: true };
+    if (!/^[-\w]{10,}$/.test(id)) fail('This is not a Google Drive file.');
+    if (id === PropertiesService.getScriptProperties().getProperty('SHEET_ID')) fail('This file cannot be deleted from the app.');
+    var f = null, name = id, trashed = false, ids = [id];
+    try { f = DriveApp.getFileById(id); name = f.getName(); } catch (e) { f = null; }
+    if (f) {
+      var type = String(f.getMimeType());
+      var keep = ['folder', 'spreadsheet', 'form', 'script'].some(function (k) { return type === 'application/vnd.google-apps.' + k; });
+      if (!keep) {
+        var target = null;
+        try { target = f.getTargetId(); } catch (e) { target = null; }
+        try { f.setTrashed(true); trashed = true; } catch (e) { trashed = false; }
+        if (target) {
+          ids.push(target);
+          try { DriveApp.getFileById(target).setTrashed(true); trashed = true; } catch (e) { /* the real file is in someone else's Drive */ }
+        }
+      }
+    }
+    return withLock(function () {
+      var known = {};
+      rows('DeletedFiles').forEach(function (r) { known[r.id] = 1; });
+      ids.forEach(function (x) {
+        if (!known[x]) append('DeletedFiles', { id: x, name: cell(String(name).slice(0, 300)), time: new Date().toISOString(), adminId: a.id, trashed: trashed });
+      });
+      CacheService.getScriptCache().remove('deletedFiles');
+      log(a, 'deleteFile', String(name).slice(0, 120), id + (trashed ? ' (in the Drive trash)' : ' (hidden only)'));
+      return { ok: true, trashed: trashed, ids: ids };
+    });
+  },
+
+  /** Files admins removed; the apps and the site hide them everywhere. No sign-in: these are ids only. */
+  deletedFiles: function () {
+    var c = CacheService.getScriptCache();
+    var j = c.get('deletedFiles');
+    if (j) return { ok: true, ids: JSON.parse(j) };
+    var ids = rows('DeletedFiles').map(function (r) { return String(r.id); });
+    try { c.put('deletedFiles', JSON.stringify(ids), 21600); } catch (e) { /* too big for the cache: read the sheet each time */ }
+    return { ok: true, ids: ids };
+  },
+
+  /** "Suggest materials" from the apps and the website; admins read them in Admin > Suggestions. No sign-in needed. */
+  suggest: function (b) {
+    var me = b.token ? auth(b) : null;
+    var note = String(b.note || '').trim().slice(0, 2000);
+    var contact = String(b.contact || '').trim().slice(0, 120);
+    if (note.length < 20) fail('Please give more details (at least 20 characters).');
+    assertClean(note);
+    if (tooMany(me ? 'suggest:' + me.id : 'suggest:guest', me ? 10 : 40)) fail('Too many suggestions. Try again later.');
+    return withLock(function () {
+      var who = me ? me.username : 'Guest';
+      append('Suggestions', { id: newId(), created: new Date().toISOString(), userId: me ? me.id : '', username: who, note: cell(note), contact: cell(contact),
+                              status: 'open', resolvedBy: '', resolvedAt: '' });
+      try {
+        MailApp.sendEmail(OWNER_EMAIL, 'ASU Bank suggestion from ' + who, note + '\n\nContact: ' + (contact || 'none') + '\n\nIn the app: Admin > Suggestions, or https://asubank.org/admin/');
+      } catch (err) { /* it is saved even when the daily email limit is used up */ }
+      return { ok: true };
+    });
+  },
+
+  adminSuggestions: function (b) {
+    auth(b, { admin: true });
+    var all = rows('Suggestions');
+    var list = all.filter(function (r) { return truthy(b.all) || b.all === true || r.status === 'open'; });
+    return { ok: true, pending: all.filter(function (r) { return r.status === 'open'; }).length,
+             suggestions: list.slice(-200).reverse().map(function (r) { delete r._row; return r; }) };
+  },
+
+  adminSuggestionSet: function (b) {
+    var a = auth(b, { admin: true });
+    var status = String(b.status || '');
+    if (['open', 'done', 'dismissed'].indexOf(status) < 0) fail('Bad status.');
+    return withLock(function () {
+      var r = rows('Suggestions').filter(function (x) { return x.id === b.id; })[0];
+      if (!r) fail('Suggestion not found.');
+      update('Suggestions', r._row, { status: status, resolvedBy: a.username, resolvedAt: new Date().toISOString() });
+      log(a, 'suggestion ' + status, r.username, String(r.note).slice(0, 80));
+      return { ok: true };
+    });
   },
 
   adminLog: function (b) {

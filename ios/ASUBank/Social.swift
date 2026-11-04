@@ -482,21 +482,29 @@ struct FriendsScreen: View {
 
     private func load() async {
         guard account.signedIn else { return }
-        do {
-            let r = try await account.call("friends")
+        func read(_ r: [String: Any]) {
             friends = decode([ABUser].self, r["friends"]) ?? []
             incoming = decode([ABUser].self, r["incoming"]) ?? []
             outgoing = decode([ABUser].self, r["outgoing"]) ?? []
             pokes = decode([Poke].self, r["pokes"]) ?? []
+        }
+        // what we knew last time, straight away
+        if loading {
+            if let r = account.saved("friends") { read(r); loading = false }
+            if let r = account.saved("feed") { feed = decode([FeedPost].self, r["posts"]) ?? [] }
+        }
+        // the feed doesn't hold up the friends list
+        Task { await loadFeed() }
+        do {
+            read(try await account.callSaving("friends"))
             error = nil
         } catch { self.error = error.localizedDescription }
-        await loadFeed()
         loading = false
         if segment == 2 { await markRead() }
     }
 
     private func loadFeed() async {
-        if let r = try? await account.call("feed") { feed = decode([FeedPost].self, r["posts"]) ?? [] }
+        if let r = try? await account.callSaving("feed") { feed = decode([FeedPost].self, r["posts"]) ?? [] }
     }
 
     private func search() async {
@@ -612,7 +620,8 @@ struct ProfileScreen: View {
                     .padding(.bottom, 52)
                 Avatar(name: user?.displayName ?? fallbackName, color: user?.color ?? fallbackColor, size: 100,
                        admin: user?.isAdmin == true, photo: user?.avatar, online: user?.online)
-                    .overlay(Circle().stroke(Color.abBackground, lineWidth: 4))
+                    // behind the photo: drawn on top, this ring cut a line through the star and the online dot
+                    .background(Circle().fill(Color.abBackground).padding(-4))
             }
             Text(user?.displayName ?? fallbackName).font(.title2.weight(.bold))
             if let u = user {
@@ -665,14 +674,17 @@ struct ProfileScreen: View {
     }
 
     private func load() async {
-        do {
-            let r = try await account.call("profile", ["userId": userId, "social": true])
+        func read(_ r: [String: Any]) {
             user = decode(ABUser.self, r["user"])
             friendship = r["friendship"] as? String ?? "none"
             friendCount = (r["friendCount"] as? NSNumber)?.intValue ?? 0
             postCount = (r["postCount"] as? NSNumber)?.intValue ?? 0
             messageCount = (r["messageCount"] as? NSNumber)?.intValue ?? 0
             posts = decode([FeedPost].self, r["posts"]) ?? []
+        }
+        if user == nil, let r = account.saved("profile", tag: userId) { read(r) }
+        do {
+            read(try await account.callSaving("profile", ["userId": userId, "social": true], tag: userId))
             error = nil
         } catch { self.error = error.localizedDescription }
     }

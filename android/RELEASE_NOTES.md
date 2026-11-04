@@ -1,5 +1,11 @@
 **ASU Bank for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.10.2
+- Suggest materials is now a real form in the app, saved in the same place as the website's form
+- Admins: delete any file from Drive by holding it, and it stays gone after a refresh
+- Friends, Users and the admin screens open much faster
+- More: see how our files are spread across the colleges
+
 ### What's new in 1.10.1
 - The weather card shows the exact day and date, plus the day's high and low
 - Android: neater official links, including the alumni platform

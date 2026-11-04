@@ -59,7 +59,9 @@ struct AppIconScreen: View {
                     // iOS sometimes answers "temporarily unavailable" to the first try
                     if retry { DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) { pick(icon, retry: false) }; return }
                     let e = error as NSError
-                    failure = "\(e.localizedDescription) (\(e.domain) \(e.code))"
+                    failure = e.code == -54
+                        ? L("Your iPhone blocked this change (error -54). Restart the iPhone and try again. If it keeps happening, the way this copy of the app was installed is the likely reason.")
+                        : "\(e.localizedDescription) (\(e.domain) \(e.code))"
                 } else {
                     current = icon
                     failure = nil

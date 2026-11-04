@@ -10,6 +10,8 @@ final class DriveLinks {
     static let shared = DriveLinks()
     private(set) var map: [String: [String]] = [:]     // shortcut id -> [target id, "folder"|"file"]
     private(set) var broken: [String: String] = [:]    // url -> reason
+    private var deleted = Set<String>()                // Drive ids admins removed
+    private static let deletedKey = "ab.deletedFiles.v1"
     private let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
     private let lock = NSLock()
 
@@ -17,6 +19,33 @@ final class DriveLinks {
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         if let d = try? Data(contentsOf: dir.appendingPathComponent("drive-map.json")) { map = (try? JSONDecoder().decode([String: [String]].self, from: d)) ?? [:] }
         if let d = try? Data(contentsOf: dir.appendingPathComponent("broken.json")) { broken = (try? JSONDecoder().decode([String: String].self, from: d)) ?? [:] }
+        deleted = Set(UserDefaults.standard.stringArray(forKey: Self.deletedKey) ?? [])
+    }
+
+    /// Returns true when the list changed
+    @discardableResult
+    func setDeleted(_ ids: Set<String>) -> Bool {
+        lock.lock(); defer { lock.unlock() }
+        guard ids != deleted else { return false }
+        deleted = ids
+        UserDefaults.standard.set(Array(ids), forKey: Self.deletedKey)
+        return true
+    }
+
+    var deletedIds: Set<String> {
+        lock.lock(); defer { lock.unlock() }
+        return deleted
+    }
+
+    /// A file an admin removed, by its own id or through the shortcut that points to it
+    func isDeleted(_ u: String) -> Bool {
+        lock.lock()
+        let gone = deleted, links = map
+        lock.unlock()
+        guard !gone.isEmpty, let id = AB.driveId(u) else { return false }
+        if gone.contains(id) { return true }
+        if let t = links[id]?.first, gone.contains(t) { return true }
+        return false
     }
 
     /// Returns true when something changed
@@ -47,8 +76,29 @@ final class DriveLinks {
     }
 
     func isBroken(_ u: String) -> String? {
+        if isDeleted(u) { return "This file was removed from ASU Bank." }
         lock.lock(); defer { lock.unlock() }
         return broken[u]
+    }
+}
+
+/// Tells every file row when an admin removed something
+@MainActor
+final class RemovedFiles: ObservableObject {
+    static let shared = RemovedFiles()
+    @Published private(set) var revision = 0
+
+    /// Returns true when the list changed
+    func refresh() async -> Bool {
+        guard let r = try? await AccountsAPI.call("deletedFiles"), let ids = r["ids"] as? [String],
+              DriveLinks.shared.setDeleted(Set(ids)) else { return false }
+        revision += 1
+        return true
+    }
+
+    func add(_ ids: [String]) {
+        DriveLinks.shared.setDeleted(DriveLinks.shared.deletedIds.union(ids))
+        revision += 1
     }
 }
 

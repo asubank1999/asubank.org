@@ -9,6 +9,9 @@
 "%d days ago" = "منذ %d أيام";
 "%lld days ago" = "منذ %lld أيام";
 "%@ days ago" = "منذ %@ أيام";
+"%d files" = "%d ملف";
+"%lld files" = "%lld ملف";
+"%@ files" = "%@ ملف";
 "%d friends" = "%d أصدقاء";
 "%lld friends" = "%lld أصدقاء";
 "%@ friends" = "%@ أصدقاء";
@@ -428,6 +431,7 @@
 "Clearing the cache frees space and reloads pages and the materials list from asubank.org. Your saved materials and settings stay." = "مسح الذاكرة المؤقتة يوفر مساحة ويعيد تحميل الصفحات وقائمة المواد من asubank.org. تبقى موادك المحفوظة وإعداداتك.";
 "Clearing…" = "جارٍ المسح…";
 "Clearly acceptable" = "مقبول";
+"Clearly label documents with course information" = "اكتب معلومات المادة بوضوح على الملفات";
 "CliQ alias" = "اسم CliQ المستعار";
 "CliQ alias: ALANQ99" = "اسم CliQ المستعار: ALANQ99";
 "Clicking “I Agree” signifies your acceptance of these terms." = "الضغط على «أوافق» يعني قبولك لهذه الشروط.";
@@ -537,6 +541,8 @@
 "Delete" = "حذف";
 "Delete @%@?" = "حذف @%@؟";
 "Delete account" = "حذف الحساب";
+"Delete from Drive" = "حذف من درايف";
+"Delete from Drive?" = "حذف من درايف؟";
 "Delete message" = "حذف الرسالة";
 "Delete my account" = "حذف حسابي";
 "Delete post" = "حذف المنشور";
@@ -554,6 +560,7 @@
 "Deleting…" = "جارٍ الحذف…";
 "Demography" = "الديموغرافيا";
 "Dentistry" = "طب الأسنان";
+"Describe what you're suggesting" = "صف ما تقترحه";
 "Descriptive Statistical Measures" = "المقاييس الإحصائية الوصفية";
 "Designer" = "مصمم";
 "Details" = "التفاصيل";
@@ -575,6 +582,7 @@
 "Document Access Agreement" = "اتفاقية الوصول إلى المستندات";
 "Documents & data" = "المستندات والبيانات";
 "Don't open" = "لا تفتحوه";
+"Don't share current semester exams that might still be in use" = "لا تشارك امتحانات الفصل الحالي التي قد تكون قيد الاستخدام";
 "Don't share other people's private information." = "لا تشارك المعلومات الخاصة بالآخرين.";
 "Donate" = "تبرّع";
 "Donate with PayPal" = "تبرّع عبر PayPal";
@@ -604,6 +612,7 @@
 "Drug Design" = "تصميم الأدوية";
 "E-Library Hub" = "مركز المكتبة الإلكترونية";
 "E-Services & Learning Platforms" = "الخدمات الإلكترونية ومنصات التعلم";
+"Each college's share of the files sorted by college. It shows where we have the most, not how much of a college's courses is covered. General files and the archive aren't counted, and search covers them too." = "حصة كل كلية من الملفات المصنفة حسب الكلية. توضح أين يتوفر لدينا أكثر، وليس نسبة ما تغطيه من مواد الكلية. الملفات العامة والأرشيف غير محسوبة، والبحث يشملها أيضاً.";
 "Earlier" = "سابقًا";
 "Early supporter" = "داعم مبكر";
 "Easy to navigate" = "سهل التنقل";
@@ -627,6 +636,7 @@
 "Email (your matches are sent here)" = "البريد الإلكتروني (تُرسل نتائجك إليه)";
 "Email Verification Required" = "يلزم بريد إلكتروني فعّال";
 "Email necro144@yahoo.com from the address on your account and we will delete it for you." = "راسل necro144@yahoo.com من البريد المسجل في حسابك وسنحذفه لك.";
+"Email, WhatsApp or ASU ID" = "البريد أو واتساب أو الرقم الجامعي";
 "Empty folder" = "مجلد فارغ";
 "Engineering" = "الهندسة";
 "Engineering & IT" = "الهندسة وتكنولوجيا المعلومات";
@@ -665,6 +675,7 @@
 "Exam-style question bank" = "بنك أسئلة بنمط الامتحان";
 "Example of Frequency Table 1" = "مثال 1 على الجدول التكراري";
 "Example of PDF" = "مثال على دالة الكثافة";
+"Example: [PHY 202] Dr. Smith, Fall 2023 midterm with solutions." = "مثال: [PHY 202] د. سميث، امتحان منتصف الفصل خريف 2023 مع الحلول.";
 "Excellent" = "ممتاز";
 "Excellent with honors" = "ممتاز مع مرتبة الشرف";
 "Expected Value 1" = "القيمة المتوقعة 1";
@@ -787,6 +798,7 @@
 "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules." = "يدير الطلاب المجموعات وليس ASU Bank. كن لطيفاً والتزم بقوانين كل مجموعة.";
 "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules. Long-press a group to copy its link." = "يدير الطلاب المجموعات وليس ASU Bank. كن لطيفاً والتزم بقوانين كل مجموعة. اضغط مطولاً على مجموعة لنسخ رابطها.";
 "Groups for courses, clubs and interests" = "مجموعات للمواد والنوادي والاهتمامات";
+"Guidelines" = "الإرشادات";
 "Gymnasium" = "الصالة الرياضية";
 "Hall" = "القاعة";
 "Hall %@ · starts at %@" = "قاعة %@ · تبدأ الساعة %@";
@@ -815,6 +827,7 @@
 "Hours passed before this term" = "الساعات المقطوعة قبل هذا الفصل";
 "How It Works" = "كيف تعمل";
 "How can I access the test banks?" = "كيف أصل إلى بنوك الأسئلة؟";
+"How can we contact you? (optional)" = "كيف نتواصل معك؟ (اختياري)";
 "How do I contact support?" = "كيف أتواصل مع الدعم؟";
 "How do I switch between dark and light mode?" = "كيف أبدّل بين الوضع الداكن والفاتح؟";
 "How it works" = "كيف يعمل";
@@ -865,6 +878,7 @@
 "In the app" = "في التطبيق";
 "In your tab bar" = "في شريط التبويب";
 "In-Person" = "حضوريًا";
+"Include the course code, professor name and semester if you know them. At least 20 characters." = "اذكر رمز المادة واسم المدرّس والفصل إن كنت تعرفها. 20 حرفاً على الأقل.";
 "Independence" = "الاستقلال";
 "Independence (Continued)" = "الاستقلال (تكملة)";
 "Industrial Engineering" = "الهندسة الصناعية";
@@ -881,7 +895,9 @@
 "Is my personal information safe on ASU Test Banks?" = "هل معلوماتي الشخصية آمنة؟";
 "Is there an Android app for ASU Test Banks?" = "هل يوجد تطبيق أندرويد؟";
 "Is there an iOS app for ASU Test Banks?" = "هل يوجد تطبيق iOS؟";
+"It disappears from ASU Bank for everyone. The folder itself stays in Drive." = "يختفي من ASU Bank للجميع. يبقى المجلد نفسه في درايف.";
 "It may already be there, for free" = "قد يكون موجوداً مجاناً";
+"It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank." = "ينتقل إلى سلة درايف ويختفي من ASU Bank للجميع. الملف المملوك لحساب درايف آخر يُزال من ASU Bank فقط.";
 "It's cold. Take a jacket." = "الجو بارد. خذ معطفاً.";
 "It's hot. Drink water and stay in the shade." = "الجو حار. اشرب الماء وابقَ في الظل.";
 "Its messages disappear from the apps. This can't be undone." = "ستختفي رسائلها من التطبيقات. لا يمكن التراجع عن ذلك.";
@@ -951,6 +967,7 @@
 "Locked (read-only for now)" = "مقفلة (للقراءة فقط حالياً)";
 "Locked rooms are read-only. Archived rooms are hidden from students but kept." = "الغرف المقفلة للقراءة فقط. الغرف المؤرشفة مخفية عن الطلاب لكنها محفوظة.";
 "Long-press a chat message to pin or delete it, or ban its sender." = "اضغط مطولاً على رسالة لتثبيتها أو حذفها أو حظر مرسلها.";
+"Looking for something specific? Request it" = "تبحث عن شيء محدد؟ اطلبه";
 "MCQs with or without answers" = "اختيار من متعدد بإجابات أو دونها";
 "Made by a fellow student" = "من صنع زميل طالب";
 "Made for you from your PDF" = "مُعدّ لك من ملف PDF الخاص بك";
@@ -973,6 +990,7 @@
 "Matches found: %lld" = "المطابقات: %lld";
 "Matches found: %@" = "المطابقات: %@";
 "Materials" = "المواد";
+"Materials by college" = "المواد حسب الكلية";
 "Materials · %d" = "المواد · %d";
 "Materials · %lld" = "المواد · %lld";
 "Materials · %@" = "المواد · %@";
@@ -1081,6 +1099,7 @@
 "No saved files yet" = "لا ملفات محفوظة بعد";
 "No sexual or violent content, and nothing illegal." = "لا محتوى جنسيًا أو عنيفًا، ولا أي شيء غير قانوني.";
 "No spam or advertising." = "لا رسائل مزعجة أو إعلانات.";
+"No spam or unrelated content" = "ممنوع الرسائل المزعجة أو المحتوى غير المتعلق";
 "No submissions here yet." = "لا توجد مشاركات هنا بعد.";
 "No submissions match." = "لا مشاركات مطابقة.";
 "No teacher named “%@” yet" = "لا يوجد مدرس باسم «%@» بعد";
@@ -1152,6 +1171,7 @@
 "Only if it's accepted" = "فقط إذا قُبل";
 "Only if you add them: email, university ID, phone number, profile photo, bio, major and college." = "فقط إذا أضفتها: البريد الإلكتروني والرقم الجامعي ورقم الهاتف وصورة الملف والنبذة والتخصص والكلية.";
 "Only share files you have the right to share." = "شارك فقط الملفات التي يحق لك مشاركتها.";
+"Only share materials you're permitted to distribute" = "شارك فقط ما يُسمح لك بنشره";
 "Only the ASU Bank team posts here." = "ينشر فريق ASU Bank فقط هنا.";
 "Open" = "مفتوحة";
 "Open Search" = "افتح البحث";
@@ -1205,6 +1225,7 @@
 "Password (6+ characters)" = "كلمة المرور (6 أحرف أو أكثر)";
 "Password changed" = "تم تغيير كلمة المرور";
 "Past exams and finals" = "امتحانات سابقة ونهائية";
+"Past exams or quizzes (with solutions if possible)" = "امتحانات أو كويزات سابقة (مع الحلول إن أمكن)";
 "Paste the group's invite link, starting with https://" = "الصق رابط دعوة المجموعة، ويبدأ بـ https://";
 "Pay on campus" = "ادفع في الجامعة";
 "Payment Method: CliQ transfer" = "طريقة الدفع: تحويل CliQ";
@@ -1273,6 +1294,7 @@
 "Posting…" = "جارٍ النشر…";
 "Posts" = "المنشورات";
 "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between." = "دليل عملي للطلاب الجدد في عمّان، الأردن: الرسوم، التخصصات، الخدمات الإلكترونية وكل ما بينها.";
+"Practice problems with answers" = "تمارين مع الإجابات";
 "Practice questions" = "أسئلة للتدريب";
 "Preferences" = "التفضيلات";
 "Premium" = "مميز";
@@ -1295,6 +1317,7 @@
 "Proceed & pay" = "المتابعة والدفع";
 "Proceed to Upload" = "متابعة الرفع";
 "Product / Commercial" = "منتج / تجاري";
+"Professor-specific materials" = "مواد خاصة بمدرّس معيّن";
 "Profile" = "الملف الشخصي";
 "Profile photo" = "صورة الملف الشخصي";
 "Profile saved" = "تم حفظ الملف";
@@ -1344,6 +1367,8 @@
 "Remove" = "إزالة";
 "Remove admin" = "إزالة صلاحية المشرف";
 "Remove friend" = "إزالة الصديق";
+"Remove from ASU Bank" = "إزالة من ASU Bank";
+"Remove from ASU Bank?" = "إزالة من ASU Bank؟";
 "Remove from Saved" = "إزالة من المحفوظات";
 "Remove photo" = "إزالة الصورة";
 "Remove this friend?" = "إزالة هذا الصديق؟";
@@ -1374,6 +1399,7 @@
 "Researcher" = "باحث";
 "Reset password" = "إعادة تعيين كلمة المرور";
 "Reset to the default" = "استعادة الوضع الافتراضي";
+"Respect copyright and academic integrity policies" = "احترم حقوق النشر وسياسات النزاهة الأكاديمية";
 "Results from every subject page appear instantly, then files from Google Drive. Arabic and English both work." = "تظهر نتائج كل صفحات المواد فورًا، ثم ملفات Google Drive. تعمل العربية والإنجليزية معًا.";
 "Return Home" = "العودة للرئيسية";
 "Review" = "مراجعة";
@@ -1437,12 +1463,14 @@
 "Send" = "إرسال";
 "Send again" = "إرسال مرة أخرى";
 "Send an announcement" = "أرسل إعلاناً";
+"Send another" = "إرسال اقتراح آخر";
 "Send booking request" = "إرسال طلب الحجز";
 "Send code" = "إرسال الرمز";
 "Send my vote" = "أرسل صوتي";
 "Send rating" = "أرسل التقييم";
 "Send report" = "إرسال البلاغ";
 "Send request" = "أرسل الطلب";
+"Send suggestion" = "إرسال الاقتراح";
 "Send the code" = "أرسل الرمز";
 "Send this to @%@. They should change it after signing in." = "أرسل هذا إلى @%@، وعليه تغييره بعد تسجيل الدخول.";
 "Send this to the student. It's shown only once." = "أرسل هذا إلى الطالب. يظهر مرة واحدة فقط.";
@@ -1548,6 +1576,7 @@
 "Study Hall" = "قاعة الدراسة";
 "Study Plans" = "الخطط الدراسية";
 "Study cards" = "بطاقات دراسية";
+"Study guides or cheat sheets" = "ملخصات أو أوراق مراجعة";
 "Study help" = "مساعدة دراسية";
 "Study materials for ASU students" = "مواد دراسية لطلاب الجامعة";
 "Study place" = "مكان الدراسة";
@@ -1598,6 +1627,7 @@
 "Tap someone to unblock them." = "اضغط على شخص لإلغاء حظره.";
 "Tap the Search tab at the bottom. The box is always at the top." = "اضغط تبويب البحث في الأسفل. المربع دائمًا في الأعلى.";
 "Tap the bin next to an upload to delete it" = "اضغط على سلة المهملات بجانب الملف لحذفه";
+"Tap the bin, or hold any file, to delete it" = "اضغط سلة المهملات أو اضغط مطولاً على أي ملف لحذفه";
 "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline." = "اضغط علامة الحفظ على أي ملف أو مادة ليظهر في تبويب المحفوظات، حتى دون إنترنت.";
 "Tap the star on any material to keep it here, even offline." = "اضغط النجمة على أي مادة للاحتفاظ بها هنا، حتى دون إنترنت.";
 "Tap to turn them on in Android settings" = "اضغط لتفعيلها من إعدادات أندرويد";
@@ -1612,6 +1642,7 @@
 "Teal" = "أزرق مخضر";
 "Tell me when it opens" = "أخبرني عندما يُفتح";
 "Tell us what to add, straight to WhatsApp." = "أخبرنا بما نضيفه، مباشرة على واتساب.";
+"Tell us what to add." = "أخبرنا بما نضيفه.";
 "Temporary password" = "كلمة مرور مؤقتة";
 "Term average" = "المعدل الفصلي";
 "Term average calculator" = "حاسبة المعدل الفصلي";
@@ -1672,6 +1703,7 @@
 "This file is empty." = "هذا الملف فارغ.";
 "This file type is not accepted." = "نوع الملف غير مقبول.";
 "This file type isn't allowed." = "نوع الملف غير مسموح.";
+"This file was removed from ASU Bank." = "أُزيل هذا الملف من ASU Bank.";
 "This image can't be shown." = "لا يمكن عرض هذه الصورة.";
 "This is a compressed %@ file. Open it with a files app." = "هذا ملف %@ مضغوط، افتحه بتطبيق ملفات.";
 "This is an estimate; the photographer confirms the final amount. You can pay by PayPal, CliQ or cash." = "هذا تقدير، ويؤكد المصور المبلغ النهائي. يمكنك الدفع عبر PayPal أو CliQ أو نقداً.";
@@ -1798,6 +1830,7 @@
 "Uploading… %@%%" = "جارٍ الرفع… %@%%";
 "Uploads" = "الملفات المرفوعة";
 "Uploads (long-press a file to delete)" = "الملفات المرفوعة (اضغط مطولاً على ملف لحذفه)";
+"Uploads (swipe or long-press a file to delete)" = "الملفات المرفوعة (اسحب ملفاً أو اضغط عليه مطولاً لحذفه)";
 "Use a clear name, e.g. “Calculus 1 Midterm 2025 Dr Ahmad.pdf”." = "استخدم اسماً واضحاً، مثل “Calculus 1 Midterm 2025 Dr Ahmad.pdf”.";
 "Use materials responsibly" = "استخدم المواد بمسؤولية";
 "Use the filter button to show only subject pages, only Drive files, or one year." = "استخدم زر الفلترة لعرض صفحات المواد فقط أو ملفات Drive فقط أو سنة واحدة.";
@@ -1838,6 +1871,7 @@
 "Waiting" = "قيد الانتظار";
 "Want your name here?" = "تريد اسمك هنا؟";
 "We got your request. Message us on WhatsApp to confirm the payment." = "وصلنا طلبك. راسلنا على واتساب لتأكيد الدفع.";
+"We got your suggestion. The ASU Bank team will look at it soon." = "وصلنا اقتراحك. سيطّلع عليه فريق ASU Bank قريباً.";
 "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules, without warning." = "لا نتسامح مطلقًا مع الإساءة. يمكن للمشرفين إزالة المحتوى وحظر الحسابات المخالفة دون إنذار.";
 "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules." = "لا نتسامح مطلقًا مع الإساءة. يمكن للمشرفين إزالة المحتوى وحظر الحسابات المخالفة لهذه القواعد.";
 "We look for matches" = "نبحث عن زملاء متوافقين";
@@ -1868,6 +1902,7 @@
 "What is and isn’t allowed in the chat, profiles and uploads." = "ما هو مسموح وممنوع في الدردشة والملفات الشخصية والمرفوعات.";
 "What it's for" = "الغرض منها";
 "What other students can see" = "ما يراه الطلاب الآخرون";
+"What to share" = "ما الذي يمكن مشاركته";
 "What we collect when you make an account" = "ما نجمعه عند إنشاء حساب";
 "What you send us without an account" = "ما ترسله دون حساب";
 "What's my grade?" = "ما تقديري؟";
@@ -1930,6 +1965,7 @@
 "You pay the second half only if your ad is accepted." = "تدفع النصف الثاني فقط إذا قُبل إعلانك.";
 "You won't see their messages or get notifications from them. You can undo this in your account." = "لن ترى رسائله ولن تصلك إشعارات منه. يمكنك التراجع عن ذلك من حسابك.";
 "You'll stay signed in here; other devices are signed out." = "ستبقى مسجّلاً هنا؛ وسيُسجّل خروج الأجهزة الأخرى.";
+"You're sending this as @%@." = "أنت ترسل هذا باسم @%@.";
 "You're welcome" = "على الرحب والسعة";
 "Your Edugate | Quizzes, course materials, and assignment submissions" = "إيديوجيت الخاص بك: الكويزات ومواد المساق وتسليم الواجبات";
 "Your Privacy Matters" = "خصوصيتك مهمة";
@@ -1947,6 +1983,7 @@
 "Your files" = "ملفاتك";
 "Your group was accepted" = "تم قبول مجموعتك";
 "Your group wasn't accepted" = "لم يتم قبول مجموعتك";
+"Your iPhone blocked this change (error -54). Restart the iPhone and try again. If it keeps happening, the way this copy of the app was installed is the likely reason." = "منع جهاز iPhone هذا التغيير (الخطأ 54-). أعد تشغيل الجهاز وحاول مرة أخرى. إذا تكرر الأمر فالسبب المرجّح هو طريقة تثبيت هذه النسخة من التطبيق.";
 "Your major" = "تخصصك";
 "Your name" = "اسمك";
 "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins." = "اسمك واسم المستخدم وصورتك ونبذتك وتخصصك وكليتك وشاراتك وآخر ظهور لك. يظهر رقم هاتفك فقط إذا فعّلت ذلك. أما بريدك ورقمك الجامعي فلا يراهما سواك والمشرفون.";

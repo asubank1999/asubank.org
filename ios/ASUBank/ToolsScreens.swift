@@ -166,8 +166,13 @@ struct AdminGroupRequestsScreen: View {
     }
 
     private func load() async {
+        let tag = showAll ? "all" : "open"
+        if requests.isEmpty, let r = account.saved("adminGroupRequests", tag: tag) {
+            requests = (r["requests"] as? [[String: Any]]) ?? []
+            loading = false
+        }
         do {
-            requests = (try await account.call("adminGroupRequests", ["all": showAll])["requests"] as? [[String: Any]]) ?? []
+            requests = (try await account.callSaving("adminGroupRequests", ["all": showAll], tag: tag)["requests"] as? [[String: Any]]) ?? []
             error = nil
         } catch { self.error = error.localizedDescription }
         loading = false

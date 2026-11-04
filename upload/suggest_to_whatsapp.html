@@ -266,7 +266,7 @@
         <div class="card">
             <h2>Request Materials</h2>
             <p>Looking for specific test bank materials? Let us know what you need.</p>
-            <button class="submit-btn" onclick="window.location.href='mailto:necro144@yahoo.com?body=ASU%20Test%20Bank%20Request:%20'">Make a Request</button>
+            <button class="submit-btn" onclick="window.location.href='/requests/request'">Make a Request</button>
         </div>
     </div>
 
@@ -305,9 +305,8 @@
       // Form submission handler
       function handleSubmit(form) {
           const note = form.note.value;
-          const contact = form.contact.value || 'No contact provided';
           const status = document.getElementById('status');
-          status.textContent = 'Preparing your submission...';
+          status.textContent = 'Sending your suggestion...';
           status.className = 'info';
           
           // Check if the description is too short
@@ -317,20 +316,23 @@
               return false;
           }
 
-          // Encode the message for URL
-          const message = `ASU Test Bank Submission:\n\n${note}\n\nContact: ${contact}`;
-          const encodedMessage = encodeURIComponent(message);
-          const phoneNumber = 'necro144@yahoo.com'; // Replace with your number
-          const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+          // Saved in the same place as the apps' form; admins read it in Admin > Suggestions
+          const body = { action: 'suggest', note: note, contact: form.contact.value };
+          const token = localStorage.getItem('ab.acc.token');
+          if (token) body.token = token;
+          fetch('https://script.google.com/macros/s/AKfycbzXDE0Km2mxL_gAJFqspZeaADtugupeLN0YQlkEbXnrCkSTKBfImW_lLCKF8_SMI0i_/exec', {
+              method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body)
+          }).then(function (r) { return r.json(); }).then(function (o) {
+              if (!o || !o.ok) throw new Error((o && o.error) || 'Something went wrong.');
+              status.textContent = 'Thank you! We got your suggestion.';
+              status.className = 'success';
+              form.note.value = '';
+              form.contact.value = '';
+          }).catch(function (e) {
+              status.textContent = e.message === 'Failed to fetch' ? "Couldn't reach ASU Bank. Check your connection and try again." : e.message;
+              status.className = '';
+          });
 
-          // Redirect to WhatsApp
-          window.open(whatsappUrl, '_blank');
-          
-          status.textContent = 'Thank you! Please check WhatsApp to complete your submission and attach any files.';
-          status.className = 'success';
-          form.note.value = '';
-          form.contact.value = '';
-          
           return false;
       }
     </script>

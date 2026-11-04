@@ -681,11 +681,11 @@
             ev.preventDefault();
             var m = link.value.match(/(?:\/d\/|[?&]id=)([-\w]{20,})/);
             if (!m) { showErr(err, new Error('Paste a Google Drive file link.')); return; }
-            if (!window.confirm('Move this upload to the Drive trash?')) return;
+            if (!window.confirm('Delete this file from Drive and ASU Bank?')) return;
             busy(delBtn, true, 'Delete upload');
             call('adminDeleteUpload', { fileId: m[1] }).then(function () { link.value = ''; delBtn.textContent = 'Deleted ✓'; delBtn.disabled = false; })
                 .catch(function (e) { showErr(err, e); busy(delBtn, false, 'Delete upload'); });
-        } }, h('h2', { text: 'Delete an upload' }), h('p', { class: 'acc-muted acc-small', text: 'Only files in the ASU Bank upload folder can be deleted. They go to the Drive trash.' }), link, delBtn));
+        } }, h('h2', { text: 'Delete a file' }), h('p', { class: 'acc-muted acc-small', text: 'It goes to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank.' }), link, delBtn));
 
         var repBox = h('div', { class: 'acc-log' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
         root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Open reports' }), repBox));
@@ -710,6 +710,26 @@
             }).catch(function (e) { repBox.textContent = e.message; });
         }
         loadReports();
+
+        var sugBox = h('div', { class: 'acc-log' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Suggestions' }), sugBox));
+        function loadSuggestions() {
+            call('adminSuggestions').then(function (r) {
+                while (sugBox.firstChild) sugBox.removeChild(sugBox.firstChild);
+                var list = r.suggestions || [];
+                if (!list.length) sugBox.appendChild(h('p', { class: 'acc-muted', text: 'Nothing to review.' }));
+                list.forEach(function (x) {
+                    function set(st) { return function () { call('adminSuggestionSet', { id: x.id, status: st }).then(loadSuggestions); }; }
+                    sugBox.appendChild(h('div', { class: 'acc-small acc-sep' },
+                        h('p', { text: x.note || '' }),
+                        h('p', { class: 'acc-muted', text: x.username + (x.contact ? ' · ' + x.contact : '') + ' · ' + x.created }),
+                        h('div', { class: 'acc-actions' },
+                            h('button', { type: 'button', class: 'ab-btn gray', text: 'Done', onclick: set('done') }),
+                            h('button', { type: 'button', class: 'ab-btn gray', text: 'Dismiss', onclick: set('dismissed') }))));
+                });
+            }).catch(function (e) { sugBox.textContent = e.message; });
+        }
+        loadSuggestions();
 
         var logBox = h('div', { class: 'acc-log' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
         root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Admin activity' }), logBox));

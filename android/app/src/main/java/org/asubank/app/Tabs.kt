@@ -1,6 +1,7 @@
 package org.asubank.app
 
 import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Dashboard
@@ -346,6 +347,8 @@ fun MoreScreen() {
             item {
                 Group(header = "All subjects") {
                     ListRow("Subjects directory", icon = Icons.Filled.GridView) { nav.openPage("/banks/subjects", "All subjects") }
+                    Divider()
+                    ListRow("Materials by college", icon = Icons.Filled.BarChart) { nav.openPage("/app/coverage", "Materials by college") }
                     Divider()
                     ListRow("Latest uploads", icon = Icons.Filled.AutoAwesome) { nav.openPage("/guides/latest", "Latest uploads") }
                     Divider()

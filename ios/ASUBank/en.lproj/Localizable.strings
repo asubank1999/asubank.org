@@ -9,6 +9,9 @@
 "%d days ago" = "%d days ago";
 "%lld days ago" = "%lld days ago";
 "%@ days ago" = "%@ days ago";
+"%d files" = "%d files";
+"%lld files" = "%lld files";
+"%@ files" = "%@ files";
 "%d friends" = "%d friends";
 "%lld friends" = "%lld friends";
 "%@ friends" = "%@ friends";
@@ -428,6 +431,7 @@
 "Clearing the cache frees space and reloads pages and the materials list from asubank.org. Your saved materials and settings stay." = "Clearing the cache frees space and reloads pages and the materials list from asubank.org. Your saved materials and settings stay.";
 "Clearing…" = "Clearing…";
 "Clearly acceptable" = "Clearly acceptable";
+"Clearly label documents with course information" = "Clearly label documents with course information";
 "CliQ alias" = "CliQ alias";
 "CliQ alias: ALANQ99" = "CliQ alias: ALANQ99";
 "Clicking “I Agree” signifies your acceptance of these terms." = "Clicking “I Agree” signifies your acceptance of these terms.";
@@ -537,6 +541,8 @@
 "Delete" = "Delete";
 "Delete @%@?" = "Delete @%@?";
 "Delete account" = "Delete account";
+"Delete from Drive" = "Delete from Drive";
+"Delete from Drive?" = "Delete from Drive?";
 "Delete message" = "Delete message";
 "Delete my account" = "Delete my account";
 "Delete post" = "Delete post";
@@ -554,6 +560,7 @@
 "Deleting…" = "Deleting…";
 "Demography" = "Demography";
 "Dentistry" = "Dentistry";
+"Describe what you're suggesting" = "Describe what you're suggesting";
 "Descriptive Statistical Measures" = "Descriptive Statistical Measures";
 "Designer" = "Designer";
 "Details" = "Details";
@@ -575,6 +582,7 @@
 "Document Access Agreement" = "Document Access Agreement";
 "Documents & data" = "Documents & data";
 "Don't open" = "Don't open";
+"Don't share current semester exams that might still be in use" = "Don't share current semester exams that might still be in use";
 "Don't share other people's private information." = "Don't share other people's private information.";
 "Donate" = "Donate";
 "Donate with PayPal" = "Donate with PayPal";
@@ -604,6 +612,7 @@
 "Drug Design" = "Drug Design";
 "E-Library Hub" = "E-Library Hub";
 "E-Services & Learning Platforms" = "E-Services & Learning Platforms";
+"Each college's share of the files sorted by college. It shows where we have the most, not how much of a college's courses is covered. General files and the archive aren't counted, and search covers them too." = "Each college's share of the files sorted by college. It shows where we have the most, not how much of a college's courses is covered. General files and the archive aren't counted, and search covers them too.";
 "Earlier" = "Earlier";
 "Early supporter" = "Early supporter";
 "Easy to navigate" = "Easy to navigate";
@@ -627,6 +636,7 @@
 "Email (your matches are sent here)" = "Email (your matches are sent here)";
 "Email Verification Required" = "Email Verification Required";
 "Email necro144@yahoo.com from the address on your account and we will delete it for you." = "Email necro144@yahoo.com from the address on your account and we will delete it for you.";
+"Email, WhatsApp or ASU ID" = "Email, WhatsApp or ASU ID";
 "Empty folder" = "Empty folder";
 "Engineering" = "Engineering";
 "Engineering & IT" = "Engineering & IT";
@@ -665,6 +675,7 @@
 "Exam-style question bank" = "Exam-style question bank";
 "Example of Frequency Table 1" = "Example of Frequency Table 1";
 "Example of PDF" = "Example of PDF";
+"Example: [PHY 202] Dr. Smith, Fall 2023 midterm with solutions." = "Example: [PHY 202] Dr. Smith, Fall 2023 midterm with solutions.";
 "Excellent" = "Excellent";
 "Excellent with honors" = "Excellent with honors";
 "Expected Value 1" = "Expected Value 1";
@@ -787,6 +798,7 @@
 "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules." = "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules.";
 "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules. Long-press a group to copy its link." = "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules. Long-press a group to copy its link.";
 "Groups for courses, clubs and interests" = "Groups for courses, clubs and interests";
+"Guidelines" = "Guidelines";
 "Gymnasium" = "Gymnasium";
 "Hall" = "Hall";
 "Hall %@ · starts at %@" = "Hall %@ · starts at %@";
@@ -815,6 +827,7 @@
 "Hours passed before this term" = "Hours passed before this term";
 "How It Works" = "How It Works";
 "How can I access the test banks?" = "How can I access the test banks?";
+"How can we contact you? (optional)" = "How can we contact you? (optional)";
 "How do I contact support?" = "How do I contact support?";
 "How do I switch between dark and light mode?" = "How do I switch between dark and light mode?";
 "How it works" = "How it works";
@@ -865,6 +878,7 @@
 "In the app" = "In the app";
 "In your tab bar" = "In your tab bar";
 "In-Person" = "In-Person";
+"Include the course code, professor name and semester if you know them. At least 20 characters." = "Include the course code, professor name and semester if you know them. At least 20 characters.";
 "Independence" = "Independence";
 "Independence (Continued)" = "Independence (Continued)";
 "Industrial Engineering" = "Industrial Engineering";
@@ -881,7 +895,9 @@
 "Is my personal information safe on ASU Test Banks?" = "Is my personal information safe on ASU Test Banks?";
 "Is there an Android app for ASU Test Banks?" = "Is there an Android app for ASU Test Banks?";
 "Is there an iOS app for ASU Test Banks?" = "Is there an iOS app for ASU Test Banks?";
+"It disappears from ASU Bank for everyone. The folder itself stays in Drive." = "It disappears from ASU Bank for everyone. The folder itself stays in Drive.";
 "It may already be there, for free" = "It may already be there, for free";
+"It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank." = "It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank.";
 "It's cold. Take a jacket." = "It's cold. Take a jacket.";
 "It's hot. Drink water and stay in the shade." = "It's hot. Drink water and stay in the shade.";
 "Its messages disappear from the apps. This can't be undone." = "Its messages disappear from the apps. This can't be undone.";
@@ -951,6 +967,7 @@
 "Locked (read-only for now)" = "Locked (read-only for now)";
 "Locked rooms are read-only. Archived rooms are hidden from students but kept." = "Locked rooms are read-only. Archived rooms are hidden from students but kept.";
 "Long-press a chat message to pin or delete it, or ban its sender." = "Long-press a chat message to pin or delete it, or ban its sender.";
+"Looking for something specific? Request it" = "Looking for something specific? Request it";
 "MCQs with or without answers" = "MCQs with or without answers";
 "Made by a fellow student" = "Made by a fellow student";
 "Made for you from your PDF" = "Made for you from your PDF";
@@ -973,6 +990,7 @@
 "Matches found: %lld" = "Matches found: %lld";
 "Matches found: %@" = "Matches found: %@";
 "Materials" = "Materials";
+"Materials by college" = "Materials by college";
 "Materials · %d" = "Materials · %d";
 "Materials · %lld" = "Materials · %lld";
 "Materials · %@" = "Materials · %@";
@@ -1081,6 +1099,7 @@
 "No saved files yet" = "No saved files yet";
 "No sexual or violent content, and nothing illegal." = "No sexual or violent content, and nothing illegal.";
 "No spam or advertising." = "No spam or advertising.";
+"No spam or unrelated content" = "No spam or unrelated content";
 "No submissions here yet." = "No submissions here yet.";
 "No submissions match." = "No submissions match.";
 "No teacher named “%@” yet" = "No teacher named “%@” yet";
@@ -1152,6 +1171,7 @@
 "Only if it's accepted" = "Only if it's accepted";
 "Only if you add them: email, university ID, phone number, profile photo, bio, major and college." = "Only if you add them: email, university ID, phone number, profile photo, bio, major and college.";
 "Only share files you have the right to share." = "Only share files you have the right to share.";
+"Only share materials you're permitted to distribute" = "Only share materials you're permitted to distribute";
 "Only the ASU Bank team posts here." = "Only the ASU Bank team posts here.";
 "Open" = "Open";
 "Open Search" = "Open Search";
@@ -1205,6 +1225,7 @@
 "Password (6+ characters)" = "Password (6+ characters)";
 "Password changed" = "Password changed";
 "Past exams and finals" = "Past exams and finals";
+"Past exams or quizzes (with solutions if possible)" = "Past exams or quizzes (with solutions if possible)";
 "Paste the group's invite link, starting with https://" = "Paste the group's invite link, starting with https://";
 "Pay on campus" = "Pay on campus";
 "Payment Method: CliQ transfer" = "Payment Method: CliQ transfer";
@@ -1273,6 +1294,7 @@
 "Posting…" = "Posting…";
 "Posts" = "Posts";
 "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between." = "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between.";
+"Practice problems with answers" = "Practice problems with answers";
 "Practice questions" = "Practice questions";
 "Preferences" = "Preferences";
 "Premium" = "Premium";
@@ -1295,6 +1317,7 @@
 "Proceed & pay" = "Proceed & pay";
 "Proceed to Upload" = "Proceed to Upload";
 "Product / Commercial" = "Product / Commercial";
+"Professor-specific materials" = "Professor-specific materials";
 "Profile" = "Profile";
 "Profile photo" = "Profile photo";
 "Profile saved" = "Profile saved";
@@ -1344,6 +1367,8 @@
 "Remove" = "Remove";
 "Remove admin" = "Remove admin";
 "Remove friend" = "Remove friend";
+"Remove from ASU Bank" = "Remove from ASU Bank";
+"Remove from ASU Bank?" = "Remove from ASU Bank?";
 "Remove from Saved" = "Remove from Saved";
 "Remove photo" = "Remove photo";
 "Remove this friend?" = "Remove this friend?";
@@ -1374,6 +1399,7 @@
 "Researcher" = "Researcher";
 "Reset password" = "Reset password";
 "Reset to the default" = "Reset to the default";
+"Respect copyright and academic integrity policies" = "Respect copyright and academic integrity policies";
 "Results from every subject page appear instantly, then files from Google Drive. Arabic and English both work." = "Results from every subject page appear instantly, then files from Google Drive. Arabic and English both work.";
 "Return Home" = "Return Home";
 "Review" = "Review";
@@ -1437,12 +1463,14 @@
 "Send" = "Send";
 "Send again" = "Send again";
 "Send an announcement" = "Send an announcement";
+"Send another" = "Send another";
 "Send booking request" = "Send booking request";
 "Send code" = "Send code";
 "Send my vote" = "Send my vote";
 "Send rating" = "Send rating";
 "Send report" = "Send report";
 "Send request" = "Send request";
+"Send suggestion" = "Send suggestion";
 "Send the code" = "Send the code";
 "Send this to @%@. They should change it after signing in." = "Send this to @%@. They should change it after signing in.";
 "Send this to the student. It's shown only once." = "Send this to the student. It's shown only once.";
@@ -1548,6 +1576,7 @@
 "Study Hall" = "Study Hall";
 "Study Plans" = "Study Plans";
 "Study cards" = "Study cards";
+"Study guides or cheat sheets" = "Study guides or cheat sheets";
 "Study help" = "Study help";
 "Study materials for ASU students" = "Study materials for ASU students";
 "Study place" = "Study place";
@@ -1598,6 +1627,7 @@
 "Tap someone to unblock them." = "Tap someone to unblock them.";
 "Tap the Search tab at the bottom. The box is always at the top." = "Tap the Search tab at the bottom. The box is always at the top.";
 "Tap the bin next to an upload to delete it" = "Tap the bin next to an upload to delete it";
+"Tap the bin, or hold any file, to delete it" = "Tap the bin, or hold any file, to delete it";
 "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline." = "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline.";
 "Tap the star on any material to keep it here, even offline." = "Tap the star on any material to keep it here, even offline.";
 "Tap to turn them on in Android settings" = "Tap to turn them on in Android settings";
@@ -1612,6 +1642,7 @@
 "Teal" = "Teal";
 "Tell me when it opens" = "Tell me when it opens";
 "Tell us what to add, straight to WhatsApp." = "Tell us what to add, straight to WhatsApp.";
+"Tell us what to add." = "Tell us what to add.";
 "Temporary password" = "Temporary password";
 "Term average" = "Term average";
 "Term average calculator" = "Term average calculator";
@@ -1672,6 +1703,7 @@
 "This file is empty." = "This file is empty.";
 "This file type is not accepted." = "This file type is not accepted.";
 "This file type isn't allowed." = "This file type isn't allowed.";
+"This file was removed from ASU Bank." = "This file was removed from ASU Bank.";
 "This image can't be shown." = "This image can't be shown.";
 "This is a compressed %@ file. Open it with a files app." = "This is a compressed %@ file. Open it with a files app.";
 "This is an estimate; the photographer confirms the final amount. You can pay by PayPal, CliQ or cash." = "This is an estimate; the photographer confirms the final amount. You can pay by PayPal, CliQ or cash.";
@@ -1798,6 +1830,7 @@
 "Uploading… %@%%" = "Uploading… %@%%";
 "Uploads" = "Uploads";
 "Uploads (long-press a file to delete)" = "Uploads (long-press a file to delete)";
+"Uploads (swipe or long-press a file to delete)" = "Uploads (swipe or long-press a file to delete)";
 "Use a clear name, e.g. “Calculus 1 Midterm 2025 Dr Ahmad.pdf”." = "Use a clear name, e.g. “Calculus 1 Midterm 2025 Dr Ahmad.pdf”.";
 "Use materials responsibly" = "Use materials responsibly";
 "Use the filter button to show only subject pages, only Drive files, or one year." = "Use the filter button to show only subject pages, only Drive files, or one year.";
@@ -1838,6 +1871,7 @@
 "Waiting" = "Waiting";
 "Want your name here?" = "Want your name here?";
 "We got your request. Message us on WhatsApp to confirm the payment." = "We got your request. Message us on WhatsApp to confirm the payment.";
+"We got your suggestion. The ASU Bank team will look at it soon." = "We got your suggestion. The ASU Bank team will look at it soon.";
 "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules, without warning." = "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules, without warning.";
 "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules." = "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules.";
 "We look for matches" = "We look for matches";
@@ -1868,6 +1902,7 @@
 "What is and isn’t allowed in the chat, profiles and uploads." = "What is and isn’t allowed in the chat, profiles and uploads.";
 "What it's for" = "What it's for";
 "What other students can see" = "What other students can see";
+"What to share" = "What to share";
 "What we collect when you make an account" = "What we collect when you make an account";
 "What you send us without an account" = "What you send us without an account";
 "What's my grade?" = "What's my grade?";
@@ -1930,6 +1965,7 @@
 "You pay the second half only if your ad is accepted." = "You pay the second half only if your ad is accepted.";
 "You won't see their messages or get notifications from them. You can undo this in your account." = "You won't see their messages or get notifications from them. You can undo this in your account.";
 "You'll stay signed in here; other devices are signed out." = "You'll stay signed in here; other devices are signed out.";
+"You're sending this as @%@." = "You're sending this as @%@.";
 "You're welcome" = "You're welcome";
 "Your Edugate | Quizzes, course materials, and assignment submissions" = "Your Edugate | Quizzes, course materials, and assignment submissions";
 "Your Privacy Matters" = "Your Privacy Matters";
@@ -1947,6 +1983,7 @@
 "Your files" = "Your files";
 "Your group was accepted" = "Your group was accepted";
 "Your group wasn't accepted" = "Your group wasn't accepted";
+"Your iPhone blocked this change (error -54). Restart the iPhone and try again. If it keeps happening, the way this copy of the app was installed is the likely reason." = "Your iPhone blocked this change (error -54). Restart the iPhone and try again. If it keeps happening, the way this copy of the app was installed is the likely reason.";
 "Your major" = "Your major";
 "Your name" = "Your name";
 "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins." = "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins.";

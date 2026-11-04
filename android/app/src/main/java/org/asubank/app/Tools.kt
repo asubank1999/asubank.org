@@ -165,7 +165,9 @@ fun AdminGroupRequestsScreen() {
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     suspend fun load() {
-        try { list = (Account.call("adminGroupRequests", mapOf("all" to showAll))["requests"] as? kotlinx.serialization.json.JsonArray).objects(); error = null }
+        val tag = if (showAll) "all" else "open"
+        if (list.isEmpty()) Account.saved("adminGroupRequests", tag)?.let { list = (it["requests"] as? kotlinx.serialization.json.JsonArray).objects(); loading = false }
+        try { list = (Account.callSaving("adminGroupRequests", mapOf("all" to showAll), tag)["requests"] as? kotlinx.serialization.json.JsonArray).objects(); error = null }
         catch (e: ApiError) { error = e.message }
         loading = false
     }

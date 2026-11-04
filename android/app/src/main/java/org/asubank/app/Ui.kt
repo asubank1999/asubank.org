@@ -66,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 // MARK: theme (colors from the website's design system, assets/app/app.css)
 
@@ -361,16 +362,39 @@ fun ListRow(
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun MaterialRow(m: Material, kind: Kind? = null, meta: String? = null, showSource: Boolean = true) {
+    val removedFiles by RemovedFiles.ids.collectAsState()
+    if (RemovedFiles.has(m.u, removedFiles)) return
     val nav = LocalNav.current
     val savedList by Saved.saved.collectAsState()
     val k = kind ?: AB.kind(m.u, m.t)
     var menu by remember { mutableStateOf(false) }
     var reporting by remember { mutableStateOf(false) }
+    var deleting by remember { mutableStateOf(false) }
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val ctx = androidx.compose.ui.platform.LocalContext.current
     if (reporting) ReportDialog(ReportTarget("file", m.u, m.t)) { reporting = false }
+    if (deleting) androidx.compose.material3.AlertDialog(
+        onDismissRequest = { deleting = false },
+        title = { Text(if (k == Kind.FOLDER) "Remove from ASU Bank?" else "Delete from Drive?") },
+        text = { Text(if (k == Kind.FOLDER) "It disappears from ASU Bank for everyone. The folder itself stays in Drive." else "It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank.") },
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = {
+                deleting = false
+                scope.launch {
+                    try { adminDeleteUpload(m.u) }
+                    catch (e: ApiError) { Toast.makeText(ctx, e.message ?: "Couldn't delete", Toast.LENGTH_LONG).show() }
+                }
+            }) { Text(if (k == Kind.FOLDER) "Remove from ASU Bank" else "Delete from Drive", color = MaterialTheme.colorScheme.error) }
+        },
+        dismissButton = { androidx.compose.material3.TextButton(onClick = { deleting = false }) { Text("Cancel") } },
+    )
     // hold a file to save or report it
     DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
         DropdownMenuItem(text = { Text(if (savedList.any { it.u == m.u }) "Remove from Saved" else "Save") }, onClick = { menu = false; Saved.toggle(m) })
         if (k != Kind.PAGE) DropdownMenuItem(text = { Text("Report this file") }, onClick = { menu = false; reporting = true })
+        if (Account.user.value?.isAdmin == true && k != Kind.PAGE && AB.driveId(m.u) != null) {
+            DropdownMenuItem(text = { Text(if (k == Kind.FOLDER) "Remove from ASU Bank" else "Delete from Drive", color = MaterialTheme.colorScheme.error) }, onClick = { menu = false; deleting = true })
+        }
     }
     Row(
         Modifier.fillMaxWidth().combinedClickable(

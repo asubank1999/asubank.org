@@ -57,6 +57,7 @@ struct MoreView: View {
 
                 Section("All subjects") {
                     RouteLink(Route.page("/banks/subjects", "All subjects")) { Label("Subjects directory", systemImage: "square.grid.2x2") }
+                    RouteLink(Route.page("/app/coverage", "Materials by college")) { Label("Materials by college", systemImage: "chart.bar") }
                     RouteLink(Route.page("/guides/latest", "Latest uploads")) { Label("Latest uploads", systemImage: "sparkles") }
                     RouteLink(Route.page("/requests/student_request_portal", "Request a material")) { Label("Request a material", systemImage: "tray.and.arrow.down") }
                     RouteLink(Route.page("/guides/links", "ASU resources")) { Label("ASU resources (Useful gate)", systemImage: "square.grid.3x3.fill") }

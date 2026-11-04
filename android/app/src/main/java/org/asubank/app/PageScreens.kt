@@ -94,6 +94,8 @@ fun SitePageScreen(path: String, title: String) {
         path == "/requests/portal_to_rating" || path == "/requests/rating" -> TeacherRatingsScreen()
         path == "/requests/matcher" || path == "/requests/matcher_confirm" -> CourseMatcherScreen()
         path in setOf("/requests/student_request_portal", "/requests/request", "/requests/student_request_main") -> RequestMaterialScreen()
+        path == "/upload/suggest_to_whatsapp" -> SuggestMaterialScreen()
+        path == "/app/coverage" -> CollegeCoverageScreen()
         path == "/requests/student_ads" -> StudentAdsScreen()
         path == "/apps/donate" -> DonateScreen()
         path == "/app/theme" -> ThemeScreen()
@@ -345,8 +347,9 @@ private fun countdown(d: LocalDate, today: LocalDate): String {
 @Composable
 fun LatestScreen() {
     val scope = rememberCoroutineScope()
-    var files by remember { mutableStateOf<List<DriveResult>>(emptyList()) }
-    var state by remember { mutableStateOf(0) } // 0 loading, 2 done, 3 failed
+    var files by remember { mutableStateOf(LatestCache.read()) }
+    var state by remember { mutableStateOf(if (files.isEmpty()) 0 else 2) } // 0 loading, 2 done, 3 failed
+    val removedFiles by RemovedFiles.ids.collectAsState()
     var q by rememberSaveable { mutableStateOf("") }
     var type by rememberSaveable { mutableStateOf("all") }
     val user by Account.user.collectAsState()
@@ -354,13 +357,13 @@ fun LatestScreen() {
     var deleting by remember { mutableStateOf<DriveResult?>(null) }
     suspend fun load() {
         val r = DriveSearch.latest()
-        if (r != null) { files = r; state = 2 } else if (files.isEmpty()) state = 3
+        if (r != null) { files = r; state = 2; LatestCache.write(r) } else if (files.isEmpty()) state = 3
     }
     LaunchedEffect(Unit) { load() }
     val types = listOf("all" to "All", "pdf" to "PDF", "ppt" to "Slides", "doc" to "Docs", "img" to "Images")
     val nq = AB.norm(q)
     val filtered = files.filter { r ->
-        (type == "all" || r.kind.name.lowercase() == type) && (nq.isEmpty() || AB.norm(r.m.t).contains(nq))
+        !RemovedFiles.has(r.m.u, removedFiles) && (type == "all" || r.kind.name.lowercase() == type) && (nq.isEmpty() || AB.norm(r.m.t).contains(nq))
     }.take(400)
     val today = LocalDate.now()
     val groups = filtered.groupBy { r ->
@@ -418,13 +421,13 @@ fun LatestScreen() {
     deleting?.let { r ->
         AlertDialog(
             onDismissRequest = { deleting = null },
-            title = { Text("Delete this upload?") },
-            text = { Text(trf("“%s” moves to the Drive trash and disappears from ASU Bank.", r.m.t)) },
+            title = { Text("Delete from Drive?") },
+            text = { Text("It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank.") },
             confirmButton = {
                 TextButton(onClick = {
                     deleting = null
                     scope.launch {
-                        try { adminDeleteUpload(r.m.u); MyUploads.remove(r.m.u); files = files.filter { it.m.u != r.m.u }; Toast.makeText(ctx, "Deleted", Toast.LENGTH_SHORT).show() }
+                        try { adminDeleteUpload(r.m.u); files = files.filter { it.m.u != r.m.u }; Toast.makeText(ctx, "Deleted", Toast.LENGTH_SHORT).show() }
                         catch (e: ApiError) { Toast.makeText(ctx, e.message ?: "Couldn't delete", Toast.LENGTH_LONG).show() }
                     }
                 }) { Text("Delete", color = MaterialTheme.colorScheme.error) }

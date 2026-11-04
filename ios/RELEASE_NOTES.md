@@ -3,6 +3,13 @@
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
 ASU Bank is a free, volunteer, non-profit project. It is not made by or affiliated with the university.
 
+### What's new in 1.10.2
+- Suggest materials is now a real form in the app, saved in the same place as the website's form
+- Admins: delete any file from Drive by holding it, and it stays gone after a refresh
+- Friends, Users and the admin screens open much faster
+- More: see how our files are spread across the colleges
+- Fixed the star and online dot on profile photos
+
 ### What's new in 1.10.1
 - iPhone: fixed rows and buttons that greyed when tapped but wouldn't open, on iOS 15 and 16
 - iPhone: changing the app icon is fixed, and if iOS refuses, the message now says why

@@ -151,7 +151,54 @@ object DriveLinks {
 
     /** (target id, is folder) */
     fun target(id: String): Pair<String, Boolean>? = map[id]?.let { t -> t.firstOrNull()?.let { it to (t.getOrNull(1) == "folder") } }
-    fun broken(u: String): String? = dead[u]
+    fun broken(u: String): String? = if (RemovedFiles.has(u)) "This file was removed from ASU Bank." else dead[u]
+}
+
+/** Files admins removed: hidden everywhere, because the other indexes keep listing a file for a while */
+object RemovedFiles {
+    val ids = MutableStateFlow<Set<String>>(emptySet())
+    private const val KEY = "deletedFiles.v1"
+
+    fun init() { Saved.prefs.getStringSet(KEY, null)?.let { ids.value = it.toSet() } }
+
+    private fun store(set: Set<String>) {
+        ids.value = set
+        Saved.prefs.edit().putStringSet(KEY, set).apply()
+    }
+
+    /** True when the list changed */
+    suspend fun refresh(): Boolean {
+        val r = runCatching { AccountsApi.call("deletedFiles") }.getOrNull() ?: return false
+        val list = (r["ids"] as? kotlinx.serialization.json.JsonArray)?.mapNotNull { it.prim() }?.toSet() ?: return false
+        if (list == ids.value) return false
+        store(list)
+        return true
+    }
+
+    fun add(new: List<String>) = store(ids.value + new)
+
+    /** By the file's own id, or through the shortcut that points to it */
+    fun has(u: String, set: Set<String> = ids.value): Boolean {
+        if (set.isEmpty()) return false
+        val id = AB.driveId(u) ?: return false
+        return id in set || DriveLinks.target(id)?.first in set
+    }
+}
+
+/** The list from last time, so Latest uploads opens with files in it while the new list loads */
+@kotlinx.serialization.Serializable
+data class SavedFile(val m: Material, val kind: String, val date: String, val size: Long)
+
+object LatestCache {
+    fun read(): List<DriveResult> = Disk.read("latest-uploads.json")?.let { t ->
+        runCatching { json.decodeFromString<List<SavedFile>>(t) }.getOrNull()
+    }.orEmpty().filter { DriveLinks.broken(it.m.u) == null }.map { f ->
+        DriveResult(f.m, runCatching { Kind.valueOf(f.kind) }.getOrDefault(Kind.FILE), f.date, f.size)
+    }
+
+    fun write(list: List<DriveResult>) {
+        runCatching { Disk.write("latest-uploads.json", json.encodeToString(list.take(400).map { SavedFile(it.m, it.kind.name, it.date, it.size) })) }
+    }
 }
 
 /** Saved files, recently opened files and recent searches (kept on this device) */
@@ -285,12 +332,14 @@ object DriveSearch {
 
     /** Your uploads, then the upload folder, then the indexed Drive (each file once), newest first */
     suspend fun latest(): List<DriveResult>? = coroutineScope {
+        val removed = async { RemovedFiles.refresh() }
         val folder = async { UploadFolder.load() }
         val indexed = Net.text("${AB.LATEST}?t=${System.currentTimeMillis() / 1000}&sort=date&order=desc")
             ?.let { t -> runCatching { json.decodeFromString(DriveReply.serializer(), t) }.getOrNull() }
             ?.takeIf { it.success == true }?.let { map(it.files ?: emptyList(), "Latest uploads") } ?: emptyList()
         val mine = MyUploads.all().map { DriveResult(Material(u = it.url, t = it.name, s = "Your upload", d = it.date), AB.kind(it.url, it.name), it.date, 0) }
-        val merged = (mine + folder.await() + indexed).distinctBy { AB.driveId(it.m.u) ?: it.m.u }
+        removed.await()
+        val merged = (mine + folder.await() + indexed).filter { DriveLinks.broken(it.m.u) == null }.distinctBy { AB.driveId(it.m.u) ?: it.m.u }
         if (merged.isEmpty()) null else merged.sortedByDescending { it.date }
     }
 }
