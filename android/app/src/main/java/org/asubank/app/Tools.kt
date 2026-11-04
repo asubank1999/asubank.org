@@ -492,13 +492,13 @@ fun WeatherCard() {
             .background(MaterialTheme.colorScheme.surfaceContainer).padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Row(verticalAlignment = Alignment.Top) {
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(if (tomorrow) "Tomorrow on campus" else "Today on campus", fontWeight = FontWeight.SemiBold)
-                Text(dateText, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-            Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(if (tomorrow) "Tomorrow on campus" else "Today on campus", Modifier.weight(1f), fontWeight = FontWeight.SemiBold)
                 Text("7 AM – 4 PM", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(dateText, Modifier.weight(1f), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(trf("High %d° · Low %d°", hours.maxOf { it.temp }, hours.minOf { it.temp }), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
             }
         }

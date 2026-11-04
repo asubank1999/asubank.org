@@ -407,6 +407,18 @@ struct WeatherHour: Identifiable {
 }
 
 enum WeatherText {
+    /// Multicolor symbols draw clouds white, which vanish on a light card
+    static func colors(_ c: Int) -> (Color, Color) {
+        switch c {
+        case 0: return (.orange, .orange)
+        case 1, 2: return (.gray, .orange)
+        case 51...57, 61...67, 80...82: return (.gray, .blue)
+        case 71...77, 85, 86: return (.gray, .cyan)
+        case 95...99: return (.gray, .yellow)
+        default: return (.gray, .gray)
+        }
+    }
+
     static func symbol(_ c: Int) -> String {
         switch c {
         case 0: return "sun.max.fill"
@@ -552,7 +564,9 @@ struct WeatherCard: View {
                             ForEach(store.hours) { h in
                                 VStack(spacing: 5) {
                                     Text(WeatherText.hourText(h.hour)).font(.caption2).foregroundStyle(.secondary)
-                                    Image(systemName: h.symbol).symbolRenderingMode(.multicolor).font(.title3).frame(height: 26)
+                                    Image(systemName: h.symbol).symbolRenderingMode(.palette)
+                                        .foregroundStyle(WeatherText.colors(h.code).0, WeatherText.colors(h.code).1)
+                                        .font(.title3).frame(height: 26)
                                         .accessibilityLabel(L(WeatherText.label(h.code)))
                                     Text("\(h.temp)°").font(.subheadline.weight(.semibold)).monospacedDigit()
                                     Text("\(h.rain)%").font(.caption2).foregroundStyle(h.rain >= 40 ? Color.blue : Color.secondary)
