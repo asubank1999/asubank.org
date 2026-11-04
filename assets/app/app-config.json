@@ -1,14 +1,14 @@
 {
   "ios": {
-    "latest": "1.10.2",
+    "latest": "1.11.0",
     "minimum": "1.0.0",
     "store": "",
-    "notes": "New Notifications tab for friend requests, pokes and new uploads. Suggest materials is now a real form in the app, admins can delete files from Drive, friends and admin screens open much faster, and More shows how our files are spread across the colleges."
+    "notes": "See what changed after every update under More > What's New. Changing the app icon now works with TrollStore, and the About text says how ASU Bank is supported."
   },
   "android": {
-    "latest": "1.10.2",
+    "latest": "1.11.0",
     "minimum": "1.0.0",
-    "notes": "New Alerts tab for friend requests, pokes and new uploads. Suggest materials is now a real form in the app, admins can delete files from Drive, friends and admin screens open much faster, and More shows how our files are spread across the colleges."
+    "notes": "See what changed after every update under More > What's New. The About text now says how ASU Bank is supported."
   },
   "donate": true
 }
