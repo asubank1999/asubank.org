@@ -349,7 +349,7 @@ fun ListRow(
         }
         Column(Modifier.weight(1f), horizontalAlignment = if (rtl && !Lang.rtl) Alignment.End else Alignment.Start) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(title, style = MaterialTheme.typography.bodyLarge, color = titleColor ?: MaterialTheme.colorScheme.onSurface, textAlign = if (rtl) TextAlign.End else TextAlign.Start)
+                Text(title, Modifier.weight(1f, fill = false), style = MaterialTheme.typography.bodyLarge, color = titleColor ?: MaterialTheme.colorScheme.onSurface, textAlign = if (rtl) TextAlign.End else TextAlign.Start)
                 if (badge != null) Badge(badge, if (badge == "NEW") Brand.green else Brand.orange)
             }
             if (!subtitle.isNullOrEmpty()) Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = if (rtl) TextAlign.End else TextAlign.Start)

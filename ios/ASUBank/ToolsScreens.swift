@@ -458,6 +458,8 @@ enum WeatherText {
 final class WeatherStore: ObservableObject {
     @Published var hours: [WeatherHour] = []
     @Published var tomorrow = false
+    /// The day shown, like "Wednesday, 4 November 2026"
+    @Published var dateText = ""
     @Published var failed = false
     private var loaded: Date?
 
@@ -512,6 +514,12 @@ final class WeatherStore: ObservableObject {
         guard !out.isEmpty else { return false }
         hours = out
         tomorrow = late
+        let shown = DateFormatter()
+        shown.calendar = cal
+        shown.timeZone = cal.timeZone
+        shown.locale = Locale(identifier: AppLanguage.code)
+        shown.setLocalizedDateFormatFromTemplate("EEEEdMMMMyyyy")
+        dateText = shown.string(from: day)
         return true
     }
 }
@@ -526,11 +534,18 @@ struct WeatherCard: View {
             Color.clear.frame(height: 0).task { await store.load() }
             if !store.hours.isEmpty {
                 VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Label(store.tomorrow ? L("Tomorrow on campus") : L("Today on campus"), systemImage: "thermometer.sun.fill")
-                            .font(.subheadline.weight(.semibold))
+                    HStack(alignment: .firstTextBaseline) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Label(store.tomorrow ? L("Tomorrow on campus") : L("Today on campus"), systemImage: "thermometer.sun.fill")
+                                .font(.subheadline.weight(.semibold))
+                            Text(store.dateText).font(.caption).foregroundStyle(.secondary)
+                        }
                         Spacer()
-                        Text("7 AM – 4 PM").font(.caption).foregroundStyle(.secondary)
+                        VStack(alignment: .trailing, spacing: 3) {
+                            Text("7 AM – 4 PM").font(.caption).foregroundStyle(.secondary)
+                            Text(String(format: L("High %d° · Low %d°"), store.hours.map(\.temp).max() ?? 0, store.hours.map(\.temp).min() ?? 0))
+                                .font(.caption.weight(.semibold)).monospacedDigit()
+                        }
                     }
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 14) {

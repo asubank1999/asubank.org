@@ -1,5 +1,9 @@
 **ASU Bank for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.10.1
+- The weather card shows the exact day and date, plus the day's high and low
+- Android: neater official links, including the alumni platform
+
 ### What's new in 1.10.0
 - Fixed: settings under More sometimes wouldn't open or froze
 - Faster: the app starts quicker, and lists and photos scroll more smoothly

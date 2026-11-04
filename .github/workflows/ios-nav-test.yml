@@ -1,0 +1,60 @@
+# Runs the app on a real iOS 16 simulator and taps through More for several minutes. Started by hand or through the API.
+#  stack: 1 uses iOS 16's NavigationStack (how 1.10.0 and earlier ran), 0 uses what the app ships with now.
+name: iOS navigation test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: macos-15
+    timeout-minutes: 70
+    strategy:
+      fail-fast: false
+      matrix:
+        stack: ['0', '1']
+    defaults:
+      run:
+        working-directory: ios
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install XcodeGen
+        run: brew install xcodegen xcbeautify
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Get the iOS 16 simulator
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes
+          if ! xcrun simctl list runtimes | grep -q "iOS 16"; then
+            xcodebuild -downloadPlatform iOS -buildVersion 16.4
+          fi
+          xcrun simctl list runtimes
+          RT=$(xcrun simctl list runtimes -j | python3 -c "
+          import json,sys
+          r=[x['identifier'] for x in json.load(sys.stdin)['runtimes'] if x['version'].startswith('16.') and x['isAvailable']]
+          print(r[-1])")
+          UDID=$(xcrun simctl create nav "iPhone 14" "$RT")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+      - name: Run the tests
+        env:
+          TEST_RUNNER_NAV_STACK: ${{ matrix.stack }}
+        run: |
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl spawn "$UDID" log stream --level debug --predicate 'process == "ASUBank" AND (eventMessage CONTAINS[c] "navigation" OR eventMessage CONTAINS[c] "attempt to present" OR eventMessage CONTAINS[c] "icon")' > "$RUNNER_TEMP/app.log" 2>&1 &
+          set +e
+          xcodebuild -project ASUBank.xcodeproj -scheme ASUBank -configuration Debug \
+            -destination "id=$UDID" -derivedDataPath build -resultBundlePath "$RUNNER_TEMP/result.xcresult" \
+            CODE_SIGNING_ALLOWED=NO test > "$RUNNER_TEMP/test.log" 2>&1
+          CODE=$?
+          grep -E "NAVTEST|Test Case|error:|BUILD|TEST (SUCCEEDED|FAILED)" "$RUNNER_TEMP/test.log" | tail -80
+          echo "--- app log"
+          sort "$RUNNER_TEMP/app.log" | cut -c60- | sort | uniq -c | sort -rn | head -30
+          exit $CODE
+      - name: Keep the results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nav-test-stack-${{ matrix.stack }}
+          path: ${{ runner.temp }}/result.xcresult

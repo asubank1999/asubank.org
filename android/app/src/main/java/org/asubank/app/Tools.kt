@@ -422,6 +422,8 @@ data class WeatherHour(val hour: Int, val temp: Int, val rain: Int, val code: In
 object Weather {
     val hours = MutableStateFlow<List<WeatherHour>>(emptyList())
     val tomorrow = MutableStateFlow(false)
+    /** The day shown, like "Wednesday, 4 November 2026" */
+    val dateText = MutableStateFlow("")
     private var loaded = 0L
     /** Campus location only; nothing about the student is sent */
     private const val URL = "https://api.open-meteo.com/v1/forecast?latitude=32.04&longitude=35.90&hourly=temperature_2m,precipitation_probability,weather_code&timezone=Asia%2FAmman&forecast_days=2"
@@ -461,6 +463,9 @@ object Weather {
         if (out.isEmpty()) return false
         hours.value = out
         tomorrow.value = late
+        val locale = Locale(Lang.code)
+        dateText.value = java.text.SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEEdMMMMyyyy"), locale)
+            .apply { timeZone = cal.timeZone }.format(cal.time)
         return true
     }
 
@@ -479,6 +484,7 @@ object Weather {
 fun WeatherCard() {
     val hours by Weather.hours.collectAsState()
     val tomorrow by Weather.tomorrow.collectAsState()
+    val dateText by Weather.dateText.collectAsState()
     LaunchedEffect(Unit) { Weather.load() }
     if (hours.isEmpty()) return
     Column(
@@ -486,9 +492,15 @@ fun WeatherCard() {
             .background(MaterialTheme.colorScheme.surfaceContainer).padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(if (tomorrow) "Tomorrow on campus" else "Today on campus", Modifier.weight(1f), fontWeight = FontWeight.SemiBold)
-            Text("7 AM – 4 PM", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Row(verticalAlignment = Alignment.Top) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(if (tomorrow) "Tomorrow on campus" else "Today on campus", fontWeight = FontWeight.SemiBold)
+                Text(dateText, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text("7 AM – 4 PM", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(trf("High %d° · Low %d°", hours.maxOf { it.temp }, hours.minOf { it.temp }), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+            }
         }
         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
             hours.forEach { h ->

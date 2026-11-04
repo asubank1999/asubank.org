@@ -804,6 +804,8 @@
 "Helpers" = "Ayudantes";
 "Hi, %@" = "Hola, %@";
 "Hide your university number and name on scans." = "Oculta tu número universitario y nombre en los escaneos.";
+"High %d° · Low %d°" = "Máx. %d° · Mín. %d°";
+"High %lld° · Low %lld°" = "Máx. %lld° · Mín. %lld°";
 "Histogram" = "Histogram";
 "Home" = "Inicio";
 "Home and More always stay, and you can add up to %d more." = "Inicio y Más siempre se quedan, y puedes añadir hasta %d más.";

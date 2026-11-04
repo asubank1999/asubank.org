@@ -168,9 +168,13 @@ struct ModerationDialogs: ViewModifier {
 /// Everyone agrees to the community rules once, before using the chat
 struct CommunityRulesGate: ViewModifier {
     @AppStorage("ab.chat.rulesAccepted") private var accepted = false
+    @State private var onScreen = false
 
     func body(content: Content) -> some View {
-        content.sheet(isPresented: Binding(get: { !accepted }, set: { _ in })) {
+        content
+            .onAppear { onScreen = true }
+            .onDisappear { onScreen = false }
+            .sheet(isPresented: Binding(get: { onScreen && !accepted }, set: { _ in })) {
             ABStack {
                 List {
                     Section {

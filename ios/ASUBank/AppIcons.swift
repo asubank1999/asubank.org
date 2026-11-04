@@ -18,7 +18,7 @@ struct AppIconScreen: View {
     ]
 
     @State private var current = UIApplication.shared.alternateIconName
-    @State private var failed = false
+    @State private var failure: String?
 
     var body: some View {
         List {
@@ -46,14 +46,25 @@ struct AppIconScreen: View {
         }
         .listStyle(.insetGrouped)
         .navigationTitle("App icon")
-        .alert("Couldn't change the icon", isPresented: $failed) { Button("OK", role: .cancel) {} }
+        .alert("Couldn't change the icon", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: { Text(failure ?? "") }
     }
 
-    private func pick(_ icon: String?) {
+    private func pick(_ icon: String?, retry: Bool = true) {
         guard icon != current else { return }
         UIApplication.shared.setAlternateIconName(icon) { error in
             DispatchQueue.main.async {
-                if error == nil { current = icon; Haptics.success() } else { failed = true }
+                if let error {
+                    // iOS sometimes answers "temporarily unavailable" to the first try
+                    if retry { DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) { pick(icon, retry: false) }; return }
+                    let e = error as NSError
+                    failure = "\(e.localizedDescription) (\(e.domain) \(e.code))"
+                } else {
+                    current = icon
+                    failure = nil
+                    Haptics.success()
+                }
             }
         }
     }

@@ -241,11 +241,11 @@ final class AccountStore: ObservableObject {
 
     private func adopt(_ r: [String: Any]) {
         if let t = r["token"] as? String { token = t; Keychain.set(t, for: "ab.token") }
-        if let u = decode(ABUser.self, r["user"]) {
+        if let u = decode(ABUser.self, r["user"]), u != user {
             user = u
             UserDefaults.standard.set(try? JSONEncoder().encode(u), forKey: userKey)
         }
-        if let rs = decode([ChatRoom].self, r["rooms"]), !rs.isEmpty { rooms = rs }
+        if let rs = decode([ChatRoom].self, r["rooms"]), !rs.isEmpty, rs != rooms { rooms = rs }
     }
 
     func signIn(login: String, password: String) async throws {
@@ -417,7 +417,7 @@ final class ChatNotifier: ObservableObject {
     func deliver(_ e: ABEvent) async {
         guard wants(e) else { return }
         let isPrivate = e.type.hasPrefix("friend_") || e.type.hasPrefix("group_") || e.type == "poke"
-        if isPrivate { socialUnread += e.type.hasPrefix("group_") ? 0 : 1 }
+        if isPrivate { if !e.type.hasPrefix("group_") { socialUnread += 1 } }
         else if e.type != "upload" { unread += 1 }
         let me = AccountStore.shared.user?.id
         let who = e.displayName ?? ""

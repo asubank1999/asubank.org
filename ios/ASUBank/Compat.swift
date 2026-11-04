@@ -5,12 +5,23 @@ import UIKit
 // Color.gradient are iOS 16 only; these wrappers use them on iOS 16+ and the iOS 15 way otherwise.
 // (Every iPhone that runs iOS 14 can update to iOS 15, so 15 reaches the same phones.)
 
+/// iOS 16's NavigationStack can stop pushing screens: the row greys when tapped and nothing opens, on every tab.
+/// So it's only used from iOS 17; iOS 15 and 16 use NavigationView. `-ab.nav.stack YES` brings it back for the CI test.
+enum ABNav {
+    static let useStack = ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17
+        || UserDefaults.standard.bool(forKey: "ab.nav.stack")
+}
+
 /// A tab's navigation container
 struct ABStack<Content: View>: View {
     @ViewBuilder let content: () -> Content
     var body: some View {
         if #available(iOS 16.0, *) {
-            NavigationStack { content() }
+            if ABNav.useStack {
+                NavigationStack { content() }
+            } else {
+                NavigationView { content() }.navigationViewStyle(.stack)
+            }
         } else {
             NavigationView { content() }.navigationViewStyle(.stack)
         }
@@ -24,7 +35,7 @@ struct Lazy<V: View>: View {
     var body: V { build() }
 }
 
-/// NavigationLink(value:) on iOS 16, a destination link on iOS 15
+/// NavigationLink(value:) with NavigationStack, a destination link with NavigationView
 struct RouteLink<Label: View>: View {
     let route: Route
     let label: Label
@@ -34,7 +45,11 @@ struct RouteLink<Label: View>: View {
     }
     var body: some View {
         if #available(iOS 16.0, *) {
-            NavigationLink(value: route) { label }
+            if ABNav.useStack {
+                NavigationLink(value: route) { label }
+            } else {
+                NavigationLink(destination: Lazy { RouteView(route: route) }) { label }
+            }
         } else {
             NavigationLink(destination: Lazy { RouteView(route: route) }) { label }
         }
@@ -44,7 +59,11 @@ struct RouteLink<Label: View>: View {
 private struct Destinations: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 16.0, *) {
-            content.navigationDestination(for: Route.self) { RouteView(route: $0) }
+            if ABNav.useStack {
+                content.navigationDestination(for: Route.self) { RouteView(route: $0) }
+            } else {
+                content
+            }
         } else {
             content
         }
@@ -56,7 +75,11 @@ private struct PushWhen<D: View>: ViewModifier {
     let destination: () -> D
     func body(content: Content) -> some View {
         if #available(iOS 16.0, *) {
-            content.navigationDestination(isPresented: $isPresented, destination: destination)
+            if ABNav.useStack {
+                content.navigationDestination(isPresented: $isPresented, destination: destination)
+            } else {
+                content.background(NavigationLink(destination: Lazy(destination), isActive: $isPresented) { EmptyView() }.hidden())
+            }
         } else {
             content.background(NavigationLink(destination: Lazy(destination), isActive: $isPresented) { EmptyView() }.hidden())
         }

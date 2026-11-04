@@ -804,6 +804,8 @@
 "Helpers" = "المساعدون";
 "Hi, %@" = "مرحباً، %@";
 "Hide your university number and name on scans." = "أخفِ رقمك الجامعي واسمك في الصور الممسوحة.";
+"High %d° · Low %d°" = "العظمى %d° · الصغرى %d°";
+"High %lld° · Low %lld°" = "العظمى %lld° · الصغرى %lld°";
 "Histogram" = "المدرج التكراري";
 "Home" = "الرئيسية";
 "Home and More always stay, and you can add up to %d more." = "تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.";
