@@ -1,9 +1,9 @@
 {
   "ios": {
-    "latest": "1.10.1",
+    "latest": "1.10.2",
     "minimum": "1.0.0",
     "store": "",
-    "notes": "iPhone: fixes rows and buttons that wouldn't open and the app icon change. The weather card now shows the exact date, and Android's official links are neater."
+    "notes": "New Notifications tab for friend requests, pokes and new uploads. Suggest materials is now a real form in the app, admins can delete files from Drive, friends and admin screens open much faster, and More shows how our files are spread across the colleges."
   },
   "android": {
     "latest": "1.10.2",
