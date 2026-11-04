@@ -451,7 +451,7 @@
             ['/requests/matcher_confirm', 'Course matcher', 'people'], ['/guides/links', 'ASU resources', 'grid']]],
         ['Help & support', [
             ['/guides/contact', 'Contact us', 'chat'], ['/guides/faqs', 'FAQs', 'help'],
-            ['/apps/donate', 'Donate (PayPal or CliQ)', 'star'], ['/legal/uni_tos', 'Terms of Service', 'page']]]
+            ['/apps/donate', 'Donate (PayPal or CliQ)', 'star'], ['/legal/uni_tos', 'Terms of Service', 'page'], ['/legal/privacy', 'Privacy policy', 'page'], ['/legal/community', 'Community rules', 'page']]]
     ];
     var installEvt = null;
     window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); installEvt = e; });

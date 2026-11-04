@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MoreView: View {
+    @State private var reportingProblem: ReportTarget?
     @EnvironmentObject private var library: Library
     @EnvironmentObject private var config: AppConfig
     @EnvironmentObject private var app: AppState
@@ -90,6 +91,7 @@ struct MoreView: View {
                 } header: { Text("Storage") } footer: {
                     Text("Clearing the cache frees space and reloads pages and the materials list from asubank.org. Your saved materials and settings stay.")
                 }
+                .sheet(item: $reportingProblem) { ReportSheet(target: $0) }
                 .confirmationDialog("Clear the cache?", isPresented: $confirmClear, titleVisibility: .visible) {
                     Button("Clear cache", role: .destructive) {
                         clearing = true
@@ -121,6 +123,9 @@ struct MoreView: View {
                     }
                     Button { showTerms = true } label: { Label("About & terms", systemImage: "heart.text.square") }
                     RouteLink(Route.page("/guides/contact", "Contact us")) { Label("Contact us", systemImage: "envelope") }
+                    RouteLink(Route.page("/legal/privacy", "Privacy policy")) { Label("Privacy policy", systemImage: "hand.raised") }
+                    RouteLink(Route.page("/legal/community", "Community rules")) { Label("Community rules", systemImage: "checkmark.shield") }
+                    Button { reportingProblem = ReportTarget(kind: "other", targetId: "", name: "") } label: { Label("Report a problem", systemImage: "flag") }
                 }
 
                 Section {

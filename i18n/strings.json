@@ -248,9 +248,15 @@
   "ar": "ASU Bank مشروع مجاني تطوعي وغير ربحي. التبرعات تساعد فقط في استمراره.",
   "es": "ASU Bank es un proyecto gratuito, voluntario y sin fines de lucro. Las donaciones solo ayudan a mantenerlo."
  },
+ "ASU Bank is a free, volunteer, student-run project. It is not made by or owned by Applied Science Private University. Questions go to necro144@yahoo.com.": {
+  "ar": "بنك ASU مشروع طلابي تطوعي مجاني، وليس من صنع جامعة العلوم التطبيقية الخاصة ولا ملكًا لها. أرسل أسئلتك إلى necro144@yahoo.com."
+ },
  "ASU Bank is built by students, for students. These people uploaded, sorted and shared the materials you use every day.": {
   "ar": "ASU Bank من الطلاب وللطلاب. هؤلاء رفعوا ورتبوا وشاركوا المواد التي تستخدمها كل يوم.",
   "es": "ASU Bank lo hacen estudiantes para estudiantes. Estas personas subieron, ordenaron y compartieron los materiales que usas cada día."
+ },
+ "ASU Bank is for university students and isn’t meant for children under 13.": {
+  "ar": "بنك ASU مخصص لطلاب الجامعة وليس للأطفال دون 13 عامًا."
  },
  "ASU Bank is free and run by a volunteer student. Donations keep it online and growing.": {
   "ar": "بنك ASU مجاني ويديره طالب متطوع. التبرعات تُبقيه متاحًا وتساعده على النمو."
@@ -817,6 +823,9 @@
   "ar": "كن لطيفاً ومفيداً. لا تشارك إجابات امتحان أثناء الامتحان أو معلومات خاصة أو أي شيء مخالف. يمكن للمشرفين حذف الرسائل وحظر الحسابات.",
   "es": "Sé amable y útil. No compartas respuestas durante un examen, datos privados ni nada ilegal. Los admins pueden borrar mensajes y bloquear cuentas."
  },
+ "Be respectful. No harassment, bullying, threats or hate speech.": {
+  "ar": "كن محترمًا. لا مضايقة أو تنمر أو تهديد أو خطاب كراهية."
+ },
  "Be the first to rate them, and others will join in.": {
   "ar": "كن أول من يقيّمه وسينضم الآخرون."
  },
@@ -865,6 +874,19 @@
  },
  "Bivariate Distribution": {
   "ar": "التوزيع الثنائي المتغير"
+ },
+ "Block": {
+  "ar": "حظر",
+  "es": "Bloquear"
+ },
+ "Block %@?": {
+  "ar": "حظر %@؟"
+ },
+ "Block %s?": {
+  "ar": "حظر %s؟"
+ },
+ "Blocked people": {
+  "ar": "المحظورون"
  },
  "Book a photoshoot": {
   "ar": "احجز جلسة تصوير",
@@ -1017,6 +1039,9 @@
   "ar": "إلغاء",
   "es": "Cancelar"
  },
+ "Can’t sign in?": {
+  "ar": "لا تستطيع تسجيل الدخول؟"
+ },
  "Central Limit Theorem": {
   "ar": "نظرية النهاية المركزية"
  },
@@ -1087,6 +1112,9 @@
   "ar": "الهندسة الكيميائية",
   "es": "Ingeniería química"
  },
+ "Children": {
+  "ar": "الأطفال"
+ },
  "Choose": {
   "ar": "اختر",
   "es": "Elegir"
@@ -1094,6 +1122,9 @@
  "Choose (optional)": {
   "ar": "اختر (اختياري)",
   "es": "Elegir (opcional)"
+ },
+ "Choose Delete my account and enter your password.": {
+  "ar": "اختر حذف حسابي وأدخل كلمة المرور."
  },
  "Choose a PDF": {
   "ar": "اختر ملف PDF",
@@ -1255,6 +1286,9 @@
   "ar": "المجتمع والخدمات",
   "es": "Comunidad y servicios"
  },
+ "Community rules": {
+  "ar": "قواعد المجتمع"
+ },
  "Community votes and polls": {
   "ar": "تصويتات واستطلاعات المجتمع"
  },
@@ -1346,8 +1380,17 @@
   "ar": "نسخ الرابط",
   "es": "Copiar enlace"
  },
+ "Copyright": {
+  "ar": "حقوق النشر"
+ },
+ "Copyright: I own this or represent the owner": {
+  "ar": "حقوق نشر: أنا المالك أو أمثله"
+ },
  "Core Subjects": {
   "ar": "المواد الأساسية"
+ },
+ "Couldn't block": {
+  "ar": "تعذر الحظر"
  },
  "Couldn't connect. Check your connection and try again.": {
   "ar": "تعذر الاتصال. تحقق من اتصالك وحاول مجددًا."
@@ -1493,6 +1536,9 @@
   "ar": "حذف الحساب",
   "es": "Eliminar cuenta"
  },
+ "Delete message": {
+  "ar": "حذف الرسالة"
+ },
  "Delete my account": {
   "ar": "حذف حسابي",
   "es": "Eliminar mi cuenta"
@@ -1519,6 +1565,9 @@
   "ar": "حذف الملف المرفوع",
   "es": "Eliminar archivo"
  },
+ "Delete your account": {
+  "ar": "حذف حسابك"
+ },
  "Delete your account?": {
   "ar": "حذف حسابك؟",
   "es": "¿Eliminar tu cuenta?"
@@ -1526,6 +1575,9 @@
  "Deleted": {
   "ar": "تم الحذف",
   "es": "Eliminado"
+ },
+ "Deleting your data": {
+  "ar": "حذف بياناتك"
  },
  "Deleting…": {
   "ar": "جارٍ الحذف…"
@@ -1575,6 +1627,12 @@
   "ar": "تصويت مجتمع ديسكورد",
   "es": "Votación de la comunidad de Discord"
  },
+ "Dismiss": {
+  "ar": "تجاهل"
+ },
+ "Dismissed": {
+  "ar": "تم التجاهل"
+ },
  "Display name": {
   "ar": "الاسم الظاهر",
   "es": "Nombre visible"
@@ -1608,6 +1666,9 @@
   "ar": "لا تفتحوه",
   "es": "No abrir"
  },
+ "Don't share other people's private information.": {
+  "ar": "لا تشارك المعلومات الخاصة بالآخرين."
+ },
  "Donate": {
   "ar": "تبرّع",
   "es": "Donar"
@@ -1633,6 +1694,9 @@
  "Donor": {
   "ar": "متبرّع",
   "es": "Donante"
+ },
+ "Don’t share other people’s private information.": {
+  "ar": "لا تشارك المعلومات الخاصة بالآخرين."
  },
  "Dorm Common Area": {
   "ar": "القاعة المشتركة في السكن"
@@ -1736,6 +1800,9 @@
  },
  "Email Verification Required": {
   "ar": "يلزم بريد إلكتروني فعّال"
+ },
+ "Email necro144@yahoo.com from the address on your account and we will delete it for you.": {
+  "ar": "راسل necro144@yahoo.com من البريد المسجل في حسابك وسنحذفه لك."
  },
  "Empty folder": {
   "ar": "مجلد فارغ",
@@ -1959,6 +2026,9 @@
  "Files you open show up here so you can get back to them.": {
   "ar": "تظهر هنا الملفات التي تفتحها لتعود إليها بسهولة."
  },
+ "Files you upload, teacher ratings, course matcher forms and material requests go to our Google Drive and Sheets, with the details you type in. Don’t put your name or student ID in files you upload.": {
+  "ar": "الملفات التي ترفعها وتقييمات المدرسين ونماذج مطابقة الزملاء وطلبات المواد تصل إلى Google Drive وSheets الخاصة بنا مع ما تكتبه من بيانات. لا تضع اسمك أو رقمك الجامعي في الملفات المرفوعة."
+ },
  "Fill in your courses and times": {
   "ar": "أدخل موادك وأوقاتك",
   "es": "Indica tus cursos y horarios"
@@ -2179,6 +2249,15 @@
  "Hall numbers follow a specific format to help you locate them easily. For example:\n1206 means:\n1 = College Number (College of IT)\n2 = Floor Number (2nd Floor)\n06 = Hall Number (Hall 06)\nUse this format to navigate to your desired hall.": {
   "ar": "تتبع أرقام القاعات نمطًا محددًا لتسهيل الوصول إليها. مثال:\n1206 تعني:\n1 = رقم الكلية (كلية تكنولوجيا المعلومات)\n2 = رقم الطابق (الطابق الثاني)\n06 = رقم القاعة (القاعة 06)\nاستخدم هذا النمط للوصول إلى قاعتك."
  },
+ "Handled": {
+  "ar": "تمت المعالجة"
+ },
+ "Harassment or bullying": {
+  "ar": "مضايقة أو تنمر"
+ },
+ "Hate speech": {
+  "ar": "خطاب كراهية"
+ },
  "Hate speech, harassment, bullying, or discriminatory remarks toward any member.": {
   "ar": "خطاب الكراهية أو المضايقة أو التنمر أو التمييز تجاه أي عضو."
  },
@@ -2253,6 +2332,9 @@
  "How to Construct Frequency Table": {
   "ar": "كيفية إنشاء جدول تكراري"
  },
+ "How to delete your ASU Bank account and data.": {
+  "ar": "كيف تحذف حسابك وبياناتك في بنك ASU."
+ },
  "How to find any material": {
   "ar": "كيف تجد أي مادة"
  },
@@ -2274,6 +2356,9 @@
  },
  "How your term and cumulative average turn into a grade at ASU.": {
   "ar": "كيف يتحول معدلك الفصلي والتراكمي إلى تقدير في ASU."
+ },
+ "I agree": {
+  "ar": "أوافق"
  },
  "I agree to the Terms of Service": {
   "ar": "أوافق على شروط الخدمة",
@@ -2318,6 +2403,9 @@
  },
  "If you encounter any issues or have questions about the service, please call or WhatsApp us at: necro144@yahoo.com": {
   "ar": "إذا واجهت مشكلة أو كان لديك سؤال عن الخدمة، فاتصل بنا أو راسلنا على واتساب: necro144@yahoo.com"
+ },
+ "If you own something on ASU Bank or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it.": {
+  "ar": "إذا كنت تملك شيئًا في بنك ASU أو تمثل مالكه وتريد إزالته، فأبلغ عن الملف أو راسل necro144@yahoo.com مع رابطه."
  },
  "If you're still having trouble understanding how this service works, our support team is here to help!": {
   "ar": "إذا كنت ما زلت لا تفهم كيف تعمل الخدمة، ففريق الدعم هنا لمساعدتك!"
@@ -2498,6 +2586,9 @@
  "Last seen %s": {
   "ar": "آخر ظهور %s",
   "es": "Última vez %s"
+ },
+ "Last updated November 2026.": {
+  "ar": "آخر تحديث: تشرين الثاني 2026."
  },
  "Last updated: September 10, 2026": {
   "ar": "آخر تحديث: 10 أيلول 2026"
@@ -2993,6 +3084,12 @@
   "ar": "لا ملفات محفوظة بعد",
   "es": "Aún no hay archivos guardados"
  },
+ "No sexual or violent content, and nothing illegal.": {
+  "ar": "لا محتوى جنسيًا أو عنيفًا، ولا أي شيء غير قانوني."
+ },
+ "No spam or advertising.": {
+  "ar": "لا رسائل مزعجة أو إعلانات."
+ },
  "No submissions here yet.": {
   "ar": "لا توجد مشاركات هنا بعد.",
   "es": "Aún no hay envíos aquí."
@@ -3084,6 +3181,9 @@
  "Nothing saved yet": {
   "ar": "لا شيء محفوظ بعد",
   "es": "Aún no has guardado nada"
+ },
+ "Nothing to review.": {
+  "ar": "لا شيء للمراجعة."
  },
  "Nothing was uploaded.": {
   "ar": "لم يُرفع شيء."
@@ -3194,12 +3294,18 @@
  "Only if it's accepted": {
   "ar": "فقط إذا قُبل"
  },
+ "Only if you add them: email, university ID, phone number, profile photo, bio, major and college.": {
+  "ar": "فقط إذا أضفتها: البريد الإلكتروني والرقم الجامعي ورقم الهاتف وصورة الملف والنبذة والتخصص والكلية."
+ },
+ "Only share files you have the right to share.": {
+  "ar": "شارك فقط الملفات التي يحق لك مشاركتها."
+ },
  "Only the ASU Bank team posts here.": {
   "ar": "ينشر فريق ASU Bank فقط هنا.",
   "es": "Aquí solo publica el equipo de ASU Bank."
  },
  "Open": {
-  "ar": "فتح",
+  "ar": "مفتوحة",
   "es": "Abrir"
  },
  "Open Search": {
@@ -3249,6 +3355,9 @@
  },
  "Open it with another app on your phone.": {
   "ar": "افتحه بتطبيق آخر على هاتفك."
+ },
+ "Open the Chat tab or More and go to your account.": {
+  "ar": "افتح تبويب الدردشة أو المزيد وانتقل إلى حسابك."
  },
  "Open the file (%s)": {
   "ar": "افتح الملف (%s)"
@@ -3558,6 +3667,9 @@
   "ar": "عروض لشاشة الحرم الجامعي",
   "es": "Presentaciones para la pantalla del campus"
  },
+ "Press and hold a message, open a profile, or use the menu on a file to report it. You can also block anyone from their profile or a message. Reports go straight to the admins.": {
+  "ar": "اضغط مطولًا على رسالة أو افتح ملفًا شخصيًا أو استخدم قائمة الملف للإبلاغ عنه. ويمكنك أيضًا حظر أي شخص من ملفه الشخصي أو رسالته. تصل البلاغات مباشرة إلى المشرفين."
+ },
  "Preview in Google Drive": {
   "ar": "معاينة في Google Drive",
   "es": "Vista previa en Google Drive"
@@ -3572,6 +3684,9 @@
  },
  "Principles of Nutrition": {
   "ar": "مبادئ التغذية"
+ },
+ "Privacy policy": {
+  "ar": "سياسة الخصوصية"
  },
  "Private until matched": {
   "ar": "خاص حتى المطابقة"
@@ -3776,6 +3891,32 @@
   "ar": "رد على %s",
   "es": "Respondiendo a %s"
  },
+ "Report": {
+  "ar": "إبلاغ",
+  "es": "Reportar"
+ },
+ "Report a problem": {
+  "ar": "الإبلاغ عن مشكلة"
+ },
+ "Report and block": {
+  "ar": "الإبلاغ والحظر"
+ },
+ "Report message": {
+  "ar": "الإبلاغ عن الرسالة"
+ },
+ "Report this file": {
+  "ar": "الإبلاغ عن هذا الملف"
+ },
+ "Report this person": {
+  "ar": "الإبلاغ عن هذا الشخص"
+ },
+ "Reporting": {
+  "ar": "الإبلاغ عن"
+ },
+ "Reports": {
+  "ar": "البلاغات",
+  "es": "Reportes"
+ },
  "Request a file": {
   "ar": "اطلب ملفًا"
  },
@@ -3958,6 +4099,9 @@
   "ar": "ابحث عن دكاترة",
   "es": "Buscar profesores"
  },
+ "Search text the app can’t translate by itself goes to Google Translate through our server, without your account.": {
+  "ar": "نص البحث الذي لا يستطيع التطبيق ترجمته بنفسه يذهب إلى ترجمة Google عبر خادمنا، دون بيانات حسابك."
+ },
  "Search the course name, not the file name": {
   "ar": "ابحث باسم المادة لا باسم الملف",
   "es": "Busca el nombre del curso, no del archivo"
@@ -4016,6 +4160,9 @@
   "ar": "أرسل التقييم",
   "es": "Enviar valoración"
  },
+ "Send report": {
+  "ar": "إرسال البلاغ"
+ },
  "Send request": {
   "ar": "أرسل الطلب",
   "es": "Enviar solicitud"
@@ -4048,6 +4195,9 @@
  "Settings": {
   "ar": "الإعدادات",
   "es": "Ajustes"
+ },
+ "Sexual content": {
+  "ar": "محتوى جنسي"
  },
  "Share": {
   "ar": "مشاركة",
@@ -4095,6 +4245,9 @@
  "Shared only with students you match with.": {
   "ar": "تُشارك فقط مع الطلاب الذين تتوافق معهم.",
   "es": "Solo se comparte con los estudiantes con los que coincidas."
+ },
+ "Shares someone's private information": {
+  "ar": "يشارك معلومات خاصة بشخص ما"
  },
  "Shariah": {
   "ar": "الشريعة",
@@ -4150,6 +4303,9 @@
   "ar": "تسجيل الدخول",
   "es": "Iniciar sesión"
  },
+ "Sign in at asubank.org/account, then choose to delete your account and enter your password.": {
+  "ar": "سجّل الدخول في asubank.org/account، ثم اختر حذف الحساب وأدخل كلمة المرور."
+ },
  "Sign in or create account": {
   "ar": "سجّل الدخول أو أنشئ حساباً",
   "es": "Inicia sesión o crea una cuenta"
@@ -4203,6 +4359,12 @@
   "ar": "تنزيل سلس",
   "es": "Descarga fluida"
  },
+ "So we can reply to you": {
+  "ar": "لنتمكن من الرد عليك"
+ },
+ "Something else": {
+  "ar": "شيء آخر"
+ },
  "Something went wrong.": {
   "ar": "حدث خطأ ما.",
   "es": "Algo salió mal."
@@ -4220,6 +4382,9 @@
  "Source": {
   "ar": "المصدر",
   "es": "Fuente"
+ },
+ "Spam or advertising": {
+  "ar": "رسائل مزعجة أو إعلانات"
  },
  "Spam, advertising, unrelated promotions, or repeated off-topic messages.": {
   "ar": "الرسائل المزعجة والإعلانات والترويج غير المتعلق أو الرسائل المتكررة خارج الموضوع."
@@ -4495,6 +4660,9 @@
   "ar": "اضغط على دكتور لإضافة تقييمك. المعدلات من 10.",
   "es": "Toca un profesor para añadir tu valoración. Las medias son sobre 10."
  },
+ "Tap someone to unblock them.": {
+  "ar": "اضغط على شخص لإلغاء حظره."
+ },
  "Tap the Search tab at the bottom. The box is always at the top.": {
   "ar": "اضغط تبويب البحث في الأسفل. المربع دائمًا في الأعلى."
  },
@@ -4592,6 +4760,9 @@
   "ar": "شكرًا! تم رفع %d ملفات، وهي الآن في آخر المرفوعات.",
   "es": "¡Gracias! Se subieron %d archivos. Ya están en Últimas subidas."
  },
+ "Thank you. Our team will review your report.": {
+  "ar": "شكرًا لك. سيراجع فريقنا بلاغك."
+ },
  "Thanks list": {
   "ar": "قائمة الشكر",
   "es": "Agradecimientos"
@@ -4611,6 +4782,9 @@
  },
  "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.": {
   "ar": "يتطوع مشرفو المجموعات بوقتهم لتنظيم المجتمع وإدارته. لا يضمن المشرفون دقة أي مادة يشاركها الأعضاء أو اكتمالها أو موثوقيتها، وليسوا مسؤولين عن النصائح أو الآراء أو المحتوى الذي ينشره الآخرون."
+ },
+ "The apps have no analytics. The website uses Google Analytics to count visits.": {
+  "ar": "لا توجد أدوات تحليل في التطبيقات. أما الموقع فيستخدم Google Analytics لإحصاء الزيارات."
  },
  "The file": {
   "ar": "الملف",
@@ -4641,6 +4815,9 @@
  },
  "The ratings server didn't answer. Try again.": {
   "ar": "لم يرد خادم التقييمات. حاول مجددًا."
+ },
+ "The rules": {
+  "ar": "القواعد"
  },
  "The scale": {
   "ar": "السلّم",
@@ -4741,6 +4918,9 @@
   "ar": "هذه الغرفة مقفلة. النشر للمشرفين فقط.",
   "es": "Esta sala está bloqueada. Solo los admins pueden publicar."
  },
+ "This service isn't available in this version of the app.": {
+  "ar": "هذه الخدمة غير متاحة في هذا الإصدار من التطبيق."
+ },
  "This username, email or ID belongs to the admin. We'll email a code to confirm it's you.": {
   "ar": "اسم المستخدم أو البريد أو الرقم يخص المشرف. سنرسل رمزًا بالبريد للتأكد من أنه أنت."
  },
@@ -4773,8 +4953,14 @@
  "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.": {
   "ar": "للاستفادة من الخدمة يجب أن يكون لديك بريد إلكتروني يعمل. عند إيجاد تطابق (50% فأكثر) ستصلك أنت وزميلك رسالة بالتعليمات وبيانات الاتصال."
  },
+ "To remove a file or anything else, report it or email us.": {
+  "ar": "لإزالة ملف أو أي شيء آخر، أبلغ عنه أو راسلنا بالبريد."
+ },
  "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed.": {
   "ar": "للإبلاغ عن ملف يخالف القواعد أو حقوقك، أرسل رابطه على واتساب وسيُزال."
+ },
+ "To report something, press and hold a message or open a profile.": {
+  "ar": "للإبلاغ عن شيء، اضغط مطولًا على رسالة أو افتح ملفًا شخصيًا."
  },
  "Today": {
   "ar": "اليوم",
@@ -4929,6 +5115,10 @@
  },
  "Unban": {
   "ar": "رفع الحظر",
+  "es": "Desbloquear"
+ },
+ "Unblock": {
+  "ar": "إلغاء الحظر",
   "es": "Desbloquear"
  },
  "Under the passing limit (60)": {
@@ -5123,6 +5313,9 @@
   "ar": "اسم المستخدم أو البريد",
   "es": "Usuario o correo"
  },
+ "Username, display name and a scrambled copy of your password.": {
+  "ar": "اسم المستخدم والاسم الظاهر ونسخة مشفرة من كلمة المرور."
+ },
  "Username, email or ID": {
   "ar": "اسم المستخدم أو البريد أو الرقم"
  },
@@ -5208,6 +5401,9 @@
  "View your enrolled courses for the current semester": {
   "ar": "اعرض المواد المسجلة في الفصل الحالي"
  },
+ "Violence or threats": {
+  "ar": "عنف أو تهديد"
+ },
  "Violet": {
   "ar": "بنفسجي",
   "es": "Violeta"
@@ -5229,6 +5425,12 @@
  },
  "We got your request. Message us on WhatsApp to confirm the payment.": {
   "ar": "وصلنا طلبك. راسلنا على واتساب لتأكيد الدفع."
+ },
+ "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules, without warning.": {
+  "ar": "لا نتسامح مطلقًا مع الإساءة. يمكن للمشرفين إزالة المحتوى وحظر الحسابات المخالفة دون إنذار."
+ },
+ "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules.": {
+  "ar": "لا نتسامح مطلقًا مع الإساءة. يمكن للمشرفين إزالة المحتوى وحظر الحسابات المخالفة لهذه القواعد."
  },
  "We look for matches": {
   "ar": "نبحث عن زملاء متوافقين",
@@ -5279,6 +5481,9 @@
   "ar": "محتوى منظم",
   "es": "Contenido bien organizado"
  },
+ "What ASU Bank collects, why, and how to delete it.": {
+  "ar": "ما الذي يجمعه بنك ASU ولماذا وكيف تحذفه."
+ },
  "What are you looking for?": {
   "ar": "عمّ تبحث؟",
   "es": "¿Qué estás buscando?"
@@ -5290,19 +5495,37 @@
  "What formats are the test banks available in?": {
   "ar": "ما صيغ بنوك الأسئلة؟"
  },
+ "What happens": {
+  "ar": "ماذا يحدث"
+ },
  "What if I can't find a specific test bank?": {
   "ar": "ماذا لو لم أجد بنك أسئلة معينًا؟"
  },
  "What is ASU Test Banks?": {
   "ar": "ما هو بنك اختبارات ASU؟"
  },
+ "What is and isn’t allowed in the chat, profiles and uploads.": {
+  "ar": "ما هو مسموح وممنوع في الدردشة والملفات الشخصية والمرفوعات."
+ },
  "What it's for": {
   "ar": "الغرض منها",
   "es": "Para qué es"
  },
+ "What other students can see": {
+  "ar": "ما يراه الطلاب الآخرون"
+ },
+ "What we collect when you make an account": {
+  "ar": "ما نجمعه عند إنشاء حساب"
+ },
+ "What you send us without an account": {
+  "ar": "ما ترسله دون حساب"
+ },
  "What's my grade?": {
   "ar": "ما تقديري؟",
   "es": "¿Cuál es mi nota?"
+ },
+ "What's wrong?": {
+  "ar": "ما المشكلة؟"
  },
  "WhatsApp community": {
   "ar": "مجتمع واتساب"
@@ -5343,6 +5566,9 @@
   "ar": "أين وكيف",
   "es": "Dónde y cómo"
  },
+ "Where it is kept and who gets it": {
+  "ar": "أين تُحفظ ومن يحصل عليها"
+ },
  "Which games would you play?": {
   "ar": "أي الألعاب ستلعب؟",
   "es": "¿A qué juegos jugarías?"
@@ -5350,6 +5576,9 @@
  "Who is online": {
   "ar": "من المتصل",
   "es": "Quién está en línea"
+ },
+ "Who we are": {
+  "ar": "من نحن"
  },
  "Who's online": {
   "ar": "من المتصل",
@@ -5378,6 +5607,9 @@
  "Would you personally be interested in joining?": {
   "ar": "هل أنت مهتم شخصياً بالانضمام؟",
   "es": "¿Te interesaría unirte?"
+ },
+ "Wrong, broken or misleading file": {
+  "ar": "ملف خاطئ أو معطل أو مضلل"
  },
  "YES": {
   "ar": "نعم",
@@ -5427,6 +5659,9 @@
  "You can contact support through the WhatsApp group linked on the website.": {
   "ar": "يمكنك التواصل مع الدعم عبر مجموعة واتساب الموجودة في الموقع."
  },
+ "You can delete your account at any time. See the page on deleting your account. Your profile and photo are removed, and your old messages stay in the chat as “Deleted user”.": {
+  "ar": "يمكنك حذف حسابك في أي وقت، راجع صفحة حذف الحساب. تُزال بياناتك وصورتك، وتبقى رسائلك القديمة في الدردشة باسم «مستخدم محذوف»."
+ },
  "You can sign in with these too. Only you and admins see them.": {
   "ar": "يمكنك تسجيل الدخول بهما أيضاً. لا يراهما إلا أنت والمشرفون.",
   "es": "También puedes entrar con ellos. Solo tú y los admins los ven."
@@ -5443,9 +5678,15 @@
  "You have the latest version": {
   "ar": "لديك أحدث إصدار"
  },
+ "You haven't blocked anyone.": {
+  "ar": "لم تحظر أحدًا."
+ },
  "You pay the second half only if your ad is accepted.": {
   "ar": "تدفع النصف الثاني فقط إذا قُبل إعلانك.",
   "es": "Pagas la segunda mitad solo si se acepta tu anuncio."
+ },
+ "You won't see their messages or get notifications from them. You can undo this in your account.": {
+  "ar": "لن ترى رسائله ولن تصلك إشعارات منه. يمكنك التراجع عن ذلك من حسابك."
  },
  "You'll stay signed in here; other devices are signed out.": {
   "ar": "ستبقى مسجّلاً هنا؛ وسيُسجّل خروج الأجهزة الأخرى.",
@@ -5473,12 +5714,21 @@
   "ar": "معدلك، من 0 إلى 100",
   "es": "Tu promedio, de 0 a 100"
  },
+ "Your chat messages, who you blocked, when you were last active, and the reports you send.": {
+  "ar": "رسائلك في الدردشة ومن حظرتهم وآخر نشاط لك والبلاغات التي ترسلها."
+ },
  "Your courses, topics and when you're free. Takes about a minute.": {
   "ar": "موادك ومواضيعك وأوقات فراغك. يستغرق دقيقة تقريبًا."
+ },
+ "Your data is stored on Google services (Sheets, Drive and Apps Script) in the project owner’s account. Only admins can open it. We don’t sell it or use it for advertising.": {
+  "ar": "تُحفظ بياناتك على خدمات Google (Sheets وDrive وApps Script) في حساب صاحب المشروع، ولا يطلع عليها سوى المشرفين. لا نبيعها ولا نستخدمها للإعلانات."
  },
  "Your details are only shared with students you match with.": {
   "ar": "تُشارك بياناتك فقط مع الطلاب الذين تتوافق معهم.",
   "es": "Tus datos solo se comparten con quienes coincidas."
+ },
+ "Your email or phone (optional)": {
+  "ar": "بريدك أو هاتفك (اختياري)"
  },
  "Your files": {
   "ar": "ملفاتك",
@@ -5492,6 +5742,9 @@
   "ar": "اسمك",
   "es": "Tu nombre"
  },
+ "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins.": {
+  "ar": "اسمك واسم المستخدم وصورتك ونبذتك وتخصصك وكليتك وشاراتك وآخر ظهور لك. يظهر رقم هاتفك فقط إذا فعّلت ذلك. أما بريدك ورقمك الجامعي فلا يراهما سواك والمشرفون."
+ },
  "Your password": {
   "ar": "كلمة مرورك",
   "es": "Tu contraseña"
@@ -5502,6 +5755,9 @@
  "Your privacy": {
   "ar": "خصوصيتك",
   "es": "Tu privacidad"
+ },
+ "Your profile, photo, email, university ID, phone number and sign-ins are deleted straight away. Your old messages stay in the chat as “Deleted user”, with nothing that points to you.": {
+  "ar": "تُحذف فورًا بياناتك وصورتك وبريدك ورقمك الجامعي وهاتفك وجلسات الدخول. وتبقى رسائلك القديمة في الدردشة باسم «مستخدم محذوف» دون ما يدل عليك."
  },
  "Your rating": {
   "ar": "تقييمك",
@@ -5525,6 +5781,9 @@
  "Your upload": {
   "ar": "ملفك المرفوع",
   "es": "Tu archivo"
+ },
+ "Zero tolerance": {
+  "ar": "لا تسامح مطلقًا"
  },
  "admins post": {
   "ar": "للمشرفين",

@@ -1,5 +1,6 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.Flag
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
@@ -251,6 +252,8 @@ fun MaterialScreen(m: Material) {
     }
     val file = when (val s = state) { is VState.Pdf -> s.file; is VState.Img -> s.file; is VState.Card -> s.file; else -> null }
 
+    var reporting by remember { mutableStateOf<ReportTarget?>(null) }
+    reporting?.let { t -> ReportDialog(t) { reporting = null } }
     Screen(m.t, actions = {
         IconButton(onClick = { Saved.toggle(m) }) {
             val on = savedList.any { it.u == m.u }
@@ -271,6 +274,9 @@ fun MaterialScreen(m: Material) {
                 menu = false
                 (ctx.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager)
                     .setPrimaryClip(android.content.ClipData.newPlainText("link", AB.absolute(m.u)))
+            })
+            DropdownMenuItem(text = { Text("Report this file") }, leadingIcon = { Icon(Icons.Filled.Flag, null) }, onClick = {
+                menu = false; reporting = ReportTarget("file", m.u, m.t)
             })
         }
     }) { pad ->

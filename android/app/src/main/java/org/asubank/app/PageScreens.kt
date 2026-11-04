@@ -85,6 +85,7 @@ fun SitePageScreen(path: String, title: String) {
     val subjects by Library.subjects.collectAsState()
     val page = pages[path]
     when {
+        BuildConfig.STORE_BUILD && path in Moderation.paidPaths -> StoreNoticeScreen()
         path == "/banks/subjects" -> SubjectsDirectory()
         path.startsWith("/banks/") && subjects.any { it.p == path } -> SubjectScreen(subjects.first { it.p == path })
         path in SiteRouter.latestPaths -> LatestScreen()

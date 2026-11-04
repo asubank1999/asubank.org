@@ -200,7 +200,7 @@ object AppConfig {
         Net.text(AB.CONFIG)?.let { t ->
             runCatching {
                 val o = json.parseToJsonElement(t).jsonObject
-                donate.value = (o["donate"] as? JsonPrimitive)?.booleanOrNull ?: true
+                donate.value = !BuildConfig.STORE_BUILD && (o["donate"] as? JsonPrimitive)?.booleanOrNull ?: !BuildConfig.STORE_BUILD
                 (o["android"] as? JsonObject)?.let { a ->
                     minimum = (a["minimum"] as? JsonPrimitive)?.contentOrNull
                     configLatest = (a["latest"] as? JsonPrimitive)?.contentOrNull
@@ -210,7 +210,9 @@ object AppConfig {
         }
         // The newest android-v* GitHub Release, with its APK
         var relVersion: String? = null
-        Net.text(AB.RELEASES)?.let { t ->
+        // a Play build only ever updates through Google Play
+        if (BuildConfig.STORE_BUILD) apkUrl.value = "https://play.google.com/store/apps/details?id=org.asubank.app"
+        else Net.text(AB.RELEASES)?.let { t ->
             runCatching {
                 for (r in json.parseToJsonElement(t).jsonArray) {
                     val o = r.jsonObject

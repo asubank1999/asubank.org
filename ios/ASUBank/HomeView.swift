@@ -88,8 +88,12 @@ struct SiteLinkButton<Label: View>: View {
 
 struct SiteLinkRow: View {
     let link: SiteLink
+    private var hidden: Bool {
+        if AppConfig.isStore, case .web(let p) = link.target { return Moderation.paidPaths.contains(p) }
+        return false
+    }
     var body: some View {
-        SiteLinkButton(link: link) {
+        if !hidden { SiteLinkButton(link: link) {
             HStack(spacing: 12) {
                 Text(link.emoji).font(.title3).frame(width: 30)
                 VStack(alignment: .leading, spacing: 2) {
@@ -104,7 +108,7 @@ struct SiteLinkRow: View {
                     Image(systemName: "arrow.up.right").font(.footnote).foregroundStyle(.tertiary)
                 }
             }
-        }
+        } }
     }
 }
 

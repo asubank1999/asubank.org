@@ -3,6 +3,12 @@
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
 ASU Bank is a free, volunteer, non-profit project. It is not made by or affiliated with the university.
 
+### What's new in 1.8.0
+- **Report anything**: press and hold a chat message, open a profile, or use the menu on any file to report it. Anyone can report a problem from More, even without an account.
+- **Block people**: you won't see their messages or get notifications from them. Undo it any time from your account.
+- **Community rules and a privacy policy**, both in More.
+- **Safer chat**: abusive words are filtered, and deleting your account removes your name from your old messages.
+
 ### What's new in 1.7.0
 - **Search help**: type a course in Arabic or English, even with mistakes. The app translates it, suggests the right word and subject, and searches both languages.
 - **Major and college** on your profile, set in Edit profile and shown to other students.

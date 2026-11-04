@@ -1,5 +1,7 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.Block
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -170,6 +172,12 @@ fun ProfileScreen(userId: String) {
     val ctx = LocalContext.current
     var user by remember { mutableStateOf<AbUser?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
+    val me by Account.user.collectAsState()
+    val blockScope = rememberCoroutineScope()
+    var reporting by remember { mutableStateOf<ReportTarget?>(null) }
+    var blocking by remember { mutableStateOf<BlockTarget?>(null) }
+    reporting?.let { t -> ReportDialog(t) { reporting = null } }
+    blocking?.let { t -> BlockDialog(t, { blocking = null }) }
     androidx.compose.runtime.LaunchedEffect(userId) {
         try { user = Account.call("profile", mapOf("userId" to userId))["user"].decodeAs<AbUser>() } catch (e: ApiError) { error = e.message }
     }
@@ -207,6 +215,16 @@ fun ProfileScreen(userId: String) {
                         Divider()
                         ListRow("WhatsApp", emoji = "💬") {
                             runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://wa.me/" + u.phone.filter { it.isDigit() }))) }
+                        }
+                    }
+                }
+                if (me != null && u.id != me?.id) item {
+                    Group {
+                        ListRow(tr("Report this person"), icon = Icons.Filled.Flag) { reporting = ReportTarget("user", u.id, u.name) }
+                        if (!u.isAdmin) {
+                            Divider()
+                            if (u.id in me?.blocked.orEmpty()) ListRow(tr("Unblock"), icon = Icons.Filled.Block) { blockScope.launch { runCatching { Moderation.setBlocked(u.id, false) } } }
+                            else ListRow(tr("Block"), icon = Icons.Filled.Block, titleColor = MaterialTheme.colorScheme.error) { blocking = BlockTarget(u.id, u.name) }
                         }
                     }
                 }
@@ -463,6 +481,8 @@ fun AccountScreen() {
             item {
                 Group(header = "Security") {
                     ListRow("Change password", icon = Icons.Filled.Key) { changing = true }
+                    Divider()
+                    ListRow("Blocked people", icon = Icons.Filled.Block) { nav.navigate("blocked") }
                     Divider()
                     ListRow("Sign out", icon = Icons.Filled.Logout) { confirmOut = true }
                     Divider()

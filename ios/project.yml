@@ -10,9 +10,10 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "1.7.0"
-    CURRENT_PROJECT_VERSION: "5"
+    MARKETING_VERSION: "1.8.0"
+    CURRENT_PROJECT_VERSION: "6"
     DEVELOPMENT_TEAM: ""
+    AB_STORE_BUILD: "NO"
 targets:
   ASUBank:
     type: application
@@ -30,6 +31,7 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true
+        ABStoreBuild: $(AB_STORE_BUILD)
         ITSAppUsesNonExemptEncryption: false
         UILaunchScreen: {}
         UIApplicationSceneManifest:

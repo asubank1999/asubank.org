@@ -259,6 +259,8 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable("adminUsers") { AdminUsersScreen() }
                 composable("adminUser") { AdminUserScreen() }
                 composable("adminLog") { AdminLogScreen() }
+                composable("adminReports") { AdminReportsScreen() }
+                composable("blocked") { BlockedScreen() }
                 composable("submissions?admin={admin}", listOf(navArgument("admin") { defaultValue = "" })) { e ->
                     SubmissionsScreen(admin = e.arguments?.getString("admin") == "1" && user?.isAdmin == true)
                 }

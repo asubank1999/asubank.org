@@ -1,5 +1,6 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.Flag
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -116,6 +117,8 @@ fun AdminTab() {
             }
             item {
                 Group(header = "Manage") {
+                    ListRow("Reports", icon = Icons.Filled.Flag) { nav.navigate("adminReports") }
+                    Divider()
                     ListRow("Users", "Ban, reset passwords, make admins", icon = Icons.Filled.People) { nav.navigate("adminUsers") }
                     Divider()
                     ListRow("Send an announcement", "Notifies everyone", icon = Icons.Filled.Campaign) { announcing = true }

@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 3;
+var SCHEMA = 4;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -62,11 +62,12 @@ var ONLINE_MS = 3 * 60000;
 
 var SHEETS = {
   Users: ['id', 'username', 'email', 'uniId', 'displayName', 'salt', 'hash', 'role', 'banned', 'banReason', 'created', 'lastSeen', 'color', 'mustReset',
-          'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college'],
+          'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college', 'blocked'],
   Sessions: ['token', 'userId', 'created', 'lastUsed', 'platform'],
   Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited'],
   Rooms: ['id', 'name', 'emoji', 'about', 'adminOnly', 'locked', 'archived', 'pinned', 'order', 'created'],
-  Log: ['time', 'adminId', 'action', 'target', 'detail']
+  Log: ['time', 'adminId', 'action', 'target', 'detail'],
+  Reports: ['id', 'created', 'reporterId', 'reporterName', 'contact', 'kind', 'targetId', 'targetName', 'targetUser', 'reason', 'details', 'status', 'resolvedBy', 'resolvedAt']
 };
 
 // MARK: - entry points
@@ -172,6 +173,35 @@ function log(admin, action, target, detail) {
 
 function truthy(v) { return v === true || v === 'TRUE' || v === 'true'; }
 
+// MARK: - moderation
+
+var REPORT_REASONS = ['spam', 'harassment', 'hate', 'sexual', 'violence', 'privacy', 'copyright', 'wrong', 'other'];
+
+/** Whole words only, so "class" or "عكس" never match. Add words here and publish a new version. */
+var BANNED_WORDS = ['fuck', 'fucking', 'fucker', 'motherfucker', 'bitch', 'cunt', 'asshole', 'whore', 'slut', 'nigger', 'nigga', 'faggot',
+                    'شرموطة', 'شرموطه', 'قحبة', 'قحبه', 'منيوك', 'منيك', 'متناك', 'كسمك', 'كسختك', 'زبي', 'عرص', 'عرصة', 'خول'];
+
+function assertClean(text) {
+  var words = String(text || '').toLowerCase().split(/[^a-z\u0600-\u06FF]+/);
+  if (words.some(function (w) { return BANNED_WORDS.indexOf(w) >= 0; })) fail('Please keep it respectful. That has a word that is not allowed here.');
+}
+
+/** A deleted account's messages stay in the chat, with nothing that points to the person */
+function anonymizeMessages(userId) {
+  var name = 'Deleted user';
+  rows('Messages').forEach(function (m) {
+    if (m.userId === userId) update('Messages', m._row, { userId: '', username: 'deleted', displayName: name, color: '#8e8e93' });
+  });
+  allRooms().forEach(function (r) {
+    putRoom(r.id, roomMessages(r.id).map(function (m) {
+      if (m.userId === userId) { m.userId = ''; m.username = 'deleted'; m.displayName = name; m.color = '#8e8e93'; }
+      return m;
+    }));
+  });
+}
+
+function blockedIds(u) { return String((u && u.blocked) || '').split(',').filter(String); }
+
 // MARK: - users and passwords
 
 function norm(s) { return String(s || '').trim().toLowerCase(); }
@@ -207,6 +237,7 @@ function publicUser(u, full) {
     o.phone = u.phone ? String(u.phone) : ''; o.showPhone = truthy(u.showPhone);
     o.banned = truthy(u.banned); o.banReason = u.banReason || '';
     o.created = u.created; o.mustReset = truthy(u.mustReset);
+    o.blocked = blockedIds(u);
   }
   return o;
 }
@@ -518,6 +549,7 @@ var ACTIONS = {
 
   updateProfile: function (b) {
     var s = auth(b);
+    assertClean(b.displayName); assertClean(b.bio);
     return withLock(function () {
       var u = userById(s.id);
       var email = b.email === undefined ? u.email : String(b.email).trim();
@@ -594,6 +626,7 @@ var ACTIONS = {
     return withLock(function () {
       dropUserSessions(u.id);
       removeAvatarFile(u.avatar);
+      anonymizeMessages(u.id);
       sheet('Users').deleteRow(userById(u.id)._row);
       CacheService.getScriptCache().remove('people');
       return { ok: true };
@@ -631,6 +664,7 @@ var ACTIONS = {
     if ((r.adminOnly || r.locked) && u.role !== 'admin') fail(r.locked ? 'This room is locked. Only admins can post here.' : 'Only admins can post here.');
     var text = String(b.text || '').trim().slice(0, MAX_TEXT);
     if (!text) fail('Type a message first.');
+    assertClean(text);
     if (u.role !== 'admin' && tooMany('send:' + u.id, 20)) fail('Slow down a little.');
     return withLock(function () {
       var m = { id: newId(), room: r.id, userId: u.id, username: u.username, displayName: u.displayName || u.username, role: u.role,
@@ -656,6 +690,7 @@ var ACTIONS = {
     var u = auth(b);
     var text = String(b.text || '').trim().slice(0, MAX_TEXT);
     if (!text) fail('Type a message first.');
+    assertClean(text);
     return withLock(function () {
       var m = rows('Messages').filter(function (x) { return x.id === b.id; })[0];
       if (!m || truthy(m.deleted)) fail('Message not found.');
@@ -704,6 +739,94 @@ var ACTIONS = {
     if (norm(out) === norm(text) || /^[\s?؟]*$/.test(out)) out = '';
     c.put(key, out, 86400);
     return { ok: true, text: out, to: to };
+  },
+
+  // MARK: reports and blocking
+
+  /** Anyone can report something, signed in or not. The owner gets an email and it shows in the admin Reports screen. */
+  report: function (b) {
+    var me = b.token ? auth(b) : null;
+    var kind = String(b.kind || '');
+    if (['message', 'user', 'file', 'other'].indexOf(kind) < 0) fail('Bad report.');
+    var reason = String(b.reason || '');
+    if (REPORT_REASONS.indexOf(reason) < 0) fail('Choose what is wrong first.');
+    if (tooMany(me ? 'report:' + me.id : 'report:guest', me ? 15 : 40)) fail('Too many reports. Try again later.');
+    var targetId = String(b.targetId || '').slice(0, 300);
+    var targetName = String(b.targetName || '').trim().slice(0, 300);
+    var targetUser = '';
+    // the stored copy comes from our own data, so an edit or delete later can't hide what was reported
+    if (kind === 'message') {
+      var m = rows('Messages').filter(function (x) { return x.id === targetId; })[0];
+      if (!m) fail('Message not found.');
+      targetName = String(m.text).slice(0, 300);
+      targetUser = m.username;
+    } else if (kind === 'user') {
+      var t = userById(targetId);
+      if (!t) fail('User not found.');
+      targetName = t.displayName || t.username;
+      targetUser = t.username;
+    }
+    return withLock(function () {
+      if (me && rows('Reports').some(function (r) { return r.reporterId === me.id && r.kind === kind && r.targetId === targetId && r.status === 'open' && kind !== 'other'; })) return { ok: true };
+      var rep = { id: newId(), created: new Date().toISOString(), reporterId: me ? me.id : '', reporterName: me ? me.username : 'Guest',
+                  contact: String(b.contact || '').trim().slice(0, 120), kind: kind, targetId: targetId, targetName: targetName, targetUser: targetUser,
+                  reason: reason, details: String(b.details || '').trim().slice(0, 1000), status: 'open', resolvedBy: '', resolvedAt: '' };
+      append('Reports', rep);
+      try {
+        MailApp.sendEmail(OWNER_EMAIL, 'ASU Bank report: ' + reason + ' (' + kind + ')',
+          'Reported by: ' + rep.reporterName + (rep.contact ? ' (' + rep.contact + ')' : '') + '\n' +
+          'What: ' + kind + (targetUser ? ' by @' + targetUser : '') + '\n' + targetName + '\n' + (kind === 'file' ? targetId + '\n' : '') +
+          '\nDetails: ' + (rep.details || 'none') + '\n\nReview it in the app: Admin > Reports, or https://asubank.org/admin/');
+      } catch (err) { /* the report is saved even when the daily email limit is used up */ }
+      return { ok: true };
+    });
+  },
+
+  block: function (b) {
+    var s = auth(b);
+    var target = String(b.userId || '');
+    if (target === s.id) fail("You can't block yourself.");
+    var t = userById(target);
+    if (b.on !== false) {
+      if (!t) fail('User not found.');
+      if (t.role === 'admin') fail("You can't block an admin. Report the message instead.");
+    }
+    return withLock(function () {
+      var u = userById(s.id);
+      var list = blockedIds(u).filter(function (x) { return x !== target; });
+      if (b.on !== false) list.push(target);
+      update('Users', u._row, { blocked: list.join(',') });
+      return { ok: true, blocked: list };
+    });
+  },
+
+  blockedList: function (b) {
+    var s = auth(b);
+    var people = [];
+    blockedIds(userById(s.id)).forEach(function (id) {
+      var t = userById(id);
+      if (t) people.push({ id: t.id, username: t.username, displayName: t.displayName || t.username });
+    });
+    return { ok: true, people: people };
+  },
+
+  adminReports: function (b) {
+    auth(b, { admin: true });
+    var list = rows('Reports').filter(function (r) { return truthy(b.all) || b.all === true || r.status === 'open'; });
+    return { ok: true, reports: list.slice(-200).reverse().map(function (r) { delete r._row; return r; }) };
+  },
+
+  adminReportSet: function (b) {
+    var a = auth(b, { admin: true });
+    var status = String(b.status || '');
+    if (['open', 'done', 'dismissed'].indexOf(status) < 0) fail('Bad status.');
+    return withLock(function () {
+      var r = rows('Reports').filter(function (x) { return x.id === b.id; })[0];
+      if (!r) fail('Report not found.');
+      update('Reports', r._row, { status: status, resolvedBy: a.username, resolvedAt: new Date().toISOString() });
+      log(a, 'report ' + status, r.kind, String(r.targetName).slice(0, 80));
+      return { ok: true };
+    });
   },
 
   latest: function (b) {
@@ -756,7 +879,8 @@ var ACTIONS = {
       newWeek: users.filter(function (u) { return String(u.created) > week; }).length,
       messages: msgs.length,
       messagesToday: msgs.filter(function (m) { return String(m.created) > day; }).length,
-      rooms: allRooms().length
+      rooms: allRooms().length,
+      openReports: rows('Reports').filter(function (r) { return r.status === 'open'; }).length
     } };
   },
 

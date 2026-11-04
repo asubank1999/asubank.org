@@ -57,6 +57,7 @@ struct ABUser: Codable, Identifiable, Hashable {
     var bio: String?
     var major: String?
     var college: String?
+    var blocked: [String]?
     var badges: [String]?
     var online: Bool?
 
@@ -384,6 +385,7 @@ final class ChatNotifier: ObservableObject {
     func wants(_ e: ABEvent) -> Bool {
         let me = AccountStore.shared.user?.id
         if e.userId != nil && e.userId == me { return false }
+        if let u = e.userId, AccountStore.shared.user?.blocked?.contains(u) == true { return false }
         switch e.type {
         case "upload": return uploads
         case "announcement": return announcements

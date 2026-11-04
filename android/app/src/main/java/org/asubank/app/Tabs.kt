@@ -1,5 +1,7 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.Policy
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Slideshow
 import androidx.compose.material.icons.filled.CloudUpload
@@ -157,7 +159,7 @@ fun follow(l: SiteLink, nav: androidx.navigation.NavController, ctx: Context) {
 fun LinkRows(links: List<SiteLink>) {
     val nav = LocalNav.current
     val ctx = LocalContext.current
-    links.forEachIndexed { i, l ->
+    links.filter { !BuildConfig.STORE_BUILD || it.web !in Moderation.paidPaths }.forEachIndexed { i, l ->
         if (i > 0) Divider()
         ListRow(l.title, l.subtitle, emoji = l.emoji, badge = l.shownBadge) { follow(l, nav, ctx) }
     }
@@ -387,6 +389,12 @@ fun MoreScreen() {
                     ListRow("About & terms", icon = Icons.Filled.VolunteerActivism) { showTerms = true }
                     Divider()
                     ListRow("Contact us", icon = Icons.Filled.Email) { nav.openPage("/guides/contact", "Contact us") }
+                    Divider()
+                    ListRow("Privacy policy", icon = Icons.Filled.Policy) { nav.openPage("/legal/privacy", "Privacy policy") }
+                    Divider()
+                    ListRow("Community rules", icon = Icons.Filled.VerifiedUser) { nav.openPage("/legal/community", "Community rules") }
+                    Divider()
+                    ReportProblemRow()
                 }
             }
             item {

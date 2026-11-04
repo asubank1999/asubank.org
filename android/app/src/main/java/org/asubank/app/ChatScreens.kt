@@ -1,5 +1,6 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.Flag
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -108,6 +109,7 @@ fun ChatTab() {
     val rooms by Account.rooms.collectAsState()
     val pending by ChatNotifier.pendingRoom.collectAsState()
     val online by Presence.users.collectAsState()
+    if (user != null) CommunityRulesGate()
     val onlineCount by Presence.count.collectAsState()
     var menuFor by remember { mutableStateOf<String?>(null) }
     var adding by remember { mutableStateOf(false) }
@@ -260,6 +262,10 @@ fun ChatRoomScreen(roomId: String) {
     var roomSettings by remember { mutableStateOf(false) }
     val list = rememberLazyListState()
     val admin = Account.isAdmin
+    var reporting by remember { mutableStateOf<ReportTarget?>(null) }
+    var blocking by remember { mutableStateOf<BlockTarget?>(null) }
+    reporting?.let { t -> ReportDialog(t) { reporting = null } }
+    blocking?.let { t -> BlockDialog(t, { blocking = null }, { id -> messages.removeAll { it.userId == id } }) }
     val canPost = admin || (room.adminOnly != true && room.locked != true && room.archived != true)
 
     suspend fun fetch() {
@@ -274,7 +280,9 @@ fun ChatRoomScreen(roomId: String) {
                 if (i >= 0 && messages[i].text != e.str("text")) messages[i] = messages[i].copy(text = e.str("text") ?: messages[i].text, edited = e.str("edited"))
             }
             val have = messages.map { it.id }.toSet()
-            val new = r["messages"].decodeAs<List<ChatMessage>>().orEmpty().filter { it.id !in have }
+            val blocked = Account.user.value?.blocked.orEmpty()
+            messages.removeAll { it.userId in blocked }
+            val new = r["messages"].decodeAs<List<ChatMessage>>().orEmpty().filter { it.id !in have && it.userId !in blocked }
             if (new.isNotEmpty()) messages.addAll(new)
             r["people"].decodeAs<Map<String, ChatPerson>>()?.let { people.putAll(it) }
             r["room"].decodeAs<ChatRoom>()?.let { serverRoom = it }
@@ -372,6 +380,12 @@ fun ChatRoomScreen(roomId: String) {
                                 })
                                 if (!mine) DropdownMenuItem(text = { Text("View profile") }, leadingIcon = { Icon(Icons.Filled.Person, null) }, onClick = {
                                     menuFor = null; nav.navigate("profile/${m.userId}")
+                                })
+                                if (!mine) DropdownMenuItem(text = { Text("Report message") }, leadingIcon = { Icon(Icons.Filled.Flag, null) }, onClick = {
+                                    menuFor = null; reporting = ReportTarget("message", m.id, m.text.take(120))
+                                })
+                                if (!mine && m.role != "admin") DropdownMenuItem(text = { Text("Block") }, leadingIcon = { Icon(Icons.Filled.Block, null) }, onClick = {
+                                    menuFor = null; blocking = BlockTarget(m.userId, m.displayName.ifEmpty { m.username })
                                 })
                                 if (admin) DropdownMenuItem(
                                     text = { Text(if (pinned?.id == m.id) "Unpin" else "Pin") }, leadingIcon = { Icon(Icons.Filled.PushPin, null) },

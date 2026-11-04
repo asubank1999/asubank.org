@@ -23,6 +23,8 @@ final class AppConfig: ObservableObject {
     @Published private(set) var checking = false
     private var checkedAt: Date?
 
+    /// App Store build (AB_STORE_BUILD=YES): no outside updates and no outside payments
+    static let isStore = (Bundle.main.object(forInfoDictionaryKey: "ABStoreBuild") as? String) == "YES"
     static let current = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
     static let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
     private static let bundleID = Bundle.main.bundleIdentifier ?? "org.asubank.app"
@@ -49,7 +51,7 @@ final class AppConfig: ObservableObject {
         var req = URLRequest(url: Self.configURL)
         req.cachePolicy = .reloadIgnoringLocalCacheData
         if let (data, _) = try? await URLSession.shared.data(for: req) { remote = try? JSONDecoder().decode(Remote.self, from: data) }
-        donate = remote?.donate ?? true
+        donate = !Self.isStore && (remote?.donate ?? true)
 
         // The App Store is the truth for the newest version; app-config.json covers the time before review ends
         var store: Lookup.R?
@@ -66,7 +68,7 @@ final class AppConfig: ObservableObject {
         let newest = [store?.version, remote?.ios?.latest].compactMap { $0 }.max { Self.compare($0, $1) < 0 }
         latest = newest
         // Sideloaded builds have no App Store page: send them to the GitHub release instead
-        if storeURL == nil, let n = newest { storeURL = URL(string: "https://github.com/asubank1999/asubank.org/releases/tag/ios-v\(n)") }
+        if !Self.isStore, storeURL == nil, let n = newest { storeURL = URL(string: "https://github.com/asubank1999/asubank.org/releases/tag/ios-v\(n)") }
         notes = store?.releaseNotes ?? remote?.ios?.notes
         // Only nag when there is somewhere to update from
         guard storeURL != nil else { return }

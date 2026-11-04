@@ -13,7 +13,7 @@ struct ChatTab: View {
     var body: some View {
         ABStack {
             Group {
-                if account.signedIn { rooms } else { SignInPrompt() }
+                if account.signedIn { rooms.modifier(CommunityRulesGate()) } else { SignInPrompt() }
             }
             .navigationTitle("Chat")
             .toolbar {
@@ -289,6 +289,8 @@ final class RoomModel: ObservableObject {
         if ChatNotifier.shared.openRoom == room.id { ChatNotifier.shared.openRoom = nil }
     }
 
+    func hideMessages(from userId: String) { messages.removeAll { $0.userId == userId } }
+
     func fetch() async {
         var fields: [String: Any] = ["room": room.id]
         if let last = messages.last?.id { fields["after"] = last }
@@ -297,7 +299,8 @@ final class RoomModel: ObservableObject {
             let new = decode([ChatMessage].self, r["messages"]) ?? []
             let gone = Set((r["deleted"] as? [String]) ?? [])
             let edits = (r["edited"] as? [[String: Any]]) ?? []
-            var list = messages.filter { !gone.contains($0.id) }
+            let blocked = Set(AccountStore.shared.user?.blocked ?? [])
+            var list = messages.filter { !gone.contains($0.id) && !blocked.contains($0.userId) }
             for e in edits {
                 if let id = e["id"] as? String, let i = list.firstIndex(where: { $0.id == id }) {
                     list[i].text = e["text"] as? String ?? list[i].text
@@ -305,7 +308,7 @@ final class RoomModel: ObservableObject {
                 }
             }
             let have = Set(list.map(\.id))
-            list += new.filter { !have.contains($0.id) }
+            list += new.filter { !have.contains($0.id) && !blocked.contains($0.userId) }
             if list != messages { withAnimation(.easeOut(duration: 0.2)) { messages = list } }
             if let p = decode([String: ChatPerson].self, r["people"]) { people.merge(p) { _, n in n } }
             if let rm = decode(ChatRoom.self, r["room"]), rm != room { room = rm }
@@ -370,6 +373,8 @@ struct ChatRoomView: View {
     @State private var editing: ChatMessage?
     @State private var sending = false
     @State private var banTarget: ChatMessage?
+    @State private var reporting: ReportTarget?
+    @State private var blocking: BlockTarget?
     @State private var profile: ChatMessage?
     @State private var roomSettings = false
     @FocusState private var focused: Bool
@@ -451,6 +456,7 @@ struct ChatRoomView: View {
         .onAppear { model.start() }
         .onDisappear { model.stop() }
         .onChange(of: account.rooms) { rs in if let r = rs.first(where: { $0.id == model.room.id }) { model.room = r } }
+        .modifier(ModerationDialogs(report: $reporting, block: $blocking, blocked: { model.hideMessages(from: $0) }))
         .confirmationDialog("Ban @\(banTarget?.username ?? "")?", isPresented: Binding(get: { banTarget != nil }, set: { if !$0 { banTarget = nil } }), titleVisibility: .visible) {
             Button("Ban from ASU Bank", role: .destructive) { if let m = banTarget { Task { await model.ban(m) } } }
         } message: { Text("They're signed out and can't sign in again until an admin unbans them.") }
@@ -511,6 +517,10 @@ struct ChatRoomView: View {
                         Button { replyTo = nil; editing = m; text = m.text; focused = true } label: { Label("Edit", systemImage: "pencil") }
                     }
                     if !mine { Button { profile = m } label: { Label("View profile", systemImage: "person.crop.circle") } }
+                    if !mine {
+                        Button { reporting = ReportTarget(kind: "message", targetId: m.id, name: String(m.text.prefix(120))) } label: { Label("Report message", systemImage: "flag") }
+                        if m.role != "admin" { Button(role: .destructive) { blocking = BlockTarget(userId: m.userId, name: m.displayName) } label: { Label("Block", systemImage: "nosign") } }
+                    }
                     if account.isAdmin {
                         Button { Task { await model.pin(model.pinned?.id == m.id ? nil : m) } } label: {
                             Label(model.pinned?.id == m.id ? "Unpin" : "Pin", systemImage: model.pinned?.id == m.id ? "pin.slash" : "pin")

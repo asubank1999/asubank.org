@@ -14,6 +14,11 @@ on:
     paths: ['android/**', '.github/workflows/android.yml']
     tags: ['android-v*']
   workflow_dispatch:
+    inputs:
+      store:
+        description: Also build the Google Play bundle (.aab)
+        type: boolean
+        default: false
 
 # a newer push replaces a running build (they would race to push the screenshots branch)
 concurrency:
@@ -62,6 +67,23 @@ jobs:
         with:
           name: ASUBank-apk-${{ github.run_number }}
           path: ASUBank-*.apk
+          retention-days: 30
+
+      - name: Google Play bundle
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.store }}
+        env:
+          STORE_BUILD: 'true'
+          BUILD_NUMBER: ${{ github.run_number }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: gradle -p android --no-daemon bundleRelease
+      - name: Keep the Play bundle as a download
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.store }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ASUBank-play-${{ github.run_number }}
+          path: android/app/build/outputs/bundle/release/*.aab
           retention-days: 30
 
       - name: Enable KVM for the emulator

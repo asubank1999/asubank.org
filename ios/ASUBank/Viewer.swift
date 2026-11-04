@@ -57,6 +57,7 @@ final class DriveLinks {
 /// Opens any material natively: Drive folders as lists, PDFs in PDFKit, Office files and images in Quick Look.
 /// Only things iOS can't show itself (YouTube, other websites, Dropbox folders) use a web view.
 struct MaterialScreen: View {
+    @State private var reporting: ReportTarget?
     let material: Material
     @EnvironmentObject private var saved: SavedStore
     @Environment(\.openURL) private var openURL
@@ -91,6 +92,7 @@ struct MaterialScreen: View {
         }
         .navigationTitle(material.t)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $reporting) { ReportSheet(target: $0) }
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button { saved.toggle(material); Haptics.tap() } label: {
@@ -106,6 +108,7 @@ struct MaterialScreen: View {
                         Button { openURL(url) } label: { Label("Open in Drive / Safari", systemImage: "safari") }
                         Button { UIPasteboard.general.url = url; Haptics.success() } label: { Label("Copy link", systemImage: "link") }
                     }
+                    Button(role: .destructive) { reporting = ReportTarget(kind: "file", targetId: material.u, name: material.t) } label: { Label("Report this file", systemImage: "flag") }
                 } label: { Image(systemName: "ellipsis.circle") }
             }
         }

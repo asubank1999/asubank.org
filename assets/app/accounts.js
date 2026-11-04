@@ -34,6 +34,31 @@
     }
     function signOutLocally() { token = null; user = null; set('ab.acc.token', null); set('ab.acc.user', null); }
     function isAdmin() { return !!(user && user.role === 'admin'); }
+    function isBlocked(id) { return !!(user && user.blocked && user.blocked.indexOf(id) >= 0); }
+    var REPORT_REASONS = [['spam', 'Spam or advertising'], ['harassment', 'Harassment or bullying'], ['hate', 'Hate speech'], ['sexual', 'Sexual content'],
+        ['violence', 'Violence or threats'], ['privacy', "Shares someone's private information"], ['copyright', 'Copyright: I own this or represent the owner'],
+        ['wrong', 'Wrong, broken or misleading file'], ['other', 'Something else']];
+    function reportSheet(kind, targetId, name) {
+        var s = sheet('Report');
+        var pick = h('select', { 'aria-label': "What's wrong?" }, h('option', { value: '', text: "What's wrong?" }));
+        REPORT_REASONS.forEach(function (r) { pick.appendChild(h('option', { value: r[0], text: r[1] })); });
+        var details = h('textarea', { rows: '3', maxlength: '1000', placeholder: 'Details (optional)' });
+        var err = h('p', { class: 'acc-err', role: 'alert' });
+        var send = h('button', { type: 'submit', class: 'ab-btn', text: 'Send report' });
+        s.box.appendChild(h('form', { class: 'acc-field', onsubmit: function (ev) {
+            ev.preventDefault();
+            if (!pick.value) { err.textContent = "Choose what's wrong first."; return; }
+            send.disabled = true;
+            call('report', { kind: kind, targetId: targetId, targetName: name, reason: pick.value, details: details.value }).then(function () {
+                while (s.box.lastChild && s.box.children.length > 1) s.box.removeChild(s.box.lastChild);
+                s.box.appendChild(h('p', { text: 'Thank you. Our team will review your report.' }));
+            }).catch(function (e) { send.disabled = false; err.textContent = e.message; });
+        } }, name ? h('p', { class: 'acc-muted acc-small', text: name }) : null, pick, details, err, send));
+    }
+    function blockPerson(id, name, done) {
+        if (!window.confirm('Block ' + name + "? You won't see their messages. You can undo this from their profile.")) return;
+        call('block', { userId: id, on: true }).then(function (r) { user.blocked = r.blocked; if (done) done(); }).catch(function (e) { window.alert(e.message); });
+    }
     function nameOf(u) { return (u && (u.displayName || u.username)) || ''; }
 
     // ---- tiny DOM helper (text is always set with textContent, never HTML)
@@ -116,6 +141,12 @@
                     h('a', { class: 'ab-btn tinted', href: 'tel:' + digits, text: '📞 ' + u.phone }),
                     h('a', { class: 'ab-btn tinted', href: 'https://wa.me/' + digits.replace('+', ''), target: '_blank', rel: 'noopener', text: 'WhatsApp' })));
             }
+            if (u.id !== user.id) body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
+                h('button', { type: 'button', class: 'ab-btn gray', text: 'Report', onclick: function () { reportSheet('user', u.id, nameOf(u)); } }),
+                u.role === 'admin' ? null : h('button', { type: 'button', class: 'ab-btn gray', text: isBlocked(u.id) ? 'Unblock' : 'Block', onclick: function () {
+                    if (isBlocked(u.id)) call('block', { userId: u.id, on: false }).then(function (r) { user.blocked = r.blocked; s.close(); });
+                    else blockPerson(u.id, nameOf(u), function () { s.close(); });
+                } })));
             if (isAdmin() && u.id !== user.id) body.appendChild(h('p', null, h('a', { href: '/admin/#' + encodeURIComponent(u.username), text: 'Manage this user in Admin ›' })));
         }).catch(function (e) { body.textContent = (fallback ? fallback + ': ' : '') + e.message; });
     }
@@ -279,6 +310,19 @@
     function chatView() {
         if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
         if (!token || !user) return needSignIn('Student chat', 'Talk with other ASU students, ask for help and share materials. Chat is only for signed-in students.', chatView);
+        var rulesOk = false;
+        try { rulesOk = localStorage.getItem('ab.chat.rulesAccepted') === '1'; } catch (e) {}
+        if (!rulesOk) {
+            clear();
+            root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Community rules' }),
+                h('p', { text: 'Be respectful. No harassment, threats, hate speech, sexual or violent content, spam or other people’s private information. We have zero tolerance for abuse: admins can remove content and ban accounts.' }),
+                h('p', null, h('a', { href: '/legal/community', text: 'Read the full rules' })),
+                h('button', { type: 'button', class: 'ab-btn', text: 'I agree', onclick: function () {
+                    try { localStorage.setItem('ab.chat.rulesAccepted', '1'); } catch (e) {}
+                    chatView();
+                } })));
+            return;
+        }
         var room = decodeURIComponent((location.hash || '').replace('#', ''));
         if (room) return roomView(room);
         clear();
@@ -445,6 +489,8 @@
                 h('button', { type: 'button', text: 'Reply', onclick: function () { setReply(m); input.focus(); } }),
                 mine ? h('button', { type: 'button', text: 'Edit', onclick: function () { setReply(m, true); input.value = m.text; input.focus(); } }) : null,
                 isAdmin() ? h('button', { type: 'button', text: pinned && pinned.id === m.id ? 'Unpin' : 'Pin', onclick: function () { pin(pinned && pinned.id === m.id ? null : m); } }) : null,
+                !mine ? h('button', { type: 'button', text: 'Report', onclick: function () { reportSheet('message', m.id, m.text.slice(0, 120)); } }) : null,
+                (!mine && m.role !== 'admin') ? h('button', { type: 'button', text: 'Block', onclick: function () { blockPerson(m.userId, nameOf(m), function () { location.reload(); }); } }) : null,
                 (mine || isAdmin()) ? h('button', { type: 'button', text: 'Delete', onclick: function () {
                     if (!window.confirm('Delete this message?')) return;
                     call('deleteMessage', { id: m.id }).then(function () { remove([m.id]); }).catch(function (e) { showErr(err, e); });
@@ -480,7 +526,7 @@
         }
         function add(list) {
             var changed = false;
-            list.forEach(function (m) { if (!byId[m.id]) { byId[m.id] = m; msgs.push(m); changed = true; } });
+            list.filter(function (m) { return !isBlocked(m.userId); }).forEach(function (m) { if (!byId[m.id]) { byId[m.id] = m; msgs.push(m); changed = true; } });
             if (msgs.length) last = msgs[msgs.length - 1].id;
             if (changed) render();
         }
@@ -634,6 +680,30 @@
             call('adminDeleteUpload', { fileId: m[1] }).then(function () { link.value = ''; delBtn.textContent = 'Deleted ✓'; delBtn.disabled = false; })
                 .catch(function (e) { showErr(err, e); busy(delBtn, false, 'Delete upload'); });
         } }, h('h2', { text: 'Delete an upload' }), h('p', { class: 'acc-muted acc-small', text: 'Only files in the ASU Bank upload folder can be deleted. They go to the Drive trash.' }), link, delBtn));
+
+        var repBox = h('div', { class: 'acc-log' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Open reports' }), repBox));
+        function loadReports() {
+            call('adminReports').then(function (r) {
+                while (repBox.firstChild) repBox.removeChild(repBox.firstChild);
+                var list = r.reports || [];
+                if (!list.length) repBox.appendChild(h('p', { class: 'acc-muted', text: 'Nothing to review.' }));
+                list.forEach(function (x) {
+                    function set(st) { return function () { call('adminReportSet', { id: x.id, status: st }).then(loadReports); }; }
+                    repBox.appendChild(h('div', { class: 'acc-small acc-sep' },
+                        h('b', { text: x.reason + ' · ' + x.kind + (x.targetUser ? ' · @' + x.targetUser : '') }),
+                        h('p', { text: x.targetName || '' }), x.details ? h('p', { text: x.details }) : null,
+                        h('p', { class: 'acc-muted', text: x.reporterName + (x.contact ? ' · ' + x.contact : '') + ' · ' + x.created }),
+                        h('div', { class: 'acc-actions' },
+                            h('button', { type: 'button', class: 'ab-btn gray', text: 'Done', onclick: set('done') }),
+                            h('button', { type: 'button', class: 'ab-btn gray', text: 'Dismiss', onclick: set('dismissed') }),
+                            x.kind === 'message' ? h('button', { type: 'button', class: 'ab-btn gray acc-danger', text: 'Delete message', onclick: function () {
+                                call('deleteMessage', { id: x.targetId }).then(set('done'));
+                            } }) : null)));
+                });
+            }).catch(function (e) { repBox.textContent = e.message; });
+        }
+        loadReports();
 
         var logBox = h('div', { class: 'acc-log' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
         root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Admin activity' }), logBox));

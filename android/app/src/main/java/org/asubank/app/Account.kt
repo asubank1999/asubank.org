@@ -106,6 +106,7 @@ data class AbUser(
     val college: String? = null,
     val badges: List<String> = emptyList(),
     val online: Boolean? = null,
+    val blocked: List<String> = emptyList(),
 ) {
     val isAdmin get() = role == "admin"
     val name get() = displayName.ifEmpty { username }
@@ -402,6 +403,7 @@ object ChatNotifier {
     fun wants(e: AbEvent): Boolean {
         val me = Account.user.value?.id
         if (e.userId != null && e.userId == me) return false
+        if (e.userId != null && e.userId in Account.user.value?.blocked.orEmpty()) return false
         return when (e.type) {
             "upload" -> uploads.value
             "announcement" -> announcements.value

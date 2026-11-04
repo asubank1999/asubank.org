@@ -37,6 +37,7 @@ struct AdminTab: View {
                     } header: { Text("Overview") }
 
                     Section("Manage") {
+                        NavigationLink { AdminReportsScreen() } label: { Label("Reports", systemImage: "flag") }
                         NavigationLink { AdminUsersScreen() } label: { Label("Users", systemImage: "person.2") }
                         Button { announcing = true } label: { Label("Send an announcement", systemImage: "megaphone") }
                         NavigationLink { AdminRoomsScreen() } label: { Label("Chat rooms (add, lock, archive)", systemImage: "bubble.left.and.bubble.right") }

@@ -98,6 +98,8 @@ struct ProfileScreen: View {
     @ObservedObject private var account = AccountStore.shared
     @State private var user: ABUser?
     @State private var error: String?
+    @State private var reporting: ReportTarget?
+    @State private var blocking: BlockTarget?
 
     var body: some View {
         List {
@@ -135,6 +137,18 @@ struct ProfileScreen: View {
                         }
                     }
                 }
+                if account.signedIn, u.id != account.user?.id {
+                    Section {
+                        Button { reporting = ReportTarget(kind: "user", targetId: u.id, name: u.displayName) } label: { Label("Report this person", systemImage: "flag") }
+                        if !u.isAdmin {
+                            if account.user?.blocked?.contains(u.id) == true {
+                                Button { Task { try? await Moderation.setBlocked(u.id, false) } } label: { Label("Unblock", systemImage: "checkmark.circle") }
+                            } else {
+                                Button(role: .destructive) { blocking = BlockTarget(userId: u.id, name: u.displayName) } label: { Label("Block", systemImage: "nosign") }
+                            }
+                        }
+                    }
+                }
                 if account.isAdmin, u.id != account.user?.id {
                     Section { NavigationLink { AdminUserScreen(user: u) { await load() } } label: { Label("Manage this user", systemImage: "checkmark.seal") } }
                 }
@@ -142,6 +156,7 @@ struct ProfileScreen: View {
             if let error { Section { Text(error).foregroundStyle(.red) } }
         }
         .listStyle(.insetGrouped)
+        .modifier(ModerationDialogs(report: $reporting, block: $blocking))
         .navigationTitle(user?.displayName ?? fallbackName)
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
@@ -362,6 +377,7 @@ struct AccountScreen: View {
                     row("Phone", u.phone?.isEmpty == false ? u.phone! + (u.showPhone == true ? "" : " 🔒") : "Not set")
                     Button { editing = true } label: { Label("Edit profile", systemImage: "pencil") }
                     Button { changing = true } label: { Label("Change password", systemImage: "key") }
+                    NavigationLink { BlockedScreen() } label: { Label("Blocked people", systemImage: "nosign") }
                 }
                 Section {
                     Toggle(isOn: $notifier.messages) { Label("New chat messages", systemImage: "bubble.left.and.bubble.right") }
