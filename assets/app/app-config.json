@@ -1,14 +1,14 @@
 {
   "ios": {
-    "latest": "1.7.0",
+    "latest": "1.8.0",
     "minimum": "1.0.0",
     "store": "",
-    "notes": "Search help that translates and suggests, Arabic for every page, major and college on profiles, more badges, and tabs that go back when you tap them again."
+    "notes": "Report messages, people and files, block people, community rules and a privacy policy, plus safer chat."
   },
   "android": {
-    "latest": "1.7.0",
+    "latest": "1.8.0",
     "minimum": "1.0.0",
-    "notes": "Search help that translates and suggests, Arabic for every page, major and college on profiles, more badges, and tabs that go back when you tap them again."
+    "notes": "Report messages, people and files, block people, community rules and a privacy policy, plus safer chat."
   },
   "donate": true
 }
