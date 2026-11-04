@@ -3,6 +3,16 @@
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
 ASU Bank is a free, volunteer, non-profit project. It is not made by or affiliated with the university.
 
+### What's new in 1.10.0
+- Fixed: settings under More sometimes wouldn't open or froze
+- Faster: the app starts quicker, and lists and photos scroll more smoothly
+- Upload is rebuilt as a native screen with no limit on file size or number of files; a dropped connection picks up where it stopped
+- Report any file: hold it in a list, or use the menu when it's open
+- Choose your app icon under More > App icon
+- Early supporter badge for everyone who joins by the end of November 2026, with our thanks
+- A neater owner star on profile photos
+- New shortcut: the university's alumni platform
+
 ### What's new in 1.9.0
 - Friends: add classmates, accept requests, poke them or ask to meet, study or grab coffee, and share posts in a new Friends tab
 - Bigger profiles with a cover, counts, year, interests and posts

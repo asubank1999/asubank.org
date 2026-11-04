@@ -201,6 +201,8 @@ private fun SubmissionDetail(item: Submissions.Item, admin: Boolean, onClose: ()
     var secret by remember { mutableStateOf(Saved.prefs.getString("subs.secret", "") ?: "") }
     var error by remember { mutableStateOf<String?>(null) }
     var busy by remember { mutableStateOf(false) }
+    var reporting by remember { mutableStateOf(false) }
+    if (reporting) ReportDialog(ReportTarget("file", item.primaryUrl ?: item.id, item.title)) { reporting = false }
     AlertDialog(
         onDismissRequest = onClose,
         title = { Text(item.title) },
@@ -212,6 +214,7 @@ private fun SubmissionDetail(item: Submissions.Item, admin: Boolean, onClose: ()
                 item.primaryUrl?.takeIf { it.isNotEmpty() }?.let { u ->
                     TextButton(onClick = { onClose(); openLink(nav, ctx, u, item.title) }) { Text(trf("Open the file (%s)", item.platform ?: tr("link"))) }
                 }
+                TextButton(onClick = { reporting = true }) { Text("Report this file") }
                 item.backupLinks.orEmpty().filter { it.url.isNotEmpty() }.forEachIndexed { i, l ->
                     TextButton(onClick = { onClose(); openLink(nav, ctx, l.url, item.title) }) { Text(trf("Backup %d (%s)", i + 1, l.platform ?: tr("link"))) }
                 }

@@ -6759,5 +6759,105 @@
  "Write the name of the group.": {
   "ar": "اكتب اسم المجموعة.",
   "es": "Escribe el nombre del grupo."
+ },
+ "Alumni Follow-up Platform | منصة متابعة الخريجين": {
+  "ar": "منصة متابعة الخريجين",
+  "es": "Plataforma de seguimiento de egresados"
+ },
+ "Any file size, as many files as you like.": {
+  "ar": "أي حجم للملف، وبالعدد الذي تريده.",
+  "es": "Cualquier tamaño de archivo y tantos archivos como quieras."
+ },
+ "App icon": {
+  "ar": "أيقونة التطبيق",
+  "es": "Icono de la app"
+ },
+ "Applied Science University's official platform for keeping in touch with its graduates.": {
+  "ar": "المنصة الرسمية لجامعة العلوم التطبيقية للبقاء على تواصل مع خريجيها.",
+  "es": "La plataforma oficial de la Universidad de Ciencias Aplicadas para mantener el contacto con sus egresados."
+ },
+ "Book and cap": {
+  "ar": "كتاب وقبعة تخرج",
+  "es": "Libro y birrete"
+ },
+ "Classic": {
+  "ar": "الكلاسيكية",
+  "es": "Clásico"
+ },
+ "Couldn't change the icon": {
+  "ar": "تعذّر تغيير الأيقونة",
+  "es": "No se pudo cambiar el icono"
+ },
+ "Graduation cap": {
+  "ar": "قبعة التخرج",
+  "es": "Birrete"
+ },
+ "I agree to the upload rules": {
+  "ar": "أوافق على قواعد الرفع",
+  "es": "Acepto las normas de subida"
+ },
+ "Keep the app open until your files finish. You can close this screen.": {
+  "ar": "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك إغلاق هذه الشاشة.",
+  "es": "Mantén la app abierta hasta que terminen tus archivos. Puedes cerrar esta pantalla."
+ },
+ "Keep the app open until your files finish. You can leave this screen.": {
+  "ar": "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك مغادرة هذه الشاشة.",
+  "es": "Mantén la app abierta hasta que terminen tus archivos. Puedes salir de esta pantalla."
+ },
+ "Midnight book": {
+  "ar": "كتاب ليلي",
+  "es": "Libro nocturno"
+ },
+ "Official ASU alumni portal | Register as a graduate or sign in": {
+  "ar": "بوابة الخريجين الرسمية للجامعة | سجّل كخريج أو ادخل إلى حسابك",
+  "es": "Portal oficial de egresados de ASU | Regístrate como egresado o inicia sesión"
+ },
+ "Pick the icon you want on your Home Screen. Your iPhone shows a short message when it changes.": {
+  "ar": "اختر الأيقونة التي تريدها على الشاشة الرئيسية. سيعرض iPhone رسالة قصيرة عند تغييرها.",
+  "es": "Elige el icono que quieras en tu pantalla de inicio. Tu iPhone mostrará un breve mensaje al cambiarlo."
+ },
+ "Pick the icon you want on your home screen. It can take a few seconds to change, and you may need to add it to your home screen again.": {
+  "ar": "اختر الأيقونة التي تريدها على الشاشة الرئيسية. قد يستغرق التغيير بضع ثوانٍ، وقد تحتاج إلى إضافتها إلى الشاشة الرئيسية من جديد.",
+  "es": "Elige el icono que quieras en tu pantalla de inicio. Puede tardar unos segundos en cambiar y quizá tengas que volver a añadirlo a la pantalla de inicio."
+ },
+ "Preparing files…": {
+  "ar": "جارٍ تجهيز الملفات…",
+  "es": "Preparando archivos…"
+ },
+ "Share your study files": {
+  "ar": "شارك ملفاتك الدراسية",
+  "es": "Comparte tus archivos de estudio"
+ },
+ "Study cards": {
+  "ar": "بطاقات دراسية",
+  "es": "Tarjetas de estudio"
+ },
+ "Thank you for joining early! 🌱": {
+  "ar": "شكراً لانضمامك مبكراً! 🌱",
+  "es": "¡Gracias por unirte pronto! 🌱"
+ },
+ "The file changed while uploading. Please add it again.": {
+  "ar": "تغيّر الملف أثناء الرفع. يرجى إضافته مرة أخرى.",
+  "es": "El archivo cambió durante la subida. Vuelve a añadirlo."
+ },
+ "The upload expired. Please try again.": {
+  "ar": "انتهت صلاحية الرفع. يرجى المحاولة مرة أخرى.",
+  "es": "La subida caducó. Inténtalo de nuevo."
+ },
+ "Upload could not start. Please try again.": {
+  "ar": "تعذّر بدء الرفع. يرجى المحاولة مرة أخرى.",
+  "es": "No se pudo iniciar la subida. Inténtalo de nuevo."
+ },
+ "Upload rules": {
+  "ar": "قواعد الرفع",
+  "es": "Normas de subida"
+ },
+ "You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.": {
+  "ar": "انضممت إلى ASU Bank في أيامه الأولى، لذا أصبحت شارة «داعم مبكر» على ملفك الشخصي. شكراً لمساعدتك طلاب الجامعة.",
+  "es": "Te uniste a ASU Bank en sus primeros días, así que tu perfil ya tiene la insignia de Early supporter. Gracias por ayudar a los estudiantes de ASU."
+ },
+ "You're welcome": {
+  "ar": "على الرحب والسعة",
+  "es": "De nada"
  }
 }

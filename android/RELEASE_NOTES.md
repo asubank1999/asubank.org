@@ -1,5 +1,15 @@
 **ASU Bank for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.10.0
+- Fixed: settings under More sometimes wouldn't open or froze
+- Faster: the app starts quicker, and lists and photos scroll more smoothly
+- Upload is rebuilt as a native screen with no limit on file size or number of files; a dropped connection picks up where it stopped
+- Report any file: hold it in a list, or use the menu when it's open
+- Choose your app icon under More > App icon
+- Early supporter badge for everyone who joins by the end of November 2026, with our thanks
+- A neater owner star on profile photos
+- New shortcut: the university's alumni platform
+
 - Search every material, plus the shared Google Drive, from one search box
 - PDFs, slides and documents open natively in the app (pinch to zoom), Drive folders open as native lists
 - Save materials, see what you opened recently, upload materials to share with other students

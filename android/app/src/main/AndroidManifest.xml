@@ -27,14 +27,10 @@
         android:theme="@style/Theme.ASUBank">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".AppActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -43,6 +39,69 @@
                 <data android:scheme="https" android:host="www.asubank.org" />
             </intent-filter>
         </activity>
+
+        <!-- More > App icon turns on one of these. This one keeps the old activity's name, so icons already on people's home screens keep working. -->
+        <activity-alias
+            android:name=".MainActivity"
+            android:exported="true"
+            android:targetActivity=".AppActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconNavy"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_alt_navy"
+            android:roundIcon="@mipmap/ic_alt_navy"
+            android:targetActivity=".AppActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconCap"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_alt_cap"
+            android:roundIcon="@mipmap/ic_alt_cap"
+            android:targetActivity=".AppActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconCards"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_alt_cards"
+            android:roundIcon="@mipmap/ic_alt_cards"
+            android:targetActivity=".AppActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconBook"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_alt_book"
+            android:roundIcon="@mipmap/ic_alt_book"
+            android:targetActivity=".AppActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <receiver android:name=".LectureReceiver" android:exported="false">
             <intent-filter>

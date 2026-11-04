@@ -7,6 +7,9 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +45,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -201,7 +207,7 @@ object SiteRouter {
                 "/" -> SiteTarget.Tab(Routes.HOME)
                 "/guides/search" -> SiteTarget.Tab(Routes.SEARCH)
                 "/guides/saved" -> SiteTarget.Tab(Routes.SAVED)
-                "/upload/uploadmethod", "/upload" -> SiteTarget.Tab(Routes.UPLOAD)
+                "/upload/uploadmethod", "/upload", "/upload/dupload", "/upload/gupload", "/upload/googledrive_fileupload", "/upload/discord_fileupload" -> SiteTarget.Tab(Routes.UPLOAD)
                 "/chat", "/chat/", "/chat/index" -> SiteTarget.Tab(Routes.CHAT)
                 "/admin", "/admin/", "/admin/index" -> SiteTarget.Tab(if (Account.isAdmin) Routes.ADMIN else Routes.MORE)
                 else -> SiteTarget.Page(path, title)
@@ -352,15 +358,25 @@ fun ListRow(
     }
 }
 
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun MaterialRow(m: Material, kind: Kind? = null, meta: String? = null, showSource: Boolean = true) {
     val nav = LocalNav.current
     val savedList by Saved.saved.collectAsState()
     val k = kind ?: AB.kind(m.u, m.t)
+    var menu by remember { mutableStateOf(false) }
+    var reporting by remember { mutableStateOf(false) }
+    if (reporting) ReportDialog(ReportTarget("file", m.u, m.t)) { reporting = false }
+    // hold a file to save or report it
+    DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+        DropdownMenuItem(text = { Text(if (savedList.any { it.u == m.u }) "Remove from Saved" else "Save") }, onClick = { menu = false; Saved.toggle(m) })
+        if (k != Kind.PAGE) DropdownMenuItem(text = { Text("Report this file") }, onClick = { menu = false; reporting = true })
+    }
     Row(
-        Modifier.fillMaxWidth().clickable {
-            if (k == Kind.PAGE) nav.openPage(AB.sitePath(m.u) ?: m.u, m.t) else nav.openMaterial(m)
-        }.padding(horizontal = 16.dp, vertical = 10.dp),
+        Modifier.fillMaxWidth().combinedClickable(
+            onClick = { if (k == Kind.PAGE) nav.openPage(AB.sitePath(m.u) ?: m.u, m.t) else nav.openMaterial(m) },
+            onLongClick = { menu = true },
+        ).padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {

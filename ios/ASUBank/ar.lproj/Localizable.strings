@@ -224,6 +224,7 @@
 "Almost there" = "اقتربت";
 "Also searching for" = "نبحث أيضًا عن";
 "Alumni" = "خريج";
+"Alumni Follow-up Platform | منصة متابعة الخريجين" = "منصة متابعة الخريجين";
 "Always dark" = "داكن دائمًا";
 "Always light" = "فاتح دائمًا";
 "Ambassador" = "سفير";
@@ -246,6 +247,7 @@
 "Another game?" = "لعبة أخرى؟";
 "Answers to common questions." = "إجابات عن الأسئلة المتكررة.";
 "Any" = "أي";
+"Any file size, as many files as you like." = "أي حجم للملف، وبالعدد الذي تريده.";
 "Any illegal activity, including academic dishonesty in violation of university policy." = "أي نشاط غير قانوني، بما في ذلك الغش الأكاديمي المخالف لسياسة الجامعة.";
 "Any year" = "أي سنة";
 "Anything special? (optional)" = "أي طلب خاص؟ (اختياري)";
@@ -253,8 +255,10 @@
 "Anything the team should know" = "أي شيء يجب أن يعرفه الفريق";
 "Anything we should add or fix?" = "هل هناك ما يجب أن نضيفه أو نصلحه؟";
 "App" = "التطبيق";
+"App icon" = "أيقونة التطبيق";
 "Appearance" = "المظهر";
 "Applied Science Private University — Student & Parent Login" = "جامعة العلوم التطبيقية الخاصة: دخول الطلاب وأولياء الأمور";
+"Applied Science University's official platform for keeping in touch with its graduates." = "المنصة الرسمية لجامعة العلوم التطبيقية للبقاء على تواصل مع خريجيها.";
 "Approved" = "مقبول";
 "Arabic" = "العربية";
 "Arabic Literature" = "الأدب العربي";
@@ -328,6 +332,7 @@
 "Block %@?" = "حظر %@؟";
 "Blocked people" = "المحظورون";
 "Book a photoshoot" = "احجز جلسة تصوير";
+"Book and cap" = "كتاب وقبعة تخرج";
 "Book another session" = "احجز جلسة أخرى";
 "Booking submitted!" = "تم إرسال الحجز!";
 "Browse by subject" = "تصفح حسب المادة";
@@ -408,6 +413,7 @@
 "Choose your gender." = "اختر الجنس.";
 "Choose your year." = "اختر سنتك الدراسية.";
 "Class rep" = "ممثل الشعبة";
+"Classic" = "الكلاسيكية";
 "Classical Literature — Class Schedule" = "الأدب الكلاسيكي: جدول المحاضرات";
 "Classmate Matching Service" = "خدمة مطابقة الزملاء";
 "Clear" = "مسح";
@@ -479,6 +485,7 @@
 "Copyright: I own this or represent the owner" = "حقوق نشر: أنا المالك أو أمثله";
 "Core Subjects" = "المواد الأساسية";
 "Couldn't block" = "تعذر الحظر";
+"Couldn't change the icon" = "تعذّر تغيير الأيقونة";
 "Couldn't connect. Check your connection and try again." = "تعذر الاتصال. تحقق من اتصالك وحاول مجددًا.";
 "Couldn't delete" = "تعذر الحذف";
 "Couldn't do that" = "تعذر تنفيذ ذلك";
@@ -769,6 +776,7 @@
 "Grading scale" = "سلّم العلامات";
 "Graduate" = "خرّيج";
 "Graduation" = "تخرج";
+"Graduation cap" = "قبعة التخرج";
 "Graphical Representation of Data 1" = "التمثيل البياني للبيانات 1";
 "Graphite" = "رمادي داكن";
 "Ground floor" = "الطابق الأرضي";
@@ -820,6 +828,7 @@
 "How your term and cumulative average turn into a grade at ASU." = "كيف يتحول معدلك الفصلي والتراكمي إلى تقدير في ASU.";
 "I agree" = "أوافق";
 "I agree to the Terms of Service" = "أوافق على شروط الخدمة";
+"I agree to the upload rules" = "أوافق على قواعد الرفع";
 "I agree to these rules" = "أوافق على هذه القوانين";
 "I have a question" = "لدي سؤال";
 "I need your notes" = "أحتاج ملخصاتك";
@@ -888,6 +897,8 @@
 "Jordan's emergency number: ambulance, fire and police" = "رقم الطوارئ في الأردن: الإسعاف والدفاع المدني والشرطة";
 "Junior" = "سنة ثالثة";
 "Keep discussions relevant to university/academic matters." = "إبقاء النقاشات متعلقة بالشؤون الجامعية والأكاديمية.";
+"Keep the app open until your files finish. You can close this screen." = "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك إغلاق هذه الشاشة.";
+"Keep the app open until your files finish. You can leave this screen." = "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك مغادرة هذه الشاشة.";
 "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21)." = "تابع الكتابة: أرقام القاعات من 4 أرقام (5 للمبنيين 10 و21).";
 "Lab Materials" = "مواد المختبرات";
 "Lab materials" = "مواد المختبرات";
@@ -983,6 +994,7 @@
 "Microbiology and Immunology" = "الأحياء الدقيقة والمناعة";
 "Microsoft Teams" = "Microsoft Teams";
 "Middle name (optional)" = "الاسم الأوسط (اختياري)";
+"Midnight book" = "كتاب ليلي";
 "Midterm" = "ميد";
 "Mint" = "نعناعي";
 "Mobile-friendly design" = "تصميم مناسب للجوال";
@@ -1110,6 +1122,7 @@
 "OK" = "حسناً";
 "Ocean" = "محيط";
 "Off-Campus" = "خارج الحرم الجامعي";
+"Official ASU alumni portal | Register as a graduate or sign in" = "بوابة الخريجين الرسمية للجامعة | سجّل كخريج أو ادخل إلى حسابك";
 "Official ASU average calculator" = "حاسبة المعدل الرسمية للجامعة";
 "Official ASU tool for GPA and term average calculation" = "أداة ASU الرسمية لحساب المعدل التراكمي والفصلي";
 "Offline" = "غير متصل";
@@ -1227,6 +1240,8 @@
 "Pick a result" = "اختر نتيجة";
 "Pick at least one time you're free." = "اختر وقت فراغ واحدًا على الأقل.";
 "Pick the existing name so all ratings stay together." = "اختر الاسم الموجود لتبقى كل التقييمات معاً.";
+"Pick the icon you want on your Home Screen. Your iPhone shows a short message when it changes." = "اختر الأيقونة التي تريدها على الشاشة الرئيسية. سيعرض iPhone رسالة قصيرة عند تغييرها.";
+"Pick the icon you want on your home screen. It can take a few seconds to change, and you may need to add it to your home screen again." = "اختر الأيقونة التي تريدها على الشاشة الرئيسية. قد يستغرق التغيير بضع ثوانٍ، وقد تحتاج إلى إضافتها إلى الشاشة الرئيسية من جديد.";
 "Pie Chart 3" = "المخطط الدائري 3";
 "Pin" = "تثبيت";
 "Ping" = "نغمة قصيرة";
@@ -1260,6 +1275,7 @@
 "Preferences" = "التفضيلات";
 "Premium" = "مميز";
 "Prepare for your university placement exams" = "استعد لامتحانات المستوى في الجامعة";
+"Preparing files…" = "جارٍ تجهيز الملفات…";
 "Presentation title" = "عنوان العرض";
 "Presentations" = "العروض التقديمية";
 "Presentations for the campus screen" = "عروض لشاشة الحرم الجامعي";
@@ -1449,6 +1465,7 @@
 "Share your educational resources with the ASU community" = "شارك مصادرك التعليمية مع مجتمع ASU";
 "Share your experience and help other students choose their sections." = "شارك تجربتك وساعد الطلاب في اختيار شعبهم.";
 "Share your notes, slides and past papers." = "شارك ملاحظاتك وسلايداتك وامتحانات السنوات السابقة.";
+"Share your study files" = "شارك ملفاتك الدراسية";
 "Share your study materials." = "شارك موادك الدراسية.";
 "Shared by students" = "من مشاركات الطلاب";
 "Shared only with students you match with." = "تُشارك فقط مع الطلاب الذين تتوافق معهم.";
@@ -1528,6 +1545,7 @@
 "Studies" = "الدراسة";
 "Study Hall" = "قاعة الدراسة";
 "Study Plans" = "الخطط الدراسية";
+"Study cards" = "بطاقات دراسية";
 "Study help" = "مساعدة دراسية";
 "Study materials for ASU students" = "مواد دراسية لطلاب الجامعة";
 "Study place" = "مكان الدراسة";
@@ -1601,6 +1619,7 @@
 "Test Bank" = "بنك أسئلة";
 "Test bank" = "بنك أسئلة";
 "Test banks" = "بنوك الأسئلة";
+"Thank you for joining early! 🌱" = "شكراً لانضمامك مبكراً! 🌱";
 "Thank you!" = "شكراً لك!";
 "Thank you! %d files uploaded. They're in Latest uploads now." = "شكرًا! تم رفع %d ملفات، وهي الآن في آخر المرفوعات.";
 "Thank you! %lld files uploaded. They're in Latest uploads now." = "شكرًا! تم رفع %lld ملفات، وهي الآن في آخر المرفوعات.";
@@ -1615,6 +1634,7 @@
 "The apps have no analytics. The website uses Google Analytics to count visits." = "لا توجد أدوات تحليل في التطبيقات. أما الموقع فيستخدم Google Analytics لإحصاء الزيارات.";
 "The end time must be after the start time." = "يجب أن يكون وقت النهاية بعد وقت البداية.";
 "The file" = "الملف";
+"The file changed while uploading. Please add it again." = "تغيّر الملف أثناء الرفع. يرجى إضافته مرة أخرى.";
 "The file is empty." = "الملف فارغ.";
 "The file may already be on ASU Bank." = "قد يكون الملف موجودًا في بنك ASU.";
 "The hard parts, made simple" = "تبسيط الأجزاء الصعبة";
@@ -1631,6 +1651,7 @@
 "The server sent something unexpected. Try again." = "أرسل الخادم ردًا غير متوقع. حاول مجددًا.";
 "The submissions server sent something unexpected." = "أرسل خادم المشاركات ردًا غير متوقع.";
 "The team reviews it before it goes on the campus display screen." = "يراجعه الفريق قبل عرضه على شاشة الحرم الجامعي.";
+"The upload expired. Please try again." = "انتهت صلاحية الرفع. يرجى المحاولة مرة أخرى.";
 "Theme" = "السمة";
 "There might be an iOS app in the future if students are willing to donate to support its development. Stay tuned for updates!" = "نعم، تطبيق iPhone متاح الآن، وستجد رابط تنزيله في الموقع.";
 "These Terms may be updated at any time. Continued membership in the group after changes are posted constitutes acceptance of the revised Terms." = "قد تُحدَّث هذه الشروط في أي وقت. استمرارك في المجموعة بعد نشر التعديلات يعني قبولك للشروط المعدلة.";
@@ -1758,12 +1779,14 @@
 "Upload %@ files" = "ارفع %@ ملفات";
 "Upload Information" = "معلومات الرفع";
 "Upload Your Materials" = "ارفع موادك";
+"Upload could not start. Please try again." = "تعذّر بدء الرفع. يرجى المحاولة مرة أخرى.";
 "Upload failed. Please try again." = "فشل الرفع. يُرجى المحاولة مجددًا.";
 "Upload failed: %@" = "فشل الرفع: %@";
 "Upload files" = "رفع ملفات";
 "Upload it for others" = "ارفعه للآخرين";
 "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team." = "ارفع مواد، ساعد في ترتيبها، أو أبلغ عن روابط معطلة. راسل ASU-Requests وانضم للفريق.";
 "Upload more" = "رفع المزيد";
+"Upload rules" = "قواعد الرفع";
 "Upload your presentations" = "ارفع عروضك التقديمية";
 "Uploaded" = "تم الرفع";
 "Uploaded content" = "المحتوى المرفوع";
@@ -1901,9 +1924,11 @@
 "You have the latest version" = "لديك أحدث إصدار";
 "You haven't added any friends yet." = "لم تضف أي أصدقاء بعد.";
 "You haven't blocked anyone." = "لم تحظر أحدًا.";
+"You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU." = "انضممت إلى ASU Bank في أيامه الأولى، لذا أصبحت شارة «داعم مبكر» على ملفك الشخصي. شكراً لمساعدتك طلاب الجامعة.";
 "You pay the second half only if your ad is accepted." = "تدفع النصف الثاني فقط إذا قُبل إعلانك.";
 "You won't see their messages or get notifications from them. You can undo this in your account." = "لن ترى رسائله ولن تصلك إشعارات منه. يمكنك التراجع عن ذلك من حسابك.";
 "You'll stay signed in here; other devices are signed out." = "ستبقى مسجّلاً هنا؛ وسيُسجّل خروج الأجهزة الأخرى.";
+"You're welcome" = "على الرحب والسعة";
 "Your Edugate | Quizzes, course materials, and assignment submissions" = "إيديوجيت الخاص بك: الكويزات ومواد المساق وتسليم الواجبات";
 "Your Privacy Matters" = "خصوصيتك مهمة";
 "Your WhatsApp, e.g. 079 123 4567" = "رقم واتساب، مثل 079 123 4567";

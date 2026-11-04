@@ -789,6 +789,7 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="/assets/app/app.css?v=3">
     <script src="/assets/app/app.js?v=2" defer></script>
+    <script src="/assets/app/report-file.js" defer></script>
 </head>
 <body>
 <div class="container">
@@ -1011,7 +1012,7 @@
         const sorted = sortFiles(files);
         return `<div class="files-grid">${sorted.map(f => `
             <div class="file-card" data-id="${f.id}" onclick="openFile('${f.url}')">
-                <div class="file-actions"><button class="open-btn" onclick="event.stopPropagation(); openFile('${f.url}')"><i class="fas fa-external-link-alt"></i></button></div>
+                <div class="file-actions"><button class="open-btn" onclick="event.stopPropagation(); openFile('${f.url}')"><i class="fas fa-external-link-alt"></i></button><button class="open-btn" title="Report this file" aria-label="Report this file" data-report-url="${escapeHtml(f.url)}" data-report-name="${escapeHtml(f.name)}"><i class="fas fa-flag"></i></button></div>
                 <div class="file-icon ${f.icon}">${getFileIconHTML(f.icon)}</div>
                 <h3 class="file-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</h3>
                 <div class="file-meta"><span><i class="fas fa-hdd"></i> <span class="${getSizeClass(f.size || 0)}">${formatFileSize(f.size || 0)}</span></span><span><i class="fas fa-tag"></i> ${f.icon}</span></div>
@@ -1021,7 +1022,7 @@
     function renderList(files) {
         if (!files.length) return renderGrid(files);
         const sorted = sortFiles(files);
-        return `<div class="files-list">${sorted.map(f => `<div class="file-row" onclick="openFile('${f.url}')"><div class="list-icon ${f.icon}">${getFileIconHTML(f.icon)}</div><div class="list-name">${escapeHtml(f.name)}</div><div class="list-size ${getSizeClass(f.size || 0)}">${formatFileSize(f.size || 0)}</div><div class="list-date">${formatDate(f.dateUploaded)}</div></div>`).join('')}</div>`;
+        return `<div class="files-list">${sorted.map(f => `<div class="file-row" onclick="openFile('${f.url}')"><div class="list-icon ${f.icon}">${getFileIconHTML(f.icon)}</div><div class="list-name">${escapeHtml(f.name)}</div><div class="list-size ${getSizeClass(f.size || 0)}">${formatFileSize(f.size || 0)}</div><div class="list-date">${formatDate(f.dateUploaded)}</div><button class="open-btn" title="Report this file" aria-label="Report this file" data-report-url="${escapeHtml(f.url)}" data-report-name="${escapeHtml(f.name)}"><i class="fas fa-flag"></i></button></div>`).join('')}</div>`;
     }
 
     function renderFiles(files) {

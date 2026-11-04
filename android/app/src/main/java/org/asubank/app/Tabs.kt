@@ -329,6 +329,8 @@ fun MoreScreen() {
                     Divider()
                     ListRow("Customize tab bar", icon = Icons.Filled.Dashboard) { nav.navigate("tabBar") }
                     Divider()
+                    ListRow("App icon", icon = Icons.Filled.Apps) { nav.navigate("appIcon") }
+                    Divider()
                     ListRow("Language", tr(Lang.choices.first { it.first == Lang.choice.value }.second), icon = Icons.Filled.Language) { nav.navigate("language") }
                     Divider()
                     ListRow("Upload files", icon = Icons.Filled.CloudUpload) { nav.openTab(Routes.UPLOAD) }

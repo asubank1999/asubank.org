@@ -71,25 +71,32 @@ object Library {
     fun items(s: Subject) = items.value.filter { it.m.p == s.p }
 
     suspend fun load() {
-        if (items.value.isEmpty()) Disk.read("materials.json")?.let { apply(it) }
+        if (items.value.isEmpty()) withContext(Dispatchers.IO) { Disk.read("materials.json") }?.let { apply(it) }
         loading.value = true
         val t = Net.text(AB.CATALOG)
-        if (t != null && apply(t)) Disk.write("materials.json", t)
+        if (t != null && apply(t)) withContext(Dispatchers.IO) { Disk.write("materials.json", t) }
         failed.value = items.value.isEmpty()
         loading.value = false
     }
 
     /** Re-applies the catalog after shortcut / broken-link data changed */
-    fun reindex() { raw?.let { apply(it) } }
+    suspend fun reindex() { raw?.let { val t = it; raw = null; apply(t) } }
 
-    private fun apply(t: String): Boolean = try {
-        val c = json.decodeFromString(Catalog.serializer(), t)
-        raw = t
-        subjects.value = c.subjects
-        // Links the server found dead are hidden (tools/check_links.py -> broken.json)
-        items.value = c.items.filter { DriveLinks.broken(it.u) == null }.map { AB.index(it) }
-        true
-    } catch (e: Exception) { false }
+    /** Parsing stalled the screen at every launch, so it runs off the main thread, and only when the catalog actually changed */
+    private suspend fun apply(t: String): Boolean {
+        if (t == raw) return true
+        return try {
+            val (c, indexed) = withContext(Dispatchers.Default) {
+                val c = json.decodeFromString(Catalog.serializer(), t)
+                // Links the server found dead are hidden (tools/check_links.py -> broken.json)
+                c to c.items.filter { DriveLinks.broken(it.u) == null }.map { AB.index(it) }
+            }
+            raw = t
+            subjects.value = c.subjects
+            items.value = indexed
+            true
+        } catch (e: Exception) { false }
+    }
 }
 
 /** All asubank.org pages as native content */
@@ -98,14 +105,24 @@ object Pages {
     val loaded = MutableStateFlow(false)
     private val ser = MapSerializer(String.serializer(), SitePage.serializer())
 
+    private var raw: String? = null
+
     suspend fun load() {
-        if (pages.value.isEmpty()) Disk.read("pages.json")?.let { apply(it) }
+        if (pages.value.isEmpty()) withContext(Dispatchers.IO) { Disk.read("pages.json") }?.let { apply(it) }
         val t = Net.text(AB.PAGES)
-        if (t != null && apply(t)) Disk.write("pages.json", t)
+        if (t != null && apply(t)) withContext(Dispatchers.IO) { Disk.write("pages.json", t) }
         loaded.value = true
     }
 
-    private fun apply(t: String): Boolean = try { pages.value = json.decodeFromString(ser, t); true } catch (e: Exception) { false }
+    private suspend fun apply(t: String): Boolean {
+        if (t == raw) return true
+        return try {
+            val parsed = withContext(Dispatchers.Default) { json.decodeFromString(ser, t) }
+            raw = t
+            pages.value = parsed
+            true
+        } catch (e: Exception) { false }
+    }
 }
 
 /** Drive shortcuts resolved to their real file/folder, and links that no longer work (tools/check_links.py) */
@@ -329,14 +346,18 @@ object UploadFolder {
 object Storage {
     private fun size(f: File?): Long = if (f == null || !f.exists()) 0 else if (f.isFile) f.length() else (f.listFiles()?.sumOf { size(it) } ?: 0)
 
-    suspend fun measure(ctx: Context): Triple<Long, Long, Long> = withContext(Dispatchers.IO) {
+    /** Kept until the cache is cleared: the More screen asks every time you come back to it */
+    private var known: Triple<Long, Long, Long>? = null
+
+    suspend fun measure(ctx: Context): Triple<Long, Long, Long> = known ?: withContext(Dispatchers.IO) {
         val app = size(File(ctx.applicationInfo.sourceDir))
         val cache = size(ctx.cacheDir)
         val data = size(ctx.filesDir) + size(File(ctx.applicationInfo.dataDir, "shared_prefs"))
-        Triple(app, cache, data)
+        Triple(app, cache, data).also { known = it }
     }
 
     suspend fun clear(ctx: Context) = withContext(Dispatchers.IO) {
+        known = null
         // downloaded materials and the web view cache both live in cacheDir
         ctx.cacheDir.listFiles()?.forEach { it.deleteRecursively() }
         Unit

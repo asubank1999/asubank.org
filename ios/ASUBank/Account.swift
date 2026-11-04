@@ -208,6 +208,8 @@ final class AccountStore: ObservableObject {
     @Published private(set) var user: ABUser?
     @Published private(set) var rooms: [ChatRoom] = AccountStore.defaultRooms
     @Published var signInShown = false
+    /// The thank-you after signing up during the early supporter period
+    @Published var earlyThanksShown = false
 
     private(set) var token: String?
     private let userKey = "ab.account.user"
@@ -253,13 +255,19 @@ final class AccountStore: ObservableObject {
     }
 
     func register(username: String, password: String, displayName: String, email: String, uniId: String, code: String) async throws {
-        adopt(try await AccountsAPI.call("register", [
+        let reply = try await AccountsAPI.call("register", [
             "username": username.trimmingCharacters(in: .whitespaces), "password": password, "displayName": displayName,
             "email": email.trimmingCharacters(in: .whitespaces), "uniId": uniId.trimmingCharacters(in: .whitespaces),
             "code": code.trimmingCharacters(in: .whitespaces), "platform": "ios", "device": UIDevice.current.identifierForVendor?.uuidString ?? "",
-        ]))
+        ])
+        adopt(reply)
         await refresh()
         ChatNotifier.shared.signedIn()
+        if reply["earlySupporter"] as? Bool == true {
+            // after the sign-in sheet has closed; a screen can't show an alert while its sheet is leaving
+            try? await Task.sleep(nanoseconds: 900_000_000)
+            earlyThanksShown = true
+        }
     }
 
     /// Emails the admin code (only for the owner's username, email or university ID)

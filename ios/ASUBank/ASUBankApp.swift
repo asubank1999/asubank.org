@@ -39,7 +39,7 @@ struct ASUBankApp: App {
                 .tint(.abAccent)
                 .preferredColorScheme(appearance == 1 ? .light : appearance >= 2 ? .dark : nil)
                 .task {
-                    try? await Task.sleep(nanoseconds: 1_500_000_000)
+                    try? await Task.sleep(nanoseconds: 600_000_000)
                     withAnimation(.easeOut(duration: 0.35)) { splash = false }
                 }
                 .task {
@@ -48,7 +48,7 @@ struct ASUBankApp: App {
                 }
                 .task {
                     await library.load()
-                    if await DriveLinks.shared.refresh() { library.reindex() }
+                    if await DriveLinks.shared.refresh() { await library.reindex() }
                 }
                 .task { await pages.load() }
                 .task { await SearchHelp.shared.load() }
@@ -139,6 +139,11 @@ struct RootView: View {
         .sheet(item: $app.overlayTab) { screen($0) }
         .task { LectureStore.shared.reschedule() }
         .sheet(isPresented: $account.signInShown) { SignInScreen() }
+        .alert("Thank you for joining early! 🌱", isPresented: $account.earlyThanksShown) {
+            Button("You're welcome", role: .cancel) {}
+        } message: {
+            Text("You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.")
+        }
         .fullScreenCover(isPresented: Binding(get: { !accepted && !config.mustUpdate }, set: { _ in })) {
             WelcomeTermsView()
         }

@@ -742,7 +742,7 @@ object Lectures {
         val l = list.value.firstOrNull { it.id == id } ?: return
         if (!l.enabled) return
         val channel = NotifySounds.channel(ctx, CHANNEL, tr("Lecture reminders"), NotificationManager.IMPORTANCE_HIGH, NotifySounds.LECTURES)
-        val open = Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP).putExtra("openTab", Routes.LECTURES)
+        val open = Intent(ctx, AppActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP).putExtra("openTab", Routes.LECTURES)
         val tap = PendingIntent.getActivity(ctx, l.id.hashCode(), open, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val text = if (l.hall.isEmpty()) trf("Starts at %s", l.timeText()) else trf("Hall %s · starts at %s", l.hall, l.timeText())
         val n = NotificationCompat.Builder(ctx, channel)

@@ -57,6 +57,7 @@ import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
@@ -104,10 +105,14 @@ fun Avatar(name: String, color: String, size: Dp = 40.dp, admin: Boolean = false
             Text(name.take(1).uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = (size.value * 0.42f).sp)
             if (!photo.isNullOrEmpty()) AsyncImage(photo, null, Modifier.matchParentSize(), contentScale = ContentScale.Crop)
         }
-        if (admin) Box(
-            Modifier.align(Alignment.BottomEnd).size(size * 0.4f).clip(CircleShape).background(Brand.gold),
-            contentAlignment = Alignment.Center,
-        ) { Icon(Icons.Filled.Shield, null, tint = Color.Black, modifier = Modifier.size(size * 0.26f)) }
+        // Sits exactly on the circle's edge at any avatar size: at 30% wide, a badge in the corner of the frame is centered on the rim
+        if (admin) {
+            val star = maxOf(14.dp, size * 0.30f)
+            Box(
+                Modifier.align(Alignment.BottomEnd).size(star).clip(CircleShape).background(Brand.gold).border(1.dp, Color.White, CircleShape),
+                contentAlignment = Alignment.Center,
+            ) { Icon(Icons.Filled.Star, null, tint = Color.Black, modifier = Modifier.size(star * 0.66f)) }
+        }
         if (online != null) Box(
             Modifier.align(Alignment.TopEnd).size(maxOf(10.dp, size * 0.26f)).clip(CircleShape)
                 .background(if (online) Brand.green else Color.Gray)

@@ -272,11 +272,16 @@ object Account {
         ChatNotifier.start(Disk.ctx)
     }
 
+    /** The thank-you after signing up during the early supporter period */
+    val earlyThanks = MutableStateFlow(false)
+
     suspend fun register(username: String, password: String, displayName: String, email: String, uniId: String, code: String) {
-        adopt(AccountsApi.call("register", mapOf(
+        val reply = AccountsApi.call("register", mapOf(
             "username" to username.trim(), "password" to password, "displayName" to displayName.trim(),
             "email" to email.trim(), "uniId" to uniId.trim(), "code" to code.trim(), "platform" to "android", "device" to device(),
-        )))
+        ))
+        adopt(reply)
+        if ((reply["earlySupporter"] as? JsonPrimitive)?.booleanOrNull == true) earlyThanks.value = true
         refresh()
         ChatNotifier.start(Disk.ctx)
     }
@@ -435,7 +440,7 @@ object ChatNotifier {
         val me = Account.user.value?.id
         val reply = e.type == "message" && me != null && e.replyToUserId == me
         val who = e.displayName ?: ""
-        val intent = Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        val intent = Intent(ctx, AppActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         val isPrivate = e.type.startsWith("friend_") || e.type.startsWith("group_") || e.type == "poke"
         if (isPrivate && !e.type.startsWith("group_")) socialUnread.value += 1
         when {

@@ -1,5 +1,6 @@
 import SwiftUI
 import PhotosUI
+import ImageIO
 
 /// A round avatar: the profile photo, or the first letter of the name on the user's color.
 /// `online` adds a green (online) or grey (offline) dot.
@@ -18,16 +19,13 @@ struct Avatar: View {
             .background(c.abGradient, in: Circle())
         Group {
             if let photo, let url = URL(string: photo), !photo.isEmpty {
-                AsyncImage(url: url) { img in img.resizable().scaledToFill() } placeholder: { letter }
+                CachedPhoto(url: url, pixelSize: size) { letter }
                     .frame(width: size, height: size).clipShape(Circle())
             } else { letter }
         }
         .overlay(alignment: .bottomTrailing) {
-            if admin {
-                Image(systemName: "checkmark.seal.fill").font(.system(size: size * 0.34)).foregroundStyle(Color.abGold)
-                    .background(Circle().fill(Color(UIColor.systemBackground)).padding(1))
-                    .offset(x: 2, y: 2)
-            }
+            // Sits exactly on the circle's edge at any avatar size: at 30% wide, a badge in the corner of the frame is centered on the rim
+            if admin { OwnerStar(size: max(13, size * 0.30)) }
         }
         .overlay(alignment: .topTrailing) {
             if let online {
@@ -38,6 +36,71 @@ struct Avatar: View {
             }
         }
         .accessibilityHidden(true)
+    }
+}
+
+/// The gold star on the owner's and admins' photos
+struct OwnerStar: View {
+    let size: CGFloat
+    var body: some View {
+        Image(systemName: "star.fill")
+            .font(.system(size: size * 0.58, weight: .bold))
+            .foregroundStyle(.black.opacity(0.82))
+            .frame(width: size, height: size)
+            .background(Color.abGold, in: Circle())
+            .overlay(Circle().stroke(.white, lineWidth: max(1, size * 0.07)))
+    }
+}
+
+/// Remembers people's photos in memory, shrunk to the size they're drawn at. AsyncImage downloaded them again on every
+/// redraw and decoded them full size, which was a big part of the lag in the chat and friends lists.
+@MainActor
+final class PhotoCache {
+    static let shared = PhotoCache()
+    private let images = NSCache<NSString, UIImage>()
+    private var running: [String: Task<UIImage?, Never>] = [:]
+    init() { images.countLimit = 150 }
+
+    func cached(_ url: URL) -> UIImage? { images.object(forKey: url.absoluteString as NSString) }
+
+    func load(_ url: URL, pixelSize: CGFloat) async -> UIImage? {
+        let key = url.absoluteString
+        if let i = images.object(forKey: key as NSString) { return i }
+        if let t = running[key] { return await t.value }
+        let side = pixelSize * UIScreen.main.scale
+        let t = Task.detached(priority: .utility) { () -> UIImage? in
+            guard let (data, _) = try? await URLSession.shared.data(from: url) else { return nil }
+            let opts: [CFString: Any] = [kCGImageSourceCreateThumbnailFromImageAlways: true, kCGImageSourceCreateThumbnailWithTransform: true,
+                                         kCGImageSourceShouldCacheImmediately: true, kCGImageSourceThumbnailMaxPixelSize: max(side, 180)]
+            guard let src = CGImageSourceCreateWithData(data as CFData, nil),
+                  let cg = CGImageSourceCreateThumbnailAtIndex(src, 0, opts as CFDictionary) else { return UIImage(data: data) }
+            return UIImage(cgImage: cg)
+        }
+        running[key] = t
+        let img = await t.value
+        running[key] = nil
+        if let img { images.setObject(img, forKey: key as NSString) }
+        return img
+    }
+}
+
+struct CachedPhoto<Placeholder: View>: View {
+    let url: URL
+    let pixelSize: CGFloat
+    @ViewBuilder let placeholder: () -> Placeholder
+    @State private var image: UIImage?
+
+    var body: some View {
+        Group {
+            if let shown = image ?? PhotoCache.shared.cached(url) {
+                Image(uiImage: shown).resizable().scaledToFill()
+            } else {
+                placeholder()
+            }
+        }
+        .task(id: url) {
+            if PhotoCache.shared.cached(url) == nil { image = await PhotoCache.shared.load(url, pixelSize: pixelSize) }
+        }
     }
 }
 

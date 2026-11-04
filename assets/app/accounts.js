@@ -215,7 +215,13 @@
                 var p = mode === 0
                     ? call('login', { login: login.input.value.trim(), password: pw.input.value, platform: 'web' })
                     : call('register', { username: login.input.value.trim(), password: pw.input.value, displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(), code: code.input.value.trim(), platform: 'web' });
-                p.then(function (r) { adopt(r); after(); })
+                p.then(function (r) {
+                    adopt(r); after();
+                    if (r.earlySupporter) {
+                        var thanks = sheet('Thank you for joining early! 🌱');
+                        thanks.box.appendChild(h('p', { text: "You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU." }));
+                    }
+                })
                     .catch(function (e) { showErr(err, e); if (e.needCode) codeBox.hidden = false; busy(submit, false, mode === 0 ? 'Sign in' : 'Create account'); });
             } },
                 login.el, pw.el,

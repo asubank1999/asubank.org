@@ -65,6 +65,17 @@ struct MaterialRow: View {
                 ShareButton(item: url, subject: Text(m.t)) { Label("Share", systemImage: "square.and.arrow.up") }
                 Button { UIPasteboard.general.url = url } label: { Label("Copy link", systemImage: "link") }
             }
+            if k != .page {
+                Button(role: .destructive) {
+                    Task { @MainActor in
+                        // once the menu has closed
+                        try? await Task.sleep(nanoseconds: 350_000_000)
+                        Moderation.report(ReportTarget(kind: "file", targetId: m.u, name: m.t))
+                    }
+                } label: {
+                    Label("Report this file", systemImage: "flag")
+                }
+            }
         }
         .swipeActions(edge: .leading) {
             Button { saved.toggle(m); Haptics.tap() } label: {

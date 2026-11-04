@@ -10,8 +10,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "1.9.0"
-    CURRENT_PROJECT_VERSION: "7"
+    MARKETING_VERSION: "1.10.0"
+    CURRENT_PROJECT_VERSION: "8"
     DEVELOPMENT_TEAM: ""
     AB_STORE_BUILD: "NO"
 targets:
@@ -44,7 +44,7 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         NSCameraUsageDescription: ASU Bank uses the camera to scan paper notes and exams into a PDF you can upload.
-        NSPhotoLibraryUsageDescription: ASU Bank lets you pick photos of notes to upload.
+        NSPhotoLibraryUsageDescription: ASU Bank lets you pick photos and videos of notes to upload.
         BGTaskSchedulerPermittedIdentifiers:
           - org.asubank.app.chat
         UIBackgroundModes:
@@ -58,6 +58,8 @@ targets:
         PRODUCT_NAME: ASUBank
         TARGETED_DEVICE_FAMILY: "1,2"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: "IconNavy IconCap IconCards IconBook"
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         CODE_SIGN_STYLE: Automatic
         ENABLE_PREVIEWS: YES

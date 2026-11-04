@@ -69,21 +69,28 @@ final class SitePages: ObservableObject {
 
     func page(_ path: String) -> SitePage? { pages[path] }
 
+    private var lastData: Data?
+
     func load() async {
-        if pages.isEmpty, let data = try? Data(contentsOf: cacheFile) { apply(data) }
+        let file = cacheFile
+        if pages.isEmpty, let data = await Task.detached(priority: .userInitiated, operation: { try? Data(contentsOf: file) }).value { await apply(data) }
         var req = URLRequest(url: url)
         req.cachePolicy = .reloadIgnoringLocalCacheData
         if let (data, resp) = try? await URLSession.shared.data(for: req),
-           (resp as? HTTPURLResponse)?.statusCode == 200, apply(data) {
-            try? data.write(to: cacheFile, options: .atomic)
+           (resp as? HTTPURLResponse)?.statusCode == 200, await apply(data) {
+            Task.detached(priority: .utility) { try? data.write(to: file, options: .atomic) }
         }
         loaded = true
     }
 
+    /// Off the main thread, and no redraw when the download is what's already showing
     @discardableResult
-    private func apply(_ data: Data) -> Bool {
-        guard let p = try? JSONDecoder().decode([String: SitePage].self, from: data) else { return false }
-        pages = p
+    private func apply(_ data: Data) async -> Bool {
+        if data == lastData { return true }
+        let parsed = await Task.detached(priority: .userInitiated) { try? JSONDecoder().decode([String: SitePage].self, from: data) }.value
+        guard let parsed else { return false }
+        lastData = data
+        pages = parsed
         return true
     }
 }

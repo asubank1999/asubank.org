@@ -98,7 +98,7 @@ import androidx.navigation.navArgument
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class AppActivity : ComponentActivity() {
     /** asubank.org links opened from other apps */
     private val incoming = MutableStateFlow<String?>(null)
 
@@ -190,8 +190,15 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
             if (inBar(t)) { lastTab = t; nav.openTab(t) } else nav.navigate(t)
         }
     }
+    val earlyThanks by Account.earlyThanks.collectAsState()
+    if (earlyThanks) AlertDialog(
+        onDismissRequest = { Account.earlyThanks.value = false },
+        title = { Text("Thank you for joining early! 🌱") },
+        text = { Text("You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.") },
+        confirmButton = { TextButton(onClick = { Account.earlyThanks.value = false }) { Text("You're welcome") } },
+    )
     var splash by remember { mutableStateOf(!splashDone) }
-    LaunchedEffect(Unit) { if (splash) { delay(1500); splashDone = true; splash = false } }
+    LaunchedEffect(Unit) { if (splash) { delay(600); splashDone = true; splash = false } }
     LaunchedEffect(route) { if (allTabs.any { it.route == route }) lastTab = route ?: Routes.HOME }
     LaunchedEffect(pendingRoom) { if (pendingRoom != null && route != Routes.CHAT) nav.openTab(Routes.CHAT) }
     // Android 13+ asks before showing notifications
@@ -273,6 +280,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable(Routes.LECTURES) { LecturesScreen(back = !inBar(Routes.LECTURES)) }
                 composable(Routes.HACKS) { LifeHacksScreen(back = !inBar(Routes.HACKS)) }
                 composable("tabBar") { TabBarScreen() }
+                composable("appIcon") { AppIconScreen() }
                 composable("sounds") { SoundsScreen() }
                 composable("groupRequest") { GroupRequestScreen() }
                 composable("adminGroups") { AdminGroupRequestsScreen() }

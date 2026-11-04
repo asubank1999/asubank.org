@@ -45,25 +45,15 @@ final class Library: ObservableObject {
     @Published private(set) var items: [IndexedMaterial] = []
     @Published private(set) var loading = false
     @Published private(set) var failed = false
+    /// Worked out once per catalog: these used to be recalculated every time a screen redrew
+    @Published private(set) var categories: [(name: String, subjects: [Subject])] = []
+    @Published private(set) var years: [String] = []
+    private var lastData: Data?
 
     private let cacheFile: URL = {
         let dir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         return dir.appendingPathComponent("materials.json")
     }()
-
-    var categories: [(name: String, subjects: [Subject])] {
-        var order: [String] = []
-        var groups: [String: [Subject]] = [:]
-        for s in subjects where s.c != "Archive" {
-            if groups[s.c] == nil { order.append(s.c) }
-            groups[s.c, default: []].append(s)
-        }
-        return order.map { ($0, groups[$0] ?? []) }
-    }
-
-    var years: [String] {
-        Array(Set(items.map(\.year).filter { !$0.isEmpty })).sorted(by: >)
-    }
 
     func items(in subject: Subject) -> [IndexedMaterial] {
         items.filter { $0.m.p == subject.p }
@@ -74,12 +64,17 @@ final class Library: ObservableObject {
     }
 
     /// Re-applies the catalog after shortcut / broken-link data changed
-    func reindex() {
-        if let data = try? Data(contentsOf: cacheFile) { apply(data) }
+    func reindex() async {
+        lastData = nil
+        if let data = await Self.read(cacheFile) { await apply(data) }
+    }
+
+    private nonisolated static func read(_ url: URL) async -> Data? {
+        await Task.detached(priority: .userInitiated) { try? Data(contentsOf: url) }.value
     }
 
     func load() async {
-        if items.isEmpty, let data = try? Data(contentsOf: cacheFile) { apply(data) }
+        if items.isEmpty, let data = await Self.read(cacheFile) { await apply(data) }
         loading = true
         defer { loading = false }
         do {
@@ -87,19 +82,42 @@ final class Library: ObservableObject {
             req.cachePolicy = .reloadIgnoringLocalCacheData
             let (data, resp) = try await URLSession.shared.data(for: req)
             guard (resp as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
-            if apply(data) { try? data.write(to: cacheFile, options: .atomic) }
+            if await apply(data) {
+                let file = cacheFile
+                Task.detached(priority: .utility) { try? data.write(to: file, options: .atomic) }
+            }
             failed = false
         } catch {
             failed = items.isEmpty
         }
     }
 
+    /// Parsing the catalog stalled the screen at every launch, so it happens off the main thread.
+    /// When the download is the same as what's showing, nothing is redrawn at all.
     @discardableResult
-    private func apply(_ data: Data) -> Bool {
-        guard let c = try? JSONDecoder().decode(Catalog.self, from: data) else { return false }
-        subjects = c.subjects
-        // Links the server found dead are hidden (tools/check_links.py -> broken.json)
-        items = c.items.filter { DriveLinks.shared.isBroken($0.u) == nil }.map(AB.index)
+    private func apply(_ data: Data) async -> Bool {
+        if data == lastData { return true }
+        typealias Parsed = (Catalog, [IndexedMaterial], [(name: String, subjects: [Subject])], [String])
+        let parsed: Parsed? = await Task.detached(priority: .userInitiated) { () -> Parsed? in
+            guard let c = try? JSONDecoder().decode(Catalog.self, from: data) else { return nil }
+            // Links the server found dead are hidden (tools/check_links.py -> broken.json)
+            let items = c.items.filter { DriveLinks.shared.isBroken($0.u) == nil }.map(AB.index)
+            var order: [String] = []
+            var groups: [String: [Subject]] = [:]
+            for s in c.subjects where s.c != "Archive" {
+                if groups[s.c] == nil { order.append(s.c) }
+                groups[s.c, default: []].append(s)
+            }
+            let years = Array(Set(items.map(\.year).filter { !$0.isEmpty })).sorted(by: >)
+            let categories: [(name: String, subjects: [Subject])] = order.map { ($0, groups[$0] ?? []) }
+            return (c, items, categories, years)
+        }.value
+        guard let parsed else { return false }
+        lastData = data
+        subjects = parsed.0.subjects
+        items = parsed.1
+        categories = parsed.2
+        years = parsed.3
         return true
     }
 }

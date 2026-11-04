@@ -37,6 +37,9 @@ struct MoreView: View {
                     }
                     NavigationLink { ThemeScreen() } label: { Label("Theme", systemImage: "paintpalette") }
                     NavigationLink { TabBarScreen() } label: { Label("Customize tab bar", systemImage: "rectangle.3.group") }
+                    if UIApplication.shared.supportsAlternateIcons {
+                        NavigationLink { AppIconScreen() } label: { Label("App icon", systemImage: "app.badge") }
+                    }
                     NavigationLink { LanguageScreen() } label: {
                         HStack {
                             Label("Language", systemImage: "globe")
@@ -96,21 +99,6 @@ struct MoreView: View {
                 } header: { Text("Storage") } footer: {
                     Text("Clearing the cache frees space and reloads pages and the materials list from asubank.org. Your saved materials and settings stay.")
                 }
-                .sheet(item: $reportingProblem) { ReportSheet(target: $0) }
-                .confirmationDialog("Clear the cache?", isPresented: $confirmClear, titleVisibility: .visible) {
-                    Button("Clear cache", role: .destructive) {
-                        clearing = true
-                        Task {
-                            await AppStorageInfo.clear()
-                            await library.load()
-                            sizes = await AppStorageInfo.measure()
-                            clearing = false
-                            Haptics.success()
-                        }
-                    }
-                } message: {
-                    Text("Downloaded pages, images and web data will be fetched again when you need them.")
-                }
 
                 Section("About") {
                     HStack {
@@ -148,8 +136,24 @@ struct MoreView: View {
             }
             .listStyle(.insetGrouped)
             .navigationTitle("More")
-            .task { sizes = await AppStorageInfo.measure() }
+            .task { if sizes == nil { sizes = await AppStorageInfo.measure() } }
             .sheet(isPresented: $showTerms) { WelcomeTermsView { showTerms = false } }
+            // These belong on the List. On a Section, SwiftUI repeats them on every row, which froze this screen's navigation.
+            .sheet(item: $reportingProblem) { ReportSheet(target: $0) }
+            .confirmationDialog("Clear the cache?", isPresented: $confirmClear, titleVisibility: .visible) {
+                Button("Clear cache", role: .destructive) {
+                    clearing = true
+                    Task {
+                        await AppStorageInfo.clear()
+                        await library.load()
+                        sizes = await AppStorageInfo.measure()
+                        clearing = false
+                        Haptics.success()
+                    }
+                }
+            } message: {
+                Text("Downloaded pages, images and web data will be fetched again when you need them.")
+            }
             .abDestinations()
         }
     }

@@ -55,6 +55,10 @@ var BADGES = {
   sponsor: { name: 'Sponsor', emoji: '💎' },
   legend: { name: 'Legend', emoji: '🔥' }
 };
+/** Everyone who signs up from this moment until the end of November 2026 (Jordan time) gets the early supporter badge */
+var EARLY_START = Date.parse('2026-11-04T00:00:00+03:00');
+var EARLY_END = Date.parse('2026-12-01T00:00:00+03:00');
+function isEarlySupporter(when) { var t = new Date(when).getTime(); return t >= EARLY_START && t < EARLY_END; }
 var SESSION_DAYS = 120;
 var MAX_TEXT = 1000;
 var CACHE_MSGS = 150;
@@ -97,6 +101,21 @@ function doGet(e) {
 function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
 
 function fail(msg) { var e = new Error(msg); e.userMessage = msg; throw e; }
+
+// Run once from the editor: gives the badge to accounts made earlier on the first day, before it was switched on
+function backfillEarlySupporters() {
+  var n = 0;
+  rows('Users').forEach(function (u) {
+    if (!isEarlySupporter(u.created)) return;
+    var list = String(u.badges || '').split(',').map(function (s) { return s.trim(); }).filter(String);
+    if (list.indexOf('early_supporter') >= 0) return;
+    list.push('early_supporter');
+    update('Users', u._row, { badges: list.join(',') });
+    n++;
+  });
+  CacheService.getScriptCache().remove('people');
+  Logger.log('Early supporter badge given to ' + n + ' accounts');
+}
 
 // Run once from the editor
 function setup() {
@@ -583,14 +602,16 @@ var ACTIONS = {
       if (taken('email', email)) fail('An account already uses that email.');
       if (taken('uniId', uniId)) fail('An account already uses that university ID.');
       var salt = Utilities.getUuid();
+      var early = isEarlySupporter(new Date());
+      var startBadges = (admin ? ['founder'] : []).concat(early ? ['early_supporter'] : []);
       var u = { id: newId(), username: username, email: email, uniId: uniId ? "'" + uniId : '', displayName: displayName, salt: salt,
                 hash: hashPassword(b.password, salt), role: admin ? 'admin' : 'user', banned: false, banReason: '',
                 created: new Date().toISOString(), lastSeen: new Date().toISOString(), color: COLORS[all.length % COLORS.length], mustReset: false,
-                avatar: '', phone: '', showPhone: false, bio: '', badges: admin ? 'founder' : '' };
+                avatar: '', phone: '', showPhone: false, bio: '', badges: startBadges.join(',') };
       append('Users', u);
       u.uniId = uniId;
       CacheService.getScriptCache().remove('people');
-      return { ok: true, token: newSession(u, b.platform), user: publicUser(u, true) };
+      return { ok: true, token: newSession(u, b.platform), user: publicUser(u, true), earlySupporter: early };
     });
   },
 

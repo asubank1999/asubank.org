@@ -39,6 +39,19 @@ enum Moderation {
     /// Paid services stay out of store builds until they use the store's own payments
     static let paidPaths: Set<String> = ["/apps/donate", "/requests/student_ads", "/requests/student_request_portal", "/requests/request", "/requests/student_request_main"]
 
+    /// Opens the report form over whatever is on screen. A row can't carry its own sheet: long lists would hold hundreds of them.
+    @MainActor static func report(_ target: ReportTarget) {
+        guard let root = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene }).flatMap(\.windows)
+            .first(where: \.isKeyWindow)?.rootViewController else { return }
+        var top = root
+        while let p = top.presentedViewController { top = p }
+        weak var shown: UIViewController?
+        let host = UIHostingController(rootView: ReportSheet(target: target, onClose: { shown?.dismiss(animated: true) }).tint(Color.abAccent))
+        shown = host
+        top.present(host, animated: true)
+    }
+
     @MainActor static func setBlocked(_ userId: String, _ on: Bool) async throws {
         _ = try await AccountStore.shared.call("block", ["userId": userId, "on": on])
         await AccountStore.shared.refresh()
@@ -48,6 +61,7 @@ enum Moderation {
 /// Lets anyone report a message, a person, a file or a problem. Signing in isn't needed.
 struct ReportSheet: View {
     let target: ReportTarget
+    var onClose: (() -> Void)? = nil
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var account = AccountStore.shared
     @State private var reason = ""
@@ -99,7 +113,7 @@ struct ReportSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(sent ? "Done" : "Cancel") { dismiss() }
+                    Button(sent ? "Done" : "Cancel") { if let onClose { onClose() } else { dismiss() } }
                 }
             }
         }

@@ -199,6 +199,11 @@ private struct SubmissionDetail: View {
                 if let u = item.primaryUrl { linkRow(item.title, u, item.platform) }
                 ForEach(item.backupLinks ?? [], id: \.self) { l in linkRow(l.label ?? "Backup", l.url, l.platform) }
             }
+            Section {
+                Button(role: .destructive) { Moderation.report(ReportTarget(kind: "file", targetId: item.primaryUrl ?? item.id, name: item.title)) } label: {
+                    Label("Report this file", systemImage: "flag")
+                }
+            }
             if admin {
                 Section {
                     SecureField("Admin secret", text: $secret)
