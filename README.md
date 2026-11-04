@@ -4,7 +4,7 @@
 
 | | Download | How to install |
 |---|---|---|
-| 🤖 **Android app (v1.8.0)** | **[⬇️ Download for Android (APK)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.8.0/ASUBank-1.8.0.apk)** | Open the link on your phone, tap the downloaded file, then allow "Install unknown apps" if Android asks. Android 8 or newer. |
+| 🤖 **Android app (v1.9.0)** | **[⬇️ Download for Android (APK)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.9.0/ASUBank-1.9.0.apk)** | Open the link on your phone, tap the downloaded file, then allow "Install unknown apps" if Android asks. Android 8 or newer. |
 | 🍎 **iPhone app (v1.8.0)** | **[⬇️ Download for iPhone (IPA)](https://github.com/asubank1999/asubank.org/releases/download/ios-v1.8.0/ASUBank-1.8.0-unsigned.ipa)** | Install it with [Sideloadly](https://sideloadly.io) or AltStore on a computer (they sign it with your Apple ID). iOS 15 or newer. |
 | 🌐 **Website** | **[asubank.org](https://asubank.org)** | Works on any phone or computer, nothing to install. |
 
