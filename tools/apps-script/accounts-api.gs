@@ -478,6 +478,27 @@ function scanUploads() {
   });
 }
 
+/** The upload folder's newest files from the last week (cached for 10 minutes: searching Drive is slow) */
+function recentUploads() {
+  var c = CacheService.getScriptCache();
+  var j = c.get('recentUploads');
+  if (j) return JSON.parse(j);
+  var list = [];
+  try {
+    var since = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 19);
+    var it = DriveApp.getFolderById(UPLOAD_FOLDER_ID).searchFiles('createdDate > "' + since + '" and trashed = false');
+    while (it.hasNext() && list.length < 200) {
+      var f = it.next();
+      if (/upload-test/i.test(f.getName())) continue;
+      list.push({ id: f.getId(), name: f.getName().slice(0, 120), created: f.getDateCreated().toISOString(), url: 'https://drive.google.com/file/d/' + f.getId() + '/view' });
+    }
+  } catch (e) { return []; }
+  list.sort(function (a, b) { return b.created.localeCompare(a.created); });
+  list = list.slice(0, 20);
+  c.put('recentUploads', JSON.stringify(list), 600);
+  return list;
+}
+
 // MARK: - avatars
 
 function avatarFolder() {
@@ -945,6 +966,52 @@ var ACTIONS = {
       log(a, 'report ' + status, r.kind, String(r.targetName).slice(0, 80));
       return { ok: true };
     });
+  },
+
+  /**
+   * The Notifications tab: friend requests, pokes, group answers, announcements and new uploads, plus reports,
+   * suggestions and group requests for admins. Built from the sheets, because the events feed only keeps the last 60 events.
+   */
+  notifications: function (b) {
+    var u = auth(b);
+    var map = usersById();
+    var blocked = blockedIds(map[u.id]);
+    var out = [];
+    function add(type, when, id, fromId, text, extra) {
+      var t = new Date(when);
+      if (isNaN(t.getTime())) return;
+      if (fromId && blocked.indexOf(fromId) >= 0) return;
+      var o = { id: type + ':' + id, type: type, created: t.toISOString(), text: String(text || '') };
+      var p = fromId ? map[fromId] : null;
+      if (p) { o.userId = p.id; o.name = p.displayName || p.username; o.avatar = p.avatar || ''; o.color = p.color || ''; }
+      Object.keys(extra || {}).forEach(function (k) { o[k] = extra[k]; });
+      out.push(o);
+    }
+    rows('Friends').forEach(function (f) {
+      if (f.status === 'accepted') { if (f.from === u.id) add('friend_accept', f.updated || f.created, f.id, f.to, ''); }
+      else if (f.to === u.id) add('friend_request', f.created, f.id, f.from, '');
+    });
+    rows('Pokes').filter(function (p) { return p.to === u.id; }).slice(-30).forEach(function (p) {
+      add('poke', p.created, p.id, p.from, p.place, { kind: String(p.kind || 'poke') });
+    });
+    rows('GroupRequests').forEach(function (r) {
+      if (r.userId === u.id && (r.status === 'approved' || r.status === 'rejected')) add('group_' + r.status, r.resolvedAt || r.created, r.id, '', r.title);
+      else if (u.role === 'admin' && r.status === 'pending') add('group_request', r.created, r.id, r.userId, r.title);
+    });
+    roomMessages('announcements').slice(-5).forEach(function (m) { add('announcement', m.created, m.id, '', m.text); });
+    var gone = {};
+    rows('DeletedFiles').forEach(function (r) { gone[String(r.id)] = 1; });
+    recentUploads().forEach(function (f) { if (!gone[f.id]) add('upload', f.created, f.id, '', f.name, { url: f.url }); });
+    if (u.role === 'admin') {
+      rows('Reports').filter(function (r) { return r.status === 'open'; }).slice(-20).forEach(function (r) {
+        add('report', r.created, r.id, '', r.reason + ' · ' + r.kind + (r.targetName ? ': ' + String(r.targetName).slice(0, 80) : ''));
+      });
+      rows('Suggestions').filter(function (r) { return r.status === 'open'; }).slice(-20).forEach(function (r) {
+        add('suggestion', r.created, r.id, '', String(r.note).slice(0, 140));
+      });
+    }
+    out.sort(function (x, y) { return y.created.localeCompare(x.created); });
+    return { ok: true, items: out.slice(0, 60) };
   },
 
   latest: function (b) {

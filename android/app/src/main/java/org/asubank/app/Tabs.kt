@@ -1,6 +1,7 @@
 package org.asubank.app
 
 import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.People
@@ -336,6 +337,7 @@ fun MoreScreen() {
                     Divider()
                     ListRow("Upload files", icon = Icons.Filled.CloudUpload) { nav.openTab(Routes.UPLOAD) }
                     Divider(); ListRow("Saved", icon = Icons.Filled.Star) { nav.navigate("savedList") }
+                    Divider(); ListRow("Notifications", icon = Icons.Filled.Notifications) { nav.navigate(Routes.NOTIFICATIONS) }
                     Divider(); ListRow("Friends", icon = Icons.Filled.People) { nav.navigate(Routes.FRIENDS) }
                     Divider(); ListRow("My lectures", icon = Icons.Filled.Alarm) { nav.navigate(Routes.LECTURES) }
                     Divider(); ListRow("Life hacks", icon = Icons.Filled.Lightbulb) { nav.navigate(Routes.HACKS) }

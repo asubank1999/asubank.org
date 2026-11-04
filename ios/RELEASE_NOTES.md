@@ -4,6 +4,7 @@ Summaries, past papers and test banks for Applied Science Private University stu
 ASU Bank is a free, volunteer, non-profit project. It is not made by or affiliated with the university.
 
 ### What's new in 1.10.2
+- New Notifications tab: friend requests, pokes, new uploads, announcements and admin requests in one list
 - Suggest materials is now a real form in the app, saved in the same place as the website's form
 - Admins: delete any file from Drive by holding it, and it stays gone after a refresh
 - Friends, Users and the admin screens open much faster

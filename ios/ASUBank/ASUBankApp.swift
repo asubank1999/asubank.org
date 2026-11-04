@@ -44,7 +44,10 @@ struct ASUBankApp: App {
                 }
                 .task {
                     await AccountStore.shared.refresh()
-                    if AccountStore.shared.signedIn { ChatNotifier.shared.start() }
+                    if AccountStore.shared.signedIn {
+                        ChatNotifier.shared.start()
+                        await NoticeStore.shared.load()
+                    }
                 }
                 .task {
                     await library.load()
@@ -67,6 +70,7 @@ struct RootView: View {
     @AppStorage(WelcomeTermsView.key) private var accepted = false
     @ObservedObject private var account = AccountStore.shared
     @ObservedObject private var notifier = ChatNotifier.shared
+    @ObservedObject private var notices = NoticeStore.shared
     @AppStorage(TabBarPrefs.key) private var chosenTabs = TabBarPrefs.standard
     @State private var lastTab: AppTab = .home
     /// Tapping the tab you are on rebuilds its stack, which goes back to its first screen
@@ -86,6 +90,7 @@ struct RootView: View {
         case .search: SearchView()
         case .chat: ChatTab()
         case .friends: FriendsTab()
+        case .notifications: NotificationsTab()
         case .saved: SavedView()
         case .lectures: LecturesTab()
         case .hacks: LifeHacksTab()
@@ -105,7 +110,7 @@ struct RootView: View {
                 screen(t).id(resets[t, default: 0])
                     .tabItem { Label(LocalizedStringKey(o?.name ?? ""), systemImage: o?.icon ?? "circle") }
                     .tag(t)
-                    .badge(t == .friends ? notifier.socialUnread : 0)
+                    .badge(t == .friends ? notifier.socialUnread : t == .notifications ? notices.unread : 0)
             }
             if account.isAdmin {
                 AdminTab().id(resets[.admin, default: 0])

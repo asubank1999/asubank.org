@@ -2,6 +2,7 @@ package org.asubank.app
 
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.People
 import kotlinx.coroutines.delay
@@ -156,6 +157,7 @@ private val adminTab = Tab(Routes.ADMIN, "Admin", Icons.Filled.Shield)
 private val choosableTabs = listOf(
     Tab(Routes.SEARCH, "Search", Icons.Filled.Search),
     Tab(Routes.CHAT, "Chat", Icons.Filled.Forum),
+    Tab(Routes.NOTIFICATIONS, "Notifications", Icons.Filled.Notifications),
     Tab(Routes.FRIENDS, "Friends", Icons.Filled.People),
     Tab(Routes.SAVED, "Saved", Icons.Filled.Star),
     Tab(Routes.LECTURES, "My lectures", Icons.Filled.Alarm),
@@ -182,7 +184,10 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     val socialUnread by ChatNotifier.socialUnread.collectAsState()
     val pendingTab by ChatNotifier.pendingTab.collectAsState()
     val isAdmin = user?.isAdmin == true
-    val middleTabs = chosenTabs.take(if (isAdmin) 2 else 3).mapNotNull { id -> choosableTabs.firstOrNull { it.route == id } }
+    val notices by Notices.items.collectAsState()
+    val noticesRead by Notices.lastRead.collectAsState()
+    val noticeUnread = notices.count { it.created > noticesRead }
+    val middleTabs = TabPrefs.shown(chosenTabs, isAdmin).mapNotNull { id -> choosableTabs.firstOrNull { it.route == id } }
     val barTabs = listOf(homeTab) + middleTabs + (if (isAdmin) listOf(adminTab) else emptyList()) + moreTab
     val inBar: (String) -> Boolean = { r -> barTabs.any { it.route == r } }
     LaunchedEffect(pendingTab) {
@@ -215,6 +220,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     LaunchedEffect(Unit) {
         launch { Library.load(); val links = DriveLinks.refresh(); val removed = RemovedFiles.refresh(); if (links || removed) Library.reindex() }
         launch { Pages.load() }
+        launch { Notices.load() }
         launch { SearchHelp.load() }
     }
     // Check for a new version on launch and whenever the app comes back
@@ -252,7 +258,8 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                                 else { lastTab = t.route; nav.openTab(t.route) }
                             },
                             icon = {
-                                if (t.route == Routes.FRIENDS && socialUnread > 0) BadgedBox(badge = { androidx.compose.material3.Badge { Text("$socialUnread") } }) { Icon(t.icon, null) }
+                                if (t.route == Routes.NOTIFICATIONS && noticeUnread > 0) BadgedBox(badge = { androidx.compose.material3.Badge { Text("$noticeUnread") } }) { Icon(t.icon, null) }
+                                else if (t.route == Routes.FRIENDS && socialUnread > 0) BadgedBox(badge = { androidx.compose.material3.Badge { Text("$socialUnread") } }) { Icon(t.icon, null) }
                                 else Icon(t.icon, null)
                             },
                             label = { Text(tr(t.label)) },
@@ -278,6 +285,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable(Routes.UPLOAD) { UploadScreen() }
                 composable(Routes.SAVED) { SavedScreen(back = !inBar(Routes.SAVED)) }
                 composable(Routes.FRIENDS) { FriendsScreen(back = !inBar(Routes.FRIENDS)) }
+                composable(Routes.NOTIFICATIONS) { NotificationsScreen(back = !inBar(Routes.NOTIFICATIONS)) }
                 composable(Routes.LECTURES) { LecturesScreen(back = !inBar(Routes.LECTURES)) }
                 composable(Routes.HACKS) { LifeHacksScreen(back = !inBar(Routes.HACKS)) }
                 composable("tabBar") { TabBarScreen() }

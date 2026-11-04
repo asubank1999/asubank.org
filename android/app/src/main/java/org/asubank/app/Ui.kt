@@ -172,6 +172,7 @@ object Routes {
     const val FRIENDS = "friends"
     const val LECTURES = "lectures"
     const val HACKS = "hacks"
+    const val NOTIFICATIONS = "notifications"
 }
 
 val LocalNav = staticCompositionLocalOf<NavController> { error("no nav") }

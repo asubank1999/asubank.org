@@ -1,6 +1,7 @@
 **ASU Bank for Android** — the native app for [asubank.org](https://asubank.org).
 
 ### What's new in 1.10.2
+- New Notifications tab: friend requests, pokes, new uploads, announcements and admin requests in one list
 - Suggest materials is now a real form in the app, saved in the same place as the website's form
 - Admins: delete any file from Drive by holding it, and it stays gone after a refresh
 - Friends, Users and the admin screens open much faster

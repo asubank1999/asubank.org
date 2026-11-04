@@ -332,6 +332,7 @@ final class AccountStore: ObservableObject {
         Keychain.set(nil, for: "ab.token")
         UserDefaults.standard.removeObject(forKey: userKey)
         ReplyCache.clear()
+        NoticeStore.shared.reset()
     }
 }
 
@@ -437,6 +438,7 @@ final class ChatNotifier: ObservableObject {
         guard let seen else { UserDefaults.standard.set(max(newest, r["now"] as? String ?? ""), forKey: key); return }
         UserDefaults.standard.set(max(seen, newest), forKey: key)
         for e in events where e.created > seen { await deliver(e) }
+        if events.contains(where: { $0.created > seen && $0.type != "message" }) { await NoticeStore.shared.load() }
     }
 
     /// Whether the user wants a notification for this event

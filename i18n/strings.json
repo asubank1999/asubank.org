@@ -1,4 +1,8 @@
 {
+ "%@ asked to add: %@": {
+  "ar": "طلب %@ إضافة: %@",
+  "es": "%@ pidió añadir: %@"
+ },
  "%@ replied to you": {
   "ar": "%@ ردّ عليك",
   "es": "%@ te respondió"
@@ -10,6 +14,10 @@
  "%d accounts": {
   "ar": "%d حساب",
   "es": "%d cuentas"
+ },
+ "%d d ago": {
+  "ar": "قبل %d يوم",
+  "es": "hace %d d"
  },
  "%d days ago": {
   "ar": "منذ %d أيام",
@@ -2531,6 +2539,10 @@
   "ar": "تظهر هنا طلبات الصداقة والنكزات.",
   "es": "Aquí aparecen las solicitudes y los toques."
  },
+ "Friend requests, pokes, new uploads and announcements will show up here.": {
+  "ar": "ستظهر هنا طلبات الصداقة والنكزات والملفات الجديدة والإعلانات.",
+  "es": "Aquí verás solicitudes de amistad, toques, archivos nuevos y anuncios."
+ },
  "Friends": {
   "ar": "الأصدقاء",
   "es": "Amigos"
@@ -3042,6 +3054,10 @@
  },
  "Junior": {
   "ar": "سنة ثالثة"
+ },
+ "Just now": {
+  "ar": "الآن",
+  "es": "Ahora"
  },
  "Keep discussions relevant to university/academic matters.": {
   "ar": "إبقاء النقاشات متعلقة بالشؤون الجامعية والأكاديمية."
@@ -3570,6 +3586,10 @@
   "ar": "منشور جديد",
   "es": "Nueva publicación"
  },
+ "New report": {
+  "ar": "بلاغ جديد",
+  "es": "Nuevo reporte"
+ },
  "New resources are added regularly. Check the website frequently or join our WhatsApp group for updates.": {
   "ar": "تضاف مصادر جديدة بانتظام. تابع الموقع أو انضم إلى مجموعة واتساب لمعرفة الجديد."
  },
@@ -3581,9 +3601,17 @@
   "ar": "الطلاب الجدد",
   "es": "Nuevos estudiantes"
  },
+ "New suggestion": {
+  "ar": "اقتراح جديد",
+  "es": "Nueva sugerencia"
+ },
  "New this week": {
   "ar": "جدد هذا الأسبوع",
   "es": "Nuevos esta semana"
+ },
+ "New upload on ASU Bank": {
+  "ar": "ملف جديد على ASU Bank",
+  "es": "Nueva subida en ASU Bank"
  },
  "New uploaded files": {
   "ar": "الملفات المرفوعة الجديدة",
@@ -5176,6 +5204,10 @@
  },
  "Sign in to chat with other students.": {
   "ar": "سجّل الدخول للدردشة مع الطلاب الآخرين."
+ },
+ "Sign in to see your notifications": {
+  "ar": "سجّل الدخول لرؤية إشعاراتك",
+  "es": "Inicia sesión para ver tus notificaciones"
  },
  "Sign in with an admin account to manage ASU Bank.": {
   "ar": "سجّل الدخول بحساب مشرف لإدارة ASU Bank.",

@@ -332,6 +332,7 @@ object Account {
         user.value = null
         Saved.prefs.edit().remove("account.token").remove("account.user").apply()
         ReplyCache.clear()
+        Notices.reset()
         ChatNotifier.stop(Disk.ctx)
     }
 }
@@ -427,6 +428,7 @@ object ChatNotifier {
         if (seen == null) { Saved.prefs.edit().putString("notify.lastSeen", maxOf(newest, r.str("now") ?: "")).apply(); return@withLock }
         if (newest > seen) Saved.prefs.edit().putString("notify.lastSeen", newest).apply()
         events.filter { it.created > seen }.forEach { deliver(ctx, it) }
+        if (events.any { it.created > seen && it.type != "message" }) Notices.load()
     }
 
     /** Whether the user wants a notification for this event */

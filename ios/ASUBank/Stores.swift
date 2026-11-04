@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 enum AppTab: Hashable, Identifiable {
-    case home, search, upload, chat, saved, admin, more, friends, lectures, hacks
+    case home, search, upload, chat, saved, admin, more, friends, lectures, hacks, notifications
     var id: Self { self }
 }
 
@@ -24,7 +24,7 @@ final class AppState: ObservableObject {
     init() {
         // Launch arguments used by the CI screenshots, e.g. `-startTab search -startQuery calculus`
         let d = UserDefaults.standard
-        let tabs: [String: AppTab] = ["home": .home, "search": .search, "upload": .upload, "chat": .chat, "saved": .saved, "admin": .admin, "more": .more]
+        let tabs: [String: AppTab] = ["home": .home, "search": .search, "upload": .upload, "chat": .chat, "saved": .saved, "admin": .admin, "more": .more, "notifications": .notifications]
         if let t = d.string(forKey: "startTab"), let tab = tabs[t] { self.tab = tab }
         pendingQuery = d.string(forKey: "startQuery")
         if let p = d.string(forKey: "startPath") { pendingRoute = .page(p, "") }

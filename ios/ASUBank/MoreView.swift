@@ -49,6 +49,7 @@ struct MoreView: View {
                     }
                     Button { app.uploadShown = true } label: { Label("Upload files", systemImage: "arrow.up.circle") }
                     NavigationLink { SavedView(embedded: true) } label: { Label("Saved", systemImage: "star") }
+                    NavigationLink { NotificationsScreen() } label: { Label("Notifications", systemImage: "bell") }
                     NavigationLink { FriendsScreen() } label: { Label("Friends", systemImage: "person.2") }
                     NavigationLink { LecturesScreen() } label: { Label("My lectures", systemImage: "alarm") }
                     NavigationLink { LifeHacksScreen() } label: { Label("Life hacks", systemImage: "lightbulb") }

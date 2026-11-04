@@ -931,10 +931,13 @@ fun NextLectureCard() {
 /** Which tabs sit between Home and More. Apps only. */
 object TabPrefs {
     private const val KEY = "tabs"
-    private const val DEFAULT = "search,chat,friends"
+    private const val DEFAULT = "search,chat,notifications"
+    /** Admins have one place less, and Home has a search button */
+    private val DEFAULT_ADMIN = listOf(Routes.CHAT, Routes.NOTIFICATIONS)
+    fun shown(list: List<String>, admin: Boolean) = if (admin && list == DEFAULT.split(",")) DEFAULT_ADMIN else list.take(if (admin) 2 else 3)
     /** route, name */
     val options = listOf(
-        Routes.SEARCH to "Search", Routes.CHAT to "Chat", Routes.FRIENDS to "Friends",
+        Routes.SEARCH to "Search", Routes.CHAT to "Chat", Routes.NOTIFICATIONS to "Notifications", Routes.FRIENDS to "Friends",
         Routes.SAVED to "Saved", Routes.LECTURES to "My lectures", Routes.HACKS to "Life hacks",
     )
     val chosen = MutableStateFlow(DEFAULT.split(","))
@@ -952,7 +955,7 @@ fun TabBarScreen() {
     val chosen by TabPrefs.chosen.collectAsState()
     val user by Account.user.collectAsState()
     val limit = if (user?.isAdmin == true) 2 else 3
-    val ids = chosen.take(limit)
+    val ids = TabPrefs.shown(chosen, user?.isAdmin == true)
     Screen("Customize tab bar") { pad ->
         LazyColumn(Modifier.padding(pad).fillMaxSize()) {
             item {

@@ -1036,15 +1036,18 @@ enum TabBarPrefs {
     static let options: [(tab: AppTab, id: String, name: String, icon: String)] = [
         (.search, "search", "Search", "magnifyingglass"),
         (.chat, "chat", "Chat", "bubble.left.and.bubble.right.fill"),
+        (.notifications, "notifications", "Notifications", "bell.fill"),
         (.friends, "friends", "Friends", "person.2.fill"),
         (.saved, "saved", "Saved", "star.fill"),
         (.lectures, "lectures", "My lectures", "alarm.fill"),
         (.hacks, "hacks", "Life hacks", "lightbulb.fill")
     ]
-    static let standard = "search,chat,friends"
+    static let standard = "search,chat,notifications"
+    /// Admins have one place less, and Home has a search button
+    static let standardAdmin = "chat,notifications"
 
     static func chosen(_ stored: String, admin: Bool) -> [AppTab] {
-        let ids = stored.split(separator: ",").map(String.init)
+        let ids = (admin && stored == standard ? standardAdmin : stored).split(separator: ",").map(String.init)
         let tabs = ids.compactMap { id in options.first { $0.id == id }?.tab }
         return Array((tabs.isEmpty ? [.search] : tabs).prefix(admin ? 2 : 3))
     }
@@ -1055,7 +1058,7 @@ struct TabBarScreen: View {
     @ObservedObject private var account = AccountStore.shared
 
     private var limit: Int { account.isAdmin ? 2 : 3 }
-    private var ids: [String] { stored.split(separator: ",").map(String.init).filter { id in TabBarPrefs.options.contains { $0.id == id } } }
+    private var ids: [String] { (account.isAdmin && stored == TabBarPrefs.standard ? TabBarPrefs.standardAdmin : stored).split(separator: ",").map(String.init).filter { id in TabBarPrefs.options.contains { $0.id == id } } }
 
     var body: some View {
         List {
