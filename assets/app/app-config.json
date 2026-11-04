@@ -1,14 +1,14 @@
 {
   "ios": {
-    "latest": "1.8.0",
+    "latest": "1.9.0",
     "minimum": "1.0.0",
     "store": "",
-    "notes": "Report messages, people and files, block people, community rules and a privacy policy, plus safer chat."
+    "notes": "Friends and pokes, posts on your profile, lecture reminders, weather on Home, new themes, notification sounds, tab bar choices, life hacks, and in-app groups, photoshoot booking and submissions."
   },
   "android": {
-    "latest": "1.8.0",
+    "latest": "1.9.0",
     "minimum": "1.0.0",
-    "notes": "Report messages, people and files, block people, community rules and a privacy policy, plus safer chat."
+    "notes": "Friends and pokes, posts on your profile, lecture reminders, weather on Home, new themes, notification sounds, tab bar choices, life hacks, and in-app groups, photoshoot booking and submissions."
   },
   "donate": true
 }
