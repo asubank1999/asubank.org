@@ -555,10 +555,14 @@ fun ABDots(modifier: Modifier = Modifier, color: Color = accent, strokeWidth: Dp
 fun Modifier.shimmer(): Modifier = composed {
     val move = rememberInfiniteTransition(label = "shimmer")
     val x by move.animateFloat(-1f, 2f, infiniteRepeatable(tween(1200, easing = LinearEasing)), label = "shimmer")
-    drawWithContent {
+    // SrcAtop in its own layer: the shine shows only on the grey shapes, not as a band across the screen
+    graphicsLayer(compositingStrategy = androidx.compose.ui.graphics.CompositingStrategy.Offscreen).drawWithContent {
         drawContent()
         val w = size.width
-        drawRect(Brush.linearGradient(listOf(Color.Transparent, Color.White.copy(alpha = 0.22f), Color.Transparent), Offset(x * w, 0f), Offset(x * w + w * 0.6f, 0f)))
+        drawRect(
+            Brush.linearGradient(listOf(Color.Transparent, Color.White.copy(alpha = 0.22f), Color.Transparent), Offset(x * w, 0f), Offset(x * w + w * 0.6f, 0f)),
+            blendMode = androidx.compose.ui.graphics.BlendMode.SrcAtop,
+        )
     }
 }
 

@@ -83,17 +83,24 @@ struct StoryTextView: View {
             .scaleEffect(scale)
             .offset(y: style.anim == "float" ? (moving ? -10 : 10) : 0)
             .opacity(style.anim == "fade" ? (moving ? 1 : 0.25) : 1)
+            // tied to these values, so it can't catch layout changes around the text
+            .animation(motion, value: moving)
+            .animation(style.effect == "rainbow" ? .linear(duration: 3).repeatForever(autoreverses: false) : nil, value: hue)
             .onAppear {
-                switch style.anim {
-                case "pop": withAnimation(.spring(response: 0.45, dampingFraction: 0.5)) { moving = true }
-                case "pulse": withAnimation(.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) { moving = true }
-                case "float": withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) { moving = true }
-                case "fade": withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) { moving = true }
-                default: break
-                }
-                if style.effect == "rainbow" { withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) { hue = 360 } }
+                if motion != nil { moving = true }
+                if style.effect == "rainbow" { hue = 360 }
             }
             .id(style.anim + style.effect)
+    }
+
+    private var motion: Animation? {
+        switch style.anim {
+        case "pop": return .spring(response: 0.45, dampingFraction: 0.5)
+        case "pulse": return .easeInOut(duration: 0.7).repeatForever(autoreverses: true)
+        case "float": return .easeInOut(duration: 1.6).repeatForever(autoreverses: true)
+        case "fade": return .easeInOut(duration: 1.2).repeatForever(autoreverses: true)
+        default: return nil
+        }
     }
 
     private var scale: CGFloat {

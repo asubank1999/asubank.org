@@ -599,41 +599,44 @@ struct JobsBanner: View {
 /// Three dots in the accent color, used wherever something is on its way
 struct ABDots: View {
     var title: LocalizedStringKey?
-    @State private var on = false
 
     init(_ title: LocalizedStringKey? = nil) { self.title = title }
 
     var body: some View {
         VStack(spacing: 8) {
-            HStack(spacing: 5) {
-                ForEach(0..<3, id: \.self) { i in
-                    Circle().fill(.tint).frame(width: 8, height: 8)
-                        .scaleEffect(on ? 1 : 0.45)
-                        .opacity(on ? 1 : 0.35)
-                        .animation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true).delay(Double(i) * 0.16), value: on)
+            TimelineView(.animation) { t in
+                HStack(spacing: 5) {
+                    ForEach(0..<3, id: \.self) { i in
+                        let wave = (sin((t.date.timeIntervalSinceReferenceDate - Double(i) * 0.16) * .pi * 2) + 1) / 2
+                        Circle().fill(.tint).frame(width: 8, height: 8)
+                            .scaleEffect(0.45 + 0.55 * wave)
+                            .opacity(0.35 + 0.65 * wave)
+                    }
                 }
             }
             if let title { Text(title).font(.footnote).foregroundStyle(.secondary) }
         }
-        .onAppear { on = true }
         .accessibilityLabel(Text("Loading"))
     }
 }
 
+/// A shine across grey shapes. It follows the clock and never uses withAnimation: an endless animation started that way
+/// also catches any layout change in the same update and repeats it forever, which made the chat screen bounce.
 struct Shimmer: ViewModifier {
-    @State private var x: CGFloat = -1
     func body(content: Content) -> some View {
         content
             .overlay(
-                GeometryReader { g in
-                    LinearGradient(colors: [.clear, .white.opacity(0.28), .clear], startPoint: .leading, endPoint: .trailing)
-                        .frame(width: g.size.width * 0.7)
-                        .offset(x: x * g.size.width)
+                TimelineView(.animation) { t in
+                    GeometryReader { g in
+                        let p = t.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 1.15) / 1.15
+                        LinearGradient(colors: [.clear, .white.opacity(0.28), .clear], startPoint: .leading, endPoint: .trailing)
+                            .frame(width: g.size.width * 0.7)
+                            .offset(x: (CGFloat(p) * 2.3 - 1) * g.size.width)
+                    }
                 }
                 .allowsHitTesting(false)
+                .mask(content)
             )
-            .clipped()
-            .onAppear { withAnimation(.linear(duration: 1.15).repeatForever(autoreverses: false)) { x = 1.3 } }
     }
 }
 

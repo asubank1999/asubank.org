@@ -645,6 +645,10 @@
   "ru": "@%s забанен",
   "tr": "@%s yasaklandı"
  },
+ "A cleaner loading effect": {
+  "ar": "تأثير تحميل أنظف",
+  "es": "Un efecto de carga más limpio"
+ },
  "A few letters are enough: \"calc\", \"MATH101\" or a doctor's name. Arabic names work too.": {
   "ar": "تكفي بضعة أحرف: \"calc\" أو \"MATH101\" أو اسم الدكتور. الأسماء العربية تعمل أيضًا.",
   "de": "Ein paar Buchstaben genügen: „calc“, „MATH101“ oder der Name eines Arztes. Arabische Namen funktionieren auch.",
@@ -4660,6 +4664,10 @@
  "Fixed Google Drive folders that looked empty: every file inside a folder now shows up": {},
  "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.": {},
  "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder).": {},
+ "Fixed the chat screen and message bar bouncing while a conversation opens": {
+  "ar": "إصلاح اهتزاز شاشة المحادثة وشريط الرسائل عند فتح المحادثة",
+  "es": "Corregido el rebote de la pantalla de chat y la barra de mensajes al abrir una conversación"
+ },
  "Fixed the star and online dot on profile photos": {},
  "Fixed: settings under More sometimes wouldn't open or froze": {},
  "Fixes: sharper profile photos, and the online row shows only people who are online": {

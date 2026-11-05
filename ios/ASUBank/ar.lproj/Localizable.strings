@@ -132,6 +132,7 @@
 "8 - College of Arts" = "8 - كلية الآداب";
 "9 - College of Engineering" = "9 - كلية الهندسة";
 "@%@ is banned" = "تم حظر @%@";
+"A cleaner loading effect" = "تأثير تحميل أنظف";
 "A few letters are enough: \"calc\", \"MATH101\" or a doctor's name. Arabic names work too." = "تكفي بضعة أحرف: \"calc\" أو \"MATH101\" أو اسم الدكتور. الأسماء العربية تعمل أيضًا.";
 "A free, student-run project" = "مشروع طلابي مجاني";
 "A line about you (optional)" = "سطر عنك (اختياري)";
@@ -834,6 +835,7 @@
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
 "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder)." = "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder).";
+"Fixed the chat screen and message bar bouncing while a conversation opens" = "إصلاح اهتزاز شاشة المحادثة وشريط الرسائل عند فتح المحادثة";
 "Fixed the star and online dot on profile photos" = "Fixed the star and online dot on profile photos";
 "Fixed: settings under More sometimes wouldn't open or froze" = "Fixed: settings under More sometimes wouldn't open or froze";
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "إصلاحات: صور شخصية أوضح، وصف المتصلين يعرض المتصلين فقط";

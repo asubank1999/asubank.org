@@ -132,6 +132,7 @@
 "8 - College of Arts" = "8 - Facultad de Artes";
 "9 - College of Engineering" = "9 - Facultad de Ingeniería";
 "@%@ is banned" = "@%@ está bloqueado";
+"A cleaner loading effect" = "Un efecto de carga más limpio";
 "A few letters are enough: \"calc\", \"MATH101\" or a doctor's name. Arabic names work too." = "Unas pocas letras son suficientes: \"calc\", \"MATH101\" o el nombre de un médico. Los nombres árabes también funcionan.";
 "A free, student-run project" = "Un proyecto gratuito de estudiantes";
 "A line about you (optional)" = "Una línea sobre ti (opcional)";
@@ -834,6 +835,7 @@
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
 "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder)." = "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder).";
+"Fixed the chat screen and message bar bouncing while a conversation opens" = "Corregido el rebote de la pantalla de chat y la barra de mensajes al abrir una conversación";
 "Fixed the star and online dot on profile photos" = "Fixed the star and online dot on profile photos";
 "Fixed: settings under More sometimes wouldn't open or froze" = "Fixed: settings under More sometimes wouldn't open or froze";
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "Correcciones: fotos de perfil más nítidas y la fila de conectados solo muestra a quien está en línea";
