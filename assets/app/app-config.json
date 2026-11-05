@@ -1,15 +1,15 @@
 {
   "share": "https://asubank.org/",
   "ios": {
-    "latest": "1.14.0",
+    "latest": "1.15.0",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.14.0",
-    "notes": "ASU Bank is now UniHub. Disappearing voice messages, photos and videos, see who saw your story, delete for everyone, instant messages and comments, background uploads, and new story effects. This installs as a new app: sign in once, then you can delete the old ASU Bank app."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.15.0",
+    "notes": "New: Subject swap. Trade a registered subject with another student. Post what you have and what you want, and matching swaps show first. Also fixes the chat screen bouncing on iPhone."
   },
   "android": {
-    "latest": "1.14.0",
+    "latest": "1.15.0",
     "minimum": "1.0.0",
-    "notes": "ASU Bank is now UniHub. Disappearing voice messages, photos and videos, see who saw your story, delete for everyone, instant messages and comments, background uploads, and new story effects. This installs as a new app: sign in once, then you can delete the old ASU Bank app."
+    "notes": "New: Subject swap. Trade a registered subject with another student. Post what you have and what you want, and matching swaps show first. Also fixes the chat screen bouncing on iPhone."
   },
   "donate": true
 }
