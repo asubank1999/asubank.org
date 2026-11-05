@@ -1,14 +1,14 @@
 {
   "ios": {
-    "latest": "1.11.0",
+    "latest": "1.12.0",
     "minimum": "1.0.0",
-    "store": "",
-    "notes": "See what changed after every update under More > What's New. Changing the app icon now works with TrollStore, and the About text says how ASU Bank is supported."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.12.0",
+    "notes": "New Feed with photos and comments, stories for 24 hours, cover photos, hold anyone's photo to see it bigger, calendar and exams first on Home, Exams & tasks, Focus timer, and new themes."
   },
   "android": {
-    "latest": "1.11.0",
+    "latest": "1.12.0",
     "minimum": "1.0.0",
-    "notes": "See what changed after every update under More > What's New. The About text now says how ASU Bank is supported."
+    "notes": "New Feed with photos and comments, stories for 24 hours, cover photos, hold anyone's photo to see it bigger, calendar and exams first on Home, Exams & tasks, Focus timer, and new themes."
   },
   "donate": true
 }
