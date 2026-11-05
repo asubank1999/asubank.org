@@ -1,4 +1,4 @@
-# Applied Science University - Test Bank & Resources
+# UniHub: study materials and tools for university students
 
 ## 📲 Download the app / حمّل التطبيق
 

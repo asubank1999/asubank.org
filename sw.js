@@ -2,7 +2,7 @@
    - pages: network first (always fresh), cached copy when offline, offline page as last resort
    - app files, icons, images, materials index: served from cache instantly, refreshed in the background
    - other sites (Drive, Apps Script, analytics) are never cached */
-const VERSION = 'asubank-v5';
+const VERSION = 'unihub-v6';
 const PAGES = VERSION + '-pages';
 const ASSETS = VERSION + '-assets';
 
@@ -13,8 +13,8 @@ const CORE = [
     '/guides/saved',
     '/upload/uploadmethod',
     '/banks/subjects',
-    '/assets/app/app.css?v=2',
-    '/assets/app/app.js?v=1',
+    '/assets/app/app.css?v=4',
+    '/assets/app/app.js?v=3',
     '/assets/app/materials.json',
     '/assets/img/ASU_Jordan_logo-removebg-preview.png',
     '/icons/icon-192x192.png',

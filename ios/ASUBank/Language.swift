@@ -8,7 +8,7 @@ enum AppLanguage {
     static let key = "ab.language"
     static let choices: [(code: String, name: String, native: String)] = [
         ("system", "System language", ""), ("en", "English", "English"), ("ar", "Arabic", "العربية"), ("es", "Spanish", "Español"),
-        ("fr", "French", "Français"), ("tr", "Turkish", "Türkçe"), ("de", "German", "Deutsch"), ("ru", "Russian", "Русский"),
+        
     ]
 
     static var choice: String { UserDefaults.standard.string(forKey: key) ?? "system" }
@@ -17,7 +17,7 @@ enum AppLanguage {
     static var code: String {
         if choice != "system" { return choice }
         let pref = Locale.preferredLanguages.first.map { String($0.prefix(2)) } ?? "en"
-        return ["ar", "es", "fr", "tr", "de", "ru"].contains(pref) ? pref : "en"
+        return ["ar", "es"].contains(pref) ? pref : "en"
     }
 
     static var isRTL: Bool { code == "ar" }

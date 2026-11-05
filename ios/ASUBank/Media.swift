@@ -307,15 +307,28 @@ struct ChatMediaTile: View {
     @State private var file: URL?
     @State private var image: UIImage?
     @State private var failed = false
+    @State private var loading = false
+
+    /// A video comes down only when it's tapped, so a chat doesn't use up mobile data
+    private func tapped() {
+        if let file { open(file); return }
+        guard type == "video", !loading else { return }
+        loading = true
+        Task {
+            if let got = try? await fetch() { file = got; open(got) } else { failed = true }
+            loading = false
+        }
+    }
 
     var body: some View {
-        Button { if let file { open(file) } } label: {
+        Button { tapped() } label: {
             ZStack {
                 Color.black.opacity(type == "video" ? 0.75 : 0.08)
                 if let image { Image(uiImage: image).resizable().scaledToFill() }
                 else if failed { Image(systemName: "exclamationmark.triangle").foregroundStyle(.secondary) }
-                else if file == nil { ABDots().tint(.white) }
-                if type == "video" && file != nil {
+                else if type != "video" && file == nil { ABDots().tint(Color.abAccent) }
+                if type == "video" && loading { ABDots().tint(.white) }
+                else if type == "video" {
                     Image(systemName: "play.circle.fill").font(.system(size: 44)).foregroundStyle(.white.opacity(0.92)).shadow(radius: 4)
                 }
             }
@@ -325,13 +338,16 @@ struct ChatMediaTile: View {
         .buttonStyle(.plain)
         .accessibilityLabel(Text(type == "video" ? "Play video" : "View photo"))
         .task {
-            var got = localFile
-            if got == nil { got = try? await fetch() }
-            guard let url = got else { failed = true; return }
-            file = url
-            if type == "video" {
-                image = await Task.detached(priority: .utility) { StoryVideo.poster(url) }.value
-            } else {
+            if let localFile {
+                file = localFile
+                if type == "video" {
+                    image = await Task.detached(priority: .utility) { StoryVideo.poster(localFile) }.value
+                } else {
+                    image = UIImage(contentsOfFile: localFile.path)
+                }
+            } else if type != "video" {
+                guard let url = try? await fetch() else { failed = true; return }
+                file = url
                 image = UIImage(contentsOfFile: url.path)
             }
         }

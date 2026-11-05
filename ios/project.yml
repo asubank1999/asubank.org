@@ -10,8 +10,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "1.13.0"
-    CURRENT_PROJECT_VERSION: "13"
+    MARKETING_VERSION: "1.14.0"
+    CURRENT_PROJECT_VERSION: "14"
     DEVELOPMENT_TEAM: ""
     AB_STORE_BUILD: "NO"
 targets:
@@ -27,7 +27,7 @@ targets:
       properties:
         CFBundleDisplayName: UniHub
         CFBundleDevelopmentRegion: en
-        CFBundleLocalizations: [en, ar, es, fr, tr, de, ru]
+        CFBundleLocalizations: [en, ar, es]
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true

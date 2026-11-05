@@ -32,7 +32,7 @@
         if (r.token) { token = r.token; set('ab.acc.token', token); }
         if (r.user) { user = r.user; set('ab.acc.user', JSON.stringify(user)); }
     }
-    function signOutLocally() { token = null; user = null; set('ab.acc.token', null); set('ab.acc.user', null); }
+    function signOutLocally() { token = null; user = null; set('ab.acc.token', null); set('ab.acc.user', null); cacheClear(); }
     function isAdmin() { return !!(user && user.role === 'admin'); }
     function isBlocked(id) { return !!(user && user.blocked && user.blocked.indexOf(id) >= 0); }
     var REPORT_REASONS = [['spam', 'Spam or advertising'], ['harassment', 'Harassment or bullying'], ['hate', 'Hate speech'], ['sexual', 'Sexual content'],
@@ -125,7 +125,7 @@
     }
     function showProfile(userId, fallback) {
         var s = sheet('Profile');
-        var body = h('div', { class: 'acc-profile' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var body = h('div', { class: 'acc-profile' }, skel('row', 2));
         s.box.appendChild(body);
         var signedIn = !!(token && user);
         call(signedIn ? 'profile' : 'publicProfile', { userId: userId, social: true }).then(function (r) {
@@ -196,6 +196,232 @@
     function errBox() { return h('p', { class: 'acc-err', role: 'alert' }); }
     function showErr(box, e) { box.textContent = e ? (e.message || String(e)) : ''; }
     function busy(btn, on, label) { btn.disabled = on; if (label) btn.textContent = on ? 'Please wait…' : label; }
+
+    // ---- 1.14.0 loading effects
+    function dots(label) { return h('div', { class: 'acc-dots', role: 'status', 'aria-label': label || 'Loading' }, h('i'), h('i'), h('i')); }
+    // grey shapes in the form of what is coming, so the screen feels ready straight away
+    function skel(kind, n) {
+        var box = h('div', { class: 'acc-skel', role: 'status', 'aria-label': 'Loading' });
+        if (kind === 'bubble') [[170, 0], [120, 0], [210, 1], [140, 0], [90, 1], [190, 0]].forEach(function (b) {
+            box.appendChild(h('div', { class: 'acc-skel-b' + (b[1] ? ' mine' : '') }, h('i', { style: 'width:' + b[0] + 'px' })));
+        });
+        else for (var i = 0; i < (n || 3); i++) box.appendChild(kind === 'post'
+            ? h('div', { class: 'acc-card acc-skel-post' }, h('div', { class: 'acc-skel-top' }, h('i', { class: 'av' }), h('span', null, h('i', { class: 'l1' }), h('i', { class: 'l2' }))), h('i', { class: 'l3' }), h('i', { class: 'pic' }))
+            : h('div', { class: 'acc-skel-top row' }, h('i', { class: 'av' }), h('span', null, h('i', { class: 'l1' }), h('i', { class: 'l2' }))));
+        return box;
+    }
+    // what a screen showed last time, so it opens at once. Cleared when signing out.
+    function cacheGet(k) { try { return JSON.parse(get('ab.cache.' + k)); } catch (e) { return null; } }
+    function cachePut(k, v) { set('ab.cache.' + k, JSON.stringify(v)); }
+    function cacheClear() {
+        try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf('ab.cache.') === 0) localStorage.removeItem(k); }); } catch (e) {}
+    }
+
+    // ---- work that carries on in the background, with a strip at the top
+    var jobsBar = null;
+    function addJob(title, run, done) {
+        if (!jobsBar) { jobsBar = h('div', { class: 'acc-jobs', 'aria-live': 'polite' }); document.body.appendChild(jobsBar); }
+        var row = h('div', { class: 'acc-job' });
+        function draw(state, message) {
+            while (row.firstChild) row.removeChild(row.firstChild);
+            row.appendChild(state === 'ok' ? h('b', { class: 'acc-job-ok', text: '✓' }) : state === 'fail' ? h('b', { class: 'acc-job-bad', text: '!' }) : dots());
+            row.appendChild(h('span', { class: 'acc-job-t' }, h('b', { text: state === 'ok' ? 'Done' : title }), message ? h('small', { text: message }) : null));
+            if (state === 'fail') {
+                row.appendChild(h('button', { type: 'button', class: 'acc-job-btn', text: 'Try again', onclick: go }));
+                row.appendChild(h('button', { type: 'button', class: 'acc-x', 'aria-label': 'Close', text: '×', onclick: function () { row.remove(); } }));
+            }
+        }
+        function go() {
+            draw('run');
+            run().then(function () {
+                draw('ok');
+                if (done) done();
+                setTimeout(function () { row.classList.add('out'); setTimeout(function () { row.remove(); }, 260); }, 1200);
+            }).catch(function (e) { draw('fail', e.message); });
+        }
+        jobsBar.appendChild(row);
+        go();
+    }
+
+    // ---- disappearing
+    var DISAPPEAR = [[0, "Don't disappear"], [60, '1 minute'], [3600, '60 minutes'], [86400, '1 day'], [604800, '1 week']];
+    function expired(iso) { return !!iso && new Date(iso).getTime() <= Date.now(); }
+    function leftText(iso) {
+        if (!iso) return '';
+        var s = Math.max(0, Math.floor((new Date(iso).getTime() - Date.now()) / 1000));
+        return '⏱ ' + (s < 60 ? Math.max(1, s) + 's' : s < 3600 ? Math.floor(s / 60) + 'm' : s < 86400 ? Math.floor(s / 3600) + 'h' : Math.floor(s / 86400) + 'd');
+    }
+    function disappearPick() {
+        var pick = h('select', { class: 'acc-disappear', 'aria-label': 'Disappears after', title: 'Disappears after' });
+        DISAPPEAR.forEach(function (d) { pick.appendChild(h('option', { value: String(d[0]), text: (d[0] ? '⏱ ' : '') + d[1] })); });
+        pick.addEventListener('change', function () { pick.classList.toggle('on', pick.value !== '0'); });
+        return pick;
+    }
+
+    // ---- files in chats and posts
+    var MIME = { m4a: 'audio/mp4', weba: 'audio/webm', ogg: 'audio/ogg', mp4: 'video/mp4', mov: 'video/quicktime', webm: 'video/webm', jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', pdf: 'application/pdf' };
+    function blobFrom(data, name) {
+        var bin = atob(data), bytes = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        var ext = String(name || '').split('.').pop().toLowerCase();
+        return URL.createObjectURL(new Blob([bytes], { type: MIME[ext] || 'application/octet-stream' }));
+    }
+    var mediaUrls = {};
+    function mediaUrl(key, get) {
+        if (!mediaUrls[key]) mediaUrls[key] = get().catch(function (e) { delete mediaUrls[key]; throw e; });
+        return mediaUrls[key];
+    }
+    function roomOrPostMedia(scope, id, name) {
+        return function () {
+            return mediaUrl(scope + id, function () {
+                return call('mediaFile', { scope: scope, id: id }).then(function (r) { return blobFrom(r.data, r.name || name); });
+            });
+        };
+    }
+    function fileBase64(f) {
+        return new Promise(function (ok, bad) {
+            var rd = new FileReader();
+            rd.onload = function () { ok(String(rd.result).split(',')[1]); };
+            rd.onerror = function () { bad(new Error("Couldn't open this file.")); };
+            rd.readAsDataURL(f);
+        });
+    }
+    function voiceTime(s) { s = Math.round(s || 0); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+    var voices = {}, voiceNow = null;
+    function voiceBubble(id, duration, fetchUrl) {
+        var seed = 7; for (var c = 0; c < id.length; c++) seed = (seed * 31 + id.charCodeAt(c)) >>> 0;
+        var wave = h('span', { class: 'acc-wave', 'aria-hidden': 'true' });
+        for (var i = 0; i < 26; i++) {
+            seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+            wave.appendChild(h('i', { style: 'height:' + (6 + (seed >>> 28)) + 'px' }));
+        }
+        var btn = h('button', { type: 'button', class: 'acc-voice-btn', 'aria-label': 'Play voice message', text: '▶' });
+        var time = h('small', { text: voiceTime(duration) });
+        var box = h('div', { class: 'acc-voice' }, btn, wave, time);
+        function draw(a) {
+            var p = a && a.duration ? a.currentTime / a.duration : 0;
+            Array.prototype.forEach.call(wave.children, function (b, i) { b.className = i / 26 <= p && p > 0 ? 'on' : ''; });
+            var on = a && !a.paused;
+            btn.textContent = on ? '❚❚' : '▶';
+            btn.setAttribute('aria-label', on ? 'Pause' : 'Play voice message');
+        }
+        function bind(a) { a.ontimeupdate = function () { draw(a); }; a.onended = function () { a.currentTime = 0; draw(a); }; a.onpause = a.onplay = function () { draw(a); }; draw(a); }
+        if (voices[id]) bind(voices[id]);
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var a = voices[id];
+            if (a) {
+                if (a.paused) { if (voiceNow && voiceNow !== a) voiceNow.pause(); voiceNow = a; a.play(); } else a.pause();
+                return;
+            }
+            btn.disabled = true; btn.textContent = '…';
+            fetchUrl().then(function (u) {
+                a = voices[id] = new Audio(u);
+                a.onerror = function () { delete voices[id]; time.textContent = "This browser can't play it"; btn.textContent = '▶'; };
+                bind(a);
+                if (voiceNow) voiceNow.pause();
+                voiceNow = a;
+                return a.play();
+            }).catch(function () { time.textContent = "Couldn't play it"; btn.textContent = '▶'; })
+              .then(function () { btn.disabled = false; });
+        });
+        return box;
+    }
+    function photoTile(fetchUrl) {
+        var img = h('img', { class: 'acc-dm-photo', alt: 'Photo' });
+        var loader = dots();
+        var tile = h('button', { type: 'button', class: 'acc-dm-photo-btn', 'aria-label': 'View photo', onclick: function (e) { e.stopPropagation(); if (img.src) window.open(img.src, '_blank', 'noopener'); } }, loader, img);
+        fetchUrl().then(function (u) { img.src = u; loader.remove(); }).catch(function () { loader.remove(); });
+        return tile;
+    }
+    // a video comes down only when it's tapped
+    function videoTile(fetchUrl) {
+        var tile = h('button', { type: 'button', class: 'acc-video-tile', 'aria-label': 'Play video' }, h('span', { text: '▶' }));
+        tile.addEventListener('click', function (e) {
+            e.stopPropagation();
+            while (tile.firstChild) tile.removeChild(tile.firstChild);
+            tile.appendChild(dots());
+            tile.disabled = true;
+            fetchUrl().then(function (u) {
+                var v = h('video', { class: 'acc-video', src: u, controls: true, autoplay: true, playsinline: true });
+                tile.replaceWith(v);
+            }).catch(function () { while (tile.firstChild) tile.removeChild(tile.firstChild); tile.disabled = false; tile.appendChild(h('span', { text: '!' })); });
+        });
+        return tile;
+    }
+    function mediaOf(m, fetchUrl) {
+        if (m.fileType === 'voice') return voiceBubble(m.id, m.duration, fetchUrl);
+        if (m.fileType === 'video') return videoTile(fetchUrl);
+        if (m.fileType === 'photo') return photoTile(fetchUrl);
+        return null;
+    }
+    function previewOf(m) {
+        return m.text || (m.fileType === 'voice' ? '🎤 Voice message' : m.fileType === 'video' ? '🎬 Video' : m.fileType === 'photo' ? '📷 Photo' : m.fileName ? '📄 ' + m.fileName : '');
+    }
+    var localSeq = 0;
+
+    // the row in a chat: attach, timer, message box, and the microphone or send button
+    function chatRow(opts) {
+        var input = opts.input, send = opts.send;
+        var file = h('input', { type: 'file', hidden: true, accept: 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm' + (opts.docs ? ',.pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document' : '') });
+        var attach = h('button', { type: 'button', class: 'acc-attach', 'aria-label': 'Attach a file', title: opts.docs ? 'Attach a photo, video, PDF or Word file' : 'Attach a photo or video', text: '+', onclick: function () { file.click(); } });
+        var pick = disappearPick();
+        var mic = h('button', { type: 'button', class: 'acc-send', 'aria-label': 'Record a voice message', title: 'Record a voice message', text: '🎤' });
+        var row = h('div', { class: 'acc-compose-row' }, attach, pick, input, mic, send);
+        var recBar = h('div', { class: 'acc-rec', hidden: true });
+        function tidy() { var empty = !input.value.trim(); mic.hidden = !empty || !window.MediaRecorder; send.hidden = empty && !mic.hidden; }
+        input.addEventListener('input', tidy);
+        tidy();
+        file.addEventListener('change', function () {
+            var f = file.files[0]; file.value = '';
+            if (!f) return;
+            var isVideo = /^video\//.test(f.type), isPhoto = /^image\//.test(f.type);
+            if (isVideo && f.size > 12000000) return opts.fail(new Error('That video is too big. The limit is 12 MB.'));
+            if (!isVideo && !isPhoto && f.size > 8000000) return opts.fail(new Error('That file is too big. The limit is 8 MB.'));
+            var local = URL.createObjectURL(f);
+            if (isPhoto) opts.media('photo', 'photo.jpg', function () { return postPhotoData(f); }, 0, local, f.size);
+            else if (isVideo) opts.media('video', /\.mov$/i.test(f.name) ? 'video.mov' : /\.webm$/i.test(f.name) ? 'video.webm' : 'video.mp4', function () { return fileBase64(f); }, 0, local, f.size);
+            else opts.media(/\.pdf$/i.test(f.name) ? 'pdf' : 'docx', f.name, function () { return fileBase64(f); }, 0, null, f.size);
+        });
+        var rec = null, chunks = [], started = 0, tick = null, cancelled = false, streamNow = null;
+        function stopAll() { clearInterval(tick); if (streamNow) streamNow.getTracks().forEach(function (t) { t.stop(); }); streamNow = null; recBar.hidden = true; row.hidden = false; }
+        function drawRec() {
+            while (recBar.firstChild) recBar.removeChild(recBar.firstChild);
+            var clock = h('b', { text: '0:00' });
+            recBar.appendChild(h('button', { type: 'button', class: 'acc-attach', 'aria-label': 'Cancel', text: '🗑', onclick: function () { cancelled = true; rec.stop(); } }));
+            recBar.appendChild(h('i', { class: 'acc-rec-dot' }));
+            recBar.appendChild(clock);
+            recBar.appendChild(h('span', { class: 'acc-rec-t', text: 'Recording…' }));
+            recBar.appendChild(h('button', { type: 'button', class: 'acc-send', 'aria-label': 'Send', text: '↑', onclick: function () { rec.stop(); } }));
+            tick = setInterval(function () {
+                var s = (Date.now() - started) / 1000;
+                clock.textContent = voiceTime(s);
+                if (s >= 180 && rec.state === 'recording') rec.stop();
+            }, 250);
+        }
+        mic.addEventListener('click', function () {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+                streamNow = stream;
+                // iPhones can't play webm, so mp4 audio is first choice wherever the browser records it
+                var mp4 = MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported('audio/mp4');
+                rec = new MediaRecorder(stream, mp4 ? { mimeType: 'audio/mp4', audioBitsPerSecond: 32000 } : { audioBitsPerSecond: 32000 });
+                chunks = []; cancelled = false; started = Date.now();
+                rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+                rec.onstop = function () {
+                    var length = Math.max(1, Math.round((Date.now() - started) / 1000));
+                    stopAll();
+                    if (cancelled) return;
+                    var blob = new Blob(chunks, { type: rec.mimeType || (mp4 ? 'audio/mp4' : 'audio/webm') });
+                    if (blob.size > 8000000) return opts.fail(new Error('That file is too big. The limit is 8 MB.'));
+                    opts.media('voice', mp4 ? 'voice.m4a' : 'voice.weba', function () { return fileBase64(blob); }, length, URL.createObjectURL(blob), blob.size);
+                };
+                row.hidden = true; recBar.hidden = false;
+                drawRec();
+                rec.start();
+            }).catch(function () { opts.fail(new Error("UniHub can't use the microphone. You can allow it in your browser's settings.")); });
+        });
+        return { row: row, recBar: recBar, file: file, disappear: function () { return Number(pick.value) || 0; }, tidy: tidy };
+    }
 
     // ---- sign in / create account
     function signInForm(after) {
@@ -354,9 +580,9 @@
         tabs.appendChild(h('button', { type: 'button', role: 'tab', class: room ? '' : 'on', 'aria-selected': room ? 'false' : 'true', text: 'Rooms', onclick: function () { location.hash = ''; } }));
         tabs.appendChild(msgTab);
         root.appendChild(tabs);
-        call('dmList').then(function (r) { if (r.unread) msgTab.textContent = 'Messages (' + r.unread + ')'; if (room) drawDms(r); })
+        call('dmList').then(function (r) { cachePut('dms', r); if (r.unread) msgTab.textContent = 'Messages (' + r.unread + ')'; if (room) drawDms(r); })
             .catch(function (e) { if (room) { dmBox.textContent = e.message; } });
-        var dmBox = h('div', null, h('p', { class: 'acc-muted acc-center', text: 'Loading…' }));
+        var dmBox = h('div', null, skel('row', 5));
         function drawDms(r) {
             while (dmBox.firstChild) dmBox.removeChild(dmBox.firstChild);
             dmBox.appendChild(h('div', { class: 'acc-card acc-rooms' }, h('button', { type: 'button', class: 'acc-room', onclick: newMessage },
@@ -368,7 +594,7 @@
                 return;
             }
             dmBox.appendChild(h('div', { class: 'acc-card acc-rooms' }, list.map(function (c) {
-                var preview = c.last.text || (c.last.fileType === 'photo' ? '📷 Photo' : '📄 ' + (c.last.fileName || ''));
+                var preview = previewOf(c.last);
                 return h('a', { class: 'acc-room' + (c.unread ? ' unread' : ''), href: '#@dm/' + encodeURIComponent(c.user.id) },
                     avatar(nameOf(c.user), c.user.color, 50, c.user.role === 'admin', c.user.avatar, c.user.online == null ? null : !!c.user.online),
                     h('span', { class: 'acc-room-t' },
@@ -376,7 +602,7 @@
                         h('span', { class: 'acc-dm-top' }, h('small', { class: 'acc-dm-preview', text: preview }), c.unread ? h('i', { class: 'acc-count', text: String(c.unread) }) : null)));
             })));
         }
-        if (room) { root.appendChild(dmBox); return; }
+        if (room) { var savedDms = cacheGet('dms'); if (savedDms) drawDms(savedDms); root.appendChild(dmBox); return; }
         var strip = h('div', { class: 'acc-card acc-rooms', hidden: true });
         root.appendChild(strip);
         call('online').then(function (r) {
@@ -388,7 +614,7 @@
                 h('span', { class: 'acc-room-t' }, h('b', { text: (r.onlineCount || 0) + ' online now' }), h('small', { text: (r.users || []).length + ' students' })),
                 h('span', { class: 'acc-chev', text: '›' })));
         }).catch(function () {});
-        var list = h('div', { class: 'acc-card acc-rooms' }, h('p', { class: 'acc-muted', text: 'Loading rooms…' }));
+        var list = h('div', { class: 'acc-card acc-rooms' }, skel('row', 5));
         root.appendChild(list);
         root.appendChild(h('p', { class: 'acc-muted acc-small acc-foot', text: "Be kind and helpful. Don't share exam answers during an exam, private info or anything illegal. Admins can remove messages and ban accounts." }));
         root.appendChild(h('p', { class: 'acc-muted acc-small acc-center', text: 'Signed in as @' + user.username }));
@@ -405,12 +631,14 @@
             if (isAdmin()) list.appendChild(h('button', { type: 'button', class: 'acc-room acc-room-add', onclick: function () { roomEditor(null, drawRooms); } },
                 h('span', { class: 'acc-emoji', text: '＋' }), h('span', { class: 'acc-room-t' }, h('b', { text: 'New room' }), h('small', { text: 'Admins only' }))));
         }
-        call('rooms').then(function (r) { drawRooms(r.rooms || []); }).catch(function (e) { list.textContent = e.message; });
+        var savedRooms = cacheGet('rooms');
+        if (savedRooms && savedRooms.length) drawRooms(savedRooms);
+        call('rooms').then(function (r) { cachePut('rooms', r.rooms || []); drawRooms(r.rooms || []); }).catch(function (e) { if (!savedRooms) list.textContent = e.message; });
     }
 
     function showOnline() {
         var s = sheet('Who’s online');
-        var box = h('div', { class: 'acc-users' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var box = h('div', { class: 'acc-users' }, skel('row', 4));
         s.box.appendChild(box);
         call('online').then(function (r) {
             while (box.firstChild) box.removeChild(box.firstChild);
@@ -464,7 +692,7 @@
     function roomView(roomId) {
         clear();
         var info = { id: roomId, name: roomId, emoji: '💬' };
-        var msgs = [], byId = {}, people = {}, replyTo = null, editing = null, pinned = null, last = null;
+        var msgs = [], byId = {}, people = {}, replyTo = null, editing = null, pinned = null, last = null, seenIds = {}, forceBottom = false;
         var title = h('h1', { class: 'acc-room-title', text: roomId });
         var titleEmoji = h('span', { class: 'acc-emoji', text: '💬' });
         var titleAbout = h('small', { class: 'acc-muted' });
@@ -474,17 +702,52 @@
         var input = h('textarea', { rows: 1, maxlength: 1000, placeholder: 'Message' });
         var replyBar = h('div', { class: 'acc-reply', hidden: true });
         var send = h('button', { type: 'submit', class: 'acc-send', 'aria-label': 'Send', text: '↑' });
+        // the message shows at once and is replaced by the real one when the server has it
+        function deliver(text, media) {
+            var reply = replyTo ? replyTo.id : '';
+            setReply(null);
+            var temp = { id: 'local-' + (++localSeq), room: roomId, userId: user.id, username: user.username, displayName: user.displayName, role: user.role, color: user.color,
+                text: text, created: new Date().toISOString(), replyTo: reply, pending: true };
+            if (media) { temp.hasFile = true; temp.fileType = media.type; temp.fileName = media.name; temp.duration = media.duration; temp.local = media.local; }
+            byId[temp.id] = temp; msgs.push(temp); forceBottom = true; render();
+            var gone = bar.disappear();
+            (media ? media.load() : Promise.resolve(null)).then(function (data) {
+                var f = { room: roomId, text: text, replyTo: reply, expiresIn: gone };
+                if (data) { f.file = data; f.fileName = media.name; f.duration = media.duration; }
+                return call('send', f);
+            }).then(function (r) {
+                delete byId[temp.id];
+                msgs = msgs.filter(function (m) { return m !== temp; });
+                if (r.message && !byId[r.message.id]) {
+                    if (media && media.local) { r.message.local = media.local; mediaUrls['room' + r.message.id] = Promise.resolve(media.local); }
+                    seenIds[r.message.id] = 1;
+                    add([r.message]);
+                }
+                render();
+                showErr(err, null);
+            }).catch(function (e) {
+                delete byId[temp.id];
+                msgs = msgs.filter(function (m) { return m !== temp; });
+                render();
+                showErr(err, e);
+                if (text && !input.value) { input.value = text; bar.tidy(); }
+            });
+        }
+        var bar = chatRow({ input: input, send: send, fail: function (e) { showErr(err, e); }, media: function (type, name, load, duration, local) {
+            deliver('', { type: type, name: name, load: load, duration: duration, local: local });
+        } });
         var composer = h('form', { class: 'acc-composer', onsubmit: function (ev) {
             ev.preventDefault();
             var t = input.value.trim(); if (!t) return;
-            send.disabled = true;
-            var p = editing
-                ? call('editMessage', { id: editing.id, text: t }).then(function () { var m = editing; m.text = t; m.edited = new Date().toISOString(); setReply(null); render(); })
-                : call('send', { room: roomId, text: t, replyTo: replyTo ? replyTo.id : '' }).then(function (r) { setReply(null); if (r.message) add([r.message]); });
-            p.then(function () { input.value = ''; showErr(err, null); })
-                .catch(function (e) { showErr(err, e); })
-                .then(function () { send.disabled = false; input.focus(); });
-        } }, replyBar, h('div', { class: 'acc-compose-row' }, input, send));
+            input.value = ''; bar.tidy(); showErr(err, null);
+            if (editing) {
+                var m = editing, before = [m.text, m.edited];
+                m.text = t; m.edited = new Date().toISOString();
+                setReply(null); render();
+                call('editMessage', { id: m.id, text: t }).catch(function (e) { m.text = before[0]; m.edited = before[1]; render(); showErr(err, e); });
+            } else deliver(t);
+            input.focus();
+        } }, replyBar, bar.row, bar.recBar, bar.file);
         input.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); composer.requestSubmit ? composer.requestSubmit() : send.click(); }
             if (e.key === 'Escape' && (editing || replyTo)) { setReply(null); input.value = ''; }
@@ -518,7 +781,7 @@
             while (replyBar.firstChild) replyBar.removeChild(replyBar.firstChild);
             replyBar.hidden = !m;
             send.textContent = editing ? '✓' : '↑';
-            if (m) replyBar.appendChild(h('span', null, h('b', { text: (edit ? 'Editing your message' : 'Replying to ' + nameOf(m)) + ': ' }), m.text.slice(0, 80)),
+            if (m) replyBar.appendChild(h('span', null, h('b', { text: (edit ? 'Editing your message' : 'Replying to ' + nameOf(m)) + ': ' }), previewOf(m).slice(0, 80)),
                 h('button', { type: 'button', class: 'acc-x', 'aria-label': 'Cancel', text: '×', onclick: function () { if (editing) input.value = ''; setReply(null); } }));
         }
         function drawPin() {
@@ -527,7 +790,7 @@
             if (!pinned) return;
             pinBar.appendChild(h('button', { type: 'button', class: 'acc-pinned-t', onclick: function () {
                 var el = feed.querySelector('[data-id="' + pinned.id + '"]'); if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            } }, h('b', { text: '📌 ' + nameOf(pinned) + ': ' }), pinned.text.slice(0, 140)));
+            } }, h('b', { text: '📌 ' + nameOf(pinned) + ': ' }), previewOf(pinned).slice(0, 140)));
             if (isAdmin()) pinBar.appendChild(h('button', { type: 'button', class: 'acc-x', 'aria-label': 'Unpin', title: 'Unpin', text: '×', onclick: function () { pin(null); } }));
         }
         function pin(m) {
@@ -541,15 +804,17 @@
             var grouped = prev && prev.userId === m.userId && new Date(prev.created).toDateString() === new Date(m.created).toDateString();
             var reply = m.replyTo && byId[m.replyTo];
             var who = function () { showProfile(m.userId, nameOf(m)); };
-            var actions = h('span', { class: 'acc-msg-actions' },
+            var actions = m.pending ? null : h('span', { class: 'acc-msg-actions' },
                 h('button', { type: 'button', text: 'Reply', onclick: function () { setReply(m); input.focus(); } }),
-                mine ? h('button', { type: 'button', text: 'Edit', onclick: function () { setReply(m, true); input.value = m.text; input.focus(); } }) : null,
+                mine && m.text ? h('button', { type: 'button', text: 'Edit', onclick: function () { setReply(m, true); input.value = m.text; bar.tidy(); input.focus(); } }) : null,
                 isAdmin() ? h('button', { type: 'button', text: pinned && pinned.id === m.id ? 'Unpin' : 'Pin', onclick: function () { pin(pinned && pinned.id === m.id ? null : m); } }) : null,
-                !mine ? h('button', { type: 'button', text: 'Report', onclick: function () { reportSheet('message', m.id, m.text.slice(0, 120)); } }) : null,
+                !mine ? h('button', { type: 'button', text: 'Report', onclick: function () { reportSheet('message', m.id, previewOf(m).slice(0, 120)); } }) : null,
                 (!mine && m.role !== 'admin') ? h('button', { type: 'button', text: 'Block', onclick: function () { blockPerson(m.userId, nameOf(m), function () { location.reload(); }); } }) : null,
-                (mine || isAdmin()) ? h('button', { type: 'button', text: 'Delete', onclick: function () {
-                    if (!window.confirm('Delete this message?')) return;
-                    call('deleteMessage', { id: m.id }).then(function () { remove([m.id]); }).catch(function (e) { showErr(err, e); });
+                (mine || isAdmin()) ? h('button', { type: 'button', text: 'Delete for everyone', onclick: function () {
+                    if (!window.confirm('Delete this message for everyone?')) return;
+                    // gone at once here; everyone else's screen removes it on its next check
+                    remove([m.id]);
+                    call('deleteMessage', { id: m.id }).catch(function (e) { byId[m.id] = m; msgs.push(m); msgs.sort(function (a, b) { return a.created < b.created ? -1 : 1; }); render(); showErr(err, e); });
                 } }) : null,
                 (isAdmin() && !mine) ? h('button', { type: 'button', text: 'Ban', onclick: function () {
                     if (!window.confirm('Ban @' + m.username + '? They can’t sign in or chat until an admin unbans them.')) return;
@@ -557,33 +822,43 @@
                 } }) : null);
             var av = !mine ? (below ? h('span', { class: 'acc-av-space' }) : h('button', { type: 'button', class: 'acc-av-btn', 'aria-label': 'Profile of ' + nameOf(m), onclick: who },
                 avatar(nameOf(m), m.color, 30, admin, p.avatar, p.online ? true : null))) : null;
-            return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (grouped ? ' grouped' : '') + (below ? ' below' : ''), 'data-id': m.id },
+            return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (grouped ? ' grouped' : '') + (below ? ' below' : '') + (m.pending ? ' pending' : ''), 'data-id': m.id },
                 av,
                 h('div', { class: 'acc-bubble', onclick: toggleActions },
                     (!mine && !grouped) ? h('button', { type: 'button', class: 'acc-from', style: '--from:' + safeColor(m.color), onclick: who },
                         nameOf(m), admin ? h('span', { class: 'acc-badge', text: 'ADMIN' }) : null, badgeRow(p.badges, true)) : null,
-                    reply ? h('div', { class: 'acc-quote' }, h('b', { text: nameOf(reply) }), reply.text.slice(0, 120)) : null,
-                    h('div', { class: 'acc-text', text: m.text }),
-                    h('div', { class: 'acc-time', text: (pinned && pinned.id === m.id ? '📌 ' : '') + (m.edited ? 'edited · ' : '') + fmtTime(m.created) }),
+                    reply ? h('div', { class: 'acc-quote' }, h('b', { text: nameOf(reply) }), previewOf(reply).slice(0, 120)) : null,
+                    m.hasFile ? mediaOf(m, m.local ? function () { return Promise.resolve(m.local); } : roomOrPostMedia('room', m.id, m.fileName)) : null,
+                    m.text ? h('div', { class: 'acc-text', text: m.text }) : null,
+                    h('div', { class: 'acc-time', text: (m.pending ? '🕓 ' : '') + (m.expires ? leftText(m.expires) + ' · ' : '') + (pinned && pinned.id === m.id ? '📌 ' : '') + (m.edited ? 'edited · ' : '') + fmtTime(m.created) }),
                     actions));
         }
 
         function render() {
-            var atBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80;
+            var atBottom = forceBottom || feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80;
+            forceBottom = false;
+            msgs = msgs.filter(function (m) { if (expired(m.expires)) { delete byId[m.id]; return false; } return true; });
+            var firstDraw = !Object.keys(seenIds).length;
             while (feed.firstChild) feed.removeChild(feed.firstChild);
             if (!msgs.length) feed.appendChild(h('p', { class: 'acc-muted acc-center', text: 'No messages yet. Say hi!' }));
             var day = null;
             msgs.forEach(function (m, i) {
                 var d = new Date(m.created).toDateString();
                 if (d !== day) { day = d; feed.appendChild(h('div', { class: 'acc-day' }, h('span', { text: dayLabel(m.created) }))); }
-                feed.appendChild(bubble(m, i > 0 ? msgs[i - 1] : null, msgs[i + 1]));
+                var b = bubble(m, i > 0 ? msgs[i - 1] : null, msgs[i + 1]);
+                if (!seenIds[m.id]) { seenIds[m.id] = 1; if (!firstDraw) b.classList.add('enter'); }
+                feed.appendChild(b);
             });
             if (atBottom || !last) feed.scrollTop = feed.scrollHeight;
         }
         function add(list) {
             var changed = false;
-            list.filter(function (m) { return !isBlocked(m.userId); }).forEach(function (m) { if (!byId[m.id]) { byId[m.id] = m; msgs.push(m); changed = true; } });
-            if (msgs.length) last = msgs[msgs.length - 1].id;
+            var firstPending = function () { for (var i = 0; i < msgs.length; i++) if (msgs[i].pending) return i; return msgs.length; };
+            list.filter(function (m) { return !isBlocked(m.userId) && !expired(m.expires); }).forEach(function (m) {
+                if (!byId[m.id]) { byId[m.id] = m; msgs.splice(firstPending(), 0, m); changed = true; }
+            });
+            var real = msgs.filter(function (m) { return !m.pending; });
+            if (real.length) last = real[real.length - 1].id;
             if (changed) render();
         }
         function remove(ids) {
@@ -591,6 +866,8 @@
             var gone = {}; ids.forEach(function (i) { gone[i] = 1; });
             var before = msgs.length;
             msgs = msgs.filter(function (m) { if (gone[m.id]) { delete byId[m.id]; return false; } return true; });
+            var real = msgs.filter(function (m) { return !m.pending; });
+            last = real.length ? real[real.length - 1].id : null;
             if (msgs.length !== before) render();
         }
         // returns true when something changed
@@ -614,9 +891,10 @@
                 if (changed && msgs.length === n) render();
                 if (!msgs.length) render();
                 showErr(err, null);
-            }).catch(function (e) { showErr(err, e); })
+            }).catch(function (e) { if (!msgs.length) render(); showErr(err, e); })
               .then(function () { if (decodeURIComponent(location.hash.replace('#', '')) === roomId) pollTimer = setTimeout(poll, document.hidden ? 15000 : 3000); });
         }
+        feed.appendChild(skel('bubble'));
         poll();
     }
 
@@ -630,7 +908,7 @@
     function newMessage() {
         var s = sheet('New message');
         var search = h('input', { type: 'search', placeholder: 'Search people', 'aria-label': 'Search people' });
-        var box = h('div', { class: 'acc-users' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var box = h('div', { class: 'acc-users' }, skel('row', 4));
         s.box.appendChild(h('div', { class: 'acc-field' }, search));
         s.box.appendChild(box);
         var friends = [], found = [], timer = null;
@@ -661,7 +939,7 @@
 
     function dmThread(userId) {
         clear();
-        var msgs = [], byId = {}, last = null, seenUpTo = '', other = null, sending = false, urls = {};
+        var msgs = [], byId = {}, last = null, seenUpTo = '', other = null, urls = {}, seenIds = {}, forceBottom = false;
         var hash = '#@dm/' + encodeURIComponent(userId);
         var title = h('h1', { class: 'acc-room-title', text: '' });
         var status = h('small', { class: 'acc-muted' });
@@ -670,32 +948,48 @@
         var err = errBox();
         var input = h('textarea', { rows: 1, maxlength: 2000, placeholder: 'Message' });
         var send = h('button', { type: 'submit', class: 'acc-send', 'aria-label': 'Send', text: '↑' });
-        var file = h('input', { type: 'file', hidden: true, accept: '.pdf,.docx,.jpg,.jpeg,.png,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png' });
-        var attach = h('button', { type: 'button', class: 'acc-attach', 'aria-label': 'Attach a photo, PDF or Word file', title: 'Attach a photo, PDF or Word file', text: '+', onclick: function () { file.click(); } });
+        // the message shows at once and is replaced by the real one when the server has it
+        function deliver(text, media) {
+            var temp = { id: 'local-' + (++localSeq), from: user.id, to: userId, text: text, created: new Date().toISOString(), pending: true };
+            if (media) { temp.hasFile = true; temp.fileType = media.type; temp.fileName = media.name; temp.fileSize = media.size; temp.duration = media.duration; temp.local = media.local; }
+            byId[temp.id] = temp; msgs.push(temp); forceBottom = true; render();
+            var gone = bar.disappear();
+            (media ? media.load() : Promise.resolve(null)).then(function (data) {
+                var f = { userId: userId, text: text, expiresIn: gone };
+                if (data) { f.file = data; f.fileName = media.name; f.duration = media.duration; }
+                return call('dmSend', f);
+            }).then(function (r) {
+                delete byId[temp.id];
+                msgs = msgs.filter(function (m) { return m !== temp; });
+                if (r.message && !byId[r.message.id]) {
+                    if (media && media.local) { r.message.local = media.local; urls[r.message.id] = media.local; }
+                    seenIds[r.message.id] = 1;
+                    add([r.message]);
+                }
+                render();
+                showErr(err, null);
+            }).catch(function (e) {
+                delete byId[temp.id];
+                msgs = msgs.filter(function (m) { return m !== temp; });
+                render();
+                showErr(err, e);
+                if (text && !input.value) { input.value = text; bar.tidy(); }
+            });
+        }
+        var bar = chatRow({ input: input, send: send, docs: true, fail: function (e) { showErr(err, e); }, media: function (type, name, load, duration, local, size) {
+            deliver('', { type: type, name: name, load: load, duration: duration, local: local, size: size });
+        } });
         var composer = h('form', { class: 'acc-composer', onsubmit: function (ev) {
             ev.preventDefault();
-            var t = input.value.trim(); if (!t || sending) return;
-            post({ userId: userId, text: t }, function () { input.value = ''; });
-        } }, h('div', { class: 'acc-compose-row' }, attach, input, send), file);
+            var t = input.value.trim(); if (!t) return;
+            input.value = ''; bar.tidy(); showErr(err, null);
+            deliver(t);
+            input.focus();
+        } }, bar.row, bar.recBar, bar.file);
         var closed = h('p', { class: 'acc-muted acc-small acc-center', hidden: true, text: '🔒 You can only send private messages to friends.' });
         input.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); composer.requestSubmit ? composer.requestSubmit() : send.click(); }
         });
-        file.addEventListener('change', function () {
-            var f = file.files[0]; file.value = '';
-            if (!f) return;
-            if (f.size > 8000000) return showErr(err, new Error('That file is too big. The limit is 8 MB.'));
-            var rd = new FileReader();
-            rd.onload = function () { post({ userId: userId, text: '', file: String(rd.result).split(',')[1], fileName: f.name }); };
-            rd.onerror = function () { showErr(err, new Error("Couldn't open this file.")); };
-            rd.readAsDataURL(f);
-        });
-        function post(fields, done) {
-            sending = true; send.disabled = true; attach.disabled = true;
-            call('dmSend', fields).then(function (r) { if (done) done(); if (r.message) add([r.message]); showErr(err, null); })
-                .catch(function (e) { showErr(err, e); })
-                .then(function () { sending = false; send.disabled = false; attach.disabled = false; input.focus(); });
-        }
         root.appendChild(h('div', { class: 'acc-room-head' }, h('a', { href: '#@messages', class: 'acc-back', 'aria-label': 'Back to messages', text: '‹' }), face,
             h('span', { class: 'acc-room-t' }, title, status)));
         root.appendChild(feed); root.appendChild(err); root.appendChild(composer); root.appendChild(closed);
@@ -703,19 +997,12 @@
         function fetchFile(m) {
             if (urls[m.id]) return Promise.resolve(urls[m.id]);
             return call('dmFile', { id: m.id }).then(function (r) {
-                var bin = atob(r.data), bytes = new Uint8Array(bin.length);
-                for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-                var type = m.fileType === 'pdf' ? 'application/pdf' : m.fileType === 'photo' ? (/\.png$/i.test(m.fileName) ? 'image/png' : 'image/jpeg') : 'application/octet-stream';
-                return (urls[m.id] = URL.createObjectURL(new Blob([bytes], { type: type })));
+                return (urls[m.id] = blobFrom(r.data, r.name || m.fileName));
             });
         }
         function attachment(m) {
-            if (m.fileType === 'photo') {
-                var img = h('img', { class: 'acc-dm-photo', alt: 'Photo' });
-                var link = h('button', { type: 'button', class: 'acc-dm-photo-btn', 'aria-label': 'View photo', onclick: function () { if (img.src) window.open(img.src, '_blank', 'noopener'); } }, img);
-                fetchFile(m).then(function (u) { img.src = u; }).catch(function () {});
-                return link;
-            }
+            var media = mediaOf(m, m.local ? function () { return Promise.resolve(m.local); } : function () { return fetchFile(m); });
+            if (media) return media;
             var size = m.fileSize >= 1000000 ? (m.fileSize / 1000000).toFixed(1) + ' MB' : Math.max(1, Math.round(m.fileSize / 1000)) + ' KB';
             return h('button', { type: 'button', class: 'acc-dm-file', onclick: function (ev) {
                 var b = ev.currentTarget; b.disabled = true;
@@ -728,21 +1015,26 @@
         function bubble(m, prev, next) {
             var mine = m.from === user.id;
             var same = function (o) { return o && o.from === m.from && new Date(o.created).toDateString() === new Date(m.created).toDateString(); };
-            var actions = h('span', { class: 'acc-msg-actions' },
-                mine ? h('button', { type: 'button', text: 'Delete', onclick: function () {
-                    if (!window.confirm('Delete this message?')) return;
-                    call('dmDelete', { id: m.id }).then(function () { remove([m.id]); }).catch(function (e) { showErr(err, e); });
+            var actions = m.pending ? null : h('span', { class: 'acc-msg-actions' },
+                mine ? h('button', { type: 'button', text: 'Delete for everyone', onclick: function () {
+                    if (!window.confirm('Delete this message for everyone?')) return;
+                    // gone at once for me; the other person's screen removes it on its next check
+                    remove([m.id]);
+                    call('dmDelete', { id: m.id }).catch(function (e) { byId[m.id] = m; msgs.push(m); msgs.sort(function (a, b) { return a.created < b.created ? -1 : 1; }); render(); showErr(err, e); });
                 } }) : h('button', { type: 'button', text: 'Report', onclick: function () { reportSheet('dm', m.id, (m.text || m.fileName || '').slice(0, 120)); } }),
                 (!mine && other && other.role !== 'admin') ? h('button', { type: 'button', text: 'Block', onclick: function () { blockPerson(userId, nameOf(other), function () { location.hash = '@messages'; }); } }) : null);
-            return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (same(prev) ? ' grouped' : '') + (same(next) ? ' below' : ''), 'data-id': m.id },
+            return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (same(prev) ? ' grouped' : '') + (same(next) ? ' below' : '') + (m.pending ? ' pending' : ''), 'data-id': m.id },
                 h('div', { class: 'acc-bubble', onclick: toggleActions },
                     m.hasFile ? attachment(m) : null,
                     m.text ? h('div', { class: 'acc-text', text: m.text }) : null,
-                    h('div', { class: 'acc-time', text: fmtTime(m.created) }),
+                    h('div', { class: 'acc-time', text: (m.pending ? '🕓 ' : '') + (m.expires ? leftText(m.expires) + ' · ' : '') + fmtTime(m.created) }),
                     actions));
         }
         function render() {
-            var atBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80;
+            var atBottom = forceBottom || feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80;
+            forceBottom = false;
+            msgs = msgs.filter(function (m) { if (expired(m.expires)) { delete byId[m.id]; return false; } return true; });
+            var firstDraw = !Object.keys(seenIds).length;
             while (feed.firstChild) feed.removeChild(feed.firstChild);
             if (!msgs.length) feed.appendChild(h('div', { class: 'acc-empty' }, other ? avatar(nameOf(other), other.color, 72, false, other.avatar) : null,
                 h('b', { text: other ? nameOf(other) : '' }), h('p', { class: 'acc-muted', text: 'Say hello. Only the two of you see this chat.' })));
@@ -751,15 +1043,19 @@
             msgs.forEach(function (m, i) {
                 var d = new Date(m.created).toDateString();
                 if (d !== day) { day = d; feed.appendChild(h('div', { class: 'acc-day' }, h('span', { text: dayLabel(m.created) }))); }
-                feed.appendChild(bubble(m, msgs[i - 1], msgs[i + 1]));
+                var b = bubble(m, msgs[i - 1], msgs[i + 1]);
+                if (!seenIds[m.id]) { seenIds[m.id] = 1; if (!firstDraw) b.classList.add('enter'); }
+                feed.appendChild(b);
                 if (m.id === seen) feed.appendChild(h('div', { class: 'acc-seen', text: 'Seen' }));
             });
             if (atBottom || !last) feed.scrollTop = feed.scrollHeight;
         }
         function add(list) {
             var changed = false;
-            list.forEach(function (m) { if (!byId[m.id]) { byId[m.id] = m; msgs.push(m); changed = true; } });
-            if (msgs.length) last = msgs[msgs.length - 1].id;
+            var firstPending = function () { for (var i = 0; i < msgs.length; i++) if (msgs[i].pending) return i; return msgs.length; };
+            list.filter(function (m) { return !expired(m.expires); }).forEach(function (m) { if (!byId[m.id]) { byId[m.id] = m; msgs.splice(firstPending(), 0, m); changed = true; } });
+            var real = msgs.filter(function (m) { return !m.pending; });
+            if (real.length) last = real[real.length - 1].id;
             if (changed) render();
             return changed;
         }
@@ -768,9 +1064,12 @@
             var gone = {}; ids.forEach(function (i) { gone[i] = 1; });
             var before = msgs.length;
             msgs = msgs.filter(function (m) { if (gone[m.id]) { delete byId[m.id]; return false; } return true; });
-            if (msgs.length !== before) { last = msgs.length ? msgs[msgs.length - 1].id : null; render(); }
+            var real = msgs.filter(function (m) { return !m.pending; });
+            last = real.length ? real[real.length - 1].id : null;
+            if (msgs.length !== before) render();
         }
         var first = true;
+        feed.appendChild(skel('bubble'));
         function poll() {
             var f = { userId: userId }; if (last) f.after = last;
             call('dmThread', f).then(function (r) {
@@ -792,7 +1091,6 @@
             }).catch(function (e) { showErr(err, e); })
               .then(function () {
                   if (location.hash === hash) pollTimer = setTimeout(poll, document.hidden ? 15000 : 3000);
-                  else Object.keys(urls).forEach(function (k) { URL.revokeObjectURL(urls[k]); });
               });
         }
         poll();
@@ -822,7 +1120,7 @@
                 .catch(function (e) { showErr(err, e); busy(annBtn, false, 'Send announcement'); });
         } }, h('h2', { text: '📣 Announcement' }), h('p', { class: 'acc-muted acc-small', text: 'Posted in Announcements; everyone with notifications on gets it.' }), ann, annBtn));
 
-        var roomBox = h('div', { class: 'acc-rooms' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var roomBox = h('div', { class: 'acc-rooms' }, skel('row', 3));
         function drawRooms(rooms) {
             while (roomBox.firstChild) roomBox.removeChild(roomBox.firstChild);
             rooms.forEach(function (rm) {
@@ -915,7 +1213,7 @@
                 .catch(function (e) { showErr(err, e); busy(delBtn, false, 'Delete upload'); });
         } }, h('h2', { text: 'Delete a file' }), h('p', { class: 'acc-muted acc-small', text: 'It goes to the Drive trash and disappears from UniHub for everyone. A file owned by another Drive account is only removed from UniHub.' }), link, delBtn));
 
-        var repBox = h('div', { class: 'acc-log' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var repBox = h('div', { class: 'acc-log' }, skel('row', 3));
         root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Open reports' }), repBox));
         function loadReports() {
             call('adminReports').then(function (r) {
@@ -939,7 +1237,7 @@
         }
         loadReports();
 
-        var sugBox = h('div', { class: 'acc-log' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var sugBox = h('div', { class: 'acc-log' }, skel('row', 3));
         root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Suggestions' }), sugBox));
         function loadSuggestions() {
             call('adminSuggestions').then(function (r) {
@@ -959,7 +1257,7 @@
         }
         loadSuggestions();
 
-        var logBox = h('div', { class: 'acc-log' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var logBox = h('div', { class: 'acc-log' }, skel('row', 3));
         root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Admin activity' }), logBox));
         call('adminLog').then(function (r) {
             while (logBox.firstChild) logBox.removeChild(logBox.firstChild);
@@ -988,10 +1286,17 @@
         var card = h('article', { class: 'acc-card acc-post' + (flat ? ' flat' : '') });
         card.appendChild(h('button', { type: 'button', class: 'acc-post-head', 'aria-label': 'Open the profile of ' + nameOf(u), onclick: flat ? null : function () { showProfile(u.id, nameOf(u)); } },
             avatar(nameOf(u), u.color, 40, u.role === 'admin', u.avatar),
-            h('span', { class: 'acc-post-who' }, h('b', { text: nameOf(u) }), h('small', { title: a[1], text: ago(p.created) + ' · ' + a[0] }))));
+            h('span', { class: 'acc-post-who' }, h('b', { text: nameOf(u) }), h('small', { title: a[1], text: ago(p.created) + ' · ' + a[0] + (p.expires ? ' · ' + leftText(p.expires) : '') }))));
         if (p.text) card.appendChild(h('p', { class: 'acc-post-text', text: p.text }));
         if (safePhoto(p.image)) card.appendChild(h('a', { href: bigPhoto(p.image), target: '_blank', rel: 'noopener noreferrer' },
             h('img', { class: 'acc-post-img', src: safePhoto(p.image), alt: 'Photo in the post', loading: 'lazy', referrerpolicy: 'no-referrer', onerror: function (e) { e.currentTarget.remove(); } })));
+        var postVid = driveId(p.video);
+        if (postVid) {
+            var vt = h('button', { type: 'button', class: 'acc-video-tile wide', 'aria-label': 'Play video' }, h('span', { text: '▶' }));
+            vt.addEventListener('click', function () { vt.replaceWith(h('iframe', { class: 'acc-post-video', src: 'https://drive.google.com/file/d/' + postVid + '/preview', title: 'Video', allow: 'autoplay; fullscreen', referrerpolicy: 'no-referrer' })); });
+            card.appendChild(vt);
+        }
+        if (p.hasVoice) card.appendChild(voiceBubble(p.id, p.duration, roomOrPostMedia('post', p.id, 'voice.m4a')));
         if (!(token && user)) {
             card.appendChild(h('p', { class: 'acc-post-meta', text: '♥ ' + (p.likes || 0) + '   💬 ' + (p.comments || 0) }));
             return card;
@@ -1021,15 +1326,16 @@
         if (u.id !== user.id) row.appendChild(h('button', { type: 'button', class: 'acc-post-act small', text: 'Report', onclick: function () { reportSheet('post', p.id, nameOf(u)); } }));
         if (u.id === user.id || isAdmin()) row.appendChild(h('button', { type: 'button', class: 'acc-post-act small', text: 'Delete', onclick: function (e) {
             if (!window.confirm('Delete this post?')) return;
-            var b = e.currentTarget; b.disabled = true;
-            call('postDelete', { id: p.id }).then(function () { card.remove(); }).catch(function (x) { b.disabled = false; b.textContent = x.message; });
+            var b = e.currentTarget, parent = card.parentNode, after = card.nextSibling;
+            card.remove();
+            call('postDelete', { id: p.id }).catch(function (x) { if (parent) parent.insertBefore(card, after); b.textContent = x.message; });
         } }));
         card.appendChild(row);
         return card;
     }
     function commentsSheet(p, changed) {
         var s = sheet('Comments');
-        var list = h('div', { class: 'acc-comments' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var list = h('div', { class: 'acc-comments' }, skel('row', 3));
         var input = h('textarea', { rows: '1', maxlength: '500', placeholder: 'Write a comment', 'aria-label': 'Write a comment' });
         var send = h('button', { type: 'submit', class: 'acc-send', 'aria-label': 'Send', text: '↑' });
         var err = errBox();
@@ -1040,15 +1346,17 @@
             var acts = h('span', { class: 'acc-comment-acts' });
             if (mine || isAdmin() || (p.user && p.user.id === user.id)) acts.appendChild(h('button', { type: 'button', text: 'Delete', onclick: function (e) {
                 if (!window.confirm('Delete this comment?')) return;
-                var b = e.currentTarget; b.disabled = true;
-                call('commentDelete', { id: c.id }).then(load).catch(function (x) { b.disabled = false; showErr(err, x); });
+                row.remove();
+                count = Math.max(0, count - 1); changed(count);
+                call('commentDelete', { id: c.id }).then(load).catch(function (x) { showErr(err, x); load(); });
             } }));
             if (!mine) acts.appendChild(h('button', { type: 'button', text: 'Report', onclick: function () { reportSheet('comment', c.id, nameOf(u)); } }));
-            return h('div', { class: 'acc-comment' },
+            var row = h('div', { class: 'acc-comment' + (c.pending ? ' pending' : '') },
                 h('button', { type: 'button', class: 'acc-comment-av', 'aria-label': 'Open the profile of ' + nameOf(u), onclick: function () { showProfile(u.id, nameOf(u)); } }, avatar(nameOf(u), u.color, 34, u.role === 'admin', u.avatar)),
                 h('div', { class: 'acc-comment-t' },
                     h('div', { class: 'acc-comment-top' }, h('b', { text: nameOf(u) }), h('small', { text: ago(c.created) })),
-                    h('p', { text: c.text }), acts));
+                    h('p', { text: c.text }), c.pending ? null : acts));
+            return row;
         }
         function load() {
             return call('comments', { postId: p.id }).then(function (r) {
@@ -1063,10 +1371,23 @@
         var form = h('form', { class: 'acc-compose-row acc-comment-form', onsubmit: function (e) {
             e.preventDefault();
             var text = input.value.trim();
-            if (!text || send.disabled) return;
-            send.disabled = true; showErr(err);
-            call('commentAdd', { postId: p.id, text: text }).then(function () { input.value = ''; return load(); })
-                .catch(function (x) { showErr(err, x); }).then(function () { send.disabled = false; input.focus(); });
+            if (!text) return;
+            showErr(err);
+            // the comment shows at once; only a failure brings the words back
+            input.value = '';
+            var empty = list.querySelector('.acc-center');
+            if (empty) empty.remove();
+            var temp = line({ id: 'local', text: text, created: new Date().toISOString(), user: user, pending: true });
+            temp.classList.add('enter');
+            list.appendChild(temp);
+            list.scrollTop = list.scrollHeight;
+            count++; changed(count);
+            call('commentAdd', { postId: p.id, text: text }).then(load).catch(function (x) {
+                temp.remove(); count--; changed(count);
+                showErr(err, x);
+                if (!input.value) input.value = text;
+            });
+            input.focus();
         } }, input, send);
         input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } });
         s.box.appendChild(list); s.box.appendChild(err); s.box.appendChild(form);
@@ -1092,37 +1413,89 @@
     function composeSheet(done) {
         var s = sheet('New post');
         var text = h('textarea', { rows: '4', maxlength: '1000', placeholder: "What's on your mind?", 'aria-label': 'Post text' });
-        var pickInput = h('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp', hidden: true });
+        var pickInput = h('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm', hidden: true });
         var preview = h('img', { class: 'acc-post-img', alt: 'Photo you picked', hidden: true });
-        var photo = null, previewUrl = null;
-        var pickBtn = h('button', { type: 'button', class: 'ab-btn gray', text: 'Add a photo', onclick: function () { pickInput.click(); } });
-        var dropBtn = h('button', { type: 'button', class: 'ab-btn gray', text: 'Remove photo', hidden: true, onclick: function () { setPhoto(null); } });
+        var previewVideo = h('video', { class: 'acc-video', controls: true, playsinline: true, hidden: true });
+        var photo = null, video = null, previewUrl = null, voice = null, rec = null, streamNow = null, started = 0, cancelled = false;
+        var pickBtn = h('button', { type: 'button', class: 'ab-btn gray', text: 'Add a photo or video', onclick: function () { pickInput.click(); } });
+        var dropBtn = h('button', { type: 'button', class: 'ab-btn gray', text: 'Remove', hidden: true, onclick: function () { setMedia(null); } });
+        var voiceBtn = h('button', { type: 'button', class: 'ab-btn gray', text: '🎤 Record a voice message', onclick: toggleVoice });
+        var voiceBox = h('div', { hidden: true });
         var who = h('select', { 'aria-label': 'Who can see this' });
         ['public', 'students', 'friends'].forEach(function (k) { who.appendChild(h('option', { value: k, text: AUDIENCE[k][0] + ' ' + AUDIENCE[k][1] })); });
         who.value = AUDIENCE[get('ab.audience')] ? get('ab.audience') : 'public';
+        var gone = disappearPick();
         var err = errBox();
         var post = h('button', { type: 'submit', class: 'ab-btn', text: 'Post' });
-        function setPhoto(f) {
+        function setMedia(f) {
             if (previewUrl) URL.revokeObjectURL(previewUrl);
-            photo = f; previewUrl = f ? URL.createObjectURL(f) : null;
-            if (f) preview.src = previewUrl; else preview.removeAttribute('src');
-            preview.hidden = !f; dropBtn.hidden = !f; pickBtn.textContent = f ? 'Change photo' : 'Add a photo';
+            var isVideo = !!f && /^video\//.test(f.type);
+            photo = f && !isVideo ? f : null; video = isVideo ? f : null;
+            previewUrl = f ? URL.createObjectURL(f) : null;
+            if (photo) preview.src = previewUrl; else preview.removeAttribute('src');
+            if (video) previewVideo.src = previewUrl; else previewVideo.removeAttribute('src');
+            preview.hidden = !photo; previewVideo.hidden = !video; dropBtn.hidden = !f;
+            pickBtn.textContent = f ? 'Change' : 'Add a photo or video';
         }
-        pickInput.addEventListener('change', function () { if (pickInput.files[0]) setPhoto(pickInput.files[0]); pickInput.value = ''; });
+        function finishRec() { if (streamNow) streamNow.getTracks().forEach(function (t) { t.stop(); }); streamNow = null; voiceBtn.textContent = '🎤 Record a voice message'; }
+        function toggleVoice() {
+            if (rec && rec.state === 'recording') { rec.stop(); return; }
+            if (voice) { voice = null; while (voiceBox.firstChild) voiceBox.removeChild(voiceBox.firstChild); voiceBox.hidden = true; voiceBtn.textContent = '🎤 Record a voice message'; return; }
+            if (!window.MediaRecorder) { showErr(err, new Error("This browser can't record voice messages.")); return; }
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+                streamNow = stream;
+                var mp4 = MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported('audio/mp4');
+                rec = new MediaRecorder(stream, mp4 ? { mimeType: 'audio/mp4', audioBitsPerSecond: 32000 } : { audioBitsPerSecond: 32000 });
+                var chunks = [];
+                started = Date.now(); cancelled = false;
+                rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+                rec.onstop = function () {
+                    finishRec();
+                    if (cancelled) return;
+                    var blob = new Blob(chunks, { type: rec.mimeType || (mp4 ? 'audio/mp4' : 'audio/webm') });
+                    var length = Math.max(1, Math.round((Date.now() - started) / 1000));
+                    voice = { blob: blob, name: mp4 ? 'voice.m4a' : 'voice.weba', duration: length };
+                    voiceBox.hidden = false;
+                    voiceBox.appendChild(voiceBubble('new' + Date.now(), length, function () { return Promise.resolve(URL.createObjectURL(blob)); }));
+                    voiceBtn.textContent = 'Remove voice message';
+                };
+                rec.start();
+                voiceBtn.textContent = '⏹ Stop recording';
+                setTimeout(function () { if (rec && rec.state === 'recording') rec.stop(); }, 180000);
+            }).catch(function () { showErr(err, new Error("UniHub can't use the microphone. You can allow it in your browser's settings.")); });
+        }
+        pickInput.addEventListener('change', function () {
+            var f = pickInput.files[0]; pickInput.value = '';
+            if (!f) return;
+            if (/^video\//.test(f.type) && f.size > 12000000) { showErr(err, new Error('That video is too big. The limit is 12 MB.')); return; }
+            showErr(err); setMedia(f);
+        });
         s.box.appendChild(h('form', { class: 'acc-compose-form', onsubmit: function (e) {
             e.preventDefault();
             var words = text.value.trim();
-            if (!words && !photo) { showErr(err, new Error('Write something first.')); return; }
-            post.disabled = true; post.textContent = 'Posting…'; showErr(err);
+            if (rec && rec.state === 'recording') { showErr(err, new Error('Stop the recording first.')); return; }
+            if (!words && !photo && !video && !voice) { showErr(err, new Error('Write something first.')); return; }
             set('ab.audience', who.value);
-            (photo ? postPhotoData(photo) : Promise.resolve(null)).then(function (d) {
-                var f = { text: words, audience: who.value };
-                if (d) f.image = d;
-                return call('postCreate', f);
-            }).then(function () { setPhoto(null); s.close(); done(); }).catch(function (x) { showErr(err, x); post.disabled = false; post.textContent = 'Post'; });
-        } }, text, preview, pickInput,
-            h('div', { class: 'acc-actions' }, pickBtn, dropBtn),
+            // the sheet closes straight away; the upload carries on in the background
+            var f = { text: words, audience: who.value, expiresIn: Number(gone.value) || 0 };
+            var pic = photo, clip = video, sound = voice;
+            addJob('Publishing your post…', function () {
+                return (pic ? postPhotoData(pic) : Promise.resolve(null)).then(function (d) {
+                    if (d) f.image = d;
+                    return clip ? fileBase64(clip) : null;
+                }).then(function (d) {
+                    if (d) f.video = d;
+                    return sound ? fileBase64(sound.blob) : null;
+                }).then(function (d) {
+                    if (d) { f.file = d; f.fileName = sound.name; f.duration = sound.duration; }
+                    return call('postCreate', f);
+                });
+            }, done);
+            s.close();
+        } }, text, preview, previewVideo, pickInput,
+            h('div', { class: 'acc-actions' }, pickBtn, dropBtn, voiceBtn), voiceBox,
             h('label', { class: 'acc-field' }, h('span', { text: 'Who can see this' }), who),
+            h('label', { class: 'acc-field' }, h('span', { text: 'Disappears after' }), gone),
             err, post));
         text.focus();
     }
@@ -1130,18 +1503,24 @@
     function friendControls(u, state, changed) {
         var box = h('span', { class: 'acc-fr-btns' });
         function go(action, fields) {
-            Array.prototype.forEach.call(box.children, function (b) { b.disabled = true; });
+            // the button changes straight away with a little bounce; only a failure puts it back
+            var before = state;
+            state = action === 'friendRequest' ? 'outgoing' : action === 'friendRespond' ? (fields && fields.accept ? 'friends' : 'none') : 'none';
+            draw(true);
             call(action, Object.assign({ userId: u.id }, fields || {})).then(function (r) {
-                state = r.friendship || 'none';
-                draw();
+                var now = r.friendship || state;
+                if (now !== state) { state = now; draw(); }
                 if (changed) changed(state);
             }).catch(function (e) {
+                state = before;
                 draw();
                 box.appendChild(h('small', { class: 'acc-err', role: 'alert', text: e.message }));
             });
         }
-        function btn(label, cls, fn) { box.appendChild(h('button', { type: 'button', class: 'ab-btn ' + cls, text: label, onclick: fn })); }
-        function draw() {
+        var popNext = false;
+        function btn(label, cls, fn) { box.appendChild(h('button', { type: 'button', class: 'ab-btn ' + cls + (popNext ? ' acc-pop' : ''), text: label, onclick: fn })); }
+        function draw(pop) {
+            popNext = !!pop;
             while (box.firstChild) box.removeChild(box.firstChild);
             if (state === 'none') btn('Add friend', '', function () { go('friendRequest'); });
             else if (state === 'outgoing') btn('Cancel request', 'gray', function () { go('friendRemove'); });
@@ -1158,7 +1537,7 @@
     function friendsSheet(changed) {
         var s = sheet('Friends');
         var search = h('input', { type: 'search', placeholder: 'Search students', 'aria-label': 'Search students' });
-        var box = h('div', { class: 'acc-users' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var box = h('div', { class: 'acc-users' }, skel('row', 4));
         s.box.appendChild(h('div', { class: 'acc-field' }, search));
         s.box.appendChild(box);
         var data = { friends: [], incoming: [], outgoing: [] }, tips = [], found = null, timer = null;
@@ -1206,6 +1585,39 @@
         load();
     }
     function driveId(u) { var m = /[?&]id=([\w-]+)/.exec(u || ''); return m ? m[1] : ''; }
+    // the text of a story with its font, colour, effect and motion
+    function storyText(item) {
+        var st = {};
+        try { st = JSON.parse(item.style || '{}') || {}; } catch (e) {}
+        var cls = ['acc-story-text', 'f-' + String(st.font || 'classic').replace(/\W/g, ''), 'e-' + String(st.effect || 'shadow').replace(/\W/g, ''), 'a-' + String(st.anim || 'none').replace(/\W/g, '')];
+        var c = safeColor(st.color || '#FFFFFF');
+        var p = h('p', { class: cls.join(' '), style: '--c:' + c + ';text-align:' + (st.align === 'left' || st.align === 'right' ? st.align : 'center') });
+        p.appendChild(h('span', { text: item.text }));
+        return p;
+    }
+    function storyBackground(item) {
+        var st = {};
+        try { st = JSON.parse(item.style || '{}') || {}; } catch (e) {}
+        var a = safeColor(item.bg);
+        return st.bg2 && /^#[0-9a-fA-F]{3,8}$/.test(st.bg2) ? 'linear-gradient(135deg,' + a + ',' + st.bg2 + ')' : a;
+    }
+    // who saw a story, with the exact date and time
+    function storyViewers(id) {
+        var s = sheet('Viewers');
+        var list = h('div', { class: 'acc-users' }, skel('row', 4));
+        s.box.appendChild(list);
+        call('storyViewers', { id: id }).then(function (r) {
+            while (list.firstChild) list.removeChild(list.firstChild);
+            var got = r.viewers || [];
+            if (!got.length) list.appendChild(h('p', { class: 'acc-muted acc-center', text: 'No views yet.' }));
+            got.forEach(function (v) {
+                var d = new Date(v.at);
+                list.appendChild(h('button', { type: 'button', class: 'acc-room', onclick: function () { s.close(); showProfile(v.user.id, nameOf(v.user)); } },
+                    avatar(nameOf(v.user), v.user.color, 40, v.user.role === 'admin', v.user.avatar),
+                    h('span', { class: 'acc-room-t' }, h('b', { text: nameOf(v.user) }), h('small', { text: isNaN(d) ? '' : d.toLocaleString([], { dateStyle: 'long', timeStyle: 'medium' }) }))));
+            });
+        }).catch(function (e) { list.textContent = e.message; });
+    }
     function storyViewer(groups, start) {
         var g = start, s = 0, timer = null;
         var stage = h('div', { class: 'acc-story-stage' });
@@ -1233,10 +1645,12 @@
             head.appendChild(h('span', { class: 'acc-post-who' }, h('b', { text: nameOf(u) }), h('small', { text: ago(item.created) })));
             head.appendChild(h('button', { type: 'button', class: 'acc-story-x', 'aria-label': 'Close', text: '×', onclick: close }));
             var vid = driveId(item.video);
-            stage.style.background = (item.image || vid) ? '#000' : safeColor(item.bg);
+            stage.style.background = (item.image || vid) ? '#000' : storyBackground(item);
+            stage.classList.remove('fade'); void stage.offsetWidth; stage.classList.add('fade');
             if (vid) stage.appendChild(h('iframe', { src: 'https://drive.google.com/file/d/' + vid + '/preview', title: 'Story video', allow: 'autoplay; fullscreen', referrerpolicy: 'no-referrer' }));
             else if (safePhoto(item.image)) stage.appendChild(h('img', { src: bigPhoto(item.image), alt: '', referrerpolicy: 'no-referrer' }));
-            if (item.text) stage.appendChild(h('p', { class: 'acc-story-text', text: item.text }));
+            if (item.text) stage.appendChild(storyText(item));
+            if (item.views != null && user && u.id === user.id) stage.appendChild(h('button', { type: 'button', class: 'acc-story-views', text: '👁 ' + item.views + ' views', onclick: function () { clearTimeout(timer); storyViewers(item.id); } }));
             if (token && user && !item.seen) { item.seen = true; call('storySeen', { id: item.id }).catch(function () {}); }
             // a video moves on when the person taps next: the Drive player doesn't say when it has ended
             if (!vid) timer = setTimeout(function () { step(1); }, 6000);
@@ -1297,13 +1711,16 @@
             if (fresh) {
                 offset = 0;
                 while (list.firstChild) list.removeChild(list.firstChild);
-                list.appendChild(h('p', { class: 'acc-muted', text: 'Loading…' }));
+                var saved = cacheGet('feed.' + scope);
+                if (saved && saved.length) saved.forEach(function (p) { list.appendChild(postCard(p)); });
+                else list.appendChild(skel('post', 3));
                 moreBtn.hidden = true;
             }
             call(signedIn ? 'feedAll' : 'publicFeed', { scope: scope, offset: offset }).then(function (r) {
                 if (mine !== loadToken) return;
                 if (fresh) while (list.firstChild) list.removeChild(list.firstChild);
                 var got = r.posts || [];
+                if (fresh) cachePut('feed.' + scope, got.slice(0, 12));
                 if (fresh && !got.length) list.appendChild(h('p', { class: 'acc-muted acc-center', text:
                     scope === 'friends' ? 'No posts from friends yet.' : scope === 'strangers' ? 'No posts from other students yet.' : 'No public posts yet.' }));
                 got.forEach(function (p) { list.appendChild(postCard(p)); });
@@ -1312,8 +1729,8 @@
             }).catch(function (e) {
                 if (mine !== loadToken) return;
                 if (!token && signedIn) return feedView();
-                if (fresh) { while (list.firstChild) list.removeChild(list.firstChild); }
-                list.appendChild(h('p', { class: 'acc-err', role: 'alert', text: e.message }));
+                if (fresh && !cacheGet('feed.' + scope)) { while (list.firstChild) list.removeChild(list.firstChild); }
+                list.insertBefore(h('p', { class: 'acc-err', role: 'alert', text: e.message }), list.firstChild);
             });
         }
         call(signedIn ? 'stories' : 'publicStories').then(function (r) {

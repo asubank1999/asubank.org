@@ -11,6 +11,26 @@
     var AB = window.AB = window.AB || {};
     var doc = document, root = doc.documentElement;
 
+    /* ---------- first visit: the same opening as the apps, once per visit, never inside the apps ---------- */
+    (function splash() {
+        var seen = false;
+        try { seen = !!sessionStorage.getItem('ab.splash'); sessionStorage.setItem('ab.splash', '1'); } catch (e) { seen = true; }
+        if (seen || /ASUBankApp/.test(navigator.userAgent)) return;
+        var s = doc.createElement('div');
+        s.className = 'ab-splash';
+        s.setAttribute('aria-hidden', 'true');
+        s.innerHTML = '<img src="/icons/icon-192x192.png" alt="" width="104" height="104"><b>UniHub</b><span class="ab-splash-dots"><i></i><i></i><i></i></span>';
+        root.appendChild(s);
+        var began = Date.now(), gone = false;
+        function leave() {
+            if (gone) return;
+            gone = true;
+            setTimeout(function () { s.classList.add('out'); setTimeout(function () { s.remove(); }, 380); }, Math.max(0, 700 - (Date.now() - began)));
+        }
+        if (doc.readyState === 'complete') leave(); else window.addEventListener('load', leave);
+        setTimeout(leave, 2200);
+    })();
+
     /* ---------- tiny helpers ---------- */
     function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
     function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }

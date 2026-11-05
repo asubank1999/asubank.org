@@ -264,3 +264,105 @@ html.dark .acc-fr-badge { color: #000; }
 .acc-fr-btns { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
 .acc-fr-btns .ab-btn { padding: 6px 12px; font-size: 13px; }
 .acc-users h3 { margin: 14px 0 4px; font-size: 13px; color: var(--ab-label-2,#5e5e66); }
+
+/* 1.14.0: loading effects */
+.acc-dots { display: inline-flex; gap: 5px; align-items: center; justify-content: center; padding: 6px; }
+.acc-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ab-accent,#8c1d40); animation: acc-dot 1.05s ease-in-out infinite; }
+.acc-dots i:nth-child(2) { animation-delay: .16s; }
+.acc-dots i:nth-child(3) { animation-delay: .32s; }
+html.dark .acc-dots i { background: var(--ab-accent,#ff8fb0); }
+@keyframes acc-dot { 0%, 100% { transform: scale(.45); opacity: .35; } 50% { transform: scale(1); opacity: 1; } }
+.acc-skel { display: flex; flex-direction: column; gap: 10px; padding: 4px 0; }
+.acc-skel i { display: block; border-radius: 8px; background: linear-gradient(100deg, var(--ab-fill-2,rgba(120,120,128,.14)) 30%, rgba(160,160,170,.32) 50%, var(--ab-fill-2,rgba(120,120,128,.14)) 70%); background-size: 240% 100%; animation: acc-shine 1.25s linear infinite; }
+@keyframes acc-shine { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+.acc-skel-top { display: flex; align-items: center; gap: 12px; }
+.acc-skel-top.row { padding: 8px 12px; }
+.acc-skel-top span { display: flex; flex-direction: column; gap: 7px; flex: 1; min-width: 0; }
+.acc-skel .av { width: 44px; height: 44px; border-radius: 50%; flex: none; }
+.acc-skel .l1 { width: 130px; max-width: 70%; height: 11px; }
+.acc-skel .l2 { width: 200px; max-width: 90%; height: 9px; }
+.acc-skel .l3 { width: 80%; height: 11px; margin-top: 12px; }
+.acc-skel .pic { width: 100%; height: 170px; border-radius: 14px; margin-top: 10px; }
+.acc-skel-post { padding: 14px; }
+.acc-skel-b { display: flex; }
+.acc-skel-b.mine { justify-content: flex-end; }
+.acc-skel-b i { height: 38px; border-radius: 18px; max-width: 75%; }
+
+/* work in the background */
+.acc-jobs { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1200; display: flex; flex-direction: column; gap: 6px; width: min(420px, calc(100vw - 24px)); pointer-events: none; }
+.acc-job { pointer-events: auto; display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-radius: 22px; background: var(--ab-card,#fff); color: inherit; box-shadow: 0 6px 22px rgba(0,0,0,.22); animation: acc-drop .28s cubic-bezier(.2,.9,.3,1.2); transition: opacity .25s, transform .25s; }
+.acc-job.out { opacity: 0; transform: translateY(-14px); }
+.acc-job .acc-dots { padding: 0 4px; }
+.acc-job-t { flex: 1; min-width: 0; display: flex; flex-direction: column; font-size: 14px; }
+.acc-job-t small { opacity: .75; }
+.acc-job-ok { color: #2e9e4f; font-size: 18px; }
+.acc-job-bad { color: #ef8a17; font-size: 18px; }
+.acc-job-btn { border: 0; background: none; color: var(--ab-accent,#8c1d40); font-weight: 600; cursor: pointer; }
+@keyframes acc-drop { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
+
+/* messages that arrive or are on their way */
+.acc-msg.enter, .acc-comment.enter { animation: acc-rise .24s cubic-bezier(.2,.9,.3,1.15); }
+@keyframes acc-rise { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
+.acc-msg.pending .acc-bubble, .acc-comment.pending { opacity: .72; }
+.acc-pop { animation: acc-pop .38s cubic-bezier(.2,1.5,.4,1); }
+@keyframes acc-pop { 0% { transform: scale(.7); } 60% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+/* attachments, timer and voice */
+.acc-disappear { flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; font-size: 12px; color: transparent; cursor: pointer; appearance: none; -webkit-appearance: none; overflow: hidden; background: var(--ab-fill-2,rgba(120,120,128,.14)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='13' r='8'/%3E%3Cpath d='M12 9v4l2.5 2M9 2h6'/%3E%3C/svg%3E") center no-repeat; }
+.acc-disappear option { color: initial; }
+.acc-disappear.on { outline: 2px solid var(--ab-accent,#8c1d40); }
+.acc-compose-form .acc-disappear, .acc-field .acc-disappear { width: auto; height: auto; border-radius: 10px; padding: 10px; font-size: inherit; color: inherit; background: var(--ab-fill-2,rgba(120,120,128,.14)); appearance: auto; -webkit-appearance: auto; }
+.acc-compose-row [hidden] { display: none !important; }
+.acc-rec { display: flex; align-items: center; gap: 10px; }
+.acc-rec[hidden] { display: none; }
+.acc-rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #e53935; animation: acc-dot 1s ease-in-out infinite; }
+.acc-rec-t { flex: 1; opacity: .7; font-size: 14px; }
+.acc-voice { display: flex; align-items: center; gap: 10px; min-width: 200px; padding: 2px 0; }
+.acc-voice-btn { flex: none; width: 38px; height: 38px; border: 0; border-radius: 50%; cursor: pointer; font-size: 13px; background: rgba(120,120,128,.18); color: inherit; }
+.acc-msg.mine .acc-voice-btn { background: rgba(255,255,255,.22); }
+.acc-wave { display: flex; align-items: center; gap: 2px; height: 24px; flex: 1; min-width: 0; overflow: hidden; }
+.acc-wave i { flex: none; width: 2.5px; border-radius: 2px; background: currentColor; opacity: .4; transition: opacity .12s; }
+.acc-wave i.on { opacity: 1; }
+.acc-voice small { font-size: 11px; opacity: .8; white-space: nowrap; }
+.acc-video-tile { display: flex; align-items: center; justify-content: center; width: 220px; height: 280px; max-width: 100%; border: 0; border-radius: 12px; background: #15151a; color: #fff; cursor: pointer; font-size: 42px; margin-bottom: 4px; }
+.acc-video-tile.wide { width: 100%; height: 300px; }
+.acc-video-tile .acc-dots i { background: #fff; }
+.acc-video { display: block; width: 100%; max-width: 320px; max-height: 420px; border-radius: 12px; background: #000; }
+.acc-compose-form .acc-video { max-width: 100%; }
+.acc-post-video { width: 100%; height: 340px; border: 0; border-radius: 12px; }
+.acc-dm-photo-btn { min-width: 60px; min-height: 40px; }
+
+/* story looks, the same set as the apps */
+.acc-story-stage.fade > * { animation: acc-fade .22s ease; }
+@keyframes acc-fade { from { opacity: 0; } to { opacity: 1; } }
+.acc-story-text { color: var(--c,#fff); text-shadow: none; font-weight: 700; line-height: 1.25; font-size: 28px; }
+.acc-story-text.f-classic { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; }
+.acc-story-text.f-modern { font-family: 'Avenir Next', 'Arial Black', Roboto, sans-serif; font-weight: 900; }
+.acc-story-text.f-serif { font-family: Georgia, 'Times New Roman', serif; }
+.acc-story-text.f-mono { font-family: 'American Typewriter', 'Courier New', monospace; }
+.acc-story-text.f-hand { font-family: Noteworthy, 'Comic Sans MS', cursive; }
+.acc-story-text.f-script { font-family: 'Snell Roundhand', 'Brush Script MT', cursive; font-size: 34px; }
+.acc-story-text.f-tall { font-family: 'Futura', 'Arial Narrow', Impact, sans-serif; font-stretch: condensed; }
+.acc-story-text.f-round { font-family: ui-rounded, 'Arial Rounded MT Bold', Nunito, sans-serif; }
+.acc-story-text.e-shadow { text-shadow: 0 2px 6px rgba(0,0,0,.7); }
+.acc-story-text.e-outline { -webkit-text-stroke: 1.5px #000; paint-order: stroke fill; }
+.acc-story-text.e-neon { color: #fff; text-shadow: 0 0 4px var(--c), 0 0 12px var(--c), 0 0 26px var(--c); }
+.acc-story-text.e-box span { background: var(--c); color: #000; padding: 4px 12px; border-radius: 10px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.acc-story-text.e-retro { text-shadow: 3px 3px 0 #ff375f, 6px 6px 0 #64d2ff; }
+.acc-story-text.e-rainbow { color: transparent; background: linear-gradient(90deg,#ff375f,#ff9f0a,#ffd60a,#30d158,#0a84ff,#bf5af2,#ff375f); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; animation: acc-rainbow 3s linear infinite; }
+.acc-story-text.e-glow { text-shadow: 0 0 16px rgba(255,255,255,.9); }
+@keyframes acc-rainbow { to { background-position: 300% 0; } }
+.acc-story-text.a-pop span { display: inline-block; animation: acc-pop .5s cubic-bezier(.2,1.6,.4,1); }
+.acc-story-text.a-pulse span { display: inline-block; animation: acc-pulse .7s ease-in-out infinite alternate; }
+.acc-story-text.a-float span { display: inline-block; animation: acc-float 1.6s ease-in-out infinite alternate; }
+.acc-story-text.a-fade span { display: inline-block; animation: acc-breathe 1.2s ease-in-out infinite alternate; }
+@keyframes acc-pulse { from { transform: scale(.96); } to { transform: scale(1.07); } }
+@keyframes acc-float { from { transform: translateY(10px); } to { transform: translateY(-10px); } }
+@keyframes acc-breathe { from { opacity: .25; } to { opacity: 1; } }
+.acc-story-views { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); border: 0; border-radius: 22px; padding: 8px 14px; background: rgba(0,0,0,.5); color: #fff; font-weight: 600; cursor: pointer; z-index: 3; }
+.acc-modal { z-index: 1100; }
+@media (prefers-reduced-motion: reduce) {
+    .acc-dots i, .acc-skel i, .acc-job, .acc-msg.enter, .acc-comment.enter, .acc-pop, .acc-story-text span, .acc-story-text.e-rainbow { animation: none !important; }
+    .acc-dots i { opacity: .8; transform: none; }
+}
+body:has(.acc-story) .ab-tabbar { display: none; }

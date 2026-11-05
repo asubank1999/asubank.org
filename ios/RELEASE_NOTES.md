@@ -3,6 +3,21 @@
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
 UniHub is free and student-run. It is not made by or affiliated with the university.
 
+### What's new in 1.14.0
+- ASU Bank is now UniHub, with a new name and a new icon
+- This update installs as a new app: sign in once, then you can delete the old ASU Bank app
+- Send disappearing voice messages, photos and videos in rooms and private messages
+- Posts can have a voice message or a video too
+- Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week
+- See who saw your story, with the exact date and time
+- Delete for everyone removes a message on both sides
+- Messages, comments and friend requests now show at once, and posts and stories upload in the background
+- New loading effects everywhere, smoother and less waiting
+- A new story screen with more fonts, text effects, colors, gradient backgrounds and moving text
+- A new look for posting a video story, with your video playing while you edit
+- Share UniHub with your friends from More
+- Changing the theme now restarts the app, so the new colors always load cleanly
+
 ### What's new in 1.13.0
 - Feed now has Friends, Strangers and Guest
 - Read public posts and stories without an account, also on the website

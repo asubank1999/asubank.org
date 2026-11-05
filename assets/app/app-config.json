@@ -1,4 +1,5 @@
 {
+  "share": "https://asubank.org/",
   "ios": {
     "latest": "1.13.0",
     "minimum": "1.0.0",

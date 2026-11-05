@@ -515,6 +515,7 @@ struct StoryViewer: View {
             .padding(12)
         }
         .statusBar(hidden: true)
+        .animation(.easeInOut(duration: 0.22), value: story?.id)
         .sheet(item: $reporting, onDismiss: { paused = false }) { ReportSheet(target: $0) }
         .sheet(item: $viewersOf, onDismiss: { paused = false }) { StoryViewersSheet(storyId: $0.id) }
         .task(id: "\(g)-\(s)-\(story?.id ?? "")") { await run() }

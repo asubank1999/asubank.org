@@ -156,7 +156,8 @@ jobs:
           cp ios/UniHub-unsigned.ipa "UniHub-$V-unsigned.ipa"
           # One release page for both apps, under the android tag because older Android apps look for that tag.
           REL="android-v$V"
-          gh release create "$REL" --title "UniHub $V" --notes-file ios/RELEASE_NOTES.md --latest || true
+          python3 tools/release_notes.py ios "$V" > "$RUNNER_TEMP/notes.md"
+          gh release create "$REL" --title "UniHub $V" --notes-file "$RUNNER_TEMP/notes.md" --latest || true
           gh release upload "$REL" "UniHub-$V-unsigned.ipa" --clobber
       - name: Point the README download link at this version
         if: startsWith(github.ref, 'refs/tags/ios-v')
