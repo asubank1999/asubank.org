@@ -19,9 +19,13 @@
     document.addEventListener('visibilitychange', function () { if (!document.hidden) { unread = 0; showUnread(); } });
 
     function wanted(e, user) {
-        if (e.type === 'upload' || !e.room) return false;
         if (e.userId && e.userId === user.id) return false;
         if (e.userId && user.blocked && user.blocked.indexOf(e.userId) >= 0) return false;
+        if (e.type === 'dm') {
+            var inThread = /^\/chat/.test(location.pathname) && decodeURIComponent(location.hash.replace('#', '')) === '@dm/' + e.userId;
+            return !(inThread && !document.hidden);
+        }
+        if (e.type === 'upload' || !e.room) return false;
         // already looking at this room
         var open = /^\/chat/.test(location.pathname) && decodeURIComponent(location.hash.replace('#', '')) === e.room;
         return !(open && !document.hidden);
@@ -29,12 +33,12 @@
 
     function show(e, user) {
         var who = e.displayName || 'Someone';
-        var title = e.type === 'announcement' ? '📣 ' + who : e.replyToUserId === user.id ? who + ' replied to you' : 'New message from ' + who;
+        var title = e.type === 'dm' ? who : e.type === 'announcement' ? '📣 ' + who : e.replyToUserId === user.id ? who + ' replied to you' : 'New message from ' + who;
         var options = {
             body: (e.roomName ? e.roomName + ': ' : '') + String(e.text || '').slice(0, 160),
             icon: '/icons/icon-192x192.png',
             tag: 'chat-' + e.id,
-            data: { url: '/chat/#' + encodeURIComponent(e.room) }
+            data: { url: e.type === 'dm' ? '/chat/#@dm/' + encodeURIComponent(e.userId) : '/chat/#' + encodeURIComponent(e.room) }
         };
         // phones only allow notifications through the service worker
         if (navigator.serviceWorker && navigator.serviceWorker.controller) {
@@ -55,7 +59,7 @@
         if (now - Number(get(KEYS.turn) || 0) < EVERY - 2000) return; // another tab just asked
         set(KEYS.turn, String(now));
         var since = get(KEYS.since);
-        fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'events', token: token, since: since || '' }) })
+        fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'events', token: token, since: since || '', social3: true }) })
             .then(function (r) { return r.json(); })
             .then(function (o) {
                 if (!o || !o.ok) return;
@@ -82,11 +86,16 @@
             bar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;margin:8px 0;border-radius:12px;font-size:14px;background:var(--ab-accent-soft,#f7dce5)';
             root.parentNode.insertBefore(bar, root);
         }
+        // only asks for attention when notifications are off; while they're on it's one quiet line, and not inside a chat
+        var open = /^#?(@messages)?$/.test(location.hash);
+        bar.style.display = enabled() && !open ? 'none' : 'flex';
+        bar.style.background = enabled() ? 'transparent' : '';
+        bar.style.padding = enabled() ? '0 4px' : '';
         bar.textContent = '';
         var label = document.createElement('span');
         var perm = Notification.permission;
         if (perm === 'denied') label.textContent = '🔕 Notifications are blocked. Allow them for asubank.org in your browser settings.';
-        else label.textContent = enabled() ? '🔔 Chat notifications are on while a tab of this site is open.' : '🔕 Get notified about new chat messages.';
+        else label.textContent = enabled() ? '🔔 Notifications are on' : '🔕 Get notified about new chat messages.';
         bar.appendChild(label);
         if (perm === 'denied') return;
         var b = document.createElement('button');

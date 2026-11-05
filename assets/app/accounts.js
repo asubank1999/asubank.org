@@ -136,7 +136,7 @@
             body.appendChild(h('div', { class: 'acc-cover-av' }, avatar(nameOf(u), u.color, 96, u.role === 'admin', u.avatar, signedIn ? !!u.online : null)));
             body.appendChild(h('h2', { text: nameOf(u) }));
             body.appendChild(h('p', { class: 'acc-muted', text: '@' + u.username + (u.role === 'admin' ? ' · Admin' : '') + (signedIn ? ' · ' + lastSeenText(u.lastSeen, u.online) : '') }));
-            if (signedIn) body.appendChild(h('div', { class: 'acc-stats' }, [['Friends', r.friendCount], ['Posts', r.postCount], ['Messages', r.messageCount]].map(function (s) {
+            if (signedIn) body.appendChild(h('div', { class: 'acc-pstats' }, [['Friends', r.friendCount], ['Posts', r.postCount], ['Messages', r.messageCount]].map(function (s) {
                 return h('span', null, h('b', { text: String(s[1] || 0) }), h('small', { text: s[0] }));
             })));
             var b = badgeRow(u.badges); if (b) body.appendChild(b);
@@ -148,6 +148,8 @@
                     h('a', { class: 'ab-btn tinted', href: 'tel:' + digits, text: '📞 ' + u.phone }),
                     h('a', { class: 'ab-btn tinted', href: 'https://wa.me/' + digits.replace('+', ''), target: '_blank', rel: 'noopener', text: 'WhatsApp' })));
             }
+            if (signedIn && r.canMessage && u.id !== user.id) body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
+                h('a', { class: 'ab-btn', href: '/chat/#@dm/' + encodeURIComponent(u.id), onclick: function () { s.close(); }, text: 'Send a message' })));
             if (signedIn && u.id !== user.id) body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
                 h('button', { type: 'button', class: 'ab-btn gray', text: 'Report', onclick: function () { reportSheet('user', u.id, nameOf(u)); } }),
                 u.role === 'admin' ? null : h('button', { type: 'button', class: 'ab-btn gray', text: isBlocked(u.id) ? 'Unblock' : 'Block', onclick: function () {
@@ -342,22 +344,53 @@
             return;
         }
         var room = decodeURIComponent((location.hash || '').replace('#', ''));
-        if (room) return roomView(room);
+        if (room.indexOf('@dm/') === 0) return dmThread(room.slice(4));
+        if (room && room !== '@messages') return roomView(room);
         clear();
-        root.appendChild(h('div', { class: 'acc-intro' }, h('h1', { class: 'ab-large', text: 'Chat' }),
-            h('p', { class: 'ab-sub', text: 'Signed in as @' + user.username + '. Be kind and helpful; admins can remove messages and ban accounts.' })));
-        var strip = h('div', { class: 'acc-online' });
+        root.appendChild(h('div', { class: 'acc-intro' }, h('h1', { class: 'ab-large', text: 'Chat' })));
+        var tabs = h('div', { class: 'acc-pills', role: 'tablist' });
+        var msgTab = h('button', { type: 'button', role: 'tab', class: room ? 'on' : '', 'aria-selected': room ? 'true' : 'false', text: 'Messages', onclick: function () { location.hash = '@messages'; } });
+        tabs.appendChild(h('button', { type: 'button', role: 'tab', class: room ? '' : 'on', 'aria-selected': room ? 'false' : 'true', text: 'Rooms', onclick: function () { location.hash = ''; } }));
+        tabs.appendChild(msgTab);
+        root.appendChild(tabs);
+        call('dmList').then(function (r) { if (r.unread) msgTab.textContent = 'Messages (' + r.unread + ')'; if (room) drawDms(r); })
+            .catch(function (e) { if (room) { dmBox.textContent = e.message; } });
+        var dmBox = h('div', null, h('p', { class: 'acc-muted acc-center', text: 'Loading…' }));
+        function drawDms(r) {
+            while (dmBox.firstChild) dmBox.removeChild(dmBox.firstChild);
+            dmBox.appendChild(h('div', { class: 'acc-card acc-rooms' }, h('button', { type: 'button', class: 'acc-room', onclick: newMessage },
+                h('span', { class: 'acc-emoji', text: '✏️' }), h('span', { class: 'acc-room-t' }, h('b', { text: 'New message' })))));
+            var list = r.conversations || [];
+            if (!list.length) {
+                dmBox.appendChild(h('div', { class: 'acc-empty' }, h('b', { text: 'No private messages yet' }),
+                    h('p', { class: 'acc-muted', text: 'You can message your friends. Only the two of you see the chat.' })));
+                return;
+            }
+            dmBox.appendChild(h('div', { class: 'acc-card acc-rooms' }, list.map(function (c) {
+                var preview = c.last.text || (c.last.fileType === 'photo' ? '📷 Photo' : '📄 ' + (c.last.fileName || ''));
+                return h('a', { class: 'acc-room' + (c.unread ? ' unread' : ''), href: '#@dm/' + encodeURIComponent(c.user.id) },
+                    avatar(nameOf(c.user), c.user.color, 50, c.user.role === 'admin', c.user.avatar, c.user.online == null ? null : !!c.user.online),
+                    h('span', { class: 'acc-room-t' },
+                        h('span', { class: 'acc-dm-top' }, h('b', { text: nameOf(c.user) }), h('small', { text: ago(c.last.created) })),
+                        h('span', { class: 'acc-dm-top' }, h('small', { class: 'acc-dm-preview', text: preview }), c.unread ? h('i', { class: 'acc-count', text: String(c.unread) }) : null)));
+            })));
+        }
+        if (room) { root.appendChild(dmBox); return; }
+        var strip = h('div', { class: 'acc-card acc-rooms', hidden: true });
         root.appendChild(strip);
         call('online').then(function (r) {
             var on = (r.users || []).filter(function (x) { return x.online; });
-            strip.appendChild(h('button', { type: 'button', class: 'acc-online-n', onclick: showOnline }, h('i', { class: 'acc-dot on' }), ' ' + (r.onlineCount || 0) + ' online'));
-            on.slice(0, 12).forEach(function (x) {
-                strip.appendChild(h('button', { type: 'button', class: 'acc-online-u', title: x.displayName, onclick: function () { showProfile(x.id); } },
-                    avatar(x.displayName, x.color, 34, x.role === 'admin', x.avatar, true)));
-            });
+            if (!(r.users || []).length) return;
+            strip.hidden = false;
+            strip.appendChild(h('button', { type: 'button', class: 'acc-room', onclick: showOnline },
+                h('span', { class: 'acc-stack' }, on.slice(0, 6).map(function (x) { return avatar(x.displayName, x.color, 32, false, x.avatar, true); })),
+                h('span', { class: 'acc-room-t' }, h('b', { text: (r.onlineCount || 0) + ' online now' }), h('small', { text: (r.users || []).length + ' students' })),
+                h('span', { class: 'acc-chev', text: '›' })));
         }).catch(function () {});
         var list = h('div', { class: 'acc-card acc-rooms' }, h('p', { class: 'acc-muted', text: 'Loading rooms…' }));
         root.appendChild(list);
+        root.appendChild(h('p', { class: 'acc-muted acc-small acc-foot', text: "Be kind and helpful. Don't share exam answers during an exam, private info or anything illegal. Admins can remove messages and ban accounts." }));
+        root.appendChild(h('p', { class: 'acc-muted acc-small acc-center', text: 'Signed in as @' + user.username }));
         function drawRooms(rooms) {
             while (list.firstChild) list.removeChild(list.firstChild);
             rooms.forEach(function (rm) {
@@ -431,24 +464,25 @@
         clear();
         var info = { id: roomId, name: roomId, emoji: '💬' };
         var msgs = [], byId = {}, people = {}, replyTo = null, editing = null, pinned = null, last = null;
-        var title = h('h1', { class: 'acc-room-title', text: '💬 ' + roomId });
+        var title = h('h1', { class: 'acc-room-title', text: roomId });
+        var titleEmoji = h('span', { class: 'acc-emoji', text: '💬' });
+        var titleAbout = h('small', { class: 'acc-muted' });
         var pinBar = h('div', { class: 'acc-pinned', hidden: true });
         var feed = h('div', { class: 'acc-feed', 'aria-live': 'polite' });
         var err = errBox();
         var input = h('textarea', { rows: 1, maxlength: 1000, placeholder: 'Message' });
         var replyBar = h('div', { class: 'acc-reply', hidden: true });
-        var send = h('button', { type: 'submit', class: 'ab-btn', text: 'Send' });
+        var send = h('button', { type: 'submit', class: 'acc-send', 'aria-label': 'Send', text: '↑' });
         var composer = h('form', { class: 'acc-composer', onsubmit: function (ev) {
             ev.preventDefault();
             var t = input.value.trim(); if (!t) return;
-            var label = editing ? 'Save' : 'Send';
-            busy(send, true, label);
+            send.disabled = true;
             var p = editing
                 ? call('editMessage', { id: editing.id, text: t }).then(function () { var m = editing; m.text = t; m.edited = new Date().toISOString(); setReply(null); render(); })
                 : call('send', { room: roomId, text: t, replyTo: replyTo ? replyTo.id : '' }).then(function (r) { setReply(null); if (r.message) add([r.message]); });
             p.then(function () { input.value = ''; showErr(err, null); })
                 .catch(function (e) { showErr(err, e); })
-                .then(function () { busy(send, false, editing ? 'Save' : 'Send'); input.focus(); });
+                .then(function () { send.disabled = false; input.focus(); });
         } }, replyBar, h('div', { class: 'acc-compose-row' }, input, send));
         input.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); composer.requestSubmit ? composer.requestSubmit() : send.click(); }
@@ -461,7 +495,8 @@
                 if (rm) setInfo(rm); else location.hash = '';
             });
         } });
-        root.appendChild(h('div', { class: 'acc-room-head' }, h('a', { href: '#', class: 'acc-back', text: '‹ Rooms' }), title, settings));
+        root.appendChild(h('div', { class: 'acc-room-head' }, h('a', { href: '#', class: 'acc-back', 'aria-label': 'Back to rooms', text: '‹' }), titleEmoji,
+            h('span', { class: 'acc-room-t' }, title, titleAbout), settings));
         root.appendChild(pinBar);
         root.appendChild(feed);
         root.appendChild(err);
@@ -469,7 +504,8 @@
         root.appendChild(readonly);
 
         function setInfo(rm) {
-            info = rm; title.textContent = (rm.emoji || '💬') + ' ' + (rm.locked ? '🔒 ' : '') + rm.name;
+            info = rm; title.textContent = (rm.locked ? '🔒 ' : '') + rm.name;
+            titleEmoji.textContent = rm.emoji || '💬'; titleAbout.textContent = rm.about || '';
             var canPost = isAdmin() || (!rm.adminOnly && !rm.locked && !rm.archived);
             composer.hidden = !canPost; readonly.hidden = canPost;
             readonly.textContent = rm.archived ? 'This room is archived.' : rm.locked ? 'This room is locked. You can still read it.' : 'Only admins post here.';
@@ -480,7 +516,7 @@
             replyTo = edit ? null : m; editing = edit ? m : null;
             while (replyBar.firstChild) replyBar.removeChild(replyBar.firstChild);
             replyBar.hidden = !m;
-            send.textContent = editing ? 'Save' : 'Send';
+            send.textContent = editing ? '✓' : '↑';
             if (m) replyBar.appendChild(h('span', null, h('b', { text: (edit ? 'Editing your message' : 'Replying to ' + nameOf(m)) + ': ' }), m.text.slice(0, 80)),
                 h('button', { type: 'button', class: 'acc-x', 'aria-label': 'Cancel', text: '×', onclick: function () { if (editing) input.value = ''; setReply(null); } }));
         }
@@ -497,8 +533,9 @@
             call('adminPin', { room: roomId, id: m ? m.id : '' }).then(function () { pinned = m; drawPin(); render(); }).catch(function (e) { showErr(err, e); });
         }
 
-        function bubble(m, prev) {
+        function bubble(m, prev, next) {
             var mine = m.userId === user.id, admin = m.role === 'admin';
+            var below = next && next.userId === m.userId && new Date(next.created).toDateString() === new Date(m.created).toDateString();
             var p = people[m.userId] || {};
             var grouped = prev && prev.userId === m.userId && new Date(prev.created).toDateString() === new Date(m.created).toDateString();
             var reply = m.replyTo && byId[m.replyTo];
@@ -517,11 +554,11 @@
                     if (!window.confirm('Ban @' + m.username + '? They can’t sign in or chat until an admin unbans them.')) return;
                     call('adminBan', { userId: m.userId, banned: true, reason: 'Removed from the chat by an admin' }).then(function () { showErr(err, new Error('@' + m.username + ' is banned.')); }).catch(function (e) { showErr(err, e); });
                 } }) : null);
-            var av = !mine ? (grouped ? h('span', { class: 'acc-av-space' }) : h('button', { type: 'button', class: 'acc-av-btn', 'aria-label': 'Profile of ' + nameOf(m), onclick: who },
+            var av = !mine ? (below ? h('span', { class: 'acc-av-space' }) : h('button', { type: 'button', class: 'acc-av-btn', 'aria-label': 'Profile of ' + nameOf(m), onclick: who },
                 avatar(nameOf(m), m.color, 30, admin, p.avatar, p.online ? true : null))) : null;
-            return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (grouped ? ' grouped' : ''), 'data-id': m.id },
+            return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (grouped ? ' grouped' : '') + (below ? ' below' : ''), 'data-id': m.id },
                 av,
-                h('div', { class: 'acc-bubble' },
+                h('div', { class: 'acc-bubble', onclick: toggleActions },
                     (!mine && !grouped) ? h('button', { type: 'button', class: 'acc-from', style: 'color:' + safeColor(m.color), onclick: who },
                         nameOf(m), admin ? h('span', { class: 'acc-badge', text: 'ADMIN' }) : null, badgeRow(p.badges, true)) : null,
                     reply ? h('div', { class: 'acc-quote' }, h('b', { text: nameOf(reply) }), reply.text.slice(0, 120)) : null,
@@ -537,8 +574,8 @@
             var day = null;
             msgs.forEach(function (m, i) {
                 var d = new Date(m.created).toDateString();
-                if (d !== day) { day = d; feed.appendChild(h('div', { class: 'acc-day', text: dayLabel(m.created) })); }
-                feed.appendChild(bubble(m, i > 0 ? msgs[i - 1] : null));
+                if (d !== day) { day = d; feed.appendChild(h('div', { class: 'acc-day' }, h('span', { text: dayLabel(m.created) }))); }
+                feed.appendChild(bubble(m, i > 0 ? msgs[i - 1] : null, msgs[i + 1]));
             });
             if (atBottom || !last) feed.scrollTop = feed.scrollHeight;
         }
@@ -578,6 +615,184 @@
                 showErr(err, null);
             }).catch(function (e) { showErr(err, e); })
               .then(function () { if (decodeURIComponent(location.hash.replace('#', '')) === roomId) pollTimer = setTimeout(poll, document.hidden ? 15000 : 3000); });
+        }
+        poll();
+    }
+
+    // a tap shows a message's actions on phones; a mouse shows them on hover
+    function toggleActions(e) {
+        if (e.target.closest('button, a')) return;
+        e.currentTarget.classList.toggle('show');
+    }
+
+    // ---- private messages. Friends only, admins can write to anyone. Files come through the server, to the two people in the chat only.
+    function newMessage() {
+        var s = sheet('New message');
+        var search = h('input', { type: 'search', placeholder: 'Search people', 'aria-label': 'Search people' });
+        var box = h('div', { class: 'acc-users' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        s.box.appendChild(h('div', { class: 'acc-field' }, search));
+        s.box.appendChild(box);
+        var friends = [], found = [], timer = null;
+        function row(u) {
+            return h('a', { class: 'acc-user-row', href: '#@dm/' + encodeURIComponent(u.id), onclick: function () { s.close(); } },
+                avatar(nameOf(u), u.color, 40, u.role === 'admin', u.avatar), h('span', { class: 'acc-room-t' }, h('b', { text: nameOf(u) })));
+        }
+        function draw() {
+            var q = search.value.trim().toLowerCase();
+            var shown = friends.filter(function (u) { return !q || nameOf(u).toLowerCase().indexOf(q) >= 0; });
+            while (box.firstChild) box.removeChild(box.firstChild);
+            if (!shown.length && !found.length) box.appendChild(h('p', { class: 'acc-muted', text: 'No friends yet. Add friends in the app, then you can message them here.' }));
+            shown.forEach(function (u) { box.appendChild(row(u)); });
+            if (found.length) box.appendChild(h('h3', { text: 'Everyone' }));
+            found.forEach(function (u) { box.appendChild(row(u)); });
+        }
+        search.addEventListener('input', function () {
+            draw();
+            clearTimeout(timer);
+            found = [];
+            if (!isAdmin() || search.value.trim().length < 2) return;
+            timer = setTimeout(function () {
+                call('searchUsers', { q: search.value.trim() }).then(function (r) { found = r.people || []; draw(); }).catch(function () {});
+            }, 400);
+        });
+        call('friends').then(function (r) { friends = r.friends || []; draw(); }).catch(function (e) { box.textContent = e.message; });
+    }
+
+    function dmThread(userId) {
+        clear();
+        var msgs = [], byId = {}, last = null, seenUpTo = '', other = null, sending = false, urls = {};
+        var hash = '#@dm/' + encodeURIComponent(userId);
+        var title = h('h1', { class: 'acc-room-title', text: '' });
+        var status = h('small', { class: 'acc-muted' });
+        var face = h('button', { type: 'button', class: 'acc-av-btn', 'aria-label': 'Open the profile', onclick: function () { showProfile(userId); } });
+        var feed = h('div', { class: 'acc-feed', 'aria-live': 'polite' });
+        var err = errBox();
+        var input = h('textarea', { rows: 1, maxlength: 2000, placeholder: 'Message' });
+        var send = h('button', { type: 'submit', class: 'acc-send', 'aria-label': 'Send', text: '↑' });
+        var file = h('input', { type: 'file', hidden: true, accept: '.pdf,.docx,.jpg,.jpeg,.png,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png' });
+        var attach = h('button', { type: 'button', class: 'acc-attach', 'aria-label': 'Attach a photo, PDF or Word file', title: 'Attach a photo, PDF or Word file', text: '+', onclick: function () { file.click(); } });
+        var composer = h('form', { class: 'acc-composer', onsubmit: function (ev) {
+            ev.preventDefault();
+            var t = input.value.trim(); if (!t || sending) return;
+            post({ userId: userId, text: t }, function () { input.value = ''; });
+        } }, h('div', { class: 'acc-compose-row' }, attach, input, send), file);
+        var closed = h('p', { class: 'acc-muted acc-small acc-center', hidden: true, text: '🔒 You can only send private messages to friends.' });
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); composer.requestSubmit ? composer.requestSubmit() : send.click(); }
+        });
+        file.addEventListener('change', function () {
+            var f = file.files[0]; file.value = '';
+            if (!f) return;
+            if (f.size > 8000000) return showErr(err, new Error('That file is too big. The limit is 8 MB.'));
+            var rd = new FileReader();
+            rd.onload = function () { post({ userId: userId, text: '', file: String(rd.result).split(',')[1], fileName: f.name }); };
+            rd.onerror = function () { showErr(err, new Error("Couldn't open this file.")); };
+            rd.readAsDataURL(f);
+        });
+        function post(fields, done) {
+            sending = true; send.disabled = true; attach.disabled = true;
+            call('dmSend', fields).then(function (r) { if (done) done(); if (r.message) add([r.message]); showErr(err, null); })
+                .catch(function (e) { showErr(err, e); })
+                .then(function () { sending = false; send.disabled = false; attach.disabled = false; input.focus(); });
+        }
+        root.appendChild(h('div', { class: 'acc-room-head' }, h('a', { href: '#@messages', class: 'acc-back', 'aria-label': 'Back to messages', text: '‹' }), face,
+            h('span', { class: 'acc-room-t' }, title, status)));
+        root.appendChild(feed); root.appendChild(err); root.appendChild(composer); root.appendChild(closed);
+
+        function fetchFile(m) {
+            if (urls[m.id]) return Promise.resolve(urls[m.id]);
+            return call('dmFile', { id: m.id }).then(function (r) {
+                var bin = atob(r.data), bytes = new Uint8Array(bin.length);
+                for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+                var type = m.fileType === 'pdf' ? 'application/pdf' : m.fileType === 'photo' ? (/\.png$/i.test(m.fileName) ? 'image/png' : 'image/jpeg') : 'application/octet-stream';
+                return (urls[m.id] = URL.createObjectURL(new Blob([bytes], { type: type })));
+            });
+        }
+        function attachment(m) {
+            if (m.fileType === 'photo') {
+                var img = h('img', { class: 'acc-dm-photo', alt: 'Photo' });
+                var link = h('button', { type: 'button', class: 'acc-dm-photo-btn', 'aria-label': 'View photo', onclick: function () { if (img.src) window.open(img.src, '_blank', 'noopener'); } }, img);
+                fetchFile(m).then(function (u) { img.src = u; }).catch(function () {});
+                return link;
+            }
+            var size = m.fileSize >= 1000000 ? (m.fileSize / 1000000).toFixed(1) + ' MB' : Math.max(1, Math.round(m.fileSize / 1000)) + ' KB';
+            return h('button', { type: 'button', class: 'acc-dm-file', onclick: function (ev) {
+                var b = ev.currentTarget; b.disabled = true;
+                fetchFile(m).then(function (u) {
+                    var a = h('a', { href: u, download: m.fileName }); document.body.appendChild(a); a.click(); a.remove();
+                }).catch(function (e) { showErr(err, e); }).then(function () { b.disabled = false; });
+            } }, h('span', { class: 'acc-emoji', text: m.fileType === 'pdf' ? '📕' : '📘' }),
+                h('span', { class: 'acc-room-t' }, h('b', { text: m.fileName }), h('small', { text: size })));
+        }
+        function bubble(m, prev, next) {
+            var mine = m.from === user.id;
+            var same = function (o) { return o && o.from === m.from && new Date(o.created).toDateString() === new Date(m.created).toDateString(); };
+            var actions = h('span', { class: 'acc-msg-actions' },
+                mine ? h('button', { type: 'button', text: 'Delete', onclick: function () {
+                    if (!window.confirm('Delete this message?')) return;
+                    call('dmDelete', { id: m.id }).then(function () { remove([m.id]); }).catch(function (e) { showErr(err, e); });
+                } }) : h('button', { type: 'button', text: 'Report', onclick: function () { reportSheet('dm', m.id, (m.text || m.fileName || '').slice(0, 120)); } }),
+                (!mine && other && other.role !== 'admin') ? h('button', { type: 'button', text: 'Block', onclick: function () { blockPerson(userId, nameOf(other), function () { location.hash = '@messages'; }); } }) : null);
+            return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (same(prev) ? ' grouped' : '') + (same(next) ? ' below' : ''), 'data-id': m.id },
+                h('div', { class: 'acc-bubble', onclick: toggleActions },
+                    m.hasFile ? attachment(m) : null,
+                    m.text ? h('div', { class: 'acc-text', text: m.text }) : null,
+                    h('div', { class: 'acc-time', text: fmtTime(m.created) }),
+                    actions));
+        }
+        function render() {
+            var atBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80;
+            while (feed.firstChild) feed.removeChild(feed.firstChild);
+            if (!msgs.length) feed.appendChild(h('div', { class: 'acc-empty' }, other ? avatar(nameOf(other), other.color, 72, false, other.avatar) : null,
+                h('b', { text: other ? nameOf(other) : '' }), h('p', { class: 'acc-muted', text: 'Say hello. Only the two of you see this chat.' })));
+            var day = null, seen = null;
+            if (seenUpTo) msgs.forEach(function (m) { if (m.from === user.id && m.created <= seenUpTo) seen = m.id; });
+            msgs.forEach(function (m, i) {
+                var d = new Date(m.created).toDateString();
+                if (d !== day) { day = d; feed.appendChild(h('div', { class: 'acc-day' }, h('span', { text: dayLabel(m.created) }))); }
+                feed.appendChild(bubble(m, msgs[i - 1], msgs[i + 1]));
+                if (m.id === seen) feed.appendChild(h('div', { class: 'acc-seen', text: 'Seen' }));
+            });
+            if (atBottom || !last) feed.scrollTop = feed.scrollHeight;
+        }
+        function add(list) {
+            var changed = false;
+            list.forEach(function (m) { if (!byId[m.id]) { byId[m.id] = m; msgs.push(m); changed = true; } });
+            if (msgs.length) last = msgs[msgs.length - 1].id;
+            if (changed) render();
+            return changed;
+        }
+        function remove(ids) {
+            if (!ids || !ids.length) return;
+            var gone = {}; ids.forEach(function (i) { gone[i] = 1; });
+            var before = msgs.length;
+            msgs = msgs.filter(function (m) { if (gone[m.id]) { delete byId[m.id]; return false; } return true; });
+            if (msgs.length !== before) { last = msgs.length ? msgs[msgs.length - 1].id : null; render(); }
+        }
+        var first = true;
+        function poll() {
+            var f = { userId: userId }; if (last) f.after = last;
+            call('dmThread', f).then(function (r) {
+                if (r.user) {
+                    other = r.user;
+                    title.textContent = nameOf(other);
+                    status.textContent = lastSeenText(other.lastSeen, other.online);
+                    while (face.firstChild) face.removeChild(face.firstChild);
+                    face.appendChild(avatar(nameOf(other), other.color, 36, other.role === 'admin', other.avatar, other.online == null ? null : !!other.online));
+                }
+                if (r.canSend != null) { composer.hidden = !r.canSend; closed.hidden = !!r.canSend; }
+                var seenChanged = (r.seenUpTo || seenUpTo) !== seenUpTo;
+                seenUpTo = r.seenUpTo || seenUpTo;
+                remove(r.deleted);
+                var added = add(r.messages || []);
+                if ((seenChanged && !added) || first) render();
+                first = false;
+                showErr(err, null);
+            }).catch(function (e) { showErr(err, e); })
+              .then(function () {
+                  if (location.hash === hash) pollTimer = setTimeout(poll, document.hidden ? 15000 : 3000);
+                  else Object.keys(urls).forEach(function (k) { URL.revokeObjectURL(urls[k]); });
+              });
         }
         poll();
     }

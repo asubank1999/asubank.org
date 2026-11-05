@@ -449,9 +449,9 @@
     /* ---------- tab bar + More sheet ---------- */
     var TABS = [
         { id: 'home', href: '/', label: 'Home', icon: 'home', match: /^\/(index)?$/ },
-        { id: 'search', href: '/guides/search', label: 'Search', icon: 'search', match: /^\/guides\/search$/ },
-        { id: 'upload', href: '/upload/uploadmethod', label: 'Upload', icon: 'upload', match: /^\/upload\// },
-        { id: 'saved', href: '/guides/saved', label: 'Saved', icon: 'bookmark', match: /^\/guides\/saved$/ }
+        { id: 'feed', href: '/feed/', label: 'Feed', icon: 'page', match: /^\/feed/ },
+        { id: 'chat', href: '/chat/', label: 'Chat', icon: 'chat', match: /^\/chat/ },
+        { id: 'search', href: '/guides/search', label: 'Search', icon: 'search', match: /^\/guides\/search$/ }
     ];
     function cleanPath() { return location.pathname.replace(/\.html$/, '').replace(/\/index$/, '/').replace(/(.)\/$/, '$1'); }
     AB.path = cleanPath;
@@ -467,6 +467,7 @@
     }
     var MORE = [
         ['Study', [
+            ['/upload/uploadmethod', 'Upload a file', 'upload'], ['/guides/saved', 'Saved', 'bookmark'],
             ['/guides/latest', 'Latest uploads', 'sparkle'], ['/banks/mostwanted', 'Most wanted files', 'star'],
             ['/requests/student_request_portal', 'Request a material', 'inbox'], ['/guides/tutorial', 'How to search', 'help']]],
         ['University', [
@@ -474,7 +475,7 @@
             ['/guides/asu', 'ASU shortcuts (MyASU, EduGate)', 'link'], ['/guides/halls', 'University halls', 'page'],
             ['/guides/grading-scale-asu', 'Grading scale', 'sheet']]],
         ['Community', [
-            ['/feed/', 'Feed: posts and stories', 'people'], ['/guides/groups', 'Course WhatsApp groups', 'chat'], ['/requests/portal_to_rating', 'Rate professors', 'star'],
+            ['/guides/groups', 'Course WhatsApp groups', 'chat'], ['/requests/portal_to_rating', 'Rate professors', 'star'],
             ['/requests/matcher_confirm', 'Course matcher', 'people'], ['/guides/links', 'ASU resources', 'grid']]],
         ['Help & support', [
             ['/guides/contact', 'Contact us', 'chat'], ['/guides/faqs', 'FAQs', 'help'],
