@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -53,6 +54,7 @@ data class FeedPost(
     val created: String? = null,
     val likes: Int = 0,
     val liked: Boolean = false,
+    val audience: String? = null,
     val user: AbUser,
 )
 
@@ -172,6 +174,7 @@ fun ComposePostDialog(onClose: () -> Unit, posted: () -> Unit) {
     val ctx = LocalContext.current
     var text by remember { mutableStateOf("") }
     var photo by remember { mutableStateOf<Uri?>(null) }
+    var audience by remember { mutableStateOf(AudiencePref.value) }
     val pick = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) photo = uri
     }
@@ -193,6 +196,7 @@ fun ComposePostDialog(onClose: () -> Unit, posted: () -> Unit) {
                     TextButton(onClick = { pick.launch("image/*") }) { Text(tr(if (photo == null) "Add a photo" else "Change photo")) }
                     if (photo != null) TextButton(onClick = { photo = null }) { Text(tr("Remove photo"), color = MaterialTheme.colorScheme.error) }
                 }
+                AudienceMenu(audience) { audience = it }
                 error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             }
         },
@@ -201,7 +205,7 @@ fun ComposePostDialog(onClose: () -> Unit, posted: () -> Unit) {
                 busy = true
                 scope.launch {
                     try {
-                        val fields = mutableMapOf<String, Any?>("text" to text)
+                        val fields = mutableMapOf<String, Any?>("text" to text, "audience" to audience)
                         photo?.let { fields["image"] = PhotoTools.jpeg(ctx, it) ?: throw ApiError(tr("Couldn't load this photo")) }
                         Account.call("postCreate", fields)
                         posted()
@@ -234,16 +238,19 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Row(
-                    Modifier.weight(1f).clickable { nav.navigate("profile/${post.user.id}") },
+                    Modifier.weight(1f).clickable { if (me == null) Account.signInShown.value = true else nav.navigate("profile/${post.user.id}") },
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     Avatar(post.user.name, post.user.color, 38.dp, post.user.isAdmin, post.user.avatar, post.user.online)
                     Column {
                         Text(post.user.name, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.bodyMedium)
-                        Text(Social.ago(post.created), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(Social.ago(post.created), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Icon(audienceIcon(post.audience), null, Modifier.size(12.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                     }
                 }
-                Box {
+                if (me != null) Box {
                     IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, null) }
                     DropdownMenu(menu, { menu = false }) {
                         if (post.user.id == me?.id || Account.isAdmin) DropdownMenuItem(text = { Text("Delete") }, onClick = {
@@ -267,6 +274,7 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(
                 Modifier.clip(RoundedCornerShape(50)).clickable {
+                    if (me == null) { Account.signInShown.value = true; return@clickable }
                     val on = !liked
                     liked = on
                     likes += if (on) 1 else -1
@@ -278,7 +286,7 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
                 Text("$likes", style = MaterialTheme.typography.bodySmall)
             }
             Row(
-                Modifier.clip(RoundedCornerShape(50)).clickable { showComments = true }.padding(horizontal = 8.dp, vertical = 4.dp),
+                Modifier.clip(RoundedCornerShape(50)).clickable { if (me == null) Account.signInShown.value = true else showComments = true }.padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Icon(Icons.Filled.ChatBubbleOutline, tr("Comments"), tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(18.dp))
@@ -487,6 +495,7 @@ fun ProfileScreen(userId: String) {
     val me by Account.user.collectAsState()
     var user by remember { mutableStateOf<AbUser?>(null) }
     var friendship by remember { mutableStateOf("none") }
+    var canMessage by remember { mutableStateOf(false) }
     var friendCount by remember { mutableIntStateOf(0) }
     var postCount by remember { mutableIntStateOf(0) }
     var messageCount by remember { mutableIntStateOf(0) }
@@ -502,6 +511,7 @@ fun ProfileScreen(userId: String) {
     fun readProfile(r: kotlinx.serialization.json.JsonObject) {
         user = r["user"].decodeAs<AbUser>()
         friendship = r.str("friendship") ?: "none"
+        canMessage = r.bool("canMessage")
         friendCount = r.str("friendCount")?.toDoubleOrNull()?.toInt() ?: 0
         postCount = r.str("postCount")?.toDoubleOrNull()?.toInt() ?: 0
         messageCount = r.str("messageCount")?.toDoubleOrNull()?.toInt() ?: 0
@@ -547,6 +557,8 @@ fun ProfileScreen(userId: String) {
                             cover, tr("View cover photo"),
                             Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(18.dp)).clickable { PhotoPeek.show(cover) },
                             contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                            // tall photos show their upper part, where faces and the sky usually are
+                            alignment = androidx.compose.ui.BiasAlignment(0f, -0.5f),
                         )
                         if (isMe) Box(Modifier.align(Alignment.TopEnd).padding(8.dp)) {
                             IconButton(
@@ -558,7 +570,9 @@ fun ProfileScreen(userId: String) {
                                 if (cover.isNotEmpty()) DropdownMenuItem(text = { Text(tr("Remove cover photo")) }, onClick = { coverMenu = false; setCover(null) })
                             }
                         }
-                        Box(Modifier.align(Alignment.BottomCenter).border(4.dp, MaterialTheme.colorScheme.background, CircleShape).padding(4.dp)) {
+                        // a solid disc behind the photo. A ring drawn around it left a see-through gap, and cut through the star.
+                        Box(Modifier.align(Alignment.BottomCenter), contentAlignment = Alignment.Center) {
+                            Box(Modifier.size(104.dp).clip(CircleShape).background(MaterialTheme.colorScheme.background))
                             Avatar(u?.name ?: "", u?.color ?: "#8C1D40", 96.dp, u?.isAdmin == true, u?.avatar, u?.online)
                         }
                     }
@@ -587,6 +601,10 @@ fun ProfileScreen(userId: String) {
                             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                 FriendButton(u.id, friendship) { s -> friendship = s; scope.launch { load() } }
                                 if (friendship == "friends") Button(onClick = { poking = u }) { Text("👉 " + tr("Poke")) }
+                            }
+                            if (canMessage) OutlinedButton(onClick = { nav.navigate("dm/${u.id}") }) {
+                                Icon(Icons.AutoMirrored.Filled.Send, null, Modifier.size(18.dp))
+                                Text(" " + tr("Send a message"))
                             }
                         }
                     }

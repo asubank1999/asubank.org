@@ -309,6 +309,8 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable("room/{id}") { e -> ChatRoomScreen(e.arguments?.getString("id") ?: "general") }
                 composable("account") { AccountScreen() }
                 composable("profile/{id}") { e -> ProfileScreen(e.arguments?.getString("id") ?: "") }
+                composable("dm/{id}") { e -> DmThreadScreen(e.arguments?.getString("id") ?: "") }
+                composable("newmessage") { NewMessageScreen() }
                 composable("online") { OnlineScreen() }
                 composable("mutedRooms") { MutedRoomsScreen() }
                 composable("adminRooms") { AdminRoomsScreen() }

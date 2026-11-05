@@ -207,6 +207,7 @@ fun HomeScreen() {
                 }
             }
         }
+        item { WeatherCard() }
         item { HomeCalendarCard() }
         item { NextLectureCard() }
         item { HomeDueCard() }
@@ -214,26 +215,36 @@ fun HomeScreen() {
             Box(
                 Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp).clip(RoundedCornerShape(22.dp))
                     .background(heroBrush((Prefs.accents.firstOrNull { it.id == accentId } ?: Prefs.accents[0]).light))
-                    .padding(start = 18.dp, end = 18.dp, top = 16.dp, bottom = 18.dp),
+                    .padding(14.dp),
             ) {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
                     Text(
                         "Summaries, past papers and test banks for ASU students." + if (items.isNotEmpty()) " " + trf("%d materials in %d subjects.", items.size, subjects.size) else "",
-                        color = Color.White.copy(alpha = 0.85f), style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.9f), style = MaterialTheme.typography.bodySmall,
                     )
-                    OutlinedTextField(
-                        value = q, onValueChange = { q = it },
-                        placeholder = { Text("Search materials, e.g. calculus final") },
-                        leadingIcon = { Icon(Icons.Filled.Search, null) },
-                        singleLine = true,
-                        shape = RoundedCornerShape(14.dp),
+                    androidx.compose.foundation.text.BasicTextField(
+                        value = q, onValueChange = { q = it }, singleLine = true,
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface),
+                        cursorBrush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(onSearch = { AppState.pendingSearch.value = q; nav.openTab(Routes.SEARCH) }),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer, unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                            focusedBorderColor = Color.Transparent, unfocusedBorderColor = Color.Transparent,
-                        ),
                         modifier = Modifier.fillMaxWidth(),
+                        decorationBox = { inner ->
+                            Row(
+                                Modifier.fillMaxWidth().clip(RoundedCornerShape(50)).background(MaterialTheme.colorScheme.surfaceContainer)
+                                    .padding(horizontal = 12.dp, vertical = 9.dp),
+                                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Icon(Icons.Filled.Search, null, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Box(Modifier.weight(1f)) {
+                                    if (q.isEmpty()) Text(
+                                        "Search materials, e.g. calculus final", color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                                    )
+                                    inner()
+                                }
+                            }
+                        },
                     )
                 }
             }
@@ -277,7 +288,6 @@ fun HomeScreen() {
                 ListRow("All subjects", trf("%d subjects by faculty", subjects.size), icon = Icons.Filled.GridView) { nav.openPage("/banks/subjects", "All subjects") }
             }
         }
-        item { WeatherCard() }
         item { SectionTitle("New here?", "طالب جديد") }
         item { Group { LinkRows(Links.newHere) } }
         item { SectionTitle("Community & services") }

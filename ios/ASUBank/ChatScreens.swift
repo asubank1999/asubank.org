@@ -9,6 +9,8 @@ struct ChatTab: View {
     @State private var addingRoom = false
     @State private var online: [OnlineUser] = []
     @State private var onlineCount = 0
+    @State private var section = "rooms"
+    @StateObject private var dms = DMListModel()
 
     var body: some View {
         ABStack {
@@ -32,11 +34,18 @@ struct ChatTab: View {
         .onAppear(perform: takeRoom)
         .onChange(of: app.pendingRoom) { _ in takeRoom() }
         .task { await loadOnline() }
+        .task(id: account.signedIn) {
+            while !Task.isCancelled {
+                await dms.load()
+                try? await Task.sleep(nanoseconds: 20_000_000_000)
+            }
+        }
     }
 
     private func takeRoom() {
         guard let id = app.pendingRoom, account.signedIn else { return }
         app.pendingRoom = nil
+        if id == "__dm" { section = "messages"; return }
         openRoom = account.rooms.first { $0.id == id }
     }
 
@@ -60,6 +69,16 @@ struct ChatTab: View {
                 }
                 .padding(.vertical, 2)
             }
+            Picker("Show", selection: $section) {
+                Text("Rooms").tag("rooms")
+                Text(dms.unread > 0 ? "\(L("Messages")) (\(dms.unread))" : L("Messages")).tag("messages")
+            }
+            .pickerStyle(.segmented)
+            .listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
+            if section == "messages" {
+                DMConversationRows(model: dms)
+            } else {
             if !online.isEmpty {
                 Section {
                     NavigationLink { OnlineScreen(users: online) } label: {
@@ -92,15 +111,16 @@ struct ChatTab: View {
                     }
                 }
             }
+            }
         }
         .listStyle(.insetGrouped)
-        .refreshable { await account.refresh(); await loadOnline() }
+        .refreshable { await account.refresh(); await loadOnline(); await dms.load() }
     }
 
     private func roomLabel(_ r: ChatRoom) -> some View {
         HStack(spacing: 12) {
-            Text(r.emoji).font(.title2).frame(width: 44, height: 44)
-                .background(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            Text(r.emoji).font(.title2).frame(width: 48, height: 48)
+                .background(Color.abAccentSoft, in: Circle())
                 .opacity(r.archived == true ? 0.5 : 1)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
@@ -412,12 +432,11 @@ struct ChatRoomView: View {
                     ForEach(Array(model.messages.enumerated()), id: \.element.id) { i, m in
                         let prev = i > 0 ? model.messages[i - 1] : nil
                         if prev == nil || !Calendar.current.isDate(prev!.date, inSameDayAs: m.date) {
-                            Text(dayLabel(m.date)).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
-                                .padding(.horizontal, 10).padding(.vertical, 4)
-                                .background(Color(UIColor.secondarySystemBackground), in: Capsule())
-                                .padding(.vertical, 8)
+                            ChatDayLabel(date: m.date)
                         }
-                        bubble(m, grouped: prev?.userId == m.userId && Calendar.current.isDate(prev!.date, inSameDayAs: m.date))
+                        let next = i + 1 < model.messages.count ? model.messages[i + 1] : nil
+                        bubble(m, grouped: prev?.userId == m.userId && Calendar.current.isDate(prev!.date, inSameDayAs: m.date),
+                               joinedBelow: next?.userId == m.userId && Calendar.current.isDate(next!.date, inSameDayAs: m.date))
                             .id(m.id)
                     }
                     Color.clear.frame(height: 4).id("bottom")
@@ -453,6 +472,15 @@ struct ChatRoomView: View {
         .navigationTitle("\(model.room.emoji) \(model.room.name)")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                HStack(spacing: 8) {
+                    Text(model.room.emoji).font(.subheadline).frame(width: 32, height: 32).background(Color.abAccentSoft, in: Circle())
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(model.room.name).font(.subheadline.weight(.semibold)).lineLimit(1)
+                        if !model.room.about.isEmpty { Text(model.room.about).font(.caption2).foregroundStyle(.secondary).lineLimit(1) }
+                    }
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 if account.isAdmin {
                     Button { roomSettings = true } label: { Image(systemName: "slider.horizontal.3") }.accessibilityLabel(Text("Edit room"))
@@ -479,7 +507,7 @@ struct ChatRoomView: View {
         return f.string(from: d)
     }
 
-    @ViewBuilder private func bubble(_ m: ChatMessage, grouped: Bool) -> some View {
+    @ViewBuilder private func bubble(_ m: ChatMessage, grouped: Bool, joinedBelow: Bool) -> some View {
         let mine = m.userId == account.user?.id
         let person = model.people[m.userId]
         let reply = m.replyTo.flatMap { id in model.messages.first { $0.id == id } }
@@ -518,8 +546,7 @@ struct ChatRoomView: View {
                     .font(.caption2).foregroundStyle(mine ? .white.opacity(0.7) : .secondary)
                 }
                 .padding(.horizontal, 12).padding(.vertical, 8)
-                .background(mine ? AnyShapeStyle(Color.abAccent) : AnyShapeStyle(Color(UIColor.secondarySystemGroupedBackground)),
-                            in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .chatBubble(mine: mine, joinedAbove: grouped, joinedBelow: joinedBelow)
                 .contextMenu {
                     if canPost { Button { editing = nil; replyTo = m; focused = true } label: { Label("Reply", systemImage: "arrowshape.turn.up.left") } }
                     Button { UIPasteboard.general.string = m.text } label: { Label("Copy", systemImage: "doc.on.doc") }
@@ -567,20 +594,8 @@ struct ChatRoomView: View {
                     }
                     .padding(.horizontal, 14).padding(.top, 8)
                 }
-                HStack(spacing: 8) {
-                    TextField("Message", text: $text)
-                        .focused($focused)
-                        .padding(.horizontal, 14).padding(.vertical, 9)
-                        .background(Color(UIColor.secondarySystemBackground), in: Capsule())
-                        .submitLabel(.send)
-                        .onSubmit(send)
-                    Button(action: send) {
-                        Image(systemName: sending ? "hourglass" : (editing != nil ? "checkmark.circle.fill" : "arrow.up.circle.fill"))
-                            .font(.system(size: 32)).foregroundStyle(Color.abAccent)
-                    }
-                    .disabled(text.trimmingCharacters(in: .whitespaces).isEmpty || sending)
-                }
-                .padding(.horizontal, 10).padding(.vertical, 8)
+                ChatComposerBar(text: $text, focused: $focused, busy: sending, placeholder: "Message",
+                                sendSymbol: editing != nil ? "checkmark" : "arrow.up", send: send)
             } else {
                 Label(model.room.archived == true ? L("This room is archived.") : model.room.locked == true ? L("This room is locked. Only admins can post.") : L("Only the ASU Bank team posts here."),
                       systemImage: model.room.locked == true || model.room.archived == true ? "lock.fill" : "megaphone")

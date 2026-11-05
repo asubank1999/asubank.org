@@ -1,6 +1,6 @@
 /* ASU Bank accounts, chat and admin on the website.
    Same "ASU Bank Accounts" Apps Script as the iOS and Android apps (tools/apps-script/accounts-api.gs),
-   so one account works everywhere. Pages: /account/, /chat/, /admin/ (each has <div id="acc-app" data-view="...">). */
+   so one account works everywhere. Pages: /account/, /chat/, /feed/, /admin/ (each has <div id="acc-app" data-view="...">). */
 (function () {
     'use strict';
     var API = 'https://script.google.com/macros/s/AKfycbzXDE0Km2mxL_gAJFqspZeaADtugupeLN0YQlkEbXnrCkSTKBfImW_lLCKF8_SMI0i_/exec';
@@ -127,11 +127,18 @@
         var s = sheet('Profile');
         var body = h('div', { class: 'acc-profile' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
         s.box.appendChild(body);
-        call('profile', { userId: userId }).then(function (r) {
+        var signedIn = !!(token && user);
+        call(signedIn ? 'profile' : 'publicProfile', { userId: userId }).then(function (r) {
             var u = r.user; while (body.firstChild) body.removeChild(body.firstChild);
-            body.appendChild(avatar(nameOf(u), u.color, 96, u.role === 'admin', u.avatar, !!u.online));
+            var cover = h('div', { class: 'acc-cover', style: 'background:' + safeColor(u.color) });
+            if (safePhoto(u.cover)) cover.appendChild(h('img', { src: safePhoto(u.cover), alt: '', referrerpolicy: 'no-referrer', onerror: function (e) { e.currentTarget.remove(); } }));
+            body.appendChild(cover);
+            body.appendChild(h('div', { class: 'acc-cover-av' }, avatar(nameOf(u), u.color, 96, u.role === 'admin', u.avatar, signedIn ? !!u.online : null)));
             body.appendChild(h('h2', { text: nameOf(u) }));
-            body.appendChild(h('p', { class: 'acc-muted', text: '@' + u.username + (u.role === 'admin' ? ' · Admin' : '') + ' · ' + lastSeenText(u.lastSeen, u.online) }));
+            body.appendChild(h('p', { class: 'acc-muted', text: '@' + u.username + (u.role === 'admin' ? ' · Admin' : '') + (signedIn ? ' · ' + lastSeenText(u.lastSeen, u.online) : '') }));
+            if (signedIn) body.appendChild(h('div', { class: 'acc-stats' }, [['Friends', r.friendCount], ['Posts', r.postCount], ['Messages', r.messageCount]].map(function (s) {
+                return h('span', null, h('b', { text: String(s[1] || 0) }), h('small', { text: s[0] }));
+            })));
             var b = badgeRow(u.badges); if (b) body.appendChild(b);
             if (u.bio) body.appendChild(h('p', { class: 'acc-bio', text: u.bio }));
             if (u.college || u.major) body.appendChild(h('p', { class: 'acc-muted', text: '🎓 ' + [u.college, u.major].filter(Boolean).join(' · ') }));
@@ -141,13 +148,18 @@
                     h('a', { class: 'ab-btn tinted', href: 'tel:' + digits, text: '📞 ' + u.phone }),
                     h('a', { class: 'ab-btn tinted', href: 'https://wa.me/' + digits.replace('+', ''), target: '_blank', rel: 'noopener', text: 'WhatsApp' })));
             }
-            if (u.id !== user.id) body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
+            if (signedIn && u.id !== user.id) body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
                 h('button', { type: 'button', class: 'ab-btn gray', text: 'Report', onclick: function () { reportSheet('user', u.id, nameOf(u)); } }),
                 u.role === 'admin' ? null : h('button', { type: 'button', class: 'ab-btn gray', text: isBlocked(u.id) ? 'Unblock' : 'Block', onclick: function () {
                     if (isBlocked(u.id)) call('block', { userId: u.id, on: false }).then(function (r) { user.blocked = r.blocked; s.close(); });
                     else blockPerson(u.id, nameOf(u), function () { s.close(); });
                 } })));
-            if (isAdmin() && u.id !== user.id) body.appendChild(h('p', null, h('a', { href: '/admin/#' + encodeURIComponent(u.username), text: 'Manage this user in Admin ›' })));
+            if (signedIn && isAdmin() && u.id !== user.id) body.appendChild(h('p', null, h('a', { href: '/admin/#' + encodeURIComponent(u.username), text: 'Manage this user in Admin ›' })));
+            if (!signedIn) body.appendChild(h('p', { class: 'acc-muted acc-small' }, h('a', { href: '/account/', text: 'Sign in' }), ' to see the full profile.'));
+            if (r.posts && r.posts.length) {
+                body.appendChild(h('h3', { class: 'acc-left', text: signedIn ? 'Posts' : 'Public posts' }));
+                r.posts.forEach(function (p) { p.user = p.user || u; body.appendChild(postCard(p, true)); });
+            }
         }).catch(function (e) { body.textContent = (fallback ? fallback + ': ' : '') + e.message; });
     }
     // shrinks a picked photo to a 256 px square JPEG (base64, no data: prefix)
@@ -743,7 +755,138 @@
         }).catch(function (e) { logBox.textContent = e.message; });
     }
 
-    var views = { account: accountView, chat: chatView, admin: adminView };
+    // ---- /feed/: reading is open to everyone, posting happens in the apps
+    function ago(iso) {
+        var s = (Date.now() - new Date(iso).getTime()) / 1000;
+        if (!iso || isNaN(s)) return '';
+        if (s < 60) return 'now';
+        if (s < 3600) return Math.floor(s / 60) + 'm';
+        if (s < 86400) return Math.floor(s / 3600) + 'h';
+        if (s < 604800) return Math.floor(s / 86400) + 'd';
+        return new Date(iso).toLocaleDateString();
+    }
+    var AUDIENCE = { 'public': ['🌐', 'Everyone'], students: ['🎓', 'ASU students'], friends: ['👥', 'Friends only'] };
+    function bigPhoto(u) { return safePhoto(u).replace(/sz=w\d+/, 'sz=w1600'); }
+    function postCard(p, flat) {
+        var u = p.user || {}, a = AUDIENCE[p.audience] || AUDIENCE.students;
+        var card = h('article', { class: 'acc-card acc-post' + (flat ? ' flat' : '') });
+        card.appendChild(h('button', { type: 'button', class: 'acc-post-head', 'aria-label': 'Open the profile of ' + nameOf(u), onclick: flat ? null : function () { showProfile(u.id, nameOf(u)); } },
+            avatar(nameOf(u), u.color, 40, u.role === 'admin', u.avatar),
+            h('span', { class: 'acc-post-who' }, h('b', { text: nameOf(u) }), h('small', { title: a[1], text: ago(p.created) + ' · ' + a[0] }))));
+        if (p.text) card.appendChild(h('p', { class: 'acc-post-text', text: p.text }));
+        if (safePhoto(p.image)) card.appendChild(h('a', { href: bigPhoto(p.image), target: '_blank', rel: 'noopener noreferrer' },
+            h('img', { class: 'acc-post-img', src: safePhoto(p.image), alt: 'Photo in the post', loading: 'lazy', referrerpolicy: 'no-referrer', onerror: function (e) { e.currentTarget.remove(); } })));
+        card.appendChild(h('p', { class: 'acc-post-meta', text: '♥ ' + (p.likes || 0) + '   💬 ' + (p.comments || 0) }));
+        return card;
+    }
+    function driveId(u) { var m = /[?&]id=([\w-]+)/.exec(u || ''); return m ? m[1] : ''; }
+    function storyViewer(groups, start) {
+        var g = start, s = 0, timer = null;
+        var stage = h('div', { class: 'acc-story-stage' });
+        var bars = h('div', { class: 'acc-story-bars' });
+        var head = h('div', { class: 'acc-story-head' });
+        var box = h('div', { class: 'acc-story', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Story' });
+        function close() { clearTimeout(timer); document.removeEventListener('keydown', keys); box.remove(); }
+        function step(d) {
+            var list = groups[g].stories;
+            if (s + d >= 0 && s + d < list.length) s += d;
+            else if (d > 0 && g + 1 < groups.length) { g++; s = 0; }
+            else if (d < 0 && g > 0) { g--; s = groups[g].stories.length - 1; }
+            else if (d > 0) return close();
+            draw();
+        }
+        function keys(e) { if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1); }
+        function draw() {
+            clearTimeout(timer);
+            var group = groups[g], item = group.stories[s], u = group.user;
+            while (stage.firstChild) stage.removeChild(stage.firstChild);
+            while (bars.firstChild) bars.removeChild(bars.firstChild);
+            while (head.firstChild) head.removeChild(head.firstChild);
+            group.stories.forEach(function (_, i) { bars.appendChild(h('i', { class: i <= s ? 'on' : '' })); });
+            head.appendChild(avatar(nameOf(u), u.color, 36, u.role === 'admin', u.avatar));
+            head.appendChild(h('span', { class: 'acc-post-who' }, h('b', { text: nameOf(u) }), h('small', { text: ago(item.created) })));
+            head.appendChild(h('button', { type: 'button', class: 'acc-story-x', 'aria-label': 'Close', text: '×', onclick: close }));
+            var vid = driveId(item.video);
+            stage.style.background = (item.image || vid) ? '#000' : safeColor(item.bg);
+            if (vid) stage.appendChild(h('iframe', { src: 'https://drive.google.com/file/d/' + vid + '/preview', title: 'Story video', allow: 'autoplay; fullscreen', referrerpolicy: 'no-referrer' }));
+            else if (safePhoto(item.image)) stage.appendChild(h('img', { src: bigPhoto(item.image), alt: '', referrerpolicy: 'no-referrer' }));
+            if (item.text) stage.appendChild(h('p', { class: 'acc-story-text', text: item.text }));
+            if (token && user && !item.seen) { item.seen = true; call('storySeen', { id: item.id }).catch(function () {}); }
+            // a video moves on when the person taps next: the Drive player doesn't say when it has ended
+            if (!vid) timer = setTimeout(function () { step(1); }, 6000);
+        }
+        box.appendChild(bars); box.appendChild(head); box.appendChild(stage);
+        box.appendChild(h('button', { type: 'button', class: 'acc-story-nav prev', 'aria-label': 'Previous story', text: '‹', onclick: function () { step(-1); } }));
+        box.appendChild(h('button', { type: 'button', class: 'acc-story-nav next', 'aria-label': 'Next story', text: '›', onclick: function () { step(1); } }));
+        document.addEventListener('keydown', keys);
+        document.body.appendChild(box);
+        draw();
+    }
+    function feedView() {
+        var signedIn = !!(token && user);
+        var scope = signedIn ? (get('ab.feed.scope') || 'friends') : 'guest';
+        var offset = 0;
+        var loadToken = 0;
+        clear();
+        root.appendChild(h('div', { class: 'acc-intro' }, h('h1', { class: 'ab-large', text: 'Feed' })));
+        var stories = h('div', { class: 'acc-stories' });
+        root.appendChild(stories);
+        if (signedIn) {
+            var seg = h('div', { class: 'acc-seg', role: 'tablist' });
+            [['friends', 'Friends'], ['strangers', 'Strangers'], ['guest', 'Guest']].forEach(function (o) {
+                seg.appendChild(h('button', { type: 'button', role: 'tab', 'aria-selected': o[0] === scope ? 'true' : 'false', class: o[0] === scope ? 'on' : '', text: o[1], onclick: function () {
+                    scope = o[0]; set('ab.feed.scope', scope);
+                    Array.prototype.forEach.call(seg.children, function (b) { var on = b === seg.children[['friends', 'strangers', 'guest'].indexOf(scope)]; b.className = on ? 'on' : ''; b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+                    posts(true);
+                } }));
+            });
+            root.appendChild(seg);
+            root.appendChild(h('p', { class: 'acc-muted acc-small', text: 'To post or add a story, use the ASU Bank app.' }));
+        } else {
+            root.appendChild(h('div', { class: 'acc-card' }, h('b', { text: "You're browsing as a guest" }),
+                h('p', { class: 'acc-muted', text: 'You see what students share with everyone. Sign in for more.' }),
+                h('a', { class: 'ab-btn', href: '/account/', text: 'Sign in or create account' })));
+        }
+        var list = h('div', { 'aria-live': 'polite' });
+        var moreBtn = h('button', { type: 'button', class: 'ab-btn gray acc-more', text: 'Load more', hidden: true, onclick: function () { posts(false); } });
+        root.appendChild(list); root.appendChild(moreBtn);
+
+        function posts(fresh) {
+            var mine = ++loadToken;
+            if (fresh) {
+                offset = 0;
+                while (list.firstChild) list.removeChild(list.firstChild);
+                list.appendChild(h('p', { class: 'acc-muted', text: 'Loading…' }));
+                moreBtn.hidden = true;
+            }
+            call(signedIn ? 'feedAll' : 'publicFeed', { scope: scope, offset: offset }).then(function (r) {
+                if (mine !== loadToken) return;
+                if (fresh) while (list.firstChild) list.removeChild(list.firstChild);
+                var got = r.posts || [];
+                if (fresh && !got.length) list.appendChild(h('p', { class: 'acc-muted acc-center', text:
+                    scope === 'friends' ? 'No posts from friends yet.' : scope === 'strangers' ? 'No posts from other students yet.' : 'No public posts yet.' }));
+                got.forEach(function (p) { list.appendChild(postCard(p)); });
+                offset += got.length;
+                moreBtn.hidden = got.length < 25;
+            }).catch(function (e) {
+                if (mine !== loadToken) return;
+                if (!token && signedIn) return feedView();
+                if (fresh) { while (list.firstChild) list.removeChild(list.firstChild); }
+                list.appendChild(h('p', { class: 'acc-err', role: 'alert', text: e.message }));
+            });
+        }
+        call(signedIn ? 'stories' : 'publicStories').then(function (r) {
+            (r.groups || []).forEach(function (g, i) {
+                if (!g.stories || !g.stories.length) return;
+                stories.appendChild(h('button', { type: 'button', class: 'acc-story-pick' + (g.seen ? ' seen' : ''), onclick: function () { storyViewer(r.groups, i); } },
+                    h('span', { class: 'acc-story-ring' }, avatar(nameOf(g.user), g.user.color, 56, false, g.user.avatar)),
+                    h('small', { text: nameOf(g.user) })));
+            });
+        }).catch(function () {});
+        posts(true);
+    }
+
+    var views = { account: accountView, chat: chatView, admin: adminView, feed: feedView };
     (views[view] || accountView)();
     if (view === 'chat') window.addEventListener('hashchange', chatView);
 })();

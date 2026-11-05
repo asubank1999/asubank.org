@@ -129,6 +129,7 @@ struct HomeView: View {
         ABStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
+                    WeatherCard()
                     HomeCalendarCard()
                     NextLectureCard()
                     HomeDueCard()
@@ -155,8 +156,6 @@ struct HomeView: View {
                     group(Links.schedules)
 
                     subjects
-
-                    WeatherCard()
 
                     SectionHeader(title: "New here? Start with these", arabic: "طالب جديد؟")
                     group(Links.newHere)
@@ -197,25 +196,20 @@ struct HomeView: View {
     }
 
     private var hero: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 9) {
             Text("Summaries, past papers and test banks for ASU students")
-                .font(.title2.weight(.bold))
+                .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.white)
-            Text("ملخصات وامتحانات سابقة وبنوك أسئلة لطلاب جامعة العلوم التطبيقية")
-                .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.85))
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .multilineTextAlignment(.trailing)
             Button { app.tab = .search; Haptics.tap() } label: {
                 HStack {
                     Image(systemName: "magnifyingglass")
-                    Text("Search \(library.items.isEmpty ? "" : "\(library.items.count) ")materials, subjects, years…")
+                    Text("Search \(library.items.isEmpty ? "" : "\(library.items.count) ")materials, subjects, years…").lineLimit(1).minimumScaleFactor(0.85)
                     Spacer()
                 }
-                .font(.body)
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
-                .padding(.horizontal, 14).padding(.vertical, 12)
-                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .padding(.horizontal, 12).padding(.vertical, 8)
+                .background(Color.abSurface, in: Capsule())
             }
             .buttonStyle(PressStyle())
             HStack(spacing: 8) {
@@ -224,7 +218,7 @@ struct HomeView: View {
                 heroButton("★ Saved") { app.tab = .saved }
             }
         }
-        .padding(20)
+        .padding(14)
         .background(
             LinearGradient(colors: AppTheme.heroColors, startPoint: .topLeading, endPoint: .bottomTrailing),
             in: RoundedRectangle(cornerRadius: 22, style: .continuous)
@@ -239,8 +233,8 @@ struct HomeView: View {
 
     private func heroButton(_ title: String, action: @escaping () -> Void) -> some View {
         Button { action(); Haptics.tap() } label: {
-            Text(title).font(.subheadline.weight(.semibold)).foregroundStyle(.white)
-                .padding(.horizontal, 12).padding(.vertical, 8)
+            Text(title).font(.caption.weight(.semibold)).foregroundStyle(.white)
+                .padding(.horizontal, 10).padding(.vertical, 6)
                 .background(.white.opacity(0.16), in: Capsule())
         }
         .buttonStyle(PressStyle())

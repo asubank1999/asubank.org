@@ -474,7 +474,7 @@
             ['/guides/asu', 'ASU shortcuts (MyASU, EduGate)', 'link'], ['/guides/halls', 'University halls', 'page'],
             ['/guides/grading-scale-asu', 'Grading scale', 'sheet']]],
         ['Community', [
-            ['/guides/groups', 'Course WhatsApp groups', 'chat'], ['/requests/portal_to_rating', 'Rate professors', 'star'],
+            ['/feed/', 'Feed: posts and stories', 'people'], ['/guides/groups', 'Course WhatsApp groups', 'chat'], ['/requests/portal_to_rating', 'Rate professors', 'star'],
             ['/requests/matcher_confirm', 'Course matcher', 'people'], ['/guides/links', 'ASU resources', 'grid']]],
         ['Help & support', [
             ['/guides/contact', 'Contact us', 'chat'], ['/guides/faqs', 'FAQs', 'help'],

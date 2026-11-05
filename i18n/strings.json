@@ -7397,5 +7397,193 @@
  "Fixes: sharper profile photos, and the online row shows only people who are online": {
   "ar": "إصلاحات: صور شخصية أوضح، وصف المتصلين يعرض المتصلين فقط",
   "es": "Correcciones: fotos de perfil más nítidas y la fila de conectados solo muestra a quien está en línea"
+ },
+ "Feed now has Friends, Strangers and Guest": {
+  "ar": "صار في آخر المنشورات: الأصدقاء، الغرباء والضيف",
+  "es": "El Feed ahora tiene Amigos, Desconocidos e Invitado"
+ },
+ "Read public posts and stories without an account, also on the website": {
+  "ar": "اقرأ المنشورات والقصص العامة بدون حساب، وعلى الموقع أيضاً",
+  "es": "Lee publicaciones e historias públicas sin cuenta, también en la web"
+ },
+ "Choose who sees each new post or story: everyone, ASU students or friends": {
+  "ar": "اختر من يرى كل منشور أو قصة جديدة: الجميع أو طلاب ASU أو الأصدقاء",
+  "es": "Elige quién ve cada publicación o historia: todos, estudiantes de ASU o amigos"
+ },
+ "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can": {
+  "ar": "اسحب جانباً في آخر المنشورات لفتح الكاميرا لقصة بصورة أو فيديو، بسرعة 60 إطاراً إن كان هاتفك يدعمها",
+  "es": "Desliza de lado en el Feed para abrir la cámara y crear una historia con foto o vídeo, a 60 FPS si tu teléfono puede"
+ },
+ "Private messages between friends, with photos, PDF and Word files": {
+  "ar": "رسائل خاصة بين الأصدقاء مع الصور وملفات PDF وWord",
+  "es": "Mensajes privados entre amigos, con fotos y archivos PDF y Word"
+ },
+ "A new look for the chat": {
+  "ar": "شكل جديد للدردشة",
+  "es": "Un nuevo aspecto para el chat"
+ },
+ "Weather is back at the top of Home, and the banner and search box are smaller": {
+  "ar": "عاد الطقس إلى أعلى الرئيسية، وصار الشريط ومربع البحث أصغر",
+  "es": "El tiempo vuelve arriba en Inicio, y el banner y el buscador son más pequeños"
+ },
+ "Sharper cover photos and a cleaner star on admin photos": {
+  "ar": "صور غلاف أوضح ونجمة أنظف على صور المشرفين",
+  "es": "Fotos de portada más nítidas y una estrella más limpia en las fotos de los administradores"
+ },
+ "ASU Bank can't use the camera.": {
+  "ar": "لا يستطيع ASU Bank استخدام الكاميرا.",
+  "es": "ASU Bank no puede usar la cámara."
+ },
+ "ASU students": {
+  "ar": "طلاب ASU",
+  "es": "Estudiantes de ASU"
+ },
+ "Add friends first. Then you can message them here.": {
+  "ar": "أضف أصدقاء أولاً، وبعدها يمكنك مراسلتهم هنا.",
+  "es": "Primero añade amigos. Luego podrás escribirles aquí."
+ },
+ "Attach a file": {
+  "ar": "إرفاق ملف",
+  "es": "Adjuntar un archivo"
+ },
+ "Choose from photos": {
+  "ar": "اختر من الصور",
+  "es": "Elegir de las fotos"
+ },
+ "Couldn't open this file.": {
+  "ar": "تعذر فتح هذا الملف.",
+  "es": "No se pudo abrir este archivo."
+ },
+ "Couldn't record the video. Try again.": {
+  "ar": "تعذر تسجيل الفيديو. حاول مرة أخرى.",
+  "es": "No se pudo grabar el vídeo. Inténtalo de nuevo."
+ },
+ "Couldn't take the photo. Try again.": {
+  "ar": "تعذر التقاط الصورة. حاول مرة أخرى.",
+  "es": "No se pudo hacer la foto. Inténtalo de nuevo."
+ },
+ "Everyone, also guests": {
+  "ar": "الجميع، والضيوف أيضاً",
+  "es": "Todos, también invitados"
+ },
+ "File not found.": {
+  "ar": "الملف غير موجود.",
+  "es": "Archivo no encontrado."
+ },
+ "Friends only": {
+  "ar": "الأصدقاء فقط",
+  "es": "Solo amigos"
+ },
+ "Guest": {
+  "ar": "ضيف",
+  "es": "Invitado"
+ },
+ "Strangers": {
+  "ar": "الغرباء",
+  "es": "Desconocidos"
+ },
+ "New message": {
+  "ar": "رسالة جديدة",
+  "es": "Mensaje nuevo"
+ },
+ "No private messages yet": {
+  "ar": "لا توجد رسائل خاصة بعد",
+  "es": "Aún no hay mensajes privados"
+ },
+ "PDF or Word file": {
+  "ar": "ملف PDF أو Word",
+  "es": "Archivo PDF o Word"
+ },
+ "Photo": {
+  "ar": "صورة",
+  "es": "Foto"
+ },
+ "Pick from your photos": {
+  "ar": "اختر من صورك",
+  "es": "Elegir de tus fotos"
+ },
+ "Remove video": {
+  "ar": "إزالة الفيديو",
+  "es": "Quitar vídeo"
+ },
+ "Say hello. Only the two of you see this chat.": {
+  "ar": "قل مرحباً. أنتما الاثنان فقط تريان هذه الدردشة.",
+  "es": "Saluda. Solo vosotros dos veis este chat."
+ },
+ "Seen": {
+  "ar": "تمت الرؤية",
+  "es": "Visto"
+ },
+ "Send a message": {
+  "ar": "أرسل رسالة",
+  "es": "Enviar un mensaje"
+ },
+ "Sign in to post, comment, like and add stories.": {
+  "ar": "سجّل الدخول لتنشر وتعلّق وتعجب وتضيف قصصاً.",
+  "es": "Inicia sesión para publicar, comentar, dar me gusta y añadir historias."
+ },
+ "Switch camera": {
+  "ar": "تبديل الكاميرا",
+  "es": "Cambiar de cámara"
+ },
+ "Text story": {
+  "ar": "قصة نصية",
+  "es": "Historia de texto"
+ },
+ "That file is too big. The limit is 8 MB.": {
+  "ar": "هذا الملف كبير جداً. الحد 8 ميغابايت.",
+  "es": "Ese archivo es demasiado grande. El límite es 8 MB."
+ },
+ "That video is too big. Keep it short.": {
+  "ar": "هذا الفيديو كبير جداً. اجعله قصيراً.",
+  "es": "Ese vídeo es demasiado grande. Que sea corto."
+ },
+ "The camera is off": {
+  "ar": "الكاميرا مغلقة",
+  "es": "La cámara está desactivada"
+ },
+ "Who can see this": {
+  "ar": "من يمكنه رؤية هذا",
+  "es": "Quién puede ver esto"
+ },
+ "Write a text story": {
+  "ar": "اكتب قصة نصية",
+  "es": "Escribe una historia de texto"
+ },
+ "You can allow it in Settings, or pick from your photos.": {
+  "ar": "يمكنك السماح بها من الإعدادات، أو الاختيار من صورك.",
+  "es": "Puedes permitirlo en Ajustes o elegir de tus fotos."
+ },
+ "You can message your friends. Only the two of you see the chat.": {
+  "ar": "يمكنك مراسلة أصدقائك. أنتما الاثنان فقط تريان الدردشة.",
+  "es": "Puedes escribir a tus amigos. Solo vosotros dos veis el chat."
+ },
+ "You can only send private messages to friends.": {
+  "ar": "يمكنك إرسال رسائل خاصة إلى الأصدقاء فقط.",
+  "es": "Solo puedes enviar mensajes privados a amigos."
+ },
+ "You're browsing as a guest": {
+  "ar": "أنت تتصفح كضيف",
+  "es": "Estás navegando como invitado"
+ },
+ "Your story disappears after 24 hours and is deleted from our database after 2 days.": {
+  "ar": "تختفي قصتك بعد 24 ساعة وتُحذف من قاعدة بياناتنا بعد يومين.",
+  "es": "Tu historia desaparece tras 24 horas y se borra de nuestra base de datos tras 2 días."
+ },
+ "No posts from other students yet": {
+  "ar": "لا توجد منشورات من طلاب آخرين بعد",
+  "es": "Aún no hay publicaciones de otros estudiantes"
+ },
+ "No public posts yet": {
+  "ar": "لا توجد منشورات عامة بعد",
+  "es": "Aún no hay publicaciones públicas"
+ },
+ "Add friends, or look at what other students share under Strangers.": {
+  "ar": "أضف أصدقاء، أو شاهد ما يشاركه الطلاب الآخرون في الغرباء.",
+  "es": "Añade amigos o mira lo que comparten otros estudiantes en Desconocidos."
+ },
+ "Posts shared with everyone show up here. Anyone can read them, also without an account.": {
+  "ar": "تظهر هنا المنشورات المشاركة مع الجميع. يمكن لأي شخص قراءتها، حتى بدون حساب.",
+  "es": "Aquí aparecen las publicaciones compartidas con todos. Cualquiera puede leerlas, también sin cuenta."
  }
 }

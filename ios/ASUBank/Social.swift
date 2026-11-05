@@ -12,6 +12,7 @@ struct Poke: Decodable, Identifiable {
 }
 
 struct FeedPost: Decodable, Identifiable {
+    var audience: String?
     let id: String
     var text: String
     var image: String?
@@ -31,6 +32,16 @@ enum Social {
         ("notes", "I need your notes", "📝"),
         ("coffee", "Coffee?", "☕")
     ]
+
+    static func date(_ iso: String) -> Date { ISO8601DateFormatter.ab.date(from: iso) ?? ISO8601DateFormatter().date(from: iso) ?? Date() }
+
+    static func audienceSymbol(_ a: String?) -> String {
+        switch a {
+        case "public": return "globe"
+        case "friends": return "person.2.fill"
+        default: return "graduationcap.fill"
+        }
+    }
 
     static func pokeText(kind: String, name: String, place: String?) -> String {
         let where_ = (place ?? "").trimmingCharacters(in: .whitespaces)
@@ -179,6 +190,7 @@ struct ComposePostSheet: View {
     @State private var picking = false
     @State private var busy = false
     @State private var error: String?
+    @AppStorage("ab.audience") private var audience = "public"
 
     var body: some View {
         ABStack {
@@ -194,6 +206,7 @@ struct ComposePostSheet: View {
                     }
                     Button { picking = true } label: { Label(photo == nil ? "Add a photo" : "Change photo", systemImage: "photo") }
                 }
+                Section { AudiencePicker(audience: $audience) }
                 if let error { Section { Text(error).foregroundStyle(.red) } }
             }
             .navigationTitle("New post")
@@ -213,7 +226,7 @@ struct ComposePostSheet: View {
         busy = true
         defer { busy = false }
         do {
-            var fields: [String: Any] = ["text": String(text.prefix(1000))]
+            var fields: [String: Any] = ["text": String(text.prefix(1000)), "audience": audience]
             if let photo {
                 let data = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(photo, maxSide: 1280) }.value
                 guard let data else { self.error = L("Couldn't load this photo"); return }
@@ -241,16 +254,19 @@ struct PostRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
             HStack(spacing: 10) {
-                NavigationLink { ProfileScreen(userId: post.user.id, fallbackName: post.user.displayName, fallbackColor: post.user.color) } label: {
+                ProfileEntry(post: post) {
                     HStack(spacing: 10) {
                         Avatar(name: post.user.displayName, color: post.user.color, size: 38, admin: post.user.isAdmin, photo: post.user.avatar, online: post.user.online)
                         VStack(alignment: .leading, spacing: 1) {
                             Text(post.user.displayName).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
-                            Text(Social.ago(post.created)).font(.caption).foregroundStyle(.secondary)
+                            HStack(spacing: 4) {
+                                Text(Social.ago(post.created))
+                                Image(systemName: Social.audienceSymbol(post.audience))
+                            }
+                            .font(.caption).foregroundStyle(.secondary)
                         }
                     }
                 }
-                .buttonStyle(.plain)
                 Spacer()
                 Menu {
                     if post.user.id == account.user?.id || account.isAdmin {
@@ -290,7 +306,7 @@ struct PostRow: View {
                         .foregroundStyle((liked ?? post.liked) ? Color.red : Color.secondary)
                 }
                 .buttonStyle(.borderless)
-                Button { showComments = true } label: {
+                Button { if account.signedIn { showComments = true } else { account.signInShown = true } } label: {
                     Label("\(commentCount ?? post.comments ?? 0)", systemImage: "bubble.left")
                         .font(.subheadline).foregroundStyle(.secondary)
                 }
@@ -306,6 +322,7 @@ struct PostRow: View {
     }
 
     private func like() async {
+        guard account.signedIn else { account.signInShown = true; return }
         let on = !(liked ?? post.liked)
         Haptics.tap()
         liked = on
@@ -313,6 +330,23 @@ struct PostRow: View {
         if let r = try? await account.call("postLike", ["id": post.id, "on": on]) {
             likes = (r["likes"] as? NSNumber)?.intValue ?? likes
         }
+    }
+}
+
+/// Opens the person's profile. Profiles need an account, so guests are asked to sign in.
+private struct ProfileEntry<Content: View>: View {
+    let post: FeedPost
+    @ViewBuilder var content: () -> Content
+    @ObservedObject private var account = AccountStore.shared
+    var body: some View {
+        Group {
+            if account.signedIn {
+                NavigationLink { ProfileScreen(userId: post.user.id, fallbackName: post.user.displayName, fallbackColor: post.user.color) } label: { content() }
+            } else {
+                Button { account.signInShown = true } label: { content() }
+            }
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -579,6 +613,7 @@ struct ProfileScreen: View {
     @ObservedObject private var account = AccountStore.shared
     @State private var user: ABUser?
     @State private var friendship = "none"
+    @State private var canMessage = false
     @State private var friendCount = 0
     @State private var postCount = 0
     @State private var messageCount = 0
@@ -621,6 +656,13 @@ struct ProfileScreen: View {
                 }
                 if isMe {
                     Section { Button { composing = true } label: { Label("Write a post", systemImage: "square.and.pencil") } }
+                }
+                if canMessage && !isMe {
+                    Section {
+                        NavigationLink { DMThreadScreen(userId: u.id, name: u.displayName, color: u.color, photo: u.avatar) } label: {
+                            Label("Send a message", systemImage: "paperplane.fill").foregroundStyle(Color.abAccent)
+                        }
+                    }
                 }
                 ForEach(posts) { p in
                     Section { PostRow(post: p) { await load() } }
@@ -674,7 +716,7 @@ struct ProfileScreen: View {
                     .overlay {
                         if let cover = user?.cover, !cover.isEmpty, let url = URL(string: cover) {
                             Button { PhotoTools.show(cover) } label: {
-                                Color.clear.overlay(CachedPhoto(url: url, pixelSize: 420) { Color.clear }).clipped().contentShape(Rectangle())
+                                Color.clear.overlay(alignment: .top) { CachedPhoto(url: url, pixelSize: 1000) { Color.clear } }.clipped().contentShape(Rectangle())
                             }
                             .buttonStyle(.borderless)
                             .accessibilityLabel(Text("View cover photo"))
@@ -756,6 +798,7 @@ struct ProfileScreen: View {
         func read(_ r: [String: Any]) {
             user = decode(ABUser.self, r["user"])
             friendship = r["friendship"] as? String ?? "none"
+            canMessage = r["canMessage"] as? Bool ?? false
             friendCount = (r["friendCount"] as? NSNumber)?.intValue ?? 0
             postCount = (r["postCount"] as? NSNumber)?.intValue ?? 0
             messageCount = (r["messageCount"] as? NSNumber)?.intValue ?? 0

@@ -1610,6 +1610,25 @@ var ACTIONS = {
     return o;
   },
 
+  /** A profile for visitors without an account: only for people who shared something with everyone, and only their name, photo, badges and public posts */
+  publicProfile: function (b) {
+    var id = String(b.userId || ''), map = usersById(), u = map[id];
+    var hidden = 'Sign in to see this profile.';
+    if (!u || truthy(u.banned)) fail(hidden);
+    var counts = {};
+    rows('Comments').forEach(function (x) { if (!truthy(x.deleted)) counts[x.postId] = (counts[x.postId] || 0) + 1; });
+    var posts = rows('Posts').filter(function (p) { return p.userId === id && p.audience === 'public' && !truthy(p.deleted); }).reverse().slice(0, 25).map(function (p) {
+      return { id: p.id, text: String(p.text), image: String(p.image || ''), audience: 'public', comments: counts[p.id] || 0, created: p.created,
+               likes: String(p.likes || '').split(',').filter(String).length, liked: false, user: guestUser(u) };
+    });
+    if (!posts.length) {
+      var now = Date.now();
+      var story = rows('Stories').some(function (r) { return r.userId === id && r.audience === 'public' && now - new Date(r.created).getTime() <= STORY_SHOWN_MS; });
+      if (!story) fail(hidden);
+    }
+    return { ok: true, user: guestUser(u), posts: posts };
+  },
+
   /** Stories anyone may see, no account needed */
   publicStories: function (b) {
     var c = CacheService.getScriptCache(), hit = c.get('ps');

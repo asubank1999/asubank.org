@@ -106,18 +106,35 @@ fun Avatar(name: String, color: String, size: Dp = 40.dp, admin: Boolean = false
             if (!photo.isNullOrEmpty()) AsyncImage(photo, null, Modifier.matchParentSize(), contentScale = ContentScale.Crop)
         }
         // Sits exactly on the circle's edge at any avatar size: at 30% wide, a badge in the corner of the frame is centered on the rim
-        if (admin) {
-            val star = maxOf(14.dp, size * 0.30f)
-            Box(
-                Modifier.align(Alignment.BottomEnd).size(star).clip(CircleShape).background(Brand.gold).border(1.dp, Color.White, CircleShape),
-                contentAlignment = Alignment.Center,
-            ) { Icon(Icons.Filled.Star, null, tint = Color.Black, modifier = Modifier.size(star * 0.66f)) }
-        }
+        if (admin) OwnerStar(maxOf(14.dp, size * 0.30f), Modifier.align(Alignment.BottomEnd))
         if (online != null) Box(
             Modifier.align(Alignment.TopEnd).size(maxOf(10.dp, size * 0.26f)).clip(CircleShape)
                 .background(if (online) Brand.green else Color.Gray)
                 .border(2.dp, MaterialTheme.colorScheme.background, CircleShape),
         )
+    }
+}
+
+/** The gold star on the owner's and admins' photos. Drawn by hand so it stays sharp and centered at every size, like the iPhone's. */
+@Composable
+fun OwnerStar(size: Dp, modifier: Modifier = Modifier) {
+    androidx.compose.foundation.Canvas(modifier.size(size)) {
+        val r = this.size.minDimension / 2
+        val c = center
+        drawCircle(Color.White, r, c)
+        drawCircle(Brand.gold, r - maxOf(1.dp.toPx(), r * 0.14f), c)
+        val outer = r * 0.62f
+        val inner = outer * 0.46f
+        val path = androidx.compose.ui.graphics.Path()
+        for (i in 0 until 10) {
+            val a = Math.toRadians(-90.0 + i * 36.0)
+            val d = if (i % 2 == 0) outer else inner
+            val x = c.x + (d * Math.cos(a)).toFloat()
+            val y = c.y + (d * Math.sin(a)).toFloat()
+            if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
+        }
+        path.close()
+        drawPath(path, Color.Black.copy(alpha = 0.82f))
     }
 }
 

@@ -14,6 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
@@ -33,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
@@ -60,6 +62,8 @@ import java.io.ByteArrayOutputStream
 data class StoryItem(
     val id: String,
     val image: String = "",
+    val video: String = "",
+    val audience: String? = null,
     val text: String = "",
     val bg: String = "",
     val created: String? = null,
@@ -172,11 +176,53 @@ fun PhotoViewerHost() {
 
 // MARK: - feed
 
+/** Who a post or story is for, remembered for the next one */
+object AudiencePref {
+    var value: String
+        get() = Saved.prefs.getString("ab.audience", "public") ?: "public"
+        set(v) { Saved.prefs.edit().putString("ab.audience", v).apply() }
+}
+
+fun audienceIcon(a: String?): androidx.compose.ui.graphics.vector.ImageVector = when (a) {
+    "public" -> Icons.Filled.Public
+    "friends" -> Icons.Filled.Group
+    else -> Icons.Filled.School
+}
+
+private fun audienceLabel(a: String) = when (a) {
+    "public" -> "Everyone, also guests"
+    "friends" -> "Friends only"
+    else -> "ASU students"
+}
+
+@Composable
+fun AudienceMenu(audience: String, onChange: (String) -> Unit) {
+    var open by remember { mutableStateOf(false) }
+    Box {
+        TextButton(onClick = { open = true }) {
+            Icon(audienceIcon(audience), null, Modifier.size(18.dp))
+            Spacer(Modifier.width(6.dp))
+            Text(tr(audienceLabel(audience)))
+        }
+        DropdownMenu(open, { open = false }) {
+            listOf("public", "students", "friends").forEach { a ->
+                DropdownMenuItem(
+                    text = { Text(tr(audienceLabel(a))) }, leadingIcon = { Icon(audienceIcon(a), null) },
+                    onClick = { open = false; AudiencePref.value = a; onChange(a) },
+                )
+            }
+        }
+    }
+}
+
 @Composable
 fun FeedScreen(back: Boolean = false) {
     val scope = rememberCoroutineScope()
     val me by Account.user.collectAsState()
-    var feedScope by remember { mutableStateOf("all") }
+    var chosen by remember { mutableStateOf(Saved.prefs.getString("ab.feed.scope", "friends") ?: "friends") }
+    // people without an account only have the guest feed
+    val feedScope = if (me == null) "guest" else chosen
+    val action = if (me == null) "publicFeed" else "feedAll"
     var posts by remember { mutableStateOf<List<FeedPost>>(emptyList()) }
     var groups by remember { mutableStateOf<List<StoryGroup>>(emptyList()) }
     var loaded by remember { mutableStateOf(false) }
@@ -184,15 +230,17 @@ fun FeedScreen(back: Boolean = false) {
     var loadingMore by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     var composing by remember { mutableStateOf(false) }
-    var addingStory by remember { mutableStateOf(false) }
+    var camera by remember { mutableStateOf(false) }
+    var draft by remember { mutableStateOf<StoryDraft?>(null) }
     var viewing by remember { mutableStateOf<Int?>(null) }
 
-    suspend fun loadStories() { runCatching { groups = Account.call("stories")["groups"].decodeAs<List<StoryGroup>>().orEmpty() } }
+    suspend fun loadStories() {
+        runCatching { groups = Account.call(if (Account.user.value == null) "publicStories" else "stories")["groups"].decodeAs<List<StoryGroup>>().orEmpty() }
+    }
     suspend fun load() {
-        if (Account.user.value == null) return
-        if (posts.isEmpty()) Account.saved("feedAll", feedScope)?.let { posts = it["posts"].decodeAs<List<FeedPost>>().orEmpty() }
+        if (posts.isEmpty()) Account.saved(action, feedScope)?.let { posts = it["posts"].decodeAs<List<FeedPost>>().orEmpty() }
         try {
-            val list = Account.callSaving("feedAll", mapOf("scope" to feedScope), feedScope)["posts"].decodeAs<List<FeedPost>>().orEmpty()
+            val list = Account.callSaving(action, mapOf("scope" to feedScope), feedScope)["posts"].decodeAs<List<FeedPost>>().orEmpty()
             posts = list
             more = list.size >= 25
             error = null
@@ -200,74 +248,98 @@ fun FeedScreen(back: Boolean = false) {
         loaded = true
     }
     LaunchedEffect(me?.id, feedScope) {
+        posts = emptyList()
+        loaded = false
         launch { loadStories() }
         load()
     }
 
     if (composing) ComposePostDialog({ composing = false }) { scope.launch { load() } }
-    if (addingStory) ComposeStoryDialog({ addingStory = false }) { scope.launch { loadStories() } }
+    if (camera) StoryCameraDialog({ camera = false }) { media -> camera = false; draft = StoryDraft(media) }
+    draft?.let { d -> ComposeStoryDialog(d.media, { draft = null }) { scope.launch { loadStories() } } }
     viewing?.let { start -> StoryViewer(groups, start) { viewing = null; scope.launch { loadStories() } } }
 
-    Screen("Feed", back = back, large = true) { pad ->
-        if (me == null) {
-            Box(Modifier.padding(pad)) { SignInPrompt("Sign in to see the feed", "Post, comment and share stories with other ASU students.") }
-            return@Screen
-        }
-        LazyColumn(Modifier.padding(pad)) {
-            item { StoriesRow(groups, { addingStory = true }, { viewing = it }) }
-            item {
-                Group {
-                    Row(
-                        Modifier.fillMaxWidth().clickable { composing = true }.padding(horizontal = 14.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    ) {
-                        me?.let { Avatar(it.name, it.color, 38.dp, it.isAdmin, it.avatar, hold = false) }
-                        Text(tr("What's on your mind?"), Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Icon(Icons.Filled.Image, null, tint = accent)
-                    }
+    Screen("Feed", back = back, large = true, actions = {
+        if (me != null) IconButton(onClick = { camera = true }) { Icon(Icons.Filled.PhotoCamera, tr("Add story")) }
+    }) { pad ->
+        var swipe by remember { mutableFloatStateOf(0f) }
+        Box(
+            Modifier.padding(pad).pointerInput(me?.id) {
+                if (me == null) return@pointerInput
+                // swiping sideways opens the camera. The stories row scrolls by itself and takes its own swipes first.
+                detectHorizontalDragGestures(onDragStart = { swipe = 0f }, onDragEnd = { if (kotlin.math.abs(swipe) > size.width * 0.22f) camera = true }) { c, d ->
+                    c.consume()
+                    swipe += d
                 }
-            }
-            item {
-                Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("all" to "Everyone", "friends" to "Friends").forEach { (k, label) ->
-                        FilterChip(selected = feedScope == k, onClick = {
-                            if (feedScope != k) { feedScope = k; posts = emptyList(); loaded = false }
-                        }, label = { Text(tr(label)) })
-                    }
-                }
-            }
-            if (posts.isEmpty()) item {
-                when {
-                    error != null -> Group {
-                        Text(error!!, Modifier.padding(16.dp), color = MaterialTheme.colorScheme.error)
-                        TextButton(onClick = { scope.launch { load() } }) { Text(tr("Try again")) }
-                    }
-                    loaded -> EmptyState(
-                        Icons.Filled.Forum,
-                        tr(if (feedScope == "friends") "No posts from friends yet" else "No posts yet"),
-                        tr("Share something with other ASU students."),
-                    )
-                    else -> Box(Modifier.fillMaxWidth().padding(30.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-                }
-            }
-            items(posts, key = { it.id }) { p -> PostCard(p) { scope.launch { load() } } }
-            if (more && posts.isNotEmpty()) item {
-                Box(Modifier.fillMaxWidth().padding(10.dp), contentAlignment = Alignment.Center) {
-                    TextButton(enabled = !loadingMore, onClick = {
-                        loadingMore = true
-                        scope.launch {
-                            runCatching {
-                                val list = Account.call("feedAll", mapOf("scope" to feedScope, "offset" to posts.size))["posts"].decodeAs<List<FeedPost>>().orEmpty()
-                                val have = posts.map { it.id }.toSet()
-                                posts = posts + list.filter { it.id !in have }
-                                more = list.size >= 25
+            },
+        ) {
+            LazyColumn {
+                if (me != null || groups.isNotEmpty()) item { StoriesRow(groups, { camera = true }, { viewing = it }) }
+                if (me != null) {
+                    item {
+                        Group {
+                            Row(
+                                Modifier.fillMaxWidth().clickable { composing = true }.padding(horizontal = 14.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            ) {
+                                me?.let { Avatar(it.name, it.color, 38.dp, it.isAdmin, it.avatar, hold = false) }
+                                Text(tr("What's on your mind?"), Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Icon(Icons.Filled.Image, null, tint = accent)
                             }
-                            loadingMore = false
                         }
-                    }) { Text(tr("Load more")) }
+                    }
+                    item {
+                        PillTabs(listOf("friends" to tr("Friends"), "strangers" to tr("Strangers"), "guest" to tr("Guest")), feedScope) { k ->
+                            chosen = k
+                            Saved.prefs.edit().putString("ab.feed.scope", k).apply()
+                        }
+                    }
+                } else item {
+                    Group {
+                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text("You're browsing as a guest", fontWeight = FontWeight.SemiBold)
+                            Text("Sign in to post, comment, like and add stories.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Button(onClick = { Account.signInShown.value = true }) { Text("Sign in or create account") }
+                        }
+                    }
                 }
+                if (posts.isEmpty()) item {
+                    when {
+                        error != null -> Group {
+                            Text(error!!, Modifier.padding(16.dp), color = MaterialTheme.colorScheme.error)
+                            TextButton(onClick = { scope.launch { load() } }) { Text(tr("Try again")) }
+                        }
+                        loaded -> EmptyState(
+                            Icons.Filled.Forum,
+                            tr(when (feedScope) { "friends" -> "No posts from friends yet"; "strangers" -> "No posts from other students yet"; else -> "No public posts yet" }),
+                            tr(when (feedScope) {
+                                "friends" -> "Add friends, or look at what other students share under Strangers."
+                                "guest" -> "Posts shared with everyone show up here. Anyone can read them, also without an account."
+                                else -> "Share something with other ASU students."
+                            }),
+                        )
+                        else -> Box(Modifier.fillMaxWidth().padding(30.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+                    }
+                }
+                items(posts, key = { it.id }) { p -> PostCard(p) { scope.launch { load() } } }
+                if (more && posts.isNotEmpty()) item {
+                    Box(Modifier.fillMaxWidth().padding(10.dp), contentAlignment = Alignment.Center) {
+                        TextButton(enabled = !loadingMore, onClick = {
+                            loadingMore = true
+                            scope.launch {
+                                runCatching {
+                                    val list = Account.call(action, mapOf("scope" to feedScope, "offset" to posts.size))["posts"].decodeAs<List<FeedPost>>().orEmpty()
+                                    val have = posts.map { it.id }.toSet()
+                                    posts = posts + list.filter { it.id !in have }
+                                    more = list.size >= 25
+                                }
+                                loadingMore = false
+                            }
+                        }) { Text(tr("Load more")) }
+                    }
+                }
+                item { Spacer(Modifier.height(24.dp)) }
             }
-            item { Spacer(Modifier.height(24.dp)) }
         }
     }
 }
@@ -278,7 +350,7 @@ fun FeedScreen(back: Boolean = false) {
 private fun StoriesRow(groups: List<StoryGroup>, add: () -> Unit, open: (Int) -> Unit) {
     val me by Account.user.collectAsState()
     LazyRow(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        item {
+        if (me != null) item {
             Column(Modifier.width(76.dp).clip(RoundedCornerShape(12.dp)).clickable { add() }.padding(4.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Box {
                     Avatar(me?.name ?: "", me?.color ?: "#8C1D40", 60.dp, photo = me?.avatar, hold = false)
@@ -306,16 +378,20 @@ private fun StoriesRow(groups: List<StoryGroup>, add: () -> Unit, open: (Int) ->
 }
 
 @Composable
-private fun ComposeStoryDialog(onClose: () -> Unit, posted: () -> Unit) {
+private fun ComposeStoryDialog(media: StoryMedia?, onClose: () -> Unit, posted: () -> Unit) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     var text by remember { mutableStateOf("") }
-    var photo by remember { mutableStateOf<Uri?>(null) }
+    var photo by remember { mutableStateOf((media as? StoryMedia.Photo)?.uri) }
+    var video by remember { mutableStateOf((media as? StoryMedia.Video)?.uri) }
+    var poster by remember { mutableStateOf<Bitmap?>(null) }
+    var audience by remember { mutableStateOf(AudiencePref.value) }
     var bg by remember { mutableStateOf("#8C1D40") }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     val pick = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri -> if (uri != null) photo = uri }
     val colors = listOf("#8C1D40", "#0A63C9", "#1F7A3A", "#6E3FD1", "#D2510A", "#00847F", "#C2185B", "#3A3A3C")
+    LaunchedEffect(video) { poster = video?.let { v -> withContext(Dispatchers.IO) { StoryVideo.poster(ctx, v) } } }
 
     AlertDialog(
         onDismissRequest = onClose,
@@ -324,13 +400,16 @@ private fun ComposeStoryDialog(onClose: () -> Unit, posted: () -> Unit) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Box(Modifier.fillMaxWidth().height(200.dp).clip(RoundedCornerShape(14.dp)).background(hexColor(bg)), contentAlignment = Alignment.Center) {
                     photo?.let { AsyncImage(it, null, Modifier.matchParentSize(), contentScale = ContentScale.Crop) }
+                    poster?.let { androidx.compose.foundation.Image(it.asImageBitmap(), null, Modifier.matchParentSize(), contentScale = ContentScale.Crop) }
+                    if (video != null) Icon(Icons.Filled.PlayCircle, null, Modifier.size(52.dp), tint = Color.White)
                     if (text.isNotEmpty()) Text(text, color = Color.White, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.padding(12.dp))
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                    TextButton(onClick = { pick.launch("image/*") }) { Text(tr(if (photo == null) "Add a photo" else "Change photo")) }
+                    if (video == null) TextButton(onClick = { pick.launch("image/*") }) { Text(tr(if (photo == null) "Add a photo" else "Change photo")) }
                     if (photo != null) TextButton(onClick = { photo = null }) { Text(tr("Remove photo"), color = MaterialTheme.colorScheme.error) }
+                    if (video != null) TextButton(onClick = { video = null }) { Text(tr("Remove video"), color = MaterialTheme.colorScheme.error) }
                 }
-                if (photo == null) LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (photo == null && video == null) LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(colors) { c ->
                         Box(
                             Modifier.size(32.dp).clip(CircleShape).background(hexColor(c))
@@ -339,20 +418,25 @@ private fun ComposeStoryDialog(onClose: () -> Unit, posted: () -> Unit) {
                     }
                 }
                 OutlinedTextField(text, { if (it.length <= 300) text = it }, Modifier.fillMaxWidth(), label = { Text(tr("Write something")) })
+                AudienceMenu(audience) { audience = it }
                 Text(
-                    tr("Your story is seen by ASU Bank students for 24 hours, then it disappears. It's deleted from our database after 2 days."),
+                    tr("Your story disappears after 24 hours and is deleted from our database after 2 days."),
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             }
         },
         confirmButton = {
-            TextButton(enabled = !busy && (photo != null || text.isNotBlank()), onClick = {
+            TextButton(enabled = !busy && (photo != null || video != null || text.isNotBlank()), onClick = {
                 busy = true
                 scope.launch {
                     try {
-                        val fields = mutableMapOf<String, Any?>("text" to text, "bg" to bg)
-                        photo?.let { fields["image"] = PhotoTools.jpeg(ctx, it) ?: throw ApiError(tr("Couldn't load this photo")) }
+                        val fields = mutableMapOf<String, Any?>("text" to text, "bg" to bg, "audience" to audience)
+                        val v = video
+                        if (v != null) {
+                            fields["video"] = StoryVideo.base64(ctx, v) ?: throw ApiError(tr("That video is too big. Keep it short."))
+                            poster?.let { fields["image"] = withContext(Dispatchers.IO) { PhotoTools.base64(it) } }
+                        } else photo?.let { fields["image"] = PhotoTools.jpeg(ctx, it) ?: throw ApiError(tr("Couldn't load this photo")) }
                         Account.call("storyCreate", fields)
                         posted()
                         onClose()
@@ -376,6 +460,8 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
     var removed by remember { mutableStateOf(setOf<String>()) }
     var menu by remember { mutableStateOf(false) }
     var reporting by remember { mutableStateOf<ReportTarget?>(null) }
+    var videoLength by remember { mutableStateOf<Double?>(null) }
+    var swipe by remember { mutableFloatStateOf(0f) }
 
     val group = groups.getOrNull(g)
     val stories = group?.stories?.filter { it.id !in removed }.orEmpty()
@@ -394,11 +480,15 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
 
     LaunchedEffect(g, s, story?.id) {
         progress = 0f
+        videoLength = null
         val item = story ?: return@LaunchedEffect
-        if (!item.seen) launch { runCatching { Account.call("storySeen", mapOf("id" to item.id)) } }
+        if (!item.seen && Account.user.value != null) launch { runCatching { Account.call("storySeen", mapOf("id" to item.id)) } }
+        val isVideo = item.video.isNotEmpty()
         while (progress < 1f) {
             delay(50)
-            if (!paused && reporting == null && !menu) progress += 0.05f / 6f
+            // a video's bar starts once the video has loaded, and follows its length
+            if (isVideo && videoLength == null) continue
+            if (!paused && reporting == null && !menu) progress += 0.05f / (videoLength ?: 6.0).toFloat()
         }
         forward()
     }
@@ -409,6 +499,9 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
             story?.let { item ->
                 if (item.image.isNotEmpty()) AsyncImage(PhotoTools.large(item.image), null, Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
                 else Box(Modifier.fillMaxSize().background(hexColor(item.bg.ifEmpty { "#8C1D40" })))
+                if (item.video.isNotEmpty()) key(item.id) {
+                    StoryVideoPlayer(item.video, paused || reporting != null || menu) { videoLength = it }
+                }
                 if (item.text.isNotEmpty()) Text(
                     item.text, Modifier.align(Alignment.Center).padding(24.dp), color = Color.White, fontSize = 24.sp,
                     fontWeight = FontWeight.Bold, textAlign = TextAlign.Center,
@@ -421,6 +514,18 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
                         onPress = { paused = true; tryAwaitRelease(); paused = false },
                         onTap = { o -> if (o.x < size.width / 2) back() else forward() },
                     )
+                }.pointerInput(g) {
+                    // swiping sideways goes to the next or previous person's stories
+                    detectHorizontalDragGestures(
+                        onDragStart = { swipe = 0f },
+                        onDragEnd = {
+                            if (swipe < -70.dp.toPx()) { if (g + 1 < groups.size) { g += 1; s = 0 } else onClose() }
+                            else if (swipe > 70.dp.toPx() && g > 0) { g -= 1; s = 0 }
+                        },
+                    ) { c, d ->
+                        c.consume()
+                        swipe += d
+                    }
                 },
             )
             Column(Modifier.fillMaxWidth().statusBarsPadding().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -440,7 +545,7 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
                             Text(u.name, color = Color.White, fontWeight = FontWeight.SemiBold, maxLines = 1)
                             Text(Social.ago(story?.created), color = Color.White.copy(alpha = 0.8f), style = MaterialTheme.typography.bodySmall)
                         }
-                        Box {
+                        if (me != null) Box {
                             IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, null, tint = Color.White) }
                             DropdownMenu(menu, { menu = false }) {
                                 if (u.id == me?.id || Account.isAdmin) DropdownMenuItem(text = { Text(tr("Delete")) }, onClick = {

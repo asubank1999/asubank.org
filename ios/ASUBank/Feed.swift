@@ -6,6 +6,8 @@ import SwiftUI
 struct StoryItem: Decodable, Identifiable, Hashable {
     let id: String
     var image: String?
+    var video: String?
+    var audience: String?
     var text: String?
     var bg: String?
     var created: String?
@@ -141,12 +143,87 @@ struct AvatarPeek: ViewModifier {
 }
 
 struct FeedTab: View {
-    var body: some View { ABStack { FeedScreen() } }
+    var body: some View { ABStack { FeedScreen(swipeCamera: true) } }
+}
+
+/// Who a post or story is for
+struct AudiencePicker: View {
+    @Binding var audience: String
+    var body: some View {
+        Picker(selection: $audience) {
+            Label("Everyone, also guests", systemImage: "globe").tag("public")
+            Label("ASU students", systemImage: "graduationcap").tag("students")
+            Label("Friends only", systemImage: "person.2").tag("friends")
+        } label: {
+            Label("Who can see this", systemImage: Social.audienceSymbol(audience))
+        }
+    }
+}
+
+/// Notices a sideways swipe on the list behind it, without getting in the way of scrolling
+private struct SwipeCatcher: UIViewRepresentable {
+    var swiped: () -> Void
+
+    func makeUIView(context: Context) -> UIView {
+        let v = UIView()
+        v.isUserInteractionEnabled = false
+        return v
+    }
+    func updateUIView(_ uiView: UIView, context: Context) {
+        context.coordinator.swiped = swiped
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { context.coordinator.attach(from: uiView) }
+    }
+    func makeCoordinator() -> Coordinator { Coordinator(swiped) }
+
+    final class Coordinator: NSObject, UIGestureRecognizerDelegate {
+        var swiped: () -> Void
+        private weak var list: UIScrollView?
+        init(_ s: @escaping () -> Void) { swiped = s }
+
+        private func search(_ v: UIView) -> UIScrollView? {
+            if v is UITableView || v is UICollectionView { return v as? UIScrollView }
+            for s in v.subviews { if let f = search(s) { return f } }
+            return nil
+        }
+
+        func attach(from view: UIView) {
+            guard list == nil else { return }
+            var up = view.superview
+            while let s = up {
+                if let f = search(s) {
+                    list = f
+                    for d in [UISwipeGestureRecognizer.Direction.left, .right] {
+                        let g = UISwipeGestureRecognizer(target: self, action: #selector(fire))
+                        g.direction = d
+                        g.delegate = self
+                        f.addGestureRecognizer(g)
+                    }
+                    return
+                }
+                up = s.superview
+            }
+        }
+
+        @objc private func fire() { swiped() }
+
+        func gestureRecognizer(_ g: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { true }
+
+        /// The stories row scrolls sideways by itself
+        func gestureRecognizer(_ g: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            var v = touch.view
+            while let s = v, s !== list {
+                if let sc = s as? UIScrollView, sc.contentSize.width > sc.bounds.width + 1 { return false }
+                v = s.superview
+            }
+            return true
+        }
+    }
 }
 
 struct FeedScreen: View {
+    var swipeCamera = false
     @ObservedObject private var account = AccountStore.shared
-    @State private var scope = "all"
+    @AppStorage("ab.feed.scope") private var savedScope = "friends"
     @State private var posts: [FeedPost] = []
     @State private var groups: [StoryGroup] = []
     @State private var loaded = false
@@ -154,52 +231,61 @@ struct FeedScreen: View {
     @State private var loadingMore = false
     @State private var error: String?
     @State private var composing = false
-    @State private var addingStory = false
+    @State private var camera = false
+    @State private var pendingDraft: StoryDraft?
+    @State private var draft: StoryDraft?
     @State private var viewing: StoryStart?
 
     struct StoryStart: Identifiable { let index: Int; var id: Int { index } }
 
+    /// People without an account only have the guest feed
+    private var scope: String { account.signedIn ? savedScope : "guest" }
+
     var body: some View {
-        Group {
-            if !account.signedIn {
-                SignInPrompt(forFeed: true)
-            } else {
-                list
-            }
-        }
-        .navigationTitle("Feed")
-    }
-
-    private var list: some View {
         List {
-            Section {
-                StoriesRow(groups: groups, add: { addingStory = true }, open: { viewing = StoryStart(index: $0) })
-            }
-            .listRowInsets(EdgeInsets())
-            .listRowBackground(Color.clear)
-
-            Section {
-                Button { composing = true } label: {
-                    HStack(spacing: 10) {
-                        if let u = account.user {
-                            Avatar(name: u.displayName, color: u.color, size: 38, admin: u.isAdmin, photo: u.avatar, peek: false)
-                        }
-                        Text("What's on your mind?").foregroundStyle(.secondary)
-                        Spacer()
-                        Image(systemName: "photo.fill").foregroundStyle(Color.abAccent)
-                    }
-                    .padding(.vertical, 2)
+            if !groups.isEmpty || account.signedIn {
+                Section {
+                    StoriesRow(groups: groups, add: { camera = true }, open: { viewing = StoryStart(index: $0) })
                 }
-                .buttonStyle(.plain)
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
             }
 
-            Picker("Show", selection: $scope) {
-                Text("Everyone").tag("all")
-                Text("Friends").tag("friends")
+            if account.signedIn {
+                Section {
+                    Button { composing = true } label: {
+                        HStack(spacing: 10) {
+                            if let u = account.user {
+                                Avatar(name: u.displayName, color: u.color, size: 38, admin: u.isAdmin, photo: u.avatar, peek: false)
+                            }
+                            Text("What's on your mind?").foregroundStyle(.secondary)
+                            Spacer()
+                            Image(systemName: "photo.fill").foregroundStyle(Color.abAccent)
+                        }
+                        .padding(.vertical, 2)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                Picker("Show", selection: $savedScope) {
+                    Text("Friends").tag("friends")
+                    Text("Strangers").tag("strangers")
+                    Text("Guest").tag("guest")
+                }
+                .pickerStyle(.segmented)
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+            } else {
+                Section {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("You're browsing as a guest").font(.headline)
+                        Text("Sign in to post, comment, like and add stories.").font(.subheadline).foregroundStyle(.secondary)
+                        Button("Sign in or create account") { account.signInShown = true }
+                            .buttonStyle(.borderedProminent).tint(.abAccent)
+                    }
+                    .padding(.vertical, 4)
+                }
             }
-            .pickerStyle(.segmented)
-            .listRowInsets(EdgeInsets())
-            .listRowBackground(Color.clear)
 
             if let error, posts.isEmpty {
                 Section {
@@ -209,9 +295,7 @@ struct FeedScreen: View {
             } else if posts.isEmpty {
                 Section {
                     if loaded {
-                        EmptyState(symbol: "text.bubble", title: scope == "friends" ? "No posts from friends yet" : "No posts yet",
-                                   text: "Share something with other ASU students.")
-                            .listRowBackground(Color.clear)
+                        EmptyState(symbol: "text.bubble", title: emptyTitle, text: emptyText).listRowBackground(Color.clear)
                     } else {
                         HStack { Spacer(); ProgressView(); Spacer() }.padding(20).listRowBackground(Color.clear)
                     }
@@ -229,21 +313,55 @@ struct FeedScreen: View {
             }
         }
         .listStyle(.insetGrouped)
+        .background(swipeCamera && account.signedIn ? AnyView(SwipeCatcher { camera = true }) : AnyView(EmptyView()))
+        .navigationTitle("Feed")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                if account.signedIn {
+                    Button { camera = true } label: { Image(systemName: "camera.fill") }.accessibilityLabel(Text("Add story"))
+                }
+            }
+        }
         .refreshable { await load() }
-        .task { if !loaded { await load() } }
-        .onChange(of: scope) { _ in posts = []; loaded = false; Task { await load() } }
+        .task(id: scope) {
+            posts = []
+            loaded = false
+            await load()
+        }
         .sheet(isPresented: $composing) { ComposePostSheet { await load() } }
-        .sheet(isPresented: $addingStory) { ComposeStorySheet { await loadStories() } }
+        .fullScreenCover(isPresented: $camera, onDismiss: {
+            if let d = pendingDraft { pendingDraft = nil; draft = d }
+        }) {
+            StoryCameraScreen { media in pendingDraft = StoryDraft(media: media) }
+        }
+        .sheet(item: $draft) { d in ComposeStorySheet(media: d.media) { await loadStories() } }
         .fullScreenCover(item: $viewing, onDismiss: { Task { await loadStories() } }) { start in
             StoryViewer(groups: groups, startGroup: start.index)
         }
     }
 
+    private var emptyTitle: String {
+        switch scope {
+        case "friends": return "No posts from friends yet"
+        case "strangers": return "No posts from other students yet"
+        default: return "No public posts yet"
+        }
+    }
+
+    private var emptyText: String {
+        switch scope {
+        case "friends": return "Add friends, or look at what other students share under Strangers."
+        case "guest": return "Posts shared with everyone show up here. Anyone can read them, also without an account."
+        default: return "Share something with other ASU students."
+        }
+    }
+
     private func load() async {
         Task { await loadStories() }
-        if posts.isEmpty, let r = account.saved("feedAll", tag: scope) { posts = decode([FeedPost].self, r["posts"]) ?? [] }
+        let action = account.signedIn ? "feedAll" : "publicFeed"
+        if posts.isEmpty, let r = account.saved(action, tag: scope) { posts = decode([FeedPost].self, r["posts"]) ?? [] }
         do {
-            let r = try await account.callSaving("feedAll", ["scope": scope], tag: scope)
+            let r = try await account.callSaving(action, ["scope": scope], tag: scope)
             let list = decode([FeedPost].self, r["posts"]) ?? []
             posts = list
             more = list.count >= 25
@@ -256,7 +374,8 @@ struct FeedScreen: View {
         guard !loadingMore else { return }
         loadingMore = true
         defer { loadingMore = false }
-        guard let r = try? await account.call("feedAll", ["scope": scope, "offset": posts.count]) else { return }
+        let action = account.signedIn ? "feedAll" : "publicFeed"
+        guard let r = try? await account.call(action, ["scope": scope, "offset": posts.count]) else { return }
         let list = decode([FeedPost].self, r["posts"]) ?? []
         let have = Set(posts.map(\.id))
         posts += list.filter { !have.contains($0.id) }
@@ -264,7 +383,7 @@ struct FeedScreen: View {
     }
 
     private func loadStories() async {
-        if let r = try? await account.call("stories") { groups = decode([StoryGroup].self, r["groups"]) ?? [] }
+        if let r = try? await account.call(account.signedIn ? "stories" : "publicStories") { groups = decode([StoryGroup].self, r["groups"]) ?? [] }
     }
 }
 
@@ -279,7 +398,7 @@ struct StoriesRow: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: 12) {
-                Button(action: add) {
+                if account.signedIn { Button(action: add) {
                     VStack(spacing: 5) {
                         ZStack(alignment: .bottomTrailing) {
                             Avatar(name: account.user?.displayName ?? "", color: account.user?.color ?? "#8C1D40", size: 60, photo: account.user?.avatar, peek: false)
@@ -291,7 +410,7 @@ struct StoriesRow: View {
                     }
                     .frame(width: 72)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.plain) }
                 ForEach(Array(groups.enumerated()), id: \.element.id) { i, g in
                     Button { open(i) } label: {
                         VStack(spacing: 5) {
@@ -312,11 +431,16 @@ struct StoriesRow: View {
 }
 
 struct ComposeStorySheet: View {
+    var media: StoryMedia?
     var posted: () async -> Void
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var account = AccountStore.shared
+    @AppStorage("ab.audience") private var audience = "public"
     @State private var text = ""
     @State private var photo: UIImage?
+    @State private var video: URL?
+    @State private var fromCamera = false
+    @State private var poster: UIImage?
     @State private var picking = false
     @State private var bg = "#8C1D40"
     @State private var busy = false
@@ -324,15 +448,33 @@ struct ComposeStorySheet: View {
 
     private let colors = ["#8C1D40", "#0A63C9", "#1F7A3A", "#6E3FD1", "#D2510A", "#00847F", "#C2185B", "#3A3A3C"]
 
+    init(media: StoryMedia? = nil, posted: @escaping () async -> Void) {
+        self.media = media
+        self.posted = posted
+        switch media {
+        case .photo(let image):
+            _photo = State(initialValue: image)
+        case .video(let url, let still, let camera):
+            _video = State(initialValue: url)
+            _poster = State(initialValue: still)
+            _fromCamera = State(initialValue: camera)
+        case nil:
+            break
+        }
+    }
+
     var body: some View {
         ABStack {
             Form {
                 Section {
                     ZStack {
-                        if let photo {
-                            Color.clear.frame(height: 300).overlay(Image(uiImage: photo).resizable().scaledToFill()).clipped()
+                        if let shown = photo ?? poster {
+                            Color.clear.frame(height: 300).overlay(Image(uiImage: shown).resizable().scaledToFill()).clipped()
                         } else {
                             Color(hexString: bg).frame(height: 300)
+                        }
+                        if video != nil {
+                            Image(systemName: "play.circle.fill").font(.system(size: 54)).foregroundStyle(.white.opacity(0.9))
                         }
                         if !text.isEmpty {
                             Text(text).font(.title3.weight(.bold)).foregroundStyle(.white).multilineTextAlignment(.center)
@@ -342,9 +484,11 @@ struct ComposeStorySheet: View {
                     .listRowInsets(EdgeInsets())
                 }
                 Section {
-                    Button { picking = true } label: { Label(photo == nil ? "Add a photo" : "Change photo", systemImage: "photo") }
-                    if photo != nil {
-                        Button(role: .destructive) { photo = nil } label: { Label("Remove photo", systemImage: "trash") }
+                    if video == nil {
+                        Button { picking = true } label: { Label(photo == nil ? "Add a photo" : "Change photo", systemImage: "photo") }
+                    }
+                    if photo != nil || video != nil {
+                        Button(role: .destructive) { photo = nil; video = nil; poster = nil } label: { Label(video != nil ? "Remove video" : "Remove photo", systemImage: "trash") }
                     } else {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 10) {
@@ -362,8 +506,9 @@ struct ComposeStorySheet: View {
                 }
                 Section {
                     TextField("Write something", text: $text)
+                    AudiencePicker(audience: $audience)
                 } footer: {
-                    Text("Your story is seen by ASU Bank students for 24 hours, then it disappears. It's deleted from our database after 2 days.")
+                    Text("Your story disappears after 24 hours and is deleted from our database after 2 days.")
                 }
                 if let error { Section { Text(error).foregroundStyle(.red) } }
             }
@@ -373,7 +518,7 @@ struct ComposeStorySheet: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(busy ? "Posting…" : "Post") { Task { await post() } }
-                        .disabled(busy || (photo == nil && text.trimmingCharacters(in: .whitespaces).isEmpty))
+                        .disabled(busy || (photo == nil && video == nil && text.trimmingCharacters(in: .whitespaces).isEmpty))
                 }
             }
             .sheet(isPresented: $picking) { AvatarPicker { photo = $0 } }
@@ -383,8 +528,17 @@ struct ComposeStorySheet: View {
     private func post() async {
         busy = true
         defer { busy = false }
-        var fields: [String: Any] = ["text": String(text.prefix(300)), "bg": bg]
-        if let photo {
+        var fields: [String: Any] = ["text": String(text.prefix(300)), "bg": bg, "audience": audience]
+        if let video {
+            guard let ready = await StoryVideo.prepare(video, fromCamera: fromCamera), let bytes = try? Data(contentsOf: ready) else {
+                error = L("That video is too big. Keep it short.")
+                return
+            }
+            fields["video"] = bytes.base64EncodedString()
+            if let poster {
+                fields["image"] = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(poster, maxSide: 900) }.value
+            }
+        } else if let photo {
             let data = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(photo, maxSide: 1280) }.value
             guard let data else { error = L("Couldn't load this photo"); return }
             fields["image"] = data
@@ -409,6 +563,7 @@ struct StoryViewer: View {
     @State private var paused = false
     @State private var removed = Set<String>()
     @State private var reporting: ReportTarget?
+    @State private var videoLength: Double?
 
     init(groups: [StoryGroup], startGroup: Int) {
         self.groups = groups
@@ -435,6 +590,7 @@ struct StoryViewer: View {
             .simultaneousGesture(DragGesture(minimumDistance: 0).onEnded { v in
                 paused = false
                 if v.translation.height > 120 { dismiss() }
+                else if abs(v.translation.width) > 70, abs(v.translation.width) > abs(v.translation.height) { switchPerson(v.translation.width < 0) }
             })
             VStack(spacing: 10) {
                 HStack(spacing: 4) {
@@ -478,7 +634,9 @@ struct StoryViewer: View {
 
     @ViewBuilder private func page(_ item: StoryItem) -> some View {
         ZStack {
-            if let image = item.image, !image.isEmpty, let url = PhotoTools.large(image) {
+            if let video = item.video, !video.isEmpty, let url = URL(string: video) {
+                StoryVideoView(url: url, paused: paused, duration: $videoLength).id(item.id)
+            } else if let image = item.image, !image.isEmpty, let url = PhotoTools.large(image) {
                 StoryPhoto(url: url).id(item.id)
             } else {
                 Color(hexString: item.bg ?? "#8C1D40").ignoresSafeArea()
@@ -508,15 +666,29 @@ struct StoryViewer: View {
 
     private func run() async {
         progress = 0
+        videoLength = nil
         guard let story else { return }
-        if story.seen != true { _ = try? await account.call("storySeen", ["id": story.id]) }
-        let step = 0.05 / Self.seconds
+        if story.seen != true, account.signedIn { Task { _ = try? await account.call("storySeen", ["id": story.id]) } }
+        let isVideo = story.video?.isEmpty == false
         while progress < 1 {
             try? await Task.sleep(nanoseconds: 50_000_000)
             if Task.isCancelled { return }
-            if !paused { progress += step }
+            // a video's bar starts once the video has loaded, and follows its length
+            if isVideo && videoLength == nil { continue }
+            if !paused { progress += 0.05 / (videoLength ?? Self.seconds) }
         }
         forward()
+    }
+
+    /// Swiping sideways goes to the next or previous person's stories
+    private func switchPerson(_ next: Bool) {
+        Haptics.tap()
+        if next {
+            if g + 1 < groups.count { g += 1; s = 0 } else { dismiss() }
+        } else if g > 0 {
+            g -= 1
+            s = 0
+        }
     }
 
     private func forward() {

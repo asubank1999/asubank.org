@@ -68,8 +68,11 @@ object AccountsApi {
         val req = Request.Builder().url(URL)
             .post(body.toString().toRequestBody("text/plain;charset=utf-8".toMediaType()))
             .build()
+        // videos and files take longer than the usual calls
+        val long = "video" in fields || "file" in fields || action == "dmFile"
+        val http = if (long) Net.http.newBuilder().writeTimeout(5, java.util.concurrent.TimeUnit.MINUTES).readTimeout(5, java.util.concurrent.TimeUnit.MINUTES).build() else Net.http
         val text = try {
-            Net.http.newCall(req).execute().use { it.body?.string() }
+            http.newCall(req).execute().use { it.body?.string() }
         } catch (e: Exception) { null } ?: throw ApiError("Couldn't reach ASU Bank. Check your connection and try again.")
         val o = runCatching { json.parseToJsonElement(text) as JsonObject }.getOrNull()
             ?: throw ApiError("The server sent something unexpected. Try again.")
@@ -334,6 +337,7 @@ object Account {
     suspend fun signOut() { runCatching { AccountsApi.call("logout", token = token) }; signOutLocally() }
 
     fun signOutLocally() {
+        runCatching { DmFiles.folder(Disk.ctx).deleteRecursively() }
         token = null
         user.value = null
         Saved.prefs.edit().remove("account.token").remove("account.user").apply()
@@ -370,6 +374,7 @@ object ChatNotifier {
     val muted = MutableStateFlow<Set<String>>(emptySet())
     /** The room on screen, which never notifies */
     @Volatile var openRoom: String? = null
+    @Volatile var openDM: String? = null
     /** Room to open from a tapped notification */
     val pendingRoom = MutableStateFlow<String?>(null)
 
@@ -427,7 +432,7 @@ object ChatNotifier {
     suspend fun check(ctx: Context) = lock.withLock {
         val token = Account.token ?: return@withLock
         val seen = Saved.prefs.getString("notify.lastSeen", null)
-        val r = runCatching { AccountsApi.call("events", mapOf("since" to (seen ?: ""), "social" to true, "social2" to true), token = token) }.getOrNull() ?: return@withLock
+        val r = runCatching { AccountsApi.call("events", mapOf("since" to (seen ?: ""), "social" to true, "social2" to true, "social3" to true), token = token) }.getOrNull() ?: return@withLock
         val events = r["events"].decodeAs<List<AbEvent>>() ?: emptyList()
         val newest = events.maxOfOrNull { it.created } ?: ""
         // first check after install: remember, don't notify
@@ -447,6 +452,7 @@ object ChatNotifier {
             "announcement" -> announcements.value
             "friend_request", "friend_accept", "poke", "post_comment" -> social.value
             "group_request", "group_approved", "group_rejected" -> true
+            "dm" -> e.userId != openDM
             else -> when {
                 e.room == openRoom -> false
                 replies.value && me != null && e.replyToUserId == me -> true
@@ -461,9 +467,11 @@ object ChatNotifier {
         val reply = e.type == "message" && me != null && e.replyToUserId == me
         val who = e.displayName ?: ""
         val intent = Intent(ctx, AppActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        val isPrivate = e.type.startsWith("friend_") || e.type.startsWith("group_") || e.type == "poke" || e.type == "post_comment"
-        if (isPrivate && !e.type.startsWith("group_")) socialUnread.value += 1
+        val isDm = e.type == "dm"
+        val isPrivate = e.type.startsWith("friend_") || e.type.startsWith("group_") || e.type == "poke" || e.type == "post_comment" || isDm
+        if (isPrivate && !e.type.startsWith("group_") && !isDm) socialUnread.value += 1
         when {
+            isDm -> intent.putExtra("openRoom", "__dm")
             e.type == "upload" -> intent.putExtra("openPath", "/guides/latest")
             e.type == "group_request" -> intent.putExtra("openTab", Routes.ADMIN)
             e.type.startsWith("group_") -> Unit
@@ -481,6 +489,7 @@ object ChatNotifier {
             e.type == "friend_accept" -> tr("You have a new friend")
             e.type == "poke" -> "👉 $who"
             e.type == "post_comment" -> trf("%s commented on your post", who)
+            isDm -> who
             e.type == "group_request" -> tr("New group request")
             e.type == "group_approved" -> tr("Your group was accepted")
             e.type == "group_rejected" -> tr("Your group wasn't accepted")

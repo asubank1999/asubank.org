@@ -21,6 +21,7 @@ shot 31-home-midnight --es startTab home --ei appearance 4
 shot 32-home-sand --es startTab home --ei appearance 7
 shot 8-halls --es startTab home --ei appearance 0 --es startPath /guides/halls
 shot 33-feed --es startTab feed
+shot 36-chat-guest --es startTab chat
 shot 34-planner --es startPath /app/planner
 shot 35-focus --es startPath /app/focus
 shot 9-ratings-intro --es startPath /requests/portal_to_rating

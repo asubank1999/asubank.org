@@ -66,6 +66,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -115,11 +116,17 @@ fun ChatTab() {
     var menuFor by remember { mutableStateOf<String?>(null) }
     var adding by remember { mutableStateOf(false) }
     var editing by remember { mutableStateOf<ChatRoom?>(null) }
+    var section by rememberSaveable { mutableStateOf("rooms") }
+    val dmUnread by Dms.unread.collectAsState()
     LaunchedEffect(pending, user) {
         val r = pending ?: return@LaunchedEffect
-        if (user != null) { ChatNotifier.pendingRoom.value = null; nav.navigate("room/$r") }
+        if (user != null) {
+            ChatNotifier.pendingRoom.value = null
+            if (r == "__dm") section = "messages" else nav.navigate("room/$r")
+        }
     }
     LaunchedEffect(user) { if (user != null) { Account.refresh(); Presence.load() } }
+    LaunchedEffect(user?.id) { if (user != null) while (true) { Dms.load(); delay(20_000) } }
 
     Screen("Chat", back = false, large = true, actions = {
         if (user?.isAdmin == true) IconButton(onClick = { adding = true }) { Icon(Icons.Filled.AddComment, tr("Add a room")) }
@@ -128,7 +135,11 @@ fun ChatTab() {
         val u = user
         if (u == null) { Box(Modifier.padding(pad)) { SignInPrompt() }; return@Screen }
         LazyColumn(Modifier.padding(pad)) {
-            if (online.isNotEmpty()) item {
+            item {
+                PillTabs(listOf("rooms" to tr("Rooms"), "messages" to (tr("Messages") + if (dmUnread > 0) " ($dmUnread)" else "")), section) { section = it }
+            }
+            if (section == "messages") item { DmConversations() }
+            if (section != "messages" && online.isNotEmpty()) item {
                 Group {
                     Row(
                         Modifier.fillMaxWidth().clickable { nav.navigate("online") }.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -145,7 +156,7 @@ fun ChatTab() {
                     }
                 }
             }
-            item {
+            if (section != "messages") item {
                 Group(footer = "Be kind and helpful. Don't share exam answers during an exam, private info or anything illegal. Admins can remove messages and ban accounts.") {
                     rooms.forEachIndexed { i, r ->
                         if (i > 0) Divider()
@@ -156,7 +167,9 @@ fun ChatTab() {
                                     .padding(horizontal = 16.dp, vertical = 12.dp),
                                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp),
                             ) {
-                                Text(r.emoji, fontSize = 22.sp, modifier = Modifier.width(30.dp), textAlign = TextAlign.Center)
+                                Box(Modifier.size(46.dp).clip(CircleShape).background(accent.copy(alpha = 0.13f)), contentAlignment = Alignment.Center) {
+                                    Text(r.emoji, fontSize = 22.sp, textAlign = TextAlign.Center)
+                                }
                                 Column(Modifier.weight(1f)) {
                                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                         Text(r.name, style = MaterialTheme.typography.bodyLarge)
@@ -368,16 +381,15 @@ fun ChatRoomScreen(roomId: String) {
                         val day = m.instant.atZone(ZoneId.systemDefault()).toLocalDate()
                         val prev = messages.getOrNull(i - 1)
                         val prevDay = prev?.instant?.atZone(ZoneId.systemDefault())?.toLocalDate()
-                        if (day != prevDay) Text(
-                            dayLabel(day), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
-                        )
+                        if (day != prevDay) ChatDayPill(day)
                         val mine = m.userId == user?.id
                         val grouped = prev != null && prev.userId == m.userId && day == prevDay
+                        val next = messages.getOrNull(i + 1)
+                        val joinedBelow = next != null && next.userId == m.userId && next.instant.atZone(ZoneId.systemDefault()).toLocalDate() == day
                         val reply = m.replyTo?.let { id -> messages.firstOrNull { it.id == id } }
                         Box {
                             Bubble(
-                                m, mine, grouped, reply, people[m.userId], pinned?.id == m.id,
+                                m, mine, grouped, joinedBelow, reply, people[m.userId], pinned?.id == m.id,
                                 Modifier.combinedClickable(onClick = {}, onLongClick = { menuFor = m.id }),
                                 onAvatar = { nav.navigate("profile/${m.userId}") },
                             )
@@ -440,16 +452,10 @@ fun ChatRoomScreen(roomId: String) {
                             IconButton(onClick = { if (editing != null) text = ""; replyTo = null; editing = null }) { Icon(Icons.Filled.Close, tr("Cancel")) }
                         }
                     }
-                    Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        OutlinedTextField(
-                            text, { if (it.length <= 1000) text = it }, placeholder = { Text("Message") },
-                            maxLines = 5, shape = RoundedCornerShape(22.dp), modifier = Modifier.weight(1f),
-                        )
-                        FilledIconButton(onClick = ::send, enabled = text.isNotBlank() && !sending, modifier = Modifier.size(48.dp)) {
-                            if (sending) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
-                            else Icon(if (editing != null) Icons.Filled.Check else Icons.AutoMirrored.Filled.Send, tr("Send"))
-                        }
-                    }
+                    ChatComposer(
+                        text, { if (it.length <= 1000) text = it }, sending,
+                        sendIcon = if (editing != null) Icons.Filled.Check else Icons.AutoMirrored.Filled.Send, send = ::send,
+                    )
                 }
             }
         }
@@ -479,25 +485,24 @@ fun ChatRoomScreen(roomId: String) {
 
 @Composable
 private fun Bubble(
-    m: ChatMessage, mine: Boolean, grouped: Boolean, reply: ChatMessage?, person: ChatPerson?, isPinned: Boolean,
+    m: ChatMessage, mine: Boolean, grouped: Boolean, joinedBelow: Boolean, reply: ChatMessage?, person: ChatPerson?, isPinned: Boolean,
     modifier: Modifier, onAvatar: () -> Unit,
 ) {
     val admin = m.role == "admin"
     Row(
-        Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp, top = if (grouped) 0.dp else 6.dp),
+        Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp, top = if (grouped) 1.dp else 6.dp),
         horizontalArrangement = if (mine) Arrangement.End else Arrangement.Start,
         verticalAlignment = Alignment.Bottom,
     ) {
         if (!mine) {
-            if (grouped) Spacer(Modifier.width(34.dp))
+            if (joinedBelow) Spacer(Modifier.width(30.dp))
             else Box(Modifier.clip(CircleShape).clickable(onClick = onAvatar)) {
                 Avatar(m.displayName.ifEmpty { m.username }, m.color, 30.dp, admin, person?.avatar, person?.online)
             }
             Spacer(Modifier.width(6.dp))
         }
         Column(
-            modifier.widthIn(max = 290.dp).clip(RoundedCornerShape(18.dp))
-                .background(if (mine) accent else MaterialTheme.colorScheme.surfaceContainerHigh)
+            modifier.widthIn(max = 290.dp).chatBubble(mine, grouped, joinedBelow)
                 .padding(horizontal = 12.dp, vertical = 8.dp),
         ) {
             val fg = if (mine) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface

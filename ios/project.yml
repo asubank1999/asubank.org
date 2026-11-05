@@ -10,8 +10,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "1.12.0"
-    CURRENT_PROJECT_VERSION: "12"
+    MARKETING_VERSION: "1.13.0"
+    CURRENT_PROJECT_VERSION: "13"
     DEVELOPMENT_TEAM: ""
     AB_STORE_BUILD: "NO"
 targets:
@@ -43,7 +43,8 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        NSCameraUsageDescription: ASU Bank uses the camera to scan paper notes and exams into a PDF you can upload.
+        NSCameraUsageDescription: ASU Bank uses the camera for stories and to scan paper notes and exams into a PDF you can upload.
+        NSMicrophoneUsageDescription: ASU Bank records sound when you film a video story.
         NSPhotoLibraryUsageDescription: ASU Bank lets you pick photos and videos of notes to upload.
         BGTaskSchedulerPermittedIdentifiers:
           - org.asubank.app.chat

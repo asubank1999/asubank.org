@@ -20,7 +20,7 @@ enum AccountsAPI {
         var body = fields
         body["action"] = action
         if let token { body["token"] = token }
-        var req = URLRequest(url: url, timeoutInterval: 40)
+        var req = URLRequest(url: url, timeoutInterval: fields["video"] != nil || fields["file"] != nil || action == "dmFile" ? 180 : 40)
         req.httpMethod = "POST"
         req.setValue("text/plain;charset=utf-8", forHTTPHeaderField: "Content-Type")
         req.httpBody = try JSONSerialization.data(withJSONObject: body)
@@ -336,6 +336,7 @@ final class AccountStore: ObservableObject {
     }
 
     func signOutLocally() {
+        try? FileManager.default.removeItem(at: DMFiles.folder)
         token = nil
         user = nil
         Keychain.set(nil, for: "ab.token")
@@ -414,6 +415,7 @@ final class ChatNotifier: ObservableObject {
     }
     /// The room on screen, which never notifies
     var openRoom: String?
+    var openDM: String?
     @Published var unread = 0
     private var timer: Task<Void, Never>?
 
@@ -440,7 +442,7 @@ final class ChatNotifier: ObservableObject {
         guard let token = AccountStore.shared.token else { return }
         let key = "ab.notify.lastSeenDate"
         let seen = UserDefaults.standard.string(forKey: key)
-        guard let r = try? await AccountsAPI.call("events", ["since": seen ?? "", "social": true, "social2": true], token: token) else { return }
+        guard let r = try? await AccountsAPI.call("events", ["since": seen ?? "", "social": true, "social2": true, "social3": true], token: token) else { return }
         let events = decode([ABEvent].self, r["events"]) ?? []
         let newest = events.map(\.created).max() ?? ""
         // first check after install: remember, don't notify
@@ -460,6 +462,7 @@ final class ChatNotifier: ObservableObject {
         case "announcement": return announcements
         case "friend_request", "friend_accept", "poke", "post_comment": return social
         case "group_request", "group_approved", "group_rejected": return true
+        case "dm": return e.userId != openDM
         default:
             if e.room == openRoom { return false }
             if replies && me != nil && e.replyToUserId == me { return true }
@@ -488,6 +491,8 @@ final class ChatNotifier: ObservableObject {
             c.title = "👉 " + who
         case "post_comment":
             c.title = String(format: L("%@ commented on your post"), who)
+        case "dm":
+            c.title = who
         case "group_request":
             c.title = L("New group request")
         case "group_approved":
@@ -508,7 +513,7 @@ final class ChatNotifier: ObservableObject {
         }
         c.sound = NotificationSounds.sound(NotificationSounds.messageKey)
         c.threadIdentifier = e.room ?? e.type
-        c.userInfo = ["room": e.room ?? "", "url": e.url ?? "", "open": e.type == "group_request" ? "admin" : isPrivate && !e.type.hasPrefix("group_") ? "friends" : ""]
+        c.userInfo = ["room": e.type == "dm" ? "__dm" : (e.room ?? ""), "url": e.url ?? "", "open": e.type == "group_request" ? "admin" : isPrivate && !e.type.hasPrefix("group_") ? "friends" : ""]
         try? await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: e.id, content: c, trigger: nil))
     }
 

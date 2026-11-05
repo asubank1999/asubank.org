@@ -128,6 +128,7 @@
 "A few letters are enough: \"calc\", \"MATH101\" or a doctor's name. Arabic names work too." = "A few letters are enough: \"calc\", \"MATH101\" or a doctor's name. Arabic names work too.";
 "A free, student-run project" = "Un proyecto gratuito de estudiantes";
 "A line about you (optional)" = "Una línea sobre ti (opcional)";
+"A new look for the chat" = "Un nuevo aspecto para el chat";
 "A plan to study it easily" = "A plan to study it easily";
 "A ringtone from my phone…" = "Un tono de mi teléfono…";
 "ADMIN" = "ADMIN";
@@ -135,6 +136,7 @@
 "ALL FILES" = "TODOS LOS ARCHIVOS";
 "APPROVED" = "APROBADO";
 "ARCHIVED" = "ARCHIVADA";
+"ASU Bank can't use the camera." = "ASU Bank no puede usar la cámara.";
 "ASU Bank checks for new activity while it's open, and in the background when iOS allows it." = "ASU Bank busca actividad nueva mientras está abierto y en segundo plano cuando iOS lo permite.";
 "ASU Bank is a free, volunteer, student-run project. It is not made by or owned by Applied Science Private University. Questions go to necro144@yahoo.com." = "ASU Bank is a free, volunteer, student-run project. It is not made by or owned by Applied Science Private University. Questions go to necro144@yahoo.com.";
 "ASU Bank is built by students, for students. These people uploaded, sorted and shared the materials you use every day." = "ASU Bank lo hacen estudiantes para estudiantes. Estas personas subieron, ordenaron y compartieron los materiales que usas cada día.";
@@ -154,6 +156,7 @@
 "ASU resources" = "ASU resources";
 "ASU resources (Useful gate)" = "Recursos de ASU (Useful gate)";
 "ASU shortcuts" = "ASU shortcuts";
+"ASU students" = "Estudiantes de ASU";
 "About" = "Acerca de";
 "About & terms" = "Acerca de y términos";
 "About ASU Bank" = "About ASU Bank";
@@ -191,7 +194,9 @@
 "Add at least one study topic." = "Add at least one study topic.";
 "Add at least one topic you want to study." = "Add at least one topic you want to study.";
 "Add friend" = "Añadir amigo";
+"Add friends first. Then you can message them here." = "Primero añade amigos. Luego podrás escribirles aquí.";
 "Add friends or write the first one." = "Añade amigos o escribe la primera.";
+"Add friends, or look at what other students share under Strangers." = "Añade amigos o mira lo que comparten otros estudiantes en Desconocidos.";
 "Add story" = "Añadir historia";
 "Add your classmates as friends" = "Añade a tus compañeros como amigos";
 "Add your exams and assignments, and the next ones show on Home." = "Añade tus exámenes y tareas, y los próximos aparecerán en Inicio.";
@@ -301,6 +306,7 @@
 "Ask your college's WhatsApp group" = "Pregunta en el grupo de WhatsApp de tu facultad";
 "Assignment" = "Assignment";
 "At least 6 characters" = "Al menos 6 caracteres";
+"Attach a file" = "Adjuntar un archivo";
 "Attach the PDF you want it made from." = "Attach the PDF you want it made from.";
 "BANNED" = "BLOQUEADO";
 "Back" = "Atrás";
@@ -435,7 +441,9 @@
 "Choose a photo" = "Elegir una foto";
 "Choose a service." = "Elige un servicio.";
 "Choose files" = "Elegir archivos";
+"Choose from photos" = "Elegir de las fotos";
 "Choose how you'll pay." = "Elige cómo pagarás.";
+"Choose who sees each new post or story: everyone, ASU students or friends" = "Elige quién ve cada publicación o historia: todos, estudiantes de ASU o amigos";
 "Choose your gender." = "Choose your gender.";
 "Choose your year." = "Elige tu año.";
 "Class rep" = "Delegado";
@@ -524,15 +532,18 @@
 "Couldn't load the tips. Check your connection and try again." = "No se pudieron cargar los consejos. Revisa tu conexión e inténtalo de nuevo.";
 "Couldn't load this photo" = "No se pudo cargar esta foto";
 "Couldn't open" = "Couldn't open";
+"Couldn't open this file." = "No se pudo abrir este archivo.";
 "Couldn't open this folder" = "No se pudo abrir esta carpeta";
 "Couldn't reach ASU Bank. Check your connection and try again." = "Couldn't reach ASU Bank. Check your connection and try again.";
 "Couldn't reach the matcher. Check your connection; it will retry when you submit." = "No se pudo conectar. Revisa tu conexión; se reintentará al enviar.";
 "Couldn't reach the submissions server." = "Couldn't reach the submissions server.";
 "Couldn't read that file. Try another PDF." = "Couldn't read that file. Try another PDF.";
 "Couldn't read this file." = "No se pudo leer este archivo.";
+"Couldn't record the video. Try again." = "No se pudo grabar el vídeo. Inténtalo de nuevo.";
 "Couldn't save" = "Couldn't save";
 "Couldn't send" = "Couldn't send";
 "Couldn't send your booking. Check your connection and try again." = "No se pudo enviar tu reserva. Revisa tu conexión e inténtalo de nuevo.";
+"Couldn't take the photo. Try again." = "No se pudo hacer la foto. Inténtalo de nuevo.";
 "Countdown Timer" = "Countdown Timer";
 "Course" = "Curso";
 "Course %d" = "Curso %d";
@@ -702,6 +713,7 @@
 "Every teacher shows an average out of 10 and how many students voted." = "Every teacher shows an average out of 10 and how many students voted.";
 "Every year and doctor in one place." = "Todos los años y profesores en un solo lugar.";
 "Everyone" = "Todos";
+"Everyone, also guests" = "Todos, también invitados";
 "Everything on ASU Bank is searchable from one box: subject pages and the shared Google Drive." = "Everything on ASU Bank is searchable from one box: subject pages and the shared Google Drive.";
 "Everything students uploaded, updated live." = "Everything students uploaded, updated live.";
 "Everything you have coming up." = "Todo lo que tienes por delante.";
@@ -727,11 +739,13 @@
 "Fair and safe" = "Justo y seguro";
 "False" = "False";
 "Feed" = "Publicaciones";
+"Feed now has Friends, Strangers and Guest" = "El Feed ahora tiene Amigos, Desconocidos e Invitado";
 "Feels safe" = "Se siente seguro";
 "Female" = "Mujer";
 "Fifth Year" = "Fifth Year";
 "Fifth year" = "Quinto año";
 "File" = "Archivo";
+"File not found." = "Archivo no encontrado.";
 "File too big" = "Archivo demasiado grande";
 "Files" = "Archivos";
 "Files %d" = "Files %d";
@@ -811,6 +825,7 @@
 "Friend requests, pokes, new uploads and announcements will show up here." = "Aquí verás solicitudes de amistad, toques, archivos nuevos y anuncios.";
 "Friends" = "Amigos";
 "Friends and pokes" = "Amigos y toques";
+"Friends only" = "Solo amigos";
 "From" = "Desde";
 "From your phone, Drive or Downloads" = "Desde tu teléfono, Drive o Descargas";
 "Full Q&A from your PDF" = "Full Q&A from your PDF";
@@ -843,6 +858,7 @@
 "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules." = "Los grupos los gestionan estudiantes, no ASU Bank. Sé amable y respeta sus normas.";
 "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules. Long-press a group to copy its link." = "Los grupos los gestionan estudiantes, no ASU Bank. Sé amable y respeta sus normas. Mantén pulsado un grupo para copiar su enlace.";
 "Groups for courses, clubs and interests" = "Groups for courses, clubs and interests";
+"Guest" = "Invitado";
 "Guidelines" = "Normas";
 "Gymnasium" = "Gymnasium";
 "Hall" = "Aula";
@@ -1117,6 +1133,7 @@
 "New here?" = "¿Nuevo aquí?";
 "New here? Start with these" = "¿Nuevo aquí? Empieza por esto";
 "New item" = "Nuevo elemento";
+"New message" = "Mensaje nuevo";
 "New message from %@" = "Nuevo mensaje de %@";
 "New messages in the student chat" = "Mensajes nuevos en el chat de estudiantes";
 "New password" = "Contraseña nueva";
@@ -1155,8 +1172,11 @@
 "No people found" = "No se encontraron personas";
 "No people found." = "No se encontraron personas.";
 "No posts from friends yet" = "Tus amigos aún no han publicado";
+"No posts from other students yet" = "Aún no hay publicaciones de otros estudiantes";
 "No posts yet" = "Aún no hay publicaciones";
 "No posts yet. Add friends or write the first one." = "Aún no hay publicaciones. Añade amigos o escribe la primera.";
+"No private messages yet" = "Aún no hay mensajes privados";
+"No public posts yet" = "Aún no hay publicaciones públicas";
 "No ratings yet" = "No ratings yet";
 "No results" = "No results";
 "No saved files yet" = "Aún no hay archivos guardados";
@@ -1277,6 +1297,7 @@
 "Overdue" = "Vencido";
 "Overview" = "Resumen";
 "PDF Summary" = "Resumen PDF";
+"PDF or Word file" = "Archivo PDF o Word";
 "PDF, PowerPoint, Word, images or video, up to 25 MB. It uploads right from the app." = "PDF, PowerPoint, Word, imágenes o video, hasta 25 MB. Se sube directamente desde la app.";
 "PDF, Word, PowerPoint, Excel, images or ZIP, up to 25 MB each." = "PDF, Word, PowerPoint, Excel, imágenes o ZIP, hasta 25 MB cada uno.";
 "PENDING" = "PENDIENTE";
@@ -1319,6 +1340,7 @@
 "Phone sound" = "Sonido del teléfono";
 "Phone, e.g. 079 123 4567" = "Teléfono, p. ej. 079 123 4567";
 "Phone: NULL" = "Phone: NULL";
+"Photo" = "Foto";
 "Photos" = "Fotos";
 "Photos and editing" = "Fotos y edición";
 "Photos to edit" = "Fotos para editar";
@@ -1329,6 +1351,7 @@
 "Physiotherapy 2025" = "Physiotherapy 2025";
 "Pick a result" = "Elige un resultado";
 "Pick at least one time you're free." = "Pick at least one time you're free.";
+"Pick from your photos" = "Elegir de tus fotos";
 "Pick the existing name so all ratings stay together." = "Elige el nombre existente para que todas las valoraciones queden juntas.";
 "Pick the icon you want on your Home Screen. Your iPhone shows a short message when it changes." = "Elige el icono que quieras en tu pantalla de inicio. Tu iPhone mostrará un breve mensaje al cambiarlo.";
 "Pick the icon you want on your home screen. It can take a few seconds to change, and you may need to add it to your home screen again." = "Elige el icono que quieras en tu pantalla de inicio. Puede tardar unos segundos en cambiar y quizá tengas que volver a añadirlo a la pantalla de inicio.";
@@ -1362,6 +1385,7 @@
 "Posted in 📣 Announcements. Everyone with notifications on gets it." = "Se publica en 📣 Anuncios. Lo recibe todo el que tenga avisos activos.";
 "Posting…" = "Publicando…";
 "Posts" = "Publicaciones";
+"Posts shared with everyone show up here. Anyone can read them, also without an account." = "Aquí aparecen las publicaciones compartidas con todos. Cualquiera puede leerlas, también sin cuenta.";
 "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between." = "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between.";
 "Practice problems with answers" = "Ejercicios con respuestas";
 "Practice questions" = "Practice questions";
@@ -1378,6 +1402,7 @@
 "Pricing · 10 JD total" = "Precio · 10 JD en total";
 "Principles of Nutrition" = "Principles of Nutrition";
 "Privacy policy" = "Privacy policy";
+"Private messages between friends, with photos, PDF and Word files" = "Mensajes privados entre amigos, con fotos y archivos PDF y Word";
 "Private until matched" = "Private until matched";
 "Probability" = "Probability";
 "Probability Laws Example 1" = "Probability Laws Example 1";
@@ -1417,6 +1442,7 @@
 "Rate the teaching, not the person. Rude names are blocked." = "Rate the teaching, not the person. Rude names are blocked.";
 "Rate your teachers" = "Valora a tus profesores";
 "Reach the exact audience you need" = "Reach the exact audience you need";
+"Read public posts and stories without an account, also on the website" = "Lee publicaciones e historias públicas sin cuenta, también en la web";
 "Read the full Terms of Service" = "Leer los Términos del servicio completos";
 "Read the terms" = "Leer los términos";
 "Real averages" = "Promedios reales";
@@ -1442,6 +1468,7 @@
 "Remove from Saved" = "Quitar de Guardados";
 "Remove photo" = "Quitar foto";
 "Remove this friend?" = "¿Eliminar a este amigo?";
+"Remove video" = "Quitar vídeo";
 "Removed from the chat by an admin" = "Expulsado del chat por un admin";
 "Repeat new password" = "Repite la contraseña nueva";
 "Repeat password" = "Repite la contraseña";
@@ -1498,6 +1525,7 @@
 "Saved · %lld" = "Guardados · %lld";
 "Saved · %@" = "Guardados · %@";
 "Saving…" = "Saving…";
+"Say hello. Only the two of you see this chat." = "Saluda. Solo vosotros dos veis este chat.";
 "Say hi, ask anything about ASU" = "Saluda y pregunta lo que sea sobre ASU";
 "Scan" = "Escanear";
 "Scanned pages become one PDF. You can add up to 20 photos at a time." = "Las páginas escaneadas se convierten en un PDF. Puedes añadir hasta 20 fotos a la vez.";
@@ -1536,7 +1564,9 @@
 "See averages and rate anonymously." = "See averages and rate anonymously.";
 "See this year's important dates" = "Ver las fechas importantes de este año";
 "See what changed after every update, and every past version under More > What's New" = "Mira qué cambió tras cada actualización y todas las versiones anteriores en Más > Novedades";
+"Seen" = "Visto";
 "Send" = "Enviar";
+"Send a message" = "Enviar un mensaje";
 "Send again" = "Send again";
 "Send an announcement" = "Enviar un anuncio";
 "Send another" = "Enviar otra";
@@ -1581,6 +1611,7 @@
 "Shariah" = "Sharía";
 "Sharing another member's personal information without consent." = "Sharing another member's personal information without consent.";
 "Sharing malicious links, viruses, or phishing content." = "Sharing malicious links, viruses, or phishing content.";
+"Sharper cover photos and a cleaner star on admin photos" = "Fotos de portada más nítidas y una estrella más limpia en las fotos de los administradores";
 "Sheet" = "Hoja";
 "Sheets" = "Hojas";
 "Should we open the Discord gaming community?" = "¿Abrimos la comunidad de juegos en Discord?";
@@ -1602,6 +1633,7 @@
 "Sign in to chat" = "Inicia sesión para chatear";
 "Sign in to chat with other students and keep your account in sync with asubank.org." = "Inicia sesión para chatear y mantener tu cuenta sincronizada con asubank.org.";
 "Sign in to chat with other students." = "Sign in to chat with other students.";
+"Sign in to post, comment, like and add stories." = "Inicia sesión para publicar, comentar, dar me gusta y añadir historias.";
 "Sign in to see the feed" = "Inicia sesión para ver el feed";
 "Sign in to see your notifications" = "Inicia sesión para ver tus notificaciones";
 "Sign in with an admin account to manage ASU Bank." = "Inicia sesión con una cuenta de admin para gestionar ASU Bank.";
@@ -1644,6 +1676,7 @@
 "Storage" = "Almacenamiento";
 "Stored on" = "Guardado en";
 "Stories: share a photo or text for 24 hours" = "Historias: comparte una foto o un texto durante 24 horas";
+"Strangers" = "Desconocidos";
 "Strong and steady" = "Strong and steady";
 "Structured submission" = "Envío estructurado";
 "Stuck on something? Ask other students" = "¿Atascado? Pregunta a otros estudiantes";
@@ -1700,6 +1733,8 @@
 "Sunset" = "Sunset";
 "Support" = "Soporte";
 "Support ASU Bank" = "Apoya ASU Bank";
+"Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Desliza de lado en el Feed para abrir la cámara y crear una historia con foto o vídeo, a 60 FPS si tu teléfono puede";
+"Switch camera" = "Cambiar de cámara";
 "System language" = "Idioma del sistema";
 "System language follows your iPhone's settings. Material names and files stay as they were uploaded." = "El idioma del sistema sigue los ajustes de tu iPhone. Los nombres de materiales y archivos se quedan como se subieron.";
 "System language follows your phone's settings. Material names and files stay as they were uploaded." = "El idioma del sistema sigue los ajustes de tu teléfono. Los nombres de materiales y archivos se quedan como se subieron.";
@@ -1740,6 +1775,7 @@
 "Test Bank" = "Test Bank";
 "Test bank" = "Banco de preguntas";
 "Test banks" = "Bancos de preguntas";
+"Text story" = "Historia de texto";
 "Thank you for joining early! 🌱" = "¡Gracias por unirte pronto! 🌱";
 "Thank you!" = "¡Gracias!";
 "Thank you! %d files uploaded. They're in Latest uploads now." = "¡Gracias! Se subieron %d archivos. Ya están en Últimas subidas.";
@@ -1750,10 +1786,13 @@
 "Thanks! Your rating was saved." = "Thanks! Your rating was saved.";
 "Thanks, your vote is in!" = "¡Gracias, tu voto está registrado!";
 "That doesn't look like a hall number." = "That doesn't look like a hall number.";
+"That file is too big. The limit is 8 MB." = "Ese archivo es demasiado grande. El límite es 8 MB.";
 "That name isn't allowed." = "That name isn't allowed.";
+"That video is too big. Keep it short." = "Ese vídeo es demasiado grande. Que sea corto.";
 "The About text now says how ASU Bank is supported: ads on the website, sponsors and donations" = "El texto de Acerca de ahora explica cómo se apoya ASU Bank: anuncios en el sitio web, patrocinadores y donaciones";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.";
 "The apps have no analytics. The website uses Google Analytics to count visits." = "The apps have no analytics. The website uses Google Analytics to count visits.";
+"The camera is off" = "La cámara está desactivada";
 "The end time must be after the start time." = "La hora de fin debe ser posterior a la de inicio.";
 "The file" = "El archivo";
 "The file changed while uploading. Please add it again." = "El archivo cambió durante la subida. Vuelve a añadirlo.";
@@ -1977,6 +2016,7 @@
 "We'll email you as soon as a classmate with similar courses and times signs up." = "We'll email you as soon as a classmate with similar courses and times signs up.";
 "We'll remind you 10 minutes before, every week on these days." = "Te avisaremos 10 minutos antes, cada semana en estos días.";
 "We're building a dedicated platform for students to advertise their services,\nproducts, and talents to the university community. Affordable, targeted, and effective\nadvertising tailored specifically for the student market." = "We're building a dedicated platform for students to advertise their services,\nproducts, and talents to the university community. Affordable, targeted, and effective\nadvertising tailored specifically for the student market.";
+"Weather is back at the top of Home, and the banner and search box are smaller" = "El tiempo vuelve arriba en Inicio, y el banner y el buscador son más pequeños";
 "Wednesday" = "Wednesday";
 "Week %d" = "Semana %d";
 "Week %lld" = "Semana %lld";
@@ -2023,6 +2063,7 @@
 "Where it is kept and who gets it" = "Where it is kept and who gets it";
 "Where on campus? (optional)" = "¿Dónde en el campus? (opcional)";
 "Which games would you play?" = "¿A qué juegos jugarías?";
+"Who can see this" = "Quién puede ver esto";
 "Who is online" = "Quién está en línea";
 "Who we are" = "Who we are";
 "Who's online" = "Quién está en línea";
@@ -2036,6 +2077,7 @@
 "Would you personally be interested in joining?" = "¿Te interesaría unirte?";
 "Write a comment" = "Escribe un comentario";
 "Write a post" = "Escribe una publicación";
+"Write a text story" = "Escribe una historia de texto";
 "Write something" = "Escribe algo";
 "Write the name of the group." = "Escribe el nombre del grupo.";
 "Wrong, broken or misleading file" = "Wrong, broken or misleading file";
@@ -2052,8 +2094,11 @@
 "You" = "Tú";
 "You both get an email" = "Ambos reciben un correo";
 "You both get each other's contact by email. Matching can take a while, so be patient." = "You both get each other's contact by email. Matching can take a while, so be patient.";
+"You can allow it in Settings, or pick from your photos." = "Puedes permitirlo en Ajustes o elegir de tus fotos.";
 "You can contact support through the WhatsApp group linked on the website." = "You can contact support through the WhatsApp group linked on the website.";
 "You can delete your account at any time. See the page on deleting your account. Your profile and photo are removed, and your old messages stay in the chat as “Deleted user”." = "You can delete your account at any time. See the page on deleting your account. Your profile and photo are removed, and your old messages stay in the chat as “Deleted user”.";
+"You can message your friends. Only the two of you see the chat." = "Puedes escribir a tus amigos. Solo vosotros dos veis el chat.";
+"You can only send private messages to friends." = "Solo puedes enviar mensajes privados a amigos.";
 "You can sign in with these too. Only you and admins see them." = "También puedes entrar con ellos. Solo tú y los admins los ven.";
 "You can toggle between dark and light mode using the \"Switch to Dark Mode\" button located at the top right corner of the page." = "You can toggle between dark and light mode using the \"Switch to Dark Mode\" button located at the top right corner of the page.";
 "You don't need to create an account to access the test banks. Simply visit the website and browse the available resources." = "You don't need to create an account to access the test banks. Simply visit the website and browse the available resources.";
@@ -2066,6 +2111,7 @@
 "You pay the second half only if your ad is accepted." = "Pagas la segunda mitad solo si se acepta tu anuncio.";
 "You won't see their messages or get notifications from them. You can undo this in your account." = "You won't see their messages or get notifications from them. You can undo this in your account.";
 "You'll stay signed in here; other devices are signed out." = "Seguirás con la sesión aquí; los demás dispositivos se cerrarán.";
+"You're browsing as a guest" = "Estás navegando como invitado";
 "You're sending this as @%@." = "Lo envías como @%@.";
 "You're welcome" = "De nada";
 "Your Edugate | Quizzes, course materials, and assignment submissions" = "Your Edugate | Quizzes, course materials, and assignment submissions";
@@ -2098,6 +2144,7 @@
 "Your rating is anonymous." = "Tu valoración es anónima.";
 "Your requests" = "Tus solicitudes";
 "Your story" = "Tu historia";
+"Your story disappears after 24 hours and is deleted from our database after 2 days." = "Tu historia desaparece tras 24 horas y se borra de nuestra base de datos tras 2 días.";
 "Your story is seen by ASU Bank students for 24 hours, then it disappears. It's deleted from our database after 2 days." = "Los estudiantes de ASU Bank ven tu historia durante 24 horas y luego desaparece. Se borra de nuestra base de datos a los 2 días.";
 "Your studies" = "Tus estudios";
 "Your timetable, with reminders." = "Tu horario, con recordatorios.";

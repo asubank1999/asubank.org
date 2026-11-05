@@ -1,5 +1,15 @@
 **ASU Bank for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.13.0
+- Feed now has Friends, Strangers and Guest
+- Read public posts and stories without an account, also on the website
+- Choose who sees each new post or story: everyone, ASU students or friends
+- Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can
+- Private messages between friends, with photos, PDF and Word files
+- A new look for the chat
+- Weather is back at the top of Home, and the banner and search box are smaller
+- Sharper cover photos and a cleaner star on admin photos
+
 ### What's new in 1.12.0
 - New Feed: posts with photos, comments and likes from everyone or just your friends
 - Stories: share a photo or text for 24 hours

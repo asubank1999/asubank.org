@@ -115,3 +115,45 @@ button.acc-from { font-size: 13px; font-weight: 600; text-align: start; }
 .acc-emojis { display: flex; flex-wrap: wrap; gap: 4px; margin: -4px 0 8px; }
 .acc-emojis button { border: 0; background: var(--ab-fill,rgba(118,118,128,.12)); border-radius: 8px; font-size: 20px; width: 38px; height: 38px; cursor: pointer; }
 .acc-sep { border-top: 1px solid var(--ab-sep,#ddd); padding-top: 12px; margin-top: 12px; }
+
+/* feed and profiles */
+.acc-post { padding: 14px; }
+.acc-post.flat { box-shadow: none; background: var(--ab-surface-2,#f2f2f7); text-align: left; }
+.acc-post-head { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; background: none; padding: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.acc-post.flat .acc-post-head { cursor: default; }
+.acc-post-who { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.acc-post-who small { color: var(--ab-label-2,#5e5e66); }
+.acc-post-text { margin: 10px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.acc-post-img { display: block; width: 100%; max-height: 460px; object-fit: cover; border-radius: 12px; margin-top: 10px; }
+.acc-post-meta { margin: 10px 0 0; font-size: 13px; color: var(--ab-label-2,#5e5e66); white-space: pre; }
+.acc-more { display: block; margin: 8px auto 24px; }
+.acc-more[hidden] { display: none; }
+.acc-center { text-align: center; }
+.acc-left { text-align: left; margin: 18px 0 4px; }
+.acc-cover { height: 150px; border-radius: 18px; overflow: hidden; margin-top: 4px; }
+.acc-cover img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+.acc-cover-av { display: flex; justify-content: center; margin-top: -52px; }
+.acc-cover-av .acc-av { box-shadow: 0 0 0 4px var(--ab-surface,#fff); }
+.acc-stats { display: flex; justify-content: center; gap: 22px; margin: 10px 0; }
+.acc-stats span { display: flex; flex-direction: column; align-items: center; }
+.acc-stats small { color: var(--ab-label-2,#5e5e66); font-size: 12px; }
+.acc-stories { display: flex; gap: 10px; overflow-x: auto; padding: 4px 0 8px; scrollbar-width: none; }
+.acc-stories:empty { display: none; }
+.acc-story-pick { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 76px; flex: none; border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: pointer; }
+.acc-story-pick small { max-width: 76px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+.acc-story-ring { display: inline-flex; padding: 3px; border-radius: 50%; border: 2.5px solid var(--ab-accent,#8c1d40); }
+.acc-story-pick.seen .acc-story-ring { border-color: var(--ab-sep,#ccc); }
+.acc-story { position: fixed; inset: 0; z-index: 1000; background: #000; color: #fff; display: flex; flex-direction: column; }
+.acc-story-bars { display: flex; gap: 4px; padding: 10px 12px 0; }
+.acc-story-bars i { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.3); }
+.acc-story-bars i.on { background: #fff; }
+.acc-story-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+.acc-story-head small { color: rgba(255,255,255,.8); }
+.acc-story-x { border: 0; background: none; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; padding: 0 6px; }
+.acc-story-stage { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.acc-story-stage img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.acc-story-stage iframe { width: 100%; height: 100%; border: 0; }
+.acc-story-text { position: absolute; left: 24px; right: 24px; text-align: center; font-size: 24px; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,.6); overflow-wrap: anywhere; pointer-events: none; }
+.acc-story-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(0,0,0,.45); color: #fff; font-size: 28px; line-height: 1; cursor: pointer; }
+.acc-story-nav.prev { left: 10px; }
+.acc-story-nav.next { right: 10px; }
