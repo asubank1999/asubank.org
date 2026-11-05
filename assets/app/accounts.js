@@ -148,6 +148,7 @@
                     h('a', { class: 'ab-btn tinted', href: 'tel:' + digits, text: '📞 ' + u.phone }),
                     h('a', { class: 'ab-btn tinted', href: 'https://wa.me/' + digits.replace('+', ''), target: '_blank', rel: 'noopener', text: 'WhatsApp' })));
             }
+            if (signedIn && r.friendship && r.friendship !== 'self') body.appendChild(h('div', { class: 'acc-actions acc-center-row' }, friendControls(u, r.friendship)));
             if (signedIn && r.canMessage && u.id !== user.id) body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
                 h('a', { class: 'ab-btn', href: '/chat/#@dm/' + encodeURIComponent(u.id), onclick: function () { s.close(); }, text: 'Send a message' })));
             if (signedIn && u.id !== user.id) body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
@@ -641,7 +642,7 @@
             var q = search.value.trim().toLowerCase();
             var shown = friends.filter(function (u) { return !q || nameOf(u).toLowerCase().indexOf(q) >= 0; });
             while (box.firstChild) box.removeChild(box.firstChild);
-            if (!shown.length && !found.length) box.appendChild(h('p', { class: 'acc-muted', text: 'No friends yet. Add friends in the app, then you can message them here.' }));
+            if (!shown.length && !found.length) box.appendChild(h('p', { class: 'acc-muted', text: 'No friends yet. Add friends from the Feed page, then you can message them here.' }));
             shown.forEach(function (u) { box.appendChild(row(u)); });
             if (found.length) box.appendChild(h('h3', { text: 'Everyone' }));
             found.forEach(function (u) { box.appendChild(row(u)); });
@@ -991,8 +992,218 @@
         if (p.text) card.appendChild(h('p', { class: 'acc-post-text', text: p.text }));
         if (safePhoto(p.image)) card.appendChild(h('a', { href: bigPhoto(p.image), target: '_blank', rel: 'noopener noreferrer' },
             h('img', { class: 'acc-post-img', src: safePhoto(p.image), alt: 'Photo in the post', loading: 'lazy', referrerpolicy: 'no-referrer', onerror: function (e) { e.currentTarget.remove(); } })));
-        card.appendChild(h('p', { class: 'acc-post-meta', text: '♥ ' + (p.likes || 0) + '   💬 ' + (p.comments || 0) }));
+        if (!(token && user)) {
+            card.appendChild(h('p', { class: 'acc-post-meta', text: '♥ ' + (p.likes || 0) + '   💬 ' + (p.comments || 0) }));
+            return card;
+        }
+        var likeBusy = false;
+        var like = h('button', { type: 'button', class: 'acc-post-act', onclick: function () {
+            if (likeBusy) return;
+            likeBusy = true;
+            var was = [p.liked, p.likes];
+            p.liked = !p.liked; p.likes = Math.max(0, (p.likes || 0) + (p.liked ? 1 : -1));
+            drawLike();
+            call('postLike', { id: p.id, on: p.liked }).then(function (r) { p.likes = r.likes; p.liked = r.liked; })
+                .catch(function () { p.liked = was[0]; p.likes = was[1]; })
+                .then(function () { likeBusy = false; drawLike(); });
+        } });
+        function drawLike() {
+            like.textContent = (p.liked ? '♥ ' : '♡ ') + (p.likes || 0);
+            like.className = 'acc-post-act' + (p.liked ? ' on' : '');
+            like.setAttribute('aria-pressed', p.liked ? 'true' : 'false');
+            like.setAttribute('aria-label', (p.liked ? 'Remove like. ' : 'Like. ') + (p.likes || 0) + ' likes');
+        }
+        drawLike();
+        var talk = h('button', { type: 'button', class: 'acc-post-act', 'aria-label': (p.comments || 0) + ' comments', text: '💬 ' + (p.comments || 0), onclick: function () {
+            commentsSheet(p, function (n) { p.comments = n; talk.textContent = '💬 ' + n; talk.setAttribute('aria-label', n + ' comments'); });
+        } });
+        var row = h('div', { class: 'acc-post-acts' }, like, talk, h('span', { class: 'acc-spacer' }));
+        if (u.id !== user.id) row.appendChild(h('button', { type: 'button', class: 'acc-post-act small', text: 'Report', onclick: function () { reportSheet('post', p.id, nameOf(u)); } }));
+        if (u.id === user.id || isAdmin()) row.appendChild(h('button', { type: 'button', class: 'acc-post-act small', text: 'Delete', onclick: function (e) {
+            if (!window.confirm('Delete this post?')) return;
+            var b = e.currentTarget; b.disabled = true;
+            call('postDelete', { id: p.id }).then(function () { card.remove(); }).catch(function (x) { b.disabled = false; b.textContent = x.message; });
+        } }));
+        card.appendChild(row);
         return card;
+    }
+    function commentsSheet(p, changed) {
+        var s = sheet('Comments');
+        var list = h('div', { class: 'acc-comments' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        var input = h('textarea', { rows: '1', maxlength: '500', placeholder: 'Write a comment', 'aria-label': 'Write a comment' });
+        var send = h('button', { type: 'submit', class: 'acc-send', 'aria-label': 'Send', text: '↑' });
+        var err = errBox();
+        var count = p.comments || 0;
+        function line(c) {
+            var u = c.user || {};
+            var mine = !!user && u.id === user.id;
+            var acts = h('span', { class: 'acc-comment-acts' });
+            if (mine || isAdmin() || (p.user && p.user.id === user.id)) acts.appendChild(h('button', { type: 'button', text: 'Delete', onclick: function (e) {
+                if (!window.confirm('Delete this comment?')) return;
+                var b = e.currentTarget; b.disabled = true;
+                call('commentDelete', { id: c.id }).then(load).catch(function (x) { b.disabled = false; showErr(err, x); });
+            } }));
+            if (!mine) acts.appendChild(h('button', { type: 'button', text: 'Report', onclick: function () { reportSheet('comment', c.id, nameOf(u)); } }));
+            return h('div', { class: 'acc-comment' },
+                h('button', { type: 'button', class: 'acc-comment-av', 'aria-label': 'Open the profile of ' + nameOf(u), onclick: function () { showProfile(u.id, nameOf(u)); } }, avatar(nameOf(u), u.color, 34, u.role === 'admin', u.avatar)),
+                h('div', { class: 'acc-comment-t' },
+                    h('div', { class: 'acc-comment-top' }, h('b', { text: nameOf(u) }), h('small', { text: ago(c.created) })),
+                    h('p', { text: c.text }), acts));
+        }
+        function load() {
+            return call('comments', { postId: p.id }).then(function (r) {
+                var got = r.comments || [];
+                while (list.firstChild) list.removeChild(list.firstChild);
+                if (!got.length) list.appendChild(h('p', { class: 'acc-muted acc-center', text: 'No comments yet. Be the first.' }));
+                got.forEach(function (c) { list.appendChild(line(c)); });
+                count = got.length; changed(count);
+                list.scrollTop = list.scrollHeight;
+            }).catch(function (e) { list.textContent = e.message; });
+        }
+        var form = h('form', { class: 'acc-compose-row acc-comment-form', onsubmit: function (e) {
+            e.preventDefault();
+            var text = input.value.trim();
+            if (!text || send.disabled) return;
+            send.disabled = true; showErr(err);
+            call('commentAdd', { postId: p.id, text: text }).then(function () { input.value = ''; return load(); })
+                .catch(function (x) { showErr(err, x); }).then(function () { send.disabled = false; input.focus(); });
+        } }, input, send);
+        input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } });
+        s.box.appendChild(list); s.box.appendChild(err); s.box.appendChild(form);
+        load();
+    }
+    // a picked photo as a JPEG of at most 1280 px wide (base64, no data: prefix), the same size the apps send
+    function postPhotoData(file) {
+        return new Promise(function (ok, bad) {
+            var img = new Image(), url = URL.createObjectURL(file);
+            img.onload = function () {
+                var k = Math.min(1, 1280 / img.width), c = document.createElement('canvas');
+                c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+                c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                URL.revokeObjectURL(url);
+                var d = c.toDataURL('image/jpeg', .82).split(',')[1];
+                if (d.length > 2400000) d = c.toDataURL('image/jpeg', .6).split(',')[1];
+                ok(d);
+            };
+            img.onerror = function () { URL.revokeObjectURL(url); bad(new Error("That file isn't a photo we can read.")); };
+            img.src = url;
+        });
+    }
+    function composeSheet(done) {
+        var s = sheet('New post');
+        var text = h('textarea', { rows: '4', maxlength: '1000', placeholder: "What's on your mind?", 'aria-label': 'Post text' });
+        var pickInput = h('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp', hidden: true });
+        var preview = h('img', { class: 'acc-post-img', alt: 'Photo you picked', hidden: true });
+        var photo = null, previewUrl = null;
+        var pickBtn = h('button', { type: 'button', class: 'ab-btn gray', text: 'Add a photo', onclick: function () { pickInput.click(); } });
+        var dropBtn = h('button', { type: 'button', class: 'ab-btn gray', text: 'Remove photo', hidden: true, onclick: function () { setPhoto(null); } });
+        var who = h('select', { 'aria-label': 'Who can see this' });
+        ['public', 'students', 'friends'].forEach(function (k) { who.appendChild(h('option', { value: k, text: AUDIENCE[k][0] + ' ' + AUDIENCE[k][1] })); });
+        who.value = AUDIENCE[get('ab.audience')] ? get('ab.audience') : 'public';
+        var err = errBox();
+        var post = h('button', { type: 'submit', class: 'ab-btn', text: 'Post' });
+        function setPhoto(f) {
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            photo = f; previewUrl = f ? URL.createObjectURL(f) : null;
+            if (f) preview.src = previewUrl; else preview.removeAttribute('src');
+            preview.hidden = !f; dropBtn.hidden = !f; pickBtn.textContent = f ? 'Change photo' : 'Add a photo';
+        }
+        pickInput.addEventListener('change', function () { if (pickInput.files[0]) setPhoto(pickInput.files[0]); pickInput.value = ''; });
+        s.box.appendChild(h('form', { class: 'acc-compose-form', onsubmit: function (e) {
+            e.preventDefault();
+            var words = text.value.trim();
+            if (!words && !photo) { showErr(err, new Error('Write something first.')); return; }
+            post.disabled = true; post.textContent = 'Posting…'; showErr(err);
+            set('ab.audience', who.value);
+            (photo ? postPhotoData(photo) : Promise.resolve(null)).then(function (d) {
+                var f = { text: words, audience: who.value };
+                if (d) f.image = d;
+                return call('postCreate', f);
+            }).then(function () { setPhoto(null); s.close(); done(); }).catch(function (x) { showErr(err, x); post.disabled = false; post.textContent = 'Post'; });
+        } }, text, preview, pickInput,
+            h('div', { class: 'acc-actions' }, pickBtn, dropBtn),
+            h('label', { class: 'acc-field' }, h('span', { text: 'Who can see this' }), who),
+            err, post));
+        text.focus();
+    }
+    // the add / cancel / accept / unfriend buttons for one person
+    function friendControls(u, state, changed) {
+        var box = h('span', { class: 'acc-fr-btns' });
+        function go(action, fields) {
+            Array.prototype.forEach.call(box.children, function (b) { b.disabled = true; });
+            call(action, Object.assign({ userId: u.id }, fields || {})).then(function (r) {
+                state = r.friendship || 'none';
+                draw();
+                if (changed) changed(state);
+            }).catch(function (e) {
+                draw();
+                box.appendChild(h('small', { class: 'acc-err', role: 'alert', text: e.message }));
+            });
+        }
+        function btn(label, cls, fn) { box.appendChild(h('button', { type: 'button', class: 'ab-btn ' + cls, text: label, onclick: fn })); }
+        function draw() {
+            while (box.firstChild) box.removeChild(box.firstChild);
+            if (state === 'none') btn('Add friend', '', function () { go('friendRequest'); });
+            else if (state === 'outgoing') btn('Cancel request', 'gray', function () { go('friendRemove'); });
+            else if (state === 'incoming') {
+                btn('Accept', '', function () { go('friendRespond', { accept: true }); });
+                btn('Decline', 'gray', function () { go('friendRespond', { accept: false }); });
+            } else if (state === 'friends') btn('Unfriend', 'gray', function () {
+                if (window.confirm('Remove ' + nameOf(u) + ' from your friends?')) go('friendRemove');
+            });
+        }
+        draw();
+        return box;
+    }
+    function friendsSheet(changed) {
+        var s = sheet('Friends');
+        var search = h('input', { type: 'search', placeholder: 'Search students', 'aria-label': 'Search students' });
+        var box = h('div', { class: 'acc-users' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
+        s.box.appendChild(h('div', { class: 'acc-field' }, search));
+        s.box.appendChild(box);
+        var data = { friends: [], incoming: [], outgoing: [] }, tips = [], found = null, timer = null;
+        function row(u, state) {
+            return h('div', { class: 'acc-user-row acc-fr-row' },
+                h('button', { type: 'button', class: 'acc-fr-who', 'aria-label': 'Open the profile of ' + nameOf(u), onclick: function () { showProfile(u.id, nameOf(u)); } },
+                    avatar(nameOf(u), u.color, 40, u.role === 'admin', u.avatar, state === 'friends' ? !!u.online : null),
+                    h('span', { class: 'acc-room-t' }, h('b', { text: nameOf(u) }), u.major || u.college ? h('small', { text: u.major || u.college }) : null)),
+                friendControls(u, state, load));
+        }
+        function part(title, people, state) {
+            if (!people.length) return;
+            box.appendChild(h('h3', { text: title }));
+            people.forEach(function (u) { box.appendChild(row(u, state || u.friendship || 'none')); });
+        }
+        function draw() {
+            while (box.firstChild) box.removeChild(box.firstChild);
+            if (found) {
+                if (!found.length) box.appendChild(h('p', { class: 'acc-muted acc-center', text: 'Nobody found.' }));
+                part('Results', found);
+                return;
+            }
+            part('Friend requests', data.incoming, 'incoming');
+            part('Your friends', data.friends, 'friends');
+            part('Requests you sent', data.outgoing, 'outgoing');
+            part('People you may know', tips);
+            if (!box.firstChild) box.appendChild(h('p', { class: 'acc-muted acc-center', text: 'No friends yet. Search for students above.' }));
+        }
+        function runSearch() {
+            var q = search.value.trim();
+            if (q.length < 2) { found = null; draw(); return Promise.resolve(); }
+            return call('searchUsers', { q: q }).then(function (r) { if (search.value.trim() === q) { found = r.people || []; draw(); } }).catch(function () {});
+        }
+        function load() {
+            if (changed) changed();
+            Promise.all([call('friends'), call('searchUsers', { q: '' }).catch(function () { return {}; })]).then(function (a) {
+                data = a[0]; tips = a[1].people || [];
+                return found ? runSearch() : draw();
+            }).catch(function (e) { box.textContent = e.message; });
+        }
+        search.addEventListener('input', function () {
+            clearTimeout(timer);
+            timer = setTimeout(runSearch, 400);
+        });
+        load();
     }
     function driveId(u) { var m = /[?&]id=([\w-]+)/.exec(u || ''); return m ? m[1] : ''; }
     function storyViewer(groups, start) {
@@ -1047,16 +1258,26 @@
         var stories = h('div', { class: 'acc-stories' });
         root.appendChild(stories);
         if (signedIn) {
+            var frBadge = h('span', { class: 'acc-fr-badge', hidden: true });
+            var frCount = function () {
+                call('friends').then(function (r) {
+                    var n = (r.incoming || []).length;
+                    frBadge.textContent = String(n); frBadge.hidden = !n;
+                }).catch(function () {});
+            };
+            root.appendChild(h('div', { class: 'acc-card acc-post-box' },
+                avatar(nameOf(user), user.color, 40, user.role === 'admin', user.avatar),
+                h('button', { type: 'button', class: 'acc-post-open', text: "What's on your mind?", onclick: function () {
+                    composeSheet(function () { pickScope('friends'); });
+                } }),
+                h('button', { type: 'button', class: 'ab-btn gray acc-fr-open', onclick: function () { friendsSheet(frCount); } }, 'Friends', frBadge)));
+            frCount();
             var seg = h('div', { class: 'acc-seg', role: 'tablist' });
             [['friends', 'Friends'], ['strangers', 'Strangers'], ['guest', 'Guest']].forEach(function (o) {
-                seg.appendChild(h('button', { type: 'button', role: 'tab', 'aria-selected': o[0] === scope ? 'true' : 'false', class: o[0] === scope ? 'on' : '', text: o[1], onclick: function () {
-                    scope = o[0]; set('ab.feed.scope', scope);
-                    Array.prototype.forEach.call(seg.children, function (b) { var on = b === seg.children[['friends', 'strangers', 'guest'].indexOf(scope)]; b.className = on ? 'on' : ''; b.setAttribute('aria-selected', on ? 'true' : 'false'); });
-                    posts(true);
-                } }));
+                seg.appendChild(h('button', { type: 'button', role: 'tab', 'aria-selected': o[0] === scope ? 'true' : 'false', class: o[0] === scope ? 'on' : '', text: o[1], onclick: function () { pickScope(o[0]); } }));
             });
             root.appendChild(seg);
-            root.appendChild(h('p', { class: 'acc-muted acc-small', text: 'To post or add a story, use the ASU Bank app.' }));
+            root.appendChild(h('p', { class: 'acc-muted acc-small', text: 'To add a story, use the ASU Bank app.' }));
         } else {
             root.appendChild(h('div', { class: 'acc-card' }, h('b', { text: "You're browsing as a guest" }),
                 h('p', { class: 'acc-muted', text: 'You see what students share with everyone. Sign in for more.' }),
@@ -1066,6 +1287,11 @@
         var moreBtn = h('button', { type: 'button', class: 'ab-btn gray acc-more', text: 'Load more', hidden: true, onclick: function () { posts(false); } });
         root.appendChild(list); root.appendChild(moreBtn);
 
+        function pickScope(next) {
+            scope = next; set('ab.feed.scope', scope);
+            Array.prototype.forEach.call(seg.children, function (b) { var on = b === seg.children[['friends', 'strangers', 'guest'].indexOf(scope)]; b.className = on ? 'on' : ''; b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+            posts(true);
+        }
         function posts(fresh) {
             var mine = ++loadToken;
             if (fresh) {

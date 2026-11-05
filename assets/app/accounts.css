@@ -232,3 +232,35 @@ body:has(#acc-app .acc-feed) { padding-bottom: 0 !important; }
 .acc-from { color: var(--from,#8c1d40); }
 html.dark .acc-from { color: color-mix(in srgb, var(--from,#8c1d40) 50%, #fff); }
 .acc-msg.mine .acc-time { opacity: .85; }
+
+/* feed: posting, likes, comments, friends */
+.acc-post-box { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 12px; }
+.acc-post-open { flex: 1; min-width: 0; text-align: start; border: 0; border-radius: 22px; padding: 11px 16px; font: inherit; cursor: pointer; background: var(--ab-fill,rgba(118,118,128,.12)); color: var(--ab-label-2,#5e5e66); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acc-fr-open { flex: none; display: inline-flex; align-items: center; gap: 6px; }
+.acc-fr-badge { display: inline-block; min-width: 18px; padding: 0 5px; border-radius: 9px; font-size: 12px; font-weight: 700; line-height: 18px; text-align: center; background: var(--ab-accent,#8c1d40); color: #fff; }
+html.dark .acc-fr-badge { color: #000; }
+.acc-fr-badge[hidden] { display: none; }
+.acc-post-acts { display: flex; align-items: center; gap: 4px; margin: 8px -6px -6px; }
+.acc-post-act { border: 0; background: transparent; color: var(--ab-label-2,#5e5e66); font: inherit; font-size: 15px; font-weight: 600; padding: 7px 10px; border-radius: 10px; cursor: pointer; }
+.acc-post-act:hover { background: var(--ab-fill,rgba(118,118,128,.12)); }
+.acc-post-act.on { color: var(--ab-accent,#8c1d40); }
+.acc-post-act.small { font-size: 12px; font-weight: 500; }
+.acc-spacer { flex: 1; }
+.acc-compose-form { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.acc-compose-form textarea { width: 100%; box-sizing: border-box; resize: vertical; border: 0; border-radius: 14px; padding: 12px 14px; font: inherit; background: var(--ab-fill,rgba(118,118,128,.12)); color: inherit; }
+.acc-compose-form .acc-post-img { margin-top: 0; max-height: 280px; }
+.acc-comments { max-height: min(55vh, 460px); overflow-y: auto; margin: 10px 0; display: flex; flex-direction: column; gap: 12px; }
+.acc-comment { display: flex; gap: 10px; align-items: flex-start; }
+.acc-comment-av { flex: none; border: 0; background: none; padding: 0; cursor: pointer; }
+.acc-comment-t { flex: 1; min-width: 0; }
+.acc-comment-top { display: flex; align-items: baseline; gap: 8px; }
+.acc-comment-top small { color: var(--ab-label-2,#5e5e66); }
+.acc-comment-t p { margin: 2px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.acc-comment-acts { display: flex; gap: 10px; margin-top: 2px; }
+.acc-comment-acts button { border: 0; background: none; padding: 0; font: inherit; font-size: 12px; color: var(--ab-label-2,#5e5e66); cursor: pointer; }
+.acc-comment-form textarea { background: var(--ab-fill,rgba(118,118,128,.12)); color: inherit; font: inherit; flex: 1; min-width: 0; resize: none; border: 0; border-radius: 22px; padding: 11px 16px; }
+.acc-fr-row { flex-wrap: wrap; cursor: default; padding: 8px 4px; }
+.acc-fr-who { flex: 1 1 180px; min-width: 0; display: flex; align-items: center; gap: 12px; border: 0; background: none; padding: 0; font: inherit; color: inherit; text-align: start; cursor: pointer; }
+.acc-fr-btns { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+.acc-fr-btns .ab-btn { padding: 6px 12px; font-size: 13px; }
+.acc-users h3 { margin: 14px 0 4px; font-size: 13px; color: var(--ab-label-2,#5e5e66); }
