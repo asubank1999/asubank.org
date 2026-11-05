@@ -282,7 +282,7 @@
                     if (mine !== reqId) return;
                     drive = { q: text, files: [], state: 'error' };
                     $('driveSpin').innerHTML = ''; $('driveList').innerHTML = '';
-                    $('driveMsg').innerHTML = '<div class="err"><strong>Drive search is not answering.</strong> Check your connection and try again. If it keeps failing, contact the admin on WhatsApp necro144@yahoo.com.<div style="margin-top:10px"><button class="ab-btn sm" type="button" id="retry">Try again</button></div></div>';
+                    $('driveMsg').innerHTML = '<div class="err"><strong>Drive search is not answering.</strong> Check your connection and try again. If it keeps failing, email the admin at necro144@yahoo.com.<div style="margin-top:10px"><button class="ab-btn sm" type="button" id="retry">Try again</button></div></div>';
                     $('retry').addEventListener('click', function () { fetchDrive(text); });
                     updateStatus();
                 });
