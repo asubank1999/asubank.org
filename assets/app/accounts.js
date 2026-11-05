@@ -128,7 +128,7 @@
         var body = h('div', { class: 'acc-profile' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
         s.box.appendChild(body);
         var signedIn = !!(token && user);
-        call(signedIn ? 'profile' : 'publicProfile', { userId: userId }).then(function (r) {
+        call(signedIn ? 'profile' : 'publicProfile', { userId: userId, social: true }).then(function (r) {
             var u = r.user; while (body.firstChild) body.removeChild(body.firstChild);
             var cover = h('div', { class: 'acc-cover', style: 'background:' + safeColor(u.color) });
             if (safePhoto(u.cover)) cover.appendChild(h('img', { src: safePhoto(u.cover), alt: '', referrerpolicy: 'no-referrer', onerror: function (e) { e.currentTarget.remove(); } }));
