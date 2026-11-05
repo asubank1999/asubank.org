@@ -51,10 +51,15 @@ struct MoreView: View {
                     NavigationLink { SavedView(embedded: true) } label: { Label("Saved", systemImage: "star") }
                     NavigationLink { NotificationsScreen() } label: { Label("Notifications", systemImage: "bell") }
                     NavigationLink { FriendsScreen() } label: { Label("Friends", systemImage: "person.2") }
+                    NavigationLink { FeedScreen() } label: { Label("Feed", systemImage: "newspaper") }
                     NavigationLink { LecturesScreen() } label: { Label("My lectures", systemImage: "alarm") }
+                    NavigationLink { PlannerScreen() } label: { Label("Exams & tasks", systemImage: "checklist") }
+                    NavigationLink { FocusTimerScreen() } label: { Label("Focus timer", systemImage: "timer") }
                     NavigationLink { LifeHacksScreen() } label: { Label("Life hacks", systemImage: "lightbulb") }
                     RouteLink(Route.page("/upload/student_submissions_board", "Submissions")) { Label("Student submissions", systemImage: "rectangle.stack") }
                 } header: { Text("You") }
+
+                Section("Calendars & schedules") { ForEach(Links.schedules) { SiteLinkRow(link: $0) } }
 
                 Section("All subjects") {
                     RouteLink(Route.page("/banks/subjects", "All subjects")) { Label("Subjects directory", systemImage: "square.grid.2x2") }
@@ -64,7 +69,6 @@ struct MoreView: View {
                     RouteLink(Route.page("/guides/links", "ASU resources")) { Label("ASU resources (Useful gate)", systemImage: "square.grid.3x3.fill") }
                 }
                 Section("New students") { ForEach(Links.newHere) { SiteLinkRow(link: $0) } }
-                Section("Calendars & schedules") { ForEach(Links.schedules) { SiteLinkRow(link: $0) } }
                 Section("Community & services") { ForEach(Links.community) { SiteLinkRow(link: $0) } }
                 Section("Help") { ForEach(Links.help.filter { $0.title != "Support ASU Bank" }) { SiteLinkRow(link: $0) } }
 

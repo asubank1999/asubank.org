@@ -1,5 +1,16 @@
 **ASU Bank for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.12.0
+- New Feed: posts with photos, comments and likes from everyone or just your friends
+- Stories: share a photo or text for 24 hours
+- Add a cover photo to your profile
+- Hold anyone's photo to see it bigger
+- Calendar, next lecture and your exams now come first on Home
+- New Exams & tasks list and a Focus timer
+- 6 new backgrounds and 6 new accent colors
+- Who's online now lists every registered student, with search
+- Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online
+
 ### What's new in 1.11.0
 - See what changed after every update, and every past version under More > What's New
 - Home can show a sponsor card, always clearly labelled

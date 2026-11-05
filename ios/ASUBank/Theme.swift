@@ -12,7 +12,7 @@ extension Color {
     static var abAccent: Color { AppTheme.accent.color }
     static var abAccentSoft: Color { AppTheme.accent.soft }
     static let abGold = Color(UIColor(hex: 0xFFC627))
-    static var abBackground: Color { AppTheme.appearance == 3 ? .black : Color(UIColor.systemGroupedBackground) }
+    static var abBackground: Color { AppTheme.tint.map { Color($0) } ?? Color(UIColor.systemGroupedBackground) }
     static let abSurface = Color(UIColor.secondarySystemGroupedBackground)
 }
 
@@ -125,31 +125,69 @@ enum AppTheme {
         .init(id: 11, name: "Crimson", light: 0xb3132b, dark: 0xff6b7d),
         .init(id: 12, name: "Lavender", light: 0x7a5aa6, dark: 0xc9aefc),
         .init(id: 13, name: "Coffee", light: 0x6f4e37, dark: 0xd2a77f),
+        .init(id: 14, name: "Emerald", light: 0x047857, dark: 0x34d399),
+        .init(id: 15, name: "Indigo", light: 0x4338ca, dark: 0xa5b4fc),
+        .init(id: 16, name: "Sky", light: 0x0369a1, dark: 0x7dd3fc),
+        .init(id: 17, name: "Berry", light: 0x9d174d, dark: 0xf9a8d4),
+        .init(id: 18, name: "Olive", light: 0x5f6b1a, dark: 0xc5d36a),
+        .init(id: 19, name: "Copper", light: 0x9a4a1f, dark: 0xe8a67c),
     ]
 
-    /// 0 system, 1 light, 2 dark, 3 pitch black (OLED)
+    /// 0 system, 1 light, 2 dark, 3 pitch black (OLED), 4 midnight, 5 forest night, 6 plum, 7 sand, 8 sky, 9 blush
     static var appearance: Int { UserDefaults.standard.integer(forKey: "ab.appearance") }
     static var accent: Accent { accents.first { $0.id == UserDefaults.standard.integer(forKey: "ab.accent") } ?? accents[0] }
 
-    static var scheme: ColorScheme? { appearance == 1 ? .light : appearance >= 2 ? .dark : nil }
+    static var scheme: ColorScheme? {
+        switch appearance {
+        case 1, 7, 8, 9: return .light
+        case 2...6: return .dark
+        default: return nil
+        }
+    }
+
+    /// The background of the themes that have their own color
+    static var tint: UIColor? {
+        switch appearance {
+        case 3: return .black
+        case 4: return UIColor(hex: 0x0B1426)
+        case 5: return UIColor(hex: 0x0C1A12)
+        case 6: return UIColor(hex: 0x1A0F1F)
+        case 7: return UIColor(hex: 0xF4ECDD)
+        case 8: return UIColor(hex: 0xE3EEF9)
+        case 9: return UIColor(hex: 0xFBEAF0)
+        default: return nil
+        }
+    }
+
+    /// The Home banner follows the accent color
+    static var heroColors: [Color] {
+        let h = accent.light
+        let r: UInt32 = ((h >> 16) & 0xff) * 62 / 100
+        let g: UInt32 = ((h >> 8) & 0xff) * 62 / 100
+        let b: UInt32 = (h & 0xff) * 62 / 100
+        let dark: UInt32 = (r << 16) | (g << 8) | b
+        return [Color(UIColor(hex: h)), Color(UIColor(hex: dark))]
+    }
 
     /// Bar colors (pitch black makes the tab and navigation bars pure black too)
     static func applyBars() {
         let nav = UINavigationBarAppearance()
         let tab = UITabBarAppearance()
-        if appearance == 3 {
-            nav.configureWithOpaqueBackground(); nav.backgroundColor = .black; nav.shadowColor = .clear
-            tab.configureWithOpaqueBackground(); tab.backgroundColor = .black
-            UITableView.appearance().backgroundColor = .black
+        if let tint {
+            nav.configureWithOpaqueBackground(); nav.backgroundColor = tint; nav.shadowColor = .clear
+            tab.configureWithOpaqueBackground(); tab.backgroundColor = tint
+            UITableView.appearance().backgroundColor = tint
+            UICollectionView.appearance().backgroundColor = tint
         } else {
             nav.configureWithDefaultBackground()
             tab.configureWithDefaultBackground()
             UITableView.appearance().backgroundColor = nil
+            UICollectionView.appearance().backgroundColor = nil
         }
         UINavigationBar.appearance().standardAppearance = nav
         UINavigationBar.appearance().compactAppearance = nav
-        if appearance == 3 { UINavigationBar.appearance().scrollEdgeAppearance = nav } else { UINavigationBar.appearance().scrollEdgeAppearance = nil }
+        if tint != nil { UINavigationBar.appearance().scrollEdgeAppearance = nav } else { UINavigationBar.appearance().scrollEdgeAppearance = nil }
         UITabBar.appearance().standardAppearance = tab
-        UITabBar.appearance().scrollEdgeAppearance = appearance == 3 ? tab : nil
+        UITabBar.appearance().scrollEdgeAppearance = tint != nil ? tab : nil
     }
 }

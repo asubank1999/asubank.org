@@ -88,6 +88,7 @@ struct RootView: View {
 
     @ViewBuilder private func screen(_ t: AppTab) -> some View {
         switch t {
+        case .feed: FeedTab()
         case .search: SearchView()
         case .chat: ChatTab()
         case .friends: FriendsTab()

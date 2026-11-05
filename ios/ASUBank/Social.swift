@@ -14,6 +14,8 @@ struct Poke: Decodable, Identifiable {
 struct FeedPost: Decodable, Identifiable {
     let id: String
     var text: String
+    var image: String?
+    var comments: Int?
     var created: String?
     var likes: Int
     var liked: Bool
@@ -173,6 +175,8 @@ struct ComposePostSheet: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var account = AccountStore.shared
     @State private var text = ""
+    @State private var photo: UIImage?
+    @State private var picking = false
     @State private var busy = false
     @State private var error: String?
 
@@ -182,6 +186,14 @@ struct ComposePostSheet: View {
                 Section {
                     TextEditor(text: $text).frame(minHeight: 140)
                 } header: { Text("What's on your mind?") } footer: { Text("\(text.count)/1000") }
+                Section {
+                    if let photo {
+                        Color.clear.frame(height: 220).overlay(Image(uiImage: photo).resizable().scaledToFill()).clipped()
+                            .listRowInsets(EdgeInsets())
+                        Button(role: .destructive) { self.photo = nil } label: { Label("Remove photo", systemImage: "trash") }
+                    }
+                    Button { picking = true } label: { Label(photo == nil ? "Add a photo" : "Change photo", systemImage: "photo") }
+                }
                 if let error { Section { Text(error).foregroundStyle(.red) } }
             }
             .navigationTitle("New post")
@@ -190,9 +202,10 @@ struct ComposePostSheet: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(busy ? "Posting…" : "Post") { Task { await post() } }
-                        .disabled(busy || text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .disabled(busy || (photo == nil && text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty))
                 }
             }
+            .sheet(isPresented: $picking) { AvatarPicker { photo = $0 } }
         }
     }
 
@@ -200,7 +213,13 @@ struct ComposePostSheet: View {
         busy = true
         defer { busy = false }
         do {
-            _ = try await account.call("postCreate", ["text": String(text.prefix(1000))])
+            var fields: [String: Any] = ["text": String(text.prefix(1000))]
+            if let photo {
+                let data = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(photo, maxSide: 1280) }.value
+                guard let data else { self.error = L("Couldn't load this photo"); return }
+                fields["image"] = data
+            }
+            _ = try await account.call("postCreate", fields)
             Haptics.success()
             await posted()
             dismiss()
@@ -214,6 +233,8 @@ struct PostRow: View {
     @ObservedObject private var account = AccountStore.shared
     @State private var liked: Bool?
     @State private var likes: Int?
+    @State private var commentCount: Int?
+    @State private var showComments = false
     @State private var reporting: ReportTarget?
     @State private var blocking: BlockTarget?
 
@@ -251,15 +272,36 @@ struct PostRow: View {
                 }
                 .buttonStyle(.borderless)
             }
-            Text(post.text).fixedSize(horizontal: false, vertical: true)
-            Button { Task { await like() } } label: {
-                Label("\(likes ?? post.likes)", systemImage: (liked ?? post.liked) ? "heart.fill" : "heart")
-                    .font(.subheadline)
-                    .foregroundStyle((liked ?? post.liked) ? Color.red : Color.secondary)
+            if !post.text.isEmpty { Text(post.text).fixedSize(horizontal: false, vertical: true) }
+            if let image = post.image, !image.isEmpty, let url = URL(string: image) {
+                Button { PhotoTools.show(image) } label: {
+                    Color.abSurface.frame(height: 280)
+                        .overlay(CachedPhoto(url: url, pixelSize: 420) { ProgressView() })
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel(Text("View photo"))
             }
-            .buttonStyle(.borderless)
+            HStack(spacing: 18) {
+                Button { Task { await like() } } label: {
+                    Label("\(likes ?? post.likes)", systemImage: (liked ?? post.liked) ? "heart.fill" : "heart")
+                        .font(.subheadline)
+                        .foregroundStyle((liked ?? post.liked) ? Color.red : Color.secondary)
+                }
+                .buttonStyle(.borderless)
+                Button { showComments = true } label: {
+                    Label("\(commentCount ?? post.comments ?? 0)", systemImage: "bubble.left")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel(Text("Comments"))
+            }
         }
         .padding(.vertical, 4)
+        .onChange(of: post.likes) { _ in likes = nil; liked = nil }
+        .onChange(of: post.comments) { _ in commentCount = nil }
+        .sheet(isPresented: $showComments) { CommentsSheet(post: post) { commentCount = $0 } }
         .modifier(ModerationDialogs(report: $reporting, block: $blocking, blocked: { _ in Task { await changed() } }))
     }
 
@@ -547,6 +589,8 @@ struct ProfileScreen: View {
     @State private var poking: ABUser?
     @State private var composing = false
     @State private var editing = false
+    @State private var pickingCover = false
+    @State private var coverBusy = false
 
     private var isMe: Bool { userId == account.user?.id }
 
@@ -608,6 +652,17 @@ struct ProfileScreen: View {
         .sheet(item: $poking) { PokeSheet(user: $0) }
         .sheet(isPresented: $composing) { ComposePostSheet { await load() } }
         .sheet(isPresented: $editing, onDismiss: { Task { await load() } }) { EditProfileSheet() }
+        .sheet(isPresented: $pickingCover) { AvatarPicker { image in Task { await setCover(image) } } }
+    }
+
+    private func setCover(_ image: UIImage?) async {
+        coverBusy = true
+        defer { coverBusy = false }
+        do {
+            try await account.setCover(image)
+            Haptics.success()
+            await load()
+        } catch { self.error = error.localizedDescription; Haptics.error() }
     }
 
     private var header: some View {
@@ -615,7 +670,31 @@ struct ProfileScreen: View {
         return VStack(spacing: 8) {
             ZStack(alignment: .bottom) {
                 LinearGradient(colors: [color, Color.abAccent.opacity(0.75)], startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .frame(height: 118)
+                    .frame(height: 150)
+                    .overlay {
+                        if let cover = user?.cover, !cover.isEmpty, let url = URL(string: cover) {
+                            Button { PhotoTools.show(cover) } label: {
+                                Color.clear.overlay(CachedPhoto(url: url, pixelSize: 420) { Color.clear }).clipped().contentShape(Rectangle())
+                            }
+                            .buttonStyle(.borderless)
+                            .accessibilityLabel(Text("View cover photo"))
+                        }
+                    }
+                    .overlay(alignment: .topTrailing) {
+                        if isMe {
+                            Menu {
+                                Button { pickingCover = true } label: { Label("Choose a cover photo", systemImage: "photo") }
+                                if user?.cover?.isEmpty == false {
+                                    Button(role: .destructive) { Task { await setCover(nil) } } label: { Label("Remove cover photo", systemImage: "trash") }
+                                }
+                            } label: {
+                                Image(systemName: coverBusy ? "hourglass" : "camera.fill").font(.subheadline).foregroundStyle(.white)
+                                    .frame(width: 36, height: 36).background(.black.opacity(0.45), in: Circle())
+                            }
+                            .padding(8)
+                            .accessibilityLabel(Text("Change cover photo"))
+                        }
+                    }
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .padding(.bottom, 52)
                 Avatar(name: user?.displayName ?? fallbackName, color: user?.color ?? fallbackColor, size: 100,

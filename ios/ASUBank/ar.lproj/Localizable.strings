@@ -55,6 +55,9 @@
 "%d selected" = "تم اختيار %d";
 "%lld selected" = "تم اختيار %lld";
 "%@ selected" = "تم اختيار %@";
+"%d students" = "%d طالب";
+"%lld students" = "%lld طالب";
+"%@ students" = "%@ طالب";
 "%d subjects by faculty" = "%d قسمًا حسب الكلية";
 "%lld subjects by faculty" = "%lld قسمًا حسب الكلية";
 "%@ subjects by faculty" = "%@ قسمًا حسب الكلية";
@@ -64,6 +67,9 @@
 "%d users" = "%d مستخدم";
 "%lld users" = "%lld مستخدم";
 "%@ users" = "%@ مستخدم";
+"%d views" = "%d مشاهدة";
+"%lld views" = "%lld مشاهدة";
+"%@ views" = "%@ مشاهدة";
 "%d votes" = "%d صوت";
 "%lld votes" = "%lld صوت";
 "%@ votes" = "%@ صوت";
@@ -71,6 +77,7 @@
 "%lld%% off applied" = "تم تطبيق خصم %lld%%";
 "%@%% off applied" = "تم تطبيق خصم %@%%";
 "%@ accepted your friend request" = "%@ قبل طلب صداقتك";
+"%@ commented on your post" = "%@ علّق على منشورك";
 "%@ has a question for you" = "%@ لديه سؤال لك";
 "%@ in 10 minutes" = "%@ بعد 10 دقائق";
 "%@ needs your notes" = "%@ يحتاج ملخصاتك";
@@ -111,6 +118,7 @@
 "5 JOD - Final payment only if your ad gets accepted" = "5 دنانير: دفعة أخيرة فقط إذا قُبل إعلانك";
 "5 JOD - Initial payment when submitting your advertisement" = "5 دنانير: دفعة أولى عند إرسال إعلانك";
 "6 - Gymnasium" = "6 - الصالة الرياضية";
+"6 new backgrounds and 6 new accent colors" = "6 خلفيات جديدة و6 ألوان مميزة جديدة";
 "6-digit code" = "رمز من 6 أرقام";
 "7 - College of Nursing" = "7 - كلية التمريض";
 "7 AM – 4 PM" = "7 ص – 4 م";
@@ -173,7 +181,9 @@
 "Add a backup link" = "أضف رابطاً احتياطياً";
 "Add a course" = "أضف مادة";
 "Add a course, e.g. Calculus 1" = "أضف مادة، مثل Calculus 1";
+"Add a cover photo to your profile" = "أضف صورة غلاف إلى ملفك الشخصي";
 "Add a lecture" = "أضف محاضرة";
+"Add a photo" = "أضف صورة";
 "Add a room" = "أضف غرفة";
 "Add a tab" = "أضف تبويباً";
 "Add a topic, e.g. Integrals, Midterm review" = "أضف موضوعًا، مثل التكامل أو مراجعة الميد";
@@ -182,7 +192,9 @@
 "Add at least one topic you want to study." = "أضف موضوعًا واحدًا على الأقل تريد دراسته.";
 "Add friend" = "إضافة صديق";
 "Add friends or write the first one." = "أضف أصدقاء أو اكتب أول منشور.";
+"Add story" = "أضف قصة";
 "Add your classmates as friends" = "أضف زملاءك كأصدقاء";
+"Add your exams and assignments, and the next ones show on Home." = "أضف امتحاناتك وواجباتك، وستظهر القادمة في الرئيسية.";
 "Add your group" = "أضف مجموعتك";
 "Add your group's link" = "أضف رابط مجموعتك";
 "Add your subject, hall and time. We'll remind you 10 minutes before it starts." = "أضف المادة والقاعة والوقت، وسنذكرك قبل البدء بـ 10 دقائق.";
@@ -319,6 +331,7 @@
 "Be kind and help each other. Don't share personal info." = "كن لطيفاً وساعد غيرك. لا تشارك معلومات شخصية.";
 "Be kind and helpful. Don't share exam answers during an exam, private info or anything illegal. Admins can remove messages and ban accounts." = "كن لطيفاً ومفيداً. لا تشارك إجابات امتحان أثناء الامتحان أو معلومات خاصة أو أي شيء مخالف. يمكن للمشرفين حذف الرسائل وحظر الحسابات.";
 "Be respectful. No harassment, bullying, threats or hate speech." = "كن محترمًا. لا مضايقة أو تنمر أو تهديد أو خطاب كراهية.";
+"Be the first to comment." = "كن أول من يعلّق.";
 "Be the first to rate them, and others will join in." = "كن أول من يقيّمه وسينضم الآخرون.";
 "Be the first to rate them." = "كن أول من يقيّمه.";
 "Be the first to say something." = "كن أول من يكتب شيئاً.";
@@ -326,6 +339,7 @@
 "Before you upload" = "قبل الرفع";
 "Bell" = "جرس";
 "Below 60 the average is under the passing limit." = "المعدل تحت 60 أقل من حد النجاح.";
+"Berry" = "توتي";
 "Bigger than 25 MB." = "أكبر من 25 ميجابايت.";
 "Binomial PDF" = "توزيع ذي الحدين";
 "Binomial and Poisson" = "ذو الحدين وبواسون";
@@ -337,10 +351,12 @@
 "Block" = "حظر";
 "Block %@?" = "حظر %@؟";
 "Blocked people" = "المحظورون";
+"Blush" = "وردي فاتح";
 "Book a photoshoot" = "احجز جلسة تصوير";
 "Book and cap" = "كتاب وقبعة تخرج";
 "Book another session" = "احجز جلسة أخرى";
 "Booking submitted!" = "تم إرسال الحجز!";
+"Break" = "استراحة";
 "Browse by subject" = "تصفح حسب المادة";
 "Browse every subject by college" = "تصفح كل المواد حسب الكلية";
 "Building" = "المبنى";
@@ -368,6 +384,7 @@
 "Calculus final" = "فاينل تفاضل";
 "Calendar 2025–2026" = "التقويم 2025–2026";
 "Calendar 2026–2027" = "التقويم 2026–2027";
+"Calendar, next lecture and your exams now come first on Home" = "التقويم والمحاضرة القادمة وامتحاناتك تظهر الآن أولاً في الرئيسية";
 "Calendars & schedules" = "التقويمات والجداول";
 "Call 911" = "اتصل بالرقم 911";
 "Campus & study" = "الحرم والدراسة";
@@ -388,6 +405,7 @@
 "Category" = "الفئة";
 "Central Limit Theorem" = "نظرية النهاية المركزية";
 "Change" = "تغيير";
+"Change cover photo" = "تغيير صورة الغلاف";
 "Change password" = "تغيير كلمة المرور";
 "Change photo" = "تغيير الصورة";
 "Changing the app icon now works when the app is installed with TrollStore" = "تغيير أيقونة التطبيق يعمل الآن عند تثبيت التطبيق عبر TrollStore";
@@ -412,6 +430,7 @@
 "Choose (optional)" = "اختر (اختياري)";
 "Choose Delete my account and enter your password." = "اختر حذف حسابي وأدخل كلمة المرور.";
 "Choose a PDF" = "اختر ملف PDF";
+"Choose a cover photo" = "اختر صورة غلاف";
 "Choose a file" = "اختر ملفاً";
 "Choose a photo" = "اختر صورة";
 "Choose a service." = "اختر خدمة.";
@@ -459,6 +478,8 @@
 "Combinations" = "التوافيق";
 "Combinations Example" = "مثال على التوافيق";
 "Coming soon to revolutionize student advertising!" = "قريبًا لتغيير إعلانات الطلاب!";
+"Coming up" = "القادم";
+"Comments" = "التعليقات";
 "Communication Skills Bank" = "بنك مهارات التواصل";
 "Community" = "المجتمع";
 "Community & services" = "المجتمع والخدمات";
@@ -486,6 +507,7 @@
 "Contributor" = "مساهم";
 "Copied" = "تم النسخ";
 "Copied ALANQ99" = "تم نسخ ALANQ99";
+"Copper" = "نحاسي";
 "Copy" = "نسخ";
 "Copy CliQ alias ALANQ99" = "انسخ اسم CliQ المستعار ALANQ99";
 "Copy link" = "نسخ الرابط";
@@ -500,6 +522,7 @@
 "Couldn't load the latest files." = "تعذر تحميل أحدث الملفات.";
 "Couldn't load the ratings" = "تعذر تحميل التقييمات";
 "Couldn't load the tips. Check your connection and try again." = "تعذر تحميل النصائح. تحقق من اتصالك وحاول مرة أخرى.";
+"Couldn't load this photo" = "تعذر تحميل هذه الصورة";
 "Couldn't open" = "تعذر الفتح";
 "Couldn't open this folder" = "تعذر فتح هذا المجلد";
 "Couldn't reach ASU Bank. Check your connection and try again." = "تعذر الوصول إلى بنك ASU. تحقق من اتصالك وحاول مجددًا.";
@@ -515,6 +538,7 @@
 "Course %d" = "المادة %d";
 "Course %lld" = "المادة %lld";
 "Course %@" = "المادة %@";
+"Course (optional)" = "المادة (اختياري)";
 "Course Overview & Assignments" = "نظرة على المواد والواجبات";
 "Course WhatsApp groups" = "مجموعات واتساب للمواد";
 "Course matcher" = "ابحث عن زملاء دراسة";
@@ -536,6 +560,9 @@
 "Customize tab bar" = "تخصيص شريط التبويب";
 "Cyber security 🫀" = "الأمن السيبراني 🫀";
 "Dark" = "داكن";
+"Dark green background" = "خلفية خضراء داكنة";
+"Dark navy background" = "خلفية كحلية داكنة";
+"Dark purple background" = "خلفية بنفسجية داكنة";
 "Data Visualization" = "تمثيل البيانات";
 "Date" = "التاريخ";
 "Day" = "اليوم";
@@ -641,6 +668,7 @@
 "Email Verification Required" = "يلزم بريد إلكتروني فعّال";
 "Email necro144@yahoo.com from the address on your account and we will delete it for you." = "راسل necro144@yahoo.com من البريد المسجل في حسابك وسنحذفه لك.";
 "Email, WhatsApp or ASU ID" = "البريد أو واتساب أو الرقم الجامعي";
+"Emerald" = "زمردي";
 "Empty folder" = "مجلد فارغ";
 "Engineering" = "الهندسة";
 "Engineering & IT" = "الهندسة وتكنولوجيا المعلومات";
@@ -673,13 +701,17 @@
 "Every frame, a story. Fill in your details and see the price as you go. The photographer reviews your request and sends the final invoice." = "كل لقطة حكاية. املأ بياناتك وشاهد السعر أثناء ذلك، وسيراجع المصور طلبك ويرسل الفاتورة النهائية.";
 "Every teacher shows an average out of 10 and how many students voted." = "يظهر لكل مدرس متوسط من 10 وعدد المصوتين.";
 "Every year and doctor in one place." = "كل السنوات والدكاترة في مكان واحد.";
+"Everyone" = "الجميع";
 "Everything on ASU Bank is searchable from one box: subject pages and the shared Google Drive." = "يمكن البحث في كل ما في بنك ASU من مربع واحد: صفحات المواد وGoogle Drive المشترك.";
 "Everything students uploaded, updated live." = "كل ما رفعه الطلاب، يتحدث مباشرة.";
+"Everything you have coming up." = "كل ما هو قادم لديك.";
+"Exam" = "امتحان";
 "Exam prep" = "التحضير للامتحان";
 "Exam-style question bank" = "بنك أسئلة بنمط الامتحان";
 "Example of Frequency Table 1" = "مثال 1 على الجدول التكراري";
 "Example of PDF" = "مثال على دالة الكثافة";
 "Example: [PHY 202] Dr. Smith, Fall 2023 midterm with solutions." = "مثال: [PHY 202] د. سميث، امتحان منتصف الفصل خريف 2023 مع الحلول.";
+"Exams & tasks" = "الامتحانات والمهام";
 "Excellent" = "ممتاز";
 "Excellent with honors" = "ممتاز مع مرتبة الشرف";
 "Expected Value 1" = "القيمة المتوقعة 1";
@@ -738,11 +770,18 @@
 "First Year" = "السنة الأولى";
 "First name" = "الاسم الأول";
 "First year" = "السنة الأولى";
+"Fixes: sharper profile photos, and the online row shows only people who are online" = "إصلاحات: صور شخصية أوضح، وصف المتصلين يعرض المتصلين فقط";
+"Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "إصلاحات: صور شخصية أوضح، ولم تعد الصور مائلة على أندرويد، وصف المتصلين يعرض المتصلين فقط";
 "Flexible" = "مرن";
 "Floor" = "الطابق";
 "Floor %d" = "الطابق %d";
 "Floor %lld" = "الطابق %lld";
 "Floor %@" = "الطابق %@";
+"Focus" = "تركيز";
+"Focus for %d minutes" = "تركيز لمدة %d دقيقة";
+"Focus for %lld minutes" = "تركيز لمدة %lld دقيقة";
+"Focus for %@ minutes" = "تركيز لمدة %@ دقيقة";
+"Focus timer" = "مؤقت التركيز";
 "Foggy" = "ضباب";
 "Folder" = "مجلد";
 "Folders" = "المجلدات";
@@ -754,6 +793,7 @@
 "Football, coding, photography…" = "كرة القدم، البرمجة، التصوير…";
 "For the campus display screen" = "لشاشة العرض في الحرم الجامعي";
 "Forest" = "غابة";
+"Forest night" = "غابة ليلية";
 "Forgot your password? Ask an admin in the WhatsApp community to reset it." = "نسيت كلمة المرور؟ اطلب من مشرف في مجتمع واتساب إعادة تعيينها.";
 "Forgot your password? Ask an admin in the chat or on WhatsApp to reset it." = "نسيت كلمة المرور؟ اطلب من مشرف في الدردشة أو على واتساب إعادة تعيينها.";
 "Found materials quickly" = "وجدت المواد بسرعة";
@@ -824,6 +864,7 @@
 "High %d° · Low %d°" = "العظمى %d° · الصغرى %d°";
 "High %lld° · Low %lld°" = "العظمى %lld° · الصغرى %lld°";
 "Histogram" = "المدرج التكراري";
+"Hold anyone's photo to see it bigger" = "اضغط مطولاً على صورة أي شخص لرؤيتها أكبر";
 "Home" = "الرئيسية";
 "Home and More always stay, and you can add up to %d more." = "تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.";
 "Home and More always stay, and you can add up to %lld more." = "تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %lld.";
@@ -887,6 +928,7 @@
 "Include the course code, professor name and semester if you know them. At least 20 characters." = "اذكر رمز المادة واسم المدرّس والفصل إن كنت تعرفها. 20 حرفاً على الأقل.";
 "Independence" = "الاستقلال";
 "Independence (Continued)" = "الاستقلال (تكملة)";
+"Indigo" = "نيلي";
 "Industrial Engineering" = "الهندسة الصناعية";
 "Industrial engineering" = "الهندسة الصناعية";
 "Information About Frequency Table" = "معلومات عن الجدول التكراري";
@@ -924,6 +966,7 @@
 "Keep discussions relevant to university/academic matters." = "إبقاء النقاشات متعلقة بالشؤون الجامعية والأكاديمية.";
 "Keep the app open until your files finish. You can close this screen." = "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك إغلاق هذه الشاشة.";
 "Keep the app open until your files finish. You can leave this screen." = "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك مغادرة هذه الشاشة.";
+"Keep this screen open. A 5 minute break starts after each session." = "أبقِ هذه الشاشة مفتوحة. تبدأ استراحة 5 دقائق بعد كل جلسة.";
 "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21)." = "تابع الكتابة: أرقام القاعات من 4 أرقام (5 للمبنيين 10 و21).";
 "Lab Materials" = "مواد المختبرات";
 "Lab materials" = "مواد المختبرات";
@@ -961,6 +1004,7 @@
 "Link to the file (https://…)" = "رابط الملف (https://…)";
 "List of Halls and Faculties" = "قائمة القاعات والكليات";
 "Live results" = "النتائج المباشرة";
+"Load more" = "عرض المزيد";
 "Loading folder…" = "جارٍ تحميل المجلد…";
 "Loading next class..." = "جارٍ تحميل المحاضرة التالية...";
 "Loading ratings…" = "جارٍ تحميل التقييمات…";
@@ -992,6 +1036,8 @@
 "Manage this user" = "إدارة هذا المستخدم";
 "Marimba" = "ماريمبا";
 "Mark" = "العلامة";
+"Mark as done" = "تحديد كمنجز";
+"Mark as not done" = "تحديد كغير منجز";
 "Match my phone" = "حسب الهاتف";
 "Matches found: %d" = "المطابقات: %d";
 "Matches found: %lld" = "المطابقات: %lld";
@@ -1021,6 +1067,7 @@
 "Microbiology and Immunology" = "الأحياء الدقيقة والمناعة";
 "Microsoft Teams" = "Microsoft Teams";
 "Middle name (optional)" = "الاسم الأوسط (اختياري)";
+"Midnight" = "منتصف الليل";
 "Midnight book" = "كتاب ليلي";
 "Midterm" = "ميد";
 "Mint" = "نعناعي";
@@ -1057,6 +1104,8 @@
 "New %d" = "الجديد %d";
 "New %lld" = "الجديد %lld";
 "New %@" = "الجديد %@";
+"New Exams & tasks list and a Focus timer" = "قائمة جديدة للامتحانات والمهام ومؤقت للتركيز";
+"New Feed: posts with photos, comments and likes from everyone or just your friends" = "صفحة منشورات جديدة: منشورات بالصور وتعليقات وإعجابات من الجميع أو من أصدقائك فقط";
 "New Student Guide" = "دليل الطالب الجديد";
 "New Student Guide | Applied Science Private University" = "دليل الطالب الجديد | جامعة العلوم التطبيقية الخاصة";
 "New chat messages" = "رسائل الدردشة الجديدة";
@@ -1067,6 +1116,7 @@
 "New group request" = "طلب مجموعة جديد";
 "New here?" = "جديد هنا؟";
 "New here? Start with these" = "جديد هنا؟ ابدأ من هنا";
+"New item" = "عنصر جديد";
 "New message from %@" = "رسالة جديدة من %@";
 "New messages in the student chat" = "رسائل جديدة في دردشة الطلاب";
 "New password" = "كلمة المرور الجديدة";
@@ -1075,6 +1125,7 @@
 "New report" = "بلاغ جديد";
 "New resources are added regularly. Check the website frequently or join our WhatsApp group for updates." = "تضاف مصادر جديدة بانتظام. تابع الموقع أو انضم إلى مجموعة واتساب لمعرفة الجديد.";
 "New room" = "غرفة جديدة";
+"New story" = "قصة جديدة";
 "New students" = "الطلاب الجدد";
 "New suggestion" = "اقتراح جديد";
 "New this week" = "جدد هذا الأسبوع";
@@ -1088,6 +1139,7 @@
 "No Drive files match these filters." = "لا ملفات في Drive تطابق هذه الفلاتر.";
 "No Drive files match." = "لا ملفات مطابقة في Drive.";
 "No app can open this link" = "لا يوجد تطبيق يفتح هذا الرابط";
+"No comments yet" = "لا توجد تعليقات بعد";
 "No events" = "لا توجد أحداث";
 "No files" = "لا توجد ملفات";
 "No files match this filter." = "لا ملفات تطابق هذا الفلتر.";
@@ -1102,6 +1154,7 @@
 "No other files on Drive" = "لا ملفات أخرى على Drive";
 "No people found" = "لم يتم العثور على أشخاص";
 "No people found." = "لم يتم العثور على أشخاص.";
+"No posts from friends yet" = "لا توجد منشورات من الأصدقاء بعد";
 "No posts yet" = "لا توجد منشورات بعد";
 "No posts yet. Add friends or write the first one." = "لا توجد منشورات بعد. أضف أصدقاء أو اكتب أول منشور.";
 "No ratings yet" = "لا تقييمات بعد";
@@ -1138,6 +1191,7 @@
 "Nothing new" = "لا جديد";
 "Nothing new." = "لا جديد.";
 "Nothing opened yet" = "لم تفتح شيئًا بعد";
+"Nothing planned yet" = "لا يوجد شيء مخطط بعد";
 "Nothing saved yet" = "لا شيء محفوظ بعد";
 "Nothing to review." = "لا شيء للمراجعة.";
 "Nothing was uploaded." = "لم يُرفع شيء.";
@@ -1161,6 +1215,7 @@
 "Offline · %lld" = "غير متصل · %lld";
 "Offline · %@" = "غير متصل · %@";
 "Ogive" = "المنحنى التكراري التراكمي";
+"Olive" = "زيتوني";
 "On asubank.org the search box is at the top of every page. Type the subject, press Enter, and the results load from the subject pages and the Drive together." = "في asubank.org يوجد مربع البحث أعلى كل صفحة. اكتب اسم المادة واضغط Enter، فتظهر النتائج من صفحات المواد وDrive معًا.";
 "On asubank.org the search box is at the top of every page. Type the subject, press Enter, and the results load from the subject pages and the Drive together. Add the site to your home screen from Safari's Share menu to open it like an app." = "في asubank.org يوجد مربع البحث أعلى كل صفحة. اكتب اسم المادة واضغط Enter، فتظهر النتائج من صفحات المواد وDrive معًا. أضف الموقع إلى شاشتك الرئيسية من قائمة المشاركة في Safari لفتحه كتطبيق.";
 "On subject pages · %d" = "في صفحات المواد · %d";
@@ -1219,6 +1274,7 @@
 "Outside ASU" = "خارج الجامعة";
 "Outside ASU adds a 5 JD travel fee." = "خارج الجامعة تضاف رسوم انتقال 5 دنانير.";
 "Outstanding work" = "عمل متميز";
+"Overdue" = "فات موعده";
 "Overview" = "نظرة عامة";
 "PDF Summary" = "ملخص PDF";
 "PDF, PowerPoint, Word, images or video, up to 25 MB. It uploads right from the app." = "PDF أو PowerPoint أو Word أو صور أو فيديو، حتى 25 ميجابايت. يتم الرفع مباشرة من التطبيق.";
@@ -1237,6 +1293,7 @@
 "Past exams and finals" = "امتحانات سابقة ونهائية";
 "Past exams or quizzes (with solutions if possible)" = "امتحانات أو كويزات سابقة (مع الحلول إن أمكن)";
 "Paste the group's invite link, starting with https://" = "الصق رابط دعوة المجموعة، ويبدأ بـ https://";
+"Pause" = "إيقاف مؤقت";
 "Pay on campus" = "ادفع في الجامعة";
 "Payment Method: CliQ transfer" = "طريقة الدفع: تحويل CliQ";
 "Peer-verified study materials by Applied Science University students, for ASU students." = "مواد دراسية راجعها زملاء من طلبة جامعة العلوم التطبيقية، لطلبة ASU.";
@@ -1287,6 +1344,7 @@
 "Please read our Terms of Service before using this website. By accessing these resources, you agree to our terms and conditions. The website owner is not responsible for exam results or user-generated comments." = "يُرجى قراءة شروط الخدمة قبل استخدام هذا الموقع. باستخدامك هذه المصادر فإنك توافق على الشروط والأحكام. صاحب الموقع غير مسؤول عن نتائج الامتحانات أو تعليقات المستخدمين.";
 "Please read this before you start" = "يرجى قراءة هذا قبل البدء";
 "Please review and accept the terms" = "يُرجى مراجعة الشروط وقبولها";
+"Plum" = "برقوقي";
 "Poisson" = "توزيع بواسون";
 "Poke" = "نكزة";
 "Pokes and messages" = "النكزات والرسائل";
@@ -1299,6 +1357,7 @@
 "Position %lld" = "الترتيب %lld";
 "Position %@" = "الترتيب %@";
 "Post" = "نشر";
+"Post, comment and share stories with other ASU students." = "انشر وعلّق وشارك القصص مع طلاب ASU الآخرين.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it, even if they only want announcements." = "يُنشر في 📣 الإعلانات. يصل لكل من فعّل الإشعارات، حتى لو اختار الإعلانات فقط.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it." = "يُنشر في 📣 الإعلانات. يصل لكل من فعّل الإشعارات.";
 "Posting…" = "جارٍ النشر…";
@@ -1376,6 +1435,7 @@
 "Rejected" = "مرفوض";
 "Remove" = "إزالة";
 "Remove admin" = "إزالة صلاحية المشرف";
+"Remove cover photo" = "إزالة صورة الغلاف";
 "Remove friend" = "إزالة الصديق";
 "Remove from ASU Bank" = "إزالة من ASU Bank";
 "Remove from ASU Bank?" = "إزالة من ASU Bank؟";
@@ -1407,6 +1467,7 @@
 "Requests" = "الطلبات";
 "Requests you sent" = "الطلبات التي أرسلتها";
 "Researcher" = "باحث";
+"Reset" = "إعادة ضبط";
 "Reset password" = "إعادة تعيين كلمة المرور";
 "Reset to the default" = "استعادة الوضع الافتراضي";
 "Respect copyright and academic integrity policies" = "احترم حقوق النشر وسياسات النزاهة الأكاديمية";
@@ -1421,6 +1482,7 @@
 "Rose" = "وردي";
 "Royal blue" = "أزرق ملكي";
 "Safe and reliable payment process" = "عملية دفع آمنة وموثوقة";
+"Sand" = "رملي";
 "Save" = "حفظ";
 "Save it for later" = "احفظه لوقت لاحق";
 "Save rating" = "حفظ التقييم";
@@ -1457,6 +1519,7 @@
 "Search in this folder" = "ابحث في هذا المجلد";
 "Search latest uploads" = "ابحث في أحدث الملفات";
 "Search materials, e.g. calculus final" = "ابحث عن مواد، مثل نهائي تفاضل";
+"Search people" = "ابحث عن أشخاص";
 "Search teachers" = "ابحث عن دكاترة";
 "Search text the app can’t translate by itself goes to Google Translate through our server, without your account." = "نص البحث الذي لا يستطيع التطبيق ترجمته بنفسه يذهب إلى ترجمة Google عبر خادمنا، دون بيانات حسابك.";
 "Search the course name, not the file name" = "ابحث باسم المادة لا باسم الملف";
@@ -1471,6 +1534,7 @@
 "See My Courses / Registered Subjects" = "موادي المسجلة";
 "See all versions" = "عرض كل الإصدارات";
 "See averages and rate anonymously." = "اطلع على المتوسطات وقيّم دون كشف هويتك.";
+"See this year's important dates" = "اطّلع على مواعيد هذا العام المهمة";
 "See what changed after every update, and every past version under More > What's New" = "شاهد ما تغيّر بعد كل تحديث، وكل الإصدارات السابقة في المزيد > ما الجديد";
 "Send" = "إرسال";
 "Send again" = "إرسال مرة أخرى";
@@ -1495,6 +1559,7 @@
 "Session" = "الجلسة";
 "Session (%@ h × 5 JD)" = "الجلسة (%@ س × 5 د.أ)";
 "Session type" = "نوع الجلسة";
+"Sessions today" = "جلسات اليوم";
 "Settings" = "الإعدادات";
 "Sexual content" = "محتوى جنسي";
 "Share" = "مشاركة";
@@ -1503,6 +1568,7 @@
 "Share file" = "مشاركة الملف";
 "Share honest, anonymous feedback on instructors." = "شارك رأيك الصادق دون كشف هويتك عن المدرسين.";
 "Share link" = "مشاركة الرابط";
+"Share something with other ASU students." = "شارك شيئاً مع طلاب ASU الآخرين.";
 "Share the file so anyone with the link can view it." = "شارك الملف بحيث يستطيع أي شخص لديه الرابط عرضه.";
 "Share your educational resources with the ASU community" = "شارك مصادرك التعليمية مع مجتمع ASU";
 "Share your experience and help other students choose their sections." = "شارك تجربتك وساعد الطلاب في اختيار شعبهم.";
@@ -1536,6 +1602,7 @@
 "Sign in to chat" = "سجّل الدخول للدردشة";
 "Sign in to chat with other students and keep your account in sync with asubank.org." = "سجّل الدخول للدردشة مع الطلاب ومزامنة حسابك مع asubank.org.";
 "Sign in to chat with other students." = "سجّل الدخول للدردشة مع الطلاب الآخرين.";
+"Sign in to see the feed" = "سجّل الدخول لرؤية آخر المنشورات";
 "Sign in to see your notifications" = "سجّل الدخول لرؤية إشعاراتك";
 "Sign in with an admin account to manage ASU Bank." = "سجّل الدخول بحساب مشرف لإدارة ASU Bank.";
 "Sign out" = "تسجيل الخروج";
@@ -1544,11 +1611,14 @@
 "Signed in as @%@" = "مسجّل الدخول باسم @%@";
 "Simple Pricing" = "سعر بسيط";
 "Site policies and rules." = "سياسات الموقع وقواعده.";
+"Sky" = "سماوي";
 "Slides" = "شرائح";
 "Smooth download" = "تنزيل سلس";
 "Snow" = "ثلج";
 "So we can reply to you" = "لنتمكن من الرد عليك";
 "Soft" = "هادئ";
+"Soft blue background" = "خلفية زرقاء ناعمة";
+"Soft pink background" = "خلفية وردية ناعمة";
 "Something else" = "شيء آخر";
 "Something went wrong." = "حدث خطأ ما.";
 "Something went wrong. Try again." = "حدث خطأ ما. حاول مجددًا.";
@@ -1562,6 +1632,7 @@
 "Sponsor" = "راعٍ";
 "Sponsored" = "إعلان ممول";
 "Standard" = "عادي";
+"Start" = "ابدأ";
 "Start the conversation!" = "ابدأ المحادثة!";
 "Starts at" = "تبدأ الساعة";
 "Starts at %@" = "تبدأ الساعة %@";
@@ -1572,6 +1643,7 @@
 "Still can't find it?" = "ما زلت لا تجده؟";
 "Storage" = "التخزين";
 "Stored on" = "محفوظ على";
+"Stories: share a photo or text for 24 hours" = "القصص: شارك صورة أو نصاً لمدة 24 ساعة";
 "Strong and steady" = "قوي وثابت";
 "Structured submission" = "إرسال منظّم";
 "Stuck on something? Ask other students" = "واجهت صعوبة؟ اسأل الطلاب الآخرين";
@@ -1592,6 +1664,7 @@
 "Study cards" = "بطاقات دراسية";
 "Study guides or cheat sheets" = "ملخصات أو أوراق مراجعة";
 "Study help" = "مساعدة دراسية";
+"Study in short sessions with breaks." = "ادرس في جلسات قصيرة مع استراحات.";
 "Study materials for ASU students" = "مواد دراسية لطلاب الجامعة";
 "Study place" = "مكان الدراسة";
 "Study plans" = "الخطط الدراسية";
@@ -1648,6 +1721,7 @@
 "Tap ☆ on any file, or swipe right on it, to keep it here." = "اضغط ☆ على أي ملف أو اسحبه يمينًا للاحتفاظ به هنا.";
 "Targeted" = "موجّه";
 "Targeted Audience" = "جمهور مستهدف";
+"Task" = "مهمة";
 "Teacher" = "الدكتور";
 "Teacher not listed?" = "المدرس غير موجود؟";
 "Teacher's full name" = "الاسم الكامل للدكتور";
@@ -1741,6 +1815,7 @@
 "Thursday" = "الخميس";
 "Time" = "الوقت";
 "Tips" = "نصائح";
+"Title" = "العنوان";
 "Title or student" = "العنوان أو الطالب";
 "To" = "إلى";
 "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information." = "للاستفادة من الخدمة يجب أن يكون لديك بريد إلكتروني يعمل. عند إيجاد تطابق (50% فأكثر) ستصلك أنت وزميلك رسالة بالتعليمات وبيانات الاتصال.";
@@ -1801,6 +1876,7 @@
 "University ID" = "الرقم الجامعي";
 "University ID (optional)" = "الرقم الجامعي (اختياري)";
 "University WhatsApp Links & Resources" = "روابط واتساب الجامعية والمصادر";
+"University calendar" = "تقويم الجامعة";
 "University email" = "البريد الجامعي";
 "University email (optional)" = "البريد الجامعي (اختياري)";
 "University groups" = "مجموعات الجامعة";
@@ -1877,7 +1953,10 @@
 "Videos" = "الفيديوهات";
 "View File" = "عرض الملف";
 "View and download for education only. Redistribution is forbidden without permission." = "العرض والتنزيل للتعليم فقط. إعادة التوزيع ممنوعة دون إذن.";
+"View cover photo" = "عرض صورة الغلاف";
+"View full screen" = "عرض بملء الشاشة";
 "View our" = "اطلع على";
+"View photo" = "عرض الصورة";
 "View profile" = "عرض الملف الشخصي";
 "View your enrolled courses for the current semester" = "اعرض المواد المسجلة في الفصل الحالي";
 "Violence or threats" = "عنف أو تهديد";
@@ -1886,6 +1965,7 @@
 "Vote again" = "صوّت مرة أخرى";
 "Waiting" = "قيد الانتظار";
 "Want your name here?" = "تريد اسمك هنا؟";
+"Warm light background" = "خلفية فاتحة دافئة";
 "We got your request. Message us on WhatsApp to confirm the payment." = "وصلنا طلبك. راسلنا على واتساب لتأكيد الدفع.";
 "We got your suggestion. The ASU Bank team will look at it soon." = "وصلنا اقتراحك. سيطّلع عليه فريق ASU Bank قريباً.";
 "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules, without warning." = "لا نتسامح مطلقًا مع الإساءة. يمكن للمشرفين إزالة المحتوى وحظر الحسابات المخالفة دون إنذار.";
@@ -1946,6 +2026,7 @@
 "Who is online" = "من المتصل";
 "Who we are" = "من نحن";
 "Who's online" = "من المتصل";
+"Who's online now lists every registered student, with search" = "قائمة المتصلين تعرض الآن كل الطلاب المسجلين مع إمكانية البحث";
 "Why advertise here" = "لماذا تعلن هنا";
 "Will use again" = "سأستخدمه مجدداً";
 "With the contact method you chose" = "بطريقة التواصل التي اخترتها";
@@ -1953,7 +2034,9 @@
 "Workshops" = "المشاغل";
 "Would recommend" = "سأنصح به";
 "Would you personally be interested in joining?" = "هل أنت مهتم شخصياً بالانضمام؟";
+"Write a comment" = "اكتب تعليقاً";
 "Write a post" = "اكتب منشوراً";
+"Write something" = "اكتب شيئاً";
 "Write the name of the group." = "اكتب اسم المجموعة.";
 "Wrong, broken or misleading file" = "ملف خاطئ أو معطل أو مضلل";
 "YES" = "نعم";
@@ -2014,7 +2097,10 @@
 "Your rating is 100% anonymous. No admin or system can see who submitted it — privacy is guaranteed." = "تقييمك مجهول 100%. لا يستطيع أي مشرف أو نظام معرفة من أرسله، والخصوصية مضمونة.";
 "Your rating is anonymous." = "تقييمك مجهول الهوية.";
 "Your requests" = "طلباتك";
+"Your story" = "قصتك";
+"Your story is seen by ASU Bank students for 24 hours, then it disappears. It's deleted from our database after 2 days." = "يرى طلاب ASU Bank قصتك لمدة 24 ساعة ثم تختفي، وتُحذف من قاعدة بياناتنا بعد يومين.";
 "Your studies" = "دراستك";
+"Your timetable, with reminders." = "جدولك مع التذكيرات.";
 "Your upload" = "ملفك المرفوع";
 "Zero tolerance" = "لا تسامح مطلقًا";
 "admins post" = "للمشرفين";

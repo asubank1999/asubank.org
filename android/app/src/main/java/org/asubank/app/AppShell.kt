@@ -1,5 +1,11 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.Park
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.WbTwilight
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -73,6 +79,12 @@ fun ThemeScreen() {
         Triple("Light", "Always light", Icons.Filled.LightMode),
         Triple("Dark", "Always dark", Icons.Filled.DarkMode),
         Triple("Pitch black (OLED)", "True black everywhere; saves battery on OLED screens", Icons.Filled.NightsStay),
+        Triple("Midnight", "Dark navy background", Icons.Filled.Bedtime),
+        Triple("Forest night", "Dark green background", Icons.Filled.Park),
+        Triple("Plum", "Dark purple background", Icons.Filled.AutoAwesome),
+        Triple("Sand", "Warm light background", Icons.Filled.WbTwilight),
+        Triple("Sky", "Soft blue background", Icons.Filled.Cloud),
+        Triple("Blush", "Soft pink background", Icons.Filled.Favorite),
     )
     val dark = isDarkTheme()
     Screen("Theme") { pad ->

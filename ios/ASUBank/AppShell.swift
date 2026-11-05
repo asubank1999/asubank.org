@@ -5,7 +5,7 @@ struct SplashView: View {
     @State private var shown = false
     var body: some View {
         ZStack {
-            (AppTheme.appearance == 3 ? Color.black : Color(UIColor.systemBackground)).ignoresSafeArea()
+            (AppTheme.tint.map { Color($0) } ?? Color(UIColor.systemBackground)).ignoresSafeArea()
             VStack(spacing: 16) {
                 Image("Logo").resizable().scaledToFit().frame(width: 120, height: 120)
                     .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
@@ -32,6 +32,12 @@ struct ThemeScreen: View {
         (1, "Light", "Always light", "sun.max.fill"),
         (2, "Dark", "Always dark", "moon.fill"),
         (3, "Pitch black (OLED)", "True black everywhere; saves battery on OLED screens", "moon.stars.fill"),
+        (4, "Midnight", "Dark navy background", "moon.zzz.fill"),
+        (5, "Forest night", "Dark green background", "leaf.fill"),
+        (6, "Plum", "Dark purple background", "sparkles"),
+        (7, "Sand", "Warm light background", "sun.haze.fill"),
+        (8, "Sky", "Soft blue background", "cloud.sun.fill"),
+        (9, "Blush", "Soft pink background", "heart.fill"),
     ]
 
     var body: some View {

@@ -99,8 +99,8 @@ import kotlinx.coroutines.launch
 
 /** A round avatar: the profile photo, or the first letter on the user's color. `online` adds a green or grey dot. */
 @Composable
-fun Avatar(name: String, color: String, size: Dp = 40.dp, admin: Boolean = false, photo: String? = null, online: Boolean? = null) {
-    Box {
+fun Avatar(name: String, color: String, size: Dp = 40.dp, admin: Boolean = false, photo: String? = null, online: Boolean? = null, hold: Boolean = true) {
+    Box(if (hold) Modifier.holdToView(photo) else Modifier) {
         Box(Modifier.size(size).clip(CircleShape).background(hexColor(color)), contentAlignment = Alignment.Center) {
             Text(name.take(1).uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = (size.value * 0.42f).sp)
             if (!photo.isNullOrEmpty()) AsyncImage(photo, null, Modifier.matchParentSize(), contentScale = ContentScale.Crop)
@@ -149,12 +149,12 @@ fun lastSeenText(iso: String?): String {
     return tr("Last seen %s").format(ago)
 }
 
-/** Shrinks a picked photo to a 256 px square JPEG, as base64 */
+/** Shrinks a picked photo to a 640 px square JPEG, as base64, so it still looks good when someone holds it to expand it */
 fun avatarJpeg(ctx: android.content.Context, uri: Uri): String? = runCatching {
-    val src = ctx.contentResolver.openInputStream(uri)!!.use { BitmapFactory.decodeStream(it) }
+    val src = PhotoTools.load(ctx, uri, 1400)!!
     val side = minOf(src.width, src.height)
     val square = Bitmap.createBitmap(src, (src.width - side) / 2, (src.height - side) / 2, side, side)
-    val small = Bitmap.createScaledBitmap(square, 256, 256, true)
+    val small = Bitmap.createScaledBitmap(square, 640, 640, true)
     val out = ByteArrayOutputStream()
     small.compress(Bitmap.CompressFormat.JPEG, 82, out)
     Base64.encodeToString(out.toByteArray(), Base64.NO_WRAP)

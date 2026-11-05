@@ -64,10 +64,14 @@ struct ChatTab: View {
                 Section {
                     NavigationLink { OnlineScreen(users: online) } label: {
                         HStack(spacing: -8) {
-                            ForEach(online.prefix(6)) { u in
+                            ForEach(online.filter(\.online).prefix(6)) { u in
                                 Avatar(name: u.displayName, color: u.color ?? "#8C1D40", size: 32, photo: u.avatar, online: u.online)
                             }
-                            Text(String(format: L("%d online now"), onlineCount)).font(.subheadline.weight(.semibold)).padding(.leading, 16)
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(String(format: L("%d online now"), onlineCount)).font(.subheadline.weight(.semibold))
+                                Text(String(format: L("%d students"), online.count)).font(.caption).foregroundStyle(.secondary)
+                            }
+                            .padding(.leading, onlineCount > 0 ? 16 : 0)
                         }
                     }
                 }
@@ -132,16 +136,22 @@ struct OnlineUser: Codable, Identifiable, Hashable {
     var online: Bool
 }
 
-/// Everyone who used the chat lately: online first, then last seen
+/// Every registered student: online first, then by last seen
 struct OnlineScreen: View {
     let users: [OnlineUser]
+    @State private var query = ""
+    private var shown: [OnlineUser] {
+        let q = AB.norm(query)
+        return q.isEmpty ? users : users.filter { AB.norm($0.displayName).contains(q) }
+    }
     var body: some View {
         List {
-            let on = users.filter(\.online), off = users.filter { !$0.online }
+            let on = shown.filter(\.online), off = shown.filter { !$0.online }
             if !on.isEmpty { Section(String(format: L("Online · %d"), on.count)) { ForEach(on) { row($0) } } }
             if !off.isEmpty { Section(String(format: L("Offline · %d"), off.count)) { ForEach(off) { row($0) } } }
         }
         .listStyle(.insetGrouped)
+        .searchable(text: $query, prompt: "Search people")
         .navigationTitle("Who's online")
     }
 

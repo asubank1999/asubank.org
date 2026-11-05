@@ -1067,6 +1067,7 @@ struct NextLectureCard: View {
 enum TabBarPrefs {
     static let key = "ab.tabs"
     static let options: [(tab: AppTab, id: String, name: String, icon: String)] = [
+        (.feed, "feed", "Feed", "newspaper.fill"),
         (.search, "search", "Search", "magnifyingglass"),
         (.chat, "chat", "Chat", "bubble.left.and.bubble.right.fill"),
         (.notifications, "notifications", "Notifications", "bell.fill"),
@@ -1075,9 +1076,9 @@ enum TabBarPrefs {
         (.lectures, "lectures", "My lectures", "alarm.fill"),
         (.hacks, "hacks", "Life hacks", "lightbulb.fill")
     ]
-    static let standard = "search,chat,notifications"
-    /// Admins have one place less, and Home has a search button
-    static let standardAdmin = "chat,notifications"
+    static let standard = "feed,chat,notifications"
+    /// Admins have one place less; Home has a search button and a bell
+    static let standardAdmin = "feed,chat"
 
     static func chosen(_ stored: String, admin: Bool) -> [AppTab] {
         let ids = (admin && stored == standard ? standardAdmin : stored).split(separator: ",").map(String.init)

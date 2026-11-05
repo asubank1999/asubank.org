@@ -52,6 +52,7 @@ struct ABUser: Codable, Identifiable, Hashable {
     var lastSeen: String?
     var mustReset: Bool?
     var avatar: String?
+    var cover: String?
     var phone: String?
     var showPhone: Bool?
     var bio: String?
@@ -286,10 +287,18 @@ final class AccountStore: ObservableObject {
                                                "phone": phone, "showPhone": showPhone, "bio": bio, "major": major, "college": college, "year": year, "interests": interests]))
     }
 
-    /// Uploads a profile photo (shrunk to 256 px JPEG first), or removes it with nil
+    /// Uploads a cover photo, or removes it with nil
+    func setCover(_ image: UIImage?) async throws {
+        guard let image else { adopt(try await call("setCover", ["remove": true])); return }
+        let data = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(image, maxSide: 1280) }.value
+        guard let data else { return }
+        adopt(try await call("setCover", ["data": data]))
+    }
+
+    /// Uploads a profile photo (a 640 px square JPEG, so it still looks good when someone holds it to expand it), or removes it with nil
     func setAvatar(_ image: UIImage?) async throws {
         guard let image else { adopt(try await call("setAvatar", ["remove": true])); return }
-        let side: CGFloat = 256
+        let side: CGFloat = 640
         let scale = side / min(image.size.width, image.size.height)
         let size = CGSize(width: side, height: side)
         let fmt = UIGraphicsImageRendererFormat.default()
@@ -431,7 +440,7 @@ final class ChatNotifier: ObservableObject {
         guard let token = AccountStore.shared.token else { return }
         let key = "ab.notify.lastSeenDate"
         let seen = UserDefaults.standard.string(forKey: key)
-        guard let r = try? await AccountsAPI.call("events", ["since": seen ?? "", "social": true], token: token) else { return }
+        guard let r = try? await AccountsAPI.call("events", ["since": seen ?? "", "social": true, "social2": true], token: token) else { return }
         let events = decode([ABEvent].self, r["events"]) ?? []
         let newest = events.map(\.created).max() ?? ""
         // first check after install: remember, don't notify
@@ -449,7 +458,7 @@ final class ChatNotifier: ObservableObject {
         switch e.type {
         case "upload": return uploads
         case "announcement": return announcements
-        case "friend_request", "friend_accept", "poke": return social
+        case "friend_request", "friend_accept", "poke", "post_comment": return social
         case "group_request", "group_approved", "group_rejected": return true
         default:
             if e.room == openRoom { return false }
@@ -460,7 +469,7 @@ final class ChatNotifier: ObservableObject {
 
     func deliver(_ e: ABEvent) async {
         guard wants(e) else { return }
-        let isPrivate = e.type.hasPrefix("friend_") || e.type.hasPrefix("group_") || e.type == "poke"
+        let isPrivate = e.type.hasPrefix("friend_") || e.type.hasPrefix("group_") || e.type == "poke" || e.type == "post_comment"
         if isPrivate { if !e.type.hasPrefix("group_") { socialUnread += 1 } }
         else if e.type != "upload" { unread += 1 }
         let me = AccountStore.shared.user?.id
@@ -477,6 +486,8 @@ final class ChatNotifier: ObservableObject {
             c.title = L("You have a new friend")
         case "poke":
             c.title = "👉 " + who
+        case "post_comment":
+            c.title = String(format: L("%@ commented on your post"), who)
         case "group_request":
             c.title = L("New group request")
         case "group_approved":

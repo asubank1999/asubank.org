@@ -110,10 +110,24 @@ private val black: ColorScheme = dark.copy(
     surfaceVariant = Color(0xFF1C1C1E), outlineVariant = Color(0xFF2A2A2D),
 )
 
+/** Themes with their own background color */
+private fun tinted(base: ColorScheme, bg: Long, card: Long, high: Long, line: Long) = base.copy(
+    background = Color(bg), surface = Color(bg),
+    surfaceContainerLowest = Color(card), surfaceContainerLow = Color(card),
+    surfaceContainer = Color(card), surfaceContainerHigh = Color(high),
+    surfaceVariant = Color(high), outlineVariant = Color(line),
+)
+private val midnight = tinted(dark, 0xFF0B1426, 0xFF16213A, 0xFF1F2C4A, 0xFF2C3A5C)
+private val forestNight = tinted(dark, 0xFF0C1A12, 0xFF16291E, 0xFF1E3528, 0xFF2B4636)
+private val plum = tinted(dark, 0xFF1A0F1F, 0xFF281A2F, 0xFF33233B, 0xFF44314E)
+private val sand = tinted(light, 0xFFF4ECDD, 0xFFFFFBF2, 0xFFFAF3E5, 0xFFE3D8C3)
+private val sky = tinted(light, 0xFFE3EEF9, 0xFFFFFFFF, 0xFFF1F7FD, 0xFFCFDDEB)
+private val blush = tinted(light, 0xFFFBEAF0, 0xFFFFFFFF, 0xFFFDF3F6, 0xFFEBD3DB)
+
 data class AccentChoice(val id: Int, val name: String, val light: Long, val dark: Long)
 
 object Prefs {
-    /** 0 match the phone, 1 light, 2 dark, 3 pitch black (OLED) */
+    /** 0 match the phone, 1 light, 2 dark, 3 pitch black (OLED), 4 midnight, 5 forest night, 6 plum, 7 sand, 8 sky, 9 blush */
     val appearance = MutableStateFlow(0)
     val accent = MutableStateFlow(0)
     val accents = listOf(
@@ -131,6 +145,12 @@ object Prefs {
         AccentChoice(11, "Crimson", 0xFFB3132B, 0xFFFF6B7D),
         AccentChoice(12, "Lavender", 0xFF7A5AA6, 0xFFC9AEFC),
         AccentChoice(13, "Coffee", 0xFF6F4E37, 0xFFD2A77F),
+        AccentChoice(14, "Emerald", 0xFF047857, 0xFF34D399),
+        AccentChoice(15, "Indigo", 0xFF4338CA, 0xFFA5B4FC),
+        AccentChoice(16, "Sky", 0xFF0369A1, 0xFF7DD3FC),
+        AccentChoice(17, "Berry", 0xFF9D174D, 0xFFF9A8D4),
+        AccentChoice(18, "Olive", 0xFF5F6B1A, 0xFFC5D36A),
+        AccentChoice(19, "Copper", 0xFF9A4A1F, 0xFFE8A67C),
     )
     fun setAppearance(v: Int) { appearance.value = v; Saved.prefs.edit().putInt("appearance", v).apply() }
     fun setAccent(v: Int) { accent.value = v; Saved.prefs.edit().putInt("accent", v).apply() }
@@ -139,7 +159,7 @@ object Prefs {
 @Composable
 fun isDarkTheme(): Boolean {
     val a by Prefs.appearance.collectAsState()
-    return when (a) { 1 -> false; 2, 3 -> true; else -> isSystemInDarkTheme() }
+    return when (a) { 1, 7, 8, 9 -> false; 2, 3, 4, 5, 6 -> true; else -> isSystemInDarkTheme() }
 }
 
 @Composable
@@ -147,7 +167,16 @@ fun AsuTheme(content: @Composable () -> Unit) {
     val a by Prefs.appearance.collectAsState()
     val ac by Prefs.accent.collectAsState()
     val isDark = isDarkTheme()
-    val base = if (!isDark) light else if (a == 3) black else dark
+    val base = when (a) {
+        3 -> black
+        4 -> midnight
+        5 -> forestNight
+        6 -> plum
+        7 -> sand
+        8 -> sky
+        9 -> blush
+        else -> if (isDark) dark else light
+    }
     val choice = Prefs.accents.firstOrNull { it.id == ac } ?: Prefs.accents[0]
     val scheme = if (choice.id == 0) base else {
         val p = Color(if (isDark) choice.dark else choice.light)
@@ -173,6 +202,7 @@ object Routes {
     const val LECTURES = "lectures"
     const val HACKS = "hacks"
     const val NOTIFICATIONS = "notifications"
+    const val FEED = "feed"
 }
 
 val LocalNav = staticCompositionLocalOf<NavController> { error("no nav") }

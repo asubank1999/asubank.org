@@ -7077,5 +7077,325 @@
  "Changing the app icon now works when the app is installed with TrollStore": {
   "ar": "تغيير أيقونة التطبيق يعمل الآن عند تثبيت التطبيق عبر TrollStore",
   "es": "Cambiar el icono de la app ya funciona cuando se instala con TrollStore"
+ },
+ "%d students": {
+  "ar": "%d طالب",
+  "es": "%d estudiantes"
+ },
+ "%d views": {
+  "ar": "%d مشاهدة",
+  "es": "%d vistas"
+ },
+ "%s commented on your post": {
+  "ar": "%s علّق على منشورك",
+  "es": "%s comentó tu publicación"
+ },
+ "Add story": {
+  "ar": "أضف قصة",
+  "es": "Añadir historia"
+ },
+ "Add your exams and assignments, and the next ones show on Home.": {
+  "ar": "أضف امتحاناتك وواجباتك، وستظهر القادمة في الرئيسية.",
+  "es": "Añade tus exámenes y tareas, y los próximos aparecerán en Inicio."
+ },
+ "Be the first to comment.": {
+  "ar": "كن أول من يعلّق.",
+  "es": "Sé el primero en comentar."
+ },
+ "Change cover photo": {
+  "ar": "تغيير صورة الغلاف",
+  "es": "Cambiar foto de portada"
+ },
+ "Choose a cover photo": {
+  "ar": "اختر صورة غلاف",
+  "es": "Elegir foto de portada"
+ },
+ "Coming up": {
+  "ar": "القادم",
+  "es": "Próximamente"
+ },
+ "Comments": {
+  "ar": "التعليقات",
+  "es": "Comentarios"
+ },
+ "Couldn't load this photo": {
+  "ar": "تعذر تحميل هذه الصورة",
+  "es": "No se pudo cargar esta foto"
+ },
+ "Course (optional)": {
+  "ar": "المادة (اختياري)",
+  "es": "Asignatura (opcional)"
+ },
+ "Everyone": {
+  "ar": "الجميع",
+  "es": "Todos"
+ },
+ "Exam": {
+  "ar": "امتحان",
+  "es": "Examen"
+ },
+ "Exams & tasks": {
+  "ar": "الامتحانات والمهام",
+  "es": "Exámenes y tareas"
+ },
+ "Focus for %d minutes": {
+  "ar": "تركيز لمدة %d دقيقة",
+  "es": "Concentración durante %d minutos"
+ },
+ "Focus timer": {
+  "ar": "مؤقت التركيز",
+  "es": "Temporizador de estudio"
+ },
+ "Keep this screen open. A 5 minute break starts after each session.": {
+  "ar": "أبقِ هذه الشاشة مفتوحة. تبدأ استراحة 5 دقائق بعد كل جلسة.",
+  "es": "Mantén esta pantalla abierta. Tras cada sesión empieza un descanso de 5 minutos."
+ },
+ "Load more": {
+  "ar": "عرض المزيد",
+  "es": "Cargar más"
+ },
+ "New item": {
+  "ar": "عنصر جديد",
+  "es": "Nuevo elemento"
+ },
+ "New story": {
+  "ar": "قصة جديدة",
+  "es": "Nueva historia"
+ },
+ "No comments yet": {
+  "ar": "لا توجد تعليقات بعد",
+  "es": "Aún no hay comentarios"
+ },
+ "Nothing planned yet": {
+  "ar": "لا يوجد شيء مخطط بعد",
+  "es": "Aún no hay nada planificado"
+ },
+ "Overdue": {
+  "ar": "فات موعده",
+  "es": "Vencido"
+ },
+ "Post, comment and share stories with other ASU students.": {
+  "ar": "انشر وعلّق وشارك القصص مع طلاب ASU الآخرين.",
+  "es": "Publica, comenta y comparte historias con otros estudiantes de ASU."
+ },
+ "Remove cover photo": {
+  "ar": "إزالة صورة الغلاف",
+  "es": "Quitar foto de portada"
+ },
+ "Reset": {
+  "ar": "إعادة ضبط",
+  "es": "Reiniciar"
+ },
+ "Search people": {
+  "ar": "ابحث عن أشخاص",
+  "es": "Buscar personas"
+ },
+ "See this year's important dates": {
+  "ar": "اطّلع على مواعيد هذا العام المهمة",
+  "es": "Ver las fechas importantes de este año"
+ },
+ "Sessions today": {
+  "ar": "جلسات اليوم",
+  "es": "Sesiones de hoy"
+ },
+ "Share something with other ASU students.": {
+  "ar": "شارك شيئاً مع طلاب ASU الآخرين.",
+  "es": "Comparte algo con otros estudiantes de ASU."
+ },
+ "Sign in to see the feed": {
+  "ar": "سجّل الدخول لرؤية آخر المنشورات",
+  "es": "Inicia sesión para ver el feed"
+ },
+ "Task": {
+  "ar": "مهمة",
+  "es": "Tarea"
+ },
+ "Title": {
+  "ar": "العنوان",
+  "es": "Título"
+ },
+ "University calendar": {
+  "ar": "تقويم الجامعة",
+  "es": "Calendario universitario"
+ },
+ "View cover photo": {
+  "ar": "عرض صورة الغلاف",
+  "es": "Ver foto de portada"
+ },
+ "View full screen": {
+  "ar": "عرض بملء الشاشة",
+  "es": "Ver a pantalla completa"
+ },
+ "View photo": {
+  "ar": "عرض الصورة",
+  "es": "Ver foto"
+ },
+ "Write a comment": {
+  "ar": "اكتب تعليقاً",
+  "es": "Escribe un comentario"
+ },
+ "Write something": {
+  "ar": "اكتب شيئاً",
+  "es": "Escribe algo"
+ },
+ "Your story": {
+  "ar": "قصتك",
+  "es": "Tu historia"
+ },
+ "Your story is seen by ASU Bank students for 24 hours, then it disappears. It's deleted from our database after 2 days.": {
+  "ar": "يرى طلاب ASU Bank قصتك لمدة 24 ساعة ثم تختفي، وتُحذف من قاعدة بياناتنا بعد يومين.",
+  "es": "Los estudiantes de ASU Bank ven tu historia durante 24 horas y luego desaparece. Se borra de nuestra base de datos a los 2 días."
+ },
+ "No posts from friends yet": {
+  "ar": "لا توجد منشورات من الأصدقاء بعد",
+  "es": "Tus amigos aún no han publicado"
+ },
+ "Add a photo": {
+  "ar": "أضف صورة",
+  "es": "Añadir foto"
+ },
+ "Focus": {
+  "ar": "تركيز",
+  "es": "Concentración"
+ },
+ "Break": {
+  "ar": "استراحة",
+  "es": "Descanso"
+ },
+ "Start": {
+  "ar": "ابدأ",
+  "es": "Empezar"
+ },
+ "Pause": {
+  "ar": "إيقاف مؤقت",
+  "es": "Pausar"
+ },
+ "Mark as done": {
+  "ar": "تحديد كمنجز",
+  "es": "Marcar como hecho"
+ },
+ "Mark as not done": {
+  "ar": "تحديد كغير منجز",
+  "es": "Marcar como no hecho"
+ },
+ "Midnight": {
+  "ar": "منتصف الليل",
+  "es": "Medianoche"
+ },
+ "Forest night": {
+  "ar": "غابة ليلية",
+  "es": "Bosque nocturno"
+ },
+ "Plum": {
+  "ar": "برقوقي",
+  "es": "Ciruela"
+ },
+ "Sand": {
+  "ar": "رملي",
+  "es": "Arena"
+ },
+ "Sky": {
+  "ar": "سماوي",
+  "es": "Cielo"
+ },
+ "Blush": {
+  "ar": "وردي فاتح",
+  "es": "Rubor"
+ },
+ "Emerald": {
+  "ar": "زمردي",
+  "es": "Esmeralda"
+ },
+ "Indigo": {
+  "ar": "نيلي",
+  "es": "Índigo"
+ },
+ "Berry": {
+  "ar": "توتي",
+  "es": "Baya"
+ },
+ "Olive": {
+  "ar": "زيتوني",
+  "es": "Oliva"
+ },
+ "Copper": {
+  "ar": "نحاسي",
+  "es": "Cobre"
+ },
+ "Dark navy background": {
+  "ar": "خلفية كحلية داكنة",
+  "es": "Fondo azul marino oscuro"
+ },
+ "Dark green background": {
+  "ar": "خلفية خضراء داكنة",
+  "es": "Fondo verde oscuro"
+ },
+ "Dark purple background": {
+  "ar": "خلفية بنفسجية داكنة",
+  "es": "Fondo morado oscuro"
+ },
+ "Warm light background": {
+  "ar": "خلفية فاتحة دافئة",
+  "es": "Fondo claro cálido"
+ },
+ "Soft blue background": {
+  "ar": "خلفية زرقاء ناعمة",
+  "es": "Fondo azul suave"
+ },
+ "Soft pink background": {
+  "ar": "خلفية وردية ناعمة",
+  "es": "Fondo rosa suave"
+ },
+ "Your timetable, with reminders.": {
+  "ar": "جدولك مع التذكيرات.",
+  "es": "Tu horario, con recordatorios."
+ },
+ "Everything you have coming up.": {
+  "ar": "كل ما هو قادم لديك.",
+  "es": "Todo lo que tienes por delante."
+ },
+ "Study in short sessions with breaks.": {
+  "ar": "ادرس في جلسات قصيرة مع استراحات.",
+  "es": "Estudia en sesiones cortas con descansos."
+ },
+ "New Feed: posts with photos, comments and likes from everyone or just your friends": {
+  "ar": "صفحة منشورات جديدة: منشورات بالصور وتعليقات وإعجابات من الجميع أو من أصدقائك فقط",
+  "es": "Nuevo feed: publicaciones con fotos, comentarios y me gusta de todos o solo de tus amigos"
+ },
+ "Stories: share a photo or text for 24 hours": {
+  "ar": "القصص: شارك صورة أو نصاً لمدة 24 ساعة",
+  "es": "Historias: comparte una foto o un texto durante 24 horas"
+ },
+ "Add a cover photo to your profile": {
+  "ar": "أضف صورة غلاف إلى ملفك الشخصي",
+  "es": "Añade una foto de portada a tu perfil"
+ },
+ "Hold anyone's photo to see it bigger": {
+  "ar": "اضغط مطولاً على صورة أي شخص لرؤيتها أكبر",
+  "es": "Mantén pulsada la foto de cualquiera para verla más grande"
+ },
+ "Calendar, next lecture and your exams now come first on Home": {
+  "ar": "التقويم والمحاضرة القادمة وامتحاناتك تظهر الآن أولاً في الرئيسية",
+  "es": "El calendario, la próxima clase y tus exámenes ahora aparecen primero en Inicio"
+ },
+ "New Exams & tasks list and a Focus timer": {
+  "ar": "قائمة جديدة للامتحانات والمهام ومؤقت للتركيز",
+  "es": "Nueva lista de exámenes y tareas y un temporizador de estudio"
+ },
+ "6 new backgrounds and 6 new accent colors": {
+  "ar": "6 خلفيات جديدة و6 ألوان مميزة جديدة",
+  "es": "6 fondos nuevos y 6 colores de acento nuevos"
+ },
+ "Who's online now lists every registered student, with search": {
+  "ar": "قائمة المتصلين تعرض الآن كل الطلاب المسجلين مع إمكانية البحث",
+  "es": "Quién está en línea ahora muestra a todos los estudiantes registrados, con búsqueda"
+ },
+ "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online": {
+  "ar": "إصلاحات: صور شخصية أوضح، ولم تعد الصور مائلة على أندرويد، وصف المتصلين يعرض المتصلين فقط",
+  "es": "Correcciones: fotos de perfil más nítidas, las fotos ya no salen de lado en Android y la fila de conectados solo muestra a quien está en línea"
+ },
+ "Fixes: sharper profile photos, and the online row shows only people who are online": {
+  "ar": "إصلاحات: صور شخصية أوضح، وصف المتصلين يعرض المتصلين فقط",
+  "es": "Correcciones: fotos de perfil más nítidas y la fila de conectados solo muestra a quien está en línea"
  }
 }

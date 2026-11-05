@@ -63,7 +63,7 @@ object Notices {
         if (lastRead.value.isEmpty()) lastRead.value = Saved.prefs.getString(READ_KEY, "") ?: ""
         if (items.value.isEmpty()) Account.saved("notifications")?.let { items.value = it["items"].decodeAs<List<Notice>>().orEmpty(); loaded.value = true }
         try {
-            items.value = Account.callSaving("notifications")["items"].decodeAs<List<Notice>>().orEmpty()
+            items.value = Account.callSaving("notifications", mapOf("social2" to true))["items"].decodeAs<List<Notice>>().orEmpty()
             failed.value = null
             // the first time, what's already there isn't "new"
             if (lastRead.value.isEmpty()) markRead()
@@ -104,7 +104,7 @@ private fun emoji(type: String) = when (type) {
     "suggestion" -> "💡"
     "group_approved" -> "✅"
     "group_rejected" -> "❌"
-    "group_request" -> "💬"
+    "group_request", "post_comment" -> "💬"
     else -> "🔔"
 }
 
@@ -112,6 +112,7 @@ private fun title(n: Notice) = when (n.type) {
     "friend_request" -> tr("New friend request")
     "friend_accept" -> tr("You have a new friend")
     "poke" -> n.name ?: ""
+    "post_comment" -> trf("%s commented on your post", n.name ?: "")
     "upload" -> tr("New upload on ASU Bank")
     "announcement" -> tr("Announcement")
     "group_request" -> tr("New group request")
@@ -151,6 +152,7 @@ fun NotificationsScreen(back: Boolean = false) {
     fun open(n: Notice) {
         when (n.type) {
             "friend_request" -> nav.navigate(Routes.FRIENDS)
+            "post_comment" -> nav.navigate(Routes.FEED)
             "friend_accept", "poke" -> n.userId?.takeIf { it.isNotEmpty() }?.let { nav.navigate("profile/$it") }
             "upload" -> n.url?.takeIf { it.isNotEmpty() }?.let { nav.openMaterial(Material(u = it, t = n.text ?: "")) }
             "announcement" -> ChatNotifier.pendingRoom.value = "announcements"

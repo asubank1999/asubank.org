@@ -16,10 +16,13 @@ struct SiteLink: Identifiable {
 
 enum Links {
     static let quick: [SiteLink] = [
+        .init(emoji: "📅", title: "Calendar 2026–2027", subtitle: "This year's important dates.", added: "2026-08-31", target: .web("/schedules/calendar27")),
+        .init(emoji: "⏰", title: "My lectures", subtitle: "Your timetable, with reminders.", target: .tab(.lectures)),
+        .init(emoji: "✅", title: "Exams & tasks", subtitle: "Everything you have coming up.", target: .web("/app/planner")),
         .init(emoji: "🆕", title: "Latest uploads", subtitle: "Newest PDFs, midterms, finals and quizzes.", target: .web("/guides/latest")),
         .init(emoji: "⚡", title: "Google Drive materials", subtitle: "Search every uploaded file.", badge: "FAST", target: .tab(.search)),
+        .init(emoji: "🎯", title: "Focus timer", subtitle: "Study in short sessions with breaks.", target: .web("/app/focus")),
         .init(emoji: "📥", title: "Recent uploads", subtitle: "Latest study materials and resources.", target: .web("/portal/confirm_device")),
-        .init(emoji: "📅", title: "Calendar 2026–2027", subtitle: "This year's important dates.", added: "2026-08-31", target: .web("/schedules/calendar27")),
         .init(emoji: "📬", title: "Request a material", subtitle: "Can't find it? Ask for it.", target: .web("/requests/student_request_portal")),
         .init(emoji: "📤", title: "Upload files", subtitle: "Share your study materials.", target: .tab(.upload)),
         .init(emoji: "📝", title: "Rate your teachers", subtitle: "See averages and rate anonymously.", target: .web("/requests/portal_to_rating")),
@@ -116,6 +119,7 @@ struct HomeView: View {
     @EnvironmentObject private var app: AppState
     @EnvironmentObject private var library: Library
     @EnvironmentObject private var saved: SavedStore
+    @ObservedObject private var notices = NoticeStore.shared
 
     @State private var linked: Route?
 
@@ -125,9 +129,10 @@ struct HomeView: View {
         ABStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    hero
-                    WeatherCard()
+                    HomeCalendarCard()
                     NextLectureCard()
+                    HomeDueCard()
+                    hero.padding(.top, 4)
                     SponsorCard()
                     if !saved.recent.isEmpty {
                         SectionHeader(title: "Continue")
@@ -146,12 +151,15 @@ struct HomeView: View {
                     }
                     .padding(.horizontal, 16)
 
+                    SectionHeader(title: "Calendars & schedules", arabic: "التقويم والجداول")
+                    group(Links.schedules)
+
                     subjects
+
+                    WeatherCard()
 
                     SectionHeader(title: "New here? Start with these", arabic: "طالب جديد؟")
                     group(Links.newHere)
-                    SectionHeader(title: "Calendars & schedules", arabic: "التقويم والجداول")
-                    group(Links.schedules)
                     SectionHeader(title: "Community & services")
                     group(Links.community)
 
@@ -163,6 +171,14 @@ struct HomeView: View {
             }
             .background(Color.abBackground)
             .navigationTitle("ASU Bank")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button { app.tab = .notifications; Haptics.tap() } label: {
+                        Image(systemName: notices.unread > 0 ? "bell.badge.fill" : "bell")
+                    }
+                    .accessibilityLabel(Text("Notifications"))
+                }
+            }
             .refreshable { await library.load() }
             .abDestinations()
             // asubank.org links opened from outside the app show their native screen here
@@ -210,7 +226,7 @@ struct HomeView: View {
         }
         .padding(20)
         .background(
-            LinearGradient(colors: [Color(UIColor(hex: 0x8C1D40)), Color(UIColor(hex: 0x5a0f28))], startPoint: .topLeading, endPoint: .bottomTrailing),
+            LinearGradient(colors: AppTheme.heroColors, startPoint: .topLeading, endPoint: .bottomTrailing),
             in: RoundedRectangle(cornerRadius: 22, style: .continuous)
         )
         .overlay(alignment: .topTrailing) {

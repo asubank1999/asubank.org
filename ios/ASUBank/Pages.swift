@@ -183,6 +183,10 @@ struct SitePageView: View {
             if AccountStore.shared.signedIn { AccountScreen() } else { SignInPrompt() }
         } else if path == "/app/theme" {
             ThemeScreen()
+        } else if path == "/app/planner" {
+            PlannerScreen()
+        } else if path == "/app/focus" {
+            FocusTimerScreen()
         } else if path == "/app/language" {
             LanguageScreen()
         } else if path == "/requests/service_rating" {

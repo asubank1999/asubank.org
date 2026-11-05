@@ -1,5 +1,11 @@
 package org.asubank.app
 
+import androidx.compose.ui.draw.clip
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material.icons.filled.NotificationsNone
+import androidx.compose.material.icons.filled.DynamicFeed
+import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.BarChart
@@ -104,10 +110,13 @@ data class SiteLink(
 
 object Links {
     val quick = listOf(
+        SiteLink("📅", "Calendar 2026–2027", "This year's important dates.", added = "2026-08-31", web = "/schedules/calendar27"),
+        SiteLink("⏰", "My lectures", "Your timetable, with reminders.", tab = Routes.LECTURES),
+        SiteLink("✅", "Exams & tasks", "Everything you have coming up.", web = "/app/planner"),
         SiteLink("🆕", "Latest uploads", "Newest PDFs, midterms, finals and quizzes.", web = "/guides/latest"),
         SiteLink("⚡", "Google Drive materials", "Search every uploaded file.", badge = "FAST", tab = Routes.SEARCH),
+        SiteLink("🎯", "Focus timer", "Study in short sessions with breaks.", web = "/app/focus"),
         SiteLink("📥", "Recent uploads", "Latest study materials and resources.", web = "/portal/confirm_device"),
-        SiteLink("📅", "Calendar 2026–2027", "This year's important dates.", added = "2026-08-31", web = "/schedules/calendar27"),
         SiteLink("📬", "Request a material", "Can't find it? Ask for it.", web = "/requests/student_request_portal"),
         SiteLink("📤", "Upload files", "Share your study materials.", tab = Routes.UPLOAD),
         SiteLink("📝", "Rate your teachers", "See averages and rate anonymously.", web = "/requests/portal_to_rating"),
@@ -184,16 +193,30 @@ fun HomeScreen() {
     val subjects by Library.subjects.collectAsState()
     var q by remember { mutableStateOf("") }
 
+    val accentId by Prefs.accent.collectAsState()
+    val notices by Notices.items.collectAsState()
+    val noticesRead by Notices.lastRead.collectAsState()
+    val unread = notices.any { it.created > noticesRead }
     LazyColumn(Modifier.fillMaxWidth()) {
         item {
+            Row(Modifier.fillMaxWidth().statusBarsPadding().padding(start = 20.dp, end = 8.dp, top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("ASU Bank", Modifier.weight(1f), fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                IconButton(onClick = { nav.navigate(Routes.NOTIFICATIONS) }) {
+                    if (unread) BadgedBox(badge = { androidx.compose.material3.Badge() }) { Icon(Icons.Filled.Notifications, tr("Notifications")) }
+                    else Icon(Icons.Filled.NotificationsNone, tr("Notifications"))
+                }
+            }
+        }
+        item { HomeCalendarCard() }
+        item { NextLectureCard() }
+        item { HomeDueCard() }
+        item {
             Box(
-                Modifier.fillMaxWidth()
-                    .background(Brush.verticalGradient(listOf(Color(0xFF8C1D40), Color(0xFF5A0F28))))
-                    .statusBarsPadding()
-                    .padding(start = 20.dp, end = 20.dp, top = 22.dp, bottom = 22.dp),
+                Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp).clip(RoundedCornerShape(22.dp))
+                    .background(heroBrush((Prefs.accents.firstOrNull { it.id == accentId } ?: Prefs.accents[0]).light))
+                    .padding(start = 18.dp, end = 18.dp, top = 16.dp, bottom = 18.dp),
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("ASU Bank", color = Color.White, fontSize = 34.sp, fontWeight = FontWeight.Bold)
                     Text(
                         "Summaries, past papers and test banks for ASU students." + if (items.isNotEmpty()) " " + trf("%d materials in %d subjects.", items.size, subjects.size) else "",
                         color = Color.White.copy(alpha = 0.85f), style = MaterialTheme.typography.bodyMedium,
@@ -215,8 +238,6 @@ fun HomeScreen() {
                 }
             }
         }
-        item { WeatherCard() }
-        item { NextLectureCard() }
         item { SponsorCard() }
         if (recent.isNotEmpty()) {
             item { SectionTitle("Continue") }
@@ -248,16 +269,17 @@ fun HomeScreen() {
                 if (pair.size == 1) Spacer(Modifier.weight(1f))
             }
         }
+        item { SectionTitle("Calendars & schedules") }
+        item { Group { LinkRows(Links.schedules) } }
         item { SectionTitle("Subjects", "المواد") }
         item {
             Group {
                 ListRow("All subjects", trf("%d subjects by faculty", subjects.size), icon = Icons.Filled.GridView) { nav.openPage("/banks/subjects", "All subjects") }
             }
         }
+        item { WeatherCard() }
         item { SectionTitle("New here?", "طالب جديد") }
         item { Group { LinkRows(Links.newHere) } }
-        item { SectionTitle("Calendars & schedules") }
-        item { Group { LinkRows(Links.schedules) } }
         item { SectionTitle("Community & services") }
         item { Group { LinkRows(Links.community) } }
         item { SectionTitle("Help") }
@@ -329,7 +351,7 @@ fun MoreScreen() {
                         }
                     } else ListRow("Sign in or create an account", "Chat with students, synced with asubank.org", icon = Icons.Filled.AccountCircle) { Account.signInShown.value = true }
                     Divider()
-                    ListRow("Theme", listOf("Match my phone", "Light", "Dark", "Pitch black")[appearance.coerceIn(0, 3)], icon = Icons.Filled.Palette) { nav.navigate("theme") }
+                    ListRow("Theme", listOf("Match my phone", "Light", "Dark", "Pitch black", "Midnight", "Forest night", "Plum", "Sand", "Sky", "Blush")[appearance.coerceIn(0, 9)], icon = Icons.Filled.Palette) { nav.navigate("theme") }
                     Divider()
                     ListRow("Customize tab bar", icon = Icons.Filled.Dashboard) { nav.navigate("tabBar") }
                     Divider()
@@ -341,13 +363,17 @@ fun MoreScreen() {
                     Divider(); ListRow("Saved", icon = Icons.Filled.Star) { nav.navigate("savedList") }
                     Divider(); ListRow("Notifications", icon = Icons.Filled.Notifications) { nav.navigate(Routes.NOTIFICATIONS) }
                     Divider(); ListRow("Friends", icon = Icons.Filled.People) { nav.navigate(Routes.FRIENDS) }
+                    Divider(); ListRow("Feed", icon = Icons.Filled.DynamicFeed) { nav.navigate(Routes.FEED) }
                     Divider(); ListRow("My lectures", icon = Icons.Filled.Alarm) { nav.navigate(Routes.LECTURES) }
+                    Divider(); ListRow("Exams & tasks", icon = Icons.Filled.Checklist) { nav.openPage("/app/planner", "") }
+                    Divider(); ListRow("Focus timer", icon = Icons.Filled.Timer) { nav.openPage("/app/focus", "") }
                     Divider(); ListRow("Life hacks", icon = Icons.Filled.Lightbulb) { nav.navigate(Routes.HACKS) }
                     if (u != null) { Divider(); ListRow("My profile", icon = Icons.Filled.AccountCircle) { nav.navigate("profile/${u.id}") } }
                     Divider()
                     ListRow("Student submissions", "Presentations for the campus screen", icon = Icons.Filled.Slideshow) { nav.navigate("submissions?admin=") }
                 }
             }
+            item { Group(header = "Calendars & schedules") { LinkRows(Links.schedules) } }
             item {
                 Group(header = "All subjects") {
                     ListRow("Subjects directory", icon = Icons.Filled.GridView) { nav.openPage("/banks/subjects", "All subjects") }
@@ -362,7 +388,6 @@ fun MoreScreen() {
                 }
             }
             item { Group(header = "New students") { LinkRows(Links.newHere) } }
-            item { Group(header = "Calendars & schedules") { LinkRows(Links.schedules) } }
             item { Group(header = "Community & services") { LinkRows(Links.community) } }
             item { Group(header = "Help") { LinkRows(Links.help) } }
             if (donate) item {

@@ -100,6 +100,8 @@ fun SitePageScreen(path: String, title: String) {
         path == "/requests/student_ads" -> StudentAdsScreen()
         path == "/apps/donate" -> DonateScreen()
         path == "/app/theme" -> ThemeScreen()
+        path == "/app/planner" -> PlannerScreen()
+        path == "/app/focus" -> FocusTimerScreen()
         path == "/app/language" -> LanguageScreen()
         path == "/requests/service_rating" -> ServiceRatingScreen()
         path == "/apps/voting" -> VotingScreen()

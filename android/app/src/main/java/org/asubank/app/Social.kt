@@ -48,6 +48,8 @@ data class Poke(
 data class FeedPost(
     val id: String,
     val text: String = "",
+    val image: String = "",
+    val comments: Int = 0,
     val created: String? = null,
     val likes: Int = 0,
     val liked: Boolean = false,
@@ -167,7 +169,12 @@ fun PokeDialog(user: AbUser, onClose: () -> Unit) {
 @Composable
 fun ComposePostDialog(onClose: () -> Unit, posted: () -> Unit) {
     val scope = rememberCoroutineScope()
+    val ctx = LocalContext.current
     var text by remember { mutableStateOf("") }
+    var photo by remember { mutableStateOf<Uri?>(null) }
+    val pick = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) photo = uri
+    }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     AlertDialog(
@@ -179,14 +186,27 @@ fun ComposePostDialog(onClose: () -> Unit, posted: () -> Unit) {
                     text, { if (it.length <= 1000) text = it }, minLines = 5, modifier = Modifier.fillMaxWidth(),
                     label = { Text("What's on your mind?") }, supportingText = { Text("${text.length}/1000") },
                 )
+                photo?.let {
+                    coil.compose.AsyncImage(it, null, Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(12.dp)), contentScale = androidx.compose.ui.layout.ContentScale.Crop)
+                }
+                Row {
+                    TextButton(onClick = { pick.launch("image/*") }) { Text(tr(if (photo == null) "Add a photo" else "Change photo")) }
+                    if (photo != null) TextButton(onClick = { photo = null }) { Text(tr("Remove photo"), color = MaterialTheme.colorScheme.error) }
+                }
                 error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             }
         },
         confirmButton = {
-            TextButton(enabled = !busy && text.isNotBlank(), onClick = {
+            TextButton(enabled = !busy && (text.isNotBlank() || photo != null), onClick = {
                 busy = true
                 scope.launch {
-                    try { Account.call("postCreate", mapOf("text" to text)); posted(); onClose() } catch (e: ApiError) { error = e.message }
+                    try {
+                        val fields = mutableMapOf<String, Any?>("text" to text)
+                        photo?.let { fields["image"] = PhotoTools.jpeg(ctx, it) ?: throw ApiError(tr("Couldn't load this photo")) }
+                        Account.call("postCreate", fields)
+                        posted()
+                        onClose()
+                    } catch (e: ApiError) { error = e.message }
                     busy = false
                 }
             }) { Text(if (busy) "Posting…" else "Post") }
@@ -202,11 +222,14 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
     val me by Account.user.collectAsState()
     var liked by remember(post.id, post.liked) { mutableStateOf(post.liked) }
     var likes by remember(post.id, post.likes) { mutableIntStateOf(post.likes) }
+    var commentCount by remember(post.id, post.comments) { mutableIntStateOf(post.comments) }
+    var showComments by remember { mutableStateOf(false) }
     var menu by remember { mutableStateOf(false) }
     var reporting by remember { mutableStateOf<ReportTarget?>(null) }
     var blocking by remember { mutableStateOf<BlockTarget?>(null) }
     reporting?.let { t -> ReportDialog(t) { reporting = null } }
     blocking?.let { t -> BlockDialog(t, { blocking = null; changed() }) }
+    if (showComments) CommentsDialog(post, { commentCount = it }) { showComments = false }
     Group {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -234,7 +257,14 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
                     }
                 }
             }
-            Text(post.text)
+            if (post.text.isNotEmpty()) Text(post.text)
+            if (post.image.isNotEmpty()) coil.compose.AsyncImage(
+                post.image, tr("View photo"),
+                Modifier.fillMaxWidth().height(280.dp).clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceVariant)
+                    .clickable { PhotoPeek.show(post.image) },
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(
                 Modifier.clip(RoundedCornerShape(50)).clickable {
                     val on = !liked
@@ -246,6 +276,14 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
             ) {
                 Icon(if (liked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder, null, tint = if (liked) Color(0xFFE53935) else MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp))
                 Text("$likes", style = MaterialTheme.typography.bodySmall)
+            }
+            Row(
+                Modifier.clip(RoundedCornerShape(50)).clickable { showComments = true }.padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Icon(Icons.Filled.ChatBubbleOutline, tr("Comments"), tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(18.dp))
+                Text("$commentCount", style = MaterialTheme.typography.bodySmall)
+            }
             }
         }
     }
@@ -458,6 +496,8 @@ fun ProfileScreen(userId: String) {
     var blocking by remember { mutableStateOf<BlockTarget?>(null) }
     var poking by remember { mutableStateOf<AbUser?>(null) }
     var composing by remember { mutableStateOf(false) }
+    var coverBusy by remember { mutableStateOf(false) }
+    var coverMenu by remember { mutableStateOf(false) }
 
     fun readProfile(r: kotlinx.serialization.json.JsonObject) {
         user = r["user"].decodeAs<AbUser>()
@@ -475,6 +515,19 @@ fun ProfileScreen(userId: String) {
         } catch (e: ApiError) { error = e.message }
     }
     LaunchedEffect(userId) { load() }
+    fun setCover(uri: Uri?) {
+        coverBusy = true
+        scope.launch {
+            try {
+                Account.setCover(uri?.let { PhotoTools.jpeg(ctx, it) ?: throw ApiError(tr("Couldn't load this photo")) })
+                load()
+            } catch (e: ApiError) { Toast.makeText(ctx, e.message, Toast.LENGTH_LONG).show() }
+            coverBusy = false
+        }
+    }
+    val pickCover = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) setCover(uri)
+    }
     reporting?.let { t -> ReportDialog(t) { reporting = null } }
     blocking?.let { t -> BlockDialog(t, { blocking = null; scope.launch { load() } }) }
     poking?.let { u -> PokeDialog(u) { poking = null } }
@@ -487,8 +540,24 @@ fun ProfileScreen(userId: String) {
                 val u = user
                 Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     val c = hexColor(u?.color ?: "#8C1D40")
-                    Box(Modifier.fillMaxWidth().height(170.dp)) {
-                        Box(Modifier.fillMaxWidth().height(118.dp).clip(RoundedCornerShape(18.dp)).background(Brush.linearGradient(listOf(c, MaterialTheme.colorScheme.primary.copy(alpha = 0.75f)))))
+                    Box(Modifier.fillMaxWidth().height(202.dp)) {
+                        Box(Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(18.dp)).background(Brush.linearGradient(listOf(c, MaterialTheme.colorScheme.primary.copy(alpha = 0.75f)))))
+                        val cover = u?.cover.orEmpty()
+                        if (cover.isNotEmpty()) coil.compose.AsyncImage(
+                            cover, tr("View cover photo"),
+                            Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(18.dp)).clickable { PhotoPeek.show(cover) },
+                            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                        )
+                        if (isMe) Box(Modifier.align(Alignment.TopEnd).padding(8.dp)) {
+                            IconButton(
+                                onClick = { coverMenu = true }, enabled = !coverBusy,
+                                modifier = Modifier.size(38.dp).clip(CircleShape).background(Color.Black.copy(alpha = 0.45f)),
+                            ) { Icon(Icons.Filled.PhotoCamera, tr("Change cover photo"), tint = Color.White, modifier = Modifier.size(20.dp)) }
+                            DropdownMenu(coverMenu, { coverMenu = false }) {
+                                DropdownMenuItem(text = { Text(tr("Choose a cover photo")) }, onClick = { coverMenu = false; pickCover.launch("image/*") })
+                                if (cover.isNotEmpty()) DropdownMenuItem(text = { Text(tr("Remove cover photo")) }, onClick = { coverMenu = false; setCover(null) })
+                            }
+                        }
                         Box(Modifier.align(Alignment.BottomCenter).border(4.dp, MaterialTheme.colorScheme.background, CircleShape).padding(4.dp)) {
                             Avatar(u?.name ?: "", u?.color ?: "#8C1D40", 96.dp, u?.isAdmin == true, u?.avatar, u?.online)
                         }

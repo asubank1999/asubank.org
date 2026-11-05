@@ -17,7 +17,12 @@ shot 3-saved --es startTab saved
 shot 4-upload --es startTab upload
 shot 5-more --es startTab more
 shot 6-home-dark --es startTab home --ei appearance 2
+shot 31-home-midnight --es startTab home --ei appearance 4
+shot 32-home-sand --es startTab home --ei appearance 7
 shot 8-halls --es startTab home --ei appearance 0 --es startPath /guides/halls
+shot 33-feed --es startTab feed
+shot 34-planner --es startPath /app/planner
+shot 35-focus --es startPath /app/focus
 shot 9-ratings-intro --es startPath /requests/portal_to_rating
 sleep 6
 shot 10-ratings --ez rateIntro true --es startPath /requests/portal_to_rating

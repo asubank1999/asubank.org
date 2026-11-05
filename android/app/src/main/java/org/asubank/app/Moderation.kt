@@ -262,6 +262,14 @@ fun AdminReportsScreen() {
                                     } catch (e: ApiError) { error = e.message }
                                 }
                             }) { Text("Delete post", color = MaterialTheme.colorScheme.error) }
+                            if (r.str("kind") == "comment" || r.str("kind") == "story") TextButton(onClick = {
+                                scope.launch {
+                                    try {
+                                        Account.call(if (r.str("kind") == "story") "storyDelete" else "commentDelete", mapOf("id" to r.str("targetId")))
+                                        set(r, "done")
+                                    } catch (e: ApiError) { error = e.message }
+                                }
+                            }) { Text("Delete", color = MaterialTheme.colorScheme.error) }
                             if (r.str("kind") == "message") TextButton(onClick = { set(r, "done", deleteMessage = true) }) {
                                 Text("Delete message", color = MaterialTheme.colorScheme.error)
                             }

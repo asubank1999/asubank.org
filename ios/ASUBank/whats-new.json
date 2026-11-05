@@ -1,5 +1,19 @@
 [
  {
+  "version": "1.12.0",
+  "changes": [
+   "New Feed: posts with photos, comments and likes from everyone or just your friends",
+   "Stories: share a photo or text for 24 hours",
+   "Add a cover photo to your profile",
+   "Hold anyone's photo to see it bigger",
+   "Calendar, next lecture and your exams now come first on Home",
+   "New Exams & tasks list and a Focus timer",
+   "6 new backgrounds and 6 new accent colors",
+   "Who's online now lists every registered student, with search",
+   "Fixes: sharper profile photos, and the online row shows only people who are online"
+  ]
+ },
+ {
   "version": "1.11.0",
   "changes": [
    "See what changed after every update, and every past version under More > What's New",

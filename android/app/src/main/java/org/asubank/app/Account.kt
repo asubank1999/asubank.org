@@ -99,6 +99,7 @@ data class AbUser(
     val lastSeen: String? = null,
     val mustReset: Boolean? = null,
     val avatar: String? = null,
+    val cover: String? = null,
     val phone: String? = null,
     val showPhone: Boolean? = null,
     val bio: String? = null,
@@ -311,6 +312,11 @@ object Account {
             "phone" to phone, "showPhone" to showPhone, "bio" to bio.take(160), "major" to major.take(60), "college" to college, "year" to year, "interests" to interests.take(160))))
 
     /** Uploads a profile photo (a 256 px JPEG, base64), or removes it with null */
+    suspend fun setCover(jpegBase64: String?) = adopt(
+        if (jpegBase64 == null) call("setCover", mapOf("remove" to true))
+        else call("setCover", mapOf("data" to jpegBase64))
+    )
+
     suspend fun setAvatar(jpegBase64: String?) = adopt(
         if (jpegBase64 == null) call("setAvatar", mapOf("remove" to true))
         else call("setAvatar", mapOf("data" to jpegBase64, "type" to "image/jpeg"))
@@ -421,7 +427,7 @@ object ChatNotifier {
     suspend fun check(ctx: Context) = lock.withLock {
         val token = Account.token ?: return@withLock
         val seen = Saved.prefs.getString("notify.lastSeen", null)
-        val r = runCatching { AccountsApi.call("events", mapOf("since" to (seen ?: ""), "social" to true), token = token) }.getOrNull() ?: return@withLock
+        val r = runCatching { AccountsApi.call("events", mapOf("since" to (seen ?: ""), "social" to true, "social2" to true), token = token) }.getOrNull() ?: return@withLock
         val events = r["events"].decodeAs<List<AbEvent>>() ?: emptyList()
         val newest = events.maxOfOrNull { it.created } ?: ""
         // first check after install: remember, don't notify
@@ -439,7 +445,7 @@ object ChatNotifier {
         return when (e.type) {
             "upload" -> uploads.value
             "announcement" -> announcements.value
-            "friend_request", "friend_accept", "poke" -> social.value
+            "friend_request", "friend_accept", "poke", "post_comment" -> social.value
             "group_request", "group_approved", "group_rejected" -> true
             else -> when {
                 e.room == openRoom -> false
@@ -455,7 +461,7 @@ object ChatNotifier {
         val reply = e.type == "message" && me != null && e.replyToUserId == me
         val who = e.displayName ?: ""
         val intent = Intent(ctx, AppActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        val isPrivate = e.type.startsWith("friend_") || e.type.startsWith("group_") || e.type == "poke"
+        val isPrivate = e.type.startsWith("friend_") || e.type.startsWith("group_") || e.type == "poke" || e.type == "post_comment"
         if (isPrivate && !e.type.startsWith("group_")) socialUnread.value += 1
         when {
             e.type == "upload" -> intent.putExtra("openPath", "/guides/latest")
@@ -474,6 +480,7 @@ object ChatNotifier {
             e.type == "friend_request" -> tr("New friend request")
             e.type == "friend_accept" -> tr("You have a new friend")
             e.type == "poke" -> "👉 $who"
+            e.type == "post_comment" -> trf("%s commented on your post", who)
             e.type == "group_request" -> tr("New group request")
             e.type == "group_approved" -> tr("Your group was accepted")
             e.type == "group_rejected" -> tr("Your group wasn't accepted")

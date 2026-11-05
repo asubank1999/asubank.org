@@ -11,6 +11,8 @@ struct Avatar: View {
     var admin = false
     var photo: String? = nil
     var online: Bool? = nil
+    /// Holding the photo shows it bigger. Off where holding already means something else.
+    var peek = true
     var body: some View {
         let c = Color(hexString: color)
         let letter = Text(String(name.prefix(1)).uppercased())
@@ -35,6 +37,7 @@ struct Avatar: View {
                     .offset(x: 1, y: -1)
             }
         }
+        .modifier(AvatarPeek(photo: peek ? photo : nil))
         .accessibilityHidden(true)
     }
 }
@@ -330,7 +333,7 @@ struct AccountScreen: View {
                                 Button(role: .destructive) { setPhoto(nil) } label: { Label("Remove photo", systemImage: "trash") }
                             }
                         } label: {
-                            Avatar(name: u.displayName, color: u.color, size: 64, admin: u.isAdmin, photo: u.avatar)
+                            Avatar(name: u.displayName, color: u.color, size: 64, admin: u.isAdmin, photo: u.avatar, peek: false)
                                 .overlay(alignment: .bottomLeading) {
                                     Image(systemName: photoBusy ? "hourglass.circle.fill" : "camera.circle.fill").font(.system(size: 22))
                                         .foregroundStyle(.white, Color.abAccent).offset(x: -2, y: 2)

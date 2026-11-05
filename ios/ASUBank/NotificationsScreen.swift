@@ -32,7 +32,7 @@ final class NoticeStore: ObservableObject {
         guard account.signedIn else { items = []; loaded = false; return }
         if items.isEmpty, let r = account.saved("notifications") { items = decode([Notice].self, r["items"]) ?? []; loaded = true }
         do {
-            let r = try await account.callSaving("notifications")
+            let r = try await account.callSaving("notifications", ["social2": true])
             let list = decode([Notice].self, r["items"]) ?? []
             if list != items { items = list }
             failed = nil
@@ -96,6 +96,8 @@ struct NotificationsScreen: View {
         switch n.type {
         case "friend_request":
             NavigationLink { FriendsScreen() } label: { content(n) }
+        case "post_comment":
+            NavigationLink { FeedScreen() } label: { content(n) }
         case "friend_accept", "poke":
             if let id = n.userId, !id.isEmpty {
                 NavigationLink { ProfileScreen(userId: id, fallbackName: n.name ?? "", fallbackColor: n.color ?? "#8C1D40") } label: { content(n) }
@@ -151,6 +153,7 @@ struct NotificationsScreen: View {
         case "group_approved": return "✅"
         case "group_rejected": return "❌"
         case "group_request": return "💬"
+        case "post_comment": return "💬"
         default: return "🔔"
         }
     }
@@ -160,6 +163,7 @@ struct NotificationsScreen: View {
         case "friend_request": return L("New friend request")
         case "friend_accept": return L("You have a new friend")
         case "poke": return n.name ?? ""
+        case "post_comment": return String(format: L("%@ commented on your post"), n.name ?? "")
         case "upload": return L("New upload on ASU Bank")
         case "announcement": return L("Announcement")
         case "group_request": return L("New group request")

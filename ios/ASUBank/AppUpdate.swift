@@ -90,7 +90,7 @@ final class AppConfig: ObservableObject {
         let newest = [store?.version, remote?.ios?.latest].compactMap { $0 }.max { Self.compare($0, $1) < 0 }
         latest = newest
         // Sideloaded builds have no App Store page: send them to the GitHub release instead
-        if !Self.isStore, storeURL == nil, let n = newest { storeURL = URL(string: "https://github.com/asubank1999/asubank.org/releases/tag/ios-v\(n)") }
+        if !Self.isStore, storeURL == nil, let n = newest { storeURL = URL(string: "https://github.com/asubank1999/asubank.org/releases/tag/android-v\(n)") }
         notes = store?.releaseNotes ?? remote?.ios?.notes
         // Only nag when there is somewhere to update from
         guard storeURL != nil else { return }

@@ -55,6 +55,9 @@
 "%d selected" = "%d seleccionados";
 "%lld selected" = "%lld seleccionados";
 "%@ selected" = "%@ seleccionados";
+"%d students" = "%d estudiantes";
+"%lld students" = "%lld estudiantes";
+"%@ students" = "%@ estudiantes";
 "%d subjects by faculty" = "%d materias por facultad";
 "%lld subjects by faculty" = "%lld materias por facultad";
 "%@ subjects by faculty" = "%@ materias por facultad";
@@ -64,6 +67,9 @@
 "%d users" = "%d usuarios";
 "%lld users" = "%lld usuarios";
 "%@ users" = "%@ usuarios";
+"%d views" = "%d vistas";
+"%lld views" = "%lld vistas";
+"%@ views" = "%@ vistas";
 "%d votes" = "%d votos";
 "%lld votes" = "%lld votos";
 "%@ votes" = "%@ votos";
@@ -71,6 +77,7 @@
 "%lld%% off applied" = "%lld%% de descuento aplicado";
 "%@%% off applied" = "%@%% de descuento aplicado";
 "%@ accepted your friend request" = "%@ aceptó tu solicitud de amistad";
+"%@ commented on your post" = "%@ comentó tu publicación";
 "%@ has a question for you" = "%@ tiene una pregunta para ti";
 "%@ in 10 minutes" = "%@ en 10 minutos";
 "%@ needs your notes" = "%@ necesita tus apuntes";
@@ -111,6 +118,7 @@
 "5 JOD - Final payment only if your ad gets accepted" = "5 JOD - Final payment only if your ad gets accepted";
 "5 JOD - Initial payment when submitting your advertisement" = "5 JOD - Initial payment when submitting your advertisement";
 "6 - Gymnasium" = "6 - Gymnasium";
+"6 new backgrounds and 6 new accent colors" = "6 fondos nuevos y 6 colores de acento nuevos";
 "6-digit code" = "Código de 6 dígitos";
 "7 - College of Nursing" = "7 - College of Nursing";
 "7 AM – 4 PM" = "7 AM – 4 PM";
@@ -173,7 +181,9 @@
 "Add a backup link" = "Añadir un enlace de respaldo";
 "Add a course" = "Añadir un curso";
 "Add a course, e.g. Calculus 1" = "Añade un curso, p. ej. Calculus 1";
+"Add a cover photo to your profile" = "Añade una foto de portada a tu perfil";
 "Add a lecture" = "Añadir una clase";
+"Add a photo" = "Añadir foto";
 "Add a room" = "Añadir una sala";
 "Add a tab" = "Añadir una pestaña";
 "Add a topic, e.g. Integrals, Midterm review" = "Add a topic, e.g. Integrals, Midterm review";
@@ -182,7 +192,9 @@
 "Add at least one topic you want to study." = "Add at least one topic you want to study.";
 "Add friend" = "Añadir amigo";
 "Add friends or write the first one." = "Añade amigos o escribe la primera.";
+"Add story" = "Añadir historia";
 "Add your classmates as friends" = "Añade a tus compañeros como amigos";
+"Add your exams and assignments, and the next ones show on Home." = "Añade tus exámenes y tareas, y los próximos aparecerán en Inicio.";
 "Add your group" = "Añade tu grupo";
 "Add your group's link" = "Añade el enlace de tu grupo";
 "Add your subject, hall and time. We'll remind you 10 minutes before it starts." = "Añade tu materia, aula y hora. Te avisaremos 10 minutos antes de empezar.";
@@ -319,6 +331,7 @@
 "Be kind and help each other. Don't share personal info." = "Sé amable y ayuda a los demás. No compartas datos personales.";
 "Be kind and helpful. Don't share exam answers during an exam, private info or anything illegal. Admins can remove messages and ban accounts." = "Sé amable y útil. No compartas respuestas durante un examen, datos privados ni nada ilegal. Los admins pueden borrar mensajes y bloquear cuentas.";
 "Be respectful. No harassment, bullying, threats or hate speech." = "Be respectful. No harassment, bullying, threats or hate speech.";
+"Be the first to comment." = "Sé el primero en comentar.";
 "Be the first to rate them, and others will join in." = "Be the first to rate them, and others will join in.";
 "Be the first to rate them." = "Sé el primero en valorarlo.";
 "Be the first to say something." = "Sé el primero en decir algo.";
@@ -326,6 +339,7 @@
 "Before you upload" = "Antes de subir";
 "Bell" = "Campana";
 "Below 60 the average is under the passing limit." = "Por debajo de 60 el promedio no llega al aprobado.";
+"Berry" = "Baya";
 "Bigger than 25 MB." = "Bigger than 25 MB.";
 "Binomial PDF" = "Binomial PDF";
 "Binomial and Poisson" = "Binomial and Poisson";
@@ -337,10 +351,12 @@
 "Block" = "Bloquear";
 "Block %@?" = "Block %@?";
 "Blocked people" = "Blocked people";
+"Blush" = "Rubor";
 "Book a photoshoot" = "Reserva una sesión de fotos";
 "Book and cap" = "Libro y birrete";
 "Book another session" = "Reservar otra sesión";
 "Booking submitted!" = "¡Reserva enviada!";
+"Break" = "Descanso";
 "Browse by subject" = "Explora por materia";
 "Browse every subject by college" = "Explora las materias por facultad";
 "Building" = "Building";
@@ -368,6 +384,7 @@
 "Calculus final" = "Calculus final";
 "Calendar 2025–2026" = "Calendar 2025–2026";
 "Calendar 2026–2027" = "Calendar 2026–2027";
+"Calendar, next lecture and your exams now come first on Home" = "El calendario, la próxima clase y tus exámenes ahora aparecen primero en Inicio";
 "Calendars & schedules" = "Calendarios y horarios";
 "Call 911" = "Llamar al 911";
 "Campus & study" = "Campus & study";
@@ -388,6 +405,7 @@
 "Category" = "Categoría";
 "Central Limit Theorem" = "Central Limit Theorem";
 "Change" = "Cambiar";
+"Change cover photo" = "Cambiar foto de portada";
 "Change password" = "Cambiar contraseña";
 "Change photo" = "Cambiar foto";
 "Changing the app icon now works when the app is installed with TrollStore" = "Cambiar el icono de la app ya funciona cuando se instala con TrollStore";
@@ -412,6 +430,7 @@
 "Choose (optional)" = "Elegir (opcional)";
 "Choose Delete my account and enter your password." = "Choose Delete my account and enter your password.";
 "Choose a PDF" = "Elige un PDF";
+"Choose a cover photo" = "Elegir foto de portada";
 "Choose a file" = "Elegir un archivo";
 "Choose a photo" = "Elegir una foto";
 "Choose a service." = "Elige un servicio.";
@@ -459,6 +478,8 @@
 "Combinations" = "Combinations";
 "Combinations Example" = "Combinations Example";
 "Coming soon to revolutionize student advertising!" = "Coming soon to revolutionize student advertising!";
+"Coming up" = "Próximamente";
+"Comments" = "Comentarios";
 "Communication Skills Bank" = "Communication Skills Bank";
 "Community" = "Community";
 "Community & services" = "Comunidad y servicios";
@@ -486,6 +507,7 @@
 "Contributor" = "Colaborador";
 "Copied" = "Copiado";
 "Copied ALANQ99" = "ALANQ99 copiado";
+"Copper" = "Cobre";
 "Copy" = "Copiar";
 "Copy CliQ alias ALANQ99" = "Copiar alias CliQ ALANQ99";
 "Copy link" = "Copiar enlace";
@@ -500,6 +522,7 @@
 "Couldn't load the latest files." = "No se pudieron cargar los últimos archivos.";
 "Couldn't load the ratings" = "No se pudieron cargar las valoraciones";
 "Couldn't load the tips. Check your connection and try again." = "No se pudieron cargar los consejos. Revisa tu conexión e inténtalo de nuevo.";
+"Couldn't load this photo" = "No se pudo cargar esta foto";
 "Couldn't open" = "Couldn't open";
 "Couldn't open this folder" = "No se pudo abrir esta carpeta";
 "Couldn't reach ASU Bank. Check your connection and try again." = "Couldn't reach ASU Bank. Check your connection and try again.";
@@ -515,6 +538,7 @@
 "Course %d" = "Curso %d";
 "Course %lld" = "Curso %lld";
 "Course %@" = "Curso %@";
+"Course (optional)" = "Asignatura (opcional)";
 "Course Overview & Assignments" = "Course Overview & Assignments";
 "Course WhatsApp groups" = "Grupos de WhatsApp por curso";
 "Course matcher" = "Compañeros de estudio";
@@ -536,6 +560,9 @@
 "Customize tab bar" = "Personalizar la barra de pestañas";
 "Cyber security 🫀" = "Cyber security 🫀";
 "Dark" = "Oscuro";
+"Dark green background" = "Fondo verde oscuro";
+"Dark navy background" = "Fondo azul marino oscuro";
+"Dark purple background" = "Fondo morado oscuro";
 "Data Visualization" = "Data Visualization";
 "Date" = "Date";
 "Day" = "Day";
@@ -641,6 +668,7 @@
 "Email Verification Required" = "Email Verification Required";
 "Email necro144@yahoo.com from the address on your account and we will delete it for you." = "Email necro144@yahoo.com from the address on your account and we will delete it for you.";
 "Email, WhatsApp or ASU ID" = "Correo, WhatsApp o ID de ASU";
+"Emerald" = "Esmeralda";
 "Empty folder" = "Carpeta vacía";
 "Engineering" = "Ingeniería";
 "Engineering & IT" = "Ingeniería y TI";
@@ -673,13 +701,17 @@
 "Every frame, a story. Fill in your details and see the price as you go. The photographer reviews your request and sends the final invoice." = "Cada imagen, una historia. Rellena tus datos y mira el precio al instante. El fotógrafo revisa tu solicitud y envía la factura final.";
 "Every teacher shows an average out of 10 and how many students voted." = "Every teacher shows an average out of 10 and how many students voted.";
 "Every year and doctor in one place." = "Todos los años y profesores en un solo lugar.";
+"Everyone" = "Todos";
 "Everything on ASU Bank is searchable from one box: subject pages and the shared Google Drive." = "Everything on ASU Bank is searchable from one box: subject pages and the shared Google Drive.";
 "Everything students uploaded, updated live." = "Everything students uploaded, updated live.";
+"Everything you have coming up." = "Todo lo que tienes por delante.";
+"Exam" = "Examen";
 "Exam prep" = "Preparar exámenes";
 "Exam-style question bank" = "Exam-style question bank";
 "Example of Frequency Table 1" = "Example of Frequency Table 1";
 "Example of PDF" = "Example of PDF";
 "Example: [PHY 202] Dr. Smith, Fall 2023 midterm with solutions." = "Ejemplo: [PHY 202] Dr. Smith, parcial de otoño de 2023 con soluciones.";
+"Exams & tasks" = "Exámenes y tareas";
 "Excellent" = "Excellent";
 "Excellent with honors" = "Excellent with honors";
 "Expected Value 1" = "Expected Value 1";
@@ -738,11 +770,18 @@
 "First Year" = "First Year";
 "First name" = "Nombre";
 "First year" = "Primer año";
+"Fixes: sharper profile photos, and the online row shows only people who are online" = "Correcciones: fotos de perfil más nítidas y la fila de conectados solo muestra a quien está en línea";
+"Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "Correcciones: fotos de perfil más nítidas, las fotos ya no salen de lado en Android y la fila de conectados solo muestra a quien está en línea";
 "Flexible" = "Flexible";
 "Floor" = "Planta";
 "Floor %d" = "Planta %d";
 "Floor %lld" = "Planta %lld";
 "Floor %@" = "Planta %@";
+"Focus" = "Concentración";
+"Focus for %d minutes" = "Concentración durante %d minutos";
+"Focus for %lld minutes" = "Concentración durante %lld minutos";
+"Focus for %@ minutes" = "Concentración durante %@ minutos";
+"Focus timer" = "Temporizador de estudio";
 "Foggy" = "Niebla";
 "Folder" = "Carpeta";
 "Folders" = "Carpetas";
@@ -754,6 +793,7 @@
 "Football, coding, photography…" = "Fútbol, programación, fotografía…";
 "For the campus display screen" = "For the campus display screen";
 "Forest" = "Bosque";
+"Forest night" = "Bosque nocturno";
 "Forgot your password? Ask an admin in the WhatsApp community to reset it." = "¿Olvidaste tu contraseña? Pide a un admin en la comunidad de WhatsApp que la restablezca.";
 "Forgot your password? Ask an admin in the chat or on WhatsApp to reset it." = "¿Olvidaste tu contraseña? Pide a un admin en el chat o por WhatsApp que la restablezca.";
 "Found materials quickly" = "Encontré materiales rápido";
@@ -824,6 +864,7 @@
 "High %d° · Low %d°" = "Máx. %d° · Mín. %d°";
 "High %lld° · Low %lld°" = "Máx. %lld° · Mín. %lld°";
 "Histogram" = "Histogram";
+"Hold anyone's photo to see it bigger" = "Mantén pulsada la foto de cualquiera para verla más grande";
 "Home" = "Inicio";
 "Home and More always stay, and you can add up to %d more." = "Inicio y Más siempre se quedan, y puedes añadir hasta %d más.";
 "Home and More always stay, and you can add up to %lld more." = "Inicio y Más siempre se quedan, y puedes añadir hasta %lld más.";
@@ -887,6 +928,7 @@
 "Include the course code, professor name and semester if you know them. At least 20 characters." = "Incluye el código del curso, el profesor y el semestre si los conoces. Al menos 20 caracteres.";
 "Independence" = "Independence";
 "Independence (Continued)" = "Independence (Continued)";
+"Indigo" = "Índigo";
 "Industrial Engineering" = "Industrial Engineering";
 "Industrial engineering" = "Ingeniería industrial";
 "Information About Frequency Table" = "Information About Frequency Table";
@@ -924,6 +966,7 @@
 "Keep discussions relevant to university/academic matters." = "Keep discussions relevant to university/academic matters.";
 "Keep the app open until your files finish. You can close this screen." = "Mantén la app abierta hasta que terminen tus archivos. Puedes cerrar esta pantalla.";
 "Keep the app open until your files finish. You can leave this screen." = "Mantén la app abierta hasta que terminen tus archivos. Puedes salir de esta pantalla.";
+"Keep this screen open. A 5 minute break starts after each session." = "Mantén esta pantalla abierta. Tras cada sesión empieza un descanso de 5 minutos.";
 "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21)." = "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21).";
 "Lab Materials" = "Lab Materials";
 "Lab materials" = "Material de laboratorio";
@@ -961,6 +1004,7 @@
 "Link to the file (https://…)" = "Enlace al archivo (https://…)";
 "List of Halls and Faculties" = "List of Halls and Faculties";
 "Live results" = "Resultados en vivo";
+"Load more" = "Cargar más";
 "Loading folder…" = "Loading folder…";
 "Loading next class..." = "Loading next class...";
 "Loading ratings…" = "Cargando valoraciones…";
@@ -992,6 +1036,8 @@
 "Manage this user" = "Gestionar este usuario";
 "Marimba" = "Marimba";
 "Mark" = "Nota";
+"Mark as done" = "Marcar como hecho";
+"Mark as not done" = "Marcar como no hecho";
 "Match my phone" = "Como el teléfono";
 "Matches found: %d" = "Matches found: %d";
 "Matches found: %lld" = "Matches found: %lld";
@@ -1021,6 +1067,7 @@
 "Microbiology and Immunology" = "Microbiology and Immunology";
 "Microsoft Teams" = "Microsoft Teams";
 "Middle name (optional)" = "Segundo nombre (opcional)";
+"Midnight" = "Medianoche";
 "Midnight book" = "Libro nocturno";
 "Midterm" = "Parcial";
 "Mint" = "Menta";
@@ -1057,6 +1104,8 @@
 "New %d" = "New %d";
 "New %lld" = "New %lld";
 "New %@" = "New %@";
+"New Exams & tasks list and a Focus timer" = "Nueva lista de exámenes y tareas y un temporizador de estudio";
+"New Feed: posts with photos, comments and likes from everyone or just your friends" = "Nuevo feed: publicaciones con fotos, comentarios y me gusta de todos o solo de tus amigos";
 "New Student Guide" = "New Student Guide";
 "New Student Guide | Applied Science Private University" = "New Student Guide | Applied Science Private University";
 "New chat messages" = "Mensajes nuevos del chat";
@@ -1067,6 +1116,7 @@
 "New group request" = "Nueva solicitud de grupo";
 "New here?" = "¿Nuevo aquí?";
 "New here? Start with these" = "¿Nuevo aquí? Empieza por esto";
+"New item" = "Nuevo elemento";
 "New message from %@" = "Nuevo mensaje de %@";
 "New messages in the student chat" = "Mensajes nuevos en el chat de estudiantes";
 "New password" = "Contraseña nueva";
@@ -1075,6 +1125,7 @@
 "New report" = "Nuevo reporte";
 "New resources are added regularly. Check the website frequently or join our WhatsApp group for updates." = "New resources are added regularly. Check the website frequently or join our WhatsApp group for updates.";
 "New room" = "Sala nueva";
+"New story" = "Nueva historia";
 "New students" = "Nuevos estudiantes";
 "New suggestion" = "Nueva sugerencia";
 "New this week" = "Nuevos esta semana";
@@ -1088,6 +1139,7 @@
 "No Drive files match these filters." = "Ningún archivo de Drive coincide con estos filtros.";
 "No Drive files match." = "Ningún archivo de Drive coincide.";
 "No app can open this link" = "No app can open this link";
+"No comments yet" = "Aún no hay comentarios";
 "No events" = "Sin eventos";
 "No files" = "Sin archivos";
 "No files match this filter." = "No files match this filter.";
@@ -1102,6 +1154,7 @@
 "No other files on Drive" = "No hay más archivos en Drive";
 "No people found" = "No se encontraron personas";
 "No people found." = "No se encontraron personas.";
+"No posts from friends yet" = "Tus amigos aún no han publicado";
 "No posts yet" = "Aún no hay publicaciones";
 "No posts yet. Add friends or write the first one." = "Aún no hay publicaciones. Añade amigos o escribe la primera.";
 "No ratings yet" = "No ratings yet";
@@ -1138,6 +1191,7 @@
 "Nothing new" = "Nada nuevo";
 "Nothing new." = "Nada nuevo.";
 "Nothing opened yet" = "Nothing opened yet";
+"Nothing planned yet" = "Aún no hay nada planificado";
 "Nothing saved yet" = "Aún no has guardado nada";
 "Nothing to review." = "Nothing to review.";
 "Nothing was uploaded." = "Nothing was uploaded.";
@@ -1161,6 +1215,7 @@
 "Offline · %lld" = "Desconectados · %lld";
 "Offline · %@" = "Desconectados · %@";
 "Ogive" = "Ogive";
+"Olive" = "Oliva";
 "On asubank.org the search box is at the top of every page. Type the subject, press Enter, and the results load from the subject pages and the Drive together." = "On asubank.org the search box is at the top of every page. Type the subject, press Enter, and the results load from the subject pages and the Drive together.";
 "On asubank.org the search box is at the top of every page. Type the subject, press Enter, and the results load from the subject pages and the Drive together. Add the site to your home screen from Safari's Share menu to open it like an app." = "On asubank.org the search box is at the top of every page. Type the subject, press Enter, and the results load from the subject pages and the Drive together. Add the site to your home screen from Safari's Share menu to open it like an app.";
 "On subject pages · %d" = "En páginas de materias · %d";
@@ -1219,6 +1274,7 @@
 "Outside ASU" = "Fuera de ASU";
 "Outside ASU adds a 5 JD travel fee." = "Fuera de ASU se añade un cargo de 5 JD por traslado.";
 "Outstanding work" = "Outstanding work";
+"Overdue" = "Vencido";
 "Overview" = "Resumen";
 "PDF Summary" = "Resumen PDF";
 "PDF, PowerPoint, Word, images or video, up to 25 MB. It uploads right from the app." = "PDF, PowerPoint, Word, imágenes o video, hasta 25 MB. Se sube directamente desde la app.";
@@ -1237,6 +1293,7 @@
 "Past exams and finals" = "Exámenes anteriores y finales";
 "Past exams or quizzes (with solutions if possible)" = "Exámenes o pruebas anteriores (con soluciones si es posible)";
 "Paste the group's invite link, starting with https://" = "Pega el enlace de invitación, que empieza por https://";
+"Pause" = "Pausar";
 "Pay on campus" = "Pay on campus";
 "Payment Method: CliQ transfer" = "Payment Method: CliQ transfer";
 "Peer-verified study materials by Applied Science University students, for ASU students." = "Materiales revisados por estudiantes de la Universidad de Ciencias Aplicadas, para estudiantes de ASU.";
@@ -1287,6 +1344,7 @@
 "Please read our Terms of Service before using this website. By accessing these resources, you agree to our terms and conditions. The website owner is not responsible for exam results or user-generated comments." = "Please read our Terms of Service before using this website. By accessing these resources, you agree to our terms and conditions. The website owner is not responsible for exam results or user-generated comments.";
 "Please read this before you start" = "Lee esto antes de empezar";
 "Please review and accept the terms" = "Please review and accept the terms";
+"Plum" = "Ciruela";
 "Poisson" = "Poisson";
 "Poke" = "Toque";
 "Pokes and messages" = "Toques y mensajes";
@@ -1299,6 +1357,7 @@
 "Position %lld" = "Posición %lld";
 "Position %@" = "Posición %@";
 "Post" = "Publicar";
+"Post, comment and share stories with other ASU students." = "Publica, comenta y comparte historias con otros estudiantes de ASU.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it, even if they only want announcements." = "Se publica en 📣 Anuncios. Lo recibe todo el que tenga avisos activos, aunque solo quiera anuncios.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it." = "Se publica en 📣 Anuncios. Lo recibe todo el que tenga avisos activos.";
 "Posting…" = "Publicando…";
@@ -1376,6 +1435,7 @@
 "Rejected" = "Rechazado";
 "Remove" = "Quitar";
 "Remove admin" = "Remove admin";
+"Remove cover photo" = "Quitar foto de portada";
 "Remove friend" = "Eliminar amigo";
 "Remove from ASU Bank" = "Quitar de ASU Bank";
 "Remove from ASU Bank?" = "¿Quitar de ASU Bank?";
@@ -1407,6 +1467,7 @@
 "Requests" = "Requests";
 "Requests you sent" = "Solicitudes enviadas";
 "Researcher" = "Investigador";
+"Reset" = "Reiniciar";
 "Reset password" = "Restablecer contraseña";
 "Reset to the default" = "Restablecer";
 "Respect copyright and academic integrity policies" = "Respeta los derechos de autor y la integridad académica";
@@ -1421,6 +1482,7 @@
 "Rose" = "Rosa";
 "Royal blue" = "Azul real";
 "Safe and reliable payment process" = "Safe and reliable payment process";
+"Sand" = "Arena";
 "Save" = "Guardar";
 "Save it for later" = "Guárdalo para después";
 "Save rating" = "Save rating";
@@ -1457,6 +1519,7 @@
 "Search in this folder" = "Buscar en esta carpeta";
 "Search latest uploads" = "Buscar en las últimas subidas";
 "Search materials, e.g. calculus final" = "Busca materiales, p. ej. final de cálculo";
+"Search people" = "Buscar personas";
 "Search teachers" = "Buscar profesores";
 "Search text the app can’t translate by itself goes to Google Translate through our server, without your account." = "Search text the app can’t translate by itself goes to Google Translate through our server, without your account.";
 "Search the course name, not the file name" = "Busca el nombre del curso, no del archivo";
@@ -1471,6 +1534,7 @@
 "See My Courses / Registered Subjects" = "See My Courses / Registered Subjects";
 "See all versions" = "Ver todas las versiones";
 "See averages and rate anonymously." = "See averages and rate anonymously.";
+"See this year's important dates" = "Ver las fechas importantes de este año";
 "See what changed after every update, and every past version under More > What's New" = "Mira qué cambió tras cada actualización y todas las versiones anteriores en Más > Novedades";
 "Send" = "Enviar";
 "Send again" = "Send again";
@@ -1495,6 +1559,7 @@
 "Session" = "Sesión";
 "Session (%@ h × 5 JD)" = "Sesión (%@ h × 5 JD)";
 "Session type" = "Tipo de sesión";
+"Sessions today" = "Sesiones de hoy";
 "Settings" = "Ajustes";
 "Sexual content" = "Sexual content";
 "Share" = "Compartir";
@@ -1503,6 +1568,7 @@
 "Share file" = "Compartir archivo";
 "Share honest, anonymous feedback on instructors." = "Share honest, anonymous feedback on instructors.";
 "Share link" = "Compartir enlace";
+"Share something with other ASU students." = "Comparte algo con otros estudiantes de ASU.";
 "Share the file so anyone with the link can view it." = "Comparte el archivo para que cualquiera con el enlace pueda verlo.";
 "Share your educational resources with the ASU community" = "Share your educational resources with the ASU community";
 "Share your experience and help other students choose their sections." = "Comparte tu experiencia y ayuda a otros a elegir sus secciones.";
@@ -1536,6 +1602,7 @@
 "Sign in to chat" = "Inicia sesión para chatear";
 "Sign in to chat with other students and keep your account in sync with asubank.org." = "Inicia sesión para chatear y mantener tu cuenta sincronizada con asubank.org.";
 "Sign in to chat with other students." = "Sign in to chat with other students.";
+"Sign in to see the feed" = "Inicia sesión para ver el feed";
 "Sign in to see your notifications" = "Inicia sesión para ver tus notificaciones";
 "Sign in with an admin account to manage ASU Bank." = "Inicia sesión con una cuenta de admin para gestionar ASU Bank.";
 "Sign out" = "Cerrar sesión";
@@ -1544,11 +1611,14 @@
 "Signed in as @%@" = "Sesión iniciada como @%@";
 "Simple Pricing" = "Simple Pricing";
 "Site policies and rules." = "Site policies and rules.";
+"Sky" = "Cielo";
 "Slides" = "Diapositivas";
 "Smooth download" = "Descarga fluida";
 "Snow" = "Nieve";
 "So we can reply to you" = "So we can reply to you";
 "Soft" = "Suave";
+"Soft blue background" = "Fondo azul suave";
+"Soft pink background" = "Fondo rosa suave";
 "Something else" = "Something else";
 "Something went wrong." = "Algo salió mal.";
 "Something went wrong. Try again." = "Something went wrong. Try again.";
@@ -1562,6 +1632,7 @@
 "Sponsor" = "Patrocinador";
 "Sponsored" = "Patrocinado";
 "Standard" = "Estándar";
+"Start" = "Empezar";
 "Start the conversation!" = "Start the conversation!";
 "Starts at" = "Empieza a las";
 "Starts at %@" = "Empieza a las %@";
@@ -1572,6 +1643,7 @@
 "Still can't find it?" = "¿Sigues sin encontrarlo?";
 "Storage" = "Almacenamiento";
 "Stored on" = "Guardado en";
+"Stories: share a photo or text for 24 hours" = "Historias: comparte una foto o un texto durante 24 horas";
 "Strong and steady" = "Strong and steady";
 "Structured submission" = "Envío estructurado";
 "Stuck on something? Ask other students" = "¿Atascado? Pregunta a otros estudiantes";
@@ -1592,6 +1664,7 @@
 "Study cards" = "Tarjetas de estudio";
 "Study guides or cheat sheets" = "Guías de estudio o resúmenes";
 "Study help" = "Ayuda de estudio";
+"Study in short sessions with breaks." = "Estudia en sesiones cortas con descansos.";
 "Study materials for ASU students" = "Materiales de estudio para estudiantes de ASU";
 "Study place" = "Lugar de estudio";
 "Study plans" = "Study plans";
@@ -1648,6 +1721,7 @@
 "Tap ☆ on any file, or swipe right on it, to keep it here." = "Tap ☆ on any file, or swipe right on it, to keep it here.";
 "Targeted" = "Dirigido";
 "Targeted Audience" = "Targeted Audience";
+"Task" = "Tarea";
 "Teacher" = "Profesor";
 "Teacher not listed?" = "Teacher not listed?";
 "Teacher's full name" = "Nombre completo del profesor";
@@ -1741,6 +1815,7 @@
 "Thursday" = "Thursday";
 "Time" = "Time";
 "Tips" = "Consejos";
+"Title" = "Título";
 "Title or student" = "Title or student";
 "To" = "Hasta";
 "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information." = "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.";
@@ -1801,6 +1876,7 @@
 "University ID" = "ID universitario";
 "University ID (optional)" = "ID universitario (opcional)";
 "University WhatsApp Links & Resources" = "University WhatsApp Links & Resources";
+"University calendar" = "Calendario universitario";
 "University email" = "Correo universitario";
 "University email (optional)" = "Correo universitario (opcional)";
 "University groups" = "University groups";
@@ -1877,7 +1953,10 @@
 "Videos" = "Vídeos";
 "View File" = "View File";
 "View and download for education only. Redistribution is forbidden without permission." = "View and download for education only. Redistribution is forbidden without permission.";
+"View cover photo" = "Ver foto de portada";
+"View full screen" = "Ver a pantalla completa";
 "View our" = "View our";
+"View photo" = "Ver foto";
 "View profile" = "Ver perfil";
 "View your enrolled courses for the current semester" = "View your enrolled courses for the current semester";
 "Violence or threats" = "Violence or threats";
@@ -1886,6 +1965,7 @@
 "Vote again" = "Votar de nuevo";
 "Waiting" = "Waiting";
 "Want your name here?" = "¿Quieres tu nombre aquí?";
+"Warm light background" = "Fondo claro cálido";
 "We got your request. Message us on WhatsApp to confirm the payment." = "We got your request. Message us on WhatsApp to confirm the payment.";
 "We got your suggestion. The ASU Bank team will look at it soon." = "Recibimos tu sugerencia. El equipo de ASU Bank la revisará pronto.";
 "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules, without warning." = "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules, without warning.";
@@ -1946,6 +2026,7 @@
 "Who is online" = "Quién está en línea";
 "Who we are" = "Who we are";
 "Who's online" = "Quién está en línea";
+"Who's online now lists every registered student, with search" = "Quién está en línea ahora muestra a todos los estudiantes registrados, con búsqueda";
 "Why advertise here" = "Por qué anunciarse aquí";
 "Will use again" = "Lo usaré de nuevo";
 "With the contact method you chose" = "Con el método de contacto que elegiste";
@@ -1953,7 +2034,9 @@
 "Workshops" = "Talleres";
 "Would recommend" = "Lo recomendaría";
 "Would you personally be interested in joining?" = "¿Te interesaría unirte?";
+"Write a comment" = "Escribe un comentario";
 "Write a post" = "Escribe una publicación";
+"Write something" = "Escribe algo";
 "Write the name of the group." = "Escribe el nombre del grupo.";
 "Wrong, broken or misleading file" = "Wrong, broken or misleading file";
 "YES" = "SÍ";
@@ -2014,7 +2097,10 @@
 "Your rating is 100% anonymous. No admin or system can see who submitted it — privacy is guaranteed." = "Your rating is 100% anonymous. No admin or system can see who submitted it — privacy is guaranteed.";
 "Your rating is anonymous." = "Tu valoración es anónima.";
 "Your requests" = "Tus solicitudes";
+"Your story" = "Tu historia";
+"Your story is seen by ASU Bank students for 24 hours, then it disappears. It's deleted from our database after 2 days." = "Los estudiantes de ASU Bank ven tu historia durante 24 horas y luego desaparece. Se borra de nuestra base de datos a los 2 días.";
 "Your studies" = "Tus estudios";
+"Your timetable, with reminders." = "Tu horario, con recordatorios.";
 "Your upload" = "Tu archivo";
 "Zero tolerance" = "Zero tolerance";
 "admins post" = "solo admins";

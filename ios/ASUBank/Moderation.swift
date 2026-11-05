@@ -284,6 +284,16 @@ struct AdminReportsScreen: View {
                             }
                         }
                     }
+                    if kind == "comment" || kind == "story" {
+                        Button("Delete", role: .destructive) {
+                            Task {
+                                do {
+                                    _ = try await AccountStore.shared.call(kind == "story" ? "storyDelete" : "commentDelete", ["id": r["targetId"] as? String ?? ""])
+                                    await set(r, "done")
+                                } catch { self.error = error.localizedDescription }
+                            }
+                        }
+                    }
                     if kind == "message" {
                         Button("Delete message", role: .destructive) {
                             Task {

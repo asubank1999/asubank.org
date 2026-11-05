@@ -1,5 +1,6 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.DynamicFeed
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Notifications
@@ -112,6 +113,7 @@ class AppActivity : ComponentActivity() {
         DriveLinks.init()
         Prefs.appearance.value = Saved.prefs.getInt("appearance", 0)
         Prefs.accent.value = Saved.prefs.getInt("accent", 0)
+        Planner.init()
         Account.init()
         RemovedFiles.init()
         ChatNotifier.init(applicationContext)
@@ -159,6 +161,7 @@ private val moreTab = Tab(Routes.MORE, "More", Icons.Filled.MoreHoriz)
 private val adminTab = Tab(Routes.ADMIN, "Admin", Icons.Filled.Shield)
 /** What people can put between Home and More (More > Customize tab bar) */
 private val choosableTabs = listOf(
+    Tab(Routes.FEED, "Feed", Icons.Filled.DynamicFeed),
     Tab(Routes.SEARCH, "Search", Icons.Filled.Search),
     Tab(Routes.CHAT, "Chat", Icons.Filled.Forum),
     Tab(Routes.NOTIFICATIONS, "Alerts", Icons.Filled.Notifications),
@@ -248,6 +251,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     }
 
     CompositionLocalProvider(LocalNav provides nav) {
+        PhotoViewerHost()
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
             contentWindowInsets = WindowInsets(0),
@@ -289,6 +293,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable(Routes.SEARCH) { SearchScreen() }
                 composable(Routes.UPLOAD) { UploadScreen() }
                 composable(Routes.SAVED) { SavedScreen(back = !inBar(Routes.SAVED)) }
+                composable(Routes.FEED) { FeedScreen(back = !inBar(Routes.FEED)) }
                 composable(Routes.FRIENDS) { FriendsScreen(back = !inBar(Routes.FRIENDS)) }
                 composable(Routes.NOTIFICATIONS) { NotificationsScreen(back = !inBar(Routes.NOTIFICATIONS)) }
                 composable(Routes.LECTURES) { LecturesScreen(back = !inBar(Routes.LECTURES)) }

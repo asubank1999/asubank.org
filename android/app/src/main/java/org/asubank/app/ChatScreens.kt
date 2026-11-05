@@ -1,5 +1,6 @@
 package org.asubank.app
 
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Flag
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -134,9 +135,12 @@ fun ChatTab() {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Row(horizontalArrangement = Arrangement.spacedBy((-8).dp)) {
-                            online.take(6).forEach { o -> Avatar(o.displayName, o.color ?: "#8C1D40", 32.dp, photo = o.avatar, online = o.online) }
+                            online.filter { it.online }.take(6).forEach { o -> Avatar(o.displayName, o.color ?: "#8C1D40", 32.dp, photo = o.avatar, online = o.online) }
                         }
-                        Text(tr("%d online now").format(onlineCount), fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(start = 14.dp).weight(1f))
+                        Column(Modifier.padding(start = 14.dp).weight(1f)) {
+                            Text(tr("%d online now").format(onlineCount), fontWeight = FontWeight.SemiBold)
+                            Text(trf("%d students", online.size), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                         Text("›", fontSize = 22.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
@@ -197,11 +201,19 @@ fun ChatTab() {
 fun OnlineScreen() {
     val nav = LocalNav.current
     val users by Presence.users.collectAsState()
+    var query by remember { mutableStateOf("") }
     LaunchedEffect(Unit) { Presence.load() }
     Screen(tr("Who's online")) { pad ->
         LazyColumn(Modifier.padding(pad)) {
+            item {
+                OutlinedTextField(
+                    query, { query = it }, Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+                    placeholder = { Text(tr("Search people")) }, leadingIcon = { Icon(Icons.Filled.Search, null) },
+                    singleLine = true, shape = RoundedCornerShape(14.dp),
+                )
+            }
             listOf(true, false).forEach { on ->
-                val list = users.filter { it.online == on }
+                val list = users.filter { it.online == on && (query.isBlank() || it.displayName.contains(query.trim(), ignoreCase = true)) }
                 if (list.isNotEmpty()) item {
                     Group(header = (if (on) tr("Online · %d") else tr("Offline · %d")).format(list.size)) {
                         list.forEachIndexed { i, o ->
