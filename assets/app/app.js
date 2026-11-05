@@ -560,6 +560,15 @@
             c.setAttribute('aria-label', u ? 'Student chat (signed in as @' + u.username + ')' : 'Sign in to UniHub');
             c.setAttribute('style', u ? 'display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#fff;font-weight:700;text-decoration:none;background:' + (/^#[0-9a-fA-F]{3,8}$/.test(u.color || '') ? u.color : '#8C1D40')
                 : 'font-weight:600;font-size:15px;text-decoration:none;color:var(--ab-accent);white-space:nowrap');
+            // the profile photo over the letter; if it can't load, the letter stays
+            if (u && /^https:\/\/drive\.google\.com\/thumbnail\?/.test(u.avatar || '')) {
+                c.style.position = 'relative'; c.style.overflow = 'hidden';
+                var pic = doc.createElement('img');
+                pic.alt = ''; pic.referrerPolicy = 'no-referrer'; pic.src = u.avatar;
+                pic.setAttribute('style', 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover');
+                pic.onerror = function () { pic.remove(); };
+                c.appendChild(pic);
+            }
             r.insertBefore(c, r.firstChild);
         }
     }
