@@ -1,15 +1,15 @@
 {
   "share": "https://asubank.org/",
   "ios": {
-    "latest": "1.13.0",
+    "latest": "1.14.0",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.13.0",
-    "notes": "Feed tabs for Friends, Strangers and Guest, a story camera with video, private messages with photos, PDF and Word files, a new chat look, weather back at the top of Home, and a smaller search box."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.14.0",
+    "notes": "ASU Bank is now UniHub. Disappearing voice messages, photos and videos, see who saw your story, delete for everyone, instant messages and comments, background uploads, and new story effects. This installs as a new app: sign in once, then you can delete the old ASU Bank app."
   },
   "android": {
-    "latest": "1.13.0",
+    "latest": "1.14.0",
     "minimum": "1.0.0",
-    "notes": "Feed tabs for Friends, Strangers and Guest, a story camera with video, private messages with photos, PDF and Word files, a new chat look, weather back at the top of Home, and a smaller search box."
+    "notes": "ASU Bank is now UniHub. Disappearing voice messages, photos and videos, see who saw your story, delete for everyone, instant messages and comments, background uploads, and new story effects. This installs as a new app: sign in once, then you can delete the old ASU Bank app."
   },
   "donate": true
 }
