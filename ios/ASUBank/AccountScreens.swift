@@ -579,12 +579,17 @@ private struct DeleteAccountSheet: View {
 /// Shown in Chat and Notifications when signed out
 struct SignInPrompt: View {
     var forNotifications = false
+    var forFeed = false
     @ObservedObject private var account = AccountStore.shared
     var body: some View {
         VStack(spacing: 14) {
             Spacer()
-            Image(systemName: forNotifications ? "bell.fill" : "bubble.left.and.bubble.right.fill").font(.system(size: 54)).foregroundStyle(Color.abAccent)
-            if forNotifications {
+            Image(systemName: forFeed ? "newspaper.fill" : forNotifications ? "bell.fill" : "bubble.left.and.bubble.right.fill").font(.system(size: 54)).foregroundStyle(Color.abAccent)
+            if forFeed {
+                Text("Sign in to see the feed").font(.title3.weight(.bold)).multilineTextAlignment(.center).padding(.horizontal, 30)
+                Text("Post, comment and share stories with other ASU students.")
+                    .multilineTextAlignment(.center).foregroundStyle(.secondary).padding(.horizontal, 30)
+            } else if forNotifications {
                 Text("Sign in to see your notifications").font(.title3.weight(.bold)).multilineTextAlignment(.center).padding(.horizontal, 30)
                 Text("Friend requests, pokes, new uploads and announcements will show up here.")
                     .multilineTextAlignment(.center).foregroundStyle(.secondary).padding(.horizontal, 30)

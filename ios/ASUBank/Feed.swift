@@ -162,7 +162,7 @@ struct FeedScreen: View {
     var body: some View {
         Group {
             if !account.signedIn {
-                SignInPrompt()
+                SignInPrompt(forFeed: true)
             } else {
                 list
             }

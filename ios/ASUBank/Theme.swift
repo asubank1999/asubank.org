@@ -13,7 +13,15 @@ extension Color {
     static var abAccentSoft: Color { AppTheme.accent.soft }
     static let abGold = Color(UIColor(hex: 0xFFC627))
     static var abBackground: Color { AppTheme.tint.map { Color($0) } ?? Color(UIColor.systemGroupedBackground) }
-    static let abSurface = Color(UIColor.secondarySystemGroupedBackground)
+    static var abSurface: Color {
+        switch AppTheme.appearance {
+        case 4: return Color(UIColor(hex: 0x16213A))
+        case 5: return Color(UIColor(hex: 0x16291E))
+        case 6: return Color(UIColor(hex: 0x281A2F))
+        case 7: return Color(UIColor(hex: 0xFFFBF2))
+        default: return Color(UIColor.secondarySystemGroupedBackground)
+        }
+    }
 }
 
 extension Kind {

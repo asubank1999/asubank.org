@@ -215,7 +215,7 @@ struct HomeView: View {
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal, 14).padding(.vertical, 12)
-                .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
             .buttonStyle(PressStyle())
             HStack(spacing: 8) {
