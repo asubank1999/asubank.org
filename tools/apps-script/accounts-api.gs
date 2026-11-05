@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 6;
+var SCHEMA = 7;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -66,7 +66,7 @@ var ONLINE_MS = 3 * 60000;
 
 var SHEETS = {
   Users: ['id', 'username', 'email', 'uniId', 'displayName', 'salt', 'hash', 'role', 'banned', 'banReason', 'created', 'lastSeen', 'color', 'mustReset',
-          'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college', 'blocked', 'year', 'interests'],
+          'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college', 'blocked', 'year', 'interests', 'cover'],
   Sessions: ['token', 'userId', 'created', 'lastUsed', 'platform'],
   Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited'],
   Rooms: ['id', 'name', 'emoji', 'about', 'adminOnly', 'locked', 'archived', 'pinned', 'order', 'created'],
@@ -75,7 +75,9 @@ var SHEETS = {
   GroupRequests: ['id', 'created', 'userId', 'username', 'title', 'category', 'url', 'notes', 'status', 'resolvedBy', 'resolvedAt'],
   Friends: ['id', 'from', 'to', 'status', 'created', 'updated'],
   Pokes: ['id', 'from', 'to', 'kind', 'place', 'created', 'read'],
-  Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes'],
+  Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes', 'image'],
+  Comments: ['id', 'postId', 'userId', 'text', 'created', 'deleted'],
+  Stories: ['id', 'userId', 'image', 'text', 'bg', 'created', 'views'],
   Suggestions: ['id', 'created', 'userId', 'username', 'note', 'contact', 'status', 'resolvedBy', 'resolvedAt'],
   DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed']
 };
@@ -257,6 +259,7 @@ function badgeList(u) {
 function publicUser(u, full) {
   var o = { id: u.id, username: String(u.username), displayName: String(u.displayName || u.username), role: u.role || 'user', color: u.color || '#8C1D40',
             avatar: u.avatar || '', bio: String(u.bio || ''), major: String(u.major || ''), college: String(u.college || ''), year: String(u.year || ''), interests: String(u.interests || ''), badges: badgeList(u), lastSeen: lastActive(u) };
+  o.cover = String(u.cover || '');
   o.online = !!o.lastSeen && (new Date() - new Date(o.lastSeen)) < ONLINE_MS;
   if (truthy(u.showPhone)) o.phone = u.phone ? String(u.phone) : '';
   if (full) {
@@ -546,7 +549,9 @@ function friendTarget(s, id) {
   return t;
 }
 
-function publicPosts(s, wanted, limit) {
+function publicPosts(s, wanted, limit, offset) {
+  var counts = {};
+  rows('Comments').forEach(function (c) { if (!truthy(c.deleted)) counts[c.postId] = (counts[c.postId] || 0) + 1; });
   var me = userById(s.id);
   var map = usersById();
   var mine = blockedIds(me);
@@ -554,18 +559,60 @@ function publicPosts(s, wanted, limit) {
     if (truthy(p.deleted) || !wanted(p)) return false;
     var u = map[p.userId];
     return u && !truthy(u.banned) && mine.indexOf(p.userId) < 0 && blockedIds(u).indexOf(s.id) < 0;
-  }).reverse().slice(0, limit).map(function (p) {
+  }).reverse().slice(offset || 0, (offset || 0) + limit).map(function (p) {
     var likes = String(p.likes || '').split(',').filter(String);
-    return { id: p.id, text: String(p.text), created: p.created, likes: likes.length, liked: likes.indexOf(s.id) >= 0, user: publicUser(map[p.userId], false) };
+    return { id: p.id, text: String(p.text), image: String(p.image || ''), comments: counts[p.id] || 0, created: p.created, likes: likes.length, liked: likes.indexOf(s.id) >= 0, user: publicUser(map[p.userId], false) };
   });
+}
+
+/** Saves a photo the apps sent as base64 and shares it by link */
+function savePhoto(folder, data, name, maxLength, width) {
+  var d = String(data || '').replace(/^data:[^,]+,/, '');
+  if (d.length < 100 || d.length > maxLength) fail('That photo is too big. Pick another one.');
+  var f = folder.createFile(Utilities.newBlob(Utilities.base64Decode(d), 'image/jpeg', name + '.jpg'));
+  f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return 'https://drive.google.com/thumbnail?sz=w' + width + '&id=' + f.getId();
+}
+
+function namedFolder(key, name) {
+  var p = PropertiesService.getScriptProperties();
+  var id = p.getProperty(key);
+  if (id) { try { return DriveApp.getFolderById(id); } catch (e) {} }
+  var f = DriveApp.createFolder(name);
+  p.setProperty(key, f.getId());
+  return f;
+}
+
+var STORY_SHOWN_MS = 24 * 3600000;
+var STORY_KEPT_MS = 48 * 3600000;
+
+/** Deletes stories older than two days, with their photos. Runs at most once an hour, when someone uses the app. */
+function purgeStories(force) {
+  var c = CacheService.getScriptCache();
+  if (!force && c.get('storyPurge')) return 0;
+  c.put('storyPurge', '1', 3600);
+  var now = Date.now(), n = 0;
+  withLock(function () {
+    rows('Stories').filter(function (r) { return now - new Date(r.created).getTime() > STORY_KEPT_MS; }).reverse().forEach(function (r) {
+      removeAvatarFile(r.image);
+      sheet('Stories').deleteRow(r._row);
+      n++;
+    });
+  });
+  return n;
 }
 
 /** Removes someone from friends, pokes and posts when the account goes away */
 function purgeSocial(id) {
   [['Friends', function (r) { return r.from === id || r.to === id; }],
    ['Pokes', function (r) { return r.from === id || r.to === id; }],
+   ['Comments', function (r) { return r.userId === id; }],
+   ['Stories', function (r) { return r.userId === id; }],
    ['Posts', function (r) { return r.userId === id; }]].forEach(function (x) {
-    rows(x[0]).filter(x[1]).reverse().forEach(function (r) { sheet(x[0]).deleteRow(r._row); });
+    rows(x[0]).filter(x[1]).reverse().forEach(function (r) {
+      if (r.image) removeAvatarFile(r.image);
+      sheet(x[0]).deleteRow(r._row);
+    });
   });
 }
 
@@ -708,7 +755,7 @@ var ACTIONS = {
       return { ok: true, user: publicUser(u, true) };
     }
     var data = String(b.data || '').replace(/^data:[^,]+,/, '');
-    if (data.length < 100 || data.length > 700000) fail('Pick a photo under 500 KB.');
+    if (data.length < 100 || data.length > 900000) fail('Pick a photo under 500 KB.');
     if (tooMany('avatar:' + u.id, 10)) fail('Too many photo changes. Try again later.');
     var type = /png/i.test(b.type || '') ? 'image/png' : 'image/jpeg';
     var blob = Utilities.newBlob(Utilities.base64Decode(data), type, u.username + (type === 'image/png' ? '.png' : '.jpg'));
@@ -719,6 +766,25 @@ var ACTIONS = {
     update('Users', u._row, { avatar: url });
     forgetUser(u.id);
     u.avatar = url;
+    return { ok: true, user: publicUser(u, true) };
+  },
+
+  /** Cover photo on the profile (the apps shrink it first) */
+  setCover: function (b) {
+    var s = auth(b);
+    var u = userById(s.id);
+    if (b.remove) {
+      removeAvatarFile(u.cover);
+      update('Users', u._row, { cover: '' });
+      forgetUser(u.id); u.cover = '';
+      return { ok: true, user: publicUser(u, true) };
+    }
+    if (tooMany('cover:' + u.id, 10)) fail('Too many photo changes. Try again later.');
+    var url = savePhoto(avatarFolder(), b.data, u.username + '-cover', 1500000, 1280);
+    removeAvatarFile(u.cover);
+    update('Users', u._row, { cover: url });
+    forgetUser(u.id);
+    u.cover = url;
     return { ok: true, user: publicUser(u, true) };
   },
 
@@ -733,7 +799,7 @@ var ACTIONS = {
       o.friendship = u.id === s.id ? 'self' : relation(fr.filter(function (f) { return (f.from === s.id && f.to === u.id) || (f.to === s.id && f.from === u.id); })[0], s.id);
       o.friendCount = fr.filter(function (f) { return f.status === 'accepted' && (f.from === u.id || f.to === u.id); }).length;
       o.posts = publicPosts(s, function (p) { return p.userId === u.id; }, 20);
-      o.postCount = o.posts.length;
+      o.postCount = rows('Posts').filter(function (p) { return p.userId === u.id && !truthy(p.deleted); }).length;
       o.messageCount = rows('Messages').filter(function (m) { return m.userId === u.id && !truthy(m.deleted); }).length;
     }
     return o;
@@ -757,6 +823,7 @@ var ACTIONS = {
     return withLock(function () {
       dropUserSessions(u.id);
       removeAvatarFile(u.avatar);
+      removeAvatarFile(u.cover);
       anonymizeMessages(u.id);
       purgeSocial(u.id);
       sheet('Users').deleteRow(userById(u.id)._row);
@@ -879,7 +946,7 @@ var ACTIONS = {
   report: function (b) {
     var me = b.token ? auth(b) : null;
     var kind = String(b.kind || '');
-    if (['message', 'user', 'file', 'post', 'other'].indexOf(kind) < 0) fail('Bad report.');
+    if (['message', 'user', 'file', 'post', 'comment', 'story', 'other'].indexOf(kind) < 0) fail('Bad report.');
     var reason = String(b.reason || '');
     if (REPORT_REASONS.indexOf(reason) < 0) fail('Choose what is wrong first.');
     if (tooMany(me ? 'report:' + me.id : 'report:guest', me ? 15 : 40)) fail('Too many reports. Try again later.');
@@ -903,6 +970,12 @@ var ACTIONS = {
       var pu = userById(po.userId);
       targetName = String(po.text).slice(0, 300);
       targetUser = pu ? pu.username : '';
+    } else if (kind === 'comment' || kind === 'story') {
+      var co = rows(kind === 'comment' ? 'Comments' : 'Stories').filter(function (x) { return x.id === targetId; })[0];
+      if (!co) fail('Not found.');
+      var cu = userById(co.userId);
+      targetName = (kind === 'story' && co.image ? String(co.image) + ' ' : '') + String(co.text).slice(0, 200);
+      targetUser = cu ? cu.username : '';
     }
     return withLock(function () {
       if (me && rows('Reports').some(function (r) { return r.reporterId === me.id && r.kind === kind && r.targetId === targetId && r.status === 'open' && kind !== 'other'; })) return { ok: true };
@@ -998,6 +1071,13 @@ var ACTIONS = {
       if (r.userId === u.id && (r.status === 'approved' || r.status === 'rejected')) add('group_' + r.status, r.resolvedAt || r.created, r.id, '', r.title);
       else if (u.role === 'admin' && r.status === 'pending') add('group_request', r.created, r.id, r.userId, r.title);
     });
+    if (truthy(b.social2)) {
+      var myPosts = {};
+      rows('Posts').forEach(function (p) { if (p.userId === u.id && !truthy(p.deleted)) myPosts[p.id] = 1; });
+      rows('Comments').filter(function (c) { return myPosts[c.postId] && c.userId !== u.id && !truthy(c.deleted); }).slice(-30).forEach(function (c) {
+        add('post_comment', c.created, c.id, c.userId, c.text);
+      });
+    }
     roomMessages('announcements').slice(-5).forEach(function (m) { add('announcement', m.created, m.id, '', m.text); });
     var gone = {};
     rows('DeletedFiles').forEach(function (r) { gone[String(r.id)] = 1; });
@@ -1023,6 +1103,7 @@ var ACTIONS = {
   events: function (b) {
     var u = auth(b);
     try { scanUploads(); } catch (e) {}
+    try { purgeStories(); } catch (e) {}
     var since = String(b.since || '');
     var hidden = {};
     allRooms().forEach(function (r) { if (r.archived && u.role !== 'admin') hidden[r.id] = 1; });
@@ -1030,6 +1111,7 @@ var ACTIONS = {
       if (e.toUserId || e.toAdmin) {
         // private events, only for apps that understand them
         if (!truthy(b.social) || (since && e.created <= since)) return false;
+        if (e.type === 'post_comment' && !truthy(b.social2)) return false;
         return e.toAdmin ? u.role === 'admin' : e.toUserId === u.id;
       }
       return (!since || e.created > since) && !hidden[e.room];
@@ -1240,11 +1322,12 @@ var ACTIONS = {
   postCreate: function (b) {
     var s = auth(b);
     var text = String(b.text || '').trim().slice(0, 1000);
-    if (!text) fail('Write something first.');
+    if (!text && !b.image) fail('Write something first.');
     assertClean(text);
     if (tooMany('post:' + s.id, 10)) fail('Too many posts. Try again later.');
+    var image = b.image ? savePhoto(namedFolder('FEED_FOLDER', 'ASU Bank Feed'), b.image, s.id + '-' + Date.now(), 2500000, 1280) : '';
     return withLock(function () {
-      var p = { id: newId(), userId: s.id, text: cell(text), created: new Date().toISOString(), deleted: false, likes: '' };
+      var p = { id: newId(), userId: s.id, text: cell(text), created: new Date().toISOString(), deleted: false, likes: '', image: image };
       append('Posts', p);
       return { ok: true, id: p.id };
     });
@@ -1256,7 +1339,8 @@ var ACTIONS = {
       var p = rows('Posts').filter(function (x) { return x.id === b.id; })[0];
       if (!p) fail('Post not found.');
       if (p.userId !== s.id && s.role !== 'admin') fail('You can only delete your own posts.');
-      update('Posts', p._row, { deleted: true, text: '' });
+      if (p.image) removeAvatarFile(p.image);
+      update('Posts', p._row, { deleted: true, text: '', image: '' });
       if (p.userId !== s.id) log(s, 'deletePost', p.userId, '');
       return { ok: true };
     });
@@ -1287,17 +1371,148 @@ var ACTIONS = {
     return { ok: true, posts: publicPosts(s, function (p) { return ids[p.userId]; }, 50) };
   },
 
-  /** Who is online now and who was recently */
-  online: function (b) {
-    auth(b);
-    var p = presence(), all = people(), now = Date.now();
-    var list = Object.keys(p).filter(function (id) { return all[id]; }).map(function (id) {
-      var o = all[id];
-      return { id: id, displayName: o.displayName, avatar: o.avatar, color: o.color, role: o.role, badges: o.badges,
-               lastSeen: p[id], online: now - new Date(p[id]) < ONLINE_MS };
+  /** The feed: everyone's posts, or scope "friends". `offset` loads more. */
+  feedAll: function (b) {
+    var s = auth(b);
+    var offset = Math.max(0, Number(b.offset) || 0);
+    if (b.scope !== 'friends') return { ok: true, posts: publicPosts(s, function () { return true; }, 25, offset) };
+    var ids = {};
+    ids[s.id] = 1;
+    rows('Friends').forEach(function (f) {
+      if (f.status !== 'accepted') return;
+      if (f.from === s.id) ids[f.to] = 1;
+      if (f.to === s.id) ids[f.from] = 1;
     });
-    list.sort(function (a, c) { return String(c.lastSeen).localeCompare(String(a.lastSeen)); });
-    return { ok: true, users: list.slice(0, 100), onlineCount: list.filter(function (x) { return x.online; }).length };
+    return { ok: true, posts: publicPosts(s, function (p) { return ids[p.userId]; }, 25, offset) };
+  },
+
+  comments: function (b) {
+    var s = auth(b);
+    var map = usersById();
+    var mine = blockedIds(map[s.id]);
+    var list = rows('Comments').filter(function (c) {
+      var u = map[c.userId];
+      return c.postId === b.postId && !truthy(c.deleted) && u && !truthy(u.banned) && mine.indexOf(c.userId) < 0 && blockedIds(u).indexOf(s.id) < 0;
+    }).map(function (c) { return { id: c.id, text: String(c.text), created: c.created, user: publicUser(map[c.userId], false) }; });
+    return { ok: true, comments: list.slice(-200) };
+  },
+
+  commentAdd: function (b) {
+    var s = auth(b);
+    var text = String(b.text || '').trim().slice(0, 500);
+    if (!text) fail('Write something first.');
+    assertClean(text);
+    if (tooMany('comment:' + s.id, 30)) fail('Too many comments. Try again later.');
+    return withLock(function () {
+      var p = rows('Posts').filter(function (x) { return x.id === b.postId; })[0];
+      if (!p || truthy(p.deleted)) fail('Post not found.');
+      var owner = userById(p.userId);
+      if (owner && (blockedIds(owner).indexOf(s.id) >= 0 || blockedIds(userById(s.id)).indexOf(owner.id) >= 0)) fail("You can't do this with this person.");
+      var c = { id: newId(), postId: p.id, userId: s.id, text: cell(text), created: new Date().toISOString(), deleted: false };
+      append('Comments', c);
+      if (p.userId !== s.id) privateEvent({ toUserId: p.userId }, 'post_comment', s, text.slice(0, 140));
+      return { ok: true, id: c.id };
+    });
+  },
+
+  commentDelete: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      var c = rows('Comments').filter(function (x) { return x.id === b.id; })[0];
+      if (!c) fail('Not found.');
+      var p = rows('Posts').filter(function (x) { return x.id === c.postId; })[0];
+      if (c.userId !== s.id && s.role !== 'admin' && !(p && p.userId === s.id)) fail('You can only delete your own comments.');
+      update('Comments', c._row, { deleted: true, text: '' });
+      return { ok: true };
+    });
+  },
+
+  // MARK: stories
+
+  /** Stories from the last 24 hours, one group per person: mine first, then ones not seen yet, newest first */
+  stories: function (b) {
+    var s = auth(b);
+    try { purgeStories(); } catch (e) {}
+    var map = usersById(), mine = blockedIds(map[s.id]), now = Date.now(), groups = {};
+    rows('Stories').forEach(function (r) {
+      var u = map[r.userId];
+      if (!u || truthy(u.banned) || mine.indexOf(r.userId) >= 0 || blockedIds(u).indexOf(s.id) >= 0) return;
+      if (now - new Date(r.created).getTime() > STORY_SHOWN_MS) return;
+      var views = String(r.views || '').split(',').filter(String);
+      var g = groups[r.userId] || (groups[r.userId] = { user: publicUser(u, false), stories: [], seen: true, newest: '' });
+      var seen = r.userId === s.id || views.indexOf(s.id) >= 0;
+      var o = { id: r.id, image: String(r.image || ''), text: String(r.text || ''), bg: String(r.bg || ''), created: new Date(r.created).toISOString(), seen: seen };
+      if (r.userId === s.id) o.views = views.length;
+      g.stories.push(o);
+      if (!seen) g.seen = false;
+      if (o.created > g.newest) g.newest = o.created;
+    });
+    var list = Object.keys(groups).map(function (k) { return groups[k]; });
+    list.sort(function (a, c) {
+      var am = a.user.id === s.id, cm = c.user.id === s.id;
+      if (am !== cm) return am ? -1 : 1;
+      if (a.seen !== c.seen) return a.seen ? 1 : -1;
+      return c.newest.localeCompare(a.newest);
+    });
+    return { ok: true, groups: list };
+  },
+
+  storyCreate: function (b) {
+    var s = auth(b);
+    var text = String(b.text || '').trim().slice(0, 300);
+    if (!text && !b.image) fail('Add a photo or some text first.');
+    assertClean(text);
+    if (tooMany('story:' + s.id, 15)) fail('Too many stories. Try again later.');
+    var image = b.image ? savePhoto(namedFolder('STORY_FOLDER', 'ASU Bank Stories'), b.image, s.id + '-' + Date.now(), 2500000, 1280) : '';
+    var bg = /^#[0-9a-fA-F]{6}$/.test(String(b.bg || '')) ? String(b.bg) : '#8C1D40';
+    return withLock(function () {
+      var r = { id: newId(), userId: s.id, image: image, text: cell(text), bg: bg, created: new Date().toISOString(), views: '' };
+      append('Stories', r);
+      return { ok: true, id: r.id };
+    });
+  },
+
+  storySeen: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      var r = rows('Stories').filter(function (x) { return x.id === b.id; })[0];
+      if (!r || r.userId === s.id) return { ok: true };
+      var views = String(r.views || '').split(',').filter(String);
+      if (views.indexOf(s.id) < 0) { views.push(s.id); update('Stories', r._row, { views: views.join(',') }); }
+      return { ok: true };
+    });
+  },
+
+  storyDelete: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      var r = rows('Stories').filter(function (x) { return x.id === b.id; })[0];
+      if (!r) return { ok: true };
+      if (r.userId !== s.id && s.role !== 'admin') fail('You can only delete your own stories.');
+      removeAvatarFile(r.image);
+      sheet('Stories').deleteRow(r._row);
+      if (r.userId !== s.id) log(s, 'deleteStory', r.userId, '');
+      return { ok: true };
+    });
+  },
+
+  /** Every registered person: online first, then by last seen. Someone who never came back shows last. */
+  online: function (b) {
+    var s = auth(b);
+    var p = presence(), now = Date.now(), users = rows('Users');
+    var me = users.filter(function (u) { return u.id === s.id; })[0];
+    var mine = blockedIds(me);
+    var list = users.filter(function (u) {
+      return !truthy(u.banned) && mine.indexOf(u.id) < 0 && blockedIds(u).indexOf(s.id) < 0;
+    }).map(function (u) {
+      return { id: u.id, displayName: String(u.displayName || u.username), avatar: u.avatar || '', color: u.color || '', role: u.role || 'user', badges: badgeList(u),
+               lastSeen: lastActive(u) || '', online: !!p[u.id] && now - new Date(p[u.id]) < ONLINE_MS };
+    });
+    list.sort(function (a, c) {
+      if (a.online !== c.online) return a.online ? -1 : 1;
+      return String(c.lastSeen).localeCompare(String(a.lastSeen)) || a.displayName.localeCompare(c.displayName);
+    });
+    return { ok: true, users: list, total: list.length, onlineCount: list.filter(function (x) { return x.online; }).length };
   },
 
   // MARK: admin
@@ -1392,6 +1607,7 @@ var ACTIONS = {
     return withLock(function () {
       dropUserSessions(u.id);
       removeAvatarFile(u.avatar);
+      removeAvatarFile(u.cover);
       purgeSocial(u.id);
       sheet('Users').deleteRow(userById(u.id)._row);
       CacheService.getScriptCache().remove('people');
