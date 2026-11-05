@@ -1,7 +1,7 @@
 import SwiftUI
 import WebKit
 
-/// Talks natively to an ASU Bank Google Apps Script web app (ratings, course matcher, material requests).
+/// Talks natively to an UniHub Google Apps Script web app (ratings, course matcher, material requests).
 /// Those scripts only answer their own page through google.script.run, so a hidden web view loads the
 /// page, a script injected into every frame reports the frame that holds the form (found by `marker`,
 /// an element id on that page), and `call` runs script functions inside that frame.

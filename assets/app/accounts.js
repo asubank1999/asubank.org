@@ -1,5 +1,5 @@
-/* ASU Bank accounts, chat and admin on the website.
-   Same "ASU Bank Accounts" Apps Script as the iOS and Android apps (tools/apps-script/accounts-api.gs),
+/* UniHub accounts, chat and admin on the website.
+   Same "UniHub Accounts" Apps Script as the iOS and Android apps (tools/apps-script/accounts-api.gs),
    so one account works everywhere. Pages: /account/, /chat/, /feed/, /admin/ (each has <div id="acc-app" data-view="...">). */
 (function () {
     'use strict';
@@ -20,7 +20,7 @@
         var body = Object.assign({ action: action }, fields || {});
         if (token) body.token = token;
         return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
-            .then(function (r) { return r.json(); }, function () { throw new Error("Couldn't reach ASU Bank. Check your connection and try again."); })
+            .then(function (r) { return r.json(); }, function () { throw new Error("Couldn't reach UniHub. Check your connection and try again."); })
             .then(function (o) {
                 if (o && o.ok) return o;
                 var m = (o && o.error) || 'Something went wrong.';
@@ -94,7 +94,7 @@
     }
     var BADGES = { founder: ['👑', 'Founder'], moderator: ['🛡️', 'Moderator'], support: ['🛟', 'Support'], helper: ['🤝', 'Helper'], donor: ['💛', 'Donor'],
         contributor: ['📚', 'Contributor'], tutor: ['🎓', 'Tutor'], verified: ['✅', 'Verified'], vip: ['⭐', 'VIP'], developer: ['💻', 'Developer'],
-        team: ['🏦', 'ASU Bank team'], mentor: ['🧭', 'Mentor'], ambassador: ['📣', 'Ambassador'], top_student: ['🏅', 'Top student'], class_rep: ['🙋', 'Class rep'],
+        team: ['🏦', 'UniHub team'], mentor: ['🧭', 'Mentor'], ambassador: ['📣', 'Ambassador'], top_student: ['🏅', 'Top student'], class_rep: ['🙋', 'Class rep'],
         translator: ['🌐', 'Translator'], designer: ['🎨', 'Designer'], researcher: ['🔬', 'Researcher'], organizer: ['🎉', 'Organizer'],
         early_supporter: ['🌱', 'Early supporter'], sponsor: ['💎', 'Sponsor'], legend: ['🔥', 'Legend'] };
     var COLLEGES = ['Information Technology', 'Engineering', 'Pharmacy', 'Dentistry', 'Nursing', 'Allied Medical Sciences', 'Business', 'Law', 'Arts & Sciences', 'Arts & Design', 'Other'];
@@ -212,7 +212,7 @@
             var code = field('6-digit code', 'text');
             var codeBox = h('div', { class: 'acc-code', hidden: true },
                 h('b', { text: 'Admin verification' }),
-                h('p', { class: 'acc-codemsg', text: "This name belongs to an ASU Bank admin. Send a code to the owner's email to prove it's you." }),
+                h('p', { class: 'acc-codemsg', text: "This name belongs to an UniHub admin. Send a code to the owner's email to prove it's you." }),
                 code.el,
                 h('button', { type: 'button', class: 'ab-btn tinted', text: 'Send the code', onclick: function (ev) {
                     var b = ev.currentTarget; busy(b, true, 'Send the code');
@@ -234,7 +234,7 @@
                     adopt(r); after();
                     if (r.earlySupporter) {
                         var thanks = sheet('Thank you for joining early! 🌱');
-                        thanks.box.appendChild(h('p', { text: "You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU." }));
+                        thanks.box.appendChild(h('p', { text: "You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU." }));
                     }
                 })
                     .catch(function (e) { showErr(err, e); if (e.needCode) codeBox.hidden = false; busy(submit, false, mode === 0 ? 'Sign in' : 'Create account'); });
@@ -244,8 +244,8 @@
                 err, submit);
             if (mode === 1) pw.input.autocomplete = pw2.input.autocomplete = 'new-password';
             wrap.appendChild(h('img', { src: '/icons/icon-192x192.png', alt: '', width: 72, height: 72, class: 'acc-logo' }));
-            wrap.appendChild(h('h2', { text: mode === 0 ? 'Welcome back' : 'Join ASU Bank' }));
-            wrap.appendChild(h('p', { class: 'acc-muted', text: 'An account lets you chat with other students and ask for help. It works here and in the ASU Bank apps.' }));
+            wrap.appendChild(h('h2', { text: mode === 0 ? 'Welcome back' : 'Join UniHub' }));
+            wrap.appendChild(h('p', { class: 'acc-muted', text: 'An account lets you chat with other students and ask for help. It works here and in the UniHub apps.' }));
             wrap.appendChild(h('div', { class: 'acc-seg', role: 'tablist' },
                 ['Sign in', 'Create account'].map(function (l, i) {
                     return h('button', { type: 'button', role: 'tab', 'aria-selected': String(mode === i), class: mode === i ? 'on' : '', text: l, onclick: function () { mode = i; draw(); } });
@@ -909,11 +909,11 @@
             ev.preventDefault();
             var m = link.value.match(/(?:\/d\/|[?&]id=)([-\w]{20,})/);
             if (!m) { showErr(err, new Error('Paste a Google Drive file link.')); return; }
-            if (!window.confirm('Delete this file from Drive and ASU Bank?')) return;
+            if (!window.confirm('Delete this file from Drive and UniHub?')) return;
             busy(delBtn, true, 'Delete upload');
             call('adminDeleteUpload', { fileId: m[1] }).then(function () { link.value = ''; delBtn.textContent = 'Deleted ✓'; delBtn.disabled = false; })
                 .catch(function (e) { showErr(err, e); busy(delBtn, false, 'Delete upload'); });
-        } }, h('h2', { text: 'Delete a file' }), h('p', { class: 'acc-muted acc-small', text: 'It goes to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank.' }), link, delBtn));
+        } }, h('h2', { text: 'Delete a file' }), h('p', { class: 'acc-muted acc-small', text: 'It goes to the Drive trash and disappears from UniHub for everyone. A file owned by another Drive account is only removed from UniHub.' }), link, delBtn));
 
         var repBox = h('div', { class: 'acc-log' }, h('p', { class: 'acc-muted', text: 'Loading…' }));
         root.appendChild(h('div', { class: 'acc-card' }, h('h2', { text: 'Open reports' }), repBox));
@@ -1277,7 +1277,7 @@
                 seg.appendChild(h('button', { type: 'button', role: 'tab', 'aria-selected': o[0] === scope ? 'true' : 'false', class: o[0] === scope ? 'on' : '', text: o[1], onclick: function () { pickScope(o[0]); } }));
             });
             root.appendChild(seg);
-            root.appendChild(h('p', { class: 'acc-muted acc-small', text: 'To add a story, use the ASU Bank app.' }));
+            root.appendChild(h('p', { class: 'acc-muted acc-small', text: 'To add a story, use the UniHub app.' }));
         } else {
             root.appendChild(h('div', { class: 'acc-card' }, h('b', { text: "You're browsing as a guest" }),
                 h('p', { class: 'acc-muted', text: 'You see what students share with everyone. Sign in for more.' }),

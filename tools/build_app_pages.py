@@ -368,7 +368,7 @@ def convert(path, rel):
     b = Builder()
     b.walk(body)
     title = b.title or (one_line(html.unescape(title_tag.group(1))) if title_tag else rel)
-    title = re.sub(r'\s*[|–-]\s*ASU Bank.*$', '', title)
+    title = re.sub(r'\s*[|–-]\s*UniHub.*$', '', title)
     page = {'t': title, 'b': b.blocks}
     faqs = faq_data(raw)
     if faqs:

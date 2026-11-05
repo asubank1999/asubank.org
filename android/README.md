@@ -1,4 +1,4 @@
-# ASU Bank for Android
+# UniHub for Android
 
 Native Kotlin + Jetpack Compose app for asubank.org. It reads the same data as the site and the iOS app
 (`assets/app/materials.json`, `pages.json`, `app-config.json`, `drive-map.json`, `broken.json`).
@@ -6,7 +6,7 @@ Native Kotlin + Jetpack Compose app for asubank.org. It reads the same data as t
 Built in the cloud by `.github/workflows/android.yml` (no Android Studio needed):
 
 - every push to `android/` builds the APK (run page > Artifacts) and saves emulator screenshots to the `android-screenshots` branch
-- pushing a tag `android-vX.Y.Z` publishes a public GitHub Release with `ASUBank-X.Y.Z.apk`; the app finds new versions from these releases
+- pushing a tag `android-vX.Y.Z` publishes a public GitHub Release with `UniHub-X.Y.Z.apk`; the app finds new versions from these releases
 
 Releasing a new version: change `versionName` in `app/build.gradle.kts`, `android.latest` in `assets/app/app-config.json`, and `RELEASE_NOTES.md`, push, then push the tag.
 

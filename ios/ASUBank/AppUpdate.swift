@@ -9,6 +9,7 @@ final class AppConfig: ObservableObject {
         /// Every field is optional so a badly filled entry can't break the update check
         struct Sponsor: Decodable { var title: String?; var text: String?; var url: String?; var until: String? }
         var ios: IOS?
+        var share: String?
         var donate: Bool?
         var sponsor: Sponsor?
     }
@@ -40,6 +41,8 @@ final class AppConfig: ObservableObject {
     @Published private(set) var mustUpdate = false
     @Published var offerUpdate = false
     @Published private(set) var storeURL: URL?
+    /// What "Share UniHub" sends. Set "share" in app-config.json when the store pages exist.
+    @Published private(set) var shareURL = URL(string: "https://asubank.org/")!
     @Published private(set) var checking = false
     private var checkedAt: Date?
 
@@ -47,7 +50,7 @@ final class AppConfig: ObservableObject {
     static let isStore = (Bundle.main.object(forInfoDictionaryKey: "ABStoreBuild") as? String) == "YES"
     static let current = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
     static let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
-    private static let bundleID = Bundle.main.bundleIdentifier ?? "org.asubank.app"
+    private static let bundleID = Bundle.main.bundleIdentifier ?? "org.unihub.app"
     private static let configURL = URL(string: "https://asubank.org/assets/app/app-config.json")!
 
     /// -1, 0, 1 for dotted versions like 1.10.2
@@ -71,6 +74,7 @@ final class AppConfig: ObservableObject {
         var req = URLRequest(url: Self.configURL)
         req.cachePolicy = .reloadIgnoringLocalCacheData
         if let (data, _) = try? await URLSession.shared.data(for: req) { remote = try? JSONDecoder().decode(Remote.self, from: data) }
+        if let s = remote?.share, let u = URL(string: s) { shareURL = u }
         donate = !Self.isStore && (remote?.donate ?? true)
         // Offline keeps the last sponsor; only a config that really has none removes it
         if let remote = remote { sponsor = Self.isStore ? nil : Self.sponsorInfo(remote.sponsor) }
@@ -125,7 +129,7 @@ struct UpdateRequiredView: View {
             Image(systemName: "arrow.down.app.fill")
                 .font(.system(size: 64)).foregroundStyle(Color.abAccent)
             Text("Update required").font(.largeTitle.weight(.bold))
-            Text("This version of ASU Bank (\(AppConfig.current)) no longer works. Please update to \(config.latest ?? "the latest version") to keep using the app.")
+            Text("This version of UniHub (\(AppConfig.current)) no longer works. Please update to \(config.latest ?? "the latest version") to keep using the app.")
                 .multilineTextAlignment(.center).foregroundStyle(.secondary)
             Text("يرجى تحديث التطبيق للاستمرار.")
                 .multilineTextAlignment(.center).foregroundStyle(.secondary)
@@ -161,20 +165,20 @@ struct WelcomeTermsView: View {
                             .font(.system(size: 34)).foregroundStyle(.white)
                             .frame(width: 76, height: 76)
                             .background(Color.abAccent, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                        Text("Welcome to ASU Bank").font(.title2.weight(.bold))
+                        Text("Welcome to UniHub").font(.title2.weight(.bold))
                         Text("Please read this before you start").font(.subheadline).foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 8)
                     .listRowBackground(Color.clear)
                 }
                 Section("About this app") {
-                    term("heart.fill", "A free, student-run project", "ASU Bank is free for students and run by a student. Ads on the website, sponsors and donations support it.")
+                    term("heart.fill", "A free, student-run project", "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it.")
                     term("building.columns", "Not from the university", "This app is not made by, owned by, or affiliated with Applied Science Private University (ASPU).")
                     term("person.fill", "Made by a fellow student", "It's built by a college friend who studies English Language and Literature and wants to help all ASPU students search and find what they need.")
                     term("checkmark.shield", "Use materials responsibly", "Files are shared by students. Check them against your official course resources.")
                 }
                 Section("بالعربية") {
-                    Text("ASU Bank مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.")
+                    Text("UniHub مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.")
                         .multilineTextAlignment(.trailing)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .environment(\.layoutDirection, .rightToLeft)
@@ -190,7 +194,7 @@ struct WelcomeTermsView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationTitle(onClose == nil ? "" : "About ASU Bank")
+            .navigationTitle(onClose == nil ? "" : "About UniHub")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 // (an `if` around a ToolbarItem needs iOS 16)

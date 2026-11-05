@@ -1,9 +1,9 @@
 /**
- * ASU Bank accounts, chat and admin API (used by asubank.org, the iOS app and the Android app).
+ * UniHub accounts, chat and admin API (used by asubank.org, the iOS app and the Android app).
  *
  * Setup (once):
- *  1. https://script.google.com > New project, name it "ASU Bank Accounts", paste this file.
- *  2. Run `setup` once from the editor and approve the permissions. It creates the "ASU Bank Accounts"
+ *  1. https://script.google.com > New project, name it "UniHub Accounts", paste this file.
+ *  2. Run `setup` once from the editor and approve the permissions. It creates the "UniHub Accounts"
  *     spreadsheet in your Drive (users, sessions, messages, rooms, log) and remembers it.
  *  3. Deploy > New deployment > Web app: Execute as "Me", Who has access "Anyone". Put the /exec URL in
  *     assets/app/app-config.json ("accountsApi") so the site and both apps pick it up.
@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 8;
+var SCHEMA = 9;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -28,7 +28,7 @@ var DEFAULT_ROOMS = [
   { id: 'medical', name: 'Pharmacy & health', emoji: '💊', about: 'Pharmacy, nutrition, physiotherapy' },
   { id: 'tech', name: 'IT & engineering', emoji: '💻', about: 'IT, computer science, engineering' },
   { id: 'business', name: 'Business & arts', emoji: '📈', about: 'Business, finance, law, arts' },
-  { id: 'announcements', name: 'Announcements', emoji: '📣', about: 'News from the ASU Bank team', adminOnly: true }
+  { id: 'announcements', name: 'Announcements', emoji: '📣', about: 'News from the UniHub team', adminOnly: true }
 ];
 /** Badges an admin can give; the apps and the site show them next to names */
 var BADGES = {
@@ -42,7 +42,7 @@ var BADGES = {
   verified: { name: 'Verified', emoji: '✅' },
   vip: { name: 'VIP', emoji: '⭐' },
   developer: { name: 'Developer', emoji: '💻' },
-  team: { name: 'ASU Bank team', emoji: '🏦' },
+  team: { name: 'UniHub team', emoji: '🏦' },
   mentor: { name: 'Mentor', emoji: '🧭' },
   ambassador: { name: 'Ambassador', emoji: '📣' },
   top_student: { name: 'Top student', emoji: '🏅' },
@@ -68,17 +68,17 @@ var SHEETS = {
   Users: ['id', 'username', 'email', 'uniId', 'displayName', 'salt', 'hash', 'role', 'banned', 'banReason', 'created', 'lastSeen', 'color', 'mustReset',
           'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college', 'blocked', 'year', 'interests', 'cover'],
   Sessions: ['token', 'userId', 'created', 'lastUsed', 'platform'],
-  Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited'],
+  Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited', 'fileId', 'fileName', 'fileType', 'fileSize', 'duration', 'expires'],
   Rooms: ['id', 'name', 'emoji', 'about', 'adminOnly', 'locked', 'archived', 'pinned', 'order', 'created'],
   Log: ['time', 'adminId', 'action', 'target', 'detail'],
   Reports: ['id', 'created', 'reporterId', 'reporterName', 'contact', 'kind', 'targetId', 'targetName', 'targetUser', 'reason', 'details', 'status', 'resolvedBy', 'resolvedAt'],
   GroupRequests: ['id', 'created', 'userId', 'username', 'title', 'category', 'url', 'notes', 'status', 'resolvedBy', 'resolvedAt'],
   Friends: ['id', 'from', 'to', 'status', 'created', 'updated'],
   Pokes: ['id', 'from', 'to', 'kind', 'place', 'created', 'read'],
-  Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes', 'image', 'audience'],
+  Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes', 'image', 'audience', 'video', 'voiceId', 'duration', 'expires'],
   Comments: ['id', 'postId', 'userId', 'text', 'created', 'deleted'],
-  Stories: ['id', 'userId', 'image', 'text', 'bg', 'created', 'views', 'audience', 'video'],
-  DMs: ['id', 'pair', 'from', 'to', 'text', 'created', 'deleted', 'fileId', 'fileName', 'fileType', 'fileSize', 'read'],
+  Stories: ['id', 'userId', 'image', 'text', 'bg', 'created', 'views', 'audience', 'video', 'seenLog', 'style'],
+  DMs: ['id', 'pair', 'from', 'to', 'text', 'created', 'deleted', 'fileId', 'fileName', 'fileType', 'fileSize', 'read', 'duration', 'expires'],
   Suggestions: ['id', 'created', 'userId', 'username', 'note', 'contact', 'status', 'resolvedBy', 'resolvedAt'],
   DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed']
 };
@@ -155,6 +155,10 @@ function ensureSchema() {
                           pinned: '', order: i, created: new Date().toISOString() });
       });
     }
+    rows('Rooms').forEach(function (r) {
+      if (String(r.about).indexOf('ASU Bank') >= 0) update('Rooms', r._row, { about: String(r.about).replace(/ASU Bank/g, 'UniHub') });
+    });
+    CacheService.getScriptCache().remove('rooms');
     p.setProperty('SCHEMA', String(SCHEMA));
   });
 }
@@ -439,7 +443,94 @@ function putRoom(room, list) {
 function publicMessage(m) {
   return { id: m.id, room: m.room, userId: m.userId, username: m.username, displayName: m.displayName || m.username,
            role: m.role || 'user', text: m.text, created: m.created, replyTo: m.replyTo || '', color: m.color || '#8C1D40',
-           edited: m.edited ? String(m.edited) : '' };
+           edited: m.edited ? String(m.edited) : '', fileName: String(m.fileName || ''), fileType: String(m.fileType || ''), fileSize: Number(m.fileSize) || 0,
+           hasFile: !!m.fileId || !!m.hasFile, duration: Number(m.duration) || 0, expires: isoOrEmpty(m.expires) };
+}
+
+function isoOrEmpty(v) {
+  if (!v) return '';
+  var d = new Date(v);
+  return isNaN(d.getTime()) ? '' : d.toISOString();
+}
+
+/** Still there? Disappearing items are hidden the moment their time is up, and removed for good by purgeExpired */
+function alive(m) { return !m.expires || new Date(m.expires).getTime() > Date.now(); }
+
+var EXPIRY_CHOICES = [60, 3600, 86400, 604800];
+
+/** The time something picked to disappear, or '' to keep it. Also tells purgeExpired when to look next. */
+function expiryOf(b) {
+  var secs = Number(b.expiresIn) || 0;
+  if (EXPIRY_CHOICES.indexOf(secs) < 0) return '';
+  var at = Date.now() + secs * 1000;
+  var p = PropertiesService.getScriptProperties(), next = Number(p.getProperty('EXP_NEXT') || 0);
+  if (!next || at < next) p.setProperty('EXP_NEXT', String(at));
+  return new Date(at).toISOString();
+}
+
+/** Removes what has run out. It only reads the sheets when something is actually due. */
+function purgeExpired() {
+  var p = PropertiesService.getScriptProperties(), next = Number(p.getProperty('EXP_NEXT') || 0), now = Date.now();
+  if (!next || now < next) return;
+  var c = CacheService.getScriptCache();
+  if (c.get('expPurge')) return;
+  c.put('expPurge', '1', 30);
+  withLock(function () {
+    var soonest = 0;
+    function due(r) {
+      if (!r.expires || truthy(r.deleted)) return false;
+      var at = new Date(r.expires).getTime();
+      if (at <= now) return true;
+      if (!soonest || at < soonest) soonest = at;
+      return false;
+    }
+    function trash(id) { if (id) { try { DriveApp.getFileById(id).setTrashed(true); } catch (e) {} } }
+    rows('Messages').filter(due).forEach(function (m) {
+      trash(m.fileId);
+      update('Messages', m._row, { deleted: true, text: '', fileId: '', fileName: '', fileType: '', fileSize: 0 });
+      putRoom(m.room, roomMessages(m.room).filter(function (x) { return x.id !== m.id; }));
+      var gone = JSON.parse(c.get('d:' + m.room) || '[]');
+      gone.push(m.id);
+      c.put('d:' + m.room, JSON.stringify(gone.slice(-200)), 21600);
+    });
+    rows('DMs').filter(due).forEach(function (m) {
+      trash(m.fileId);
+      update('DMs', m._row, { deleted: true, text: '', fileId: '', fileName: '', fileType: '', fileSize: 0 });
+      dmStore(m.pair, dmCached(m.pair).filter(function (x) { return x.id !== m.id; }));
+      var gone = JSON.parse(c.get('dmd:' + m.pair) || '[]');
+      gone.push(m.id);
+      c.put('dmd:' + m.pair, JSON.stringify(gone.slice(-40)), 21600);
+    });
+    var hadPost = false;
+    rows('Posts').filter(due).forEach(function (r) {
+      removeAvatarFile(r.image);
+      removeAvatarFile(r.video);
+      trash(r.voiceId);
+      update('Posts', r._row, { deleted: true, text: '', image: '', video: '', voiceId: '' });
+      hadPost = true;
+    });
+    if (hadPost) bumpFeed();
+    if (soonest) p.setProperty('EXP_NEXT', String(soonest)); else p.deleteProperty('EXP_NEXT');
+  });
+}
+
+function feedAnswer(s, b, offset) {
+  if (b.scope === 'guest') return { ok: true, posts: publicPosts(s, function (p) { return p.audience === 'public'; }, 25, offset) };
+  if (b.scope !== 'friends' && b.scope !== 'strangers') return { ok: true, posts: publicPosts(s, function () { return true; }, 25, offset) };
+  var ids = friendIds(s.id);
+  ids[s.id] = 1;
+  var want = b.scope === 'friends';
+  return { ok: true, posts: publicPosts(s, function (p) { return !!ids[p.userId] === want; }, 25, offset) };
+}
+
+/** Feed answers are kept for a few seconds per person, and thrown away as soon as anybody posts, likes or comments */
+function bumpFeed() { CacheService.getScriptCache().put('fv', String(Date.now()), 21600); }
+function postExtras(p, o) {
+  o.video = String(p.video || '');
+  o.hasVoice = !!p.voiceId;
+  o.duration = Number(p.duration) || 0;
+  o.expires = isoOrEmpty(p.expires);
+  return o;
 }
 
 function latestMeta() {
@@ -476,7 +567,7 @@ function scanUploads() {
   if (first) return; // the first scan after a restart only remembers what is there
   fresh.sort(function (a, b) { return a.getDateCreated() - b.getDateCreated(); });
   fresh.forEach(function (f) {
-    var ev = { id: 'u' + f.getId().slice(0, 15), type: 'upload', room: '', roomName: 'Uploads', userId: '', displayName: 'ASU Bank',
+    var ev = { id: 'u' + f.getId().slice(0, 15), type: 'upload', room: '', roomName: 'Uploads', userId: '', displayName: 'UniHub',
                text: f.getName().slice(0, 120), url: 'https://drive.google.com/file/d/' + f.getId() + '/view', created: f.getDateCreated().toISOString() };
     pushEvent(ev);
   });
@@ -567,7 +658,23 @@ function dmAllowed(s, t) {
 
 function dmPublic(m) {
   return { id: m.id, from: m.from, to: m.to, text: String(m.text || ''), created: new Date(m.created).toISOString(), fileName: String(m.fileName || ''),
-           fileType: String(m.fileType || ''), fileSize: Number(m.fileSize) || 0, hasFile: !!m.fileId };
+           fileType: String(m.fileType || ''), fileSize: Number(m.fileSize) || 0, hasFile: !!m.fileId || !!m.hasFile, duration: Number(m.duration) || 0, expires: isoOrEmpty(m.expires) };
+}
+
+function mediaLabel(type) { return type === 'voice' ? '🎤 Voice message' : type === 'video' ? '🎬 Video' : type === 'photo' ? '📷 Photo' : ''; }
+
+/** Stores a file sent in a chat. Never shared by link: the only way to it is an action that checks who is asking. */
+function saveChatFile(b, allowed) {
+  var d = String(b.file).replace(/^data:[^,]+,/, '');
+  if (d.length > 17000000) fail('That file is too big. The limit is 12 MB.');
+  var bytes = Utilities.base64Decode(d);
+  if (bytes.length < 8) fail('That file is empty.');
+  var fileName = String(b.fileName || 'file').replace(/[\\/:*?"<>|\r\n]/g, '_').slice(0, 120);
+  var kind = dmFileKind(bytes, fileName);
+  if (allowed.indexOf(kind.type) < 0) fail('This file type can’t be sent here.');
+  if (kind.type !== 'video' && bytes.length > 8400000) fail('That file is too big. The limit is 8 MB.');
+  var id = namedFolder('DM_FOLDER', 'ASU Bank Private Files').createFile(Utilities.newBlob(bytes, kind.mime, newId() + '-' + fileName)).getId();
+  return { fileId: id, fileName: fileName, fileType: kind.type, fileSize: bytes.length, duration: Math.min(36000, Math.max(0, Number(b.duration) || 0)) };
 }
 
 function dmCached(pair) {
@@ -592,7 +699,13 @@ function dmFileKind(bytes, name) {
   if ((ext === 'jpg' || ext === 'jpeg') && b0 === 0xFF && b1 === 0xD8) return { type: 'photo', mime: 'image/jpeg' };
   if (ext === 'png' && b0 === 0x89 && b1 === 0x50) return { type: 'photo', mime: 'image/png' };
   if (ext === 'docx' && b0 === 0x50 && b1 === 0x4B) return { type: 'docx', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
-  fail('Only PDF, photos and DOCX files can be sent.');
+  var ftyp = String.fromCharCode(bytes[4] & 255, bytes[5] & 255, bytes[6] & 255, bytes[7] & 255) === 'ftyp';
+  if (ext === 'm4a' && ftyp) return { type: 'voice', mime: 'audio/mp4' };
+  if (ext === 'weba' && b0 === 0x1A && b1 === 0x45) return { type: 'voice', mime: 'audio/webm' };
+  if (ext === 'ogg' && b0 === 0x4F && b1 === 0x67) return { type: 'voice', mime: 'audio/ogg' };
+  if ((ext === 'mp4' || ext === 'mov') && ftyp) return { type: 'video', mime: ext === 'mov' ? 'video/quicktime' : 'video/mp4' };
+  if (ext === 'webm' && b0 === 0x1A && b1 === 0x45) return { type: 'video', mime: 'video/webm' };
+  fail('Only PDF, photos, videos, voice messages and DOCX files can be sent.');
 }
 
 /** The people someone is friends with, as a map of ids */
@@ -626,13 +739,13 @@ function publicPosts(s, wanted, limit, offset) {
   var map = usersById();
   var mine = blockedIds(me);
   return rows('Posts').filter(function (p) {
-    if (truthy(p.deleted) || !wanted(p)) return false;
+    if (truthy(p.deleted) || !alive(p) || !wanted(p)) return false;
     if (p.audience === 'friends' && p.userId !== s.id && !pals[p.userId] && s.role !== 'admin') return false;
     var u = map[p.userId];
     return u && !truthy(u.banned) && mine.indexOf(p.userId) < 0 && blockedIds(u).indexOf(s.id) < 0;
   }).reverse().slice(offset || 0, (offset || 0) + limit).map(function (p) {
     var likes = String(p.likes || '').split(',').filter(String);
-    return { id: p.id, text: String(p.text), image: String(p.image || ''), audience: audienceOf(p), comments: counts[p.id] || 0, created: p.created, likes: likes.length, liked: likes.indexOf(s.id) >= 0, user: publicUser(map[p.userId], false) };
+    return postExtras(p, { id: p.id, text: String(p.text), image: String(p.image || ''), audience: audienceOf(p), comments: counts[p.id] || 0, created: p.created, likes: likes.length, liked: likes.indexOf(s.id) >= 0, user: publicUser(map[p.userId], false) });
   });
 }
 
@@ -732,8 +845,8 @@ var ACTIONS = {
     if (tooMany('code', 5)) fail('Too many codes. Try again in 15 minutes.');
     var code = String(Math.floor(100000 + Math.random() * 900000));
     CacheService.getScriptCache().put('code', code, 900);
-    MailApp.sendEmail(OWNER_EMAIL, 'ASU Bank admin code: ' + code,
-      'Someone is creating the ASU Bank admin account (' + (b.username || '') + ').\n\nYour code: ' + code +
+    MailApp.sendEmail(OWNER_EMAIL, 'UniHub admin code: ' + code,
+      'Someone is creating the UniHub admin account (' + (b.username || '') + ').\n\nYour code: ' + code +
       '\n\nIt works for 15 minutes. If this was not you, ignore this email.');
     return { ok: true, sentTo: OWNER_EMAIL.replace(/^(.).*(@.*)$/, '$1•••$2') };
   },
@@ -926,7 +1039,8 @@ var ACTIONS = {
     var u = auth(b);
     var room = roomById(String(b.room || 'general'));
     if (!room || (room.archived && u.role !== 'admin')) fail('This room is closed.');
-    var list = roomMessages(room.id);
+    if (!b.after) { try { purgeExpired(); } catch (e) {} }
+    var list = roomMessages(room.id).filter(alive);
     if (b.after) {
       var i = -1;
       for (var k = list.length - 1; k >= 0; k--) if (list[k].id === b.after) { i = k; break; }
@@ -949,11 +1063,13 @@ var ACTIONS = {
     if (!r || r.archived) fail('This room is closed.');
     if ((r.adminOnly || r.locked) && u.role !== 'admin') fail(r.locked ? 'This room is locked. Only admins can post here.' : 'Only admins can post here.');
     var text = String(b.text || '').trim().slice(0, MAX_TEXT);
-    if (!text) fail('Type a message first.');
+    if (!text && !b.file) fail('Type a message first.');
     assertClean(text);
     if (u.role !== 'admin' && tooMany('send:' + u.id, 20)) fail('Slow down a little.');
+    var media = b.file ? saveChatFile(b, ['voice', 'photo', 'video']) : {};
+    var expires = expiryOf(b);
     return withLock(function () {
-      var m = { id: newId(), room: r.id, userId: u.id, username: u.username, displayName: u.displayName || u.username, role: u.role,
+      var m = { id: newId(), room: r.id, fileId: media.fileId || '', fileName: media.fileName || '', fileType: media.fileType || '', fileSize: media.fileSize || 0, duration: media.duration || 0, expires: expires, userId: u.id, username: u.username, displayName: u.displayName || u.username, role: u.role,
                 text: text, created: new Date().toISOString(), deleted: false, replyTo: String(b.replyTo || '').slice(0, 20), color: u.color, edited: '' };
       append('Messages', m);
       var list = roomMessages(r.id);
@@ -962,7 +1078,7 @@ var ACTIONS = {
       list.push(publicMessage(m));
       putRoom(r.id, list.slice(-CACHE_MSGS));
       var meta = { id: m.id, room: r.id, roomName: r.name, displayName: m.displayName, username: m.username, userId: m.userId,
-                   text: text.slice(0, 120), created: m.created, announcement: !!r.adminOnly };
+                   text: (text || mediaLabel(media.fileType)).slice(0, 120), created: m.created, announcement: !!r.adminOnly };
       CacheService.getScriptCache().put('latest', JSON.stringify(meta), 21600);
       meta.type = r.adminOnly ? 'announcement' : 'message';
       meta.replyToUserId = replyUser;
@@ -998,7 +1114,8 @@ var ACTIONS = {
       var m = rows('Messages').filter(function (x) { return x.id === b.id; })[0];
       if (!m) fail('Message not found.');
       if (m.userId !== u.id && u.role !== 'admin') fail('You can only delete your own messages.');
-      update('Messages', m._row, { deleted: true });
+      if (m.fileId) { try { DriveApp.getFileById(m.fileId).setTrashed(true); } catch (e) {} }
+      update('Messages', m._row, { deleted: true, fileId: '' });
       putRoom(m.room, roomMessages(m.room).filter(function (x) { return x.id !== m.id; }));
       var c = CacheService.getScriptCache();
       var gone = JSON.parse(c.get('d:' + m.room) || '[]');
@@ -1077,7 +1194,7 @@ var ACTIONS = {
                   reason: reason, details: String(b.details || '').trim().slice(0, 1000), status: 'open', resolvedBy: '', resolvedAt: '' };
       append('Reports', rep);
       try {
-        MailApp.sendEmail(OWNER_EMAIL, 'ASU Bank report: ' + reason + ' (' + kind + ')',
+        MailApp.sendEmail(OWNER_EMAIL, 'UniHub report: ' + reason + ' (' + kind + ')',
           'Reported by: ' + rep.reporterName + (rep.contact ? ' (' + rep.contact + ')' : '') + '\n' +
           'What: ' + kind + (targetUser ? ' by @' + targetUser : '') + '\n' + targetName + '\n' + (kind === 'file' ? targetId + '\n' : '') +
           '\nDetails: ' + (rep.details || 'none') + '\n\nReview it in the app: Admin > Reports, or https://asubank.org/admin/');
@@ -1250,7 +1367,7 @@ var ACTIONS = {
       append('GroupRequests', r);
       privateEvent({ toAdmin: true }, 'group_request', s, title);
       try {
-        MailApp.sendEmail(OWNER_EMAIL, 'ASU Bank group request: ' + title,
+        MailApp.sendEmail(OWNER_EMAIL, 'UniHub group request: ' + title,
           'From: @' + s.username + '\nGroup: ' + title + '\nCategory: ' + (category || 'none') + '\nLink: ' + url + '\nNotes: ' + (notes || 'none') +
           '\n\nAccept or reject it in the app: Admin > Group requests.');
       } catch (err) { /* the request is saved even when the daily email limit is used up */ }
@@ -1325,6 +1442,7 @@ var ACTIONS = {
       if (!f || f.status !== 'pending' || f.to !== s.id) fail('This request is no longer there.');
       if (b.accept === false) { sheet('Friends').deleteRow(f._row); return { ok: true, friendship: 'none' }; }
       update('Friends', f._row, { status: 'accepted', updated: new Date().toISOString() });
+      bumpFeed();
       privateEvent({ toUserId: other }, 'friend_accept', s, '');
       return { ok: true, friendship: 'friends' };
     });
@@ -1416,13 +1534,17 @@ var ACTIONS = {
   postCreate: function (b) {
     var s = auth(b);
     var text = String(b.text || '').trim().slice(0, 1000);
-    if (!text && !b.image) fail('Write something first.');
+    if (!text && !b.image && !b.video && !b.file) fail('Write something first.');
     assertClean(text);
     if (tooMany('post:' + s.id, 10)) fail('Too many posts. Try again later.');
+    var video = b.video ? saveVideo(namedFolder('FEED_FOLDER', 'ASU Bank Feed'), b.video, s.id + '-' + Date.now()) : '';
+    var voice = b.file ? saveChatFile(b, ['voice']) : {};
+    var expires = expiryOf(b);
     var image = b.image ? savePhoto(namedFolder('FEED_FOLDER', 'ASU Bank Feed'), b.image, s.id + '-' + Date.now(), 2500000, 1280) : '';
     return withLock(function () {
-      var p = { id: newId(), userId: s.id, text: cell(text), created: new Date().toISOString(), deleted: false, likes: '', image: image, audience: audienceOf(b) };
+      var p = { id: newId(), userId: s.id, text: cell(text), created: new Date().toISOString(), deleted: false, likes: '', image: image, audience: audienceOf(b), video: video, voiceId: voice.fileId || '', duration: voice.duration || 0, expires: expires };
       append('Posts', p);
+      bumpFeed();
       return { ok: true, id: p.id };
     });
   },
@@ -1434,7 +1556,10 @@ var ACTIONS = {
       if (!p) fail('Post not found.');
       if (p.userId !== s.id && s.role !== 'admin') fail('You can only delete your own posts.');
       if (p.image) removeAvatarFile(p.image);
-      update('Posts', p._row, { deleted: true, text: '', image: '' });
+      if (p.video) removeAvatarFile(p.video);
+      if (p.voiceId) { try { DriveApp.getFileById(p.voiceId).setTrashed(true); } catch (e) {} }
+      update('Posts', p._row, { deleted: true, text: '', image: '', video: '', voiceId: '' });
+      bumpFeed();
       if (p.userId !== s.id) log(s, 'deletePost', p.userId, '');
       return { ok: true };
     });
@@ -1448,6 +1573,7 @@ var ACTIONS = {
       var list = String(p.likes || '').split(',').filter(String).filter(function (x) { return x !== s.id; });
       if (b.on !== false) list.push(s.id);
       update('Posts', p._row, { likes: list.join(',') });
+      bumpFeed();
       return { ok: true, likes: list.length, liked: b.on !== false };
     });
   },
@@ -1469,20 +1595,41 @@ var ACTIONS = {
   feedAll: function (b) {
     var s = auth(b);
     var offset = Math.max(0, Number(b.offset) || 0);
-    if (b.scope === 'guest') return { ok: true, posts: publicPosts(s, function (p) { return p.audience === 'public'; }, 25, offset) };
-    if (b.scope !== 'friends' && b.scope !== 'strangers') return { ok: true, posts: publicPosts(s, function () { return true; }, 25, offset) };
-    var ids = friendIds(s.id);
-    ids[s.id] = 1;
-    var want = b.scope === 'friends';
-    return { ok: true, posts: publicPosts(s, function (p) { return !!ids[p.userId] === want; }, 25, offset) };
+    try { purgeExpired(); } catch (e) {}
+    var cache = CacheService.getScriptCache();
+    var key = 'fa:' + s.id + ':' + b.scope + ':' + offset + ':' + (cache.get('fv') || '0');
+    var kept = cache.get(key);
+    if (kept) return JSON.parse(kept);
+    var o = feedAnswer(s, b, offset);
+    var j = JSON.stringify(o);
+    if (j.length < 95000) cache.put(key, j, 45);
+    return o;
   },
+
+  /** Who saw my story, and when */
+  storyViewers: function (b) {
+    var s = auth(b);
+    var r = rows('Stories').filter(function (x) { return x.id === b.id; })[0];
+    if (!r) fail('This story is gone.');
+    if (r.userId !== s.id && s.role !== 'admin') fail('Only the person who posted a story can see who viewed it.');
+    var map = usersById(), times = {};
+    String(r.seenLog || '').split(',').filter(String).forEach(function (x) { var a = x.split('|'); times[a[0]] = a[1] || ''; });
+    var list = String(r.views || '').split(',').filter(String).map(function (id) {
+      var u = map[id];
+      return u && !truthy(u.banned) ? { user: publicUser(u, false), at: times[id] || '' } : null;
+    }).filter(Boolean);
+    list.sort(function (x, y) { return String(y.at).localeCompare(String(x.at)); });
+    return { ok: true, viewers: list };
+  },
+
 
   /** My private conversations, newest first */
   dmList: function (b) {
     var s = auth(b);
+    try { purgeExpired(); } catch (e) {}
     var map = usersById(), mine = blockedIds(map[s.id]), found = {};
     rows('DMs').forEach(function (m) {
-      if (truthy(m.deleted) || (m.from !== s.id && m.to !== s.id)) return;
+      if (truthy(m.deleted) || !alive(m) || (m.from !== s.id && m.to !== s.id)) return;
       var other = m.from === s.id ? m.to : m.from;
       var g = found[other] || (found[other] = { unread: 0 });
       g.last = m;
@@ -1505,7 +1652,7 @@ var ACTIONS = {
     var t = userById(String(b.userId || ''));
     if (!t) fail('User not found.');
     var pair = dmPair(s.id, t.id), c = CacheService.getScriptCache();
-    var all = dmCached(pair), list = all;
+    var all = dmCached(pair).filter(alive), list = all;
     if (b.after) {
       var i = -1;
       for (var k = all.length - 1; k >= 0; k--) if (all[k].id === b.after) { i = k; break; }
@@ -1536,30 +1683,20 @@ var ACTIONS = {
     if (!text && !b.file) fail('Type a message first.');
     assertClean(text);
     if (s.role !== 'admin' && tooMany('dm:' + s.id, 40)) fail('Slow down a little.');
-    var fileId = '', fileName = '', fileType = '', fileSize = 0;
-    if (b.file) {
-      var d = String(b.file).replace(/^data:[^,]+,/, '');
-      if (d.length > 11000000) fail('That file is too big. The limit is 8 MB.');
-      var bytes = Utilities.base64Decode(d);
-      if (bytes.length < 8) fail('That file is empty.');
-      fileName = String(b.fileName || 'file').replace(/[\\/:*?"<>|\r\n]/g, '_').slice(0, 120);
-      var kind = dmFileKind(bytes, fileName);
-      // never shared by link: the only way to it is dmFile, which checks who is asking
-      fileId = namedFolder('DM_FOLDER', 'ASU Bank Private Files').createFile(Utilities.newBlob(bytes, kind.mime, newId() + '-' + fileName)).getId();
-      fileType = kind.type;
-      fileSize = bytes.length;
-    }
+    var media = b.file ? saveChatFile(b, ['pdf', 'photo', 'docx', 'voice', 'video']) : {};
+    var expires = expiryOf(b);
+    var fileId = media.fileId || '', fileName = media.fileName || '', fileType = media.fileType || '', fileSize = media.fileSize || 0;
     return withLock(function () {
       var pair = dmPair(s.id, t.id);
       var m = { id: newId(), pair: pair, from: s.id, to: t.id, text: cell(text), created: new Date().toISOString(), deleted: false,
-                fileId: fileId, fileName: fileName, fileType: fileType, fileSize: fileSize, read: false };
+                fileId: fileId, fileName: fileName, fileType: fileType, fileSize: fileSize, read: false, duration: media.duration || 0, expires: expires };
       var list = dmCached(pair);
       append('DMs', m);
       m.text = text;
       list.push(dmPublic(m));
       dmStore(pair, list.slice(-80));
       CacheService.getScriptCache().put('dmu:' + t.id + ':' + s.id, '1', 21600);
-      privateEvent({ toUserId: t.id }, 'dm', s, (text || fileName).slice(0, 120));
+      privateEvent({ toUserId: t.id }, 'dm', s, (text || mediaLabel(fileType) || fileName).slice(0, 120));
       return { ok: true, message: dmPublic(m) };
     });
   },
@@ -1571,6 +1708,27 @@ var ACTIONS = {
     if (!m || truthy(m.deleted) || !m.fileId || (m.from !== s.id && m.to !== s.id)) fail('File not found.');
     var blob = DriveApp.getFileById(m.fileId).getBlob();
     return { ok: true, data: Utilities.base64Encode(blob.getBytes()), name: String(m.fileName), type: String(m.fileType) };
+  },
+
+  /** A voice message, photo or video from a room or a post. Room files need an account; a post's voice follows who may see the post. */
+  mediaFile: function (b) {
+    var fileId = '', name = '', type = '';
+    if (b.scope === 'room') {
+      auth(b);
+      var m = rows('Messages').filter(function (x) { return x.id === b.id; })[0];
+      if (!m || truthy(m.deleted) || !alive(m) || !m.fileId) fail('File not found.');
+      fileId = m.fileId; name = m.fileName; type = m.fileType;
+    } else if (b.scope === 'post') {
+      var p = rows('Posts').filter(function (x) { return x.id === b.id; })[0];
+      if (!p || truthy(p.deleted) || !alive(p) || !p.voiceId) fail('File not found.');
+      if (p.audience !== 'public') {
+        var s = auth(b);
+        if (p.audience === 'friends' && p.userId !== s.id && s.role !== 'admin' && !friendIds(s.id)[p.userId]) fail('File not found.');
+      }
+      fileId = p.voiceId; name = 'voice.m4a'; type = 'voice';
+    } else fail('File not found.');
+    var blob = DriveApp.getFileById(fileId).getBlob();
+    return { ok: true, data: Utilities.base64Encode(blob.getBytes()), name: String(name), type: String(type) };
   },
 
   dmDelete: function (b) {
@@ -1599,10 +1757,10 @@ var ACTIONS = {
     rows('Comments').forEach(function (x) { if (!truthy(x.deleted)) counts[x.postId] = (counts[x.postId] || 0) + 1; });
     var posts = rows('Posts').filter(function (p) {
       var u = map[p.userId];
-      return p.audience === 'public' && !truthy(p.deleted) && u && !truthy(u.banned);
+      return p.audience === 'public' && !truthy(p.deleted) && alive(p) && u && !truthy(u.banned);
     }).reverse().slice(offset, offset + 25).map(function (p) {
-      return { id: p.id, text: String(p.text), image: String(p.image || ''), audience: 'public', comments: counts[p.id] || 0, created: p.created,
-               likes: String(p.likes || '').split(',').filter(String).length, liked: false, user: guestUser(map[p.userId]) };
+      return postExtras(p, { id: p.id, text: String(p.text), image: String(p.image || ''), audience: 'public', comments: counts[p.id] || 0, created: p.created,
+               likes: String(p.likes || '').split(',').filter(String).length, liked: false, user: guestUser(map[p.userId]) });
     });
     var o = { ok: true, posts: posts };
     var j = JSON.stringify(o);
@@ -1617,9 +1775,9 @@ var ACTIONS = {
     if (!u || truthy(u.banned)) fail(hidden);
     var counts = {};
     rows('Comments').forEach(function (x) { if (!truthy(x.deleted)) counts[x.postId] = (counts[x.postId] || 0) + 1; });
-    var posts = rows('Posts').filter(function (p) { return p.userId === id && p.audience === 'public' && !truthy(p.deleted); }).reverse().slice(0, 25).map(function (p) {
-      return { id: p.id, text: String(p.text), image: String(p.image || ''), audience: 'public', comments: counts[p.id] || 0, created: p.created,
-               likes: String(p.likes || '').split(',').filter(String).length, liked: false, user: guestUser(u) };
+    var posts = rows('Posts').filter(function (p) { return p.userId === id && p.audience === 'public' && !truthy(p.deleted) && alive(p); }).reverse().slice(0, 25).map(function (p) {
+      return postExtras(p, { id: p.id, text: String(p.text), image: String(p.image || ''), audience: 'public', comments: counts[p.id] || 0, created: p.created,
+               likes: String(p.likes || '').split(',').filter(String).length, liked: false, user: guestUser(u) });
     });
     if (!posts.length) {
       var now = Date.now();
@@ -1639,7 +1797,7 @@ var ACTIONS = {
       if (r.audience !== 'public' || !u || truthy(u.banned) || now - new Date(r.created).getTime() > STORY_SHOWN_MS) return;
       var g = groups[r.userId] || (groups[r.userId] = { user: guestUser(u), stories: [], seen: false, newest: '' });
       var when = new Date(r.created).toISOString();
-      g.stories.push({ id: r.id, image: String(r.image || ''), video: String(r.video || ''), text: String(r.text || ''), bg: String(r.bg || ''), audience: 'public', created: when, seen: false });
+      g.stories.push({ id: r.id, image: String(r.image || ''), video: String(r.video || ''), text: String(r.text || ''), bg: String(r.bg || ''), audience: 'public', created: when, seen: false, style: String(r.style || '') });
       if (when > g.newest) g.newest = when;
     });
     var list = Object.keys(groups).map(function (k) { return groups[k]; });
@@ -1674,6 +1832,7 @@ var ACTIONS = {
       if (owner && (blockedIds(owner).indexOf(s.id) >= 0 || blockedIds(userById(s.id)).indexOf(owner.id) >= 0)) fail("You can't do this with this person.");
       var c = { id: newId(), postId: p.id, userId: s.id, text: cell(text), created: new Date().toISOString(), deleted: false };
       append('Comments', c);
+      bumpFeed();
       if (p.userId !== s.id) privateEvent({ toUserId: p.userId }, 'post_comment', s, text.slice(0, 140));
       return { ok: true, id: c.id };
     });
@@ -1687,6 +1846,7 @@ var ACTIONS = {
       var p = rows('Posts').filter(function (x) { return x.id === c.postId; })[0];
       if (c.userId !== s.id && s.role !== 'admin' && !(p && p.userId === s.id)) fail('You can only delete your own comments.');
       update('Comments', c._row, { deleted: true, text: '' });
+      bumpFeed();
       return { ok: true };
     });
   },
@@ -1706,7 +1866,7 @@ var ACTIONS = {
       var views = String(r.views || '').split(',').filter(String);
       var g = groups[r.userId] || (groups[r.userId] = { user: publicUser(u, false), stories: [], seen: true, newest: '' });
       var seen = r.userId === s.id || views.indexOf(s.id) >= 0;
-      var o = { id: r.id, image: String(r.image || ''), video: String(r.video || ''), audience: audienceOf(r), text: String(r.text || ''), bg: String(r.bg || ''), created: new Date(r.created).toISOString(), seen: seen };
+      var o = { id: r.id, image: String(r.image || ''), video: String(r.video || ''), audience: audienceOf(r), text: String(r.text || ''), bg: String(r.bg || ''), created: new Date(r.created).toISOString(), seen: seen, style: String(r.style || '') };
       if (r.userId === s.id) o.views = views.length;
       g.stories.push(o);
       if (!seen) g.seen = false;
@@ -1731,8 +1891,14 @@ var ACTIONS = {
     var image = b.image ? savePhoto(namedFolder('STORY_FOLDER', 'ASU Bank Stories'), b.image, s.id + '-' + Date.now(), 2500000, 1280) : '';
     var video = b.video ? saveVideo(namedFolder('STORY_FOLDER', 'ASU Bank Stories'), b.video, s.id + '-' + Date.now()) : '';
     var bg = /^#[0-9a-fA-F]{6}$/.test(String(b.bg || '')) ? String(b.bg) : '#8C1D40';
+    var style = '';
+    if (b.style && typeof b.style === 'object') {
+      var st = {};
+      ['font', 'effect', 'color', 'bg2', 'align', 'anim'].forEach(function (k) { if (b.style[k] != null) st[k] = String(b.style[k]).slice(0, 24); });
+      style = JSON.stringify(st);
+    }
     return withLock(function () {
-      var r = { id: newId(), userId: s.id, image: image, text: cell(text), bg: bg, created: new Date().toISOString(), views: '', audience: audienceOf(b), video: video };
+      var r = { id: newId(), userId: s.id, image: image, text: cell(text), bg: bg, created: new Date().toISOString(), views: '', audience: audienceOf(b), video: video, seenLog: '', style: style };
       append('Stories', r);
       return { ok: true, id: r.id };
     });
@@ -1744,7 +1910,11 @@ var ACTIONS = {
       var r = rows('Stories').filter(function (x) { return x.id === b.id; })[0];
       if (!r || r.userId === s.id) return { ok: true };
       var views = String(r.views || '').split(',').filter(String);
-      if (views.indexOf(s.id) < 0) { views.push(s.id); update('Stories', r._row, { views: views.join(',') }); }
+      if (views.indexOf(s.id) < 0) {
+        views.push(s.id);
+        var logged = String(r.seenLog || '');
+        update('Stories', r._row, { views: views.join(','), seenLog: (logged ? logged + ',' : '') + s.id + '|' + new Date().toISOString() });
+      }
       return { ok: true };
     });
   },
@@ -1956,7 +2126,7 @@ var ACTIONS = {
   },
 
   /**
-   * Removes a file from ASU Bank for everyone and moves it to the Drive trash when this account may do that.
+   * Removes a file from UniHub for everyone and moves it to the Drive trash when this account may do that.
    * The file's id goes on the deleted list that the apps and the site hide, because the other indexes keep listing a file for a while.
    * Folders, sheets, forms and scripts are only hidden, never trashed: the backend's own files live in this Drive.
    */
@@ -2015,7 +2185,7 @@ var ACTIONS = {
       append('Suggestions', { id: newId(), created: new Date().toISOString(), userId: me ? me.id : '', username: who, note: cell(note), contact: cell(contact),
                               status: 'open', resolvedBy: '', resolvedAt: '' });
       try {
-        MailApp.sendEmail(OWNER_EMAIL, 'ASU Bank suggestion from ' + who, note + '\n\nContact: ' + (contact || 'none') + '\n\nIn the app: Admin > Suggestions, or https://asubank.org/admin/');
+        MailApp.sendEmail(OWNER_EMAIL, 'UniHub suggestion from ' + who, note + '\n\nContact: ' + (contact || 'none') + '\n\nIn the app: Admin > Suggestions, or https://asubank.org/admin/');
       } catch (err) { /* it is saved even when the daily email limit is used up */ }
       return { ok: true };
     });

@@ -76,7 +76,7 @@ final class DriveLinks {
     }
 
     func isBroken(_ u: String) -> String? {
-        if isDeleted(u) { return "This file was removed from ASU Bank." }
+        if isDeleted(u) { return "This file was removed from UniHub." }
         lock.lock(); defer { lock.unlock() }
         return broken[u]
     }
@@ -117,12 +117,12 @@ struct MaterialScreen: View {
         Group {
             switch loader.state {
             case .resolving:
-                ProgressView("Opening…").frame(maxWidth: .infinity, maxHeight: .infinity)
+                ABDots("Opening…").frame(maxWidth: .infinity, maxHeight: .infinity)
             case .downloading(let p):
                 VStack(spacing: 14) {
                     KindTile(kind: AB.kind(material.u, material.t)).scaleEffect(1.4).padding(.bottom, 6)
                     Text(material.t).font(.headline).multilineTextAlignment(.center).lineLimit(3)
-                    if p > 0 { ProgressView(value: p).frame(width: 200) } else { ProgressView() }
+                    if p > 0 { ProgressView(value: p).frame(width: 200) } else { ABDots() }
                     Text(p > 0 ? "Downloading \(Int(p * 100))%" : "Downloading…").font(.footnote).foregroundStyle(.secondary)
                 }
                 .padding(30).frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -434,7 +434,7 @@ struct DriveFolderList: View {
         List {
             switch state {
             case 0:
-                HStack { Spacer(); ProgressView("Loading folder…"); Spacer() }.padding(30).listRowBackground(Color.clear)
+                HStack { Spacer(); ABDots("Loading folder…"); Spacer() }.padding(30).listRowBackground(Color.clear)
             case 2:
                 VStack(spacing: 10) {
                     Image(systemName: "folder.badge.questionmark").font(.system(size: 40)).foregroundStyle(.secondary)

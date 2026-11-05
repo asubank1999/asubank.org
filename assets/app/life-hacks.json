@@ -48,7 +48,7 @@
       "title": "Save money",
       "items": [
         {"t": "Bring water and a snack", "d": "A bottle and a sandwich from home add up to real savings over a semester."},
-        {"t": "Share books and notes", "d": "Check ASU Bank before you buy or print anything, and split printing with friends."},
+        {"t": "Share books and notes", "d": "Check UniHub before you buy or print anything, and split printing with friends."},
         {"t": "Write down what you spend", "d": "Just one week of tracking shows you where the money goes."},
         {"t": "Ride together", "d": "Sharing a ride with classmates from your area cuts the cost and makes the trip better."}
       ]
@@ -113,7 +113,7 @@
       "title": "وفّر مالك",
       "items": [
         {"t": "أحضر الماء والطعام معك", "d": "زجاجة ماء وشطيرة من البيت توفران مبلغاً حقيقياً خلال الفصل."},
-        {"t": "تشاركوا الكتب والملخصات", "d": "ابحث في ASU Bank قبل أن تشتري أو تطبع أي شيء، وتقاسم الطباعة مع أصدقائك."},
+        {"t": "تشاركوا الكتب والملخصات", "d": "ابحث في UniHub قبل أن تشتري أو تطبع أي شيء، وتقاسم الطباعة مع أصدقائك."},
         {"t": "اكتب ما تصرفه", "d": "أسبوع واحد من التسجيل يكفي لتعرف أين يذهب مالك."},
         {"t": "تشاركوا المواصلات", "d": "الذهاب مع زملاء من منطقتك يقلل التكلفة ويجعل الطريق أجمل."}
       ]

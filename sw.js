@@ -1,4 +1,4 @@
-/* ASU Bank service worker
+/* UniHub service worker
    - pages: network first (always fresh), cached copy when offline, offline page as last resort
    - app files, icons, images, materials index: served from cache instantly, refreshed in the background
    - other sites (Drive, Apps Script, analytics) are never cached */

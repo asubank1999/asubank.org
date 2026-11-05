@@ -11,11 +11,11 @@ plugins {
 val keystore = System.getenv("ANDROID_KEYSTORE_FILE")?.let { File(it) }?.takeIf { it.exists() }
 
 android {
-    namespace = "org.asubank.app"
+    namespace = "org.unihub.app"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "org.asubank.app"
+        applicationId = "org.unihub.app"
         minSdk = 26
         targetSdk = 35
         versionCode = (System.getenv("BUILD_NUMBER") ?: "1").toInt()

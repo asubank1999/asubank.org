@@ -72,7 +72,7 @@ final class StoryCameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureD
     @Published var sixty = false
     var finished: ((StoryMedia) -> Void)?
 
-    private let queue = DispatchQueue(label: "org.asubank.camera")
+    private let queue = DispatchQueue(label: "org.unihub.camera")
     private let photos = AVCapturePhotoOutput()
     private let movies = AVCaptureMovieFileOutput()
     private var videoInput: AVCaptureDeviceInput?
@@ -236,7 +236,7 @@ struct StoryCameraScreen: View {
             if model.blocked {
                 VStack(spacing: 12) {
                     Image(systemName: "camera.fill").font(.system(size: 44)).foregroundStyle(.white.opacity(0.7))
-                    Text("ASU Bank can't use the camera.").font(.headline).foregroundStyle(.white)
+                    Text("UniHub can't use the camera.").font(.headline).foregroundStyle(.white)
                     Text("You can allow it in Settings, or pick from your photos.").font(.subheadline).foregroundStyle(.white.opacity(0.75))
                         .multilineTextAlignment(.center).padding(.horizontal, 30)
                     Button("Open Settings") {
@@ -408,7 +408,7 @@ struct StoryVideoView: View {
             } else if failed {
                 Image(systemName: "exclamationmark.triangle").font(.largeTitle).foregroundStyle(.white.opacity(0.7))
             } else {
-                ProgressView().tint(.white)
+                ABDots().tint(.white)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

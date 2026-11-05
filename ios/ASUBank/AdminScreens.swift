@@ -64,7 +64,7 @@ struct AdminTab: View {
                     Section {
                         Label("Long-press a chat message to pin or delete it, or ban its sender.", systemImage: "hand.tap")
                         Label("Open a user to give them badges like Helper, Support or Donor.", systemImage: "rosette")
-                        Label("Users' accounts live in the \"ASU Bank Accounts\" sheet in necro1442's Drive.", systemImage: "tablecells")
+                        Label("Users' accounts live in the \"UniHub Accounts\" sheet in necro1442's Drive.", systemImage: "tablecells")
                     } header: { Text("Tips") }.font(.subheadline)
                     if let error { Section { Text(error).foregroundStyle(.red) } }
                 }
@@ -150,7 +150,7 @@ struct AdminUsersScreen: View {
             }
             .pickerStyle(.segmented)
             .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
-            if loading && users.isEmpty { HStack { Spacer(); ProgressView(); Spacer() } }
+            if loading && users.isEmpty { HStack { Spacer(); ABDots(); Spacer() } }
             if let error { Text(error).foregroundStyle(.red) }
             if !(loading && users.isEmpty) { Section("\(shown.count) users") {
                 ForEach(shown) { u in
@@ -287,7 +287,7 @@ struct AdminUserScreen: View {
         .navigationTitle(user.username)
         .navigationBarTitleDisplayMode(.inline)
         .disabled(busy)
-        .overlay { if busy { ProgressView() } }
+        .overlay { if busy { ABDots() } }
         .confirmationDialog("Delete @\(user.username)?", isPresented: $confirmDelete, titleVisibility: .visible) {
             Button("Delete account", role: .destructive) { Task { await act("adminDeleteUser", [:]) { dismiss() } } }
         } message: { Text("This can't be undone.") }
@@ -345,7 +345,7 @@ struct AdminLogScreen: View {
     }
 }
 
-/// Removes a file from ASU Bank for everyone and moves it to the Drive trash (admins)
+/// Removes a file from UniHub for everyone and moves it to the Drive trash (admins)
 enum AdminUploads {
     @MainActor static func delete(_ url: String) async throws {
         guard let id = AB.driveId(url) else { throw AccountsAPI.Failure(message: "This isn't a Google Drive file.") }

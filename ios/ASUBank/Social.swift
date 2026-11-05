@@ -21,6 +21,10 @@ struct FeedPost: Decodable, Identifiable {
     var likes: Int
     var liked: Bool
     let user: ABUser
+    var video: String?
+    var hasVoice: Bool?
+    var duration: Int?
+    var expires: String?
 }
 
 enum Social {
@@ -70,7 +74,7 @@ struct FriendButton: View {
     @Binding var state: String
     var changed: () async -> Void = {}
     @ObservedObject private var account = AccountStore.shared
-    @State private var busy = false
+    @State private var pop = false
     @State private var confirmRemove = false
     @State private var error: String?
 
@@ -87,7 +91,7 @@ struct FriendButton: View {
                 button("Add friend", "person.badge.plus", filled: true) { run("friendRequest", [:]) }
             }
         }
-        .disabled(busy)
+        .animation(.spring(response: 0.35, dampingFraction: 0.6), value: state)
         .confirmationDialog("Remove this friend?", isPresented: $confirmRemove, titleVisibility: .visible) {
             Button("Remove friend", role: .destructive) { run("friendRemove", [:]) }
             Button("Cancel", role: .cancel) {}
@@ -104,22 +108,35 @@ struct FriendButton: View {
                 .padding(.horizontal, 12).padding(.vertical, 8)
                 .foregroundStyle(filled ? Color.white : Color.primary)
                 .background(filled ? AnyShapeStyle(Color.abAccent) : AnyShapeStyle(Color.primary.opacity(0.09)), in: Capsule())
+                .scaleEffect(pop ? 1.12 : 1)
         }
         .buttonStyle(.borderless)
+        .transition(.scale(scale: 0.7).combined(with: .opacity))
     }
 
+    /// The button changes straight away with a little bounce; only a failure puts it back
     private func run(_ action: String, _ extra: [String: Any]) {
+        let before = state
+        switch action {
+        case "friendRequest": state = "outgoing"
+        case "friendRespond": state = "friends"
+        default: state = "none"
+        }
+        Haptics.success()
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.4)) { pop = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) { withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { pop = false } }
         Task {
-            busy = true
-            defer { busy = false }
             var fields = extra
             fields["userId"] = userId
             do {
                 let r = try await account.call(action, fields)
-                state = r["friendship"] as? String ?? "none"
-                Haptics.success()
+                state = r["friendship"] as? String ?? state
                 await changed()
-            } catch { self.error = error.localizedDescription; Haptics.error() }
+            } catch {
+                state = before
+                self.error = error.localizedDescription
+                Haptics.error()
+            }
         }
     }
 }
@@ -184,59 +201,112 @@ struct PokeSheet: View {
 struct ComposePostSheet: View {
     var posted: () async -> Void
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject private var account = AccountStore.shared
     @State private var text = ""
     @State private var photo: UIImage?
+    @State private var video: URL?
+    @State private var videoCamera = false
+    @State private var poster: UIImage?
+    @State private var voice: (url: URL, seconds: Int)?
     @State private var picking = false
-    @State private var busy = false
+    @State private var disappear = 0
     @State private var error: String?
+    @StateObject private var rec = VoiceRecorder()
     @AppStorage("ab.audience") private var audience = "public"
+
+    private var empty: Bool { photo == nil && video == nil && voice == nil && text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
 
     var body: some View {
         ABStack {
             Form {
                 Section {
-                    TextEditor(text: $text).frame(minHeight: 140)
+                    TextEditor(text: $text).frame(minHeight: 120)
                 } header: { Text("What's on your mind?") } footer: { Text("\(text.count)/1000") }
                 Section {
-                    if let photo {
-                        Color.clear.frame(height: 220).overlay(Image(uiImage: photo).resizable().scaledToFill()).clipped()
+                    if let shown = photo ?? poster {
+                        Color.clear.frame(height: 220)
+                            .overlay(Image(uiImage: shown).resizable().scaledToFill())
+                            .overlay { if video != nil { Image(systemName: "play.circle.fill").font(.system(size: 48)).foregroundStyle(.white) } }
+                            .clipped()
                             .listRowInsets(EdgeInsets())
-                        Button(role: .destructive) { self.photo = nil } label: { Label("Remove photo", systemImage: "trash") }
+                        Button(role: .destructive) { photo = nil; video = nil; poster = nil } label: { Label(video != nil ? "Remove video" : "Remove photo", systemImage: "trash") }
                     }
-                    Button { picking = true } label: { Label(photo == nil ? "Add a photo" : "Change photo", systemImage: "photo") }
+                    Button { picking = true } label: { Label(photo == nil && video == nil ? "Add a photo or video" : "Change", systemImage: "photo.on.rectangle") }
+                    if rec.recording {
+                        HStack {
+                            Circle().fill(.red).frame(width: 10, height: 10)
+                            Text(VoiceBubble.time(rec.seconds)).monospacedDigit()
+                            Spacer()
+                            Button("Cancel", role: .destructive) { rec.cancel() }.buttonStyle(.borderless)
+                            Button("Done") { if let f = rec.stop() { voice = (f.0, f.1) } }.buttonStyle(.borderless)
+                        }
+                    } else if let voice {
+                        VoiceBubble(id: voice.url.lastPathComponent, duration: voice.seconds, localFile: voice.url) { voice.url }
+                        Button(role: .destructive) { self.voice = nil } label: { Label("Remove voice message", systemImage: "trash") }
+                    } else {
+                        Button {
+                            Task { if !(await rec.start()) { error = L("UniHub can't use the microphone. You can allow it in Settings.") } }
+                        } label: { Label("Record a voice message", systemImage: "mic") }
+                    }
                 }
-                Section { AudiencePicker(audience: $audience) }
+                Section {
+                    AudiencePicker(audience: $audience)
+                    Picker(selection: $disappear) {
+                        ForEach(Disappear.choices, id: \.seconds) { Text(LocalizedStringKey($0.label)).tag($0.seconds) }
+                    } label: { Label("Disappears after", systemImage: "timer") }
+                }
                 if let error { Section { Text(error).foregroundStyle(.red) } }
             }
             .navigationTitle("New post")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { rec.cancel(); dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(busy ? "Posting…" : "Post") { Task { await post() } }
-                        .disabled(busy || (photo == nil && text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty))
+                    Button("Post") { post() }.disabled(empty || rec.recording)
                 }
             }
-            .sheet(isPresented: $picking) { AvatarPicker { photo = $0 } }
+            .sheet(isPresented: $picking) {
+                StoryMediaPicker { m in
+                    switch m {
+                    case .photo(let image): photo = image; video = nil; poster = nil
+                    case .video(let url, let still, let camera): video = url; poster = still; videoCamera = camera; photo = nil
+                    }
+                }
+                .ignoresSafeArea()
+            }
         }
     }
 
-    private func post() async {
-        busy = true
-        defer { busy = false }
-        do {
-            var fields: [String: Any] = ["text": String(text.prefix(1000)), "audience": audience]
-            if let photo {
-                let data = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(photo, maxSide: 1280) }.value
-                guard let data else { self.error = L("Couldn't load this photo"); return }
+    /// The sheet closes straight away; the upload carries on in the background
+    private func post() {
+        let words = String(text.prefix(1000))
+        let who = audience
+        let time = disappear
+        let shot = photo
+        let clip = video
+        let camera = videoCamera
+        let sound = voice
+        BackgroundJobs.shared.add(title: L("Publishing your post…"), done: posted) {
+            var fields: [String: Any] = ["text": words, "audience": who, "expiresIn": time]
+            if let shot {
+                let data = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(shot, maxSide: 1280) }.value
+                guard let data else { throw AccountsAPI.Failure(message: L("Couldn't load this photo")) }
                 fields["image"] = data
             }
-            _ = try await account.call("postCreate", fields)
-            Haptics.success()
-            await posted()
-            dismiss()
-        } catch { self.error = error.localizedDescription; Haptics.error() }
+            if let clip {
+                guard let ready = await StoryVideo.prepare(clip, fromCamera: camera), let bytes = try? Data(contentsOf: ready) else {
+                    throw AccountsAPI.Failure(message: L("That video is too big. Keep it short."))
+                }
+                fields["video"] = bytes.base64EncodedString()
+            }
+            if let sound {
+                guard let bytes = try? Data(contentsOf: sound.url) else { throw AccountsAPI.Failure(message: L("Couldn't send this file.")) }
+                fields["file"] = bytes.base64EncodedString()
+                fields["fileName"] = "voice.m4a"
+                fields["duration"] = sound.seconds
+            }
+            _ = try await AccountStore.shared.call("postCreate", fields)
+        }
+        dismiss()
     }
 }
 
@@ -250,6 +320,8 @@ struct PostRow: View {
     @State private var showComments = false
     @State private var reporting: ReportTarget?
     @State private var blocking: BlockTarget?
+    @State private var preview: PreviewFile?
+    @State private var gone = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
@@ -262,6 +334,7 @@ struct PostRow: View {
                             HStack(spacing: 4) {
                                 Text(Social.ago(post.created))
                                 Image(systemName: Social.audienceSymbol(post.audience))
+                                ExpiryTag(expires: post.expires)
                             }
                             .font(.caption).foregroundStyle(.secondary)
                         }
@@ -271,6 +344,7 @@ struct PostRow: View {
                 Menu {
                     if post.user.id == account.user?.id || account.isAdmin {
                         Button("Delete", role: .destructive) {
+                            withAnimation { gone = true }
                             Task {
                                 _ = try? await account.call("postDelete", ["id": post.id])
                                 await changed()
@@ -292,12 +366,23 @@ struct PostRow: View {
             if let image = post.image, !image.isEmpty, let url = URL(string: image) {
                 Button { PhotoTools.show(image) } label: {
                     Color.abSurface.frame(height: 280)
-                        .overlay(CachedPhoto(url: url, pixelSize: 420) { ProgressView() })
+                        .overlay(CachedPhoto(url: url, pixelSize: 420) { ABDots() })
                         .clipped()
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .buttonStyle(.borderless)
                 .accessibilityLabel(Text("View photo"))
+            }
+            if let video = post.video, !video.isEmpty, let url = URL(string: video) {
+                ChatMediaTile(type: "video", fetch: {
+                    guard let f = await StoryVideo.local(url) else { throw AccountsAPI.Failure(message: L("File not found.")) }
+                    return f
+                }, open: { preview = PreviewFile(url: $0) })
+            }
+            if post.hasVoice == true {
+                VoiceBubble(id: post.id, duration: post.duration ?? 0) {
+                    try await MediaFiles.local(scope: "post", id: post.id, name: "voice.m4a")
+                }
             }
             HStack(spacing: 18) {
                 Button { Task { await like() } } label: {
@@ -315,6 +400,8 @@ struct PostRow: View {
             }
         }
         .padding(.vertical, 4)
+        .opacity(gone ? 0.25 : 1)
+        .sheet(item: $preview) { FilePreview(url: $0.url).ignoresSafeArea() }
         .onChange(of: post.likes) { _ in likes = nil; liked = nil }
         .onChange(of: post.comments) { _ in commentCount = nil }
         .sheet(isPresented: $showComments) { CommentsSheet(post: post) { commentCount = $0 } }
@@ -436,7 +523,7 @@ struct FriendsScreen: View {
     // MARK: friends
 
     @ViewBuilder private var friendsSection: some View {
-        if loading { ProgressView() }
+        if loading { ABDots() }
         else if friends.isEmpty {
             Section {
                 Text("You haven't added any friends yet.").foregroundStyle(.secondary)

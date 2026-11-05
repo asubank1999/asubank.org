@@ -208,7 +208,7 @@ struct SitePageView: View {
                 NativePageScreen(path: path, page: page)
             }
         } else if !pages.loaded {
-            ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.abBackground)
+            ABDots().frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.abBackground)
         } else {
             WebScreen(title: title, url: AB.absolute(path) ?? AB.site)
         }
@@ -362,7 +362,7 @@ struct NativePageScreen: View {
                     i.resizable().scaledToFit().clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 } else {
                     RoundedRectangle(cornerRadius: 12).fill(Color.secondary.opacity(0.1)).frame(height: 180)
-                        .overlay(ProgressView())
+                        .overlay(ABDots())
                 }
             }
             .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))

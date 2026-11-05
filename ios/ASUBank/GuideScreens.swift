@@ -58,7 +58,7 @@ struct SearchGuideScreen: View {
     var body: some View {
         List {
             GuideHero(emoji: "🔍", title: "How to find any material",
-                      text: "Everything on ASU Bank is searchable from one box: subject pages and the shared Google Drive.",
+                      text: "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive.",
                       ar: "اكتب اسم المادة أو رمزها، وستجد الملفات فوراً")
 
             Section {
@@ -359,7 +359,7 @@ struct GroupsScreen: View {
                 Button { requesting = true } label: {
                     Label("Add your group's link", systemImage: "plus.bubble")
                 }
-            } footer: { Text("Groups are run by students, not by ASU Bank. Be kind and follow each group's rules.") }
+            } footer: { Text("Groups are run by students, not by UniHub. Be kind and follow each group's rules.") }
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Groups & resources")
@@ -429,7 +429,7 @@ struct ThanksScreen: View {
                 VStack(spacing: 8) {
                     Text("💛").font(.system(size: 54))
                     Text("Thank you!").font(.largeTitle.weight(.bold))
-                    Text("ASU Bank is built by students, for students. These people uploaded, sorted and shared the materials you use every day.")
+                    Text("UniHub is built by students, for students. These people uploaded, sorted and shared the materials you use every day.")
                         .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
                     Text("شكراً لكل من ساهم في بناء المنصة").font(.footnote).foregroundStyle(.secondary)
                 }
@@ -451,7 +451,7 @@ struct ThanksScreen: View {
                     Text("👑").font(.system(size: 28)).frame(width: 60, height: 60).background(Color(UIColor(hex: 0xFFC627)), in: Circle())
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Alan").font(.title2.weight(.bold))
-                        Text("Founder · builds and runs ASU Bank").font(.subheadline).opacity(0.85)
+                        Text("Founder · builds and runs UniHub").font(.subheadline).opacity(0.85)
                     }
                     Spacer()
                 }
@@ -485,7 +485,7 @@ struct ThanksScreen: View {
                     Text("Want your name here?").font(.headline)
                     Text("Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team.")
                         .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
-                    Button { openURL(waMessage("Hi ASU Bank, I'd like to help the team")) } label: {
+                    Button { openURL(waMessage("Hi UniHub, I'd like to help the team")) } label: {
                         Label("Join the team on WhatsApp", systemImage: "hand.raised.fill").frame(maxWidth: .infinity).padding(.vertical, 4)
                     }
                     .buttonStyle(.borderedProminent).tint(.abAccent)
@@ -537,13 +537,13 @@ struct StudentAdsScreen: View {
             } header: { Text("Pricing · 10 JD total") }
 
             Section {
-                Button { openURL(waMessage("Hi ASU Bank, tell me when student ads open. I'd like to advertise: ")) } label: {
+                Button { openURL(waMessage("Hi UniHub, tell me when student ads open. I'd like to advertise: ")) } label: {
                     Label("Tell me when it opens", systemImage: "bell.badge.fill")
                 }
-                Button { openURL(waMessage("Hi ASU Bank, I have a question about student ads")) } label: {
+                Button { openURL(waMessage("Hi UniHub, I have a question about student ads")) } label: {
                     Label("Ask a question", systemImage: "questionmark.bubble")
                 }
-            } footer: { Text("Ads are reviewed by the ASU Bank team before they go live.") }
+            } footer: { Text("Ads are reviewed by the UniHub team before they go live.") }
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Student ads")
@@ -578,7 +578,7 @@ struct DonateScreen: View {
 
     var body: some View {
         List {
-            GuideHero(emoji: "🤍", title: "Support ASU Bank", text: "ASU Bank is free and run by a volunteer student. Donations keep it online and growing.",
+            GuideHero(emoji: "🤍", title: "Support UniHub", text: "UniHub is free and run by a volunteer student. Donations keep it online and growing.",
                       ar: "المنصة مجانية وتطوعية — تبرعك يساعدنا على الاستمرار")
             Section {
                 Button {
@@ -606,15 +606,15 @@ struct DonateScreen: View {
                     }
                 }
             } header: { Text("Donate") } footer: {
-                Text("Donations are optional and never unlock content. Everything on ASU Bank stays free. ASU Bank never asks for money from anyone else.")
+                Text("Donations are optional and never unlock content. Everything on UniHub stays free. UniHub never asks for money from anyone else.")
             }
             Section {
-                RouteLink(.page("/guides/thankslist", "Thanks list")) { Label("People who helped ASU Bank", systemImage: "heart") }
+                RouteLink(.page("/guides/thankslist", "Thanks list")) { Label("People who helped UniHub", systemImage: "heart") }
                 RouteLink(.page("/guides/contact", "Contact us")) { Label("Questions about donating", systemImage: "envelope") }
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("Support ASU Bank")
+        .navigationTitle("Support UniHub")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

@@ -176,7 +176,7 @@ struct SearchView: View {
         Section {
             switch driveState {
             case .loading:
-                HStack { ProgressView(); Text("Searching Google Drive…").foregroundStyle(.secondary) }
+                HStack { ABDots(); Text("Searching Google Drive…").foregroundStyle(.secondary) }
             case .failed:
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Drive search is not answering.").font(.headline)

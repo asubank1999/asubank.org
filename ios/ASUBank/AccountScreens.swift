@@ -251,7 +251,7 @@ struct SignInScreen: View {
                     Button(action: { Task { await submit() } }) {
                         HStack {
                             Spacer()
-                            if busy { ProgressView().tint(.white) }
+                            if busy { ABDots().tint(.white) }
                             Text(creating ? "Create account" : "Sign in").font(.headline)
                             Spacer()
                         }
@@ -383,7 +383,7 @@ struct AccountScreen: View {
                             }
                         }
                     }
-                } header: { Text("Notifications") } footer: { Text("ASU Bank checks for new activity while it's open, and in the background when iOS allows it.") }
+                } header: { Text("Notifications") } footer: { Text("UniHub checks for new activity while it's open, and in the background when iOS allows it.") }
                 Section {
                     Button { confirmSignOut = true } label: { Label("Sign out", systemImage: "rectangle.portrait.and.arrow.right") }
                     Button(role: .destructive) { deleting = true } label: { Label("Delete my account", systemImage: "trash") }
@@ -397,7 +397,7 @@ struct AccountScreen: View {
         .sheet(isPresented: $changing) { ChangePasswordSheet() }
         .sheet(isPresented: $deleting) { DeleteAccountSheet() }
         .sheet(isPresented: $picking) { AvatarPicker { setPhoto($0) }.ignoresSafeArea() }
-        .confirmationDialog("Sign out of ASU Bank?", isPresented: $confirmSignOut, titleVisibility: .visible) {
+        .confirmationDialog("Sign out of UniHub?", isPresented: $confirmSignOut, titleVisibility: .visible) {
             Button("Sign out", role: .destructive) { Task { await account.signOut(); ChatNotifier.shared.stop() } }
         }
         .task { await account.refresh() }

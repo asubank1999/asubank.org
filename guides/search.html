@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>Search materials | ASU Bank</title>
-    <meta name="description" content="Search every ASU Bank file: test banks, past exams, summaries and course folders for Applied Science Private University. Filter by subject, type and year.">
+    <title>Search materials | UniHub</title>
+    <meta name="description" content="Search every UniHub file: test banks, past exams, summaries and course folders for Applied Science Private University. Filter by subject, type and year.">
     <link rel="canonical" href="https://asubank.org/guides/search">
     <meta name="theme-color" content="#f2f2f7">
     <link rel="manifest" href="/manifest.json">
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="ASU Bank">
+    <meta name="apple-mobile-web-app-title" content="UniHub">
     <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
     <link rel="preconnect" href="https://script.google.com">
     <link rel="preload" href="/assets/app/materials.json" as="fetch" crossorigin>
@@ -39,7 +39,7 @@
     <a class="ab-skip" href="#q">Skip to search</a>
     <header class="ab-nav">
         <div class="ab-wrap ab-nav-row">
-            <div class="ab-nav-l"><a class="ab-brand" href="/"><img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="30" height="30"><span>ASU Bank</span></a></div>
+            <div class="ab-nav-l"><a class="ab-brand" href="/"><img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="30" height="30"><span>UniHub</span></a></div>
             <div class="ab-nav-title" aria-hidden="true">Search</div>
             <div class="ab-nav-r"></div>
         </div>
@@ -48,7 +48,7 @@
     <main id="main" class="ab-wrap">
         <div class="ab-head">
             <h1 class="ab-large">Search</h1>
-            <p class="ab-sub">Every subject page and every file in the ASU Bank Drive. <span lang="ar" dir="rtl">ابحث بالعربي أو بالإنجليزي</span></p>
+            <p class="ab-sub">Every subject page and every file in the UniHub Drive. <span lang="ar" dir="rtl">ابحث بالعربي أو بالإنجليزي</span></p>
         </div>
 
         <form class="ab-search big" role="search" id="form" action="/guides/search">
@@ -137,7 +137,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         'use strict';
-        // Google Apps Script that searches the ASU Bank Drive (unchanged backend; returns {success, files[]})
+        // Google Apps Script that searches the UniHub Drive (unchanged backend; returns {success, files[]})
         var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9_c0Hr4aOusP5Wskn9fIw6UO6m8k4Esps3wJqKvZv2LQf6qcNFqP99cgU5UFOskVHsQ/exec';
         var $ = function (id) { return document.getElementById(id); };
         var q = $('q'), fSubject = $('fSubject'), fType = $('fType'), fYear = $('fYear'), fSource = $('fSource'), fSort = $('fSort');

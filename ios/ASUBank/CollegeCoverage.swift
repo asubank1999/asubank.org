@@ -28,7 +28,7 @@ struct CollegeCoverageScreen: View {
         let shares = CollegeShares.from(library.subjects)
         List {
             Section {
-                if shares.isEmpty { HStack { Spacer(); ProgressView(); Spacer() } }
+                if shares.isEmpty { HStack { Spacer(); ABDots(); Spacer() } }
                 ForEach(shares) { s in
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {

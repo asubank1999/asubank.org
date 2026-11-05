@@ -1,5 +1,5 @@
 /**
- * ASU Bank upload API for the drag-and-drop uploader on /upload/uploadmethod.
+ * UniHub upload API for the drag-and-drop uploader on /upload/uploadmethod.
  *
  * Setup (once, about 3 minutes):
  *  1. Open https://script.google.com and create a new project (or open the existing uploader project).
@@ -8,7 +8,7 @@
  *  3. Deploy > New deployment > type "Web app": Execute as "Me", Who has access "Anyone".
  *  4. Copy the Web app URL (ends in /exec) and paste it into UPLOAD_API in upload/uploadmethod.html.
  *
- * Deployed: project "ASU Bank Upload API" (necro1442@gmail.com), web app
+ * Deployed: project "UniHub Upload API" (necro1442@gmail.com), web app
  *   https://script.google.com/macros/s/AKfycbygD_bFuQN7k9zLKogIip_zEaXmsq9Vw-z6QPfMte1AAuLdq4Vf4-kGIgvy6hgVcOo/exec
  *   After editing, use Deploy > Manage deployments > edit > New version so the URL stays the same.
  *

@@ -2,7 +2,7 @@
 # The .xcodeproj is not committed; change settings here.
 name: ASUBank
 options:
-  bundleIdPrefix: org.asubank
+  bundleIdPrefix: org.unihub
   deploymentTarget:
     iOS: "15.0"
   createIntermediateGroups: true
@@ -25,9 +25,9 @@ targets:
     info:
       path: ASUBank/Info.plist
       properties:
-        CFBundleDisplayName: ASU Bank
+        CFBundleDisplayName: UniHub
         CFBundleDevelopmentRegion: en
-        CFBundleLocalizations: [en, ar, es]
+        CFBundleLocalizations: [en, ar, es, fr, tr, de, ru]
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true
@@ -43,19 +43,19 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        NSCameraUsageDescription: ASU Bank uses the camera for stories and to scan paper notes and exams into a PDF you can upload.
-        NSMicrophoneUsageDescription: ASU Bank records sound when you film a video story.
-        NSPhotoLibraryUsageDescription: ASU Bank lets you pick photos and videos of notes to upload.
+        NSCameraUsageDescription: UniHub uses the camera for stories and to scan paper notes and exams into a PDF you can upload.
+        NSMicrophoneUsageDescription: UniHub records sound for voice messages and when you film a video story.
+        NSPhotoLibraryUsageDescription: UniHub lets you pick photos and videos of notes to upload.
         BGTaskSchedulerPermittedIdentifiers:
-          - org.asubank.app.chat
+          - org.unihub.app.chat
         UIBackgroundModes:
           - fetch
         CFBundleURLTypes:
-          - CFBundleURLName: org.asubank.app
+          - CFBundleURLName: org.unihub.app
             CFBundleURLSchemes: [asubank]
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.asubank.app
+        PRODUCT_BUNDLE_IDENTIFIER: org.unihub.app
         PRODUCT_NAME: ASUBank
         TARGETED_DEVICE_FAMILY: "1,2"
         ENABLE_USER_SCRIPT_SANDBOXING: NO
@@ -88,7 +88,7 @@ targets:
       - target: ASUBank
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.asubank.app.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: org.unihub.app.uitests
         GENERATE_INFOPLIST_FILE: YES
         CODE_SIGN_STYLE: Automatic
 schemes:

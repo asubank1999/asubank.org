@@ -63,7 +63,7 @@ enum Links {
     static let help: [SiteLink] = [
         .init(emoji: "❓", title: "FAQs", target: .web("/guides/faqs")),
         .init(emoji: "✉️", title: "Contact us", target: .web("/guides/contact")),
-        .init(emoji: "🤍", title: "Support ASU Bank", subtitle: "Donate with PayPal or CliQ", target: .web("/apps/donate")),
+        .init(emoji: "🤍", title: "Support UniHub", subtitle: "Donate with PayPal or CliQ", target: .web("/apps/donate")),
         .init(emoji: "🙏", title: "Thanks list", target: .web("/guides/thankslist")),
         .init(emoji: "📜", title: "WhatsApp group rules", target: .web("/legal/wa_tos")),
         .init(emoji: "📋", title: "Terms of Service", target: .web("/legal/uni_tos"))
@@ -169,7 +169,7 @@ struct HomeView: View {
                 .padding(.bottom, 20)
             }
             .background(Color.abBackground)
-            .navigationTitle("ASU Bank")
+            .navigationTitle("UniHub")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button { app.tab = .notifications; Haptics.tap() } label: {
@@ -243,7 +243,7 @@ struct HomeView: View {
     @ViewBuilder private var subjects: some View {
         SectionHeader(title: "Browse by subject", arabic: "تصفح حسب المادة")
         if library.subjects.isEmpty {
-            HStack { Spacer(); if library.failed { Text("Connect to the internet to load subjects.").foregroundStyle(.secondary) } else { ProgressView() }; Spacer() }
+            HStack { Spacer(); if library.failed { Text("Connect to the internet to load subjects.").foregroundStyle(.secondary) } else { ABDots() }; Spacer() }
                 .padding(30)
         }
         ForEach(library.categories, id: \.name) { cat in

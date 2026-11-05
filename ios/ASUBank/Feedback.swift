@@ -19,7 +19,7 @@ enum FeedbackAPI {
     }
 
     static var stamp: String { ISO8601DateFormatter.ab.string(from: Date()) }
-    static var agent: String { "ASU Bank iOS \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")" }
+    static var agent: String { "UniHub iOS \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")" }
 }
 
 // MARK: - rate our service
@@ -48,7 +48,7 @@ struct ServiceRatingScreen: View {
                     VStack(spacing: 10) {
                         Text("💚").font(.system(size: 60))
                         Text("Thank you!").font(.title2.weight(.bold))
-                        Text("Your rating helps us make ASU Bank better for everyone.").multilineTextAlignment(.center).foregroundStyle(.secondary)
+                        Text("Your rating helps us make UniHub better for everyone.").multilineTextAlignment(.center).foregroundStyle(.secondary)
                         Button("Rate again") { withAnimation { done = false; answers = [:]; suggestion = ""; rating = 7 } }.padding(.top, 6)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 24)
@@ -61,7 +61,7 @@ struct ServiceRatingScreen: View {
                         Slider(value: $rating, in: 1...10, step: 1).tint(.abAccent)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 6)
-                } header: { Text("How would you rate ASU Bank?") }
+                } header: { Text("How would you rate UniHub?") }
                 Section {
                     ForEach(Self.questions.indices, id: \.self) { i in
                         HStack {
@@ -81,7 +81,7 @@ struct ServiceRatingScreen: View {
                 if let error { Section { Text(error).foregroundStyle(.red) } }
                 Section {
                     Button { Task { await submit() } } label: {
-                        HStack { Spacer(); if busy { ProgressView() }; Text("Send rating").font(.headline); Spacer() }.padding(.vertical, 4)
+                        HStack { Spacer(); if busy { ABDots() }; Text("Send rating").font(.headline); Spacer() }.padding(.vertical, 4)
                     }
                     .buttonStyle(.borderedProminent).tint(.abAccent)
                     .disabled(busy || answers.count < Self.questions.count)
@@ -185,7 +185,7 @@ struct VotingScreen: View {
                 if let error { Section { Text(error).foregroundStyle(.red) } }
                 Section {
                     Button { Task { await submit() } } label: {
-                        HStack { Spacer(); if busy { ProgressView() }; Text("Send my vote").font(.headline); Spacer() }.padding(.vertical, 4)
+                        HStack { Spacer(); if busy { ABDots() }; Text("Send my vote").font(.headline); Spacer() }.padding(.vertical, 4)
                     }
                     .buttonStyle(.borderedProminent).tint(.abAccent)
                     .disabled(busy || vote == nil)
@@ -205,7 +205,7 @@ struct VotingScreen: View {
         let top = (stats["topGames"] as? [[String: Any]]) ?? []
         Section {
             if total == 0 && stats.isEmpty {
-                HStack { Spacer(); ProgressView(); Spacer() }
+                HStack { Spacer(); ABDots(); Spacer() }
             } else {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {

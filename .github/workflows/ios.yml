@@ -1,4 +1,4 @@
-# Builds the ASU Bank iOS app (ios/) on GitHub's macOS machines, so no Mac is needed.
+# Builds the UniHub iOS app (ios/) on GitHub's macOS machines, so no Mac is needed.
 #  - Every push that touches ios/ checks that the app compiles (no Apple account needed).
 #  - Actions > "iOS app" > Run workflow with "Send to TestFlight" ticked signs the app, uploads it to
 #    App Store Connect (TestFlight) and keeps the .ipa as a download. Needs these repository secrets:
@@ -66,8 +66,8 @@ jobs:
           mkdir -p "$RUNNER_TEMP/shots"
           shot() { # name, wait, launch args...
             name=$1; wait=$2; shift 2
-            xcrun simctl terminate "$UDID" org.asubank.app 2>/dev/null || true
-            xcrun simctl launch "$UDID" org.asubank.app "$@"
+            xcrun simctl terminate "$UDID" org.unihub.app 2>/dev/null || true
+            xcrun simctl launch "$UDID" org.unihub.app "$@"
             sleep "$wait"
             xcrun simctl io "$UDID" screenshot "$RUNNER_TEMP/shots/$name.png"
           }
@@ -127,8 +127,8 @@ jobs:
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0"><dict>
-          <key>application-identifier</key><string>ASUBANK001.org.asubank.app</string>
-          <key>com.apple.developer.team-identifier</key><string>ASUBANK001</string>
+          <key>application-identifier</key><string>UNIHUB0001.org.unihub.app</string>
+          <key>com.apple.developer.team-identifier</key><string>UNIHUB0001</string>
           </dict></plist>
           PLIST
             sed -i '' 's/^ *//' ipa.entitlements
@@ -137,13 +137,13 @@ jobs:
           else
             echo "::warning::ldid could not be installed, so this IPA has no entitlements"
           fi
-          zip -qry ASUBank-unsigned.ipa Payload
-          ls -la ASUBank-unsigned.ipa
+          zip -qry UniHub-unsigned.ipa Payload
+          ls -la UniHub-unsigned.ipa
       - name: Keep the unsigned IPA as a download (Actions run page > Artifacts)
         uses: actions/upload-artifact@v4
         with:
-          name: ASUBank-unsigned-ipa-${{ github.run_number }}
-          path: ios/ASUBank-unsigned.ipa
+          name: UniHub-unsigned-ipa-${{ github.run_number }}
+          path: ios/UniHub-unsigned.ipa
           retention-days: 30
       - name: Publish a GitHub Release (tags ios-v*)
         if: startsWith(github.ref, 'refs/tags/ios-v')
@@ -153,11 +153,11 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           V="${TAG#ios-v}"
-          cp ios/ASUBank-unsigned.ipa "ASUBank-$V-unsigned.ipa"
+          cp ios/UniHub-unsigned.ipa "UniHub-$V-unsigned.ipa"
           # One release page for both apps, under the android tag because older Android apps look for that tag.
           REL="android-v$V"
-          gh release create "$REL" --title "ASU Bank $V" --notes-file ios/RELEASE_NOTES.md --latest || true
-          gh release upload "$REL" "ASUBank-$V-unsigned.ipa" --clobber
+          gh release create "$REL" --title "UniHub $V" --notes-file ios/RELEASE_NOTES.md --latest || true
+          gh release upload "$REL" "UniHub-$V-unsigned.ipa" --clobber
       - name: Point the README download link at this version
         if: startsWith(github.ref, 'refs/tags/ios-v')
         working-directory: .
@@ -166,7 +166,7 @@ jobs:
         run: |
           V="${TAG#ios-v}"
           git fetch -q origin main && git checkout -q -B main origin/main
-          sed -i -E "s#releases/download/(ios|android)-v[0-9.]+/ASUBank-[0-9.]+-unsigned\.ipa#releases/download/android-v$V/ASUBank-$V-unsigned.ipa#; s#iPhone app \(v[0-9.]+\)#iPhone app (v$V)#" README.md
+          sed -i -E "s#releases/download/(ios|android)-v[0-9.]+/(ASUBank|UniHub)-[0-9.]+-unsigned\.ipa#releases/download/android-v$V/UniHub-$V-unsigned.ipa#; s#iPhone app \(v[0-9.]+\)#iPhone app (v$V)#" README.md
           git diff --quiet && exit 0
           git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
           git commit -qam "README: iPhone download link -> $V" && git push -q origin main
@@ -229,7 +229,7 @@ jobs:
       - name: Keep the .ipa as a download
         uses: actions/upload-artifact@v4
         with:
-          name: ASUBank-ipa-${{ github.run_number }}
+          name: UniHub-ipa-${{ github.run_number }}
           path: ${{ runner.temp }}/export/*.ipa
       - name: Upload to App Store Connect (TestFlight)
         run: |

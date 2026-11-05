@@ -14,7 +14,7 @@ enum Submissions {
         }
     }
 
-    /// Stores the file with ASU Bank and returns its link. It doesn't appear in the public uploads list.
+    /// Stores the file with UniHub and returns its link. It doesn't appear in the public uploads list.
     static func upload(name: String, data: Data, token: String?, progress: @escaping (Double) -> Void) async throws -> String {
         var body: [String: Any] = ["action": "submissionFile", "name": name, "data": data.base64EncodedString()]
         if let token { body["token"] = token }
@@ -111,7 +111,7 @@ struct SubmissionsScreen: View {
                 .pickerStyle(.segmented)
                 .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             }
-            if loading && items.isEmpty { HStack { Spacer(); ProgressView("Loading submissions…"); Spacer() }.listRowBackground(Color.clear) }
+            if loading && items.isEmpty { HStack { Spacer(); ABDots("Loading submissions…"); Spacer() }.listRowBackground(Color.clear) }
             if let error { Section { Text(error).foregroundStyle(.red); Button("Try again") { Task { await load() } } } }
             ForEach(shown) { i in
                 Section {
@@ -366,7 +366,7 @@ private struct SubmitPresentationSheet: View {
             let url = try await Submissions.upload(name: fileName, data: data, token: account.token) { p in
                 Task { @MainActor in progress = p }
             }
-            let payload: [String: Any] = ["studentName": name, "presentationTitle": title, "fileType": fileType, "platform": "ASU Bank", "primaryUrl": url,
+            let payload: [String: Any] = ["studentName": name, "presentationTitle": title, "fileType": fileType, "platform": "UniHub", "primaryUrl": url,
                                           "notes": notes, "isBackup": false, "backupLinks": [Any]()]
             let json = try JSONSerialization.data(withJSONObject: payload)
             _ = try await Submissions.get([URLQueryItem(name: "action", value: "submit"), URLQueryItem(name: "data", value: String(data: json, encoding: .utf8))])

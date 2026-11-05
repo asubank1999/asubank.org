@@ -129,7 +129,7 @@ HEAD = '''<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>{title_txt} | ASU Bank</title>
+    <title>{title_txt} | UniHub</title>
     <meta name="description" content="{desc}">
     <link rel="canonical" href="https://asubank.org/banks/{slug}">{robots}
     <meta name="theme-color" content="#f2f2f7">
@@ -139,7 +139,7 @@ HEAD = '''<!DOCTYPE html>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="ASU Bank">
+    <meta name="apple-mobile-web-app-title" content="UniHub">
     <script>try{{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}}catch(e){{}}</script>
     <link rel="stylesheet" href="/assets/app/app.css?v=3">
     <script src="/assets/app/app.js?v=2" defer></script>
@@ -169,7 +169,7 @@ SEARCH = '''        <div class="ab-search" role="search">
 
 EMPTY = '''        <div class="ab-empty" id="empty" hidden>
             <h3>Nothing here matches</h3>
-            <p>Search every file on ASU Bank, or ask for it and we will try to find it.</p>
+            <p>Search every file on UniHub, or ask for it and we will try to find it.</p>
             <div class="ab-btn-row" style="justify-content:center;margin-top:14px">
                 <a class="ab-btn sm" href="/guides/search" data-ab-q="/guides/search?q=">Search all files</a>
                 <a class="ab-btn sm tinted" href="/requests/student_request_portal">Request it</a>
@@ -229,10 +229,10 @@ def directory_page(subjects):
                         f'<span class="ab-row-text"><span class="ab-row-title">{html.escape(s["t"])}</span><span class="ab-row-meta">{s["n"]} items · <span lang="ar">{html.escape(s["ar"])}</span></span></span></span>'
                         '<svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>')
         rows.append('        </ul></section>')
-    out = HEAD.format(title_txt='All subjects', desc='Every ASU Bank subject page: test banks, past exams and notes for Applied Science Private University, grouped by college.',
+    out = HEAD.format(title_txt='All subjects', desc='Every UniHub subject page: test banks, past exams and notes for Applied Science Private University, grouped by college.',
                       slug='subjects', robots='')
     out += NAV.format(title_attr='All subjects', college_attr='', back='/', back_label='Home', title='All subjects')
-    out += ('    <main id="main" class="ab-wrap">\n        <div class="ab-head"><div class="ab-eyebrow">ASU Bank</div><h1 class="ab-large">All subjects</h1>'
+    out += ('    <main id="main" class="ab-wrap">\n        <div class="ab-head"><div class="ab-eyebrow">UniHub</div><h1 class="ab-large">All subjects</h1>'
             '<p class="ab-sub-ar" lang="ar" dir="rtl">جميع التخصصات</p></div>\n'
             '        <ul class="ab-list"><li><a class="ab-row" href="/banks/subjects_mobile"><span class="ab-row-main"><span class="ab-tile emoji">🗄️</span><span class="ab-row-text"><span class="ab-row-title">Archived materials</span><span class="ab-row-meta">Older list of 1,200+ files</span></span></span></a></li></ul>\n')
     out += '\n'.join(rows) + '\n'

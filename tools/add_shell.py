@@ -1,4 +1,4 @@
-"""Give every page the ASU Bank app shell (tab bar, More menu, page transitions, offline support).
+"""Give every page the UniHub app shell (tab bar, More menu, page transitions, offline support).
 
 Pages built on the design (<body class="ab">) already load it; older pages keep their own layout and
 only get the shell added. Safe to run again: pages that already load app.js are skipped.

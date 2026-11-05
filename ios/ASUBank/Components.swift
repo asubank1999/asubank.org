@@ -91,19 +91,19 @@ struct MaterialRow: View {
                         confirmDelete = true
                     }
                 } label: {
-                    Label(L(k == .folder ? "Remove from ASU Bank" : "Delete from Drive"), systemImage: "trash")
+                    Label(L(k == .folder ? "Remove from UniHub" : "Delete from Drive"), systemImage: "trash")
                 }
             }
         }
-        .confirmationDialog(L(k == .folder ? "Remove from ASU Bank?" : "Delete from Drive?"), isPresented: $confirmDelete, titleVisibility: .visible) {
-            Button(L(k == .folder ? "Remove from ASU Bank" : "Delete from Drive"), role: .destructive) {
+        .confirmationDialog(L(k == .folder ? "Remove from UniHub?" : "Delete from Drive?"), isPresented: $confirmDelete, titleVisibility: .visible) {
+            Button(L(k == .folder ? "Remove from UniHub" : "Delete from Drive"), role: .destructive) {
                 Task {
                     do { try await AdminUploads.delete(m.u); Haptics.success() }
                     catch { deleteError = error.localizedDescription; Haptics.error() }
                 }
             }
         } message: {
-            Text(L(k == .folder ? "It disappears from ASU Bank for everyone. The folder itself stays in Drive." : "It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank."))
+            Text(L(k == .folder ? "It disappears from UniHub for everyone. The folder itself stays in Drive." : "It moves to the Drive trash and disappears from UniHub for everyone. A file owned by another Drive account is only removed from UniHub."))
         }
         .alert("Couldn't delete", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
             Button("OK", role: .cancel) {}

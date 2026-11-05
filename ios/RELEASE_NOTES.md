@@ -1,7 +1,7 @@
-## ASU Bank for iPhone
+## UniHub for iPhone
 
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
-ASU Bank is free and student-run. It is not made by or affiliated with the university.
+UniHub is free and student-run. It is not made by or affiliated with the university.
 
 ### What's new in 1.13.0
 - Feed now has Friends, Strangers and Guest
@@ -28,7 +28,7 @@ ASU Bank is free and student-run. It is not made by or affiliated with the unive
 - See what changed after every update, and every past version under More > What's New
 - Changing the app icon now works when the app is installed with TrollStore
 - Home can show a sponsor card, always clearly labelled
-- The About text now says how ASU Bank is supported: ads on the website, sponsors and donations
+- The About text now says how UniHub is supported: ads on the website, sponsors and donations
 
 ### What's new in 1.10.2
 - New Notifications tab: friend requests, pokes, new uploads, announcements and admin requests in one list
@@ -95,7 +95,7 @@ ASU Bank is free and student-run. It is not made by or affiliated with the unive
 - **Notifications** for new messages ("New message from …") and team announcements. Pick every message, announcements only, or off.
 - **Themes**: match your phone, Light, Dark, or Pitch black for OLED screens, plus 7 accent colors.
 - **Student submissions, now native**: browse the board, search it and submit your presentation from the app.
-- The ASU Bank logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.
+- The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.
 - When a new version is out, the app tells you as soon as you open it.
 - Enhanced **Thanks list** with stats and a founder card.
 - For admins: an **Admin tab** to see every registered student, ban or unban, reset passwords, make admins, delete accounts, delete chat messages and uploads, send announcements and see the activity log.
@@ -107,7 +107,7 @@ ASU Bank is free and student-run. It is not made by or affiliated with the unive
 - **Grading scale** redesigned, with a term average and cumulative average calculator.
 - **How to search** guide rewritten for the app: try a search right from the guide.
 - **WhatsApp groups & resources**: grouped by college and year, searchable, one tap to join.
-- New **Thanks list**, **Student ads** and **Support ASU Bank** screens. CliQ now uses the alias ALANQ99 (Bank of Jordan).
+- New **Thanks list**, **Student ads** and **Support UniHub** screens. CliQ now uses the alias ALANQ99 (Bank of Jordan).
 - Teacher ratings connect more reliably.
 
 ### What's new in 1.3.0

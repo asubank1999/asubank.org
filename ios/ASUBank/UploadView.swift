@@ -302,7 +302,7 @@ struct UploadView: View {
                         ForEach(q.files) { f in fileRow(f) }
                             .onDelete { q.remove(at: $0) }
                         if q.adding > 0 {
-                            HStack(spacing: 12) { ProgressView(); Text("Preparing files…").foregroundStyle(.secondary) }
+                            HStack(spacing: 12) { ABDots(); Text("Preparing files…").foregroundStyle(.secondary) }
                         }
                     } header: {
                         HStack {
@@ -358,7 +358,7 @@ struct UploadView: View {
                     Button { q.start() } label: {
                         HStack(spacing: 8) {
                             Spacer()
-                            if q.busy { ProgressView().tint(.white) } else { Image(systemName: "arrow.up.circle.fill") }
+                            if q.busy { ABDots().tint(.white) } else { Image(systemName: "arrow.up.circle.fill") }
                             Text(uploadTitle).font(.headline)
                             Spacer()
                         }

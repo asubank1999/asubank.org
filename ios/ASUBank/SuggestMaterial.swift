@@ -23,7 +23,7 @@ struct SuggestMaterialScreen: View {
                     VStack(spacing: 10) {
                         Image(systemName: "checkmark.circle.fill").font(.system(size: 44)).foregroundStyle(.green)
                         Text("Thank you!").font(.headline)
-                        Text("We got your suggestion. The ASU Bank team will look at it soon.")
+                        Text("We got your suggestion. The UniHub team will look at it soon.")
                             .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
                         Button("Send another") { sent = false }.buttonStyle(.borderless).padding(.top, 4)
                     }
@@ -52,7 +52,7 @@ struct SuggestMaterialScreen: View {
                     Button { Task { await send() } } label: {
                         HStack {
                             Spacer()
-                            if busy { ProgressView() } else { Text("Send suggestion").fontWeight(.semibold) }
+                            if busy { ABDots() } else { Text("Send suggestion").fontWeight(.semibold) }
                             Spacer()
                         }
                     }
@@ -107,7 +107,7 @@ struct AdminSuggestionsScreen: View {
             }
             .pickerStyle(.segmented)
             if let error { Text(error).foregroundStyle(.red) }
-            if loading { HStack { Spacer(); ProgressView(); Spacer() } }
+            if loading { HStack { Spacer(); ABDots(); Spacer() } }
             else if list.isEmpty && error == nil { Text("Nothing to review.").foregroundStyle(.secondary) }
             ForEach(Array(list.enumerated()), id: \.offset) { _, r in row(r) }
         }

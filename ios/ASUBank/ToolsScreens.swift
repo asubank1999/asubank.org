@@ -125,7 +125,7 @@ struct AdminGroupRequestsScreen: View {
             }
             .pickerStyle(.segmented)
             if let error { Text(error).foregroundStyle(.red) }
-            if loading { ProgressView() }
+            if loading { ABDots() }
             else if requests.isEmpty && error == nil { Text("Nothing to review.").foregroundStyle(.secondary) }
             ForEach(Array(requests.enumerated()), id: \.offset) { _, r in row(r) }
         }
@@ -674,7 +674,7 @@ struct LifeHacksScreen: View {
                     }
                 } header: { Text("\(s.emoji) \(s.title)") }
             }
-            if loading { ProgressView() }
+            if loading { ABDots() }
             else if sections.isEmpty { Text("Couldn't load the tips. Check your connection and try again.").foregroundStyle(.secondary) }
             Section {
                 Text("These are general tips, not medical or professional advice. In an emergency, call for help first.").font(.caption).foregroundStyle(.secondary)
@@ -741,7 +741,7 @@ struct SoundsScreen: View {
             picker("Notifications", $messages)
             picker("Lecture reminders", $lectures)
             Section {
-                Text("iPhones don't let apps use your own ringtones, so these sounds come with ASU Bank.").font(.caption).foregroundStyle(.secondary)
+                Text("iPhones don't let apps use your own ringtones, so these sounds come with UniHub.").font(.caption).foregroundStyle(.secondary)
             }
         }
         .listStyle(.insetGrouped)
@@ -894,7 +894,7 @@ struct LecturesScreen: View {
         List {
             if denied {
                 Section {
-                    Text("Notifications are off for ASU Bank, so reminders can't ring.").foregroundStyle(.red)
+                    Text("Notifications are off for UniHub, so reminders can't ring.").foregroundStyle(.red)
                     Button("Open Settings") { if let u = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(u) } }
                 }
             }

@@ -14,12 +14,18 @@ struct DMMessage: Decodable, Identifiable, Equatable {
     var fileType: String?
     var fileSize: Int?
     var hasFile: Bool?
+    var duration: Int?
+    var expires: String?
+    var pending: Bool?
+    var localFile: URL?
 
     var date: Date { Social.date(created) }
     var preview: String {
         if !text.isEmpty { return text }
         switch fileType {
         case "photo": return "📷 " + L("Photo")
+        case "voice": return "🎤 " + L("Voice message")
+        case "video": return "🎬 " + L("Video")
         default: return "📄 " + (fileName ?? "")
         }
     }
@@ -72,7 +78,7 @@ struct DMConversationRows: View {
                     EmptyState(symbol: "paperplane", title: "No private messages yet", text: "You can message your friends. Only the two of you see the chat.")
                         .listRowBackground(Color.clear)
                 } else {
-                    HStack { Spacer(); ProgressView(); Spacer() }.padding(20).listRowBackground(Color.clear)
+                    ForEach(0..<5, id: \.self) { _ in SkeletonRow() }
                 }
             }
         } else {
@@ -180,7 +186,7 @@ enum DMFiles {
     }
 }
 
-private struct FilePreview: UIViewControllerRepresentable {
+struct FilePreview: UIViewControllerRepresentable {
     let url: URL
     func makeUIViewController(context: Context) -> UINavigationController {
         let q = QLPreviewController()
@@ -199,7 +205,7 @@ private struct FilePreview: UIViewControllerRepresentable {
     }
 }
 
-private struct DocumentPicker: UIViewControllerRepresentable {
+struct DocumentPicker: UIViewControllerRepresentable {
     var picked: (URL) -> Void
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
         let docx = UTType(filenameExtension: "docx") ?? .data
@@ -219,7 +225,7 @@ private struct DocumentPicker: UIViewControllerRepresentable {
     }
 }
 
-private struct PreviewFile: Identifiable {
+struct PreviewFile: Identifiable {
     let url: URL
     var id: String { url.path }
 }
@@ -257,14 +263,16 @@ final class DMThreadModel: ObservableObject {
 
     func fetch() async {
         var fields: [String: Any] = ["userId": userId]
-        if let last = messages.last?.id { fields["after"] = last }
+        if let last = messages.last(where: { $0.pending != true })?.id { fields["after"] = last }
         do {
             let r = try await AccountStore.shared.call("dmThread", fields)
             let new = decode([DMMessage].self, r["messages"]) ?? []
             let gone = Set((r["deleted"] as? [String]) ?? [])
-            var list = messages.filter { !gone.contains($0.id) }
+            let kept = messages.filter { !gone.contains($0.id) && !Disappear.expired($0.expires) }
+            var list = kept.filter { $0.pending != true }
             let have = Set(list.map(\.id))
-            list += new.filter { !have.contains($0.id) && !gone.contains($0.id) }
+            list += new.filter { !have.contains($0.id) && !gone.contains($0.id) && !Disappear.expired($0.expires) }
+            list += kept.filter { $0.pending == true }
             if list != messages { withAnimation(.easeOut(duration: 0.2)) { messages = list } }
             if let u = decode(ABUser.self, r["user"]) { user = u }
             if let c = r["canSend"] as? Bool { canSend = c }
@@ -274,27 +282,46 @@ final class DMThreadModel: ObservableObject {
         loading = false
     }
 
-    func send(text: String, file: String? = nil, fileName: String? = nil) async -> Bool {
-        var fields: [String: Any] = ["userId": userId, "text": text]
-        if let file { fields["file"] = file; fields["fileName"] = fileName ?? "file" }
+    /// The message shows at once and is replaced by the real one when the server has it
+    func send(text: String, outgoing: ChatOutgoing? = nil, expiresIn: Int = 0) async -> Bool {
+        let me = AccountStore.shared.user?.id ?? ""
+        let temp = DMMessage(id: "local-" + UUID().uuidString, from: me, to: userId, text: text, created: ISO8601DateFormatter.ab.string(from: Date()),
+                             fileName: outgoing?.fileName, fileType: outgoing?.type, fileSize: outgoing?.size, hasFile: outgoing != nil,
+                             duration: outgoing?.duration, pending: true, localFile: outgoing?.localFile)
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) { messages.append(temp) }
+        var fields: [String: Any] = ["userId": userId, "text": text, "expiresIn": expiresIn]
         do {
+            if let outgoing {
+                guard let data = await outgoing.load() else { throw AccountsAPI.Failure(message: L("Couldn't send this file.")) }
+                fields["file"] = data
+                fields["fileName"] = outgoing.fileName
+                fields["duration"] = outgoing.duration
+            }
             let r = try await AccountStore.shared.call("dmSend", fields)
-            if let m = decode(DMMessage.self, r["message"]), !messages.contains(where: { $0.id == m.id }) {
-                withAnimation { messages.append(m) }
+            messages.removeAll { $0.id == temp.id }
+            if var m = decode(DMMessage.self, r["message"]), !messages.contains(where: { $0.id == m.id }) {
+                m.localFile = outgoing?.localFile
+                let at = messages.firstIndex { $0.pending == true } ?? messages.endIndex
+                messages.insert(m, at: at)
             }
             error = nil
             return true
         } catch {
+            withAnimation { messages.removeAll { $0.id == temp.id } }
             self.error = error.localizedDescription
             return false
         }
     }
 
+    /// Gone at once for me; the other person's phone removes it on its next check
     func delete(_ m: DMMessage) async {
-        do {
-            _ = try await AccountStore.shared.call("dmDelete", ["id": m.id])
-            withAnimation { messages.removeAll { $0.id == m.id } }
-        } catch { self.error = error.localizedDescription }
+        let before = messages
+        withAnimation { messages.removeAll { $0.id == m.id } }
+        do { _ = try await AccountStore.shared.call("dmDelete", ["id": m.id]) }
+        catch {
+            messages = before
+            self.error = error.localizedDescription
+        }
     }
 }
 
@@ -306,10 +333,8 @@ struct DMThreadScreen: View {
     @StateObject private var model: DMThreadModel
     @ObservedObject private var account = AccountStore.shared
     @State private var text = ""
-    @State private var sending = false
-    @State private var pickingPhoto = false
-    @State private var pickingFile = false
     @State private var preview: PreviewFile?
+    @State private var disappear = 0
     @State private var reporting: ReportTarget?
     @State private var blocking: BlockTarget?
     @State private var opening: String?
@@ -333,7 +358,7 @@ struct DMThreadScreen: View {
             ScrollView {
                 LazyVStack(spacing: 2) {
                     if model.loading && model.messages.isEmpty {
-                        ProgressView().padding(40)
+                        SkeletonBubbles()
                     } else if model.messages.isEmpty {
                         VStack(spacing: 8) {
                             Avatar(name: name, color: color, size: 72, photo: photo, peek: false)
@@ -383,8 +408,6 @@ struct DMThreadScreen: View {
         }
         .onAppear { model.start() }
         .onDisappear { model.stop() }
-        .sheet(isPresented: $pickingPhoto) { AvatarPicker { image in Task { await sendPhoto(image) } } }
-        .sheet(isPresented: $pickingFile) { DocumentPicker { url in Task { await sendFile(url) } } }
         .sheet(item: $preview) { FilePreview(url: $0.url).ignoresSafeArea() }
         .modifier(ModerationDialogs(report: $reporting, block: $blocking, blocked: { _ in }))
     }
@@ -399,14 +422,21 @@ struct DMThreadScreen: View {
                     Text(m.text).font(.body).foregroundStyle(mine ? .white : .primary).textSelection(.enabled)
                         .multilineTextAlignment(.leading)
                 }
-                Text(m.date, style: .time).font(.caption2).foregroundStyle(mine ? .white.opacity(0.75) : .secondary)
+                HStack(spacing: 4) {
+                    ExpiryTag(expires: m.expires, tint: mine ? .white.opacity(0.8) : .secondary)
+                    if m.pending == true { Image(systemName: "clock").font(.caption2).foregroundStyle(mine ? .white.opacity(0.8) : .secondary) }
+                    Text(m.date, style: .time).font(.caption2).foregroundStyle(mine ? .white.opacity(0.75) : .secondary)
+                }
             }
             .padding(.horizontal, 12).padding(.vertical, 8)
             .chatBubble(mine: mine, joinedAbove: joinedAbove, joinedBelow: joinedBelow)
+            .opacity(m.pending == true ? 0.72 : 1)
             .contextMenu {
                 if !m.text.isEmpty { Button { UIPasteboard.general.string = m.text } label: { Label("Copy", systemImage: "doc.on.doc") } }
                 if mine {
-                    Button(role: .destructive) { Task { await model.delete(m) } } label: { Label("Delete", systemImage: "trash") }
+                    if m.pending != true {
+                        Button(role: .destructive) { Task { await model.delete(m) } } label: { Label("Delete for everyone", systemImage: "trash") }
+                    }
                 } else {
                     Button { reporting = ReportTarget(kind: "dm", targetId: m.id, name: String(m.preview.prefix(120))) } label: { Label("Report message", systemImage: "flag") }
                     if model.user?.isAdmin != true {
@@ -420,8 +450,9 @@ struct DMThreadScreen: View {
     }
 
     @ViewBuilder private func attachment(_ m: DMMessage, mine: Bool) -> some View {
-        if m.fileType == "photo" {
-            DMPhoto(message: m) { url in preview = PreviewFile(url: url) }
+        if m.fileType == "photo" || m.fileType == "voice" || m.fileType == "video" {
+            ChatAttachment(id: m.id, type: m.fileType ?? "", duration: m.duration ?? 0, mine: mine, localFile: m.localFile,
+                           fetch: { try await DMFiles.local(m) }, open: { preview = PreviewFile(url: $0) })
         } else {
             Button { Task { await open(m) } } label: {
                 HStack(spacing: 10) {
@@ -431,7 +462,7 @@ struct DMThreadScreen: View {
                         Text(m.fileName ?? "").font(.subheadline.weight(.semibold)).lineLimit(2).multilineTextAlignment(.leading)
                         Text(DMFiles.sizeText(m.fileSize ?? 0)).font(.caption2).opacity(0.75)
                     }
-                    if opening == m.id { ProgressView().tint(mine ? .white : nil) }
+                    if opening == m.id { ABDots().tint(mine ? .white : nil) }
                 }
                 .foregroundStyle(mine ? .white : .primary)
                 .frame(width: 220, alignment: .leading)
@@ -453,20 +484,9 @@ struct DMThreadScreen: View {
                 Text(e).font(.caption).foregroundStyle(.white).padding(6).frame(maxWidth: .infinity).background(Color.red.opacity(0.85))
             }
             if model.canSend {
-                ChatComposerBar(
-                    text: $text, focused: $focused, busy: sending, placeholder: "Message",
-                    leading: AnyView(
-                        Menu {
-                            Button { pickingPhoto = true } label: { Label("Photo", systemImage: "photo") }
-                            Button { pickingFile = true } label: { Label("PDF or Word file", systemImage: "doc") }
-                        } label: {
-                            Image(systemName: "plus").font(.headline).foregroundStyle(Color.abAccent).frame(width: 38, height: 38)
-                                .background(Color.abAccentSoft, in: Circle())
-                        }
-                        .accessibilityLabel(Text("Attach a file"))
-                    ),
-                    send: sendText
-                )
+                ChatInputBar(text: $text, focused: $focused, allowDocs: true, disappear: $disappear, send: sendText,
+                             sendMedia: { o in let e = disappear; Task { _ = await model.send(text: "", outgoing: o, expiresIn: e) } },
+                             fail: { model.error = $0 })
             } else {
                 Label("You can only send private messages to friends.", systemImage: "lock.fill").font(.footnote).foregroundStyle(.secondary).padding(12)
             }
@@ -476,54 +496,12 @@ struct DMThreadScreen: View {
 
     private func sendText() {
         let t = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !t.isEmpty, !sending else { return }
-        sending = true
+        guard !t.isEmpty else { return }
         text = ""
+        Haptics.tap()
+        let e = disappear
         Task {
-            if !(await model.send(text: t)) { text = t }
-            sending = false
-            Haptics.tap()
-        }
-    }
-
-    private func sendPhoto(_ image: UIImage) async {
-        sending = true
-        defer { sending = false }
-        let data = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(image, maxSide: 1800) }.value
-        guard let data else { model.error = L("Couldn't load this photo"); return }
-        _ = await model.send(text: "", file: data, fileName: "photo.jpg")
-    }
-
-    private func sendFile(_ url: URL) async {
-        sending = true
-        defer { sending = false }
-        guard let data = try? Data(contentsOf: url) else { model.error = L("Couldn't open this file."); return }
-        guard data.count <= 8_000_000 else { model.error = L("That file is too big. The limit is 8 MB."); return }
-        _ = await model.send(text: "", file: data.base64EncodedString(), fileName: url.lastPathComponent)
-    }
-}
-
-private struct DMPhoto: View {
-    let message: DMMessage
-    var open: (URL) -> Void
-    @State private var file: URL?
-    @State private var image: UIImage?
-
-    var body: some View {
-        Button { if let file { open(file) } } label: {
-            ZStack {
-                Color.black.opacity(0.08)
-                if let image { Image(uiImage: image).resizable().scaledToFill() } else { ProgressView() }
-            }
-            .frame(width: 220, height: 220)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(Text("View photo"))
-        .task {
-            guard let url = try? await DMFiles.local(message) else { return }
-            file = url
-            image = UIImage(contentsOfFile: url.path)
+            if !(await model.send(text: t, expiresIn: e)), text.isEmpty { text = t }
         }
     }
 }
@@ -607,7 +585,7 @@ struct ChatComposerBar: View {
                 .onSubmit(send)
             Button(action: send) {
                 Group {
-                    if busy { ProgressView().tint(.white) } else { Image(systemName: sendSymbol).font(.headline.weight(.bold)).foregroundStyle(.white) }
+                    if busy { ABDots().tint(.white) } else { Image(systemName: sendSymbol).font(.headline.weight(.bold)).foregroundStyle(.white) }
                 }
                 .frame(width: 38, height: 38)
                 .background(Color.abAccent.abGradient, in: Circle())

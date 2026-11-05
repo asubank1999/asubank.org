@@ -1,4 +1,4 @@
-# Builds the ASU Bank Android app (android/) on GitHub's Linux machines.
+# Builds the UniHub Android app (android/) on GitHub's Linux machines.
 #  - Every push that touches android/ builds the APK (Actions run page > Artifacts) and takes
 #    emulator screenshots into the android-screenshots branch.
 #  - Pushing a tag like android-v1.2.0 also publishes a public GitHub Release with the APK.
@@ -59,14 +59,14 @@ jobs:
         run: |
           gradle -p android --no-daemon assembleRelease
           V=$(grep -oP 'versionName = "\K[^"]+' android/app/build.gradle.kts)
-          cp android/app/build/outputs/apk/release/app-release.apk "ASUBank-$V.apk"
+          cp android/app/build/outputs/apk/release/app-release.apk "UniHub-$V.apk"
           echo "V=$V" >> "$GITHUB_ENV"
-          ls -la ASUBank-*.apk
+          ls -la UniHub-*.apk
       - name: Keep the APK as a download (Actions run page > Artifacts)
         uses: actions/upload-artifact@v4
         with:
-          name: ASUBank-apk-${{ github.run_number }}
-          path: ASUBank-*.apk
+          name: UniHub-apk-${{ github.run_number }}
+          path: UniHub-*.apk
           retention-days: 30
 
       - name: Google Play bundle
@@ -82,7 +82,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.store }}
         uses: actions/upload-artifact@v4
         with:
-          name: ASUBank-play-${{ github.run_number }}
+          name: UniHub-play-${{ github.run_number }}
           path: android/app/build/outputs/bundle/release/*.aab
           retention-days: 30
 
@@ -100,7 +100,7 @@ jobs:
           target: google_apis
           arch: x86_64
           disable-animations: true
-          script: bash android/screenshots.sh "ASUBank-${{ env.V }}.apk"
+          script: bash android/screenshots.sh "UniHub-${{ env.V }}.apk"
       - name: Push the screenshots to the android-screenshots branch
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         continue-on-error: true
@@ -119,8 +119,8 @@ jobs:
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
           # One release page for both apps. The iOS build adds its IPA to this same release.
-          gh release create "$TAG" --title "ASU Bank $V" --notes-file android/RELEASE_NOTES.md --latest || true
-          gh release upload "$TAG" "ASUBank-$V.apk" --clobber
+          gh release create "$TAG" --title "UniHub $V" --notes-file android/RELEASE_NOTES.md --latest || true
+          gh release upload "$TAG" "UniHub-$V.apk" --clobber
       - name: Point the README download link at this version
         if: startsWith(github.ref, 'refs/tags/android-v')
         working-directory: .
@@ -129,7 +129,7 @@ jobs:
         run: |
           V="${TAG#android-v}"
           git fetch -q origin main && git checkout -q -B main origin/main
-          sed -i -E "s#releases/download/android-v[0-9.]+/ASUBank-[0-9.]+\.apk#releases/download/$TAG/ASUBank-$V.apk#; s#Android app \(v[0-9.]+\)#Android app (v$V)#" README.md
+          sed -i -E "s#releases/download/android-v[0-9.]+/(ASUBank|UniHub)-[0-9.]+\.apk#releases/download/$TAG/UniHub-$V.apk#; s#Android app \(v[0-9.]+\)#Android app (v$V)#" README.md
           git diff --quiet && exit 0
           git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
           git commit -qam "README: Android download link -> $V" && git push -q origin main

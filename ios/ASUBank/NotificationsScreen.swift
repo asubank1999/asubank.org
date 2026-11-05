@@ -72,7 +72,7 @@ struct NotificationsScreen: View {
             if account.signedIn {
                 List {
                     if let e = store.failed, store.items.isEmpty { Text(e).foregroundStyle(.red) }
-                    if !store.loaded { HStack { Spacer(); ProgressView(); Spacer() } }
+                    if !store.loaded { HStack { Spacer(); ABDots(); Spacer() } }
                     else if store.items.isEmpty && store.failed == nil {
                         EmptyState(symbol: "bell", title: "Nothing yet", text: "Friend requests, pokes, new uploads and announcements will show up here.").listRowBackground(Color.clear)
                     }
@@ -164,7 +164,7 @@ struct NotificationsScreen: View {
         case "friend_accept": return L("You have a new friend")
         case "poke": return n.name ?? ""
         case "post_comment": return String(format: L("%@ commented on your post"), n.name ?? "")
-        case "upload": return L("New upload on ASU Bank")
+        case "upload": return L("New upload on UniHub")
         case "announcement": return L("Announcement")
         case "group_request": return L("New group request")
         case "group_approved": return L("Your group was accepted")

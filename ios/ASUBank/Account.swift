@@ -3,7 +3,7 @@ import Security
 import UserNotifications
 import BackgroundTasks
 
-// Accounts, chat and admin, through the "ASU Bank Accounts" Apps Script (tools/apps-script/accounts-api.gs).
+// Accounts, chat and admin, through the "UniHub Accounts" Apps Script (tools/apps-script/accounts-api.gs).
 // The website uses the same API, so accounts, chat and admin actions are shared.
 
 enum AccountsAPI {
@@ -26,7 +26,7 @@ enum AccountsAPI {
         req.httpBody = try JSONSerialization.data(withJSONObject: body)
         let data: Data
         do { (data, _) = try await URLSession.shared.data(for: req) } catch {
-            throw Failure(message: "Couldn't reach ASU Bank. Check your connection and try again.")
+            throw Failure(message: "Couldn't reach UniHub. Check your connection and try again.")
         }
         guard let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {
             throw Failure(message: "The server sent something unexpected. Try again.")
@@ -74,7 +74,7 @@ enum ABBadges {
     static let all: [(id: String, name: String, emoji: String)] = [
         ("founder", "Founder", "👑"), ("moderator", "Moderator", "🛡️"), ("support", "Support", "🛟"), ("helper", "Helper", "🤝"),
         ("donor", "Donor", "💛"), ("contributor", "Contributor", "📚"), ("tutor", "Tutor", "🎓"), ("verified", "Verified", "✅"),
-        ("vip", "VIP", "⭐"), ("developer", "Developer", "💻"), ("team", "ASU Bank team", "🏦"), ("mentor", "Mentor", "🧭"),
+        ("vip", "VIP", "⭐"), ("developer", "Developer", "💻"), ("team", "UniHub team", "🏦"), ("mentor", "Mentor", "🧭"),
         ("ambassador", "Ambassador", "📣"), ("top_student", "Top student", "🏅"), ("class_rep", "Class rep", "🙋"),
         ("translator", "Translator", "🌐"), ("designer", "Designer", "🎨"), ("researcher", "Researcher", "🔬"),
         ("organizer", "Organizer", "🎉"), ("early_supporter", "Early supporter", "🌱"), ("sponsor", "Sponsor", "💎"), ("legend", "Legend", "🔥"),
@@ -140,8 +140,25 @@ struct ChatMessage: Codable, Identifiable, Hashable {
     var replyTo: String?
     var color: String
     var edited: String?
+    var fileName: String?
+    var fileType: String?
+    var fileSize: Int?
+    var hasFile: Bool?
+    var duration: Int?
+    var expires: String?
+    var pending: Bool?
+    var localFile: URL?
 
     var date: Date { ISO8601DateFormatter.ab.date(from: created) ?? Date() }
+    var preview: String {
+        if !text.isEmpty { return text }
+        switch fileType {
+        case "voice": return "🎤 " + L("Voice message")
+        case "video": return "🎬 " + L("Video")
+        case "photo": return "📷 " + L("Photo")
+        default: return text
+        }
+    }
 }
 
 struct ChatLatest: Codable, Hashable {
@@ -181,7 +198,7 @@ extension Color {
 
 enum Keychain {
     static func set(_ value: String?, for key: String) {
-        let q: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrAccount as String: key, kSecAttrService as String: "org.asubank.app"]
+        let q: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrAccount as String: key, kSecAttrService as String: "org.unihub.app"]
         SecItemDelete(q as CFDictionary)
         guard let value, let data = value.data(using: .utf8) else { return }
         var add = q
@@ -191,7 +208,7 @@ enum Keychain {
     }
 
     static func get(_ key: String) -> String? {
-        let q: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrAccount as String: key, kSecAttrService as String: "org.asubank.app",
+        let q: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrAccount as String: key, kSecAttrService as String: "org.unihub.app",
                                 kSecReturnData as String: true, kSecMatchLimit as String: kSecMatchLimitOne]
         var out: AnyObject?
         guard SecItemCopyMatching(q as CFDictionary, &out) == errSecSuccess, let d = out as? Data else { return nil }
@@ -219,7 +236,7 @@ final class AccountStore: ObservableObject {
         .init(id: "general", name: "General", emoji: "💬", about: "Say hi, ask anything about ASU"),
         .init(id: "help", name: "Study help", emoji: "🆘", about: "Stuck on something? Ask other students"),
         .init(id: "materials", name: "Materials", emoji: "📚", about: "Ask for or share study files"),
-        .init(id: "announcements", name: "Announcements", emoji: "📣", about: "News from the ASU Bank team", adminOnly: true),
+        .init(id: "announcements", name: "Announcements", emoji: "📣", about: "News from the UniHub team", adminOnly: true),
     ]
 
     var signedIn: Bool { user != nil && token != nil }
@@ -394,7 +411,7 @@ extension AccountStore {
 @MainActor
 final class ChatNotifier: ObservableObject {
     static let shared = ChatNotifier()
-    static let task = "org.asubank.app.chat"
+    static let task = "org.unihub.app.chat"
 
     private static func pref(_ key: String, _ fallback: Bool) -> Bool {
         UserDefaults.standard.object(forKey: "ab.notify." + key) as? Bool ?? fallback
@@ -480,7 +497,7 @@ final class ChatNotifier: ObservableObject {
         let c = UNMutableNotificationContent()
         switch e.type {
         case "upload":
-            c.title = L("📄 New upload on ASU Bank")
+            c.title = L("📄 New upload on UniHub")
         case "announcement":
             c.title = "📣 \(who)"
         case "friend_request":

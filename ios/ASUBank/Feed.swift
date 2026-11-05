@@ -13,6 +13,7 @@ struct StoryItem: Decodable, Identifiable, Hashable {
     var created: String?
     var seen: Bool?
     var views: Int?
+    var style: String?
 }
 
 struct StoryGroup: Decodable, Identifiable {
@@ -100,7 +101,7 @@ struct PhotoViewer: View {
                 } else if failed {
                     Text("Couldn't load this photo").foregroundStyle(.white)
                 } else {
-                    ProgressView().tint(.white)
+                    ABDots().tint(.white)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -128,7 +129,7 @@ struct AvatarPeek: ViewModifier {
                 content.contextMenu {
                     Button { PhotoTools.show(photo) } label: { Label("View full screen", systemImage: "arrow.up.left.and.arrow.down.right") }
                 } preview: {
-                    CachedPhoto(url: url, pixelSize: 340) { ProgressView().frame(width: 340, height: 340) }
+                    CachedPhoto(url: url, pixelSize: 340) { ABDots().frame(width: 340, height: 340) }
                         .frame(width: 340, height: 340).clipped()
                 }
             } else {
@@ -297,7 +298,7 @@ struct FeedScreen: View {
                     if loaded {
                         EmptyState(symbol: "text.bubble", title: emptyTitle, text: emptyText).listRowBackground(Color.clear)
                     } else {
-                        HStack { Spacer(); ProgressView(); Spacer() }.padding(20).listRowBackground(Color.clear)
+                        ForEach(0..<3, id: \.self) { _ in SkeletonPost() }
                     }
                 }
             }
@@ -307,7 +308,7 @@ struct FeedScreen: View {
             if more && !posts.isEmpty {
                 Section {
                     Button { Task { await loadMore() } } label: {
-                        HStack { Spacer(); if loadingMore { ProgressView() } else { Text("Load more") }; Spacer() }
+                        HStack { Spacer(); if loadingMore { ABDots() } else { Text("Load more") }; Spacer() }
                     }
                 }
             }
@@ -430,128 +431,6 @@ struct StoriesRow: View {
     }
 }
 
-struct ComposeStorySheet: View {
-    var media: StoryMedia?
-    var posted: () async -> Void
-    @Environment(\.dismiss) private var dismiss
-    @ObservedObject private var account = AccountStore.shared
-    @AppStorage("ab.audience") private var audience = "public"
-    @State private var text = ""
-    @State private var photo: UIImage?
-    @State private var video: URL?
-    @State private var fromCamera = false
-    @State private var poster: UIImage?
-    @State private var picking = false
-    @State private var bg = "#8C1D40"
-    @State private var busy = false
-    @State private var error: String?
-
-    private let colors = ["#8C1D40", "#0A63C9", "#1F7A3A", "#6E3FD1", "#D2510A", "#00847F", "#C2185B", "#3A3A3C"]
-
-    init(media: StoryMedia? = nil, posted: @escaping () async -> Void) {
-        self.media = media
-        self.posted = posted
-        switch media {
-        case .photo(let image):
-            _photo = State(initialValue: image)
-        case .video(let url, let still, let camera):
-            _video = State(initialValue: url)
-            _poster = State(initialValue: still)
-            _fromCamera = State(initialValue: camera)
-        case nil:
-            break
-        }
-    }
-
-    var body: some View {
-        ABStack {
-            Form {
-                Section {
-                    ZStack {
-                        if let shown = photo ?? poster {
-                            Color.clear.frame(height: 300).overlay(Image(uiImage: shown).resizable().scaledToFill()).clipped()
-                        } else {
-                            Color(hexString: bg).frame(height: 300)
-                        }
-                        if video != nil {
-                            Image(systemName: "play.circle.fill").font(.system(size: 54)).foregroundStyle(.white.opacity(0.9))
-                        }
-                        if !text.isEmpty {
-                            Text(text).font(.title3.weight(.bold)).foregroundStyle(.white).multilineTextAlignment(.center)
-                                .shadow(radius: 3).padding(16)
-                        }
-                    }
-                    .listRowInsets(EdgeInsets())
-                }
-                Section {
-                    if video == nil {
-                        Button { picking = true } label: { Label(photo == nil ? "Add a photo" : "Change photo", systemImage: "photo") }
-                    }
-                    if photo != nil || video != nil {
-                        Button(role: .destructive) { photo = nil; video = nil; poster = nil } label: { Label(video != nil ? "Remove video" : "Remove photo", systemImage: "trash") }
-                    } else {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 10) {
-                                ForEach(colors, id: \.self) { c in
-                                    Button { bg = c } label: {
-                                        Circle().fill(Color(hexString: c)).frame(width: 34, height: 34)
-                                            .overlay(Circle().stroke(Color.primary, lineWidth: bg == c ? 2.5 : 0).padding(-3))
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                            }
-                            .padding(5)
-                        }
-                    }
-                }
-                Section {
-                    TextField("Write something", text: $text)
-                    AudiencePicker(audience: $audience)
-                } footer: {
-                    Text("Your story disappears after 24 hours and is deleted from our database after 2 days.")
-                }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
-            }
-            .navigationTitle("New story")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(busy ? "Posting…" : "Post") { Task { await post() } }
-                        .disabled(busy || (photo == nil && video == nil && text.trimmingCharacters(in: .whitespaces).isEmpty))
-                }
-            }
-            .sheet(isPresented: $picking) { AvatarPicker { photo = $0 } }
-        }
-    }
-
-    private func post() async {
-        busy = true
-        defer { busy = false }
-        var fields: [String: Any] = ["text": String(text.prefix(300)), "bg": bg, "audience": audience]
-        if let video {
-            guard let ready = await StoryVideo.prepare(video, fromCamera: fromCamera), let bytes = try? Data(contentsOf: ready) else {
-                error = L("That video is too big. Keep it short.")
-                return
-            }
-            fields["video"] = bytes.base64EncodedString()
-            if let poster {
-                fields["image"] = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(poster, maxSide: 900) }.value
-            }
-        } else if let photo {
-            let data = await Task.detached(priority: .userInitiated) { PhotoTools.jpegBase64(photo, maxSide: 1280) }.value
-            guard let data else { error = L("Couldn't load this photo"); return }
-            fields["image"] = data
-        }
-        do {
-            _ = try await account.call("storyCreate", fields)
-            Haptics.success()
-            await posted()
-            dismiss()
-        } catch { self.error = error.localizedDescription; Haptics.error() }
-    }
-}
-
 struct StoryViewer: View {
     let groups: [StoryGroup]
     let startGroup: Int
@@ -564,6 +443,9 @@ struct StoryViewer: View {
     @State private var removed = Set<String>()
     @State private var reporting: ReportTarget?
     @State private var videoLength: Double?
+    @State private var viewersOf: ViewersTarget?
+
+    struct ViewersTarget: Identifiable { let id: String }
 
     init(groups: [StoryGroup], startGroup: Int) {
         self.groups = groups
@@ -580,7 +462,7 @@ struct StoryViewer: View {
         ZStack {
             Color.black.ignoresSafeArea()
             if let story {
-                page(story)
+                page(story).id(story.id).transition(.opacity)
             }
             HStack(spacing: 0) {
                 Color.clear.contentShape(Rectangle()).onTapGesture { back() }.frame(maxWidth: .infinity)
@@ -620,15 +502,21 @@ struct StoryViewer: View {
                 }
                 Spacer()
                 if let v = story?.views, group?.user.id == account.user?.id {
-                    Label(String(format: L("%d views"), v), systemImage: "eye.fill")
-                        .font(.footnote.weight(.semibold)).foregroundStyle(.white)
-                        .padding(.horizontal, 12).padding(.vertical, 6).background(.black.opacity(0.45), in: Capsule())
+                    Button {
+                        paused = true
+                        if let id = story?.id { viewersOf = ViewersTarget(id: id) }
+                    } label: {
+                        Label(String(format: L("%d views"), v), systemImage: "eye.fill")
+                            .font(.footnote.weight(.semibold)).foregroundStyle(.white)
+                            .padding(.horizontal, 14).padding(.vertical, 8).background(.black.opacity(0.45), in: Capsule())
+                    }
                 }
             }
             .padding(12)
         }
         .statusBar(hidden: true)
         .sheet(item: $reporting, onDismiss: { paused = false }) { ReportSheet(target: $0) }
+        .sheet(item: $viewersOf, onDismiss: { paused = false }) { StoryViewersSheet(storyId: $0.id) }
         .task(id: "\(g)-\(s)-\(story?.id ?? "")") { await run() }
     }
 
@@ -639,11 +527,10 @@ struct StoryViewer: View {
             } else if let image = item.image, !image.isEmpty, let url = PhotoTools.large(image) {
                 StoryPhoto(url: url).id(item.id)
             } else {
-                Color(hexString: item.bg ?? "#8C1D40").ignoresSafeArea()
+                StoryBackground(bg: item.bg ?? "#8C1D40", bg2: StoryStyle(json: item.style).bg2).ignoresSafeArea()
             }
             if let t = item.text, !t.isEmpty {
-                Text(t).font(.title2.weight(.bold)).foregroundStyle(.white).multilineTextAlignment(.center)
-                    .shadow(color: .black.opacity(0.7), radius: 4).padding(24)
+                StoryTextView(text: t, style: StoryStyle(json: item.style)).id(item.id)
             }
         }
     }
@@ -718,7 +605,7 @@ private struct StoryPhoto: View {
     @State private var image: UIImage?
     var body: some View {
         Group {
-            if let image { Image(uiImage: image).resizable().scaledToFit() } else { ProgressView().tint(.white) }
+            if let image { Image(uiImage: image).resizable().scaledToFit() } else { ABDots().tint(.white) }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .task { image = await PhotoCache.shared.load(url, pixelSize: 800) }
@@ -735,7 +622,6 @@ struct CommentsSheet: View {
     @State private var comments: [PostComment] = []
     @State private var loaded = false
     @State private var draft = ""
-    @State private var busy = false
     @State private var error: String?
     @State private var reporting: ReportTarget?
 
@@ -746,7 +632,7 @@ struct CommentsSheet: View {
                     if loaded {
                         EmptyState(symbol: "bubble.left", title: "No comments yet", text: "Be the first to comment.").listRowBackground(Color.clear)
                     } else {
-                        HStack { Spacer(); ProgressView(); Spacer() }.padding(20).listRowBackground(Color.clear)
+                        ForEach(0..<4, id: \.self) { _ in SkeletonRow().listRowSeparator(.hidden) }
                     }
                 }
                 ForEach(comments) { c in
@@ -760,6 +646,8 @@ struct CommentsSheet: View {
                             Text(c.text).font(.subheadline).fixedSize(horizontal: false, vertical: true)
                         }
                     }
+                    .opacity(c.id.hasPrefix("local-") ? 0.6 : 1)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                     .swipeActions {
                         if canDelete(c) {
                             Button(role: .destructive) { Task { await remove(c) } } label: { Label("Delete", systemImage: "trash") }
@@ -779,10 +667,10 @@ struct CommentsSheet: View {
                         .padding(.horizontal, 12).padding(.vertical, 9)
                         .background(Color.abSurface, in: Capsule())
                     Button { Task { await send() } } label: {
-                        Image(systemName: busy ? "hourglass" : "paperplane.fill").foregroundStyle(.white)
+                        Image(systemName: "paperplane.fill").foregroundStyle(.white)
                             .frame(width: 38, height: 38).background(Color.abAccent, in: Circle())
                     }
-                    .disabled(busy || draft.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
                     .accessibilityLabel(Text("Send"))
                 }
                 .padding(10)
@@ -810,18 +698,31 @@ struct CommentsSheet: View {
         loaded = true
     }
 
+    /// The comment shows at once; only a failure brings the words back
     private func send() async {
-        busy = true
-        defer { busy = false }
+        let words = String(draft.trimmingCharacters(in: .whitespacesAndNewlines).prefix(500))
+        guard !words.isEmpty, let me = account.user else { return }
+        let temp = PostComment(id: "local-" + UUID().uuidString, text: words, created: ISO8601DateFormatter.ab.string(from: Date()), user: me)
+        draft = ""
+        Haptics.tap()
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) { comments.append(temp) }
+        changed(comments.count)
         do {
-            _ = try await account.call("commentAdd", ["postId": post.id, "text": String(draft.prefix(500))])
-            draft = ""
+            _ = try await account.call("commentAdd", ["postId": post.id, "text": words])
             Haptics.success()
             await load()
-        } catch { self.error = error.localizedDescription; Haptics.error() }
+        } catch {
+            withAnimation { comments.removeAll { $0.id == temp.id } }
+            changed(comments.count)
+            if draft.isEmpty { draft = words }
+            self.error = error.localizedDescription
+            Haptics.error()
+        }
     }
 
     private func remove(_ c: PostComment) async {
+        withAnimation { comments.removeAll { $0.id == c.id } }
+        changed(comments.count)
         _ = try? await account.call("commentDelete", ["id": c.id])
         await load()
     }

@@ -6,8 +6,8 @@ mkdir -p shots
 adb install -r "$APK" || exit 1
 shot() { # name, extra adb args
   local name="$1"; shift
-  adb shell am force-stop org.asubank.app
-  adb shell am start -n org.asubank.app/.MainActivity --ez acceptTerms true "$@"
+  adb shell am force-stop org.unihub.app
+  adb shell am start -n org.unihub.app/.MainActivity --ez acceptTerms true "$@"
   sleep 14
   adb exec-out screencap -p > "shots/$name.png"
 }
@@ -52,8 +52,8 @@ sleep 6
 adb exec-out screencap -p > shots/22-submissions-later.png
 shot 23-account --es startPath /account
 shot 24-pitch-black --es startTab more --ei appearance 3
-adb shell pm clear org.asubank.app
-adb shell am start -n org.asubank.app/.MainActivity
+adb shell pm clear org.unihub.app
+adb shell am start -n org.unihub.app/.MainActivity
 sleep 10
 adb exec-out screencap -p > shots/7-terms.png
 adb logcat -d -s AndroidRuntime:E > shots/crash-log.txt

@@ -8,7 +8,7 @@ enum Requests {
     static let script = "https://script.google.com/macros/s/AKfycbz_bpogYUiNV8qW9KKw1MK0DUZHd0e3LoxfFndzMeOVirchHBYJ-Jy1bMn2XsWq9sVtxQ/exec"
     static let bridge = ScriptBridge(url: script, marker: "requestForm")
     static let community = "https://chat.whatsapp.com/LS92JgjO26Y5SZK9SVJ9FJ"
-    static let whatsapp = "mailto:necro144@yahoo.com?body=" + "Hi ASU Bank, about my material request".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+    static let whatsapp = "mailto:necro144@yahoo.com?body=" + "Hi UniHub, about my material request".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
     static let maxBytes = 15 * 1024 * 1024
 
     struct Service: Identifiable { let name: String; let emoji: String; let text: String; var id: String { name } }
@@ -74,7 +74,7 @@ struct RequestMaterialScreen: View {
             }
 
             Section {
-                Button { app.tab = .search } label: { Label("Search ASU Bank first, it may already be there", systemImage: "magnifyingglass") }
+                Button { app.tab = .search } label: { Label("Search UniHub first, it may already be there", systemImage: "magnifyingglass") }
                 Button { openURL(URL(string: Requests.community)!) } label: { Label("Ask the WhatsApp community for free", systemImage: "person.3") }
             } header: { Text("Before you pay") }
 
@@ -135,7 +135,7 @@ struct RequestMaterialScreen: View {
                 Button(action: submit) {
                     HStack {
                         Spacer()
-                        if sending { ProgressView().tint(.white) }
+                        if sending { ABDots().tint(.white) }
                         Text(sending ? "Sending…" : "Send request").font(.headline)
                         Spacer()
                     }

@@ -11,7 +11,7 @@ struct SplashView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
                     .shadow(color: Color.abAccent.opacity(0.35), radius: 18, y: 8)
                     .scaleEffect(shown ? 1 : 0.82)
-                Text("ASU Bank").font(.title.weight(.bold))
+                Text("UniHub").font(.title.weight(.bold))
                 Text("Study materials for ASU students").font(.subheadline).foregroundStyle(.secondary)
             }
             .opacity(shown ? 1 : 0)
@@ -25,7 +25,8 @@ struct ThemeScreen: View {
     @AppStorage("ab.appearance") private var appearance = 0
     @AppStorage("ab.accent") private var accent = 0
     @AppStorage("ab.theme.rev") private var rev = 0
-    @State private var start = (0, 0)
+    @State private var pendingMode: Int?
+    @State private var pendingAccent: Int?
 
     private let modes: [(Int, String, String, String)] = [
         (0, "Match my phone", "Follows your phone's light or dark mode", "iphone"),
@@ -45,8 +46,7 @@ struct ThemeScreen: View {
             Section {
                 ForEach(modes, id: \.0) { m in
                     Button {
-                        appearance = m.0
-                        AppTheme.applyBars()
+                        if appearance != m.0 { pendingMode = m.0 }
                         Haptics.tap()
                     } label: {
                         HStack(spacing: 12) {
@@ -68,7 +68,7 @@ struct ThemeScreen: View {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 84), spacing: 12)], spacing: 14) {
                     ForEach(AppTheme.accents) { a in
                         Button {
-                            accent = a.id
+                            if accent != a.id { pendingAccent = a.id }
                             Haptics.tap()
                         } label: {
                             VStack(spacing: 6) {
@@ -86,8 +86,14 @@ struct ThemeScreen: View {
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Theme")
-        .onAppear { start = (appearance, accent) }
-        // The rest of the app redraws with the new colors once you leave this screen
-        .onDisappear { if start != (appearance, accent) { rev += 1 } }
+        .alert("Restart UniHub to change the theme", isPresented: Binding(get: { pendingMode != nil || pendingAccent != nil }, set: { if !$0 { pendingMode = nil; pendingAccent = nil } })) {
+            Button("Restart now") {
+                if let m = pendingMode { appearance = m }
+                if let a = pendingAccent { accent = a }
+                rev += 1
+                if AppConfig.isStore { AppTheme.applyBars() } else { AppRestart.now() }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: { Text("The app closes so the new colors load cleanly. Tap its icon to open it again.") }
     }
 }

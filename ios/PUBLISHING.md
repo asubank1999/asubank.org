@@ -1,4 +1,4 @@
-# Publishing the ASU Bank iOS app (from Windows, no Mac)
+# Publishing the UniHub iOS app (from Windows, no Mac)
 
 The app is built on GitHub's macOS machines by `.github/workflows/ios.yml`.
 You do the Apple account steps once; after that, every release is one click.
@@ -6,15 +6,15 @@ You do the Apple account steps once; after that, every release is one click.
 ## 1. Join the Apple Developer Program (99 USD / year)
 
 1. Go to https://developer.apple.com/programs/enroll/ and sign in with your Apple ID (turn on two-factor authentication first).
-2. Enroll as **Individual** (fastest; your name shows as the seller) or **Organization** (needs a D-U-N-S number; the store shows "ASU Bank").
+2. Enroll as **Individual** (fastest; your name shows as the seller) or **Organization** (needs a D-U-N-S number; the store shows "UniHub").
 3. Pay and wait for the "Welcome to the Apple Developer Program" email (minutes to 2 days).
 4. Open https://developer.apple.com/account → **Membership details** and copy your **Team ID** (10 characters).
 
 ## 2. Create the app in App Store Connect
 
 1. https://appstoreconnect.apple.com → **Apps** → **+** → **New App**.
-2. Platform **iOS**, Name **ASU Bank** (or "ASU Bank – Study Materials" if taken), language English, SKU `asubank-ios`.
-3. Bundle ID: if `org.asubank.app` is not in the list yet, open https://developer.apple.com/account/resources/identifiers → **+** → App IDs → App → Explicit bundle ID `org.asubank.app` → Continue → Register, then come back and pick it.
+2. Platform **iOS**, Name **UniHub** (or "UniHub – Study Materials" if taken), language English, SKU `asubank-ios`.
+3. Bundle ID: if `org.unihub.app` is not in the list yet, open https://developer.apple.com/account/resources/identifiers → **+** → App IDs → App → Explicit bundle ID `org.unihub.app` → Continue → Register, then come back and pick it.
 4. User access: Full access → **Create**.
 
 ## 3. Create an App Store Connect API key (lets GitHub sign and upload)

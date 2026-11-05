@@ -52,6 +52,7 @@ struct MoreView: View {
                     NavigationLink { NotificationsScreen() } label: { Label("Notifications", systemImage: "bell") }
                     NavigationLink { FriendsScreen() } label: { Label("Friends", systemImage: "person.2") }
                     NavigationLink { FeedScreen() } label: { Label("Feed", systemImage: "newspaper") }
+                    ShareAppRow()
                     NavigationLink { LecturesScreen() } label: { Label("My lectures", systemImage: "alarm") }
                     NavigationLink { PlannerScreen() } label: { Label("Exams & tasks", systemImage: "checklist") }
                     NavigationLink { FocusTimerScreen() } label: { Label("Focus timer", systemImage: "timer") }
@@ -70,7 +71,7 @@ struct MoreView: View {
                 }
                 Section("New students") { ForEach(Links.newHere) { SiteLinkRow(link: $0) } }
                 Section("Community & services") { ForEach(Links.community) { SiteLinkRow(link: $0) } }
-                Section("Help") { ForEach(Links.help.filter { $0.title != "Support ASU Bank" }) { SiteLinkRow(link: $0) } }
+                Section("Help") { ForEach(Links.help.filter { $0.title != "Support UniHub" }) { SiteLinkRow(link: $0) } }
 
                 if config.donate {
                     Section {
@@ -85,8 +86,8 @@ struct MoreView: View {
                         } label: {
                             row(copied ? "checkmark.circle.fill" : "banknote.fill", .green, copied ? "Copied ALANQ99" : "CliQ alias: ALANQ99", "Bank of Jordan · tap to copy")
                         }
-                    } header: { Text("Support ASU Bank") } footer: {
-                        Text("ASU Bank is free and student-run. Donations help keep it running.")
+                    } header: { Text("Support UniHub") } footer: {
+                        Text("UniHub is free and student-run. Donations help keep it running.")
                     }
                 }
 
@@ -98,7 +99,7 @@ struct MoreView: View {
                         HStack {
                             Label("Clear cache", systemImage: "trash")
                             Spacer()
-                            if clearing { ProgressView() }
+                            if clearing { ABDots() }
                         }
                     }
                     .disabled(clearing)
@@ -116,7 +117,7 @@ struct MoreView: View {
                         HStack {
                             Label(config.updateAvailable ? "Update to \(config.latest ?? "")" : "Check for updates", systemImage: "arrow.down.app")
                             Spacer()
-                            if config.checking { ProgressView() }
+                            if config.checking { ABDots() }
                             else if config.latest != nil && !config.updateAvailable { Text("Up to date").foregroundStyle(.secondary) }
                         }
                     }
@@ -130,15 +131,15 @@ struct MoreView: View {
 
                 Section {
                     Button { openURL(AB.site) } label: { Label("Open asubank.org in Safari", systemImage: "safari") }
-                    ShareButton(item: AB.site, message: "ASU Bank — summaries, past papers and test banks for ASU students") {
-                        Label("Share ASU Bank", systemImage: "square.and.arrow.up")
+                    ShareButton(item: AB.site, message: "UniHub — summaries, past papers and test banks for ASU students") {
+                        Label("Share UniHub", systemImage: "square.and.arrow.up")
                     }
                     Button {
                         Task { await library.load() }
                         Haptics.success()
                     } label: { Label("Refresh materials", systemImage: "arrow.clockwise") }
                 } footer: {
-                    Text("ASU Bank \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "") · \(library.items.count) materials in \(library.subjects.count) subjects.\nPeer-verified study materials by Applied Science University students, for ASU students.")
+                    Text("UniHub \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "") · \(library.items.count) materials in \(library.subjects.count) subjects.\nPeer-verified study materials by Applied Science University students, for ASU students.")
                 }
             }
             .listStyle(.insetGrouped)
@@ -170,7 +171,7 @@ struct MoreView: View {
             Label(title, systemImage: symbol)
             Spacer()
             if let bytes { Text(ByteCountFormatter.string(fromByteCount: bytes, countStyle: .file)).foregroundStyle(.secondary) }
-            else { ProgressView() }
+            else { ABDots() }
         }
     }
 

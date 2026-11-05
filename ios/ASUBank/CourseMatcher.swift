@@ -111,7 +111,7 @@ private struct MatcherForm: View {
         return nil
     }
 
-    /// Course suggestions from the subjects on ASU Bank
+    /// Course suggestions from the subjects on UniHub
     private var suggestions: [String] {
         let q = AB.norm(courseText)
         guard q.count >= 2 else { return [] }
@@ -180,7 +180,7 @@ private struct MatcherForm: View {
                 Button(action: submit) {
                     HStack {
                         Spacer()
-                        if sending { ProgressView().tint(.white) }
+                        if sending { ABDots().tint(.white) }
                         Text(sending ? "Finding matches…" : "Find my study buddies").font(.headline)
                         Spacer()
                     }

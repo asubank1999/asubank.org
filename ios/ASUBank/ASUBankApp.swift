@@ -35,6 +35,7 @@ struct ASUBankApp: App {
                 .environmentObject(library)
                 .environmentObject(saved)
                 .environmentObject(pages)
+                .overlay(alignment: .top) { JobsBanner().padding(.top, 4) }
                 .environmentObject(config)
                 .tint(.abAccent)
                 .preferredColorScheme(appearance == 1 ? .light : appearance >= 2 ? .dark : nil)
@@ -153,7 +154,7 @@ struct RootView: View {
         .alert("Thank you for joining early! 🌱", isPresented: $account.earlyThanksShown) {
             Button("You're welcome", role: .cancel) {}
         } message: {
-            Text("You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.")
+            Text("You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.")
         }
         .fullScreenCover(isPresented: Binding(get: { !accepted && !config.mustUpdate }, set: { _ in })) {
             WelcomeTermsView()
@@ -176,7 +177,7 @@ struct RootView: View {
 
 extension RootView {
     var updateMessage: String {
-        var m = "ASU Bank " + (config.latest ?? "") + " is out. You have " + AppConfig.current + "."
+        var m = "UniHub " + (config.latest ?? "") + " is out. You have " + AppConfig.current + "."
         if let n = config.notes, !n.isEmpty { m += "\n\n" + n }
         return m
     }

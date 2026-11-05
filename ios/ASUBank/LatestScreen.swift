@@ -165,7 +165,7 @@ struct LatestScreen: View {
             }
             switch store.state {
             case 0, 1:
-                HStack { Spacer(); ProgressView("Loading the newest files…"); Spacer() }.padding(30).listRowBackground(Color.clear)
+                HStack { Spacer(); ABDots("Loading the newest files…"); Spacer() }.padding(30).listRowBackground(Color.clear)
             case 3:
                 VStack(spacing: 10) {
                     Text("Couldn't load the latest files.").font(.headline)
@@ -196,7 +196,7 @@ struct LatestScreen: View {
         .confirmationDialog(L("Delete from Drive?"), isPresented: Binding(get: { confirming != nil }, set: { if !$0 { confirming = nil } }), titleVisibility: .visible, presenting: confirming) { r in
             Button(L("Delete from Drive"), role: .destructive) { Task { await deleteUpload(r) } }
         } message: { _ in
-            Text(L("It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank."))
+            Text(L("It moves to the Drive trash and disappears from UniHub for everyone. A file owned by another Drive account is only removed from UniHub."))
         }
         .alert("Couldn't delete", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
             Button("OK", role: .cancel) {}

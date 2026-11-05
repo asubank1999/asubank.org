@@ -103,7 +103,7 @@ struct ReportSheet: View {
                     if let error { Section { Text(error).foregroundStyle(.red) } }
                     Section {
                         Button { Task { await send() } } label: {
-                            HStack { Text("Send report"); if busy { Spacer(); ProgressView() } }
+                            HStack { Text("Send report"); if busy { Spacer(); ABDots() } }
                         }
                         .disabled(reason.isEmpty || busy)
                     }
@@ -204,7 +204,7 @@ struct BlockedScreen: View {
     var body: some View {
         List {
             if let error { Text(error).foregroundStyle(.red) }
-            if loading { ProgressView() }
+            if loading { ABDots() }
             else if people.isEmpty && error == nil { Text("You haven't blocked anyone.").foregroundStyle(.secondary) }
             ForEach(Array(people.enumerated()), id: \.offset) { _, p in
                 HStack {
@@ -249,7 +249,7 @@ struct AdminReportsScreen: View {
             }
             .pickerStyle(.segmented)
             if let error { Text(error).foregroundStyle(.red) }
-            if loading { HStack { Spacer(); ProgressView(); Spacer() } }
+            if loading { HStack { Spacer(); ABDots(); Spacer() } }
             else if reports.isEmpty && error == nil { Text("Nothing to review.").foregroundStyle(.secondary) }
             ForEach(Array(reports.enumerated()), id: \.offset) { _, r in row(r) }
         }

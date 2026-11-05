@@ -136,7 +136,7 @@ struct TeacherRatingsScreen: View {
 
             switch bridge.status {
             case .connecting:
-                Section { HStack { Spacer(); ProgressView("Loading ratings…"); Spacer() }.padding(.vertical, 24) }
+                Section { HStack { Spacer(); ABDots("Loading ratings…"); Spacer() }.padding(.vertical, 24) }
             case .failed:
                 Section {
                     VStack(spacing: 10) {
@@ -361,7 +361,7 @@ private struct RateSheet: View {
                     } label: {
                         HStack {
                             Spacer()
-                            if saving { ProgressView() } else { Text(done ? "Done" : "Save rating").font(.headline) }
+                            if saving { ABDots() } else { Text(done ? "Done" : "Save rating").font(.headline) }
                             Spacer()
                         }
                     }

@@ -309,26 +309,26 @@
   "ar": "مؤرشفة",
   "es": "ARCHIVADA"
  },
- "ASU Bank checks for new activity while it's open, and in the background when iOS allows it.": {
-  "ar": "يتحقق ASU Bank من النشاط الجديد أثناء فتحه، وفي الخلفية عندما يسمح iOS بذلك.",
-  "es": "ASU Bank busca actividad nueva mientras está abierto y en segundo plano cuando iOS lo permite."
+ "UniHub checks for new activity while it's open, and in the background when iOS allows it.": {
+  "ar": "يتحقق UniHub من النشاط الجديد أثناء فتحه، وفي الخلفية عندما يسمح iOS بذلك.",
+  "es": "UniHub busca actividad nueva mientras está abierto y en segundo plano cuando iOS lo permite."
  },
- "ASU Bank is a free, volunteer, student-run project. It is not made by or owned by Applied Science Private University. Questions go to necro144@yahoo.com.": {
-  "ar": "بنك ASU مشروع طلابي تطوعي مجاني، وليس من صنع جامعة العلوم التطبيقية الخاصة ولا ملكًا لها. أرسل أسئلتك إلى necro144@yahoo.com."
+ "UniHub is a free, volunteer, student-run project. It is not made by or owned by Applied Science Private University. Questions go to necro144@yahoo.com.": {
+  "ar": "UniHub مشروع طلابي تطوعي مجاني، وليس من صنع جامعة العلوم التطبيقية الخاصة ولا ملكًا لها. أرسل أسئلتك إلى necro144@yahoo.com."
  },
- "ASU Bank is built by students, for students. These people uploaded, sorted and shared the materials you use every day.": {
-  "ar": "ASU Bank من الطلاب وللطلاب. هؤلاء رفعوا ورتبوا وشاركوا المواد التي تستخدمها كل يوم.",
-  "es": "ASU Bank lo hacen estudiantes para estudiantes. Estas personas subieron, ordenaron y compartieron los materiales que usas cada día."
+ "UniHub is built by students, for students. These people uploaded, sorted and shared the materials you use every day.": {
+  "ar": "UniHub من الطلاب وللطلاب. هؤلاء رفعوا ورتبوا وشاركوا المواد التي تستخدمها كل يوم.",
+  "es": "UniHub lo hacen estudiantes para estudiantes. Estas personas subieron, ordenaron y compartieron los materiales que usas cada día."
  },
- "ASU Bank is for university students and isn’t meant for children under 13.": {
-  "ar": "بنك ASU مخصص لطلاب الجامعة وليس للأطفال دون 13 عامًا."
+ "UniHub is for university students and isn’t meant for children under 13.": {
+  "ar": "UniHub مخصص لطلاب الجامعة وليس للأطفال دون 13 عامًا."
  },
- "ASU Bank is free and run by a volunteer student. Donations keep it online and growing.": {
-  "ar": "بنك ASU مجاني ويديره طالب متطوع. التبرعات تُبقيه متاحًا وتساعده على النمو."
+ "UniHub is free and run by a volunteer student. Donations keep it online and growing.": {
+  "ar": "UniHub مجاني ويديره طالب متطوع. التبرعات تُبقيه متاحًا وتساعده على النمو."
  },
- "ASU Bank team": {
-  "ar": "فريق بنك ASU",
-  "es": "Equipo de ASU Bank"
+ "UniHub team": {
+  "ar": "فريق UniHub",
+  "es": "Equipo de UniHub"
  },
  "ASU E-Library Hub": {
   "ar": "مركز مكتبة ASU الإلكترونية"
@@ -345,8 +345,8 @@
  "ASU Ramadan Lecture Schedule": {
   "ar": "جدول محاضرات رمضان في ASU"
  },
- "ASU Test Banks is a comprehensive online resource for students and educators, offering an extensive collection of test banks, PDFs, and quizzes.": {
-  "ar": "بنك اختبارات ASU مصدر شامل على الإنترنت للطلاب والمدرسين، يضم مجموعة كبيرة من بنوك الأسئلة وملفات PDF والكويزات."
+ "UniHub is a comprehensive online resource for students and educators, offering an extensive collection of test banks, PDFs, and quizzes.": {
+  "ar": "UniHub مصدر شامل على الإنترنت للطلاب والمدرسين، يضم مجموعة كبيرة من بنوك الأسئلة وملفات PDF والكويزات."
  },
  "ASU campus": {
   "ar": "حرم الجامعة",
@@ -373,8 +373,8 @@
   "ar": "حول التطبيق والشروط",
   "es": "Acerca de y términos"
  },
- "About ASU Bank": {
-  "ar": "عن بنك ASU"
+ "About UniHub": {
+  "ar": "عن UniHub"
  },
  "About it": {
   "ar": "عنه",
@@ -571,9 +571,9 @@
  "Admissions, fees, majors, scholarships and e-services.": {
   "ar": "القبول والرسوم والتخصصات والمنح والخدمات الإلكترونية."
  },
- "Ads are reviewed by the ASU Bank team before they go live.": {
-  "ar": "يراجع فريق ASU Bank الإعلانات قبل نشرها.",
-  "es": "El equipo de ASU Bank revisa los anuncios antes de publicarlos."
+ "Ads are reviewed by the UniHub team before they go live.": {
+  "ar": "يراجع فريق UniHub الإعلانات قبل نشرها.",
+  "es": "El equipo de UniHub revisa los anuncios antes de publicarlos."
  },
  "Advanced Probability and Statistics": {
   "ar": "الاحتمالات والإحصاء المتقدم"
@@ -934,9 +934,9 @@
   "ar": "حظر @%s؟",
   "es": "¿Bloquear a @%s?"
  },
- "Ban from ASU Bank": {
-  "ar": "حظر من ASU Bank",
-  "es": "Bloquear en ASU Bank"
+ "Ban from UniHub": {
+  "ar": "حظر من UniHub",
+  "es": "Bloquear en UniHub"
  },
  "Ban reason": {
   "ar": "سبب الحظر",
@@ -1197,8 +1197,8 @@
  "Can I share the resources with others?": {
   "ar": "هل يمكنني مشاركة المصادر مع الآخرين؟"
  },
- "Can I use ASU Test Banks on multiple devices?": {
-  "ar": "هل يمكنني استخدام البنك على عدة أجهزة؟"
+ "Can I use UniHub on multiple devices?": {
+  "ar": "هل يمكنني استخدام UniHub على عدة أجهزة؟"
  },
  "Can't find a file? Ask for it.": {
   "ar": "لم تجد ملفًا؟ اطلبه."
@@ -1429,9 +1429,9 @@
   "ar": "إغلاق",
   "es": "Cerrar"
  },
- "Close and reopen ASU Bank to finish switching the language.": {
-  "ar": "أغلق ASU Bank وافتحه من جديد لإكمال تغيير اللغة.",
-  "es": "Cierra y vuelve a abrir ASU Bank para terminar de cambiar el idioma."
+ "Close and reopen UniHub to finish switching the language.": {
+  "ar": "أغلق UniHub وافتحه من جديد لإكمال تغيير اللغة.",
+  "es": "Cierra y vuelve a abrir UniHub para terminar de cambiar el idioma."
  },
  "Cloudy": {
   "ar": "غائم",
@@ -1639,8 +1639,8 @@
   "ar": "تعذر فتح هذا المجلد",
   "es": "No se pudo abrir esta carpeta"
  },
- "Couldn't reach ASU Bank. Check your connection and try again.": {
-  "ar": "تعذر الوصول إلى بنك ASU. تحقق من اتصالك وحاول مجددًا."
+ "Couldn't reach UniHub. Check your connection and try again.": {
+  "ar": "تعذر الوصول إلى UniHub. تحقق من اتصالك وحاول مجددًا."
  },
  "Couldn't reach the matcher. Check your connection; it will retry when you submit.": {
   "ar": "تعذر الوصول إلى خدمة التوفيق. تحقق من اتصالك؛ ستُعاد المحاولة عند الإرسال.",
@@ -1954,12 +1954,12 @@
  "Donate with PayPal or CliQ": {
   "ar": "تبرع عبر PayPal أو CliQ"
  },
- "Donations are optional and never unlock content — everything on ASU Bank stays free. Only use the PayPal link and the number above; ASU Bank never asks for money from other numbers.": {
-  "ar": "التبرعات اختيارية ولا تفتح أي محتوى، فكل شيء في بنك ASU يبقى مجانيًا. استخدم فقط رابط PayPal والرقم أعلاه؛ بنك ASU لا يطلب المال أبدًا من أرقام أخرى."
+ "Donations are optional and never unlock content — everything on UniHub stays free. Only use the PayPal link and the number above; UniHub never asks for money from other numbers.": {
+  "ar": "التبرعات اختيارية ولا تفتح أي محتوى، فكل شيء في UniHub يبقى مجانيًا. استخدم فقط رابط PayPal والرقم أعلاه؛ UniHub لا يطلب المال أبدًا من أرقام أخرى."
  },
- "Donations are optional and never unlock content. Everything on ASU Bank stays free. ASU Bank never asks for money from anyone else.": {
-  "ar": "التبرعات اختيارية ولا تفتح أي محتوى. كل شيء في ASU Bank يبقى مجانياً، ولا يطلب ASU Bank المال من أي جهة أخرى.",
-  "es": "Las donaciones son opcionales y nunca desbloquean contenido. Todo en ASU Bank sigue siendo gratis."
+ "Donations are optional and never unlock content. Everything on UniHub stays free. UniHub never asks for money from anyone else.": {
+  "ar": "التبرعات اختيارية ولا تفتح أي محتوى. كل شيء في UniHub يبقى مجانياً، ولا يطلب UniHub المال من أي جهة أخرى.",
+  "es": "Las donaciones son opcionales y nunca desbloquean contenido. Todo en UniHub sigue siendo gratis."
  },
  "Done": {
   "ar": "تم",
@@ -2224,8 +2224,8 @@
   "ar": "كل السنوات والدكاترة في مكان واحد.",
   "es": "Todos los años y profesores en un solo lugar."
  },
- "Everything on ASU Bank is searchable from one box: subject pages and the shared Google Drive.": {
-  "ar": "يمكن البحث في كل ما في بنك ASU من مربع واحد: صفحات المواد وGoogle Drive المشترك."
+ "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive.": {
+  "ar": "يمكن البحث في كل ما في UniHub من مربع واحد: صفحات المواد وGoogle Drive المشترك."
  },
  "Everything students uploaded, updated live.": {
   "ar": "كل ما رفعه الطلاب، يتحدث مباشرة."
@@ -2340,9 +2340,9 @@
  "Files are shared by students. Check them against your official course resources.": {
   "ar": "يشارك الطلاب هذه الملفات، فقارنها بمصادر مادتك الرسمية."
  },
- "Files go to the shared ASU Bank Drive and are checked before they appear.": {
-  "ar": "تذهب الملفات إلى Drive المشترك لـ ASU Bank وتُراجع قبل ظهورها.",
-  "es": "Los archivos van al Drive compartido de ASU Bank y se revisan antes de aparecer."
+ "Files go to the shared UniHub Drive and are checked before they appear.": {
+  "ar": "تذهب الملفات إلى Drive المشترك لـ UniHub وتُراجع قبل ظهورها.",
+  "es": "Los archivos van al Drive compartido de UniHub y se revisan antes de aparecer."
  },
  "Files may be removed if they violate rules": {
   "ar": "قد تُحذف الملفات إذا خالفت القواعد"
@@ -2494,9 +2494,9 @@
   "ar": "المؤسس",
   "es": "Fundador"
  },
- "Founder · builds and runs ASU Bank": {
-  "ar": "المؤسس · يبني ويدير ASU Bank",
-  "es": "Fundador · crea y dirige ASU Bank"
+ "Founder · builds and runs UniHub": {
+  "ar": "المؤسس · يبني ويدير UniHub",
+  "es": "Fundador · crea y dirige UniHub"
  },
  "Fourth Year": {
   "ar": "السنة الرابعة"
@@ -2643,13 +2643,13 @@
   "ar": "المجموعات والموارد",
   "es": "Grupos y recursos"
  },
- "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules.": {
-  "ar": "يدير الطلاب المجموعات وليس ASU Bank. كن لطيفاً والتزم بقوانين كل مجموعة.",
-  "es": "Los grupos los gestionan estudiantes, no ASU Bank. Sé amable y respeta sus normas."
+ "Groups are run by students, not by UniHub. Be kind and follow each group's rules.": {
+  "ar": "يدير الطلاب المجموعات وليس UniHub. كن لطيفاً والتزم بقوانين كل مجموعة.",
+  "es": "Los grupos los gestionan estudiantes, no UniHub. Sé amable y respeta sus normas."
  },
- "Groups are run by students, not by ASU Bank. Be kind and follow each group's rules. Long-press a group to copy its link.": {
-  "ar": "يدير الطلاب المجموعات وليس ASU Bank. كن لطيفاً والتزم بقوانين كل مجموعة. اضغط مطولاً على مجموعة لنسخ رابطها.",
-  "es": "Los grupos los gestionan estudiantes, no ASU Bank. Sé amable y respeta sus normas. Mantén pulsado un grupo para copiar su enlace."
+ "Groups are run by students, not by UniHub. Be kind and follow each group's rules. Long-press a group to copy its link.": {
+  "ar": "يدير الطلاب المجموعات وليس UniHub. كن لطيفاً والتزم بقوانين كل مجموعة. اضغط مطولاً على مجموعة لنسخ رابطها.",
+  "es": "Los grupos los gestionan estudiantes, no UniHub. Sé amable y respeta sus normas. Mantén pulsado un grupo para copiar su enlace."
  },
  "Groups for courses, clubs and interests": {
   "ar": "مجموعات للمواد والنوادي والاهتمامات"
@@ -2770,8 +2770,8 @@
  "How to Construct Frequency Table": {
   "ar": "كيفية إنشاء جدول تكراري"
  },
- "How to delete your ASU Bank account and data.": {
-  "ar": "كيف تحذف حسابك وبياناتك في بنك ASU."
+ "How to delete your UniHub account and data.": {
+  "ar": "كيف تحذف حسابك وبياناتك في UniHub."
  },
  "How to find any material": {
   "ar": "كيف تجد أي مادة"
@@ -2788,9 +2788,9 @@
   "ar": "كيف تبحث عن الملفات",
   "es": "Cómo buscar archivos"
  },
- "How would you rate ASU Bank?": {
-  "ar": "كيف تقيّم ASU Bank؟",
-  "es": "¿Cómo valorarías ASU Bank?"
+ "How would you rate UniHub?": {
+  "ar": "كيف تقيّم UniHub؟",
+  "es": "¿Cómo valorarías UniHub?"
  },
  "How your term and cumulative average turn into a grade at ASU.": {
   "ar": "كيف يتحول معدلك الفصلي والتراكمي إلى تقدير في ASU."
@@ -2854,8 +2854,8 @@
  "If you encounter any issues or have questions about the service, please call or WhatsApp us at: necro144@yahoo.com": {
   "ar": "إذا واجهت مشكلة أو كان لديك سؤال عن الخدمة، فاتصل بنا أو راسلنا على واتساب: necro144@yahoo.com"
  },
- "If you own something on ASU Bank or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it.": {
-  "ar": "إذا كنت تملك شيئًا في بنك ASU أو تمثل مالكه وتريد إزالته، فأبلغ عن الملف أو راسل necro144@yahoo.com مع رابطه."
+ "If you own something on UniHub or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it.": {
+  "ar": "إذا كنت تملك شيئًا في UniHub أو تمثل مالكه وتريد إزالته، فأبلغ عن الملف أو راسل necro144@yahoo.com مع رابطه."
  },
  "If you're still having trouble understanding how this service works, our support team is here to help!": {
   "ar": "إذا كنت ما زلت لا تفهم كيف تعمل الخدمة، ففريق الدعم هنا لمساعدتك!"
@@ -2964,29 +2964,29 @@
   "ar": "رابط الدعوة",
   "es": "Enlace de invitación"
  },
- "Is ASU Test Banks mobile-friendly?": {
+ "Is UniHub mobile-friendly?": {
   "ar": "هل الموقع مناسب للجوال؟"
  },
- "Is my personal information safe on ASU Test Banks?": {
+ "Is my personal information safe on UniHub?": {
   "ar": "هل معلوماتي الشخصية آمنة؟"
  },
- "Is there an Android app for ASU Test Banks?": {
+ "Is there an Android app for UniHub?": {
   "ar": "هل يوجد تطبيق أندرويد؟"
  },
- "Is there an iOS app for ASU Test Banks?": {
+ "Is there an iOS app for UniHub?": {
   "ar": "هل يوجد تطبيق iOS؟"
  },
- "It disappears from ASU Bank for everyone. The folder itself stays in Drive.": {
-  "ar": "يختفي من ASU Bank للجميع. يبقى المجلد نفسه في درايف.",
-  "es": "Desaparece de ASU Bank para todos. La carpeta sigue en Drive."
+ "It disappears from UniHub for everyone. The folder itself stays in Drive.": {
+  "ar": "يختفي من UniHub للجميع. يبقى المجلد نفسه في درايف.",
+  "es": "Desaparece de UniHub para todos. La carpeta sigue en Drive."
  },
  "It may already be there, for free": {
   "ar": "قد يكون موجوداً مجاناً",
   "es": "Puede que ya esté, gratis"
  },
- "It moves to the Drive trash and disappears from ASU Bank for everyone. A file owned by another Drive account is only removed from ASU Bank.": {
-  "ar": "ينتقل إلى سلة درايف ويختفي من ASU Bank للجميع. الملف المملوك لحساب درايف آخر يُزال من ASU Bank فقط.",
-  "es": "Va a la papelera de Drive y desaparece de ASU Bank para todos. Un archivo de otra cuenta de Drive solo se quita de ASU Bank."
+ "It moves to the Drive trash and disappears from UniHub for everyone. A file owned by another Drive account is only removed from UniHub.": {
+  "ar": "ينتقل إلى سلة درايف ويختفي من UniHub للجميع. الملف المملوك لحساب درايف آخر يُزال من UniHub فقط.",
+  "es": "Va a la papelera de Drive y desaparece de UniHub para todos. Un archivo de otra cuenta de Drive solo se quita de UniHub."
  },
  "It's cold. Take a jacket.": {
   "ar": "الجو بارد. خذ معطفاً.",
@@ -3008,9 +3008,9 @@
   "ar": "انضم",
   "es": "Unirse"
  },
- "Join ASU Bank": {
-  "ar": "انضم إلى ASU Bank",
-  "es": "Únete a ASU Bank"
+ "Join UniHub": {
+  "ar": "انضم إلى UniHub",
+  "es": "Únete a UniHub"
  },
  "Join Group": {
   "ar": "انضم إلى المجموعة"
@@ -3599,9 +3599,9 @@
   "ar": "جدد هذا الأسبوع",
   "es": "Nuevos esta semana"
  },
- "New upload on ASU Bank": {
-  "ar": "ملف جديد على ASU Bank",
-  "es": "Nueva subida en ASU Bank"
+ "New upload on UniHub": {
+  "ar": "ملف جديد على UniHub",
+  "es": "Nueva subida en UniHub"
  },
  "New uploaded files": {
   "ar": "الملفات المرفوعة الجديدة",
@@ -3610,9 +3610,9 @@
  "Newest PDFs, midterms, finals and quizzes.": {
   "ar": "أحدث ملفات PDF وامتحانات الميد والفاينل والكويزات."
  },
- "News from the ASU Bank team": {
-  "ar": "أخبار من فريق بنك ASU",
-  "es": "Noticias del equipo de ASU Bank"
+ "News from the UniHub team": {
+  "ar": "أخبار من فريق UniHub",
+  "es": "Noticias del equipo de UniHub"
  },
  "News from the team will show up here.": {
   "ar": "ستظهر أخبار الفريق هنا."
@@ -3842,13 +3842,13 @@
   "ar": "الإشعارات",
   "es": "Notificaciones"
  },
- "Notifications are off for ASU Bank": {
-  "ar": "الإشعارات متوقفة لـ ASU Bank",
-  "es": "Las notificaciones de ASU Bank están desactivadas"
+ "Notifications are off for UniHub": {
+  "ar": "الإشعارات متوقفة لـ UniHub",
+  "es": "Las notificaciones de UniHub están desactivadas"
  },
- "Notifications are off for ASU Bank, so reminders can't ring.": {
-  "ar": "الإشعارات متوقفة لتطبيق ASU Bank، لذا لن تعمل التذكيرات.",
-  "es": "Las notificaciones de ASU Bank están desactivadas, así que los recordatorios no sonarán."
+ "Notifications are off for UniHub, so reminders can't ring.": {
+  "ar": "الإشعارات متوقفة لتطبيق UniHub، لذا لن تعمل التذكيرات.",
+  "es": "Las notificaciones de UniHub están desactivadas, así que los recordatorios no sonarán."
  },
  "Notifies everyone": {
   "ar": "يُشعر الجميع",
@@ -3954,9 +3954,9 @@
   "ar": "شارك فقط ما يُسمح لك بنشره",
   "es": "Comparte solo lo que puedas distribuir"
  },
- "Only the ASU Bank team posts here.": {
-  "ar": "ينشر فريق ASU Bank فقط هنا.",
-  "es": "Aquí solo publica el equipo de ASU Bank."
+ "Only the UniHub team posts here.": {
+  "ar": "ينشر فريق UniHub فقط هنا.",
+  "es": "Aquí solo publica el equipo de UniHub."
  },
  "Open": {
   "ar": "مفتوحة",
@@ -4172,12 +4172,12 @@
   "ar": "يظهر هنا طلاب من كليتك وتخصصك. أضفهما إلى ملفك لترى المزيد.",
   "es": "Aquí aparecen personas de tu facultad y carrera. Añádelas a tu perfil para ver más."
  },
- "People who helped ASU Bank": {
-  "ar": "أشخاص ساعدوا ASU Bank",
-  "es": "Personas que ayudaron a ASU Bank"
+ "People who helped UniHub": {
+  "ar": "أشخاص ساعدوا UniHub",
+  "es": "Personas que ayudaron a UniHub"
  },
- "People who helped ASU Bank.": {
-  "ar": "أشخاص ساعدوا بنك ASU."
+ "People who helped UniHub.": {
+  "ar": "أشخاص ساعدوا UniHub."
  },
  "Pharmaceutical Technology": {
   "ar": "التكنولوجيا الصيدلانية"
@@ -4517,8 +4517,8 @@
  "Questions, broken links, takedown requests or ideas — we usually reply within a day.": {
   "ar": "أسئلة، روابط معطلة، طلبات إزالة أو أفكار: نرد عادةً خلال يوم."
  },
- "Quick answers about ASU Bank.": {
-  "ar": "إجابات سريعة عن بنك ASU."
+ "Quick answers about UniHub.": {
+  "ar": "إجابات سريعة عن UniHub."
  },
  "Quick links": {
   "ar": "روابط سريعة"
@@ -4641,13 +4641,13 @@
   "ar": "إزالة الصديق",
   "es": "Eliminar amigo"
  },
- "Remove from ASU Bank": {
-  "ar": "إزالة من ASU Bank",
-  "es": "Quitar de ASU Bank"
+ "Remove from UniHub": {
+  "ar": "إزالة من UniHub",
+  "es": "Quitar de UniHub"
  },
- "Remove from ASU Bank?": {
-  "ar": "إزالة من ASU Bank؟",
-  "es": "¿Quitar de ASU Bank?"
+ "Remove from UniHub?": {
+  "ar": "إزالة من UniHub؟",
+  "es": "¿Quitar de UniHub?"
  },
  "Remove from Saved": {
   "ar": "إزالة من المحفوظات",
@@ -4878,17 +4878,17 @@
   "ar": "ابحث في %d مادة",
   "es": "Busca en %d materiales"
  },
- "Search ASU Bank": {
-  "ar": "ابحث في ASU Bank",
-  "es": "Buscar en ASU Bank"
+ "Search UniHub": {
+  "ar": "ابحث في UniHub",
+  "es": "Buscar en UniHub"
  },
- "Search ASU Bank first": {
-  "ar": "ابحث في ASU Bank أولاً",
-  "es": "Busca primero en ASU Bank"
+ "Search UniHub first": {
+  "ar": "ابحث في UniHub أولاً",
+  "es": "Busca primero en UniHub"
  },
- "Search ASU Bank first, it may already be there": {
-  "ar": "ابحث في ASU Bank أولاً، قد يكون موجوداً",
-  "es": "Busca primero en ASU Bank, puede que ya esté"
+ "Search UniHub first, it may already be there": {
+  "ar": "ابحث في UniHub أولاً، قد يكون موجوداً",
+  "es": "Busca primero en UniHub, puede que ya esté"
  },
  "Search events": {
   "ar": "ابحث في الأحداث",
@@ -5061,9 +5061,9 @@
   "ar": "مشاركة",
   "es": "Compartir"
  },
- "Share ASU Bank": {
-  "ar": "شارك ASU Bank",
-  "es": "Compartir ASU Bank"
+ "Share UniHub": {
+  "ar": "شارك UniHub",
+  "es": "Compartir UniHub"
  },
  "Share academic resources relevant to the cohort/group (notes, past exams, study guides).": {
   "ar": "مشاركة المصادر الأكاديمية المتعلقة بالدفعة أو المجموعة (ملاحظات، امتحانات سابقة، أدلة دراسة)."
@@ -5199,17 +5199,17 @@
   "ar": "سجّل الدخول لرؤية إشعاراتك",
   "es": "Inicia sesión para ver tus notificaciones"
  },
- "Sign in with an admin account to manage ASU Bank.": {
-  "ar": "سجّل الدخول بحساب مشرف لإدارة ASU Bank.",
-  "es": "Inicia sesión con una cuenta de admin para gestionar ASU Bank."
+ "Sign in with an admin account to manage UniHub.": {
+  "ar": "سجّل الدخول بحساب مشرف لإدارة UniHub.",
+  "es": "Inicia sesión con una cuenta de admin para gestionar UniHub."
  },
  "Sign out": {
   "ar": "تسجيل الخروج",
   "es": "Cerrar sesión"
  },
- "Sign out of ASU Bank?": {
-  "ar": "تسجيل الخروج من ASU Bank؟",
-  "es": "¿Cerrar sesión en ASU Bank?"
+ "Sign out of UniHub?": {
+  "ar": "تسجيل الخروج من UniHub؟",
+  "es": "¿Cerrar sesión en UniHub?"
  },
  "Sign out?": {
   "ar": "تسجيل الخروج؟",
@@ -5524,9 +5524,9 @@
   "ar": "الدعم",
   "es": "Soporte"
  },
- "Support ASU Bank": {
-  "ar": "ادعم ASU Bank",
-  "es": "Apoya ASU Bank"
+ "Support UniHub": {
+  "ar": "ادعم UniHub",
+  "es": "Apoya UniHub"
  },
  "System language": {
   "ar": "لغة النظام",
@@ -5724,8 +5724,8 @@
   "ar": "الملف فارغ.",
   "es": "El archivo está vacío."
  },
- "The file may already be on ASU Bank.": {
-  "ar": "قد يكون الملف موجودًا في بنك ASU."
+ "The file may already be on UniHub.": {
+  "ar": "قد يكون الملف موجودًا في UniHub."
  },
  "The hard parts, made simple": {
   "ar": "تبسيط الأجزاء الصعبة"
@@ -5842,9 +5842,9 @@
  "This file type isn't allowed.": {
   "ar": "نوع الملف غير مسموح."
  },
- "This file was removed from ASU Bank.": {
-  "ar": "أُزيل هذا الملف من ASU Bank.",
-  "es": "Este archivo se quitó de ASU Bank."
+ "This file was removed from UniHub.": {
+  "ar": "أُزيل هذا الملف من UniHub.",
+  "es": "Este archivo se quitó de UniHub."
  },
  "This image can't be shown.": {
   "ar": "لا يمكن عرض هذه الصورة.",
@@ -5867,8 +5867,8 @@
  "This month": {
   "ar": "هذا الشهر"
  },
- "This name belongs to an ASU Bank admin. Send a code to the owner's email to prove it's you.": {
-  "ar": "هذا الاسم يخص أحد مشرفي بنك ASU. أرسل رمزًا إلى بريد صاحبه لإثبات أنه أنت."
+ "This name belongs to an UniHub admin. Send a code to the owner's email to prove it's you.": {
+  "ar": "هذا الاسم يخص أحد مشرفي UniHub. أرسل رمزًا إلى بريد صاحبه لإثبات أنه أنت."
  },
  "This page couldn't load. Check your connection and try again.": {
   "ar": "تعذر تحميل هذه الصفحة. تحقق من اتصالك وحاول مجددًا."
@@ -5894,8 +5894,8 @@
  "This username, email or ID belongs to the admin. We'll email a code to confirm it's you.": {
   "ar": "اسم المستخدم أو البريد أو الرقم يخص المشرف. سنرسل رمزًا بالبريد للتأكد من أنه أنت."
  },
- "This version of ASU Bank (%s) no longer works. Please install %s to keep using the app.": {
-  "ar": "لم يعد هذا الإصدار من بنك ASU (%s) يعمل. يُرجى تثبيت %s لمتابعة استخدام التطبيق."
+ "This version of UniHub (%s) no longer works. Please install %s to keep using the app.": {
+  "ar": "لم يعد هذا الإصدار من UniHub (%s) يعمل. يُرجى تثبيت %s لمتابعة استخدام التطبيق."
  },
  "This week": {
   "ar": "هذا الأسبوع",
@@ -6341,8 +6341,8 @@
   "ar": "المستخدمون",
   "es": "Usuarios"
  },
- "Users' accounts live in the \"ASU Bank Accounts\" sheet in necro1442's Drive.": {
-  "ar": "حسابات المستخدمين محفوظة في جدول \"ASU Bank Accounts\" في Drive الخاص بـ necro1442."
+ "Users' accounts live in the \"UniHub Accounts\" sheet in necro1442's Drive.": {
+  "ar": "حسابات المستخدمين محفوظة في جدول \"UniHub Accounts\" في Drive الخاص بـ necro1442."
  },
  "Uses the ADMIN_SECRET of the submissions script. It's kept in this phone's keychain.": {
   "ar": "يستخدم ADMIN_SECRET الخاص بسكربت المشاركات، ويُحفظ في سلسلة مفاتيح هذا الهاتف."
@@ -6432,9 +6432,9 @@
  "We got your request. Message us on WhatsApp to confirm the payment.": {
   "ar": "وصلنا طلبك. راسلنا على واتساب لتأكيد الدفع."
  },
- "We got your suggestion. The ASU Bank team will look at it soon.": {
-  "ar": "وصلنا اقتراحك. سيطّلع عليه فريق ASU Bank قريباً.",
-  "es": "Recibimos tu sugerencia. El equipo de ASU Bank la revisará pronto."
+ "We got your suggestion. The UniHub team will look at it soon.": {
+  "ar": "وصلنا اقتراحك. سيطّلع عليه فريق UniHub قريباً.",
+  "es": "Recibimos tu sugerencia. El equipo de UniHub la revisará pronto."
  },
  "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules, without warning.": {
   "ar": "لا نتسامح مطلقًا مع الإساءة. يمكن للمشرفين إزالة المحتوى وحظر الحسابات المخالفة دون إنذار."
@@ -6487,16 +6487,16 @@
   "ar": "أهلاً بعودتك",
   "es": "Bienvenido de nuevo"
  },
- "Welcome to ASU Bank": {
-  "ar": "أهلاً بك في ASU Bank",
-  "es": "Bienvenido a ASU Bank"
+ "Welcome to UniHub": {
+  "ar": "أهلاً بك في UniHub",
+  "es": "Bienvenido a UniHub"
  },
  "Well-organized content": {
   "ar": "محتوى منظم",
   "es": "Contenido bien organizado"
  },
- "What ASU Bank collects, why, and how to delete it.": {
-  "ar": "ما الذي يجمعه بنك ASU ولماذا وكيف تحذفه."
+ "What UniHub collects, why, and how to delete it.": {
+  "ar": "ما الذي يجمعه UniHub ولماذا وكيف تحذفه."
  },
  "What are you looking for?": {
   "ar": "عمّ تبحث؟",
@@ -6519,8 +6519,8 @@
  "What if I can't find a specific test bank?": {
   "ar": "ماذا لو لم أجد بنك أسئلة معينًا؟"
  },
- "What is ASU Test Banks?": {
-  "ar": "ما هو بنك اختبارات ASU؟"
+ "What is UniHub?": {
+  "ar": "ما هو UniHub؟"
  },
  "What is and isn’t allowed in the chat, profiles and uploads.": {
   "ar": "ما هو مسموح وممنوع في الدردشة والملفات الشخصية والمرفوعات."
@@ -6577,9 +6577,9 @@
  "When a classmate is at least 50% similar to you, you're matched.": {
   "ar": "عندما يشبهك زميل بنسبة 50% على الأقل، تتم المطابقة."
  },
- "When a new file is uploaded to ASU Bank": {
-  "ar": "عند رفع ملف جديد إلى ASU Bank",
-  "es": "Cuando se sube un archivo nuevo a ASU Bank"
+ "When a new file is uploaded to UniHub": {
+  "ar": "عند رفع ملف جديد إلى UniHub",
+  "es": "Cuando se sube un archivo nuevo a UniHub"
  },
  "When are you free?": {
   "ar": "متى تكون متفرغاً؟",
@@ -6677,10 +6677,10 @@
   "ar": "نعم",
   "es": "Sí"
  },
- "Yes, ASU Test Banks encourages contributions from students and educators. You can upload your own test banks or quizzes by following the submission guidelines on the website.": {
+ "Yes, UniHub encourages contributions from students and educators. You can upload your own test banks or quizzes by following the submission guidelines on the website.": {
   "ar": "نعم، نشجع مساهمات الطلاب والمدرسين. يمكنك رفع بنوك الأسئلة أو الكويزات باتباع إرشادات الرفع في الموقع."
  },
- "Yes, all resources on ASU Test Banks are completely free to use.": {
+ "Yes, all resources on UniHub are completely free to use.": {
   "ar": "نعم، جميع المصادر في البنك مجانية تمامًا."
  },
  "Yes, the website is designed to be fully responsive and mobile-friendly, ensuring a seamless experience on all devices.": {
@@ -6743,9 +6743,9 @@
  "You haven't blocked anyone.": {
   "ar": "لم تحظر أحدًا."
  },
- "You joined ASU Bank in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.": {
-  "ar": "انضممت إلى ASU Bank في أيامه الأولى، لذا أصبحت شارة «داعم مبكر» على ملفك الشخصي. شكراً لمساعدتك طلاب الجامعة.",
-  "es": "Te uniste a ASU Bank en sus primeros días, así que tu perfil ya tiene la insignia de Early supporter. Gracias por ayudar a los estudiantes de ASU."
+ "You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.": {
+  "ar": "انضممت إلى UniHub في أيامه الأولى، لذا أصبحت شارة «داعم مبكر» على ملفك الشخصي. شكراً لمساعدتك طلاب الجامعة.",
+  "es": "Te uniste a UniHub en sus primeros días, así que tu perfil ya tiene la insignia de Early supporter. Gracias por ayudar a los estudiantes de ASU."
  },
  "You pay the second half only if your ad is accepted.": {
   "ar": "تدفع النصف الثاني فقط إذا قُبل إعلانك.",
@@ -6861,9 +6861,9 @@
   "ar": "تقييمك",
   "es": "Tu valoración"
  },
- "Your rating helps us make ASU Bank better for everyone.": {
-  "ar": "تقييمك يساعدنا على تحسين ASU Bank للجميع.",
-  "es": "Tu valoración nos ayuda a mejorar ASU Bank para todos."
+ "Your rating helps us make UniHub better for everyone.": {
+  "ar": "تقييمك يساعدنا على تحسين UniHub للجميع.",
+  "es": "Tu valoración nos ayuda a mejorar UniHub para todos."
  },
  "Your rating is 100% anonymous. No admin or system can see who submitted it — privacy is guaranteed.": {
   "ar": "تقييمك مجهول 100%. لا يستطيع أي مشرف أو نظام معرفة من أرسله، والخصوصية مضمونة."
@@ -6910,9 +6910,9 @@
  "for details.": {
   "ar": "لمزيد من التفاصيل."
  },
- "iPhones don't let apps use your own ringtones, so these sounds come with ASU Bank.": {
-  "ar": "لا يسمح iPhone للتطبيقات باستخدام نغماتك الخاصة، لذلك تأتي هذه الأصوات مع ASU Bank.",
-  "es": "El iPhone no deja a las apps usar tus tonos, así que estos sonidos vienen con ASU Bank."
+ "iPhones don't let apps use your own ringtones, so these sounds come with UniHub.": {
+  "ar": "لا يسمح iPhone للتطبيقات باستخدام نغماتك الخاصة، لذلك تأتي هذه الأصوات مع UniHub.",
+  "es": "El iPhone no deja a las apps usar tus tonos, así que estos sonidos vienen con UniHub."
  },
  "just now": {
   "ar": "الآن",
@@ -6936,9 +6936,9 @@
  "سُلّم التقديرات | ASU E-Library Hub": {
   "ar": "سُلّم التقديرات"
  },
- "“%s” moves to the Drive trash and disappears from ASU Bank.": {
-  "ar": "سينتقل «%s» إلى سلة Drive ويختفي من بنك ASU.",
-  "es": "“%s” pasa a la papelera de Drive y desaparece de ASU Bank."
+ "“%s” moves to the Drive trash and disappears from UniHub.": {
+  "ar": "سينتقل «%s» إلى سلة Drive ويختفي من UniHub.",
+  "es": "“%s” pasa a la papelera de Drive y desaparece de UniHub."
  },
  "• Hide your university number and name on scans.": {
   "ar": "• أخفِ رقمك الجامعي واسمك في الصور الممسوحة.",
@@ -6994,9 +6994,9 @@
  "📄 8. Content Ownership & Liability": {
   "ar": "📄 8. ملكية المحتوى والمسؤولية"
  },
- "📄 New upload on ASU Bank": {
-  "ar": "📄 ملف جديد على ASU Bank",
-  "es": "📄 Nueva subida en ASU Bank"
+ "📄 New upload on UniHub": {
+  "ar": "📄 ملف جديد على UniHub",
+  "es": "📄 Nueva subida en UniHub"
  },
  "📋 Campus Display Board": {
   "ar": "📋 لوحة عرض الحرم الجامعي"
@@ -7038,13 +7038,13 @@
   "ar": "مشروع طلابي مجاني",
   "es": "Un proyecto gratuito de estudiantes"
  },
- "ASU Bank is free for students and run by a student. Ads on the website, sponsors and donations support it.": {
-  "ar": "ASU Bank مجاني للطلاب ويديره طالب. تدعمه الإعلانات على الموقع والرعاة والتبرعات.",
-  "es": "ASU Bank es gratis para los estudiantes y lo lleva un estudiante. Lo apoyan los anuncios del sitio web, los patrocinadores y las donaciones."
+ "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it.": {
+  "ar": "UniHub مجاني للطلاب ويديره طالب. تدعمه الإعلانات على الموقع والرعاة والتبرعات.",
+  "es": "UniHub es gratis para los estudiantes y lo lleva un estudiante. Lo apoyan los anuncios del sitio web, los patrocinadores y las donaciones."
  },
- "ASU Bank is free and student-run. Donations help keep it running.": {
-  "ar": "ASU Bank مشروع طلابي مجاني. التبرعات تساعد في استمراره.",
-  "es": "ASU Bank es gratis y lo llevan estudiantes. Las donaciones ayudan a mantenerlo."
+ "UniHub is free and student-run. Donations help keep it running.": {
+  "ar": "UniHub مشروع طلابي مجاني. التبرعات تساعد في استمراره.",
+  "es": "UniHub es gratis y lo llevan estudiantes. Las donaciones ayudan a mantenerlo."
  },
  "What's New": {
   "ar": "ما الجديد",
@@ -7070,9 +7070,9 @@
   "ar": "قد تعرض الصفحة الرئيسية بطاقة راعٍ، مع توضيح أنها إعلان دائماً",
   "es": "Inicio puede mostrar una tarjeta de patrocinador, siempre bien señalada"
  },
- "The About text now says how ASU Bank is supported: ads on the website, sponsors and donations": {
-  "ar": "صفحة «حول» توضّح الآن كيف يُدعم ASU Bank: الإعلانات على الموقع والرعاة والتبرعات",
-  "es": "El texto de Acerca de ahora explica cómo se apoya ASU Bank: anuncios en el sitio web, patrocinadores y donaciones"
+ "The About text now says how UniHub is supported: ads on the website, sponsors and donations": {
+  "ar": "صفحة «حول» توضّح الآن كيف يُدعم UniHub: الإعلانات على الموقع والرعاة والتبرعات",
+  "es": "El texto de Acerca de ahora explica cómo se apoya UniHub: anuncios en el sitio web, patrocinadores y donaciones"
  },
  "Changing the app icon now works when the app is installed with TrollStore": {
   "ar": "تغيير أيقونة التطبيق يعمل الآن عند تثبيت التطبيق عبر TrollStore",
@@ -7242,9 +7242,9 @@
   "ar": "قصتك",
   "es": "Tu historia"
  },
- "Your story is seen by ASU Bank students for 24 hours, then it disappears. It's deleted from our database after 2 days.": {
-  "ar": "يرى طلاب ASU Bank قصتك لمدة 24 ساعة ثم تختفي، وتُحذف من قاعدة بياناتنا بعد يومين.",
-  "es": "Los estudiantes de ASU Bank ven tu historia durante 24 horas y luego desaparece. Se borra de nuestra base de datos a los 2 días."
+ "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days.": {
+  "ar": "يرى طلاب UniHub قصتك لمدة 24 ساعة ثم تختفي، وتُحذف من قاعدة بياناتنا بعد يومين.",
+  "es": "Los estudiantes de UniHub ven tu historia durante 24 horas y luego desaparece. Se borra de nuestra base de datos a los 2 días."
  },
  "No posts from friends yet": {
   "ar": "لا توجد منشورات من الأصدقاء بعد",
@@ -7430,9 +7430,9 @@
   "ar": "صور غلاف أوضح ونجمة أنظف على صور المشرفين",
   "es": "Fotos de portada más nítidas y una estrella más limpia en las fotos de los administradores"
  },
- "ASU Bank can't use the camera.": {
-  "ar": "لا يستطيع ASU Bank استخدام الكاميرا.",
-  "es": "ASU Bank no puede usar la cámara."
+ "UniHub can't use the camera.": {
+  "ar": "لا يستطيع UniHub استخدام الكاميرا.",
+  "es": "UniHub no puede usar la cámara."
  },
  "ASU students": {
   "ar": "طلاب ASU",

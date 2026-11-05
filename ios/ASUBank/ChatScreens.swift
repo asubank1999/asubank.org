@@ -323,14 +323,15 @@ final class RoomModel: ObservableObject {
 
     func fetch() async {
         var fields: [String: Any] = ["room": room.id]
-        if let last = messages.last?.id { fields["after"] = last }
+        if let last = messages.last(where: { $0.pending != true })?.id { fields["after"] = last }
         do {
             let r = try await AccountStore.shared.call("chat", fields)
             let new = decode([ChatMessage].self, r["messages"]) ?? []
             let gone = Set((r["deleted"] as? [String]) ?? [])
             let edits = (r["edited"] as? [[String: Any]]) ?? []
             let blocked = Set(AccountStore.shared.user?.blocked ?? [])
-            var list = messages.filter { !gone.contains($0.id) && !blocked.contains($0.userId) }
+            let kept = messages.filter { !gone.contains($0.id) && !blocked.contains($0.userId) && !Disappear.expired($0.expires) }
+            var list = kept.filter { $0.pending != true }
             for e in edits {
                 if let id = e["id"] as? String, let i = list.firstIndex(where: { $0.id == id }) {
                     list[i].text = e["text"] as? String ?? list[i].text
@@ -338,7 +339,8 @@ final class RoomModel: ObservableObject {
                 }
             }
             let have = Set(list.map(\.id))
-            list += new.filter { !have.contains($0.id) && !blocked.contains($0.userId) }
+            list += new.filter { !have.contains($0.id) && !blocked.contains($0.userId) && !Disappear.expired($0.expires) }
+            list += kept.filter { $0.pending == true }
             if list != messages { withAnimation(.easeOut(duration: 0.2)) { messages = list } }
             if let p = decode([String: ChatPerson].self, r["people"]) { people.merge(p) { _, n in n } }
             if let rm = decode(ChatRoom.self, r["room"]), rm != room { room = rm }
@@ -350,14 +352,34 @@ final class RoomModel: ObservableObject {
         loading = false
     }
 
-    func send(_ text: String, replyTo: String?) async -> Bool {
+    /// The message shows at once and is replaced by the real one when the server has it
+    func send(_ text: String, replyTo: String?, outgoing: ChatOutgoing? = nil, expiresIn: Int = 0) async -> Bool {
+        let store = AccountStore.shared
+        let temp = ChatMessage(id: "local-" + UUID().uuidString, room: room.id, userId: store.user?.id ?? "", username: store.user?.username ?? "",
+                               displayName: store.user?.displayName ?? "", role: store.isAdmin ? "admin" : "user", text: text,
+                               created: ISO8601DateFormatter.ab.string(from: Date()), replyTo: replyTo, color: store.user?.color ?? "#8C1D40",
+                               fileName: outgoing?.fileName, fileType: outgoing?.type, hasFile: outgoing != nil, duration: outgoing?.duration,
+                               pending: true, localFile: outgoing?.localFile)
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) { messages.append(temp) }
+        var fields: [String: Any] = ["room": room.id, "text": text, "replyTo": replyTo ?? "", "expiresIn": expiresIn]
         do {
-            let r = try await AccountStore.shared.call("send", ["room": room.id, "text": text, "replyTo": replyTo ?? ""])
-            if let m = decode(ChatMessage.self, r["message"]), !messages.contains(where: { $0.id == m.id }) {
-                withAnimation { messages.append(m) }
+            if let outgoing {
+                guard let data = await outgoing.load() else { throw AccountsAPI.Failure(message: L("Couldn't send this file.")) }
+                fields["file"] = data
+                fields["fileName"] = outgoing.fileName
+                fields["duration"] = outgoing.duration
             }
+            let r = try await store.call("send", fields)
+            messages.removeAll { $0.id == temp.id }
+            if var m = decode(ChatMessage.self, r["message"]), !messages.contains(where: { $0.id == m.id }) {
+                m.localFile = outgoing?.localFile
+                let at = messages.firstIndex { $0.pending == true } ?? messages.endIndex
+                messages.insert(m, at: at)
+            }
+            error = nil
             return true
         } catch {
+            withAnimation { messages.removeAll { $0.id == temp.id } }
             self.error = error.localizedDescription
             return false
         }
@@ -374,11 +396,15 @@ final class RoomModel: ObservableObject {
         } catch { self.error = error.localizedDescription; return false }
     }
 
+    /// Gone at once here; everyone else's phone removes it on its next check
     func delete(_ m: ChatMessage) async {
-        do {
-            _ = try await AccountStore.shared.call("deleteMessage", ["id": m.id])
-            withAnimation { messages.removeAll { $0.id == m.id } }
-        } catch { self.error = error.localizedDescription }
+        let before = messages
+        withAnimation { messages.removeAll { $0.id == m.id } }
+        do { _ = try await AccountStore.shared.call("deleteMessage", ["id": m.id]) }
+        catch {
+            messages = before
+            self.error = error.localizedDescription
+        }
     }
 
     func pin(_ m: ChatMessage?) async {
@@ -401,7 +427,8 @@ struct ChatRoomView: View {
     @State private var text = ""
     @State private var replyTo: ChatMessage?
     @State private var editing: ChatMessage?
-    @State private var sending = false
+    @State private var preview: PreviewFile?
+    @State private var disappear = 0
     @State private var banTarget: ChatMessage?
     @State private var reporting: ReportTarget?
     @State private var blocking: BlockTarget?
@@ -420,7 +447,7 @@ struct ChatRoomView: View {
             ScrollView {
                 LazyVStack(spacing: 2) {
                     if model.loading && model.messages.isEmpty {
-                        ProgressView().padding(40)
+                        SkeletonBubbles()
                     } else if model.messages.isEmpty {
                         VStack(spacing: 8) {
                             Text(model.room.emoji).font(.system(size: 44))
@@ -488,6 +515,7 @@ struct ChatRoomView: View {
             }
         }
         .sheet(isPresented: $roomSettings) { RoomEditor(room: model.room) }
+        .sheet(item: $preview) { FilePreview(url: $0.url).ignoresSafeArea() }
         .push(isPresented: Binding(get: { profile != nil }, set: { if !$0 { profile = nil } })) {
             if let m = profile { ProfileScreen(userId: m.userId, fallbackName: m.displayName, fallbackColor: m.color) }
         }
@@ -496,7 +524,7 @@ struct ChatRoomView: View {
         .onChange(of: account.rooms) { rs in if let r = rs.first(where: { $0.id == model.room.id }) { model.room = r } }
         .modifier(ModerationDialogs(report: $reporting, block: $blocking, blocked: { model.hideMessages(from: $0) }))
         .confirmationDialog("Ban @\(banTarget?.username ?? "")?", isPresented: Binding(get: { banTarget != nil }, set: { if !$0 { banTarget = nil } }), titleVisibility: .visible) {
-            Button("Ban from ASU Bank", role: .destructive) { if let m = banTarget { Task { await model.ban(m) } } }
+            Button("Ban from UniHub", role: .destructive) { if let m = banTarget { Task { await model.ban(m) } } }
         } message: { Text("They're signed out and can't sign in again until an admin unbans them.") }
     }
 
@@ -531,14 +559,23 @@ struct ChatRoomView: View {
                     if let reply {
                         VStack(alignment: .leading, spacing: 1) {
                             Text(reply.displayName).font(.caption2.weight(.bold))
-                            Text(reply.text).font(.caption).lineLimit(2)
+                            Text(reply.preview).font(.caption).lineLimit(2)
                         }
                         .padding(6)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background((mine ? Color.white : Color.abAccent).opacity(0.15), in: RoundedRectangle(cornerRadius: 8))
                     }
-                    Text(m.text).font(.body).foregroundStyle(mine ? .white : .primary).textSelection(.enabled)
+                    if m.hasFile == true, let type = m.fileType {
+                        ChatAttachment(id: m.id, type: type, duration: m.duration ?? 0, mine: mine, localFile: m.localFile,
+                                       fetch: { try await MediaFiles.local(scope: "room", id: m.id, name: m.fileName ?? "file") },
+                                       open: { preview = PreviewFile(url: $0) })
+                    }
+                    if !m.text.isEmpty {
+                        Text(m.text).font(.body).foregroundStyle(mine ? .white : .primary).textSelection(.enabled)
+                    }
                     HStack(spacing: 4) {
+                        ExpiryTag(expires: m.expires, tint: mine ? .white.opacity(0.8) : .secondary)
+                        if m.pending == true { Image(systemName: "clock") }
                         if model.pinned?.id == m.id { Image(systemName: "pin.fill") }
                         if m.edited?.isEmpty == false { Text("edited") }
                         Text(m.date, style: .time)
@@ -547,10 +584,11 @@ struct ChatRoomView: View {
                 }
                 .padding(.horizontal, 12).padding(.vertical, 8)
                 .chatBubble(mine: mine, joinedAbove: grouped, joinedBelow: joinedBelow)
+                .opacity(m.pending == true ? 0.72 : 1)
                 .contextMenu {
                     if canPost { Button { editing = nil; replyTo = m; focused = true } label: { Label("Reply", systemImage: "arrowshape.turn.up.left") } }
-                    Button { UIPasteboard.general.string = m.text } label: { Label("Copy", systemImage: "doc.on.doc") }
-                    if mine {
+                    if !m.text.isEmpty { Button { UIPasteboard.general.string = m.text } label: { Label("Copy", systemImage: "doc.on.doc") } }
+                    if mine && !m.text.isEmpty {
                         Button { replyTo = nil; editing = m; text = m.text; focused = true } label: { Label("Edit", systemImage: "pencil") }
                     }
                     if !mine { Button { profile = m } label: { Label("View profile", systemImage: "person.crop.circle") } }
@@ -563,8 +601,8 @@ struct ChatRoomView: View {
                             Label(model.pinned?.id == m.id ? "Unpin" : "Pin", systemImage: model.pinned?.id == m.id ? "pin.slash" : "pin")
                         }
                     }
-                    if mine || account.isAdmin {
-                        Button(role: .destructive) { Task { await model.delete(m) } } label: { Label("Delete", systemImage: "trash") }
+                    if (mine || account.isAdmin) && m.pending != true {
+                        Button(role: .destructive) { Task { await model.delete(m) } } label: { Label("Delete for everyone", systemImage: "trash") }
                     }
                     if account.isAdmin && !mine && m.role != "admin" {
                         Button(role: .destructive) { banTarget = m } label: { Label("Ban @\(m.username)", systemImage: "hand.raised.fill") }
@@ -594,10 +632,11 @@ struct ChatRoomView: View {
                     }
                     .padding(.horizontal, 14).padding(.top, 8)
                 }
-                ChatComposerBar(text: $text, focused: $focused, busy: sending, placeholder: "Message",
-                                sendSymbol: editing != nil ? "checkmark" : "arrow.up", send: send)
+                ChatInputBar(text: $text, focused: $focused, sendSymbol: editing != nil ? "checkmark" : "arrow.up", editing: editing != nil, disappear: $disappear, send: send,
+                             sendMedia: { o in let e = disappear; let r = replyTo?.id; replyTo = nil; Task { _ = await model.send("", replyTo: r, outgoing: o, expiresIn: e) } },
+                             fail: { model.error = $0 })
             } else {
-                Label(model.room.archived == true ? L("This room is archived.") : model.room.locked == true ? L("This room is locked. Only admins can post.") : L("Only the ASU Bank team posts here."),
+                Label(model.room.archived == true ? L("This room is archived.") : model.room.locked == true ? L("This room is locked. Only admins can post.") : L("Only the UniHub team posts here."),
                       systemImage: model.room.locked == true || model.room.archived == true ? "lock.fill" : "megaphone")
                     .font(.footnote).foregroundStyle(.secondary).padding(12)
             }
@@ -607,16 +646,15 @@ struct ChatRoomView: View {
 
     private func send() {
         let t = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !t.isEmpty, !sending else { return }
-        sending = true
+        guard !t.isEmpty else { return }
         let r = replyTo?.id
         let e = editing
+        let gone = disappear
         text = ""; replyTo = nil; editing = nil
+        Haptics.tap()
         Task {
-            let ok = e != nil ? await model.edit(e!, to: t) : await model.send(t, replyTo: r)
-            if !ok { text = t; editing = e }
-            sending = false
-            Haptics.tap()
+            let ok = e != nil ? await model.edit(e!, to: t) : await model.send(t, replyTo: r, expiresIn: gone)
+            if !ok, text.isEmpty { text = t; editing = e }
         }
     }
 }

@@ -1,5 +1,5 @@
 /* =====================================================================
-   ASU Bank app shell
+   UniHub app shell
    - tab bar on every page, "More" sheet, theme (keeps the old 'darkMode' key)
    - saved (bookmarks) + recent items in localStorage
    - material rows with preview sheet, share and save
@@ -217,7 +217,7 @@
     AB.absUrl = function (u) { try { return new URL(u, location.origin).href; } catch (e) { return u; } };
     AB.share = function (it) {
         var url = AB.absUrl(it.u), title = it.t || doc.title;
-        if (navigator.share) { navigator.share({ title: title, text: title + ' — ASU Bank', url: url }).catch(function () {}); return; }
+        if (navigator.share) { navigator.share({ title: title, text: title + ' — UniHub', url: url }).catch(function () {}); return; }
         var done = function () { AB.toast('Link copied'); };
         if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () { prompt('Copy this link', url); });
         else prompt('Copy this link', url);
@@ -486,9 +486,9 @@
     AB.install = function () {
         if (installEvt) { installEvt.prompt(); installEvt.userChoice.finally(function () { installEvt = null; }); return; }
         var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-        AB.sheet({ title: 'Install ASU Bank', body: '<div class="ab-prose" style="margin-top:4px">' + (ios
-            ? '<p>1. Tap the <strong>Share</strong> button in Safari.</p><p>2. Choose <strong>Add to Home Screen</strong>.</p><p>3. Open ASU Bank from your home screen — it runs full screen like an app and works offline for pages you opened.</p>'
-            : '<p>Open your browser menu (⋮) and choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p><p>ASU Bank then opens like an app and keeps working offline for pages you opened.</p>') + '</div>' });
+        AB.sheet({ title: 'Install UniHub', body: '<div class="ab-prose" style="margin-top:4px">' + (ios
+            ? '<p>1. Tap the <strong>Share</strong> button in Safari.</p><p>2. Choose <strong>Add to Home Screen</strong>.</p><p>3. Open UniHub from your home screen — it runs full screen like an app and works offline for pages you opened.</p>'
+            : '<p>Open your browser menu (⋮) and choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p><p>UniHub then opens like an app and keeps working offline for pages you opened.</p>') + '</div>' });
     };
     function openMore() {
         var p = AB.themePref();
@@ -537,7 +537,7 @@
             var c = doc.createElement('a'); c.className = 'ab-acc-chip';
             c.href = u ? '/chat/' : '/account/';
             c.textContent = u ? ((u.displayName || u.username || '?').charAt(0).toUpperCase()) : 'Sign in';
-            c.setAttribute('aria-label', u ? 'Student chat (signed in as @' + u.username + ')' : 'Sign in to ASU Bank');
+            c.setAttribute('aria-label', u ? 'Student chat (signed in as @' + u.username + ')' : 'Sign in to UniHub');
             c.setAttribute('style', u ? 'display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#fff;font-weight:700;text-decoration:none;background:' + (/^#[0-9a-fA-F]{3,8}$/.test(u.color || '') ? u.color : '#8C1D40')
                 : 'font-weight:600;font-size:15px;text-decoration:none;color:var(--ab-accent);white-space:nowrap');
             r.insertBefore(c, r.firstChild);

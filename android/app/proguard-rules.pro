@@ -1,5 +1,5 @@
 # Data classes are read from JSON with kotlinx.serialization
--keep class org.asubank.app.** { *; }
+-keep class org.unihub.app.** { *; }
 -keepattributes *Annotation*, InnerClasses
 -dontwarn okhttp3.internal.platform.**
 -dontwarn org.conscrypt.**
