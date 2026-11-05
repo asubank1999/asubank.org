@@ -83,7 +83,7 @@
         if (!bar) {
             bar = document.createElement('div');
             bar.id = 'acc-notify-bar';
-            bar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;margin:8px 0;border-radius:12px;font-size:14px;background:var(--ab-accent-soft,#f7dce5)';
+            bar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;margin:8px auto;border-radius:12px;font-size:14px;background:var(--ab-accent-soft,#f7dce5)';
             root.parentNode.insertBefore(bar, root);
         }
         // only asks for attention when notifications are off; while they're on it's one quiet line, and not inside a chat

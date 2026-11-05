@@ -224,3 +224,11 @@ html.dark .acc-send { color: #000; }
 .acc-dm-file b { overflow-wrap: anywhere; }
 .acc-dm-file small { opacity: .75; }
 a.acc-user-row { display: flex; }
+
+/* inside a chat: full height, no tab bar over the message box, same as the apps */
+body:has(#acc-app .acc-feed) .ab-tabbar { display: none; }
+body:has(#acc-app .acc-feed) { padding-bottom: 0 !important; }
+#acc-app .acc-feed { height: calc(100vh - 196px); height: calc(100dvh - 196px); }
+.acc-from { color: var(--from,#8c1d40); }
+html.dark .acc-from { color: color-mix(in srgb, var(--from,#8c1d40) 50%, #fff); }
+.acc-msg.mine .acc-time { opacity: .85; }

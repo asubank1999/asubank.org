@@ -559,7 +559,7 @@
             return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (grouped ? ' grouped' : '') + (below ? ' below' : ''), 'data-id': m.id },
                 av,
                 h('div', { class: 'acc-bubble', onclick: toggleActions },
-                    (!mine && !grouped) ? h('button', { type: 'button', class: 'acc-from', style: 'color:' + safeColor(m.color), onclick: who },
+                    (!mine && !grouped) ? h('button', { type: 'button', class: 'acc-from', style: '--from:' + safeColor(m.color), onclick: who },
                         nameOf(m), admin ? h('span', { class: 'acc-badge', text: 'ADMIN' }) : null, badgeRow(p.badges, true)) : null,
                     reply ? h('div', { class: 'acc-quote' }, h('b', { text: nameOf(reply) }), reply.text.slice(0, 120)) : null,
                     h('div', { class: 'acc-text', text: m.text }),
