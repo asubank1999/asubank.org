@@ -566,7 +566,7 @@ function dmAllowed(s, t) {
 }
 
 function dmPublic(m) {
-  return { id: m.id, from: m.from, to: m.to, text: String(m.text || ''), created: m.created, fileName: String(m.fileName || ''),
+  return { id: m.id, from: m.from, to: m.to, text: String(m.text || ''), created: new Date(m.created).toISOString(), fileName: String(m.fileName || ''),
            fileType: String(m.fileType || ''), fileSize: Number(m.fileSize) || 0, hasFile: !!m.fileId };
 }
 
