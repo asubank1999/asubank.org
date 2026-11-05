@@ -477,7 +477,7 @@
                     return h('button', { type: 'button', role: 'tab', 'aria-selected': String(mode === i), class: mode === i ? 'on' : '', text: l, onclick: function () { mode = i; draw(); } });
                 })));
             wrap.appendChild(form);
-            if (mode === 0) wrap.appendChild(h('p', { class: 'acc-muted acc-small', text: 'Forgot your password? Ask an admin in the chat or on WhatsApp to reset it.' }));
+            if (mode === 0) wrap.appendChild(h('p', { class: 'acc-muted acc-small', text: 'Forgot your password? Ask an admin in the chat or email necro144@yahoo.com to reset it.' }));
         }
         draw();
         return wrap;
