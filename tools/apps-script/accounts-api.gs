@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 7;
+var SCHEMA = 8;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -75,9 +75,10 @@ var SHEETS = {
   GroupRequests: ['id', 'created', 'userId', 'username', 'title', 'category', 'url', 'notes', 'status', 'resolvedBy', 'resolvedAt'],
   Friends: ['id', 'from', 'to', 'status', 'created', 'updated'],
   Pokes: ['id', 'from', 'to', 'kind', 'place', 'created', 'read'],
-  Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes', 'image'],
+  Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes', 'image', 'audience'],
   Comments: ['id', 'postId', 'userId', 'text', 'created', 'deleted'],
-  Stories: ['id', 'userId', 'image', 'text', 'bg', 'created', 'views'],
+  Stories: ['id', 'userId', 'image', 'text', 'bg', 'created', 'views', 'audience', 'video'],
+  DMs: ['id', 'pair', 'from', 'to', 'text', 'created', 'deleted', 'fileId', 'fileName', 'fileType', 'fileSize', 'read'],
   Suggestions: ['id', 'created', 'userId', 'username', 'note', 'contact', 'status', 'resolvedBy', 'resolvedAt'],
   DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed']
 };
@@ -549,19 +550,89 @@ function friendTarget(s, id) {
   return t;
 }
 
+// MARK: - private messages
+
+function dmPair(a, b) { return a < b ? a + ':' + b : b + ':' + a; }
+
+/** Friends can write to each other, admins to anyone. Someone an admin wrote to can answer. Blocks count, except for admins. */
+function dmAllowed(s, t) {
+  if (!t || t.id === s.id || truthy(t.banned)) return false;
+  if (s.role === 'admin') return true;
+  if (blockedIds(userById(s.id)).indexOf(t.id) >= 0 || blockedIds(t).indexOf(s.id) >= 0) return false;
+  if (friendIds(s.id)[t.id]) return true;
+  if (t.role !== 'admin') return false;
+  var pair = dmPair(s.id, t.id);
+  return rows('DMs').some(function (m) { return m.pair === pair && m.from === t.id; });
+}
+
+function dmPublic(m) {
+  return { id: m.id, from: m.from, to: m.to, text: String(m.text || ''), created: m.created, fileName: String(m.fileName || ''),
+           fileType: String(m.fileType || ''), fileSize: Number(m.fileSize) || 0, hasFile: !!m.fileId };
+}
+
+function dmCached(pair) {
+  var c = CacheService.getScriptCache(), hit = c.get('dm:' + pair);
+  if (hit) return JSON.parse(hit);
+  var list = rows('DMs').filter(function (m) { return m.pair === pair && !truthy(m.deleted); }).slice(-80).map(dmPublic);
+  dmStore(pair, list);
+  return list;
+}
+
+function dmStore(pair, list) {
+  var j = JSON.stringify(list);
+  while (j.length > 95000 && list.length > 10) { list = list.slice(10); j = JSON.stringify(list); }
+  CacheService.getScriptCache().put('dm:' + pair, j, 21600);
+}
+
+/** Checks what kind of file this really is. Private chats take PDF, photos and Word (DOCX) files only. */
+function dmFileKind(bytes, name) {
+  var ext = String(name).toLowerCase().split('.').pop();
+  var b0 = bytes[0] & 255, b1 = bytes[1] & 255, b2 = bytes[2] & 255, b3 = bytes[3] & 255;
+  if (ext === 'pdf' && b0 === 0x25 && b1 === 0x50 && b2 === 0x44 && b3 === 0x46) return { type: 'pdf', mime: 'application/pdf' };
+  if ((ext === 'jpg' || ext === 'jpeg') && b0 === 0xFF && b1 === 0xD8) return { type: 'photo', mime: 'image/jpeg' };
+  if (ext === 'png' && b0 === 0x89 && b1 === 0x50) return { type: 'photo', mime: 'image/png' };
+  if (ext === 'docx' && b0 === 0x50 && b1 === 0x4B) return { type: 'docx', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+  fail('Only PDF, photos and DOCX files can be sent.');
+}
+
+/** The people someone is friends with, as a map of ids */
+function friendIds(id) {
+  var ids = {};
+  rows('Friends').forEach(function (f) {
+    if (f.status !== 'accepted') return;
+    if (f.from === id) ids[f.to] = 1;
+    if (f.to === id) ids[f.from] = 1;
+  });
+  return ids;
+}
+
+/** public: anyone, also without an account. students: signed in. friends: only friends. Older posts have none, and stay with students. */
+function audienceOf(b) {
+  var a = String(b.audience || '');
+  return a === 'public' || a === 'friends' ? a : 'students';
+}
+
+/** What people without an account may see about someone */
+function guestUser(u) {
+  return { id: u.id, username: String(u.username), displayName: String(u.displayName || u.username), role: u.role || 'user',
+           color: u.color || '#8C1D40', avatar: u.avatar || '', badges: badgeList(u) };
+}
+
 function publicPosts(s, wanted, limit, offset) {
   var counts = {};
+  var pals = friendIds(s.id);
   rows('Comments').forEach(function (c) { if (!truthy(c.deleted)) counts[c.postId] = (counts[c.postId] || 0) + 1; });
   var me = userById(s.id);
   var map = usersById();
   var mine = blockedIds(me);
   return rows('Posts').filter(function (p) {
     if (truthy(p.deleted) || !wanted(p)) return false;
+    if (p.audience === 'friends' && p.userId !== s.id && !pals[p.userId] && s.role !== 'admin') return false;
     var u = map[p.userId];
     return u && !truthy(u.banned) && mine.indexOf(p.userId) < 0 && blockedIds(u).indexOf(s.id) < 0;
   }).reverse().slice(offset || 0, (offset || 0) + limit).map(function (p) {
     var likes = String(p.likes || '').split(',').filter(String);
-    return { id: p.id, text: String(p.text), image: String(p.image || ''), comments: counts[p.id] || 0, created: p.created, likes: likes.length, liked: likes.indexOf(s.id) >= 0, user: publicUser(map[p.userId], false) };
+    return { id: p.id, text: String(p.text), image: String(p.image || ''), audience: audienceOf(p), comments: counts[p.id] || 0, created: p.created, likes: likes.length, liked: likes.indexOf(s.id) >= 0, user: publicUser(map[p.userId], false) };
   });
 }
 
@@ -572,6 +643,17 @@ function savePhoto(folder, data, name, maxLength, width) {
   var f = folder.createFile(Utilities.newBlob(Utilities.base64Decode(d), 'image/jpeg', name + '.jpg'));
   f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   return 'https://drive.google.com/thumbnail?sz=w' + width + '&id=' + f.getId();
+}
+
+/** Saves a story video the apps sent as base64 and shares it by link */
+function saveVideo(folder, data, name) {
+  var d = String(data || '').replace(/^data:[^,]+,/, '');
+  if (d.length < 100 || d.length > 17000000) fail('That video is too big. Keep it short.');
+  var bytes = Utilities.base64Decode(d);
+  if (String.fromCharCode(bytes[4] & 255, bytes[5] & 255, bytes[6] & 255, bytes[7] & 255) !== 'ftyp') fail('That video type is not supported.');
+  var f = folder.createFile(Utilities.newBlob(bytes, 'video/mp4', name + '.mp4'));
+  f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return 'https://drive.google.com/uc?export=download&id=' + f.getId();
 }
 
 function namedFolder(key, name) {
@@ -595,6 +677,7 @@ function purgeStories(force) {
   withLock(function () {
     rows('Stories').filter(function (r) { return now - new Date(r.created).getTime() > STORY_KEPT_MS; }).reverse().forEach(function (r) {
       removeAvatarFile(r.image);
+      removeAvatarFile(r.video);
       sheet('Stories').deleteRow(r._row);
       n++;
     });
@@ -608,9 +691,12 @@ function purgeSocial(id) {
    ['Pokes', function (r) { return r.from === id || r.to === id; }],
    ['Comments', function (r) { return r.userId === id; }],
    ['Stories', function (r) { return r.userId === id; }],
+   ['DMs', function (r) { return r.from === id || r.to === id; }],
    ['Posts', function (r) { return r.userId === id; }]].forEach(function (x) {
     rows(x[0]).filter(x[1]).reverse().forEach(function (r) {
       if (r.image) removeAvatarFile(r.image);
+      if (r.video) removeAvatarFile(r.video);
+      if (r.fileId) { try { DriveApp.getFileById(r.fileId).setTrashed(true); } catch (e) {} }
       sheet(x[0]).deleteRow(r._row);
     });
   });
@@ -801,6 +887,7 @@ var ACTIONS = {
       o.posts = publicPosts(s, function (p) { return p.userId === u.id; }, 20);
       o.postCount = rows('Posts').filter(function (p) { return p.userId === u.id && !truthy(p.deleted); }).length;
       o.messageCount = rows('Messages').filter(function (m) { return m.userId === u.id && !truthy(m.deleted); }).length;
+      o.canMessage = dmAllowed(s, u);
     }
     return o;
   },
@@ -946,7 +1033,7 @@ var ACTIONS = {
   report: function (b) {
     var me = b.token ? auth(b) : null;
     var kind = String(b.kind || '');
-    if (['message', 'user', 'file', 'post', 'comment', 'story', 'other'].indexOf(kind) < 0) fail('Bad report.');
+    if (['message', 'user', 'file', 'post', 'comment', 'story', 'dm', 'other'].indexOf(kind) < 0) fail('Bad report.');
     var reason = String(b.reason || '');
     if (REPORT_REASONS.indexOf(reason) < 0) fail('Choose what is wrong first.');
     if (tooMany(me ? 'report:' + me.id : 'report:guest', me ? 15 : 40)) fail('Too many reports. Try again later.');
@@ -964,6 +1051,12 @@ var ACTIONS = {
       if (!t) fail('User not found.');
       targetName = t.displayName || t.username;
       targetUser = t.username;
+    } else if (kind === 'dm') {
+      var dm = rows('DMs').filter(function (x) { return x.id === targetId; })[0];
+      if (!dm || !me || dm.to !== me.id) fail('Message not found.');
+      var du = userById(dm.from);
+      targetName = String(dm.text || dm.fileName).slice(0, 300);
+      targetUser = du ? du.username : '';
     } else if (kind === 'post') {
       var po = rows('Posts').filter(function (x) { return x.id === targetId; })[0];
       if (!po) fail('Post not found.');
@@ -1112,6 +1205,7 @@ var ACTIONS = {
         // private events, only for apps that understand them
         if (!truthy(b.social) || (since && e.created <= since)) return false;
         if (e.type === 'post_comment' && !truthy(b.social2)) return false;
+        if (e.type === 'dm' && !truthy(b.social3)) return false;
         return e.toAdmin ? u.role === 'admin' : e.toUserId === u.id;
       }
       return (!since || e.created > since) && !hidden[e.room];
@@ -1327,7 +1421,7 @@ var ACTIONS = {
     if (tooMany('post:' + s.id, 10)) fail('Too many posts. Try again later.');
     var image = b.image ? savePhoto(namedFolder('FEED_FOLDER', 'ASU Bank Feed'), b.image, s.id + '-' + Date.now(), 2500000, 1280) : '';
     return withLock(function () {
-      var p = { id: newId(), userId: s.id, text: cell(text), created: new Date().toISOString(), deleted: false, likes: '', image: image };
+      var p = { id: newId(), userId: s.id, text: cell(text), created: new Date().toISOString(), deleted: false, likes: '', image: image, audience: audienceOf(b) };
       append('Posts', p);
       return { ok: true, id: p.id };
     });
@@ -1375,15 +1469,166 @@ var ACTIONS = {
   feedAll: function (b) {
     var s = auth(b);
     var offset = Math.max(0, Number(b.offset) || 0);
-    if (b.scope !== 'friends') return { ok: true, posts: publicPosts(s, function () { return true; }, 25, offset) };
-    var ids = {};
+    if (b.scope === 'guest') return { ok: true, posts: publicPosts(s, function (p) { return p.audience === 'public'; }, 25, offset) };
+    if (b.scope !== 'friends' && b.scope !== 'strangers') return { ok: true, posts: publicPosts(s, function () { return true; }, 25, offset) };
+    var ids = friendIds(s.id);
     ids[s.id] = 1;
-    rows('Friends').forEach(function (f) {
-      if (f.status !== 'accepted') return;
-      if (f.from === s.id) ids[f.to] = 1;
-      if (f.to === s.id) ids[f.from] = 1;
+    var want = b.scope === 'friends';
+    return { ok: true, posts: publicPosts(s, function (p) { return !!ids[p.userId] === want; }, 25, offset) };
+  },
+
+  /** My private conversations, newest first */
+  dmList: function (b) {
+    var s = auth(b);
+    var map = usersById(), mine = blockedIds(map[s.id]), found = {};
+    rows('DMs').forEach(function (m) {
+      if (truthy(m.deleted) || (m.from !== s.id && m.to !== s.id)) return;
+      var other = m.from === s.id ? m.to : m.from;
+      var g = found[other] || (found[other] = { unread: 0 });
+      g.last = m;
+      if (m.to === s.id && !truthy(m.read)) g.unread++;
     });
-    return { ok: true, posts: publicPosts(s, function (p) { return ids[p.userId]; }, 25, offset) };
+    var list = [], unread = 0;
+    Object.keys(found).forEach(function (id) {
+      var u = map[id], g = found[id];
+      if (!u || truthy(u.banned) || mine.indexOf(id) >= 0) return;
+      unread += g.unread;
+      list.push({ user: publicUser(u, false), last: dmPublic(g.last), unread: g.unread });
+    });
+    list.sort(function (x, y) { return String(y.last.created).localeCompare(String(x.last.created)); });
+    return { ok: true, conversations: list, unread: unread };
+  },
+
+  /** One conversation. With `after`, only what is new. Opening it marks the other person's messages as read. */
+  dmThread: function (b) {
+    var s = auth(b);
+    var t = userById(String(b.userId || ''));
+    if (!t) fail('User not found.');
+    var pair = dmPair(s.id, t.id), c = CacheService.getScriptCache();
+    var all = dmCached(pair), list = all;
+    if (b.after) {
+      var i = -1;
+      for (var k = all.length - 1; k >= 0; k--) if (all[k].id === b.after) { i = k; break; }
+      list = i >= 0 ? all.slice(i + 1) : all.slice(-60);
+    } else list = all.slice(-60);
+    var unreadKey = 'dmu:' + s.id + ':' + t.id;
+    if (c.get(unreadKey) !== '0') {
+      withLock(function () {
+        rows('DMs').forEach(function (m) {
+          if (m.pair === pair && m.to === s.id && !truthy(m.read)) update('DMs', m._row, { read: true });
+        });
+      });
+      c.put(unreadKey, '0', 21600);
+    }
+    var lastFromThem = null;
+    all.forEach(function (m) { if (m.from === t.id) lastFromThem = m; });
+    if (lastFromThem) c.put('dmr:' + pair + ':' + s.id, String(lastFromThem.created), 21600);
+    var o = { ok: true, messages: list, deleted: JSON.parse(c.get('dmd:' + pair) || '[]'), seenUpTo: c.get('dmr:' + pair + ':' + t.id) || '' };
+    if (!b.after) { o.user = publicUser(t, false); o.canSend = dmAllowed(s, t); }
+    return o;
+  },
+
+  dmSend: function (b) {
+    var s = auth(b);
+    var t = userById(String(b.userId || ''));
+    if (!dmAllowed(s, t)) fail('You can only send private messages to friends.');
+    var text = String(b.text || '').trim().slice(0, 2000);
+    if (!text && !b.file) fail('Type a message first.');
+    assertClean(text);
+    if (s.role !== 'admin' && tooMany('dm:' + s.id, 40)) fail('Slow down a little.');
+    var fileId = '', fileName = '', fileType = '', fileSize = 0;
+    if (b.file) {
+      var d = String(b.file).replace(/^data:[^,]+,/, '');
+      if (d.length > 11000000) fail('That file is too big. The limit is 8 MB.');
+      var bytes = Utilities.base64Decode(d);
+      if (bytes.length < 8) fail('That file is empty.');
+      fileName = String(b.fileName || 'file').replace(/[\\/:*?"<>|\r\n]/g, '_').slice(0, 120);
+      var kind = dmFileKind(bytes, fileName);
+      // never shared by link: the only way to it is dmFile, which checks who is asking
+      fileId = namedFolder('DM_FOLDER', 'ASU Bank Private Files').createFile(Utilities.newBlob(bytes, kind.mime, newId() + '-' + fileName)).getId();
+      fileType = kind.type;
+      fileSize = bytes.length;
+    }
+    return withLock(function () {
+      var pair = dmPair(s.id, t.id);
+      var m = { id: newId(), pair: pair, from: s.id, to: t.id, text: cell(text), created: new Date().toISOString(), deleted: false,
+                fileId: fileId, fileName: fileName, fileType: fileType, fileSize: fileSize, read: false };
+      var list = dmCached(pair);
+      append('DMs', m);
+      m.text = text;
+      list.push(dmPublic(m));
+      dmStore(pair, list.slice(-80));
+      CacheService.getScriptCache().put('dmu:' + t.id + ':' + s.id, '1', 21600);
+      privateEvent({ toUserId: t.id }, 'dm', s, (text || fileName).slice(0, 120));
+      return { ok: true, message: dmPublic(m) };
+    });
+  },
+
+  /** A file in a private chat, only for the two people in it */
+  dmFile: function (b) {
+    var s = auth(b);
+    var m = rows('DMs').filter(function (x) { return x.id === b.id; })[0];
+    if (!m || truthy(m.deleted) || !m.fileId || (m.from !== s.id && m.to !== s.id)) fail('File not found.');
+    var blob = DriveApp.getFileById(m.fileId).getBlob();
+    return { ok: true, data: Utilities.base64Encode(blob.getBytes()), name: String(m.fileName), type: String(m.fileType) };
+  },
+
+  dmDelete: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      var m = rows('DMs').filter(function (x) { return x.id === b.id; })[0];
+      if (!m) return { ok: true };
+      if (m.from !== s.id) fail('You can only delete your own messages.');
+      if (m.fileId) { try { DriveApp.getFileById(m.fileId).setTrashed(true); } catch (e) {} }
+      update('DMs', m._row, { deleted: true, text: '', fileId: '', fileName: '', fileType: '', fileSize: 0 });
+      var c = CacheService.getScriptCache();
+      dmStore(m.pair, dmCached(m.pair).filter(function (x) { return x.id !== m.id; }));
+      var gone = JSON.parse(c.get('dmd:' + m.pair) || '[]');
+      gone.push(m.id);
+      c.put('dmd:' + m.pair, JSON.stringify(gone.slice(-40)), 21600);
+      return { ok: true };
+    });
+  },
+
+  /** Posts anyone may read, no account needed */
+  publicFeed: function (b) {
+    var offset = Math.max(0, Number(b.offset) || 0);
+    var c = CacheService.getScriptCache(), key = 'pf:' + offset, hit = c.get(key);
+    if (hit) return JSON.parse(hit);
+    var counts = {}, map = usersById();
+    rows('Comments').forEach(function (x) { if (!truthy(x.deleted)) counts[x.postId] = (counts[x.postId] || 0) + 1; });
+    var posts = rows('Posts').filter(function (p) {
+      var u = map[p.userId];
+      return p.audience === 'public' && !truthy(p.deleted) && u && !truthy(u.banned);
+    }).reverse().slice(offset, offset + 25).map(function (p) {
+      return { id: p.id, text: String(p.text), image: String(p.image || ''), audience: 'public', comments: counts[p.id] || 0, created: p.created,
+               likes: String(p.likes || '').split(',').filter(String).length, liked: false, user: guestUser(map[p.userId]) };
+    });
+    var o = { ok: true, posts: posts };
+    var j = JSON.stringify(o);
+    if (j.length < 95000) c.put(key, j, 60);
+    return o;
+  },
+
+  /** Stories anyone may see, no account needed */
+  publicStories: function (b) {
+    var c = CacheService.getScriptCache(), hit = c.get('ps');
+    if (hit) return JSON.parse(hit);
+    var map = usersById(), now = Date.now(), groups = {};
+    rows('Stories').forEach(function (r) {
+      var u = map[r.userId];
+      if (r.audience !== 'public' || !u || truthy(u.banned) || now - new Date(r.created).getTime() > STORY_SHOWN_MS) return;
+      var g = groups[r.userId] || (groups[r.userId] = { user: guestUser(u), stories: [], seen: false, newest: '' });
+      var when = new Date(r.created).toISOString();
+      g.stories.push({ id: r.id, image: String(r.image || ''), video: String(r.video || ''), text: String(r.text || ''), bg: String(r.bg || ''), audience: 'public', created: when, seen: false });
+      if (when > g.newest) g.newest = when;
+    });
+    var list = Object.keys(groups).map(function (k) { return groups[k]; });
+    list.sort(function (x, y) { return y.newest.localeCompare(x.newest); });
+    var o = { ok: true, groups: list };
+    var j = JSON.stringify(o);
+    if (j.length < 95000) c.put('ps', j, 60);
+    return o;
   },
 
   comments: function (b) {
@@ -1433,15 +1678,16 @@ var ACTIONS = {
   stories: function (b) {
     var s = auth(b);
     try { purgeStories(); } catch (e) {}
-    var map = usersById(), mine = blockedIds(map[s.id]), now = Date.now(), groups = {};
+    var map = usersById(), mine = blockedIds(map[s.id]), now = Date.now(), groups = {}, pals = friendIds(s.id);
     rows('Stories').forEach(function (r) {
       var u = map[r.userId];
       if (!u || truthy(u.banned) || mine.indexOf(r.userId) >= 0 || blockedIds(u).indexOf(s.id) >= 0) return;
+      if (r.audience === 'friends' && r.userId !== s.id && !pals[r.userId] && s.role !== 'admin') return;
       if (now - new Date(r.created).getTime() > STORY_SHOWN_MS) return;
       var views = String(r.views || '').split(',').filter(String);
       var g = groups[r.userId] || (groups[r.userId] = { user: publicUser(u, false), stories: [], seen: true, newest: '' });
       var seen = r.userId === s.id || views.indexOf(s.id) >= 0;
-      var o = { id: r.id, image: String(r.image || ''), text: String(r.text || ''), bg: String(r.bg || ''), created: new Date(r.created).toISOString(), seen: seen };
+      var o = { id: r.id, image: String(r.image || ''), video: String(r.video || ''), audience: audienceOf(r), text: String(r.text || ''), bg: String(r.bg || ''), created: new Date(r.created).toISOString(), seen: seen };
       if (r.userId === s.id) o.views = views.length;
       g.stories.push(o);
       if (!seen) g.seen = false;
@@ -1460,13 +1706,14 @@ var ACTIONS = {
   storyCreate: function (b) {
     var s = auth(b);
     var text = String(b.text || '').trim().slice(0, 300);
-    if (!text && !b.image) fail('Add a photo or some text first.');
+    if (!text && !b.image && !b.video) fail('Add a photo or some text first.');
     assertClean(text);
     if (tooMany('story:' + s.id, 15)) fail('Too many stories. Try again later.');
     var image = b.image ? savePhoto(namedFolder('STORY_FOLDER', 'ASU Bank Stories'), b.image, s.id + '-' + Date.now(), 2500000, 1280) : '';
+    var video = b.video ? saveVideo(namedFolder('STORY_FOLDER', 'ASU Bank Stories'), b.video, s.id + '-' + Date.now()) : '';
     var bg = /^#[0-9a-fA-F]{6}$/.test(String(b.bg || '')) ? String(b.bg) : '#8C1D40';
     return withLock(function () {
-      var r = { id: newId(), userId: s.id, image: image, text: cell(text), bg: bg, created: new Date().toISOString(), views: '' };
+      var r = { id: newId(), userId: s.id, image: image, text: cell(text), bg: bg, created: new Date().toISOString(), views: '', audience: audienceOf(b), video: video };
       append('Stories', r);
       return { ok: true, id: r.id };
     });
@@ -1490,6 +1737,7 @@ var ACTIONS = {
       if (!r) return { ok: true };
       if (r.userId !== s.id && s.role !== 'admin') fail('You can only delete your own stories.');
       removeAvatarFile(r.image);
+      removeAvatarFile(r.video);
       sheet('Stories').deleteRow(r._row);
       if (r.userId !== s.id) log(s, 'deleteStory', r.userId, '');
       return { ok: true };
