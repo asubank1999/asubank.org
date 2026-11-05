@@ -1,14 +1,14 @@
 {
   "ios": {
-    "latest": "1.12.0",
+    "latest": "1.13.0",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.12.0",
-    "notes": "New Feed with photos and comments, stories for 24 hours, cover photos, hold anyone's photo to see it bigger, calendar and exams first on Home, Exams & tasks, Focus timer, and new themes."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.13.0",
+    "notes": "Feed tabs for Friends, Strangers and Guest, a story camera with video, private messages with photos, PDF and Word files, a new chat look, weather back at the top of Home, and a smaller search box."
   },
   "android": {
-    "latest": "1.12.0",
+    "latest": "1.13.0",
     "minimum": "1.0.0",
-    "notes": "New Feed with photos and comments, stories for 24 hours, cover photos, hold anyone's photo to see it bigger, calendar and exams first on Home, Exams & tasks, Focus timer, and new themes."
+    "notes": "Feed tabs for Friends, Strangers and Guest, a story camera with video, private messages with photos, PDF and Word files, a new chat look, weather back at the top of Home, and a smaller search box."
   },
   "donate": true
 }
