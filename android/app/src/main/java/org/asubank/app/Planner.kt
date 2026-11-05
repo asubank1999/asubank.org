@@ -241,7 +241,7 @@ fun HomeCalendarCard() {
     val path = "/schedules/calendar27"
     val next = remember(pages) {
         val today = LocalDate.now()
-        pages[path]?.cal?.mapNotNull { e -> runCatching { LocalDate.parse(e.d.take(10)) }.getOrNull()?.let { e to it } }
+        pages[path]?.cal?.filter { !it.n.startsWith("الأسبوع") }?.mapNotNull { e -> runCatching { LocalDate.parse(e.d.take(10)) }.getOrNull()?.let { e to it } }
             ?.filter { !it.second.isBefore(today) }?.minByOrNull { it.second }
     }
     Row(

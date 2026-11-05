@@ -259,6 +259,7 @@ struct HomeCalendarCard: View {
     private var next: (name: String, date: Date)? {
         let today = Calendar.current.startOfDay(for: Date())
         return pages.page(path)?.cal?
+            .filter { !$0.n.hasPrefix("الأسبوع") }
             .compactMap { e in AB.date(e.d).map { (name: e.n, date: $0) } }
             .filter { $0.date >= today }
             .min { $0.date < $1.date }
