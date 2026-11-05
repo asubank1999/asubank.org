@@ -707,7 +707,8 @@
         if(!res.ok) throw new Error(`HTTP ${res.status}`);
         const data=await res.json();
         if(data?.success&&Array.isArray(data.files)){
-          allFiles=filteredFiles=data.files;
+          if(window.AB&&AB.links)await AB.links();
+          allFiles=filteredFiles=data.files.filter(f=>!(window.AB&&AB.broken&&AB.broken[f.url]));
           renderFiles(allFiles);
         } else throw new Error(data?.error||'Unexpected response');
       } catch(err) {

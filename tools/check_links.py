@@ -25,6 +25,7 @@ LATEST = ('https://script.google.com/macros/s/AKfycbyuzws_2LcDC8nb2KU-02swjehyRf
           '?t=1&sort=date&order=desc')
 UA = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1',
       'Accept-Language': 'en'}
+EMPTY = 'This folder is empty for now.'  # set by tools/hide_empty_folders.py; check_links keeps these
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -168,6 +169,9 @@ def main():
         elif r.get('kind') == 'folder' and '/folders/' not in u:
             dmap[drive_id(u)] = [drive_id(u), 'folder']
     broken = {u: r['why'] for u, r in results.items() if r['ok'] is False}
+    for u, why in json.loads((APP / 'broken.json').read_text(encoding='utf-8')).items():
+        if why == EMPTY:
+            broken.setdefault(u, why)
     (APP / 'drive-map.json').write_text(json.dumps(dmap, separators=(',', ':')), encoding='utf-8')
     (APP / 'broken.json').write_text(json.dumps(broken, ensure_ascii=False, indent=0), encoding='utf-8')
     (ROOT / 'tools' / 'link-report.json').write_text(json.dumps(results, ensure_ascii=False, indent=1), encoding='utf-8')

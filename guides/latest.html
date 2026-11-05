@@ -1078,7 +1078,7 @@
             try { data = JSON.parse(text); } catch(e) { throw new Error('Invalid response format'); }
             if (data && data.success && Array.isArray(data.files)) {
                 if (window.AB && AB.removed) await Promise.all([AB.links(), AB.removed()]);
-                allFiles = data.files.filter(f => !(window.AB && AB.isRemoved && AB.isRemoved(f.url))).map(f => ({ ...f, size: f.size || 0, dateUploaded: f.dateUploaded || new Date().toISOString() }));
+                allFiles = data.files.filter(f => !(window.AB && AB.isRemoved && (AB.isRemoved(f.url) || AB.broken[f.url]))).map(f => ({ ...f, size: f.size || 0, dateUploaded: f.dateUploaded || new Date().toISOString() }));
                 if (!keepSearchState) {
                     // If we have currentSearch from URL params, apply it
                     if (currentSearch) {
