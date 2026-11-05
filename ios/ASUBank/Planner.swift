@@ -175,7 +175,7 @@ struct FocusTimerScreen: View {
                     Text(onBreak ? "Break" : "Focus").font(.headline).foregroundStyle(.secondary)
                     ZStack {
                         Circle().stroke(Color.abAccent.opacity(0.15), lineWidth: 12)
-                        Circle().trim(from: 0, to: remaining / total)
+                        Circle().trim(from: 0, to: CGFloat(Double(remaining) / Double(total)))
                             .stroke(Color.abAccent, style: StrokeStyle(lineWidth: 12, lineCap: .round))
                             .rotationEffect(.degrees(-90))
                         Text(String(format: "%02d:%02d", Int(remaining) / 60, Int(remaining) % 60))
