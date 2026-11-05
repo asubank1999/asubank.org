@@ -282,7 +282,7 @@ fun MaterialScreen(m: Material) {
     }) { pad ->
         Box(Modifier.padding(pad).fillMaxSize()) {
             when (val s = state) {
-                VState.Resolving -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+                VState.Resolving -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { ABDots() }
                 is VState.Downloading -> Centered {
                     KindTile(AB.kind(m.u, m.t), 64.dp)
                     Spacer(Modifier.height(16.dp))
@@ -390,7 +390,7 @@ fun PdfViewer(file: File) {
                 }
                 Box(Modifier.fillMaxWidth().aspectRatio(ratios[i]).shadow(2.dp, RoundedCornerShape(4.dp)).background(Color.White)) {
                     bmp?.let { Image(it.asImageBitmap(), "Page ${i + 1}", Modifier.fillMaxSize(), contentScale = ContentScale.Fit) }
-                        ?: Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(Modifier.size(24.dp)) }
+                        ?: Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { ABDots(Modifier.size(24.dp)) }
                 }
             }
         }
@@ -502,7 +502,7 @@ fun DriveFolderList(id: String, title: String) {
                     Button(onClick = { retry++ }) { Text("Try again") }
                 }
             }
-            entries == null -> item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+            entries == null -> item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { ABDots() } }
             entries!!.isEmpty() -> item { EmptyState(Icons.Filled.FolderOff, "Empty folder", "Nothing has been uploaded here yet.") }
             else -> {
                 val all = entries!!

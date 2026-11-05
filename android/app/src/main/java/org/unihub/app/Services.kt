@@ -115,7 +115,7 @@ private fun SendButton(text: String, sending: Boolean, onClick: () -> Unit) {
         onClick, enabled = !sending, shape = RoundedCornerShape(14.dp),
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp).height(52.dp),
     ) {
-        if (sending) { CircularProgressIndicator(Modifier.size(18.dp), color = Color.White, strokeWidth = 2.dp); Spacer(Modifier.width(10.dp)) }
+        if (sending) { ABDots(Modifier.size(18.dp), color = Color.White, strokeWidth = 2.dp); Spacer(Modifier.width(10.dp)) }
         Text(if (sending) "Sending…" else text, fontWeight = FontWeight.SemiBold)
     }
 }

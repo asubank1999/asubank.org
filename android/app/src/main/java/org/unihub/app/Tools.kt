@@ -186,7 +186,7 @@ fun AdminGroupRequestsScreen() {
                 }
             }
             error?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
-            if (loading) item { CircularProgressIndicator(Modifier.padding(16.dp)) }
+            if (loading) item { ABDots(Modifier.padding(16.dp)) }
             else if (list.isEmpty()) item { Text("Nothing to review.", Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onSurfaceVariant) }
             items(list.size) { i ->
                 val r = list[i]
@@ -580,7 +580,7 @@ fun LifeHacksScreen(back: Boolean = true) {
                     }
                 }
             }
-            if (loading) item { CircularProgressIndicator(Modifier.padding(16.dp)) }
+            if (loading) item { ABDots(Modifier.padding(16.dp)) }
             else if (sections.isEmpty()) item { Text("Couldn't load the tips. Check your connection and try again.", Modifier.padding(16.dp)) }
             item { Text("These are general tips, not medical or professional advice. In an emergency, call for help first.", Modifier.padding(20.dp), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         }

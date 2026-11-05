@@ -1,5 +1,9 @@
 package org.unihub.app
 
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.runtime.mutableIntStateOf
+import java.util.UUID
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Flag
 import android.content.ClipData
@@ -281,7 +285,7 @@ fun ChatRoomScreen(roomId: String) {
     var text by remember { mutableStateOf("") }
     var replyTo by remember { mutableStateOf<ChatMessage?>(null) }
     var editing by remember { mutableStateOf<ChatMessage?>(null) }
-    var sending by remember { mutableStateOf(false) }
+    var disappear by remember { mutableIntStateOf(0) }
     var menuFor by remember { mutableStateOf<String?>(null) }
     var banTarget by remember { mutableStateOf<ChatMessage?>(null) }
     var roomSettings by remember { mutableStateOf(false) }
@@ -295,11 +299,11 @@ fun ChatRoomScreen(roomId: String) {
 
     suspend fun fetch() {
         val f = mutableMapOf<String, Any?>("room" to roomId)
-        messages.lastOrNull()?.let { f["after"] = it.id }
+        messages.lastOrNull { !it.pending }?.let { f["after"] = it.id }
         try {
             val r = Account.call("chat", f)
             val gone = (r["deleted"] as? JsonArray)?.mapNotNull { it.prim() }?.toSet() ?: emptySet()
-            if (gone.isNotEmpty()) messages.removeAll { it.id in gone }
+            messages.removeAll { it.id in gone || Disappear.expired(it.expires) }
             (r["edited"] as? JsonArray).objects().forEach { e ->
                 val i = messages.indexOfFirst { it.id == e.str("id") }
                 if (i >= 0 && messages[i].text != e.str("text")) messages[i] = messages[i].copy(text = e.str("text") ?: messages[i].text, edited = e.str("edited"))
@@ -307,8 +311,9 @@ fun ChatRoomScreen(roomId: String) {
             val have = messages.map { it.id }.toSet()
             val blocked = Account.user.value?.blocked.orEmpty()
             messages.removeAll { it.userId in blocked }
-            val new = r["messages"].decodeAs<List<ChatMessage>>().orEmpty().filter { it.id !in have && it.userId !in blocked }
-            if (new.isNotEmpty()) messages.addAll(new)
+            val new = r["messages"].decodeAs<List<ChatMessage>>().orEmpty().filter { it.id !in have && it.userId !in blocked && !Disappear.expired(it.expires) }
+            // what is still on its way stays last
+            if (new.isNotEmpty()) messages.addAll(messages.indexOfFirst { it.pending }.takeIf { it >= 0 } ?: messages.size, new)
             r["people"].decodeAs<Map<String, ChatPerson>>()?.let { people.putAll(it) }
             r["room"].decodeAs<ChatRoom>()?.let { serverRoom = it }
             pinned = r["pinned"].decodeAs<ChatMessage>()
@@ -325,24 +330,54 @@ fun ChatRoomScreen(roomId: String) {
     LaunchedEffect(roomId) { while (true) { fetch(); delay(3000) } }
     LaunchedEffect(messages.size) { if (messages.isNotEmpty()) list.animateScrollToItem(messages.size - 1) }
 
+    /** The message shows at once and is replaced by the real one when the server has it. Leaving the room doesn't stop it. */
+    fun post(body: String, o: ChatOutgoing? = null) {
+        val u = user
+        val reply = replyTo?.id
+        val gone = disappear
+        replyTo = null
+        val temp = ChatMessage(
+            "local-" + UUID.randomUUID(), roomId, u?.id ?: "", u?.username ?: "", u?.name ?: "", if (admin) "admin" else "user", body, Instant.now().toString(), reply,
+            u?.color ?: "#8C1D40", fileName = o?.fileName ?: "", fileType = o?.type ?: "", fileSize = o?.size ?: 0, hasFile = o != null, duration = o?.duration ?: 0,
+            pending = true, local = o?.local,
+        )
+        messages.add(temp)
+        BackgroundJobs.scope.launch {
+            try {
+                val f = mutableMapOf<String, Any?>("room" to roomId, "text" to body, "replyTo" to (reply ?: ""), "expiresIn" to gone)
+                if (o != null) {
+                    f["file"] = o.load() ?: throw ApiError(tr("Couldn't send this file."))
+                    f["fileName"] = o.fileName
+                    f["duration"] = o.duration
+                }
+                val m = Account.call("send", f)["message"].decodeAs<ChatMessage>()
+                val i = messages.indexOfFirst { it.id == temp.id }
+                if (m != null && i >= 0 && messages.none { it.id == m.id }) messages[i] = m.copy(local = o?.local) else messages.removeAll { it.id == temp.id }
+                error = null
+            } catch (e: Exception) {
+                messages.removeAll { it.id == temp.id }
+                error = e.message
+                if (body.isNotEmpty() && text.isEmpty()) text = body
+            }
+        }
+    }
+
     fun send() {
         val t = text.trim()
-        if (t.isEmpty() || sending) return
-        sending = true
-        scope.launch {
-            try {
-                val e = editing
-                if (e != null) {
-                    Account.call("editMessage", mapOf("id" to e.id, "text" to t))
-                    val i = messages.indexOfFirst { it.id == e.id }
-                    if (i >= 0) messages[i] = messages[i].copy(text = t, edited = Instant.now().toString())
-                } else {
-                    val r = Account.call("send", mapOf("room" to roomId, "text" to t, "replyTo" to (replyTo?.id ?: "")))
-                    r["message"].decodeAs<ChatMessage>()?.let { m -> if (messages.none { it.id == m.id }) messages.add(m) }
-                }
-                text = ""; replyTo = null; editing = null; error = null
-            } catch (e: ApiError) { error = e.message }
-            sending = false
+        if (t.isEmpty()) return
+        text = ""
+        val e = editing
+        if (e == null) { post(t); return }
+        editing = null
+        val i = messages.indexOfFirst { it.id == e.id }
+        if (i >= 0) messages[i] = messages[i].copy(text = t, edited = Instant.now().toString())
+        BackgroundJobs.scope.launch {
+            try { Account.call("editMessage", mapOf("id" to e.id, "text" to t)); error = null }
+            catch (x: Exception) {
+                val at = messages.indexOfFirst { it.id == e.id }
+                if (at >= 0) messages[at] = e
+                error = x.message
+            }
         }
     }
 
@@ -365,14 +400,14 @@ fun ChatRoomScreen(roomId: String) {
                         Icon(Icons.Filled.PushPin, null, tint = accent, modifier = Modifier.size(18.dp))
                         Column(Modifier.weight(1f).padding(start = 10.dp)) {
                             Text("Pinned message", style = MaterialTheme.typography.labelSmall, color = accent, fontWeight = FontWeight.Bold)
-                            Text(p.text, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
+                            Text(p.preview, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
                         }
                         if (admin) IconButton(onClick = { pin(null) }) { Icon(Icons.Filled.Close, tr("Unpin")) }
                     }
                 }
             }
             Box(Modifier.weight(1f)) {
-                if (loading && messages.isEmpty()) CircularProgressIndicator(Modifier.align(Alignment.Center))
+                if (loading && messages.isEmpty()) SkeletonBubbles()
                 else if (messages.isEmpty()) EmptyState(Icons.Filled.Person, tr("No messages yet"), if (canPost) tr("Be the first to say something.") else tr("Announcements from the team show up here."))
                 LazyColumn(state = list, modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     item { Spacer(Modifier.height(8.dp)) }
@@ -387,7 +422,7 @@ fun ChatRoomScreen(roomId: String) {
                         val next = messages.getOrNull(i + 1)
                         val joinedBelow = next != null && next.userId == m.userId && next.instant.atZone(ZoneId.systemDefault()).toLocalDate() == day
                         val reply = m.replyTo?.let { id -> messages.firstOrNull { it.id == id } }
-                        Box {
+                        Box(Modifier.animateItem()) {
                             Bubble(
                                 m, mine, grouped, joinedBelow, reply, people[m.userId], pinned?.id == m.id,
                                 Modifier.combinedClickable(onClick = {}, onLongClick = { menuFor = m.id }),
@@ -395,18 +430,18 @@ fun ChatRoomScreen(roomId: String) {
                             )
                             DropdownMenu(expanded = menuFor == m.id, onDismissRequest = { menuFor = null }) {
                                 if (canPost) DropdownMenuItem(text = { Text("Reply") }, leadingIcon = { Icon(Icons.AutoMirrored.Filled.Reply, null) }, onClick = { editing = null; replyTo = m; menuFor = null })
-                                DropdownMenuItem(text = { Text("Copy") }, leadingIcon = { Icon(Icons.Filled.ContentCopy, null) }, onClick = {
+                                if (m.text.isNotEmpty()) DropdownMenuItem(text = { Text("Copy") }, leadingIcon = { Icon(Icons.Filled.ContentCopy, null) }, onClick = {
                                     (ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("Message", m.text))
                                     menuFor = null
                                 })
-                                if (mine) DropdownMenuItem(text = { Text("Edit") }, leadingIcon = { Icon(Icons.Filled.Edit, null) }, onClick = {
+                                if (mine && m.text.isNotEmpty() && !m.pending) DropdownMenuItem(text = { Text("Edit") }, leadingIcon = { Icon(Icons.Filled.Edit, null) }, onClick = {
                                     replyTo = null; editing = m; text = m.text; menuFor = null
                                 })
                                 if (!mine) DropdownMenuItem(text = { Text("View profile") }, leadingIcon = { Icon(Icons.Filled.Person, null) }, onClick = {
                                     menuFor = null; nav.navigate("profile/${m.userId}")
                                 })
                                 if (!mine) DropdownMenuItem(text = { Text("Report message") }, leadingIcon = { Icon(Icons.Filled.Flag, null) }, onClick = {
-                                    menuFor = null; reporting = ReportTarget("message", m.id, m.text.take(120))
+                                    menuFor = null; reporting = ReportTarget("message", m.id, m.preview.take(120))
                                 })
                                 if (!mine && m.role != "admin") DropdownMenuItem(text = { Text("Block") }, leadingIcon = { Icon(Icons.Filled.Block, null) }, onClick = {
                                     menuFor = null; blocking = BlockTarget(m.userId, m.displayName.ifEmpty { m.username })
@@ -415,10 +450,14 @@ fun ChatRoomScreen(roomId: String) {
                                     text = { Text(if (pinned?.id == m.id) "Unpin" else "Pin") }, leadingIcon = { Icon(Icons.Filled.PushPin, null) },
                                     onClick = { menuFor = null; pin(if (pinned?.id == m.id) null else m) },
                                 )
-                                if (mine || admin) DropdownMenuItem(text = { Text("Delete") }, leadingIcon = { Icon(Icons.Filled.Delete, null) }, onClick = {
+                                if ((mine || admin) && !m.pending) DropdownMenuItem(text = { Text("Delete for everyone") }, leadingIcon = { Icon(Icons.Filled.Delete, null) }, onClick = {
                                     menuFor = null
-                                    scope.launch {
-                                        try { Account.call("deleteMessage", mapOf("id" to m.id)); messages.removeAll { it.id == m.id } } catch (e: ApiError) { error = e.message }
+                                    // gone at once here; everyone else's phone removes it on its next check
+                                    val at = messages.indexOfFirst { it.id == m.id }
+                                    messages.removeAll { it.id == m.id }
+                                    BackgroundJobs.scope.launch {
+                                        try { Account.call("deleteMessage", mapOf("id" to m.id)) }
+                                        catch (e: Exception) { error = e.message; if (at >= 0) messages.add(minOf(at, messages.size), m) }
                                     }
                                 })
                                 if (admin && !mine) DropdownMenuItem(text = { Text(tr("Ban @%s").format(m.username)) }, leadingIcon = { Icon(Icons.Filled.Block, null) }, onClick = { banTarget = m; menuFor = null })
@@ -447,14 +486,15 @@ fun ChatRoomScreen(roomId: String) {
                                     if (editing != null) tr("Editing your message") else tr("Replying to %s").format(r.displayName.ifEmpty { r.username }),
                                     style = MaterialTheme.typography.labelMedium, color = accent,
                                 )
-                                Text(r.text, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
+                                Text(r.preview, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
                             }
                             IconButton(onClick = { if (editing != null) text = ""; replyTo = null; editing = null }) { Icon(Icons.Filled.Close, tr("Cancel")) }
                         }
                     }
-                    ChatComposer(
-                        text, { if (it.length <= 1000) text = it }, sending,
-                        sendIcon = if (editing != null) Icons.Filled.Check else Icons.AutoMirrored.Filled.Send, send = ::send,
+                    ChatInputBar(
+                        text, { if (it.length <= 1000) text = it },
+                        sendIcon = if (editing != null) Icons.Filled.Check else Icons.AutoMirrored.Filled.Send, editing = editing != null,
+                        disappear = disappear, onDisappear = { disappear = it }, sendMedia = { o -> post("", o) }, fail = { error = it }, send = ::send,
                     )
                 }
             }
@@ -503,8 +543,10 @@ private fun Bubble(
         }
         Column(
             modifier.widthIn(max = 290.dp).chatBubble(mine, grouped, joinedBelow)
+                .graphicsLayer { alpha = if (m.pending) 0.72f else 1f }
                 .padding(horizontal = 12.dp, vertical = 8.dp),
         ) {
+            val ctx = LocalContext.current
             val fg = if (mine) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
             if (!mine && !grouped) Row(
                 Modifier.horizontalScroll(rememberScrollState()),
@@ -520,19 +562,24 @@ private fun Bubble(
                     Box(Modifier.width(3.dp).height(32.dp).background(fg.copy(alpha = 0.6f), RoundedCornerShape(2.dp)))
                     Column(Modifier.padding(start = 6.dp)) {
                         Text(r.displayName.ifEmpty { r.username }, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = fg.copy(alpha = 0.85f))
-                        Text(r.text, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, color = fg.copy(alpha = 0.75f))
+                        Text(r.preview, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, color = fg.copy(alpha = 0.75f))
                     }
                 }
             }
-            Text(m.text, color = fg, style = MaterialTheme.typography.bodyLarge)
-            Text(
-                listOfNotNull(
-                    if (isPinned) "📌" else null,
-                    if (!m.edited.isNullOrEmpty()) tr("edited") else null,
-                    m.instant.atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt),
-                ).joinToString(" · "),
-                fontSize = 10.sp, color = fg.copy(alpha = 0.65f), modifier = Modifier.align(Alignment.End),
-            )
+            if (m.hasFile) ChatAttachment(m.id, m.fileType, m.duration, mine, m.local) { MediaFiles.local(ctx, "room", m.id, m.fileName) }
+            if (m.text.isNotEmpty()) Text(m.text, color = fg, style = MaterialTheme.typography.bodyLarge)
+            Row(Modifier.align(Alignment.End), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                ExpiryTag(m.expires, fg.copy(alpha = 0.7f))
+                if (m.pending) Icon(Icons.Filled.Schedule, null, Modifier.size(11.dp), tint = fg.copy(alpha = 0.7f))
+                Text(
+                    listOfNotNull(
+                        if (isPinned) "📌" else null,
+                        if (!m.edited.isNullOrEmpty()) tr("edited") else null,
+                        m.instant.atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt),
+                    ).joinToString(" · "),
+                    fontSize = 10.sp, color = fg.copy(alpha = 0.65f),
+                )
+            }
         }
     }
 }

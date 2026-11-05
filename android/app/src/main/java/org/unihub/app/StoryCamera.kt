@@ -1,5 +1,8 @@
 package org.unihub.app
 
+import android.widget.FrameLayout
+import android.view.Gravity
+import android.view.ViewGroup
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -323,7 +326,7 @@ fun StoryCameraDialog(onClose: () -> Unit, done: (StoryMedia?) -> Unit) {
                             .clickable(enabled = granted && !busy) { if (videoMode) toggleRecording() else takePhoto() },
                         contentAlignment = Alignment.Center,
                     ) {
-                        if (busy) CircularProgressIndicator(Modifier.size(28.dp), color = Color.White, strokeWidth = 3.dp)
+                        if (busy) ABDots(Modifier.size(28.dp), color = Color.White, strokeWidth = 3.dp)
                         else Box(
                             Modifier.size(if (recordingNow) 30.dp else 60.dp)
                                 .clip(if (recordingNow) RoundedCornerShape(6.dp) else CircleShape)
@@ -364,30 +367,38 @@ fun StoryVideoPlayer(url: String, paused: Boolean, onLength: (Double) -> Unit) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         val f = file
         if (f == null) {
-            if (!failed) CircularProgressIndicator(color = Color.White)
+            if (!failed) ABDots(color = Color.White)
         } else key(f.path) {
             AndroidView(
                 factory = { c ->
-                    VideoView(c).apply {
-                        setOnPreparedListener { mp ->
-                            prepared = true
-                            onLength((mp.duration / 1000.0).coerceAtLeast(1.0))
-                            start()
-                        }
-                        setOnErrorListener { _, _, _ ->
-                            onLength(6.0)
-                            true
-                        }
-                        setVideoPath(f.path)
+                    // VideoView keeps the video's shape inside what it's given. Given the whole screen it stays as big as it fits;
+                    // left to wrap its content it fell back to the video's small stored size.
+                    FrameLayout(c).apply {
+                        addView(
+                            VideoView(c).apply {
+                                setOnPreparedListener { mp ->
+                                    prepared = true
+                                    onLength((mp.duration / 1000.0).coerceAtLeast(1.0))
+                                    start()
+                                }
+                                setOnErrorListener { _, _, _ ->
+                                    onLength(6.0)
+                                    true
+                                }
+                                setVideoPath(f.path)
+                            },
+                            FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER),
+                        )
                     }
                 },
-                update = { v ->
+                update = { root ->
+                    val v = root.getChildAt(0) as VideoView
                     if (prepared) {
                         if (paused && v.isPlaying) v.pause()
                         else if (!paused && !v.isPlaying) v.start()
                     }
                 },
-                modifier = Modifier.wrapContentSize(),
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }

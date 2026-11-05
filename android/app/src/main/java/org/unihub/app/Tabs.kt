@@ -374,6 +374,7 @@ fun MoreScreen() {
                     Divider(); ListRow("Notifications", icon = Icons.Filled.Notifications) { nav.navigate(Routes.NOTIFICATIONS) }
                     Divider(); ListRow("Friends", icon = Icons.Filled.People) { nav.navigate(Routes.FRIENDS) }
                     Divider(); ListRow("Feed", icon = Icons.Filled.DynamicFeed) { nav.navigate(Routes.FEED) }
+                    Divider(); ListRow("Share UniHub", icon = Icons.Filled.Share) { shareApp(ctx) }
                     Divider(); ListRow("My lectures", icon = Icons.Filled.Alarm) { nav.navigate(Routes.LECTURES) }
                     Divider(); ListRow("Exams & tasks", icon = Icons.Filled.Checklist) { nav.openPage("/app/planner", "") }
                     Divider(); ListRow("Focus timer", icon = Icons.Filled.Timer) { nav.openPage("/app/focus", "") }

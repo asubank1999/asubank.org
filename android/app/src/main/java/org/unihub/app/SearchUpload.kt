@@ -203,7 +203,7 @@ fun SearchScreen() {
                     Group(header = "Google Drive" + if (driveState == 2) " · ${driveShown.size}" else "") {
                         when (driveState) {
                             1 -> Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                                CircularProgressIndicator(Modifier.height(20.dp)); Text("Searching the shared Drive…")
+                                ABDots(Modifier.height(20.dp)); Text("Searching the shared Drive…")
                             }
                             3 -> ListRow("Drive search failed. Tap to try again.", icon = Icons.Filled.Error) { retry++ }
                             2 -> if (driveShown.isEmpty()) ListRow("No other files on Drive", icon = Icons.Filled.SearchOff)

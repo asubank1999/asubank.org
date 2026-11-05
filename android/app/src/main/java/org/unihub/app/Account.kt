@@ -62,6 +62,7 @@ object AccountsApi {
                 is Boolean -> put(k, v)
                 is Number -> put(k, v)
                 is Collection<*> -> putJsonArray(k) { v.forEach { add(it.toString()) } }
+                is Map<*, *> -> put(k, buildJsonObject { v.forEach { (a, b) -> put(a.toString(), b.toString()) } })
                 else -> put(k, v.toString())
             }
         }
@@ -69,7 +70,7 @@ object AccountsApi {
             .post(body.toString().toRequestBody("text/plain;charset=utf-8".toMediaType()))
             .build()
         // videos and files take longer than the usual calls
-        val long = "video" in fields || "file" in fields || action == "dmFile"
+        val long = "video" in fields || "file" in fields || action == "dmFile" || action == "mediaFile"
         val http = if (long) Net.http.newBuilder().writeTimeout(5, java.util.concurrent.TimeUnit.MINUTES).readTimeout(5, java.util.concurrent.TimeUnit.MINUTES).build() else Net.http
         val text = try {
             http.newCall(req).execute().use { it.body?.string() }
@@ -206,8 +207,19 @@ data class ChatMessage(
     val replyTo: String? = null,
     val color: String = "#8C1D40",
     val edited: String? = null,
+    val fileName: String = "",
+    val fileType: String = "",
+    val fileSize: Long = 0,
+    val hasFile: Boolean = false,
+    val duration: Int = 0,
+    val expires: String? = null,
+    val pending: Boolean = false,
+    val local: String? = null,
 ) {
     val instant: Instant get() = runCatching { Instant.parse(created) }.getOrDefault(Instant.now())
+    val preview: String get() = text.ifEmpty {
+        when (fileType) { "voice" -> "🎤 " + tr("Voice message"); "video" -> "🎬 " + tr("Video"); "photo" -> "📷 " + tr("Photo"); else -> "" }
+    }
 }
 
 @Serializable

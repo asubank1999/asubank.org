@@ -1,5 +1,10 @@
 package org.unihub.app
 
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.Park
 import androidx.compose.material.icons.filled.AutoAwesome
@@ -87,6 +92,22 @@ fun ThemeScreen() {
         Triple("Blush", "Soft pink background", Icons.Filled.Favorite),
     )
     val dark = isDarkTheme()
+    val ctx = LocalContext.current
+    var pendingMode by remember { mutableStateOf<Int?>(null) }
+    var pendingAccent by remember { mutableStateOf<Int?>(null) }
+    if (pendingMode != null || pendingAccent != null) AlertDialog(
+        onDismissRequest = { pendingMode = null; pendingAccent = null },
+        title = { Text("Restart UniHub to change the theme") },
+        text = { Text("The app restarts so the new colors load cleanly.") },
+        confirmButton = {
+            TextButton(onClick = {
+                pendingMode?.let { Prefs.setAppearance(it) }
+                pendingAccent?.let { Prefs.setAccent(it) }
+                AppRestart.now(ctx)
+            }) { Text("Restart now") }
+        },
+        dismissButton = { TextButton(onClick = { pendingMode = null; pendingAccent = null }) { Text("Cancel") } },
+    )
     Screen("Theme") { pad ->
         LazyColumn(Modifier.padding(pad)) {
             item {
@@ -94,7 +115,7 @@ fun ThemeScreen() {
                     modes.forEachIndexed { i, (title, sub, icon) ->
                         if (i > 0) Divider()
                         Row(
-                            Modifier.fillMaxWidth().clickable { Prefs.setAppearance(i) }.padding(horizontal = 16.dp, vertical = 12.dp),
+                            Modifier.fillMaxWidth().clickable { if (appearance != i) pendingMode = i }.padding(horizontal = 16.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp),
                         ) {
                             Box(
@@ -118,7 +139,7 @@ fun ThemeScreen() {
                             row.forEach { a ->
                                 val c = Color(if (dark) a.dark else a.light)
                                 Column(
-                                    Modifier.weight(1f).clip(RoundedCornerShape(12.dp)).clickable { Prefs.setAccent(a.id) }.padding(vertical = 6.dp),
+                                    Modifier.weight(1f).clip(RoundedCornerShape(12.dp)).clickable { if (accentId != a.id) pendingAccent = a.id }.padding(vertical = 6.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp),
                                 ) {
                                     Box(

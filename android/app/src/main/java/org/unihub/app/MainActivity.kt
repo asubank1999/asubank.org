@@ -369,6 +369,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
             )
         }
 
+        JobsBanner()
         AnimatedVisibility(visible = splash, enter = fadeIn(), exit = fadeOut(tween(350))) { Splash() }
     }
 }

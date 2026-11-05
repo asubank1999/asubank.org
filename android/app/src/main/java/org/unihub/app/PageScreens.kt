@@ -116,7 +116,7 @@ fun SitePageScreen(path: String, title: String) {
         page != null && !page.cal.isNullOrEmpty() -> CalendarScreen(if (page.t.length > 24 || page.t.isEmpty()) "Academic calendar" else page.t, path, page.cal)
         page != null && page.web == 1 -> WebScreen(title.ifEmpty { page.t }, AB.absolute(path), allowZoom = false)
         page != null -> NativePage(path, page, title)
-        !loaded -> Screen(title) { p -> Box(Modifier.padding(p).fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+        !loaded -> Screen(title) { p -> Box(Modifier.padding(p).fillMaxSize(), contentAlignment = Alignment.Center) { ABDots() } }
         else -> WebScreen(title, AB.absolute(path), allowZoom = false)
     }
 }
@@ -391,7 +391,7 @@ fun LatestScreen() {
                 }
             }
             when (state) {
-                0 -> item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+                0 -> item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { ABDots() } }
                 3 -> item {
                     Column(Modifier.fillMaxWidth().padding(30.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                         Text("Couldn't load the latest files.", style = MaterialTheme.typography.titleMedium)
@@ -470,7 +470,7 @@ fun SubjectsDirectory() {
                     }
                 }
             }
-            if (subjects.isEmpty()) item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+            if (subjects.isEmpty()) item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { ABDots() } }
             item { Spacer(Modifier.height(24.dp)) }
         }
     }

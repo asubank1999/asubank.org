@@ -1,5 +1,14 @@
 package org.unihub.app
 
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import android.content.Intent
 import android.net.Uri
 import android.text.format.DateUtils
@@ -56,6 +65,10 @@ data class FeedPost(
     val liked: Boolean = false,
     val audience: String? = null,
     val user: AbUser,
+    val video: String = "",
+    val hasVoice: Boolean = false,
+    val duration: Int = 0,
+    val expires: String? = null,
 )
 
 object Social {
@@ -91,16 +104,20 @@ object Social {
 fun FriendButton(userId: String, state: String, changed: (String) -> Unit) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
-    var busy by remember { mutableStateOf(false) }
     var confirm by remember { mutableStateOf(false) }
+    // the button changes straight away with a little bounce; only a failure puts it back
+    var shown by remember(state) { mutableStateOf(state) }
     fun run(action: String, extra: Map<String, Any?> = emptyMap()) {
-        busy = true
+        val before = shown
+        shown = when (action) { "friendRequest" -> "outgoing"; "friendRespond" -> "friends"; else -> "none" }
         scope.launch {
             try {
                 val r = Account.call(action, extra + ("userId" to userId))
-                changed(r.str("friendship") ?: "none")
-            } catch (e: ApiError) { Toast.makeText(ctx, e.message, Toast.LENGTH_LONG).show() }
-            busy = false
+                changed(r.str("friendship") ?: shown)
+            } catch (e: ApiError) {
+                shown = before
+                Toast.makeText(ctx, e.message, Toast.LENGTH_LONG).show()
+            }
         }
     }
     if (confirm) AlertDialog(
@@ -109,11 +126,19 @@ fun FriendButton(userId: String, state: String, changed: (String) -> Unit) {
         confirmButton = { TextButton(onClick = { confirm = false; run("friendRemove") }) { Text("Remove friend", color = MaterialTheme.colorScheme.error) } },
         dismissButton = { TextButton(onClick = { confirm = false }) { Text("Cancel") } },
     )
-    when (state) {
-        "friends" -> OutlinedButton(onClick = { confirm = true }, enabled = !busy) { Icon(Icons.Filled.HowToReg, null, Modifier.size(18.dp)); Text(" " + tr("Friends")) }
-        "outgoing" -> OutlinedButton(onClick = { run("friendRemove") }, enabled = !busy) { Icon(Icons.Filled.Schedule, null, Modifier.size(18.dp)); Text(" " + tr("Requested")) }
-        "incoming" -> Button(onClick = { run("friendRespond", mapOf("accept" to true)) }, enabled = !busy) { Icon(Icons.Filled.Check, null, Modifier.size(18.dp)); Text(" " + tr("Accept")) }
-        else -> Button(onClick = { run("friendRequest") }, enabled = !busy) { Icon(Icons.Filled.PersonAdd, null, Modifier.size(18.dp)); Text(" " + tr("Add friend")) }
+    AnimatedContent(
+        shown,
+        transitionSpec = {
+            (scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMedium), initialScale = 0.6f) + fadeIn()) togetherWith (scaleOut(targetScale = 0.8f) + fadeOut())
+        },
+        label = "friend",
+    ) { now ->
+        when (now) {
+            "friends" -> OutlinedButton(onClick = { confirm = true }) { Icon(Icons.Filled.HowToReg, null, Modifier.size(18.dp)); Text(" " + tr("Friends")) }
+            "outgoing" -> OutlinedButton(onClick = { run("friendRemove") }) { Icon(Icons.Filled.Schedule, null, Modifier.size(18.dp)); Text(" " + tr("Requested")) }
+            "incoming" -> Button(onClick = { run("friendRespond", mapOf("accept" to true)) }) { Icon(Icons.Filled.Check, null, Modifier.size(18.dp)); Text(" " + tr("Accept")) }
+            else -> Button(onClick = { run("friendRequest") }) { Icon(Icons.Filled.PersonAdd, null, Modifier.size(18.dp)); Text(" " + tr("Add friend")) }
+        }
     }
 }
 
@@ -170,52 +195,93 @@ fun PokeDialog(user: AbUser, onClose: () -> Unit) {
 
 @Composable
 fun ComposePostDialog(onClose: () -> Unit, posted: () -> Unit) {
-    val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
     var text by remember { mutableStateOf("") }
     var photo by remember { mutableStateOf<Uri?>(null) }
+    var video by remember { mutableStateOf<Uri?>(null) }
+    var voice by remember { mutableStateOf<Pair<java.io.File, Int>?>(null) }
     var audience by remember { mutableStateOf(AudiencePref.value) }
-    val pick = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
-        if (uri != null) photo = uri
-    }
-    var busy by remember { mutableStateOf(false) }
+    var disappear by remember { mutableIntStateOf(0) }
     var error by remember { mutableStateOf<String?>(null) }
+    val rec = rememberVoiceRecorder { f, l -> voice = f to l }
+    val pick = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) { photo = uri; video = null }
+    }
+    val pickVideo = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) { video = uri; photo = null }
+    }
+    fun record() { if (!rec.start()) error = tr("Couldn't start the recording.") }
+    val askMic = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.RequestPermission()) { ok ->
+        if (ok) record() else error = tr("UniHub can't use the microphone. You can allow it in Settings.")
+    }
     AlertDialog(
-        onDismissRequest = onClose,
+        onDismissRequest = { rec.cancel(); onClose() },
         title = { Text("New post") },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 OutlinedTextField(
-                    text, { if (it.length <= 1000) text = it }, minLines = 5, modifier = Modifier.fillMaxWidth(),
+                    text, { if (it.length <= 1000) text = it }, minLines = 4, modifier = Modifier.fillMaxWidth(),
                     label = { Text("What's on your mind?") }, supportingText = { Text("${text.length}/1000") },
                 )
                 photo?.let {
                     coil.compose.AsyncImage(it, null, Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(12.dp)), contentScale = androidx.compose.ui.layout.ContentScale.Crop)
                 }
-                Row {
+                video?.let { v -> ChatMediaTile("video", v.toString()) { throw ApiError("") } }
+                Row(Modifier.horizontalScroll(rememberScrollState())) {
                     TextButton(onClick = { pick.launch("image/*") }) { Text(tr(if (photo == null) "Add a photo" else "Change photo")) }
                     if (photo != null) TextButton(onClick = { photo = null }) { Text(tr("Remove photo"), color = MaterialTheme.colorScheme.error) }
+                    TextButton(onClick = { pickVideo.launch("video/*") }) { Text(tr("Add a video")) }
+                    if (video != null) TextButton(onClick = { video = null }) { Text(tr("Remove video"), color = MaterialTheme.colorScheme.error) }
+                }
+                val v = voice
+                when {
+                    rec.recording -> Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Box(Modifier.size(10.dp).clip(androidx.compose.foundation.shape.CircleShape).background(Color.Red))
+                        Text(voiceTime(rec.seconds), Modifier.weight(1f))
+                        TextButton(onClick = { rec.cancel() }) { Text("Cancel", color = MaterialTheme.colorScheme.error) }
+                        TextButton(onClick = { voice = rec.stop() }) { Text("Done") }
+                    }
+                    v != null -> Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Box(Modifier.weight(1f)) { VoiceBubble(v.first.name, v.second, local = Uri.fromFile(v.first).toString()) { v.first } }
+                        IconButton(onClick = { voice = null }) { Icon(Icons.Filled.Delete, tr("Remove voice message"), tint = MaterialTheme.colorScheme.error) }
+                    }
+                    else -> TextButton(onClick = { if (hasMic(ctx)) record() else askMic.launch(android.Manifest.permission.RECORD_AUDIO) }) {
+                        Icon(Icons.Filled.Mic, null, Modifier.size(18.dp))
+                        Text(" " + tr("Record a voice message"))
+                    }
                 }
                 AudienceMenu(audience) { audience = it }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    DisappearMenu(disappear) { disappear = it }
+                    Text(Disappear.choices.first { it.first == disappear }.second, style = MaterialTheme.typography.bodyMedium)
+                }
                 error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             }
         },
         confirmButton = {
-            TextButton(enabled = !busy && (text.isNotBlank() || photo != null), onClick = {
-                busy = true
-                scope.launch {
-                    try {
-                        val fields = mutableMapOf<String, Any?>("text" to text, "audience" to audience)
-                        photo?.let { fields["image"] = PhotoTools.jpeg(ctx, it) ?: throw ApiError(tr("Couldn't load this photo")) }
-                        Account.call("postCreate", fields)
-                        posted()
-                        onClose()
-                    } catch (e: ApiError) { error = e.message }
-                    busy = false
+            TextButton(enabled = !rec.recording && (text.isNotBlank() || photo != null || video != null || voice != null), onClick = {
+                // the dialog closes straight away; the upload carries on in the background
+                val words = text
+                val who = audience
+                val time = disappear
+                val shot = photo
+                val clip = video
+                val sound = voice
+                BackgroundJobs.add(tr("Publishing your post…"), done = posted) {
+                    val fields = mutableMapOf<String, Any?>("text" to words, "audience" to who, "expiresIn" to time)
+                    shot?.let { fields["image"] = PhotoTools.jpeg(ctx, it) ?: throw ApiError(tr("Couldn't load this photo")) }
+                    clip?.let { fields["video"] = StoryVideo.base64(ctx, it) ?: throw ApiError(tr("That video is too big. Keep it short.")) }
+                    sound?.let {
+                        fields["file"] = android.util.Base64.encodeToString(it.first.readBytes(), android.util.Base64.NO_WRAP)
+                        fields["fileName"] = "voice.m4a"
+                        fields["duration"] = it.second
+                    }
+                    Account.call("postCreate", fields)
                 }
-            }) { Text(if (busy) "Posting…" else "Post") }
+                onClose()
+            }) { Text("Post") }
         },
-        dismissButton = { TextButton(onClick = onClose) { Text("Cancel") } },
+        dismissButton = { TextButton(onClick = { rec.cancel(); onClose() }) { Text("Cancel") } },
     )
 }
 
@@ -231,9 +297,12 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
     var menu by remember { mutableStateOf(false) }
     var reporting by remember { mutableStateOf<ReportTarget?>(null) }
     var blocking by remember { mutableStateOf<BlockTarget?>(null) }
+    var gone by remember { mutableStateOf(false) }
+    val ctx = LocalContext.current
     reporting?.let { t -> ReportDialog(t) { reporting = null } }
     blocking?.let { t -> BlockDialog(t, { blocking = null; changed() }) }
     if (showComments) CommentsDialog(post, { commentCount = it }) { showComments = false }
+    if (gone) return
     Group {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -247,6 +316,7 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(Social.ago(post.created), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             Icon(audienceIcon(post.audience), null, Modifier.size(12.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                            ExpiryTag(post.expires)
                         }
                     }
                 }
@@ -255,7 +325,8 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
                     DropdownMenu(menu, { menu = false }) {
                         if (post.user.id == me?.id || Account.isAdmin) DropdownMenuItem(text = { Text("Delete") }, onClick = {
                             menu = false
-                            scope.launch { runCatching { Account.call("postDelete", mapOf("id" to post.id)) }; changed() }
+                            gone = true
+                            BackgroundJobs.scope.launch { runCatching { Account.call("postDelete", mapOf("id" to post.id)) }; changed() }
                         })
                         if (post.user.id != me?.id) {
                             DropdownMenuItem(text = { Text("Report") }, onClick = { menu = false; reporting = ReportTarget("post", post.id, post.text) })
@@ -271,6 +342,10 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
                     .clickable { PhotoPeek.show(post.image) },
                 contentScale = androidx.compose.ui.layout.ContentScale.Crop,
             )
+            if (post.video.isNotEmpty()) ChatMediaTile("video") {
+                StoryVideo.local(ctx, post.video) ?: throw ApiError(tr("File not found."))
+            }
+            if (post.hasVoice) VoiceBubble(post.id, post.duration) { MediaFiles.local(ctx, "post", post.id, "voice.m4a") }
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(
                 Modifier.clip(RoundedCornerShape(50)).clickable {
@@ -388,7 +463,7 @@ fun FriendsScreen(back: Boolean = false) {
                 }
             }
             error?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
-            if (loading) item { Box(Modifier.fillMaxWidth().padding(24.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+            if (loading) items(4) { SkeletonRow() }
             when (segment) {
                 0 -> {
                     item { Group { ListRow("Write a post", icon = Icons.Filled.Edit) { composing = true } } }
@@ -577,7 +652,7 @@ fun ProfileScreen(userId: String) {
                         }
                     }
                     if (u == null) {
-                        if (error == null) CircularProgressIndicator() else Text(error!!, color = MaterialTheme.colorScheme.error)
+                        if (error == null) ABDots() else Text(error!!, color = MaterialTheme.colorScheme.error)
                     } else {
                         Text(u.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                         Text("@${u.username}", color = MaterialTheme.colorScheme.onSurfaceVariant)

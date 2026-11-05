@@ -1,5 +1,7 @@
 package org.unihub.app
 
+import androidx.compose.ui.graphics.graphicsLayer
+import java.util.UUID
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -74,10 +76,16 @@ data class DmMessage(
     val fileType: String = "",
     val fileSize: Long = 0,
     val hasFile: Boolean = false,
+    val duration: Int = 0,
+    val expires: String? = null,
+    val pending: Boolean = false,
+    val local: String? = null,
 ) {
     val instant: Instant get() = created?.let { runCatching { Instant.parse(it) }.getOrNull() } ?: Instant.now()
     val day: LocalDate get() = instant.atZone(ZoneId.systemDefault()).toLocalDate()
-    val preview: String get() = text.ifEmpty { if (fileType == "photo") "📷 " + tr("Photo") else "📄 $fileName" }
+    val preview: String get() = text.ifEmpty {
+        when (fileType) { "photo" -> "📷 " + tr("Photo"); "voice" -> "🎤 " + tr("Voice message"); "video" -> "🎬 " + tr("Video"); else -> "📄 $fileName" }
+    }
 }
 
 @Serializable
@@ -184,41 +192,6 @@ fun ChatDayPill(day: LocalDate) {
     }
 }
 
-/** The message box at the bottom of a chat */
-@Composable
-fun ChatComposer(
-    text: String, onText: (String) -> Unit, busy: Boolean, placeholder: String = "Message", sendIcon: ImageVector = Icons.AutoMirrored.Filled.Send,
-    leading: (@Composable () -> Unit)? = null, send: () -> Unit,
-) {
-    val empty = text.isBlank()
-    Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        leading?.invoke()
-        BasicTextField(
-            text, onText, Modifier.weight(1f), maxLines = 5,
-            textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-            cursorBrush = SolidColor(accent),
-            decorationBox = { inner ->
-                Box(
-                    Modifier.fillMaxWidth().clip(RoundedCornerShape(22.dp)).background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                        .padding(horizontal = 16.dp, vertical = 11.dp),
-                ) {
-                    if (text.isEmpty()) Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyLarge, maxLines = 1)
-                    inner()
-                }
-            },
-        )
-        val a = accent
-        Box(
-            Modifier.size(44.dp).clip(CircleShape).background(if (empty && !busy) a.copy(alpha = 0.4f) else a)
-                .clickable(enabled = !empty && !busy, onClick = send),
-            contentAlignment = Alignment.Center,
-        ) {
-            if (busy) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
-            else Icon(sendIcon, tr("Send"), tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(20.dp))
-        }
-    }
-}
-
 // MARK: - conversations
 
 /** The Messages side of the Chat tab */
@@ -231,7 +204,7 @@ fun DmConversations() {
         Group { ListRow("New message", icon = Icons.Filled.Edit) { nav.navigate("newmessage") } }
         if (list.isEmpty()) {
             if (loaded) EmptyState(Icons.Filled.Send, tr("No private messages yet"), tr("You can message your friends. Only the two of you see the chat."))
-            else Box(Modifier.fillMaxWidth().padding(30.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+            else Group { repeat(5) { SkeletonRow() } }
         } else Group {
             list.forEachIndexed { i, c ->
                 if (i > 0) Divider()
@@ -332,8 +305,7 @@ fun DmThreadScreen(userId: String) {
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     var text by remember { mutableStateOf("") }
-    var sending by remember { mutableStateOf(false) }
-    var attach by remember { mutableStateOf(false) }
+    var disappear by remember { mutableIntStateOf(0) }
     var menuFor by remember { mutableStateOf<String?>(null) }
     var opening by remember { mutableStateOf<String?>(null) }
     var reporting by remember { mutableStateOf<ReportTarget?>(null) }
@@ -344,13 +316,15 @@ fun DmThreadScreen(userId: String) {
 
     suspend fun fetch() {
         val f = mutableMapOf<String, Any?>("userId" to userId)
-        messages.lastOrNull()?.let { f["after"] = it.id }
+        messages.lastOrNull { !it.pending }?.let { f["after"] = it.id }
         try {
             val r = Account.call("dmThread", f)
             val gone = (r["deleted"] as? JsonArray)?.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }?.toSet().orEmpty()
-            if (gone.isNotEmpty()) messages.removeAll { it.id in gone }
+            messages.removeAll { it.id in gone || Disappear.expired(it.expires) }
             val have = messages.map { it.id }.toSet()
-            messages.addAll(r["messages"].decodeAs<List<DmMessage>>().orEmpty().filter { it.id !in have && it.id !in gone })
+            val new = r["messages"].decodeAs<List<DmMessage>>().orEmpty().filter { it.id !in have && it.id !in gone && !Disappear.expired(it.expires) }
+            // what is still on its way stays last
+            if (new.isNotEmpty()) messages.addAll(messages.indexOfFirst { it.pending }.takeIf { it >= 0 } ?: messages.size, new)
             r["user"].decodeAs<AbUser>()?.let { other = it }
             if (r.containsKey("canSend")) canSend = r.bool("canSend")
             r.str("seenUpTo")?.let { seenUpTo = it }
@@ -359,35 +333,30 @@ fun DmThreadScreen(userId: String) {
         loading = false
     }
 
-    suspend fun post(body: String, file: String? = null, fileName: String? = null): Boolean {
-        val f = mutableMapOf<String, Any?>("userId" to userId, "text" to body)
-        if (file != null) { f["file"] = file; f["fileName"] = fileName ?: "file" }
-        return try {
-            val r = Account.call("dmSend", f)
-            r["message"].decodeAs<DmMessage>()?.let { m -> if (messages.none { it.id == m.id }) messages.add(m) }
-            error = null
-            true
-        } catch (e: ApiError) { error = e.message; false }
-    }
-
-    val pickPhoto = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        if (uri != null) {
-            sending = true
-            scope.launch {
-                val data = PhotoTools.jpeg(ctx, uri, 1800)
-                if (data == null) error = tr("Couldn't load this photo") else post("", data, "photo.jpg")
-                sending = false
-            }
-        }
-    }
-    val pickFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri != null) {
-            sending = true
-            scope.launch {
-                val bytes = withContext(Dispatchers.IO) { StoryVideo.readLimited(ctx, uri, DmFiles.MAX_BYTES) }
-                if (bytes == null) error = tr("That file is too big. The limit is 8 MB.")
-                else post("", Base64.encodeToString(bytes, Base64.NO_WRAP), DmFiles.displayName(ctx, uri))
-                sending = false
+    /** The message shows at once and is replaced by the real one when the server has it. Leaving the chat doesn't stop it. */
+    fun send(body: String, o: ChatOutgoing? = null) {
+        val temp = DmMessage(
+            "local-" + UUID.randomUUID(), me?.id ?: "", userId, body, Instant.now().toString(), o?.fileName ?: "", o?.type ?: "", o?.size ?: 0, o != null,
+            o?.duration ?: 0, pending = true, local = o?.local,
+        )
+        val gone = disappear
+        messages.add(temp)
+        BackgroundJobs.scope.launch {
+            try {
+                val f = mutableMapOf<String, Any?>("userId" to userId, "text" to body, "expiresIn" to gone)
+                if (o != null) {
+                    f["file"] = o.load() ?: throw ApiError(tr("Couldn't send this file."))
+                    f["fileName"] = o.fileName
+                    f["duration"] = o.duration
+                }
+                val m = Account.call("dmSend", f)["message"].decodeAs<DmMessage>()
+                val i = messages.indexOfFirst { it.id == temp.id }
+                if (m != null && i >= 0 && messages.none { it.id == m.id }) messages[i] = m.copy(local = o?.local) else messages.removeAll { it.id == temp.id }
+                error = null
+            } catch (e: Exception) {
+                messages.removeAll { it.id == temp.id }
+                error = e.message
+                if (body.isNotEmpty() && text.isEmpty()) text = body
             }
         }
     }
@@ -419,7 +388,7 @@ fun DmThreadScreen(userId: String) {
     }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize().imePadding()) {
             Box(Modifier.weight(1f)) {
-                if (loading && messages.isEmpty()) CircularProgressIndicator(Modifier.align(Alignment.Center))
+                if (loading && messages.isEmpty()) SkeletonBubbles()
                 else if (messages.isEmpty()) Column(Modifier.align(Alignment.Center).padding(30.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     other?.let { Avatar(it.name, it.color, 72.dp, photo = it.avatar, hold = false) }
                     Text(name, fontWeight = FontWeight.SemiBold)
@@ -434,17 +403,18 @@ fun DmThreadScreen(userId: String) {
                         val mine = m.from == me?.id
                         val above = prev?.from == m.from && prev.day == m.day
                         val below = next?.from == m.from && next.day == m.day
-                        Column(Modifier.fillMaxWidth().padding(top = if (above) 1.dp else 6.dp), horizontalAlignment = if (mine) Alignment.End else Alignment.Start) {
+                        Column(Modifier.animateItem().fillMaxWidth().padding(top = if (above) 1.dp else 6.dp), horizontalAlignment = if (mine) Alignment.End else Alignment.Start) {
                             Box {
                                 Column(
                                     Modifier.widthIn(max = 290.dp).chatBubble(mine, above, below)
-                                        .combinedClickable(onClick = { if (m.hasFile && m.fileType != "photo") open(m) }, onLongClick = { menuFor = m.id })
+                                        .graphicsLayer { alpha = if (m.pending) 0.72f else 1f }
+                                        .combinedClickable(onClick = { if (m.hasFile && !m.pending && m.fileType in setOf("pdf", "docx")) open(m) }, onLongClick = { menuFor = m.id })
                                         .padding(horizontal = 12.dp, vertical = 8.dp),
                                     verticalArrangement = Arrangement.spacedBy(4.dp),
                                 ) {
                                     val fg = if (mine) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
                                     if (m.hasFile) {
-                                        if (m.fileType == "photo") DmPhoto(m)
+                                        if (m.fileType in setOf("photo", "voice", "video")) ChatAttachment(m.id, m.fileType, m.duration, mine, m.local) { DmFiles.local(ctx, m) }
                                         else Row(Modifier.width(220.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                             Icon(
                                                 if (m.fileType == "pdf") Icons.Filled.PictureAsPdf else Icons.Filled.Description, null,
@@ -454,27 +424,31 @@ fun DmThreadScreen(userId: String) {
                                                 Text(m.fileName, color = fg, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
                                                 Text(DmFiles.sizeText(m.fileSize), color = fg.copy(alpha = 0.75f), fontSize = 11.sp)
                                             }
-                                            if (opening == m.id) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = fg)
+                                            if (opening == m.id) ABDots(Modifier.size(18.dp), strokeWidth = 2.dp, color = fg)
                                         }
                                     }
                                     if (m.text.isNotEmpty()) Text(m.text, color = fg, style = MaterialTheme.typography.bodyLarge)
-                                    Text(
-                                        m.instant.atZone(ZoneId.systemDefault()).toLocalTime().format(dmTimeFmt), fontSize = 10.sp,
-                                        color = fg.copy(alpha = 0.65f), modifier = Modifier.align(Alignment.End),
-                                    )
+                                    Row(Modifier.align(Alignment.End), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                        ExpiryTag(m.expires, fg.copy(alpha = 0.7f))
+                                        if (m.pending) Icon(Icons.Filled.Schedule, null, Modifier.size(11.dp), tint = fg.copy(alpha = 0.7f))
+                                        androidx.compose.material3.Text(m.instant.atZone(ZoneId.systemDefault()).toLocalTime().format(dmTimeFmt), fontSize = 10.sp, color = fg.copy(alpha = 0.65f))
+                                    }
                                 }
                                 DropdownMenu(menuFor == m.id, { menuFor = null }) {
                                     if (m.text.isNotEmpty()) DropdownMenuItem(text = { Text("Copy") }, leadingIcon = { Icon(Icons.Filled.ContentCopy, null) }, onClick = {
                                         (ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("Message", m.text))
                                         menuFor = null
                                     })
-                                    if (mine) DropdownMenuItem(text = { Text("Delete") }, leadingIcon = { Icon(Icons.Filled.Delete, null) }, onClick = {
+                                    if (mine) { if (!m.pending) DropdownMenuItem(text = { Text("Delete for everyone") }, leadingIcon = { Icon(Icons.Filled.Delete, null) }, onClick = {
                                         menuFor = null
-                                        scope.launch {
-                                            try { Account.call("dmDelete", mapOf("id" to m.id)); messages.removeAll { it.id == m.id } }
-                                            catch (e: ApiError) { error = e.message }
+                                        // gone at once for me; the other person's phone removes it on its next check
+                                        val at = messages.indexOfFirst { it.id == m.id }
+                                        messages.removeAll { it.id == m.id }
+                                        BackgroundJobs.scope.launch {
+                                            try { Account.call("dmDelete", mapOf("id" to m.id)) }
+                                            catch (e: Exception) { error = e.message; if (at >= 0) messages.add(minOf(at, messages.size), m) }
                                         }
-                                    }) else {
+                                    }) } else {
                                         DropdownMenuItem(text = { Text("Report message") }, leadingIcon = { Icon(Icons.Filled.Flag, null) }, onClick = {
                                             menuFor = null
                                             reporting = ReportTarget("dm", m.id, m.preview.take(120))
@@ -501,53 +475,15 @@ fun DmThreadScreen(userId: String) {
                     Icon(Icons.Filled.Lock, null, Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(" " + tr("You can only send private messages to friends."), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 } else Box(Modifier.padding(horizontal = 10.dp, vertical = 8.dp)) {
-                    ChatComposer(
-                        text, { if (it.length <= 2000) text = it }, sending,
-                        leading = {
-                            Box {
-                                Box(
-                                    Modifier.size(44.dp).clip(CircleShape).background(accent.copy(alpha = 0.14f)).clickable { attach = true },
-                                    contentAlignment = Alignment.Center,
-                                ) { Icon(Icons.Filled.Add, tr("Attach a file"), tint = accent) }
-                                DropdownMenu(attach, { attach = false }) {
-                                    DropdownMenuItem(text = { Text("Photo") }, leadingIcon = { Icon(Icons.Filled.Image, null) }, onClick = { attach = false; pickPhoto.launch("image/*") })
-                                    DropdownMenuItem(text = { Text("PDF or Word file") }, leadingIcon = { Icon(Icons.Filled.Description, null) }, onClick = {
-                                        attach = false
-                                        pickFile.launch(arrayOf("application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
-                                    })
-                                }
-                            }
-                        },
+                    ChatInputBar(
+                        text, { if (it.length <= 2000) text = it }, allowDocs = true, disappear = disappear, onDisappear = { disappear = it },
+                        sendMedia = { o -> send("", o) }, fail = { error = it },
                     ) {
                         val t = text.trim()
-                        if (t.isNotEmpty() && !sending) {
-                            sending = true
-                            text = ""
-                            scope.launch {
-                                if (!post(t)) text = t
-                                sending = false
-                            }
-                        }
+                        if (t.isNotEmpty()) { text = ""; send(t) }
                     }
                 }
             }
         }
-    }
-}
-
-/** A photo in a private chat. It stays out of the shared links: it comes through the server, like the other files. */
-@Composable
-private fun DmPhoto(m: DmMessage) {
-    val ctx = LocalContext.current
-    var file by remember(m.id) { mutableStateOf<File?>(null) }
-    LaunchedEffect(m.id) { file = runCatching { DmFiles.local(ctx, m) }.getOrNull() }
-    Box(
-        Modifier.size(220.dp).clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceVariant)
-            .clickable(enabled = file != null) { file?.let { PhotoPeek.show(Uri.fromFile(it).toString()) } },
-        contentAlignment = Alignment.Center,
-    ) {
-        val f = file
-        if (f == null) CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp)
-        else AsyncImage(f, tr("View photo"), Modifier.matchParentSize(), contentScale = ContentScale.Crop)
     }
 }

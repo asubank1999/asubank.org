@@ -167,7 +167,7 @@ fun ServiceRatingScreen() {
                     Button(
                         onClick = ::submit, enabled = !busy && answers.size == questions.size,
                         modifier = Modifier.fillMaxWidth().padding(16.dp).height(50.dp),
-                    ) { if (busy) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp) else Text("Send rating") }
+                    ) { if (busy) ABDots(Modifier.size(20.dp), strokeWidth = 2.dp) else Text("Send rating") }
                 }
             }
         }
@@ -284,7 +284,7 @@ fun VotingScreen() {
                 error?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
                 item {
                     Button(onClick = ::submit, enabled = !busy && vote != null, modifier = Modifier.fillMaxWidth().padding(16.dp).height(50.dp)) {
-                        if (busy) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp) else Text("Send my vote")
+                        if (busy) ABDots(Modifier.size(20.dp), strokeWidth = 2.dp) else Text("Send my vote")
                     }
                 }
             }
@@ -306,7 +306,7 @@ private fun BigChoice(on: Boolean, emoji: String, label: String, color: Color, m
 @Composable
 private fun Results(stats: JsonObject?) {
     Group(header = "Live results") {
-        if (stats == null) { Box(Modifier.fillMaxWidth().padding(20.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() }; return@Group }
+        if (stats == null) { Box(Modifier.fillMaxWidth().padding(20.dp), contentAlignment = Alignment.Center) { ABDots() }; return@Group }
         val total = (stats["totalVotes"] as? JsonPrimitive)?.intOrNull ?: 0
         val yes = (stats["yesPercent"] as? JsonPrimitive)?.doubleOrNull ?: 0.0
         val interested = (stats["interestedCount"] as? JsonPrimitive)?.intOrNull ?: 0

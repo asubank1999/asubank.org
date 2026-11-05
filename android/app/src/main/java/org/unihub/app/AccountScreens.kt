@@ -307,7 +307,7 @@ fun SignInDialog(onClose: () -> Unit) {
                         onClick = ::submit, enabled = !busy && login.isNotBlank() && password.isNotEmpty(),
                         modifier = Modifier.fillMaxWidth().height(50.dp),
                     ) {
-                        if (busy) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
+                        if (busy) ABDots(Modifier.size(20.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
                         else Text(if (mode == 0) "Sign in" else "Create account")
                     }
                     if (mode == 0) Text(
@@ -375,7 +375,7 @@ fun AccountScreen() {
                             Modifier.align(Alignment.BottomStart).size(30.dp).clip(CircleShape).background(accent),
                             contentAlignment = Alignment.Center,
                         ) {
-                            if (photoBusy) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp, color = Color.White)
+                            if (photoBusy) ABDots(Modifier.size(16.dp), strokeWidth = 2.dp, color = Color.White)
                             else Icon(Icons.Filled.CameraAlt, tr("Change photo"), tint = Color.White, modifier = Modifier.size(17.dp))
                         }
                         DropdownMenu(photoMenu, { photoMenu = false }) {

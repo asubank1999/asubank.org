@@ -32,15 +32,15 @@ import java.util.Locale
  * which tools/gen_i18n.py writes from i18n/strings.json (the same file the iOS app's Localizable.strings come from).
  */
 object Lang {
-    val choices = listOf("system" to "System language", "en" to "English", "ar" to "Arabic", "es" to "Spanish")
-    val native = mapOf("ar" to "العربية", "es" to "Español", "en" to "English")
+    val choices = listOf("system" to "System language", "en" to "English", "ar" to "Arabic", "es" to "Spanish", "fr" to "French", "tr" to "Turkish", "de" to "German", "ru" to "Russian")
+    val native = mapOf("ar" to "العربية", "es" to "Español", "en" to "English", "fr" to "Français", "tr" to "Türkçe", "de" to "Deutsch", "ru" to "Русский")
     val choice = MutableStateFlow("system")
     @Volatile private var map: Map<String, String> = emptyMap()
     private var all: JsonObject? = null
 
     /** The language in use: the choice, or the phone's language when it's one we have */
     val code: String get() = choice.value.takeIf { it != "system" }
-        ?: Locale.getDefault().language.takeIf { it == "ar" || it == "es" } ?: "en"
+        ?: Locale.getDefault().language.takeIf { it in setOf("ar", "es", "fr", "tr", "de", "ru") } ?: "en"
 
     val rtl get() = code == "ar"
 

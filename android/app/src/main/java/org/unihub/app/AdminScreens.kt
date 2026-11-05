@@ -224,7 +224,7 @@ fun AdminUsersScreen() {
                 }
             }
             error?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
-            if (loading && users.isEmpty()) item { Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+            if (loading && users.isEmpty()) item { Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) { ABDots() } }
             item {
                 Group(footer = trf("%d accounts", shown.size)) {
                     shown.forEachIndexed { i, u ->
@@ -334,7 +334,7 @@ fun AdminUserScreen() {
                     }
                 }
             }
-            if (busy) item { Box(Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+            if (busy) item { Box(Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) { ABDots() } }
         }
     }
 

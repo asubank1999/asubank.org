@@ -187,7 +187,7 @@ fun BlockedScreen() {
             error?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
             item {
                 Group(footer = if (people.isEmpty()) null else "Tap someone to unblock them.") {
-                    if (loading) CircularProgressIndicator(Modifier.padding(16.dp))
+                    if (loading) ABDots(Modifier.padding(16.dp))
                     else if (people.isEmpty()) ListRow("You haven't blocked anyone.")
                     people.forEachIndexed { i, p ->
                         if (i > 0) Divider()
@@ -236,7 +236,7 @@ fun AdminReportsScreen() {
                 }
             }
             error?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
-            if (loading) item { CircularProgressIndicator(Modifier.padding(16.dp)) }
+            if (loading) item { ABDots(Modifier.padding(16.dp)) }
             else if (reports.isEmpty()) item { Text("Nothing to review.", Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onSurfaceVariant) }
             items(reports.size) { i ->
                 val r = reports[i]

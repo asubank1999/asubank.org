@@ -460,7 +460,7 @@ fun TeacherRatingsScreen() {
                 when (status) {
                     RatingBridge.Status.CONNECTING -> item {
                         Column(Modifier.fillMaxWidth().padding(40.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                            CircularProgressIndicator(); Spacer(Modifier.height(12.dp)); Text("Loading ratings…", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            ABDots(); Spacer(Modifier.height(12.dp)); Text("Loading ratings…", color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                     RatingBridge.Status.FAILED -> item {
@@ -654,7 +654,7 @@ private fun RateSheet(start: String, known: List<Teacher>, close: () -> Unit) {
             shape = RoundedCornerShape(14.dp), modifier = Modifier.fillMaxWidth().height(50.dp),
             colors = ButtonDefaults.buttonColors(),
         ) {
-            if (saving) CircularProgressIndicator(Modifier.size(22.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
+            if (saving) ABDots(Modifier.size(22.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
             else Text(if (done) "Done" else "Save rating", fontWeight = FontWeight.SemiBold)
         }
         Text("Your rating is anonymous.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

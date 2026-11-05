@@ -256,6 +256,8 @@ object AppConfig {
     val offerUpdate = MutableStateFlow(false)
     val apkUrl = MutableStateFlow<String?>(null)
     val notes = MutableStateFlow<String?>(null)
+    /** What "Share UniHub" sends. Set "share" in app-config.json when the store pages exist. */
+    val shareUrl = MutableStateFlow("https://asubank.org/")
     val checking = MutableStateFlow(false)
     private var checkedAt = 0L
 
@@ -281,6 +283,7 @@ object AppConfig {
                 val o = json.parseToJsonElement(t).jsonObject
                 donate.value = !BuildConfig.STORE_BUILD && (o["donate"] as? JsonPrimitive)?.booleanOrNull ?: !BuildConfig.STORE_BUILD
                 sponsor.value = if (BuildConfig.STORE_BUILD) null else readSponsor(o["sponsor"] as? JsonObject)
+                (o["share"] as? JsonPrimitive)?.contentOrNull?.takeIf { it.startsWith("https://") }?.let { shareUrl.value = it }
                 (o["android"] as? JsonObject)?.let { a ->
                     minimum = (a["minimum"] as? JsonPrimitive)?.contentOrNull
                     configLatest = (a["latest"] as? JsonPrimitive)?.contentOrNull

@@ -166,7 +166,7 @@ fun NotificationsScreen(back: Boolean = false) {
         if (user == null) Box(Modifier.padding(pad)) { SignInPrompt("Sign in to see your notifications", "Friend requests, pokes, new uploads and announcements will show up here.") }
         else LazyColumn(Modifier.padding(pad).fillMaxSize()) {
             failed?.takeIf { list.isEmpty() }?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
-            if (!loaded) item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+            if (!loaded) item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { ABDots() } }
             else if (list.isEmpty() && failed == null) item { EmptyState(Icons.Filled.Notifications, "Nothing yet", "Friend requests, pokes, new uploads and announcements will show up here.") }
             items(list.size) { i ->
                 val n = list[i]

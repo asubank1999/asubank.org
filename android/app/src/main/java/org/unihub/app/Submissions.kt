@@ -166,7 +166,7 @@ fun SubmissionsScreen(admin: Boolean = false) {
                 }
             }
             error?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
-            if (loading && items.isEmpty()) item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+            if (loading && items.isEmpty()) item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { ABDots() } }
             else if (shown.isEmpty()) item { Box(Modifier.padding(top = 40.dp)) { EmptyState(Icons.Filled.Inbox, "Nothing here", "No submissions match.") } }
             else item {
                 Group {

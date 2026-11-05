@@ -94,7 +94,7 @@ fun SuggestMaterialScreen() {
                             },
                             enabled = !busy && text.length >= 20, modifier = Modifier.fillMaxWidth(),
                         ) {
-                            if (busy) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp) else Text("Send suggestion")
+                            if (busy) ABDots(Modifier.size(20.dp), strokeWidth = 2.dp) else Text("Send suggestion")
                         }
                     }
                 }
@@ -155,7 +155,7 @@ fun AdminSuggestionsScreen() {
                 }
             }
             error?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
-            if (loading) item { Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+            if (loading) item { Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) { ABDots() } }
             else if (list.isEmpty()) item { Text("Nothing to review.", Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onSurfaceVariant) }
             items(list.size) { i ->
                 val r = list[i]
