@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 10;
+var SCHEMA = 11;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -81,6 +81,7 @@ var SHEETS = {
   DMs: ['id', 'pair', 'from', 'to', 'text', 'created', 'deleted', 'fileId', 'fileName', 'fileType', 'fileSize', 'read', 'duration', 'expires'],
   Suggestions: ['id', 'created', 'userId', 'username', 'note', 'contact', 'status', 'resolvedBy', 'resolvedAt'],
   DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed'],
+  VideoLinks: ['id', 'userId', 'url', 'title', 'subject', 'page', 'category', 'created'],
   Swaps: ['id', 'userId', 'have', 'want', 'section', 'note', 'fullName', 'studentId', 'major', 'phone', 'email', 'status', 'created']
 };
 
@@ -843,7 +844,63 @@ function swapPublic(r, me) {
            created: r.created, mine: !!me && r.userId === me.id };
 }
 
+/** One clean YouTube address from whatever was pasted, or '' if it isn't a YouTube video or playlist */
+function youtubeUrl(raw) {
+  var u = String(raw || '').trim();
+  if (!/^https?:\/\/(www\.|m\.|music\.)?(youtube\.com|youtu\.be)\//i.test(u)) return '';
+  var m = u.match(/youtu\.be\/([\w-]{11})(?![\w-])/i) || u.match(/youtube\.com\/(?:shorts|live|embed)\/([\w-]{11})(?![\w-])/i) || u.match(/youtube\.com\/watch\?(?:[^#]*&)?v=([\w-]{11})(?![\w-])/i);
+  if (m) return 'https://www.youtube.com/watch?v=' + m[1];
+  m = u.match(/youtube\.com\/playlist\?(?:[^#]*&)?list=([\w-]{10,64})(?![\w-])/i);
+  return m ? 'https://www.youtube.com/playlist?list=' + m[1] : '';
+}
+function videoLinkOut(r, me) {
+  var o = { id: r.id, u: plainCell(r.url), t: plainCell(r.title), s: plainCell(r.subject), p: plainCell(r.page), c: plainCell(r.category), tag: '', d: String(r.created).slice(0, 10), created: r.created };
+  if (me && (r.userId === me.id || me.role === 'admin')) o.canDelete = true;
+  return o;
+}
+
 var ACTIONS = {
+  /** YouTube links students shared, newest first. Public, and carries nothing about who shared them */
+  linksList: function (b) {
+    var me = null;
+    try { me = b.token ? auth(b) : null; } catch (e) {}
+    var list = rows('VideoLinks');
+    list.sort(function (x, y) { return String(y.created).localeCompare(String(x.created)); });
+    return { ok: true, links: list.slice(0, 1000).map(function (r) { return videoLinkOut(r, me); }) };
+  },
+
+  linkAdd: function (b) {
+    var s = auth(b);
+    if (s.banned) fail('This account is banned.');
+    var url = youtubeUrl(b.url);
+    if (!url) fail('Paste a link to a YouTube video or playlist.');
+    var title = String(b.title || '').replace(/\s+/g, ' ').trim().slice(0, 160);
+    if (title.length < 3) fail('Write a title, so students can find this video.');
+    var subject = String(b.subject || '').trim().slice(0, 80), page = String(b.page || '').trim().slice(0, 80), category = String(b.category || '').trim().slice(0, 80);
+    if (!subject || !/^\/banks\/[\w-]+$/.test(page)) fail('Choose a subject.');
+    return withLock(function () {
+      var all = rows('VideoLinks');
+      if (all.some(function (r) { return plainCell(r.url) === url; })) fail('This video is already on UniHub.');
+      var today = new Date().toISOString().slice(0, 10);
+      if (s.role !== 'admin' && all.filter(function (r) { return r.userId === s.id && String(r.created).slice(0, 10) === today; }).length >= 20) fail('You have shared 20 videos today. Please try again tomorrow.');
+      var row = { id: newId(), userId: s.id, url: asText(url), title: asText(title), subject: asText(subject), page: asText(page), category: asText(category), created: new Date().toISOString() };
+      append('VideoLinks', row);
+      return { ok: true, link: videoLinkOut(row, s) };
+    });
+  },
+
+  /** The student who shared it, or an admin */
+  linkDelete: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      var r = rows('VideoLinks').filter(function (x) { return x.id === b.id; })[0];
+      if (!r) return { ok: true };
+      if (r.userId !== s.id && s.role !== 'admin') fail('Only the student who shared this can delete it.');
+      sheet('VideoLinks').deleteRow(r._row);
+      return { ok: true };
+    });
+  },
+
   /** Subject swap listings. Public fields only: no phone, email, student ID or full name */
   swapList: function (b) {
     var me = null;

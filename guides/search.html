@@ -314,6 +314,7 @@
             if (!q.value && matchMedia('(pointer: fine)').matches) q.focus();
         });
         renderStart();
+        document.addEventListener('ab:yt', function () { setTimeout(function () { if (idx && q.value) run(false); }, 0); });
         document.addEventListener('ab:ab.recent', function () { if (!$('start').hidden) setTimeout(renderStart, 400); });
     });
     </script>

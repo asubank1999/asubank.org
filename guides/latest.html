@@ -983,7 +983,7 @@
         const map = { folder:'fa-folder', pdf:'fa-file-pdf', image:'fa-file-image', video:'fa-file-video', document:'fa-file-word', spreadsheet:'fa-file-excel', presentation:'fa-file-powerpoint', archive:'fa-file-archive', audio:'fa-file-audio', text:'fa-file-alt', file:'fa-file' };
         return `<i class="fas ${map[iconType] || 'fa-file'}"></i>`;
     }
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    function escapeHtml(str) { return String(str).replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]; }); }
 
     function updateStatsAndUI(files) {
         const total = allFiles.length;
@@ -1015,14 +1015,14 @@
                 <div class="file-actions"><button class="open-btn" onclick="event.stopPropagation(); openFile('${f.url}')"><i class="fas fa-external-link-alt"></i></button><button class="open-btn" title="Report this file" aria-label="Report this file" data-report-url="${escapeHtml(f.url)}" data-report-name="${escapeHtml(f.name)}"><i class="fas fa-flag"></i></button></div>
                 <div class="file-icon ${f.icon}">${getFileIconHTML(f.icon)}</div>
                 <h3 class="file-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</h3>
-                <div class="file-meta"><span><i class="fas fa-hdd"></i> <span class="${getSizeClass(f.size || 0)}">${formatFileSize(f.size || 0)}</span></span><span><i class="fas fa-tag"></i> ${f.icon}</span></div>
+                <div class="file-meta"><span><i class="fas fa-hdd"></i> <span class="${getSizeClass(f.size || 0)}">${(f.url.startsWith('https://www.youtube.com/') ? 'YouTube' : formatFileSize(f.size || 0))}</span></span><span><i class="fas fa-tag"></i> ${f.icon}</span></div>
                 <div class="file-date"><i class="far fa-clock"></i> ${formatDate(f.dateUploaded)}</div>
             </div>`).join('')}</div>`;
     }
     function renderList(files) {
         if (!files.length) return renderGrid(files);
         const sorted = sortFiles(files);
-        return `<div class="files-list">${sorted.map(f => `<div class="file-row" onclick="openFile('${f.url}')"><div class="list-icon ${f.icon}">${getFileIconHTML(f.icon)}</div><div class="list-name">${escapeHtml(f.name)}</div><div class="list-size ${getSizeClass(f.size || 0)}">${formatFileSize(f.size || 0)}</div><div class="list-date">${formatDate(f.dateUploaded)}</div><button class="open-btn" title="Report this file" aria-label="Report this file" data-report-url="${escapeHtml(f.url)}" data-report-name="${escapeHtml(f.name)}"><i class="fas fa-flag"></i></button></div>`).join('')}</div>`;
+        return `<div class="files-list">${sorted.map(f => `<div class="file-row" onclick="openFile('${f.url}')"><div class="list-icon ${f.icon}">${getFileIconHTML(f.icon)}</div><div class="list-name">${escapeHtml(f.name)}</div><div class="list-size ${getSizeClass(f.size || 0)}">${(f.url.startsWith('https://www.youtube.com/') ? 'YouTube' : formatFileSize(f.size || 0))}</div><div class="list-date">${formatDate(f.dateUploaded)}</div><button class="open-btn" title="Report this file" aria-label="Report this file" data-report-url="${escapeHtml(f.url)}" data-report-name="${escapeHtml(f.name)}"><i class="fas fa-flag"></i></button></div>`).join('')}</div>`;
     }
 
     function renderFiles(files) {
@@ -1077,7 +1077,9 @@
             let data;
             try { data = JSON.parse(text); } catch(e) { throw new Error('Invalid response format'); }
             if (data && data.success && Array.isArray(data.files)) {
-                if (window.AB && AB.removed) await Promise.all([AB.links(), AB.removed()]);
+                if (window.AB && AB.removed) await Promise.all([AB.links(), AB.removed(), AB.ytLinks()]);
+                // YouTube links students shared sit with the files
+                if (window.AB && AB.ytItems) data.files = AB.ytItems.map(l => ({ id: l.id, name: l.t + ' (' + l.s + ')', url: l.u, icon: 'video', size: 0, dateUploaded: l.created || l.d })).concat(data.files);
                 allFiles = data.files.filter(f => !(window.AB && AB.isRemoved && (AB.isRemoved(f.url) || AB.broken[f.url]))).map(f => ({ ...f, size: f.size || 0, dateUploaded: f.dateUploaded || new Date().toISOString() }));
                 if (!keepSearchState) {
                     // If we have currentSearch from URL params, apply it

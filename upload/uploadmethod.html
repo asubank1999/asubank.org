@@ -32,6 +32,15 @@
         .embed iframe { width: 100%; height: 420px; border: 0; display: block; background: #fff; }
         .embed .ab-empty { position: absolute; inset: 0; display: grid; place-items: center; background: var(--ab-surface); }
         .meta-list { margin-top: 12px; }
+        .yt-preview { display: flex; align-items: center; gap: 12px; padding: 10px 14px; }
+        .yt-preview img { width: 112px; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; background: var(--ab-fill-2, rgba(120,120,128,.14)); flex: none; }
+        .yt-preview small { color: var(--ab-label-2); font-size: 13px; }
+        .yt-msg { color: var(--ab-red); font-size: 14px; margin: 8px 2px 0; min-height: 0; }
+        .yt-msg:empty { display: none; }
+        .yt-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; }
+        .yt-row a { flex: 1; min-width: 0; }
+        .yt-row small { display: block; color: var(--ab-label-2); font-size: 12px; }
+        .yt-del { color: var(--ab-red); background: none; border: 0; font: inherit; font-size: 14px; cursor: pointer; padding: 6px; }
         .meta-row { display: grid; grid-template-columns: 1fr 1fr; }
         .meta-row .ab-field + .ab-field { border-top: 0; border-left: .5px solid var(--ab-sep); }
     </style>
@@ -62,6 +71,7 @@
                         <li>No illegal, private or copyrighted material. Files that break the rules are removed.</li>
                         <li>Use a clear name, e.g. “Calculus 1 Midterm 2025 Dr Ahmad.pdf”.</li>
                         <li>New files appear in <a href="/guides/latest">Latest uploads</a> and in <a href="/guides/search">Search</a>.</li>
+                        <li>YouTube videos and playlists are welcome too: they show in Search right away.</li>
                     </ul>
                     <label class="agree" style="margin-top:10px">
                         <input type="checkbox" id="agree">
@@ -91,6 +101,23 @@
                         <button class="ab-btn" type="button" id="startBtn" style="flex:1" disabled>Upload</button>
                         <button class="ab-btn gray" type="button" id="clearBtn" hidden>Clear</button>
                     </div>
+                </section>
+
+                <!-- YouTube links go to the accounts API and show in search at once -->
+                <section class="ab-section locked" id="ytSection" aria-labelledby="h-yt">
+                    <div class="ab-section-h"><h2 id="h-yt" style="font-size:17px">Share a YouTube video</h2></div>
+                    <form id="ytForm" class="ab-list meta-list" style="margin-top:0">
+                        <label class="ab-field"><span>YouTube link</span><input id="ytUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.youtube.com/watch?v=..."></label>
+                        <div class="yt-preview" id="ytPreview" hidden><img id="ytThumb" alt="" referrerpolicy="no-referrer"><small id="ytState"></small></div>
+                        <label class="ab-field"><span>Title</span><input id="ytTitle" maxlength="160" placeholder="e.g. Calculus 1, chapter 3, Dr. Ahmad"></label>
+                        <label class="ab-field"><span>Subject</span><select id="ytSubject"><option value="">Choose a subject</option></select></label>
+                    </form>
+                    <p class="st err yt-msg" id="ytErr" role="alert"></p>
+                    <div class="ab-btn-row" style="margin-top:12px">
+                        <button class="ab-btn" type="submit" form="ytForm" id="ytBtn" style="flex:1" disabled>Share video</button>
+                    </div>
+                    <p class="ab-foot" id="ytSignIn" hidden><a href="/account/">Sign in</a> to share videos, so students know they come from a real account.</p>
+                    <ul class="ab-list" id="ytList" style="margin-top:12px" hidden></ul>
                 </section>
 
                 <!-- Google uploader (used until UPLOAD_API is set; same uploader as /upload/gupload) -->
@@ -141,6 +168,7 @@
 
         function setAgree() {
             section.classList.toggle('locked', !agree.checked);
+            $('ytSection').classList.toggle('locked', !agree.checked);
             try { sessionStorage.setItem('ab.uploadAgree', agree.checked ? '1' : '0'); } catch (e) {}
             if (agree.checked && !UPLOAD_API && !$('embed').querySelector('iframe')) {
                 $('embedMsg').innerHTML = '<span class="ab-spinner"></span>';
@@ -152,6 +180,93 @@
             if (UPLOAD_API) updateStart();
         }
         agree.addEventListener('change', setAgree);
+
+        // ---------- YouTube links ----------
+        (function () {
+            var API = 'https://script.google.com/macros/s/AKfycbzXDE0Km2mxL_gAJFqspZeaADtugupeLN0YQlkEbXnrCkSTKBfImW_lLCKF8_SMI0i_/exec';
+            var token = null, subjects = {}, pasted = '', titled = false;
+            try { token = localStorage.getItem('ab.acc.token'); } catch (e) {}
+            var url = $('ytUrl'), title = $('ytTitle'), subject = $('ytSubject'), btn = $('ytBtn'), err = $('ytErr'), list = $('ytList');
+            function call(action, fields) {
+                return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ action: action, token: token }, fields)) })
+                    .then(function (r) { return r.json(); }).then(function (o) { if (!o.ok) throw new Error(o.error || 'Something went wrong.'); return o; });
+            }
+            function videoId(u) {
+                var m = String(u).match(/(?:youtu\.be\/|youtube\.com\/(?:shorts\/|live\/|embed\/|watch\?(?:[^#]*&)?v=))([\w-]{11})(?![\w-])/i);
+                return m ? m[1] : '';
+            }
+            function isPlaylist(u) { return /youtube\.com\/playlist\?(?:[^#]*&)?list=[\w-]{10,64}/i.test(u); }
+            function valid() { return !!(videoId(url.value) || isPlaylist(url.value)); }
+            function update() { btn.disabled = !token || !valid() || title.value.trim().length < 3 || !subject.value || !agree.checked; }
+            function preview() {
+                var u = url.value.trim(), id = videoId(u), box = $('ytPreview'), thumb = $('ytThumb'), state = $('ytState');
+                update();
+                if (u === pasted) return;
+                pasted = u;
+                box.hidden = !u;
+                if (!u) return;
+                thumb.hidden = !id;
+                if (id) thumb.src = 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg';
+                state.textContent = valid() ? (id ? 'YouTube video' : 'YouTube playlist') : 'This does not look like a YouTube video or playlist link.';
+                // fill the title when the student hasn't typed one
+                if (valid() && !titled) fetch('https://noembed.com/embed?url=' + encodeURIComponent(u)).then(function (r) { return r.json(); }).then(function (o) {
+                    if (o && o.title && !titled && url.value.trim() === u) { title.value = String(o.title).slice(0, 160); update(); }
+                }).catch(function () {});
+            }
+            url.addEventListener('input', preview);
+            title.addEventListener('input', function () { titled = !!title.value.trim(); update(); });
+            subject.addEventListener('change', update);
+            agree.addEventListener('change', update);
+            function row(l) {
+                var li = document.createElement('li'), box = document.createElement('div'), a = document.createElement('a'), small = document.createElement('small');
+                box.className = 'yt-row';
+                a.href = l.u; a.target = '_blank'; a.rel = 'noopener'; a.textContent = l.t;
+                small.textContent = l.s; a.appendChild(small); box.appendChild(a);
+                if (l.canDelete) {
+                    var del = document.createElement('button');
+                    del.type = 'button'; del.className = 'yt-del'; del.textContent = 'Delete';
+                    del.addEventListener('click', function () {
+                        li.remove();
+                        forget(l.u);
+                        call('linkDelete', { id: l.id }).catch(function (e) { AB.toast(e.message); load(); });
+                    });
+                    box.appendChild(del);
+                }
+                li.appendChild(box);
+                return li;
+            }
+            function forget(u) {
+                AB.ytItems = AB.ytItems.filter(function (x) { return x.u !== u; });
+                try { localStorage.setItem('ab.yt', JSON.stringify(AB.ytItems)); } catch (e) {}
+            }
+            function show(links) {
+                var mine = links.filter(function (l) { return l.canDelete; }).slice(0, 30);
+                list.innerHTML = '';
+                list.hidden = !mine.length;
+                mine.forEach(function (l) { list.appendChild(row(l)); });
+            }
+            var known = [];
+            function load() { if (token) call('linksList', {}).then(function (o) { known = o.links || []; show(known); }).catch(function () {}); }
+            AB.index().then(function (d) {
+                d.subjects.forEach(function (s) { if (s.c !== 'Archive') { subjects[s.t] = s; subject.appendChild(new Option(s.t, s.t)); } });
+            });
+            if (!token) { $('ytSignIn').hidden = false; url.disabled = title.disabled = subject.disabled = true; }
+            $('ytForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (btn.disabled) return;
+                var s = subjects[subject.value];
+                if (!s) return;
+                err.textContent = ''; btn.disabled = true; btn.textContent = 'Sharing…';
+                call('linkAdd', { url: url.value.trim(), title: title.value.trim(), subject: s.t, page: s.p, category: s.c || '' }).then(function (o) {
+                    AB.ytItems = [o.link].concat(AB.ytItems);
+                    try { localStorage.setItem('ab.yt', JSON.stringify(AB.ytItems)); } catch (x) {}
+                    known = [o.link].concat(known); show(known);
+                    url.value = title.value = ''; subject.value = ''; titled = false; pasted = ''; $('ytPreview').hidden = true;
+                    AB.toast('Video shared. Students can find it in Search now. Thank you!');
+                }).catch(function (x) { err.textContent = x.message; }).then(function () { btn.textContent = 'Share video'; update(); });
+            });
+            load();
+        })();
 
         if (!UPLOAD_API) { setAgree(); return; }
 

@@ -120,7 +120,7 @@
         u = String(u || ''); var s = (u + ' ' + (t || '')).toLowerCase();
         if (/^\/(?!\/)/.test(u) || /^https?:\/\/(www\.)?asubank\.org/.test(u)) return 'page';
         if (/drive\.google\.com\/(drive\/(u\/\d\/)?folders|embeddedfolderview|folderview)/.test(u) || /dropbox\.com\/(scl\/fo|sh)\//.test(u) || /sharepoint\.com\/:f:/.test(u)) return 'folder';
-        if (/sharepoint\.com\/:v:|youtube\.com\/(playlist|@)/.test(u)) return 'video';
+        if (/sharepoint\.com\/:v:|youtube\.com\/(playlist|@|watch|shorts|live)|youtu\.be\//.test(u)) return 'video';
         if (/docs\.google\.com\/document/.test(u)) return 'doc';
         if (/docs\.google\.com\/presentation/.test(u)) return 'ppt';
         if (/docs\.google\.com\/spreadsheets/.test(u)) return 'sheet';
@@ -599,14 +599,42 @@
         doc.addEventListener('keydown', function (e) { if (!isField(e.target) && e.ctrlKey && ['c', 'x', 'u'].indexOf(e.key) > -1) e.preventDefault(); });
     };
 
+    /* ---------- YouTube links students shared (accounts API): last known list at once, the newest soon after ---------- */
+    var ytP = null;
+    AB.ytItems = [];
+    AB.ytLinks = function () {
+        if (ytP) return ytP;
+        try { AB.ytItems = JSON.parse(localStorage.getItem('ab.yt')) || []; } catch (e) { AB.ytItems = []; }
+        var live = fetch('https://script.google.com/macros/s/AKfycbzXDE0Km2mxL_gAJFqspZeaADtugupeLN0YQlkEbXnrCkSTKBfImW_lLCKF8_SMI0i_/exec', {
+            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: '{"action":"linksList"}'
+        }).then(function (r) { return r.json(); }).then(function (o) {
+            if (!o || !o.links) return;
+            AB.ytItems = o.links.filter(function (l) { return /^https:\/\/www\.youtube\.com\/(watch\?v=|playlist\?list=)[\w-]+$/.test(l.u); });
+            try { localStorage.setItem('ab.yt', JSON.stringify(AB.ytItems)); } catch (e) {}
+            doc.dispatchEvent(new CustomEvent('ab:yt'));
+        }).catch(function () {});
+        ytP = Promise.race([live, new Promise(function (ok) { setTimeout(ok, 1500); })]);
+        return ytP;
+    };
+
     /* ---------- materials index (built from the subject pages) ---------- */
     var idxP = null;
+    function addYt(d) {
+        var have = {};
+        d.items.forEach(function (it) { have[it.u] = 1; });
+        var fresh = AB.ytItems.filter(function (l) { return !have[l.u]; }).map(function (l) {
+            return { u: l.u, t: l.t, s: l.s, p: l.p, c: l.c, tag: '', d: l.d, q: AB.norm(l.t + ' ' + l.s + ' ' + (l.c || '')), k: 'video' };
+        });
+        if (fresh.length) d.items = fresh.concat(d.items);
+    }
     AB.index = function () {
-        if (!idxP) idxP = Promise.all([fetch('/assets/app/materials.json').then(function (r) { return r.json(); }), AB.links(), AB.removed()]).then(function (x) {
+        if (!idxP) idxP = Promise.all([fetch('/assets/app/materials.json').then(function (r) { return r.json(); }), AB.links(), AB.removed(), AB.ytLinks()]).then(function (x) {
             var d = x[0];
+            doc.addEventListener('ab:yt', function () { addYt(d); });
             // links the checker found dead are left out of search
             d.items = d.items.filter(function (it) { return !AB.broken[it.u] && !AB.isRemoved(it.u); });
             d.items.forEach(function (it) { it.q = AB.norm(it.t + ' ' + it.s + ' ' + (it.c || '')); it.k = it.k || AB.kind(it.u, it.t); });
+            addYt(d);
             return d;
         }).catch(function () { idxP = null; return { items: [], subjects: [] }; });
         return idxP;
