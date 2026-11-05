@@ -632,7 +632,7 @@
             var d = x[0];
             doc.addEventListener('ab:yt', function () { addYt(d); });
             // links the checker found dead are left out of search
-            d.items = d.items.filter(function (it) { return !AB.broken[it.u] && !AB.isRemoved(it.u); });
+            d.items = d.items.filter(function (it) { return !AB.broken[it.u] && !AB.isRemoved(it.u) && it.u.indexOf('/personal/202310256_students_asu_edu_jo/') < 0; });
             d.items.forEach(function (it) { it.q = AB.norm(it.t + ' ' + it.s + ' ' + (it.c || '')); it.k = it.k || AB.kind(it.u, it.t); });
             addYt(d);
             return d;
