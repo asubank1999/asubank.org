@@ -1,5 +1,10 @@
 **UniHub for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.15.0
+- New: Subject swap. Trade a registered subject with another student, on the website and in the apps
+- Post the subject you have and the one you want, and swaps that match yours show first
+- A student's phone and email show only to signed-in students who open their swap
+
 ### What's new in 1.14.0
 - ASU Bank is now UniHub, with a new name and a new icon
 - This update installs as a new app: sign in once, then you can delete the old ASU Bank app

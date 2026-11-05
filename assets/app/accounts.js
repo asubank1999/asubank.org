@@ -1744,7 +1744,110 @@
         posts(true);
     }
 
-    var views = { account: accountView, chat: chatView, admin: adminView, feed: feedView };
+    // subject swap: the list is public; contact details load only for a signed-in student who opens a listing
+    function swapView() {
+        root.innerHTML = '';
+        var swaps = [], listBox = h('div', {}, skel('row', 4));
+        var search = h('input', { type: 'search', placeholder: 'Search subjects', 'aria-label': 'Search subjects' });
+        search.addEventListener('input', draw);
+        root.appendChild(h('div', { class: 'acc-card' },
+            h('h2', { text: 'Subject swap' }),
+            h('p', { class: 'acc-muted', text: 'Trade a registered subject with another student. Say what you have and what you want.' }),
+            h('button', { type: 'button', class: 'ab-btn acc-wide', text: 'Post a swap', onclick: function () {
+                if (!token || !user) { location.href = '/account/'; return; }
+                addSwap();
+            } }),
+            search));
+        root.appendChild(listBox);
+        function same(a, b) { return a.toLowerCase() === b.toLowerCase(); }
+        function match(s, openMine) { return openMine.some(function (m) { return same(m.have, s.want) && same(m.want, s.have); }); }
+        function row(s, isMatch) {
+            return h('button', { type: 'button', class: 'acc-card acc-swap', onclick: function () { detail(s); } },
+                isMatch ? h('small', { class: 'acc-swap-match', text: 'Matches your swap' }) : null,
+                s.status === 'done' ? h('small', { class: 'acc-muted', text: 'Done' }) : null,
+                h('strong', { text: s.have + '  ⇄  ' + s.want }),
+                h('small', { class: 'acc-muted', text: [s.name, s.major, s.section].filter(Boolean).join(' · ') }));
+        }
+        function draw() {
+            var q = search.value.trim().toLowerCase();
+            var mine = swaps.filter(function (s) { return s.mine; });
+            var openMine = mine.filter(function (s) { return s.status === 'open'; });
+            var others = swaps.filter(function (s) { return !s.mine && (!q || (s.have + ' ' + s.want + ' ' + s.major).toLowerCase().indexOf(q) >= 0); });
+            others.sort(function (a, b) { return match(b, openMine) - match(a, openMine); });
+            listBox.innerHTML = '';
+            if (mine.length) {
+                listBox.appendChild(h('h3', { class: 'acc-swap-head', text: 'Your swaps' }));
+                mine.forEach(function (s) { listBox.appendChild(row(s, false)); });
+            }
+            listBox.appendChild(h('h3', { class: 'acc-swap-head', text: 'Students offering' }));
+            if (!others.length) listBox.appendChild(h('p', { class: 'acc-muted', text: 'No swaps here yet.' }));
+            others.forEach(function (s) { listBox.appendChild(row(s, match(s, openMine))); });
+        }
+        function detail(s) {
+            var d = sheet('Subject swap'), err = h('p', { class: 'acc-err', role: 'alert' });
+            d.box.appendChild(h('p', {}, h('strong', { text: 'Has: ' }), s.have));
+            d.box.appendChild(h('p', {}, h('strong', { text: 'Wants: ' }), s.want));
+            if (s.section) d.box.appendChild(h('p', {}, h('strong', { text: 'Section or time: ' }), s.section));
+            if (s.note) d.box.appendChild(h('p', { text: s.note }));
+            if (!token || !user) {
+                d.box.appendChild(h('p', { class: 'acc-muted' }, h('a', { href: '/account/', text: 'Sign in' }), ' to see this student\'s contact details.'));
+            } else {
+                var c = h('div', {}, dots());
+                d.box.appendChild(c);
+                call('swapContact', { id: s.id }).then(function (r) {
+                    var k = r.contact || {};
+                    c.innerHTML = '';
+                    c.appendChild(h('p', {}, h('strong', { text: 'Name: ' }), k.fullName || ''));
+                    if (k.studentId) c.appendChild(h('p', {}, h('strong', { text: 'University ID: ' }), k.studentId));
+                    if (k.major) c.appendChild(h('p', {}, h('strong', { text: 'Major: ' }), k.major));
+                    if (k.phone) c.appendChild(h('p', {}, h('strong', { text: 'Phone: ' }), h('a', { href: 'tel:' + k.phone.replace(/[^0-9+]/g, ''), text: k.phone })));
+                    if (k.email) c.appendChild(h('p', {}, h('strong', { text: 'Email: ' }), h('a', { href: 'mailto:' + encodeURIComponent(k.email).replace('%40', '@'), text: k.email })));
+                }).catch(function (e) { c.innerHTML = ''; showErr(err, e); });
+            }
+            d.box.appendChild(err);
+            if (s.mine || (user && user.role === 'admin')) {
+                function set(status) {
+                    if (status === 'deleted') swaps = swaps.filter(function (x) { return x.id !== s.id; }); else s.status = status;
+                    d.close(); draw();
+                    call('swapSet', { id: s.id, status: status }).catch(function () {});
+                }
+                d.box.appendChild(h('div', { class: 'acc-actions' },
+                    h('button', { type: 'button', class: 'ab-btn', text: s.status === 'open' ? 'Mark as done' : 'Open again', onclick: function () { set(s.status === 'open' ? 'done' : 'open'); } }),
+                    h('button', { type: 'button', class: 'ab-btn acc-danger', text: 'Delete', onclick: function () { set('deleted'); } })));
+            }
+        }
+        function addSwap() {
+            var d = sheet('Post a swap'), err = h('p', { class: 'acc-err', role: 'alert' });
+            var f = {
+                have: field('Subject you have'), want: field('Subject you want'), section: field('Section or time (optional)'), note: field('Note (optional)'),
+                fullName: field('Full name'), studentId: field('University ID'), major: field('Major (optional)'), phone: field('Phone number', 'tel'), email: field('University or personal email', 'email')
+            };
+            var form = h('form', {});
+            Object.keys(f).forEach(function (k) {
+                if (k === 'fullName') form.appendChild(h('h3', { class: 'acc-swap-head', text: 'Your details' }));
+                form.appendChild(f[k].el);
+            });
+            form.appendChild(h('p', { class: 'acc-muted acc-small', text: 'Signed-in students can see these when they open your swap. Add a phone number or an email.' }));
+            form.appendChild(err);
+            var submit = h('button', { type: 'submit', class: 'ab-btn acc-wide', text: 'Post' });
+            form.appendChild(submit);
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var body = {};
+                Object.keys(f).forEach(function (k) { body[k] = f[k].input.value.trim(); });
+                busy(submit, true, 'Post'); showErr(err, null);
+                call('swapAdd', body).then(function (r) {
+                    if (r.swap) swaps.unshift(r.swap);
+                    d.close(); draw();
+                }).catch(function (x) { showErr(err, x); busy(submit, false, 'Post'); });
+            });
+            d.box.appendChild(form);
+        }
+        call('swapList').then(function (r) { swaps = r.swaps || []; draw(); })
+            .catch(function (e) { listBox.innerHTML = ''; listBox.appendChild(h('p', { class: 'acc-err', role: 'alert', text: e.message || String(e) })); });
+    }
+
+    var views = { account: accountView, chat: chatView, admin: adminView, feed: feedView, swap: swapView };
     (views[view] || accountView)();
     if (view === 'chat') window.addEventListener('hashchange', chatView);
 })();

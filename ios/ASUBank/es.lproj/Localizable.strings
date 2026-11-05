@@ -141,6 +141,7 @@
 "A new story screen with more fonts, text effects, colors, gradient backgrounds and moving text" = "Una nueva pantalla de historias con más fuentes, efectos de texto, colores, fondos degradados y texto en movimiento";
 "A plan to study it easily" = "Un plan para estudiarlo fácilmente";
 "A ringtone from my phone…" = "Un tono de mi teléfono…";
+"A student's phone and email show only to signed-in students who open their swap" = "El teléfono y el correo de un estudiante solo se muestran a quienes tienen sesión iniciada y abren su intercambio";
 "ADMIN" = "ADMIN";
 "ADMINS POST" = "SOLO ADMINS";
 "ALL FILES" = "TODOS LOS ARCHIVOS";
@@ -532,6 +533,7 @@
 "Connecting Students with Opportunities" = "Conectando estudiantes con oportunidades";
 "Connecting to the matcher…" = "Conectando con el buscador de compañeros…";
 "Connecting…" = "Conectando…";
+"Contact" = "Contacto";
 "Contact me by" = "Contáctame por";
 "Contact us" = "Contáctanos";
 "Content-Disposition" = "Content-Disposition";
@@ -668,7 +670,7 @@
 "Donate with PayPal or CliQ" = "Donate with PayPal or CliQ";
 "Donations are optional and never unlock content — everything on UniHub stays free. Only use the PayPal link and the number above; UniHub never asks for money from other numbers." = "Donations are optional and never unlock content — everything on UniHub stays free. Only use the PayPal link and the number above; UniHub never asks for money from other numbers.";
 "Donations are optional and never unlock content. Everything on UniHub stays free. UniHub never asks for money from anyone else." = "Las donaciones son opcionales y nunca desbloquean contenido. Todo en UniHub sigue siendo gratis.";
-"Done" = "Listo";
+"Done" = "Hecho";
 "Donor" = "Donante";
 "Don’t share other people’s private information." = "Don’t share other people’s private information.";
 "Dorm Common Area" = "Dorm Common Area";
@@ -931,6 +933,7 @@
 "Handled" = "Handled";
 "Handwriting" = "Handwriting";
 "Harassment or bullying" = "Harassment or bullying";
+"Has" = "Tiene";
 "Hate speech" = "Hate speech";
 "Hate speech, harassment, bullying, or discriminatory remarks toward any member." = "Hate speech, harassment, bullying, or discriminatory remarks toward any member.";
 "Health Sciences" = "Health Sciences";
@@ -1111,6 +1114,7 @@
 "Made by a fellow student" = "Made by a fellow student";
 "Made for you from your PDF" = "Hecho para ti a partir de tu PDF";
 "Major" = "Carrera";
+"Major (optional)" = "Carrera (opcional)";
 "Major and college on your profile, set in Edit profile and shown to other students." = "Major and college on your profile, set in Edit profile and shown to other students.";
 "Major, e.g. Computer Science" = "Carrera, p. ej. Informática";
 "Major, e.g. Pharmacy" = "Carrera, p. ej. Farmacia";
@@ -1131,6 +1135,7 @@
 "Matches found: %d" = "Matches found: %d";
 "Matches found: %lld" = "Matches found: %lld";
 "Matches found: %@" = "Matches found: %@";
+"Matches your swap" = "Coincide con tu intercambio";
 "Materials" = "Materiales";
 "Materials by college" = "Materiales por facultad";
 "Materials · %d" = "Materiales · %d";
@@ -1234,6 +1239,7 @@
 "New this week" = "Nuevos esta semana";
 "New upload on UniHub" = "Nueva subida en UniHub";
 "New uploaded files" = "Archivos subidos nuevos";
+"New: Subject swap. Trade a registered subject with another student, on the website and in the apps" = "Nuevo: intercambio de materias. Cambia una materia registrada con otro estudiante, en la web y en las apps";
 "Newest PDFs, midterms, finals and quizzes." = "Newest PDFs, midterms, finals and quizzes.";
 "News from the UniHub team" = "Noticias del equipo de UniHub";
 "News from the team will show up here." = "News from the team will show up here.";
@@ -1271,6 +1277,7 @@
 "No spam or unrelated content" = "Sin spam ni contenido no relacionado";
 "No submissions here yet." = "Aún no hay envíos aquí.";
 "No submissions match." = "No submissions match.";
+"No swaps here yet." = "Aún no hay intercambios.";
 "No teacher named “%@” yet" = "Aún no hay profesor llamado “%@”";
 "No travel fee on campus." = "Sin cargo por traslado en el campus.";
 "No views yet" = "Aún sin vistas";
@@ -1285,6 +1292,7 @@
 "Not signed in" = "Sin iniciar sesión";
 "Not sure of the name? Browse by college" = "¿No sabes el nombre? Explora por facultad";
 "Note (doctor, semester…)" = "Nota (profesor, semestre…)";
+"Note (optional)" = "Nota (opcional)";
 "Notes" = "Notas";
 "Notes (optional)" = "Notas (opcional)";
 "Nothing found" = "No se encontró nada";
@@ -1352,6 +1360,7 @@
 "Open Search" = "Open Search";
 "Open Settings" = "Abrir Ajustes";
 "Open a user to give them badges like Helper, Support or Donor." = "Abre un usuario para darle insignias como Ayudante, Soporte o Donante.";
+"Open again" = "Abrir de nuevo";
 "Open any chat room and long-press a message to pin, delete it or ban its sender. Open a user to give them badges." = "Abre una sala y mantén pulsado un mensaje para fijarlo, borrarlo o bloquear a quien lo envió. Abre un usuario para darle insignias.";
 "Open asubank.org in Safari" = "Abrir asubank.org en Safari";
 "Open asubank.org in the browser" = "Abrir asubank.org en el navegador";
@@ -1480,6 +1489,8 @@
 "Position %lld" = "Posición %lld";
 "Position %@" = "Posición %@";
 "Post" = "Publicar";
+"Post a swap" = "Publicar un intercambio";
+"Post the subject you have and the one you want, and swaps that match yours show first" = "Publica la materia que tienes y la que quieres, y primero verás los intercambios que coinciden";
 "Post, comment and share stories with other ASU students." = "Publica, comenta y comparte historias con otros estudiantes de ASU.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it, even if they only want announcements." = "Se publica en 📣 Anuncios. Lo recibe todo el que tenga avisos activos, aunque solo quiera anuncios.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it." = "Se publica en 📣 Anuncios. Lo recibe todo el que tenga avisos activos.";
@@ -1676,6 +1687,7 @@
 "Search no longer shows the same file several times" = "Search no longer shows the same file several times";
 "Search no longer shows the same file several times." = "Search no longer shows the same file several times.";
 "Search people" = "Buscar personas";
+"Search subjects" = "Buscar materias";
 "Search teachers" = "Buscar profesores";
 "Search text the app can’t translate by itself goes to Google Translate through our server, without your account." = "Search text the app can’t translate by itself goes to Google Translate through our server, without your account.";
 "Search the course name, not the file name" = "Busca el nombre del curso, no del archivo";
@@ -1685,6 +1697,8 @@
 "Searching the shared Drive…" = "Buscando en el Drive compartido…";
 "Second Year" = "Second Year";
 "Second year" = "Segundo año";
+"Section or time" = "Sección u horario";
+"Section or time (optional)" = "Sección u horario (opcional)";
 "Secure Payments" = "Secure Payments";
 "Security" = "Seguridad";
 "See My Courses / Registered Subjects" = "See My Courses / Registered Subjects";
@@ -1769,12 +1783,14 @@
 "Sign in to chat with other students." = "Sign in to chat with other students.";
 "Sign in to post, comment, like and add stories." = "Inicia sesión para publicar, comentar, dar me gusta y añadir historias.";
 "Sign in to see the feed" = "Inicia sesión para ver el feed";
+"Sign in to see this student's contact details." = "Inicia sesión para ver los datos de contacto de este estudiante.";
 "Sign in to see your notifications" = "Inicia sesión para ver tus notificaciones";
 "Sign in with an admin account to manage UniHub." = "Inicia sesión con una cuenta de admin para gestionar UniHub.";
 "Sign out" = "Cerrar sesión";
 "Sign out of UniHub?" = "¿Cerrar sesión en UniHub?";
 "Sign out?" = "¿Cerrar sesión?";
 "Signed in as @%@" = "Sesión iniciada como @%@";
+"Signed-in students can see these when they open your swap. Add a phone number or an email." = "Los estudiantes con sesión iniciada pueden verlos al abrir tu intercambio. Añade un teléfono o un correo.";
 "Simple Pricing" = "Simple Pricing";
 "Site policies and rules." = "Site policies and rules.";
 "Sky" = "Cielo";
@@ -1831,6 +1847,7 @@
 "Student-friendly price: 10 JD in total." = "Precio para estudiantes: 10 JD en total.";
 "Student-friendly pricing starting at just 10 JOD" = "Student-friendly pricing starting at just 10 JOD";
 "Students" = "Estudiantes";
+"Students offering" = "Ofertas de estudiantes";
 "Students often share what you need" = "Los estudiantes suelen compartir lo que necesitas";
 "Studies" = "Estudios";
 "Study Hall" = "Sala de estudio";
@@ -1849,6 +1866,9 @@
 "Subject / course, e.g. Calculus 1" = "Materia / curso, p. ej. Cálculo 1";
 "Subject pages come first, then files found in the Google Drive. Folders open right in the app." = "Subject pages come first, then files found in the Google Drive. Folders open right in the app.";
 "Subject pages only" = "Solo páginas de materias";
+"Subject swap" = "Intercambio de materias";
+"Subject you have" = "Materia que tienes";
+"Subject you want" = "Materia que quieres";
 "Subject, course code, doctor…" = "Materia, código, profesor…";
 "Subjects" = "Materias";
 "Subjects directory" = "Directorio de materias";
@@ -2024,6 +2044,7 @@
 "Topic" = "Tema";
 "Topics" = "Temas";
 "Total" = "Total";
+"Trade a registered subject with another student. Say what you have and what you want." = "Cambia una materia registrada con otro estudiante. Di cuál tienes y cuál quieres.";
 "Training 2" = "Training 2";
 "Translator" = "Traductor";
 "Travel" = "Traslado";
@@ -2092,6 +2113,7 @@
 "University halls" = "Aulas de la universidad";
 "University halls finder: type a hall number (e.g. 1206) to see the building, floor and room" = "University halls finder: type a hall number (e.g. 1206) to see the building, floor and room";
 "University halls finder: type the number on a hall's door (e.g. 1206) and see the building, floor and room instantly, in English and Arabic." = "University halls finder: type the number on a hall's door (e.g. 1206) and see the building, floor and room instantly, in English and Arabic.";
+"University or personal email" = "Correo universitario o personal";
 "University resources in one place." = "University resources in one place.";
 "Unknown building %@" = "Unknown building %@";
 "Unknown student" = "Unknown student";
@@ -2181,6 +2203,7 @@
 "Vote again" = "Votar de nuevo";
 "Waiting" = "Waiting";
 "Want your name here?" = "¿Quieres tu nombre aquí?";
+"Wants" = "Quiere";
 "Warm light background" = "Fondo claro cálido";
 "We got your request. Message us on WhatsApp to confirm the payment." = "We got your request. Message us on WhatsApp to confirm the payment.";
 "We got your suggestion. The UniHub team will look at it soon." = "Recibimos tu sugerencia. El equipo de UniHub la revisará pronto.";
@@ -2330,6 +2353,7 @@
 "Your story disappears after 24 hours and is deleted from our database after 2 days." = "Tu historia desaparece tras 24 horas y se borra de nuestra base de datos tras 2 días.";
 "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days." = "Los estudiantes de UniHub ven tu historia durante 24 horas y luego desaparece. Se borra de nuestra base de datos a los 2 días.";
 "Your studies" = "Tus estudios";
+"Your swaps" = "Tus intercambios";
 "Your timetable, with reminders." = "Tu horario, con recordatorios.";
 "Your upload" = "Tu archivo";
 "Your uploads show up in Latest uploads right away" = "Your uploads show up in Latest uploads right away";

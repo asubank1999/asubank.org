@@ -203,6 +203,7 @@ object Routes {
     const val HACKS = "hacks"
     const val NOTIFICATIONS = "notifications"
     const val FEED = "feed"
+    const val SWAPS = "swaps"
 }
 
 val LocalNav = staticCompositionLocalOf<NavController> { error("no nav") }

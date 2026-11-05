@@ -694,6 +694,10 @@
   "ru": "Мелодия с моего телефона…",
   "tr": "Telefonumdan bir zil sesi…"
  },
+ "A student's phone and email show only to signed-in students who open their swap": {
+  "ar": "يظهر هاتف الطالب وبريده فقط للطلاب المسجلين الذين يفتحون طلبه",
+  "es": "El teléfono y el correo de un estudiante solo se muestran a quienes tienen sesión iniciada y abren su intercambio"
+ },
  "ADMIN": {
   "ar": "مشرف",
   "de": "ADMIN",
@@ -3542,6 +3546,10 @@
   "ru": "Подключение…",
   "tr": "Bağlanıyor…"
  },
+ "Contact": {
+  "ar": "التواصل",
+  "es": "Contacto"
+ },
  "Contact me by": {
   "ar": "تواصل معي عبر",
   "de": "Kontaktieren Sie mich per",
@@ -4135,7 +4143,7 @@
  },
  "Done": {
   "ar": "تم",
-  "es": "Listo"
+  "es": "Hecho"
  },
  "Donor": {
   "ar": "متبرّع",
@@ -4951,6 +4959,10 @@
  "Harassment or bullying": {
   "ar": "مضايقة أو تنمر"
  },
+ "Has": {
+  "ar": "لديه",
+  "es": "Tiene"
+ },
  "Hate speech": {
   "ar": "خطاب كراهية"
  },
@@ -5557,6 +5569,10 @@
   "ar": "التخصص",
   "es": "Carrera"
  },
+ "Major (optional)": {
+  "ar": "التخصص (اختياري)",
+  "es": "Carrera (opcional)"
+ },
  "Major and college on your profile, set in Edit profile and shown to other students.": {},
  "Major, e.g. Computer Science": {
   "ar": "التخصص، مثل علم الحاسوب",
@@ -5605,7 +5621,7 @@
   "es": "Nota"
  },
  "Mark as done": {
-  "ar": "تحديد كمنجز",
+  "ar": "تم التبديل",
   "es": "Marcar como hecho"
  },
  "Mark as not done": {
@@ -5618,6 +5634,10 @@
  },
  "Matches found: %d": {
   "ar": "المطابقات: %d"
+ },
+ "Matches your swap": {
+  "ar": "يطابق طلبك",
+  "es": "Coincide con tu intercambio"
  },
  "Materials": {
   "ar": "المواد",
@@ -5960,6 +5980,10 @@
   "ar": "الملفات المرفوعة الجديدة",
   "es": "Archivos subidos nuevos"
  },
+ "New: Subject swap. Trade a registered subject with another student, on the website and in the apps": {
+  "ar": "جديد: تبديل المواد. بدّل مادة مسجّلة مع طالب آخر، على الموقع وفي التطبيقات",
+  "es": "Nuevo: intercambio de materias. Cambia una materia registrada con otro estudiante, en la web y en las apps"
+ },
  "Newest PDFs, midterms, finals and quizzes.": {
   "ar": "أحدث ملفات PDF وامتحانات الميد والفاينل والكويزات."
  },
@@ -6096,6 +6120,10 @@
  "No submissions match.": {
   "ar": "لا مشاركات مطابقة."
  },
+ "No swaps here yet.": {
+  "ar": "لا توجد طلبات تبديل بعد.",
+  "es": "Aún no hay intercambios."
+ },
  "No teacher named “%s” yet": {
   "ar": "لا يوجد مدرس باسم «%s» بعد",
   "es": "Aún no hay profesor llamado “%s”"
@@ -6144,6 +6172,10 @@
  "Note (doctor, semester…)": {
   "ar": "ملاحظة (الدكتور، الفصل…)",
   "es": "Nota (profesor, semestre…)"
+ },
+ "Note (optional)": {
+  "ar": "ملاحظة (اختياري)",
+  "es": "Nota (opcional)"
  },
  "Notes": {
   "ar": "ملاحظات",
@@ -6360,6 +6392,10 @@
  "Open a user to give them badges like Helper, Support or Donor.": {
   "ar": "افتح مستخدماً لتمنحه شارات مثل مساعد أو دعم أو متبرّع.",
   "es": "Abre un usuario para darle insignias como Ayudante, Soporte o Donante."
+ },
+ "Open again": {
+  "ar": "فتح من جديد",
+  "es": "Abrir de nuevo"
  },
  "Open any chat room and long-press a message to pin, delete it or ban its sender. Open a user to give them badges.": {
   "ar": "افتح أي غرفة واضغط مطولاً على رسالة لتثبيتها أو حذفها أو حظر مرسلها. افتح مستخدماً لتمنحه شارات.",
@@ -6792,6 +6828,14 @@
  "Post": {
   "ar": "نشر",
   "es": "Publicar"
+ },
+ "Post a swap": {
+  "ar": "انشر طلب تبديل",
+  "es": "Publicar un intercambio"
+ },
+ "Post the subject you have and the one you want, and swaps that match yours show first": {
+  "ar": "انشر المادة التي لديك والتي تريدها، وستظهر الطلبات المطابقة أولًا",
+  "es": "Publica la materia que tienes y la que quieres, y primero verás los intercambios que coinciden"
  },
  "Post, comment and share stories with other ASU students.": {
   "ar": "انشر وعلّق وشارك القصص مع طلاب ASU الآخرين.",
@@ -7432,6 +7476,10 @@
   "ar": "ابحث عن أشخاص",
   "es": "Buscar personas"
  },
+ "Search subjects": {
+  "ar": "ابحث عن مادة",
+  "es": "Buscar materias"
+ },
  "Search teachers": {
   "ar": "ابحث عن دكاترة",
   "es": "Buscar profesores"
@@ -7465,6 +7513,14 @@
  "Second year": {
   "ar": "السنة الثانية",
   "es": "Segundo año"
+ },
+ "Section or time": {
+  "ar": "الشعبة أو الوقت",
+  "es": "Sección u horario"
+ },
+ "Section or time (optional)": {
+  "ar": "الشعبة أو الوقت (اختياري)",
+  "es": "Sección u horario (opcional)"
  },
  "Secure Payments": {
   "ar": "دفع آمن"
@@ -7765,6 +7821,10 @@
   "ar": "سجّل الدخول لرؤية آخر المنشورات",
   "es": "Inicia sesión para ver el feed"
  },
+ "Sign in to see this student's contact details.": {
+  "ar": "سجّل الدخول لرؤية بيانات التواصل مع هذا الطالب.",
+  "es": "Inicia sesión para ver los datos de contacto de este estudiante."
+ },
  "Sign in to see your notifications": {
   "ar": "سجّل الدخول لرؤية إشعاراتك",
   "es": "Inicia sesión para ver tus notificaciones"
@@ -7788,6 +7848,10 @@
  "Signed in as @%s": {
   "ar": "مسجّل الدخول باسم @%s",
   "es": "Sesión iniciada como @%s"
+ },
+ "Signed-in students can see these when they open your swap. Add a phone number or an email.": {
+  "ar": "يمكن للطلاب المسجلين رؤية هذه البيانات عند فتح طلبك. أضف رقم هاتف أو بريدًا إلكترونيًا.",
+  "es": "Los estudiantes con sesión iniciada pueden verlos al abrir tu intercambio. Añade un teléfono o un correo."
  },
  "Simple Pricing": {
   "ar": "سعر بسيط"
@@ -7975,6 +8039,10 @@
   "ar": "الطلاب",
   "es": "Estudiantes"
  },
+ "Students offering": {
+  "ar": "عروض الطلاب",
+  "es": "Ofertas de estudiantes"
+ },
  "Students often share what you need": {
   "ar": "غالباً ما يشارك الطلاب ما تحتاجه",
   "es": "Los estudiantes suelen compartir lo que necesitas"
@@ -8043,6 +8111,18 @@
  "Subject pages only": {
   "ar": "صفحات المواد فقط",
   "es": "Solo páginas de materias"
+ },
+ "Subject swap": {
+  "ar": "تبديل المواد",
+  "es": "Intercambio de materias"
+ },
+ "Subject you have": {
+  "ar": "المادة التي لديك",
+  "es": "Materia que tienes"
+ },
+ "Subject you want": {
+  "ar": "المادة التي تريدها",
+  "es": "Materia que quieres"
  },
  "Subject, course code, doctor…": {
   "ar": "مادة، رمز المقرر، دكتور…",
@@ -8650,6 +8730,10 @@
   "ar": "الإجمالي",
   "es": "Total"
  },
+ "Trade a registered subject with another student. Say what you have and what you want.": {
+  "ar": "بدّل مادة مسجّلة مع طالب آخر. اكتب المادة التي لديك والمادة التي تريدها.",
+  "es": "Cambia una materia registrada con otro estudiante. Di cuál tienes y cuál quieres."
+ },
  "Training 2": {
   "ar": "التدريب 2"
  },
@@ -8918,6 +9002,10 @@
  },
  "University halls finder: type a hall number (e.g. 1206) to see the building, floor and room": {},
  "University halls finder: type the number on a hall's door (e.g. 1206) and see the building, floor and room instantly, in English and Arabic.": {},
+ "University or personal email": {
+  "ar": "البريد الجامعي أو الشخصي",
+  "es": "Correo universitario o personal"
+ },
  "University resources in one place.": {
   "ar": "مصادر الجامعة في مكان واحد."
  },
@@ -9223,6 +9311,10 @@
  "Want your name here?": {
   "ar": "تريد اسمك هنا؟",
   "es": "¿Quieres tu nombre aquí?"
+ },
+ "Wants": {
+  "ar": "يريد",
+  "es": "Quiere"
  },
  "Warm light background": {
   "ar": "خلفية فاتحة دافئة",
@@ -9745,6 +9837,10 @@
  "Your studies": {
   "ar": "دراستك",
   "es": "Tus estudios"
+ },
+ "Your swaps": {
+  "ar": "طلبات التبديل الخاصة بك",
+  "es": "Tus intercambios"
  },
  "Your timetable, with reminders.": {
   "ar": "جدولك مع التذكيرات.",

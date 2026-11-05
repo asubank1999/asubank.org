@@ -496,7 +496,7 @@
             ['/guides/grading-scale-asu', 'Grading scale', 'sheet']]],
         ['Community', [
             ['/guides/groups', 'Course WhatsApp groups', 'chat'], ['/requests/portal_to_rating', 'Rate professors', 'star'],
-            ['/requests/matcher_confirm', 'Course matcher', 'people'], ['/guides/links', 'ASU resources', 'grid']]],
+            ['/swap/', 'Subject swap', 'people'], ['/requests/matcher_confirm', 'Course matcher', 'people'], ['/guides/links', 'ASU resources', 'grid']]],
         ['Help & support', [
             ['/guides/contact', 'Contact us', 'chat'], ['/guides/faqs', 'FAQs', 'help'],
             ['/apps/donate', 'Donate (PayPal or CliQ)', 'star'], ['/legal/uni_tos', 'Terms of Service', 'page'], ['/legal/privacy', 'Privacy policy', 'page'], ['/legal/community', 'Community rules', 'page']]]

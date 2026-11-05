@@ -294,6 +294,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable(Routes.UPLOAD) { UploadScreen() }
                 composable(Routes.SAVED) { SavedScreen(back = !inBar(Routes.SAVED)) }
                 composable(Routes.FEED) { FeedScreen(back = !inBar(Routes.FEED)) }
+                composable(Routes.SWAPS) { SwapsScreen() }
                 composable(Routes.FRIENDS) { FriendsScreen(back = !inBar(Routes.FRIENDS)) }
                 composable(Routes.NOTIFICATIONS) { NotificationsScreen(back = !inBar(Routes.NOTIFICATIONS)) }
                 composable(Routes.LECTURES) { LecturesScreen(back = !inBar(Routes.LECTURES)) }

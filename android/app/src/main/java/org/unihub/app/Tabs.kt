@@ -373,6 +373,7 @@ fun MoreScreen() {
                     Divider(); ListRow("Saved", icon = Icons.Filled.Star) { nav.navigate("savedList") }
                     Divider(); ListRow("Notifications", icon = Icons.Filled.Notifications) { nav.navigate(Routes.NOTIFICATIONS) }
                     Divider(); ListRow("Friends", icon = Icons.Filled.People) { nav.navigate(Routes.FRIENDS) }
+                    Divider(); ListRow("Subject swap", icon = Icons.Filled.SwapHoriz) { nav.navigate(Routes.SWAPS) }
                     Divider(); ListRow("Feed", icon = Icons.Filled.DynamicFeed) { nav.navigate(Routes.FEED) }
                     Divider(); ListRow("Share UniHub", icon = Icons.Filled.Share) { shareApp(ctx) }
                     Divider(); ListRow("My lectures", icon = Icons.Filled.Alarm) { nav.navigate(Routes.LECTURES) }

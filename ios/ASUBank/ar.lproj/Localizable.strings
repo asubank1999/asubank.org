@@ -141,6 +141,7 @@
 "A new story screen with more fonts, text effects, colors, gradient backgrounds and moving text" = "شاشة قصص جديدة بخطوط وتأثيرات نصية وألوان أكثر، وخلفيات متدرجة ونص متحرك";
 "A plan to study it easily" = "خطة لدراستها بسهولة";
 "A ringtone from my phone…" = "نغمة من هاتفي…";
+"A student's phone and email show only to signed-in students who open their swap" = "يظهر هاتف الطالب وبريده فقط للطلاب المسجلين الذين يفتحون طلبه";
 "ADMIN" = "مشرف";
 "ADMINS POST" = "للمشرفين فقط";
 "ALL FILES" = "كل الملفات";
@@ -532,6 +533,7 @@
 "Connecting Students with Opportunities" = "نربط الطلاب بالفرص";
 "Connecting to the matcher…" = "جارٍ الاتصال بخدمة التوفيق…";
 "Connecting…" = "جارٍ الاتصال…";
+"Contact" = "التواصل";
 "Contact me by" = "تواصل معي عبر";
 "Contact us" = "تواصل معنا";
 "Content-Disposition" = "Content-Disposition";
@@ -931,6 +933,7 @@
 "Handled" = "تمت المعالجة";
 "Handwriting" = "Handwriting";
 "Harassment or bullying" = "مضايقة أو تنمر";
+"Has" = "لديه";
 "Hate speech" = "خطاب كراهية";
 "Hate speech, harassment, bullying, or discriminatory remarks toward any member." = "خطاب الكراهية أو المضايقة أو التنمر أو التمييز تجاه أي عضو.";
 "Health Sciences" = "العلوم الصحية";
@@ -1111,6 +1114,7 @@
 "Made by a fellow student" = "من صنع زميل طالب";
 "Made for you from your PDF" = "مُعدّ لك من ملف PDF الخاص بك";
 "Major" = "التخصص";
+"Major (optional)" = "التخصص (اختياري)";
 "Major and college on your profile, set in Edit profile and shown to other students." = "Major and college on your profile, set in Edit profile and shown to other students.";
 "Major, e.g. Computer Science" = "التخصص، مثل علم الحاسوب";
 "Major, e.g. Pharmacy" = "التخصص، مثل الصيدلة";
@@ -1125,12 +1129,13 @@
 "Manage this user" = "إدارة هذا المستخدم";
 "Marimba" = "ماريمبا";
 "Mark" = "العلامة";
-"Mark as done" = "تحديد كمنجز";
+"Mark as done" = "تم التبديل";
 "Mark as not done" = "تحديد كغير منجز";
 "Match my phone" = "حسب الهاتف";
 "Matches found: %d" = "المطابقات: %d";
 "Matches found: %lld" = "المطابقات: %lld";
 "Matches found: %@" = "المطابقات: %@";
+"Matches your swap" = "يطابق طلبك";
 "Materials" = "المواد";
 "Materials by college" = "المواد حسب الكلية";
 "Materials · %d" = "المواد · %d";
@@ -1234,6 +1239,7 @@
 "New this week" = "جدد هذا الأسبوع";
 "New upload on UniHub" = "ملف جديد على UniHub";
 "New uploaded files" = "الملفات المرفوعة الجديدة";
+"New: Subject swap. Trade a registered subject with another student, on the website and in the apps" = "جديد: تبديل المواد. بدّل مادة مسجّلة مع طالب آخر، على الموقع وفي التطبيقات";
 "Newest PDFs, midterms, finals and quizzes." = "أحدث ملفات PDF وامتحانات الميد والفاينل والكويزات.";
 "News from the UniHub team" = "أخبار من فريق UniHub";
 "News from the team will show up here." = "ستظهر أخبار الفريق هنا.";
@@ -1271,6 +1277,7 @@
 "No spam or unrelated content" = "ممنوع الرسائل المزعجة أو المحتوى غير المتعلق";
 "No submissions here yet." = "لا توجد مشاركات هنا بعد.";
 "No submissions match." = "لا مشاركات مطابقة.";
+"No swaps here yet." = "لا توجد طلبات تبديل بعد.";
 "No teacher named “%@” yet" = "لا يوجد مدرس باسم «%@» بعد";
 "No travel fee on campus." = "لا رسوم انتقال داخل الحرم.";
 "No views yet" = "لا توجد مشاهدات بعد";
@@ -1285,6 +1292,7 @@
 "Not signed in" = "لم تسجّل الدخول";
 "Not sure of the name? Browse by college" = "لست متأكدًا من الاسم؟ تصفح حسب الكلية";
 "Note (doctor, semester…)" = "ملاحظة (الدكتور، الفصل…)";
+"Note (optional)" = "ملاحظة (اختياري)";
 "Notes" = "ملاحظات";
 "Notes (optional)" = "ملاحظات (اختياري)";
 "Nothing found" = "لم يتم العثور على شيء";
@@ -1352,6 +1360,7 @@
 "Open Search" = "افتح البحث";
 "Open Settings" = "فتح الإعدادات";
 "Open a user to give them badges like Helper, Support or Donor." = "افتح مستخدماً لتمنحه شارات مثل مساعد أو دعم أو متبرّع.";
+"Open again" = "فتح من جديد";
 "Open any chat room and long-press a message to pin, delete it or ban its sender. Open a user to give them badges." = "افتح أي غرفة واضغط مطولاً على رسالة لتثبيتها أو حذفها أو حظر مرسلها. افتح مستخدماً لتمنحه شارات.";
 "Open asubank.org in Safari" = "افتح asubank.org في Safari";
 "Open asubank.org in the browser" = "افتح asubank.org في المتصفح";
@@ -1480,6 +1489,8 @@
 "Position %lld" = "الترتيب %lld";
 "Position %@" = "الترتيب %@";
 "Post" = "نشر";
+"Post a swap" = "انشر طلب تبديل";
+"Post the subject you have and the one you want, and swaps that match yours show first" = "انشر المادة التي لديك والتي تريدها، وستظهر الطلبات المطابقة أولًا";
 "Post, comment and share stories with other ASU students." = "انشر وعلّق وشارك القصص مع طلاب ASU الآخرين.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it, even if they only want announcements." = "يُنشر في 📣 الإعلانات. يصل لكل من فعّل الإشعارات، حتى لو اختار الإعلانات فقط.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it." = "يُنشر في 📣 الإعلانات. يصل لكل من فعّل الإشعارات.";
@@ -1676,6 +1687,7 @@
 "Search no longer shows the same file several times" = "Search no longer shows the same file several times";
 "Search no longer shows the same file several times." = "Search no longer shows the same file several times.";
 "Search people" = "ابحث عن أشخاص";
+"Search subjects" = "ابحث عن مادة";
 "Search teachers" = "ابحث عن دكاترة";
 "Search text the app can’t translate by itself goes to Google Translate through our server, without your account." = "نص البحث الذي لا يستطيع التطبيق ترجمته بنفسه يذهب إلى ترجمة Google عبر خادمنا، دون بيانات حسابك.";
 "Search the course name, not the file name" = "ابحث باسم المادة لا باسم الملف";
@@ -1685,6 +1697,8 @@
 "Searching the shared Drive…" = "جارٍ البحث في Drive المشترك…";
 "Second Year" = "السنة الثانية";
 "Second year" = "السنة الثانية";
+"Section or time" = "الشعبة أو الوقت";
+"Section or time (optional)" = "الشعبة أو الوقت (اختياري)";
 "Secure Payments" = "دفع آمن";
 "Security" = "الأمان";
 "See My Courses / Registered Subjects" = "موادي المسجلة";
@@ -1769,12 +1783,14 @@
 "Sign in to chat with other students." = "سجّل الدخول للدردشة مع الطلاب الآخرين.";
 "Sign in to post, comment, like and add stories." = "سجّل الدخول لتنشر وتعلّق وتعجب وتضيف قصصاً.";
 "Sign in to see the feed" = "سجّل الدخول لرؤية آخر المنشورات";
+"Sign in to see this student's contact details." = "سجّل الدخول لرؤية بيانات التواصل مع هذا الطالب.";
 "Sign in to see your notifications" = "سجّل الدخول لرؤية إشعاراتك";
 "Sign in with an admin account to manage UniHub." = "سجّل الدخول بحساب مشرف لإدارة UniHub.";
 "Sign out" = "تسجيل الخروج";
 "Sign out of UniHub?" = "تسجيل الخروج من UniHub؟";
 "Sign out?" = "تسجيل الخروج؟";
 "Signed in as @%@" = "مسجّل الدخول باسم @%@";
+"Signed-in students can see these when they open your swap. Add a phone number or an email." = "يمكن للطلاب المسجلين رؤية هذه البيانات عند فتح طلبك. أضف رقم هاتف أو بريدًا إلكترونيًا.";
 "Simple Pricing" = "سعر بسيط";
 "Site policies and rules." = "سياسات الموقع وقواعده.";
 "Sky" = "سماوي";
@@ -1831,6 +1847,7 @@
 "Student-friendly price: 10 JD in total." = "سعر مناسب للطلاب: 10 دنانير إجمالاً.";
 "Student-friendly pricing starting at just 10 JOD" = "أسعار تناسب الطلاب تبدأ من 10 دنانير فقط";
 "Students" = "الطلاب";
+"Students offering" = "عروض الطلاب";
 "Students often share what you need" = "غالباً ما يشارك الطلاب ما تحتاجه";
 "Studies" = "الدراسة";
 "Study Hall" = "قاعة الدراسة";
@@ -1849,6 +1866,9 @@
 "Subject / course, e.g. Calculus 1" = "المادة، مثل تفاضل 1";
 "Subject pages come first, then files found in the Google Drive. Folders open right in the app." = "تظهر صفحات المواد أولًا، ثم الملفات من Google Drive. تُفتح المجلدات داخل التطبيق.";
 "Subject pages only" = "صفحات المواد فقط";
+"Subject swap" = "تبديل المواد";
+"Subject you have" = "المادة التي لديك";
+"Subject you want" = "المادة التي تريدها";
 "Subject, course code, doctor…" = "مادة، رمز المقرر، دكتور…";
 "Subjects" = "المواد";
 "Subjects directory" = "دليل المواد";
@@ -2024,6 +2044,7 @@
 "Topic" = "الموضوع";
 "Topics" = "المواضيع";
 "Total" = "الإجمالي";
+"Trade a registered subject with another student. Say what you have and what you want." = "بدّل مادة مسجّلة مع طالب آخر. اكتب المادة التي لديك والمادة التي تريدها.";
 "Training 2" = "التدريب 2";
 "Translator" = "مترجم";
 "Travel" = "الانتقال";
@@ -2092,6 +2113,7 @@
 "University halls" = "قاعات الجامعة";
 "University halls finder: type a hall number (e.g. 1206) to see the building, floor and room" = "University halls finder: type a hall number (e.g. 1206) to see the building, floor and room";
 "University halls finder: type the number on a hall's door (e.g. 1206) and see the building, floor and room instantly, in English and Arabic." = "University halls finder: type the number on a hall's door (e.g. 1206) and see the building, floor and room instantly, in English and Arabic.";
+"University or personal email" = "البريد الجامعي أو الشخصي";
 "University resources in one place." = "مصادر الجامعة في مكان واحد.";
 "Unknown building %@" = "مبنى غير معروف %@";
 "Unknown student" = "طالب غير معروف";
@@ -2181,6 +2203,7 @@
 "Vote again" = "صوّت مرة أخرى";
 "Waiting" = "قيد الانتظار";
 "Want your name here?" = "تريد اسمك هنا؟";
+"Wants" = "يريد";
 "Warm light background" = "خلفية فاتحة دافئة";
 "We got your request. Message us on WhatsApp to confirm the payment." = "وصلنا طلبك. راسلنا على واتساب لتأكيد الدفع.";
 "We got your suggestion. The UniHub team will look at it soon." = "وصلنا اقتراحك. سيطّلع عليه فريق UniHub قريباً.";
@@ -2330,6 +2353,7 @@
 "Your story disappears after 24 hours and is deleted from our database after 2 days." = "تختفي قصتك بعد 24 ساعة وتُحذف من قاعدة بياناتنا بعد يومين.";
 "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days." = "يرى طلاب UniHub قصتك لمدة 24 ساعة ثم تختفي، وتُحذف من قاعدة بياناتنا بعد يومين.";
 "Your studies" = "دراستك";
+"Your swaps" = "طلبات التبديل الخاصة بك";
 "Your timetable, with reminders." = "جدولك مع التذكيرات.";
 "Your upload" = "ملفك المرفوع";
 "Your uploads show up in Latest uploads right away" = "Your uploads show up in Latest uploads right away";

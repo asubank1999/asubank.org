@@ -51,6 +51,7 @@ struct MoreView: View {
                     NavigationLink { SavedView(embedded: true) } label: { Label("Saved", systemImage: "star") }
                     NavigationLink { NotificationsScreen() } label: { Label("Notifications", systemImage: "bell") }
                     NavigationLink { FriendsScreen() } label: { Label("Friends", systemImage: "person.2") }
+                    NavigationLink { SwapsScreen() } label: { Label("Subject swap", systemImage: "arrow.left.arrow.right") }
                     NavigationLink { FeedScreen() } label: { Label("Feed", systemImage: "newspaper") }
                     ShareAppRow()
                     NavigationLink { LecturesScreen() } label: { Label("My lectures", systemImage: "alarm") }

@@ -141,6 +141,7 @@
 "A new story screen with more fonts, text effects, colors, gradient backgrounds and moving text" = "A new story screen with more fonts, text effects, colors, gradient backgrounds and moving text";
 "A plan to study it easily" = "A plan to study it easily";
 "A ringtone from my phone…" = "A ringtone from my phone…";
+"A student's phone and email show only to signed-in students who open their swap" = "A student's phone and email show only to signed-in students who open their swap";
 "ADMIN" = "ADMIN";
 "ADMINS POST" = "ADMINS POST";
 "ALL FILES" = "ALL FILES";
@@ -532,6 +533,7 @@
 "Connecting Students with Opportunities" = "Connecting Students with Opportunities";
 "Connecting to the matcher…" = "Connecting to the matcher…";
 "Connecting…" = "Connecting…";
+"Contact" = "Contact";
 "Contact me by" = "Contact me by";
 "Contact us" = "Contact us";
 "Content-Disposition" = "Content-Disposition";
@@ -931,6 +933,7 @@
 "Handled" = "Handled";
 "Handwriting" = "Handwriting";
 "Harassment or bullying" = "Harassment or bullying";
+"Has" = "Has";
 "Hate speech" = "Hate speech";
 "Hate speech, harassment, bullying, or discriminatory remarks toward any member." = "Hate speech, harassment, bullying, or discriminatory remarks toward any member.";
 "Health Sciences" = "Health Sciences";
@@ -1111,6 +1114,7 @@
 "Made by a fellow student" = "Made by a fellow student";
 "Made for you from your PDF" = "Made for you from your PDF";
 "Major" = "Major";
+"Major (optional)" = "Major (optional)";
 "Major and college on your profile, set in Edit profile and shown to other students." = "Major and college on your profile, set in Edit profile and shown to other students.";
 "Major, e.g. Computer Science" = "Major, e.g. Computer Science";
 "Major, e.g. Pharmacy" = "Major, e.g. Pharmacy";
@@ -1131,6 +1135,7 @@
 "Matches found: %d" = "Matches found: %d";
 "Matches found: %lld" = "Matches found: %lld";
 "Matches found: %@" = "Matches found: %@";
+"Matches your swap" = "Matches your swap";
 "Materials" = "Materials";
 "Materials by college" = "Materials by college";
 "Materials · %d" = "Materials · %d";
@@ -1234,6 +1239,7 @@
 "New this week" = "New this week";
 "New upload on UniHub" = "New upload on UniHub";
 "New uploaded files" = "New uploaded files";
+"New: Subject swap. Trade a registered subject with another student, on the website and in the apps" = "New: Subject swap. Trade a registered subject with another student, on the website and in the apps";
 "Newest PDFs, midterms, finals and quizzes." = "Newest PDFs, midterms, finals and quizzes.";
 "News from the UniHub team" = "News from the UniHub team";
 "News from the team will show up here." = "News from the team will show up here.";
@@ -1271,6 +1277,7 @@
 "No spam or unrelated content" = "No spam or unrelated content";
 "No submissions here yet." = "No submissions here yet.";
 "No submissions match." = "No submissions match.";
+"No swaps here yet." = "No swaps here yet.";
 "No teacher named “%@” yet" = "No teacher named “%@” yet";
 "No travel fee on campus." = "No travel fee on campus.";
 "No views yet" = "No views yet";
@@ -1285,6 +1292,7 @@
 "Not signed in" = "Not signed in";
 "Not sure of the name? Browse by college" = "Not sure of the name? Browse by college";
 "Note (doctor, semester…)" = "Note (doctor, semester…)";
+"Note (optional)" = "Note (optional)";
 "Notes" = "Notes";
 "Notes (optional)" = "Notes (optional)";
 "Nothing found" = "Nothing found";
@@ -1352,6 +1360,7 @@
 "Open Search" = "Open Search";
 "Open Settings" = "Open Settings";
 "Open a user to give them badges like Helper, Support or Donor." = "Open a user to give them badges like Helper, Support or Donor.";
+"Open again" = "Open again";
 "Open any chat room and long-press a message to pin, delete it or ban its sender. Open a user to give them badges." = "Open any chat room and long-press a message to pin, delete it or ban its sender. Open a user to give them badges.";
 "Open asubank.org in Safari" = "Open asubank.org in Safari";
 "Open asubank.org in the browser" = "Open asubank.org in the browser";
@@ -1480,6 +1489,8 @@
 "Position %lld" = "Position %lld";
 "Position %@" = "Position %@";
 "Post" = "Post";
+"Post a swap" = "Post a swap";
+"Post the subject you have and the one you want, and swaps that match yours show first" = "Post the subject you have and the one you want, and swaps that match yours show first";
 "Post, comment and share stories with other ASU students." = "Post, comment and share stories with other ASU students.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it, even if they only want announcements." = "Posted in 📣 Announcements. Everyone with notifications on gets it, even if they only want announcements.";
 "Posted in 📣 Announcements. Everyone with notifications on gets it." = "Posted in 📣 Announcements. Everyone with notifications on gets it.";
@@ -1676,6 +1687,7 @@
 "Search no longer shows the same file several times" = "Search no longer shows the same file several times";
 "Search no longer shows the same file several times." = "Search no longer shows the same file several times.";
 "Search people" = "Search people";
+"Search subjects" = "Search subjects";
 "Search teachers" = "Search teachers";
 "Search text the app can’t translate by itself goes to Google Translate through our server, without your account." = "Search text the app can’t translate by itself goes to Google Translate through our server, without your account.";
 "Search the course name, not the file name" = "Search the course name, not the file name";
@@ -1685,6 +1697,8 @@
 "Searching the shared Drive…" = "Searching the shared Drive…";
 "Second Year" = "Second Year";
 "Second year" = "Second year";
+"Section or time" = "Section or time";
+"Section or time (optional)" = "Section or time (optional)";
 "Secure Payments" = "Secure Payments";
 "Security" = "Security";
 "See My Courses / Registered Subjects" = "See My Courses / Registered Subjects";
@@ -1769,12 +1783,14 @@
 "Sign in to chat with other students." = "Sign in to chat with other students.";
 "Sign in to post, comment, like and add stories." = "Sign in to post, comment, like and add stories.";
 "Sign in to see the feed" = "Sign in to see the feed";
+"Sign in to see this student's contact details." = "Sign in to see this student's contact details.";
 "Sign in to see your notifications" = "Sign in to see your notifications";
 "Sign in with an admin account to manage UniHub." = "Sign in with an admin account to manage UniHub.";
 "Sign out" = "Sign out";
 "Sign out of UniHub?" = "Sign out of UniHub?";
 "Sign out?" = "Sign out?";
 "Signed in as @%@" = "Signed in as @%@";
+"Signed-in students can see these when they open your swap. Add a phone number or an email." = "Signed-in students can see these when they open your swap. Add a phone number or an email.";
 "Simple Pricing" = "Simple Pricing";
 "Site policies and rules." = "Site policies and rules.";
 "Sky" = "Sky";
@@ -1831,6 +1847,7 @@
 "Student-friendly price: 10 JD in total." = "Student-friendly price: 10 JD in total.";
 "Student-friendly pricing starting at just 10 JOD" = "Student-friendly pricing starting at just 10 JOD";
 "Students" = "Students";
+"Students offering" = "Students offering";
 "Students often share what you need" = "Students often share what you need";
 "Studies" = "Studies";
 "Study Hall" = "Study Hall";
@@ -1849,6 +1866,9 @@
 "Subject / course, e.g. Calculus 1" = "Subject / course, e.g. Calculus 1";
 "Subject pages come first, then files found in the Google Drive. Folders open right in the app." = "Subject pages come first, then files found in the Google Drive. Folders open right in the app.";
 "Subject pages only" = "Subject pages only";
+"Subject swap" = "Subject swap";
+"Subject you have" = "Subject you have";
+"Subject you want" = "Subject you want";
 "Subject, course code, doctor…" = "Subject, course code, doctor…";
 "Subjects" = "Subjects";
 "Subjects directory" = "Subjects directory";
@@ -2024,6 +2044,7 @@
 "Topic" = "Topic";
 "Topics" = "Topics";
 "Total" = "Total";
+"Trade a registered subject with another student. Say what you have and what you want." = "Trade a registered subject with another student. Say what you have and what you want.";
 "Training 2" = "Training 2";
 "Translator" = "Translator";
 "Travel" = "Travel";
@@ -2092,6 +2113,7 @@
 "University halls" = "University halls";
 "University halls finder: type a hall number (e.g. 1206) to see the building, floor and room" = "University halls finder: type a hall number (e.g. 1206) to see the building, floor and room";
 "University halls finder: type the number on a hall's door (e.g. 1206) and see the building, floor and room instantly, in English and Arabic." = "University halls finder: type the number on a hall's door (e.g. 1206) and see the building, floor and room instantly, in English and Arabic.";
+"University or personal email" = "University or personal email";
 "University resources in one place." = "University resources in one place.";
 "Unknown building %@" = "Unknown building %@";
 "Unknown student" = "Unknown student";
@@ -2181,6 +2203,7 @@
 "Vote again" = "Vote again";
 "Waiting" = "Waiting";
 "Want your name here?" = "Want your name here?";
+"Wants" = "Wants";
 "Warm light background" = "Warm light background";
 "We got your request. Message us on WhatsApp to confirm the payment." = "We got your request. Message us on WhatsApp to confirm the payment.";
 "We got your suggestion. The UniHub team will look at it soon." = "We got your suggestion. The UniHub team will look at it soon.";
@@ -2330,6 +2353,7 @@
 "Your story disappears after 24 hours and is deleted from our database after 2 days." = "Your story disappears after 24 hours and is deleted from our database after 2 days.";
 "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days." = "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days.";
 "Your studies" = "Your studies";
+"Your swaps" = "Your swaps";
 "Your timetable, with reminders." = "Your timetable, with reminders.";
 "Your upload" = "Your upload";
 "Your uploads show up in Latest uploads right away" = "Your uploads show up in Latest uploads right away";

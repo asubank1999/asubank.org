@@ -366,3 +366,6 @@ html.dark .acc-dots i { background: var(--ab-accent,#ff8fb0); }
     .acc-dots i { opacity: .8; transform: none; }
 }
 body:has(.acc-story) .ab-tabbar { display: none; }
+.acc-swap { display: flex; flex-direction: column; gap: 4px; width: 100%; text-align: start; border: 0; font: inherit; color: inherit; cursor: pointer; margin: 10px 0; }
+.acc-swap-match { color: #1f9d55; font-weight: 700; }
+.acc-swap-head { margin: 18px 4px 6px; font-size: 15px; }

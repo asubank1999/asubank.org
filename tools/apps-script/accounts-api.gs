@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 9;
+var SCHEMA = 10;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -80,7 +80,8 @@ var SHEETS = {
   Stories: ['id', 'userId', 'image', 'text', 'bg', 'created', 'views', 'audience', 'video', 'seenLog', 'style'],
   DMs: ['id', 'pair', 'from', 'to', 'text', 'created', 'deleted', 'fileId', 'fileName', 'fileType', 'fileSize', 'read', 'duration', 'expires'],
   Suggestions: ['id', 'created', 'userId', 'username', 'note', 'contact', 'status', 'resolvedBy', 'resolvedAt'],
-  DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed']
+  DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed'],
+  Swaps: ['id', 'userId', 'have', 'want', 'section', 'note', 'fullName', 'studentId', 'major', 'phone', 'email', 'status', 'created']
 };
 
 // MARK: - entry points
@@ -832,7 +833,80 @@ function removeAvatarFile(url) {
 
 // MARK: - actions
 
+/** Keeps what a student typed as plain text in the Sheet: no formulas, and phone numbers keep their leading 0 and + */
+function asText(v) { var s = String(v == null ? '' : v).trim(); return s ? "'" + s : ''; }
+function plainCell(v) { return String(v == null ? '' : v).replace(/^'/, ''); }
+function swapField(b, key, max) { return String(b[key] == null ? '' : b[key]).replace(/\s+/g, ' ').trim().slice(0, max); }
+function swapPublic(r, me) {
+  return { id: r.id, have: plainCell(r.have), want: plainCell(r.want), section: plainCell(r.section), note: plainCell(r.note),
+           name: plainCell(r.fullName).split(' ')[0], major: plainCell(r.major), status: String(r.status || 'open'),
+           created: r.created, mine: !!me && r.userId === me.id };
+}
+
 var ACTIONS = {
+  /** Subject swap listings. Public fields only: no phone, email, student ID or full name */
+  swapList: function (b) {
+    var me = null;
+    try { me = b.token ? auth(b) : null; } catch (e) {}
+    var q = String(b.q || '').trim().toLowerCase();
+    var list = rows('Swaps').filter(function (r) {
+      if (String(r.status) !== 'open' && !(me && r.userId === me.id)) return false;
+      if (!q) return true;
+      return (String(r.have) + ' ' + String(r.want) + ' ' + String(r.major)).toLowerCase().indexOf(q) >= 0;
+    });
+    list.sort(function (x, y) { return String(y.created).localeCompare(String(x.created)); });
+    return { ok: true, swaps: list.slice(0, 300).map(function (r) { return swapPublic(r, me); }) };
+  },
+
+  /** A student's contact details, for a signed-in student who taps one listing */
+  swapContact: function (b) {
+    var s = auth(b);
+    var r = rows('Swaps').filter(function (x) { return x.id === b.id; })[0];
+    if (!r) fail('This listing is gone.');
+    if (String(r.status) !== 'open' && r.userId !== s.id && s.role !== 'admin') fail('This swap is already done.');
+    if (r.userId !== s.id && s.role !== 'admin') {
+      var c = CacheService.getScriptCache(), k = 'swapc:' + s.id, n = Number(c.get(k) || 0);
+      if (n >= 40) fail('You have opened a lot of listings today. Please try again tomorrow.');
+      c.put(k, String(n + 1), 21600);
+    }
+    return { ok: true, contact: { fullName: plainCell(r.fullName), studentId: plainCell(r.studentId), major: plainCell(r.major), phone: plainCell(r.phone), email: plainCell(r.email) } };
+  },
+
+  swapAdd: function (b) {
+    var s = auth(b);
+    if (s.banned) fail('This account is banned.');
+    var have = swapField(b, 'have', 120), want = swapField(b, 'want', 120), fullName = swapField(b, 'fullName', 80);
+    var studentId = swapField(b, 'studentId', 30), phone = swapField(b, 'phone', 25), email = swapField(b, 'email', 120);
+    if (!have || !want) fail('Write the subject you have and the subject you want.');
+    if (!fullName || !studentId) fail('Write your full name and your university ID.');
+    if (!phone && !email) fail('Add a phone number or an email, so students can reach you.');
+    if (phone && !/^\+?[0-9 ()-]{7,25}$/.test(phone)) fail('That phone number does not look right.');
+    if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) fail('That email does not look right.');
+    return withLock(function () {
+      var open = rows('Swaps').filter(function (r) { return r.userId === s.id && String(r.status) === 'open'; }).length;
+      if (open >= 5) fail('You already have 5 open swaps. Close one first.');
+      var row = { id: newId(), userId: s.id, have: asText(have), want: asText(want), section: asText(swapField(b, 'section', 60)), note: asText(swapField(b, 'note', 300)),
+                  fullName: asText(fullName), studentId: asText(studentId), major: asText(swapField(b, 'major', 80)), phone: asText(phone), email: asText(email),
+                  status: 'open', created: new Date().toISOString() };
+      append('Swaps', row);
+      return { ok: true, swap: { id: row.id, have: have, want: want, section: swapField(b, 'section', 60), note: swapField(b, 'note', 300), name: fullName.split(' ')[0],
+                                 major: swapField(b, 'major', 80), status: 'open', created: row.created, mine: true } };
+    });
+  },
+
+  /** Owner or admin: mark done, open again, or delete */
+  swapSet: function (b) {
+    var s = auth(b);
+    return withLock(function () {
+      var r = rows('Swaps').filter(function (x) { return x.id === b.id; })[0];
+      if (!r) return { ok: true };
+      if (r.userId !== s.id && s.role !== 'admin') fail('Only the student who posted this can change it.');
+      if (b.status === 'deleted') sheet('Swaps').deleteRow(r._row);
+      else update('Swaps', r._row, { status: b.status === 'done' ? 'done' : 'open' });
+      return { ok: true };
+    });
+  },
+
   rooms: function (b) {
     var u = null;
     try { if (b.token) u = auth(b); } catch (e) {}
