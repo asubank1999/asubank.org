@@ -97,7 +97,7 @@ struct PlannerScreen: View {
             .accessibilityLabel(Text(i.done ? "Mark as not done" : "Mark as done"))
             Button { editing = i } label: {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(i.title).foregroundStyle(.primary).strikethrough(i.done)
+                    Text(i.title).strikethrough(i.done).foregroundStyle(.primary)
                     Text([i.course, i.due.formatted(date: .abbreviated, time: .omitted)].filter { !$0.isEmpty }.joined(separator: " · "))
                         .font(.caption).foregroundStyle(.secondary)
                 }
