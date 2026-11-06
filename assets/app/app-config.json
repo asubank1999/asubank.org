@@ -1,15 +1,15 @@
 {
   "share": "https://asubank.org/",
   "ios": {
-    "latest": "1.17.0",
+    "latest": "1.18.0",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.17.0",
-    "notes": "New: Top picks on Home (Rate your teachers, Course matcher, Subject swap), the tab bar is now Home, Feed, Chat, Search and More with more tabs to add, profiles open faster, and bus times are a native screen."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.18.0",
+    "notes": "New: choose male or female at sign-up, chats and rooms open at once, Chat opens on Messages, slide the Feed into the camera, smaller Top picks, and fixes for Android voice messages and the WhatsApp button."
   },
   "android": {
-    "latest": "1.17.0",
+    "latest": "1.18.0",
     "minimum": "1.0.0",
-    "notes": "New: Top picks on Home (Rate your teachers, Course matcher, Subject swap), the tab bar is now Home, Feed, Chat, Search and More with more tabs to add, profiles open faster, and bus times are a native screen."
+    "notes": "New: choose male or female at sign-up, chats and rooms open at once, Chat opens on Messages, slide the Feed into the camera, smaller Top picks, and fixes for Android voice messages and the WhatsApp button."
   },
   "donate": true
 }
