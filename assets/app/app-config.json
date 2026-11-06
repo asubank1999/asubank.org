@@ -1,15 +1,15 @@
 {
   "share": "https://asubank.org/",
   "ios": {
-    "latest": "1.16.0",
+    "latest": "1.17.0",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.16.0",
-    "notes": "New: your photo at the top opens your profile, Who's online on more screens, a Report section, a Customize screen, and hold a post to delete it. You can also crop your cover photo and turn off Continue. Themes now stay clear after a restart."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.17.0",
+    "notes": "New: Top picks on Home (Rate your teachers, Course matcher, Subject swap), the tab bar is now Home, Feed, Chat, Search and More with more tabs to add, profiles open faster, and bus times are a native screen."
   },
   "android": {
-    "latest": "1.16.0",
+    "latest": "1.17.0",
     "minimum": "1.0.0",
-    "notes": "New: your photo at the top opens your profile, Who's online on more screens, a Report section, a Customize screen, and hold a post to delete it. You can also crop your cover photo and turn off Continue. Themes now stay clear after a restart."
+    "notes": "New: Top picks on Home (Rate your teachers, Course matcher, Subject swap), the tab bar is now Home, Feed, Chat, Search and More with more tabs to add, profiles open faster, and bus times are a native screen."
   },
   "donate": true
 }

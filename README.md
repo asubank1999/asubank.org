@@ -29,8 +29,7 @@ Students share the materials and students run the app. **UniHub isn't made by or
 | | Download | How to install |
 |---|---|---|
 | 🤖 **Android app (v1.17.0)** | **[⬇️ Download for Android (APK)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.17.0/UniHub-1.17.0.apk)** | Open the link on your phone, tap the downloaded file, then allow "Install unknown apps" if Android asks. Android 8 or newer. |
-| 🧪 **Android test build (v1.17.0)** | **[⬇️ Download the 1.17.0 test APK](https://asubank.org/apps/test/UniHub-1.17.0.apk)** | Ready before the full release, for testing. Installs over 1.16.0 the same way. The iPhone build is still on its way. |
-| 🍎 **iPhone app (v1.16.0)** | **[⬇️ Download for iPhone (IPA)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.16.0/UniHub-1.16.0-unsigned.ipa)** | Install it with [Sideloadly](https://sideloadly.io) or AltStore on a computer (they sign it with your Apple ID). iOS 15 or newer. |
+| 🍎 **iPhone app (v1.17.0)** | **[⬇️ Download for iPhone (IPA)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.17.0/UniHub-1.17.0-unsigned.ipa)** | Install it with [Sideloadly](https://sideloadly.io) or AltStore on a computer (they sign it with your Apple ID). iOS 15 or newer. |
 | 🌐 **Website** | **[asubank.org](https://asubank.org)** | Works on any phone or computer, nothing to install. |
 
 **بالعربي:** للأندرويد اضغط على رابط التحميل من جوالك، افتح الملف، ووافق على "تثبيت التطبيقات غير المعروفة". للآيفون ثبّت الملف عن طريق Sideloadly أو AltStore من الكمبيوتر. أو استخدم الموقع مباشرة: asubank.org
