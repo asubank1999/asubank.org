@@ -454,6 +454,7 @@
 "Chat rooms" = "Salas de chat";
 "Chat rooms (add, lock, archive)" = "Salas de chat (añadir, bloquear, archivar)";
 "Chat with students, synced with asubank.org" = "Chatea con estudiantes, sincronizado con asubank.org";
+"Chats and rooms open at once, and new messages follow" = "Los chats y salas se abren al instante, y los mensajes nuevos llegan después";
 "Cheating or a rule of the university" = "Trampa o una norma de la universidad";
 "Check for updates" = "Buscar actualizaciones";
 "Check your connection and try again." = "Revisa tu conexión e inténtalo de nuevo.";
@@ -475,6 +476,7 @@
 "Choose files" = "Elegir archivos";
 "Choose from photos" = "Elegir de las fotos";
 "Choose how you'll pay." = "Elige cómo pagarás.";
+"Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it" = "Elige hombre o mujer al registrarte. A las cuentas antiguas se les pregunta una vez, y tú decides si tu perfil lo muestra";
 "Choose male or female." = "Elige hombre o mujer.";
 "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week" = "Elige cuándo desaparece: tras 1 minuto, 60 minutos, 1 día o 1 semana";
 "Choose who sees each new post or story: everyone, ASU students or friends" = "Elige quién ve cada publicación o historia: todos, estudiantes de ASU o amigos";
@@ -864,9 +866,11 @@
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
 "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder)." = "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder).";
+"Fixed the WhatsApp button on profiles with a local 07 number" = "Arreglado el botón de WhatsApp en perfiles con un número local 07";
 "Fixed the chat screen and message bar bouncing while a conversation opens" = "Corregido el rebote de la pantalla de chat y la barra de mensajes al abrir una conversación";
 "Fixed the star and online dot on profile photos" = "Fixed the star and online dot on profile photos";
 "Fixed the themes: Sand, Sky, Blush, Midnight, Forest night and Plum now stay clear after a restart" = "Temas corregidos: Arena, Cielo, Rubor, Medianoche, Noche de bosque y Ciruela se ven claros tras reiniciar";
+"Fixed voice messages that sometimes wouldn't play on Android" = "Arreglados los mensajes de voz que a veces no se reproducían en Android";
 "Fixed: settings under More sometimes wouldn't open or froze" = "Fixed: settings under More sometimes wouldn't open or froze";
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "Correcciones: fotos de perfil más nítidas y la fila de conectados solo muestra a quien está en línea";
 "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "Correcciones: fotos de perfil más nítidas, las fotos ya no salen de lado en Android y la fila de conectados solo muestra a quien está en línea";
@@ -2000,6 +2004,7 @@
 "Support UniHub" = "Apoya UniHub";
 "Swap" = "Cambio";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Desliza de lado en el Feed para abrir la cámara y crear una historia con foto o vídeo, a 60 FPS si tu teléfono puede";
+"Swipe the Feed sideways to slide into the camera" = "Desliza el Feed de lado para pasar a la cámara";
 "Switch camera" = "Cambiar de cámara";
 "System language" = "Idioma del sistema";
 "System language follows your iPhone's settings. Material names and files stay as they were uploaded." = "El idioma del sistema sigue los ajustes de tu iPhone. Los nombres de materiales y archivos se quedan como se subieron.";
@@ -2064,6 +2069,7 @@
 "That name isn't allowed." = "That name isn't allowed.";
 "That video is too big. Keep it short." = "Ese vídeo es demasiado grande. Que sea corto.";
 "The About text now says how UniHub is supported: ads on the website, sponsors and donations" = "El texto de Acerca de ahora explica cómo se apoya UniHub: anuncios en el sitio web, patrocinadores y donaciones";
+"The Chat tab opens on Messages first; Rooms are one tap away" = "La pestaña Chat abre primero Mensajes; las salas están a un toque";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.";
 "The app closes so the new colors load cleanly. Tap its icon to open it again." = "La app se cierra para que los nuevos colores carguen bien. Toca su icono para abrirla de nuevo.";
@@ -2150,6 +2156,7 @@
 "Tomorrow on campus" = "Mañana en el campus";
 "Top of the scale" = "Lo más alto de la escala";
 "Top picks" = "Lo más usado";
+"Top picks are now three small squares under Who's online" = "Los favoritos ahora son tres cuadros pequeños bajo Quién está en línea";
 "Top picks on Home: Rate your teachers, Course matcher and Subject swap come first" = "Lo más usado en Inicio: Valorar profesores, Coincidir materias e Intercambio de materias van primero";
 "Top rated" = "Mejor valorados";
 "Top student" = "Mejor estudiante";
@@ -2404,6 +2411,7 @@
 "Who's online" = "Quién está en línea";
 "Who's online is now on Home, Feed, Friends and Chat, with a clearer box" = "Quién está en línea ahora aparece en Inicio, Feed, Amigos y Chat, con un cuadro más claro";
 "Who's online now lists every registered student, with search" = "Quién está en línea ahora muestra a todos los estudiantes registrados, con búsqueda";
+"Who's online shows the people online now, also for guests" = "Quién está en línea muestra a las personas conectadas ahora, también para invitados";
 "Who's online: see who is online right now and when others were last seen, with a green dot on their photo." = "Who's online: see who is online right now and when others were last seen, with a green dot on their photo.";
 "Why advertise here" = "Por qué anunciarse aquí";
 "Will use again" = "Lo usaré de nuevo";

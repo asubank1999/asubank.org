@@ -454,6 +454,7 @@
 "Chat rooms" = "غرف الدردشة";
 "Chat rooms (add, lock, archive)" = "غرف الدردشة (إضافة، قفل، أرشفة)";
 "Chat with students, synced with asubank.org" = "دردش مع الطلاب، متزامن مع asubank.org";
+"Chats and rooms open at once, and new messages follow" = "المحادثات والغرف تفتح فوراً، والرسائل الجديدة تتبعها";
 "Cheating or a rule of the university" = "غش أو مخالفة لأنظمة الجامعة";
 "Check for updates" = "البحث عن تحديثات";
 "Check your connection and try again." = "تحقق من اتصالك وحاول مرة أخرى.";
@@ -475,6 +476,7 @@
 "Choose files" = "اختر ملفات";
 "Choose from photos" = "اختر من الصور";
 "Choose how you'll pay." = "اختر طريقة الدفع.";
+"Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it" = "اختر ذكر أو أنثى عند التسجيل. الحسابات القديمة يُطلب منها مرة واحدة، وأنت تقرر إن كان يظهر في ملفك";
 "Choose male or female." = "اختر ذكر أو أنثى.";
 "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week" = "اختر متى يختفي المحتوى: بعد دقيقة أو 60 دقيقة أو يوم أو أسبوع";
 "Choose who sees each new post or story: everyone, ASU students or friends" = "اختر من يرى كل منشور أو قصة جديدة: الجميع أو طلاب ASU أو الأصدقاء";
@@ -864,9 +866,11 @@
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
 "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder)." = "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder).";
+"Fixed the WhatsApp button on profiles with a local 07 number" = "إصلاح زر واتساب في الملفات ذات الرقم المحلي 07";
 "Fixed the chat screen and message bar bouncing while a conversation opens" = "إصلاح اهتزاز شاشة المحادثة وشريط الرسائل عند فتح المحادثة";
 "Fixed the star and online dot on profile photos" = "Fixed the star and online dot on profile photos";
 "Fixed the themes: Sand, Sky, Blush, Midnight, Forest night and Plum now stay clear after a restart" = "إصلاح المظاهر: الرمل والسماء والوردي ومنتصف الليل وليل الغابة والبرقوقي تبقى واضحة بعد إعادة التشغيل";
+"Fixed voice messages that sometimes wouldn't play on Android" = "إصلاح الرسائل الصوتية التي لم تكن تعمل أحياناً على أندرويد";
 "Fixed: settings under More sometimes wouldn't open or froze" = "Fixed: settings under More sometimes wouldn't open or froze";
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "إصلاحات: صور شخصية أوضح، وصف المتصلين يعرض المتصلين فقط";
 "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "إصلاحات: صور شخصية أوضح، ولم تعد الصور مائلة على أندرويد، وصف المتصلين يعرض المتصلين فقط";
@@ -2000,6 +2004,7 @@
 "Support UniHub" = "ادعم UniHub";
 "Swap" = "تبديل";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "اسحب جانباً في آخر المنشورات لفتح الكاميرا لقصة بصورة أو فيديو، بسرعة 60 إطاراً إن كان هاتفك يدعمها";
+"Swipe the Feed sideways to slide into the camera" = "اسحب الأخبار جانباً للانتقال إلى الكاميرا";
 "Switch camera" = "تبديل الكاميرا";
 "System language" = "لغة النظام";
 "System language follows your iPhone's settings. Material names and files stay as they were uploaded." = "لغة النظام تتبع إعدادات هاتفك. أسماء المواد والملفات تبقى كما رُفعت.";
@@ -2064,6 +2069,7 @@
 "That name isn't allowed." = "هذا الاسم غير مسموح.";
 "That video is too big. Keep it short." = "هذا الفيديو كبير جداً. اجعله قصيراً.";
 "The About text now says how UniHub is supported: ads on the website, sponsors and donations" = "صفحة «حول» توضّح الآن كيف يُدعم UniHub: الإعلانات على الموقع والرعاة والتبرعات";
+"The Chat tab opens on Messages first; Rooms are one tap away" = "تبويب الدردشة يفتح على الرسائل أولاً، والغرف بلمسة واحدة";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "يتطوع مشرفو المجموعات بوقتهم لتنظيم المجتمع وإدارته. لا يضمن المشرفون دقة أي مادة يشاركها الأعضاء أو اكتمالها أو موثوقيتها، وليسوا مسؤولين عن النصائح أو الآراء أو المحتوى الذي ينشره الآخرون.";
 "The app closes so the new colors load cleanly. Tap its icon to open it again." = "سيُغلق التطبيق لتظهر الألوان الجديدة بشكل سليم. اضغط على أيقونته لفتحه من جديد.";
@@ -2150,6 +2156,7 @@
 "Tomorrow on campus" = "غداً في الجامعة";
 "Top of the scale" = "أعلى السلم";
 "Top picks" = "الأكثر استخداماً";
+"Top picks are now three small squares under Who's online" = "الأكثر استخداماً أصبحت ثلاثة مربعات صغيرة تحت المتصلين الآن";
 "Top picks on Home: Rate your teachers, Course matcher and Subject swap come first" = "الأكثر استخداماً في الرئيسية: تقييم المدرّسين ومطابقة المواد وتبديل المواد أولاً";
 "Top rated" = "الأعلى تقييمًا";
 "Top student" = "طالب متفوق";
@@ -2404,6 +2411,7 @@
 "Who's online" = "من المتصل";
 "Who's online is now on Home, Feed, Friends and Chat, with a clearer box" = "قائمة المتصلين الآن في الرئيسية والمنشورات والأصدقاء والدردشة، بمربع أوضح";
 "Who's online now lists every registered student, with search" = "قائمة المتصلين تعرض الآن كل الطلاب المسجلين مع إمكانية البحث";
+"Who's online shows the people online now, also for guests" = "قائمة المتصلين تعرض من هم متصلون الآن، حتى للزوار";
 "Who's online: see who is online right now and when others were last seen, with a green dot on their photo." = "Who's online: see who is online right now and when others were last seen, with a green dot on their photo.";
 "Why advertise here" = "لماذا تعلن هنا";
 "Will use again" = "سأستخدمه مجدداً";

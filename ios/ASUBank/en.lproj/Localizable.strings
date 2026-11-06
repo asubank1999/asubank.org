@@ -454,6 +454,7 @@
 "Chat rooms" = "Chat rooms";
 "Chat rooms (add, lock, archive)" = "Chat rooms (add, lock, archive)";
 "Chat with students, synced with asubank.org" = "Chat with students, synced with asubank.org";
+"Chats and rooms open at once, and new messages follow" = "Chats and rooms open at once, and new messages follow";
 "Cheating or a rule of the university" = "Cheating or a rule of the university";
 "Check for updates" = "Check for updates";
 "Check your connection and try again." = "Check your connection and try again.";
@@ -475,6 +476,7 @@
 "Choose files" = "Choose files";
 "Choose from photos" = "Choose from photos";
 "Choose how you'll pay." = "Choose how you'll pay.";
+"Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it" = "Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it";
 "Choose male or female." = "Choose male or female.";
 "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week" = "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week";
 "Choose who sees each new post or story: everyone, ASU students or friends" = "Choose who sees each new post or story: everyone, ASU students or friends";
@@ -864,9 +866,11 @@
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
 "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder)." = "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder).";
+"Fixed the WhatsApp button on profiles with a local 07 number" = "Fixed the WhatsApp button on profiles with a local 07 number";
 "Fixed the chat screen and message bar bouncing while a conversation opens" = "Fixed the chat screen and message bar bouncing while a conversation opens";
 "Fixed the star and online dot on profile photos" = "Fixed the star and online dot on profile photos";
 "Fixed the themes: Sand, Sky, Blush, Midnight, Forest night and Plum now stay clear after a restart" = "Fixed the themes: Sand, Sky, Blush, Midnight, Forest night and Plum now stay clear after a restart";
+"Fixed voice messages that sometimes wouldn't play on Android" = "Fixed voice messages that sometimes wouldn't play on Android";
 "Fixed: settings under More sometimes wouldn't open or froze" = "Fixed: settings under More sometimes wouldn't open or froze";
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "Fixes: sharper profile photos, and the online row shows only people who are online";
 "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online";
@@ -2000,6 +2004,7 @@
 "Support UniHub" = "Support UniHub";
 "Swap" = "Swap";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can";
+"Swipe the Feed sideways to slide into the camera" = "Swipe the Feed sideways to slide into the camera";
 "Switch camera" = "Switch camera";
 "System language" = "System language";
 "System language follows your iPhone's settings. Material names and files stay as they were uploaded." = "System language follows your iPhone's settings. Material names and files stay as they were uploaded.";
@@ -2064,6 +2069,7 @@
 "That name isn't allowed." = "That name isn't allowed.";
 "That video is too big. Keep it short." = "That video is too big. Keep it short.";
 "The About text now says how UniHub is supported: ads on the website, sponsors and donations" = "The About text now says how UniHub is supported: ads on the website, sponsors and donations";
+"The Chat tab opens on Messages first; Rooms are one tap away" = "The Chat tab opens on Messages first; Rooms are one tap away";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.";
 "The app closes so the new colors load cleanly. Tap its icon to open it again." = "The app closes so the new colors load cleanly. Tap its icon to open it again.";
@@ -2150,6 +2156,7 @@
 "Tomorrow on campus" = "Tomorrow on campus";
 "Top of the scale" = "Top of the scale";
 "Top picks" = "Top picks";
+"Top picks are now three small squares under Who's online" = "Top picks are now three small squares under Who's online";
 "Top picks on Home: Rate your teachers, Course matcher and Subject swap come first" = "Top picks on Home: Rate your teachers, Course matcher and Subject swap come first";
 "Top rated" = "Top rated";
 "Top student" = "Top student";
@@ -2404,6 +2411,7 @@
 "Who's online" = "Who's online";
 "Who's online is now on Home, Feed, Friends and Chat, with a clearer box" = "Who's online is now on Home, Feed, Friends and Chat, with a clearer box";
 "Who's online now lists every registered student, with search" = "Who's online now lists every registered student, with search";
+"Who's online shows the people online now, also for guests" = "Who's online shows the people online now, also for guests";
 "Who's online: see who is online right now and when others were last seen, with a green dot on their photo." = "Who's online: see who is online right now and when others were last seen, with a green dot on their photo.";
 "Why advertise here" = "Why advertise here";
 "Will use again" = "Will use again";

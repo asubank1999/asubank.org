@@ -1,5 +1,15 @@
 **UniHub for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.18.0
+- Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it
+- Chats and rooms open at once, and new messages follow
+- The Chat tab opens on Messages first; Rooms are one tap away
+- Swipe the Feed sideways to slide into the camera
+- Top picks are now three small squares under Who's online
+- Who's online shows the people online now, also for guests
+- Fixed voice messages that sometimes wouldn't play on Android
+- Fixed the WhatsApp button on profiles with a local 07 number
+
 ### What's new in 1.17.0
 - Top picks on Home: Rate your teachers, Course matcher and Subject swap come first
 - The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them
