@@ -82,6 +82,75 @@
         var d = new Date(iso);
         return isNaN(d) ? '' : d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     }
+    // ---- voice notes and photos inside the panel (same files the full chat plays)
+    function sniff(bytes, name) {
+        var b = bytes, ext = String(name || '').split('.').pop().toLowerCase();
+        if (b.length > 8 && b[4] === 0x66 && b[5] === 0x74 && b[6] === 0x79 && b[7] === 0x70) return ext === 'mp4' || ext === 'mov' ? 'video/mp4' : 'audio/mp4';
+        if (b[0] === 0x1A && b[1] === 0x45 && b[2] === 0xDF && b[3] === 0xA3) return 'audio/webm';
+        if (b[0] === 0x4F && b[1] === 0x67 && b[2] === 0x67 && b[3] === 0x53) return 'audio/ogg';
+        if (b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46) return b[8] === 0x57 && b[9] === 0x45 ? 'image/webp' : 'audio/wav';
+        if (b[0] === 0xFF && b[1] === 0xD8) return 'image/jpeg';
+        if (b[0] === 0x89 && b[1] === 0x50) return 'image/png';
+        if ((b[0] === 0x49 && b[1] === 0x44 && b[2] === 0x33) || (b[0] === 0xFF && (b[1] & 0xE0) === 0xE0)) return 'audio/mpeg';
+        return { m4a: 'audio/mp4', weba: 'audio/webm', webm: 'audio/webm', ogg: 'audio/ogg', jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' }[ext] || 'application/octet-stream';
+    }
+    var fileUrls = {};
+    function fileUrl(isDm, m) {
+        var key = (isDm ? 'dm' : 'room') + m.id;
+        if (!fileUrls[key]) fileUrls[key] = call(isDm ? 'dmFile' : 'mediaFile', isDm ? { id: m.id } : { scope: 'room', id: m.id }).then(function (r) {
+            var bin = atob(r.data), bytes = new Uint8Array(bin.length);
+            for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+            return URL.createObjectURL(new Blob([bytes], { type: sniff(bytes, r.name || m.fileName) }));
+        }).catch(function (e) { delete fileUrls[key]; throw e; });
+        return fileUrls[key];
+    }
+    function voiceTime(s) { s = Math.round(s || 0); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+    var audios = {}, audioNow = null;
+    function voicePlayer(isDm, m) {
+        var key = (isDm ? 'dm' : 'room') + m.id;
+        var play = h('button', { type: 'button', class: 'abx-play', 'aria-label': 'Play voice message', text: '▶' });
+        var bar = h('span', { class: 'abx-track' }, h('i'));
+        var time = h('small', { class: 'abx-vtime', text: voiceTime(m.duration) });
+        var box = h('span', { class: 'abx-voice' }, play, bar, time);
+        function draw(a) {
+            var on = a && !a.paused;
+            play.textContent = on ? '❚❚' : '▶';
+            play.setAttribute('aria-label', on ? 'Pause' : 'Play voice message');
+            bar.firstChild.style.width = (a && a.duration && isFinite(a.duration) ? Math.min(100, a.currentTime / a.duration * 100) : 0) + '%';
+            if (a && on) time.textContent = voiceTime(a.currentTime);
+            else if (!a || !a.currentTime) time.textContent = voiceTime(m.duration || (a && isFinite(a.duration) ? a.duration : 0));
+        }
+        function bind(a) {
+            a.ontimeupdate = a.onplay = a.onpause = function () { draw(a); };
+            a.onended = function () { a.currentTime = 0; draw(a); };
+            draw(a);
+        }
+        if (audios[key]) bind(audios[key]);
+        play.addEventListener('click', function () {
+            var a = audios[key];
+            if (a) {
+                if (a.paused) { if (audioNow && audioNow !== a) audioNow.pause(); audioNow = a; a.play().catch(function () {}); } else a.pause();
+                return;
+            }
+            play.disabled = true; play.textContent = '…';
+            fileUrl(isDm, m).then(function (u) {
+                a = audios[key] = new Audio(u);
+                a.onerror = function () { delete audios[key]; time.textContent = "Can't play here"; play.textContent = '▶'; };
+                bind(a);
+                if (audioNow) audioNow.pause();
+                audioNow = a;
+                return a.play();
+            }).catch(function () { time.textContent = "Couldn't load"; play.textContent = '▶'; })
+              .then(function () { play.disabled = false; });
+        });
+        return box;
+    }
+    function photoInPanel(isDm, m) {
+        var img = h('img', { class: 'abx-photo', alt: 'Photo' });
+        var tile = h('button', { type: 'button', class: 'abx-photo-btn', 'aria-label': 'View photo', onclick: function () { if (img.src) window.open(img.src, '_blank', 'noopener'); } }, h('span', { class: 'abx-photo-wait', text: '📷' }), img);
+        fileUrl(isDm, m).then(function (u) { img.src = u; tile.classList.add('ready'); }).catch(function () { tile.firstChild.textContent = '📷 Photo'; });
+        return tile;
+    }
     var ICON = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>';
 
     // ---- the button
@@ -240,7 +309,9 @@
                 var bubble = h('div', { class: 'abx-bubble' + (m.pending ? ' pending' : '') },
                     !own && !isDm && !grouped ? h('b', { class: 'abx-from', style: 'color:' + color(who && who.color), text: nameOf(who) || m.username || '' }) : null,
                     m.text ? h('span', { class: 'abx-text', text: m.text }) : null,
-                    m.hasFile || label ? h('a', { class: 'abx-file', href: full, text: (label || '📎 File') + ' · open' }) : null,
+                    m.fileType === 'voice' && !m.pending ? voicePlayer(isDm, m)
+                        : m.fileType === 'photo' && !m.pending ? photoInPanel(isDm, m)
+                        : m.hasFile || label ? h('a', { class: 'abx-file', href: full, text: (label || '📎 File') + ' · open' }) : null,
                     h('small', { class: 'abx-time', text: m.pending ? 'Sending…' : clock(m.created) + (m.edited ? ' · edited' : '') }));
                 feed.appendChild(h('div', { class: 'abx-msg' + (own ? ' mine' : '') + (grouped ? ' grouped' : '') },
                     !own && !isDm ? (grouped ? h('span', { class: 'abx-av-gap' }) : avatar(who, true)) : null, bubble));
