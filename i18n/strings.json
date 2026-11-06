@@ -5790,6 +5790,10 @@
   "ar": "حسب الهاتف",
   "es": "Como el teléfono"
  },
+ "Matcher": {
+  "ar": "المطابقة",
+  "es": "Coincidir"
+ },
  "Matches found: %d": {
   "ar": "المطابقات: %d"
  },
@@ -8570,6 +8574,10 @@
   "ar": "ادعم UniHub",
   "es": "Apoya UniHub"
  },
+ "Swap": {
+  "ar": "تبديل",
+  "es": "Cambio"
+ },
  "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can": {
   "ar": "اسحب جانباً في آخر المنشورات لفتح الكاميرا لقصة بصورة أو فيديو، بسرعة 60 إطاراً إن كان هاتفك يدعمها",
   "es": "Desliza de lado en el Feed para abrir la cámara y crear una historia con foto o vídeo, a 60 FPS si tu teléfono puede"
@@ -8660,6 +8668,10 @@
   "ar": "مهمة",
   "es": "Tarea"
  },
+ "Tasks": {
+  "ar": "المهام",
+  "es": "Tareas"
+ },
  "Teacher": {
   "ar": "الدكتور",
   "es": "Profesor"
@@ -8675,6 +8687,10 @@
  "Teacher's full name, e.g. Dr. Ahmad Malik": {
   "ar": "الاسم الكامل للدكتور، مثل د. أحمد مالك",
   "es": "Nombre completo, p. ej. Dr. Ahmad Malik"
+ },
+ "Teachers": {
+  "ar": "المدرّسون",
+  "es": "Profesores"
  },
  "Teaching Method": {
   "ar": "طريقة شرح"

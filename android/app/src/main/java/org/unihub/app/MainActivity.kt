@@ -1,6 +1,11 @@
 package org.unihub.app
 
 import androidx.compose.material.icons.filled.DynamicFeed
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material.icons.filled.Grade
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Notifications
@@ -172,6 +177,11 @@ private val choosableTabs = listOf(
     Tab(Routes.SAVED, "Saved", Icons.Filled.Star),
     Tab(Routes.LECTURES, "My lectures", Icons.Filled.Alarm),
     Tab(Routes.HACKS, "Life hacks", Icons.Filled.Lightbulb),
+    Tab(Routes.SWAPS, "Swap", Icons.Filled.SwapHoriz),
+    Tab(Routes.RATINGS, "Teachers", Icons.Filled.Grade),
+    Tab(Routes.MATCHER, "Matcher", Icons.Filled.Groups),
+    Tab(Routes.PLANNER, "Tasks", Icons.Filled.Checklist),
+    Tab(Routes.FOCUS, "Focus", Icons.Filled.Timer),
 )
 private val allTabs = listOf(homeTab, moreTab) + choosableTabs
 
@@ -299,7 +309,11 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>, startScreen: Str
                 composable(Routes.UPLOAD) { UploadScreen() }
                 composable(Routes.SAVED) { SavedScreen(back = !inBar(Routes.SAVED)) }
                 composable(Routes.FEED) { FeedScreen(back = !inBar(Routes.FEED)) }
-                composable(Routes.SWAPS) { SwapsScreen() }
+                composable(Routes.SWAPS) { SwapsScreen(back = !inBar(Routes.SWAPS)) }
+                composable(Routes.RATINGS) { TeacherRatingsScreen(back = !inBar(Routes.RATINGS)) }
+                composable(Routes.MATCHER) { CourseMatcherScreen(back = !inBar(Routes.MATCHER)) }
+                composable(Routes.PLANNER) { PlannerScreen(back = !inBar(Routes.PLANNER)) }
+                composable(Routes.FOCUS) { FocusTimerScreen(back = !inBar(Routes.FOCUS)) }
                 composable(Routes.FRIENDS) { FriendsScreen(back = !inBar(Routes.FRIENDS)) }
                 composable(Routes.NOTIFICATIONS) { NotificationsScreen(back = !inBar(Routes.NOTIFICATIONS)) }
                 composable(Routes.LECTURES) { LecturesScreen(back = !inBar(Routes.LECTURES)) }

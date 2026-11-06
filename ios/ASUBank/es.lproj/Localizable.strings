@@ -1172,6 +1172,7 @@
 "Mark as done" = "Marcar como hecho";
 "Mark as not done" = "Marcar como no hecho";
 "Match my phone" = "Como el teléfono";
+"Matcher" = "Coincidir";
 "Matches found: %d" = "Matches found: %d";
 "Matches found: %lld" = "Matches found: %lld";
 "Matches found: %@" = "Matches found: %@";
@@ -1981,6 +1982,7 @@
 "Sunset" = "Sunset";
 "Support" = "Soporte";
 "Support UniHub" = "Apoya UniHub";
+"Swap" = "Cambio";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Desliza de lado en el Feed para abrir la cámara y crear una historia con foto o vídeo, a 60 FPS si tu teléfono puede";
 "Switch camera" = "Cambiar de cámara";
 "System language" = "Idioma del sistema";
@@ -2007,11 +2009,13 @@
 "Targeted" = "Dirigido";
 "Targeted Audience" = "Targeted Audience";
 "Task" = "Tarea";
+"Tasks" = "Tareas";
 "Teacher" = "Profesor";
 "Teacher not listed?" = "Teacher not listed?";
 "Teacher ratings connect more reliably." = "Teacher ratings connect more reliably.";
 "Teacher's full name" = "Nombre completo del profesor";
 "Teacher's full name, e.g. Dr. Ahmad Malik" = "Nombre completo, p. ej. Dr. Ahmad Malik";
+"Teachers" = "Profesores";
 "Teaching Method" = "Teaching Method";
 "Teal" = "Verde azulado";
 "Tell me when it opens" = "Avísame cuando abra";

@@ -1074,9 +1074,15 @@ enum TabBarPrefs {
         (.friends, "friends", "Friends", "person.2.fill"),
         (.saved, "saved", "Saved", "star.fill"),
         (.lectures, "lectures", "My lectures", "alarm.fill"),
-        (.hacks, "hacks", "Life hacks", "lightbulb.fill")
+        (.hacks, "hacks", "Life hacks", "lightbulb.fill"),
+        (.swap, "swap", "Subject swap", "arrow.left.arrow.right.circle.fill"),
+        (.rating, "rating", "Rate your teachers", "star.bubble.fill"),
+        (.matcher, "matcher", "Course matcher", "person.3.fill"),
+        (.planner, "planner", "Exams & tasks", "checklist"),
+        (.focus, "focus", "Focus timer", "timer")
     ]
-    static let standard = "feed,chat,notifications"
+    /// Home, Feed, Chat, Search, More. People who already picked their tabs keep them.
+    static let standard = "feed,chat,search"
 
     static func chosen(_ stored: String, admin: Bool) -> [AppTab] {
         let ids = stored.split(separator: ",").map(String.init)

@@ -136,7 +136,7 @@ object Matcher {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun CourseMatcherScreen() {
+fun CourseMatcherScreen(back: Boolean = true) {
     val ctx = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
@@ -199,7 +199,7 @@ fun CourseMatcherScreen() {
         }
     }
 
-    Screen("Course matcher") { pad ->
+    Screen("Course matcher", back = back) { pad ->
         Box(Modifier.padding(pad).fillMaxSize()) {
             BridgeHost(Matcher.bridge)
             if (intro) {

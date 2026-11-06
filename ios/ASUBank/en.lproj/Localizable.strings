@@ -1172,6 +1172,7 @@
 "Mark as done" = "Mark as done";
 "Mark as not done" = "Mark as not done";
 "Match my phone" = "Match my phone";
+"Matcher" = "Matcher";
 "Matches found: %d" = "Matches found: %d";
 "Matches found: %lld" = "Matches found: %lld";
 "Matches found: %@" = "Matches found: %@";
@@ -1981,6 +1982,7 @@
 "Sunset" = "Sunset";
 "Support" = "Support";
 "Support UniHub" = "Support UniHub";
+"Swap" = "Swap";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can";
 "Switch camera" = "Switch camera";
 "System language" = "System language";
@@ -2007,11 +2009,13 @@
 "Targeted" = "Targeted";
 "Targeted Audience" = "Targeted Audience";
 "Task" = "Task";
+"Tasks" = "Tasks";
 "Teacher" = "Teacher";
 "Teacher not listed?" = "Teacher not listed?";
 "Teacher ratings connect more reliably." = "Teacher ratings connect more reliably.";
 "Teacher's full name" = "Teacher's full name";
 "Teacher's full name, e.g. Dr. Ahmad Malik" = "Teacher's full name, e.g. Dr. Ahmad Malik";
+"Teachers" = "Teachers";
 "Teaching Method" = "Teaching Method";
 "Teal" = "Teal";
 "Tell me when it opens" = "Tell me when it opens";

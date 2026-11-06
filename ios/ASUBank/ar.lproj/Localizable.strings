@@ -1172,6 +1172,7 @@
 "Mark as done" = "تم التبديل";
 "Mark as not done" = "تحديد كغير منجز";
 "Match my phone" = "حسب الهاتف";
+"Matcher" = "المطابقة";
 "Matches found: %d" = "المطابقات: %d";
 "Matches found: %lld" = "المطابقات: %lld";
 "Matches found: %@" = "المطابقات: %@";
@@ -1981,6 +1982,7 @@
 "Sunset" = "غروب";
 "Support" = "الدعم";
 "Support UniHub" = "ادعم UniHub";
+"Swap" = "تبديل";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "اسحب جانباً في آخر المنشورات لفتح الكاميرا لقصة بصورة أو فيديو، بسرعة 60 إطاراً إن كان هاتفك يدعمها";
 "Switch camera" = "تبديل الكاميرا";
 "System language" = "لغة النظام";
@@ -2007,11 +2009,13 @@
 "Targeted" = "موجّه";
 "Targeted Audience" = "جمهور مستهدف";
 "Task" = "مهمة";
+"Tasks" = "المهام";
 "Teacher" = "الدكتور";
 "Teacher not listed?" = "المدرس غير موجود؟";
 "Teacher ratings connect more reliably." = "Teacher ratings connect more reliably.";
 "Teacher's full name" = "الاسم الكامل للدكتور";
 "Teacher's full name, e.g. Dr. Ahmad Malik" = "الاسم الكامل للدكتور، مثل د. أحمد مالك";
+"Teachers" = "المدرّسون";
 "Teaching Method" = "طريقة شرح";
 "Teal" = "أزرق مخضر";
 "Tell me when it opens" = "أخبرني عندما يُفتح";

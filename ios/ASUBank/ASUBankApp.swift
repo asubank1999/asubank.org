@@ -102,6 +102,11 @@ struct RootView: View {
         case .saved: SavedView()
         case .lectures: LecturesTab()
         case .hacks: LifeHacksTab()
+        case .swap: ABStack { SwapsScreen() }
+        case .rating: ABStack { TeacherRatingsScreen() }
+        case .matcher: ABStack { CourseMatcherScreen() }
+        case .planner: ABStack { PlannerScreen() }
+        case .focus: ABStack { FocusTimerScreen() }
         case .admin: AdminTab()
         case .more: MoreView()
         default: HomeView()
