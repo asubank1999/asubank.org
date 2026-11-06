@@ -2,6 +2,8 @@
 
 ## 📲 Download the app / حمّل التطبيق
 
+**[Download page with direct links and a step by step guide](https://asubank.org/apps/download)**
+
 | | Download | How to install |
 |---|---|---|
 | 🤖 **Android app (v1.15.0)** | **[⬇️ Download for Android (APK)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.15.0/UniHub-1.15.0.apk)** | Open the link on your phone, tap the downloaded file, then allow "Install unknown apps" if Android asks. Android 8 or newer. |

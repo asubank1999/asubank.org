@@ -119,6 +119,7 @@ class AppActivity : ComponentActivity() {
         ChatNotifier.init(applicationContext)
         ChatNotifier.start(applicationContext)
         TabPrefs.init()
+        HomePrefs.init()
         Lectures.init()
         Lectures.schedule(applicationContext)
         intent?.getStringExtra("openTab")?.let { ChatNotifier.pendingTab.value = it; splashDone = true }
@@ -138,7 +139,10 @@ class AppActivity : ComponentActivity() {
         if (intent?.hasExtra("openPath") == true) splashDone = true
         if (intent?.getBooleanExtra("rateIntro", false) == true) Saved.prefs.edit().putBoolean("rate.intro.v1", true).apply()
         if (intent?.getBooleanExtra("matcherIntro", false) == true) Saved.prefs.edit().putBoolean("matcher.intro.v1", true).apply()
-        setContent { AsuTheme { LangProvider { App(startTab, incoming) } } }
+        // CI screenshots: --es startScreen report | safety | customize | shareVideo
+        val startScreen = intent?.getStringExtra("startScreen")
+        val openOn = startTab ?: HomePrefs.start.value.takeIf { intent?.dataString == null && !intent.hasExtra("startPath") && !intent.hasExtra("openPath") && !intent.hasExtra("openTab") && !intent.hasExtra("openRoom") }
+        setContent { AsuTheme { LangProvider { App(openOn, incoming, startScreen) } } }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -152,13 +156,12 @@ class AppActivity : ComponentActivity() {
 /** The logo splash shows once per process start */
 var splashDone = false
 
-const val TERMS_KEY = "terms.accepted.v1"
+const val TERMS_KEY = "terms.accepted.v2"
 
 private data class Tab(val route: String, val label: String, val icon: ImageVector)
 
 private val homeTab = Tab(Routes.HOME, "Home", Icons.Filled.Home)
 private val moreTab = Tab(Routes.MORE, "More", Icons.Filled.MoreHoriz)
-private val adminTab = Tab(Routes.ADMIN, "Admin", Icons.Filled.Shield)
 /** What people can put between Home and More (More > Customize tab bar) */
 private val choosableTabs = listOf(
     Tab(Routes.FEED, "Feed", Icons.Filled.DynamicFeed),
@@ -170,10 +173,10 @@ private val choosableTabs = listOf(
     Tab(Routes.LECTURES, "My lectures", Icons.Filled.Alarm),
     Tab(Routes.HACKS, "Life hacks", Icons.Filled.Lightbulb),
 )
-private val allTabs = listOf(homeTab, moreTab, adminTab) + choosableTabs
+private val allTabs = listOf(homeTab, moreTab) + choosableTabs
 
 @Composable
-fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
+fun App(startTab: String?, incoming: MutableStateFlow<String?>, startScreen: String? = null) {
     val nav = rememberNavController()
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -196,7 +199,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
     val noticesRead by Notices.lastRead.collectAsState()
     val noticeUnread = notices.count { it.created > noticesRead }
     val middleTabs = TabPrefs.shown(chosenTabs, isAdmin).mapNotNull { id -> choosableTabs.firstOrNull { it.route == id } }
-    val barTabs = listOf(homeTab) + middleTabs + (if (isAdmin) listOf(adminTab) else emptyList()) + moreTab
+    val barTabs = listOf(homeTab) + middleTabs + moreTab
     val inBar: (String) -> Boolean = { r -> barTabs.any { it.route == r } }
     LaunchedEffect(pendingTab) {
         pendingTab?.let { t ->
@@ -242,6 +245,8 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
         }
     }
     LaunchedEffect(startTab) { if (startTab != null && startTab != Routes.HOME) nav.openTab(startTab) }
+    LaunchedEffect(startScreen) { if (startScreen != null) nav.navigate(startScreen) }
+    LaunchedEffect(user?.id) { TermsProof.sync() }
     LaunchedEffect(link) {
         val l = link ?: return@LaunchedEffect
         incoming.value = null
@@ -326,6 +331,12 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
                 composable("adminReports") { AdminReportsScreen() }
                 composable("adminSuggestions") { AdminSuggestionsScreen() }
                 composable("blocked") { BlockedScreen() }
+                composable("customize") { CustomizeScreen() }
+                composable("safety") { SafetyScreen() }
+                composable("report") { ReportCenterScreen() }
+                composable("myReports") { MyReportsScreen() }
+                composable("adminTerms") { AdminTermsScreen() }
+                composable("shareVideo") { ShareVideoScreen() }
                 composable("submissions?admin={admin}", listOf(navArgument("admin") { defaultValue = "" })) { e ->
                     SubmissionsScreen(admin = e.arguments?.getString("admin") == "1" && user?.isAdmin == true)
                 }
@@ -351,7 +362,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>) {
         if (signInShown) SignInDialog(onClose = { Account.signInShown.value = false })
 
         if (mustUpdate) UpdateRequired()
-        else if (!accepted) WelcomeTerms(onAccept = { Saved.prefs.edit().putBoolean(TERMS_KEY, true).apply(); accepted = true })
+        else if (!accepted) WelcomeTerms(onAccept = { Saved.prefs.edit().putBoolean(TERMS_KEY, true).apply(); TermsProof.accepted(); accepted = true })
 
         whatsNew?.takeIf { !mustUpdate && !splash }?.let { e ->
             WhatsNewDialog(e, onClose = { whatsNew = null }, onSeeAll = { whatsNew = null; nav.openPage("/app/whatsnew", "What's New") })
@@ -413,6 +424,15 @@ fun WelcomeTerms(onAccept: (() -> Unit)? = null, onClose: (() -> Unit)? = null) 
                         Text("Welcome to UniHub", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                         Text(if (onAccept != null) "Please read this before you start" else "About this app", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
+                    Group(header = "What you agree to") {
+                        Term(Icons.Filled.MenuBook, "You read the terms", "We keep a dated record that you accepted the Terms of Service on this date. You can see it any time under More, Safety & legal.")
+                        Divider()
+                        Term(Icons.Filled.Person, "You answer for what you post", "Share only what you have the right to share. Don't use UniHub to cheat, harass anyone or break the law.")
+                        Divider()
+                        Term(Icons.Filled.VerifiedUser, "We act on reports", "Admins can remove content and close accounts. Copyright owners can ask us to remove a file.")
+                        Divider()
+                        Term(Icons.Filled.Favorite, "No guarantees", "Materials come from students and may contain mistakes. UniHub is offered as it is. Check your official course sources.")
+                    }
                     Group(header = "About this app") {
                         Term(Icons.Filled.Favorite, "A free, student-run project", "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it.")
                         Divider()
@@ -436,7 +456,7 @@ fun WelcomeTerms(onAccept: (() -> Unit)? = null, onClose: (() -> Unit)? = null) 
                             Divider()
                             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Checkbox(checked = agree, onCheckedChange = { agree = it })
-                                Text("I understand and agree / أوافق", style = MaterialTheme.typography.bodyLarge)
+                                Text("I have read and accept the Terms of Service / قرأت شروط الاستخدام وأوافق عليها", style = MaterialTheme.typography.bodyLarge)
                             }
                         }
                     }

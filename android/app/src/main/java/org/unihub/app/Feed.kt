@@ -1,5 +1,6 @@
 package org.unihub.app
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import java.time.Instant
@@ -265,6 +266,7 @@ fun FeedScreen(back: Boolean = false) {
     viewing?.let { start -> StoryViewer(groups, start) { viewing = null; scope.launch { loadStories() } } }
 
     Screen("Feed", back = back, large = true, actions = {
+        OnlineButton()
         if (me != null) IconButton(onClick = { camera = true }) { Icon(Icons.Filled.PhotoCamera, tr("Add story")) }
     }) { pad ->
         var swipe by remember { mutableFloatStateOf(0f) }
@@ -516,9 +518,11 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
 
 // MARK: - comments
 
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun CommentsDialog(post: FeedPost, changed: (Int) -> Unit, onClose: () -> Unit) {
     val scope = rememberCoroutineScope()
+    val ctx = androidx.compose.ui.platform.LocalContext.current
     val me by Account.user.collectAsState()
     var comments by remember { mutableStateOf<List<PostComment>>(emptyList()) }
     var loaded by remember { mutableStateOf(false) }
@@ -550,8 +554,22 @@ fun CommentsDialog(post: FeedPost, changed: (Int) -> Unit, onClose: () -> Unit) 
                         else Column { repeat(4) { SkeletonRow() } }
                     }
                     items(comments, key = { it.id }) { c ->
+                        var held by remember { mutableStateOf(false) }
+                        androidx.compose.material3.DropdownMenu(held, { held = false }) {
+                            androidx.compose.material3.DropdownMenuItem(text = { Text("Copy") }, onClick = {
+                                held = false
+                                (ctx.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager).setPrimaryClip(android.content.ClipData.newPlainText("Comment", c.text))
+                            })
+                            if (c.user.id == me?.id || post.user.id == me?.id || Account.isAdmin) androidx.compose.material3.DropdownMenuItem(text = { Text("Delete", color = MaterialTheme.colorScheme.error) }, onClick = {
+                                held = false
+                                comments = comments.filterNot { it.id == c.id }
+                                changed(comments.size)
+                                scope.launch { runCatching { Account.call("commentDelete", mapOf("id" to c.id)) }; load() }
+                            })
+                            if (c.user.id != me?.id) androidx.compose.material3.DropdownMenuItem(text = { Text("Report") }, onClick = { held = false; reporting = ReportTarget("comment", c.id, c.text) })
+                        }
                         Row(
-                            Modifier.animateItem().fillMaxWidth().graphicsLayer { alpha = if (c.id.startsWith("local-")) 0.6f else 1f }.padding(horizontal = 14.dp, vertical = 8.dp),
+                            Modifier.animateItem().fillMaxWidth().graphicsLayer { alpha = if (c.id.startsWith("local-")) 0.6f else 1f }.combinedClickable(onClick = {}, onLongClick = { held = true }).padding(horizontal = 14.dp, vertical = 8.dp),
                             horizontalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
                             Avatar(c.user.name, c.user.color, 34.dp, c.user.isAdmin, c.user.avatar)

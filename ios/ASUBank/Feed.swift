@@ -282,7 +282,7 @@ struct FeedScreen: View {
                         Text("You're browsing as a guest").font(.headline)
                         Text("Sign in to post, comment, like and add stories.").font(.subheadline).foregroundStyle(.secondary)
                         Button("Sign in or create account") { account.signInShown = true }
-                            .buttonStyle(.borderedProminent).tint(.abAccent)
+                            .buttonStyle(.borderedProminent).tint(.abFill)
                     }
                     .padding(.vertical, 4)
                 }
@@ -317,6 +317,7 @@ struct FeedScreen: View {
         .background(swipeCamera && account.signedIn ? AnyView(SwipeCatcher { camera = true }) : AnyView(EmptyView()))
         .navigationTitle("Feed")
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) { OnlineButton() }
             ToolbarItem(placement: .primaryAction) {
                 if account.signedIn {
                     Button { camera = true } label: { Image(systemName: "camera.fill") }.accessibilityLabel(Text("Add story"))
@@ -417,7 +418,7 @@ struct StoriesRow: View {
                         VStack(spacing: 5) {
                             Avatar(name: g.user.displayName, color: g.user.color, size: 60, photo: g.user.avatar, peek: false)
                                 .padding(3)
-                                .overlay(Circle().stroke(g.seen == true ? AnyShapeStyle(Color.secondary.opacity(0.4)) : AnyShapeStyle(Color.abAccent.abGradient), lineWidth: 2.5))
+                                .overlay(Circle().stroke(g.seen == true ? AnyShapeStyle(Color.secondary.opacity(0.4)) : AnyShapeStyle(Color.abFill.abGradient), lineWidth: 2.5))
                             Text(g.user.id == account.user?.id ? L("Your story") : g.user.displayName)
                                 .font(.caption2).foregroundStyle(.primary).lineLimit(1)
                         }
@@ -649,6 +650,15 @@ struct CommentsSheet: View {
                     }
                     .opacity(c.id.hasPrefix("local-") ? 0.6 : 1)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .contextMenu {
+                        Button { UIPasteboard.general.string = c.text } label: { Label("Copy", systemImage: "doc.on.doc") }
+                        if canDelete(c) {
+                            Button(role: .destructive) { Task { await remove(c) } } label: { Label("Delete", systemImage: "trash") }
+                        }
+                        if c.user.id != account.user?.id {
+                            Button { reporting = ReportTarget(kind: "comment", targetId: c.id, name: c.text) } label: { Label("Report", systemImage: "flag") }
+                        }
+                    }
                     .swipeActions {
                         if canDelete(c) {
                             Button(role: .destructive) { Task { await remove(c) } } label: { Label("Delete", systemImage: "trash") }
@@ -669,7 +679,7 @@ struct CommentsSheet: View {
                         .background(Color.abSurface, in: Capsule())
                     Button { Task { await send() } } label: {
                         Image(systemName: "paperplane.fill").foregroundStyle(.white)
-                            .frame(width: 38, height: 38).background(Color.abAccent, in: Circle())
+                            .frame(width: 38, height: 38).background(Color.abFill, in: Circle())
                     }
                     .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
                     .accessibilityLabel(Text("Send"))

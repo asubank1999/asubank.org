@@ -22,6 +22,12 @@ shot 32-home-sand --es startTab home --ei appearance 7
 shot 8-halls --es startTab home --ei appearance 0 --es startPath /guides/halls
 shot 33-feed --es startTab feed
 shot 36-chat-guest --es startTab chat
+shot 37-report --es startTab home --es startScreen report
+shot 38-safety --es startTab home --es startScreen safety
+shot 39-customize --es startTab home --es startScreen customize
+shot 40-share-video --es startTab home --es startScreen shareVideo
+shot 41-more-forest --es startTab more --ei appearance 5
+shot 42-home-blush --es startTab home --ei appearance 9
 shot 34-planner --es startPath /app/planner
 shot 35-focus --es startPath /app/focus
 shot 9-ratings-intro --es startPath /requests/portal_to_rating

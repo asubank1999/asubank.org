@@ -24,7 +24,13 @@ enum Moderation {
         ("privacy", "Shares someone's private information"),
         ("copyright", "Copyright: I own this or represent the owner"),
         ("wrong", "Wrong, broken or misleading file"),
-        ("other", "Something else")
+        ("other", "Something else"),
+        ("safety", "Someone's safety is at risk"),
+        ("impersonation", "Pretending to be someone else"),
+        ("scam", "Scam or fraud"),
+        ("cheating", "Cheating or a rule of the university"),
+        ("bug", "A bug in the app or website"),
+        ("account", "A problem with my account")
     ]
 
     static let rules = [
@@ -69,6 +75,7 @@ struct ReportSheet: View {
     @State private var contact = ""
     @State private var busy = false
     @State private var sent = false
+    @State private var reference: String?
     @State private var error: String?
 
     var body: some View {
@@ -77,11 +84,12 @@ struct ReportSheet: View {
                 if sent {
                     Section {
                         Label("Thank you. Our team will review your report.", systemImage: "checkmark.seal.fill")
+                        if let reference { Text(String(format: L("Reference: %@"), reference)).font(.body.monospaced()).textSelection(.enabled) }
                     }
                 } else {
                     if !target.name.isEmpty { Section("Reporting") { Text(target.name).lineLimit(3) } }
                     Section("What's wrong?") {
-                        ForEach(Moderation.reasons, id: \.id) { r in
+                        ForEach(Moderation.reasons.filter { $0.id != "bug" && $0.id != "account" }, id: \.id) { r in
                             Button { reason = r.id } label: {
                                 HStack {
                                     Text(L(r.label)).foregroundColor(.primary)
@@ -123,8 +131,9 @@ struct ReportSheet: View {
         busy = true
         defer { busy = false }
         do {
-            _ = try await AccountsAPI.call("report", ["kind": target.kind, "targetId": target.targetId, "targetName": target.name,
+            let r = try await AccountsAPI.call("report", ["kind": target.kind, "targetId": target.targetId, "targetName": target.name,
                                                       "reason": reason, "details": details, "contact": contact], token: account.token)
+            reference = r["ref"] as? String
             sent = true
             error = nil
         } catch {
@@ -240,6 +249,7 @@ struct AdminReportsScreen: View {
     @State private var showAll = false
     @State private var loading = true
     @State private var error: String?
+    @State private var replying: ReportReply?
 
     var body: some View {
         List {
@@ -254,6 +264,7 @@ struct AdminReportsScreen: View {
             ForEach(Array(reports.enumerated()), id: \.offset) { _, r in row(r) }
         }
         .navigationTitle("Reports")
+        .sheet(item: $replying) { ReportReplySheet(reportId: $0.id) { await load() } }
         .task(id: showAll) { await load() }
         .refreshable { await load() }
     }
@@ -268,12 +279,18 @@ struct AdminReportsScreen: View {
             if let n = r["targetName"] as? String, !n.isEmpty { Text(n).font(.subheadline) }
             if let t = r["targetUser"] as? String, !t.isEmpty { Text("@\(t)").font(.caption).foregroundStyle(.secondary) }
             if let d = r["details"] as? String, !d.isEmpty { Text(d).font(.caption) }
+            if let p = r["place"] as? String, !p.isEmpty { Text(p).font(.caption).foregroundStyle(.secondary) }
+            if let e = r["evidence"] as? String, let url = URL(string: e), !e.isEmpty {
+                Link(destination: url) { Label("Open the screenshot", systemImage: "photo") }.font(.subheadline)
+            }
+            if let t = r["reply"] as? String, !t.isEmpty { Label(t, systemImage: "bubble.left.fill").font(.caption) }
             Text("\(r["reporterName"] as? String ?? "") · \(r["contact"] as? String ?? "") · \(r["created"] as? String ?? "")")
                 .font(.caption2).foregroundStyle(.tertiary)
             HStack(spacing: 14) {
                 if status == "open" {
                     Button("Done") { Task { await set(r, "done") } }
                     Button("Dismiss") { Task { await set(r, "dismissed") } }
+                    Button("Reply") { replying = ReportReply(id: r["id"] as? String ?? "") }
                     if kind == "post" {
                         Button("Delete post", role: .destructive) {
                             Task {
@@ -346,5 +363,48 @@ struct StoreNoticeView: View {
         .padding(32)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.abBackground)
+    }
+}
+
+/// Which report an admin is answering
+struct ReportReply: Identifiable {
+    let id: String
+}
+
+/// The answer the person sees under My reports
+struct ReportReplySheet: View {
+    let reportId: String
+    var sent: () async -> Void
+    @Environment(\.dismiss) private var dismiss
+    @State private var text = ""
+    @State private var busy = false
+    @State private var error: String?
+
+    var body: some View {
+        ABStack {
+            Form {
+                Section("Reply") { TextEditor(text: $text).frame(minHeight: 120) }
+                if let error { Section { Text(error).foregroundStyle(.red) } }
+            }
+            .navigationTitle("Reply")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Send") { Task { await send() } }
+                        .disabled(busy || text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+        }
+    }
+
+    private func send() async {
+        busy = true
+        defer { busy = false }
+        do {
+            _ = try await AccountStore.shared.call("adminReportSet", ["id": reportId, "status": "done", "reply": text])
+            await sent()
+            dismiss()
+        } catch { self.error = error.localizedDescription }
     }
 }

@@ -413,7 +413,7 @@ struct ChatInputBar: View {
                 Button { Task { await startRecording() } } label: {
                     Image(systemName: "mic.fill").font(.headline).foregroundStyle(.white)
                         .frame(width: 38, height: 38)
-                        .background(Color.abAccent.abGradient, in: Circle())
+                        .background(Color.abFill.abGradient, in: Circle())
                 }
                 .accessibilityLabel(Text("Record a voice message"))
                 .transition(.scale.combined(with: .opacity))
@@ -421,7 +421,7 @@ struct ChatInputBar: View {
                 Button(action: send) {
                     Image(systemName: sendSymbol).font(.headline.weight(.bold)).foregroundStyle(.white)
                         .frame(width: 38, height: 38)
-                        .background(Color.abAccent.abGradient, in: Circle())
+                        .background(Color.abFill.abGradient, in: Circle())
                         .opacity(empty ? 0.4 : 1)
                 }
                 .disabled(empty)
@@ -454,7 +454,7 @@ struct ChatInputBar: View {
                 Haptics.success()
             } label: {
                 Image(systemName: "arrow.up").font(.headline.weight(.bold)).foregroundStyle(.white)
-                    .frame(width: 38, height: 38).background(Color.abAccent.abGradient, in: Circle())
+                    .frame(width: 38, height: 38).background(Color.abFill.abGradient, in: Circle())
             }
             .accessibilityLabel(Text("Send"))
         }

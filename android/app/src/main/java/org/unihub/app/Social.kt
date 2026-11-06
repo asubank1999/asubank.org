@@ -1,5 +1,9 @@
 package org.unihub.app
 
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Spring
@@ -285,6 +289,7 @@ fun ComposePostDialog(onClose: () -> Unit, posted: () -> Unit) {
     )
 }
 
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun PostCard(post: FeedPost, changed: () -> Unit) {
     val nav = LocalNav.current
@@ -298,13 +303,31 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
     var reporting by remember { mutableStateOf<ReportTarget?>(null) }
     var blocking by remember { mutableStateOf<BlockTarget?>(null) }
     var gone by remember { mutableStateOf(false) }
+    var confirmDelete by remember { mutableStateOf(false) }
     val ctx = LocalContext.current
+    if (confirmDelete) AlertDialog(
+        onDismissRequest = { confirmDelete = false },
+        title = { Text("Delete this post?") },
+        text = { Text("This can't be undone.") },
+        confirmButton = {
+            TextButton(onClick = {
+                confirmDelete = false
+                gone = true
+                BackgroundJobs.scope.launch { runCatching { Account.call("postDelete", mapOf("id" to post.id)) }; changed() }
+            }) { Text("Delete", color = MaterialTheme.colorScheme.error) }
+        },
+        dismissButton = { TextButton(onClick = { confirmDelete = false }) { Text("Cancel") } },
+    )
     reporting?.let { t -> ReportDialog(t) { reporting = null } }
     blocking?.let { t -> BlockDialog(t, { blocking = null; changed() }) }
     if (showComments) CommentsDialog(post, { commentCount = it }) { showComments = false }
     if (gone) return
     Group {
-        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // hold a post for the same options as the ... button
+        Column(
+            Modifier.combinedClickable(remember { MutableInteractionSource() }, null, onClick = {}, onLongClick = { if (me != null) menu = true }).padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Row(
                     Modifier.weight(1f).clickable { if (me == null) Account.signInShown.value = true else nav.navigate("profile/${post.user.id}") },
@@ -323,10 +346,13 @@ fun PostCard(post: FeedPost, changed: () -> Unit) {
                 if (me != null) Box {
                     IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, null) }
                     DropdownMenu(menu, { menu = false }) {
-                        if (post.user.id == me?.id || Account.isAdmin) DropdownMenuItem(text = { Text("Delete") }, onClick = {
+                        if (post.text.isNotEmpty()) DropdownMenuItem(text = { Text("Copy") }, onClick = {
                             menu = false
-                            gone = true
-                            BackgroundJobs.scope.launch { runCatching { Account.call("postDelete", mapOf("id" to post.id)) }; changed() }
+                            (ctx.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager).setPrimaryClip(android.content.ClipData.newPlainText("Post", post.text))
+                        })
+                        if (post.user.id == me?.id || Account.isAdmin) DropdownMenuItem(text = { Text("Delete", color = MaterialTheme.colorScheme.error) }, onClick = {
+                            menu = false
+                            confirmDelete = true
                         })
                         if (post.user.id != me?.id) {
                             DropdownMenuItem(text = { Text("Report") }, onClick = { menu = false; reporting = ReportTarget("post", post.id, post.text) })
@@ -441,6 +467,7 @@ fun FriendsScreen(back: Boolean = false) {
     val alerts = incoming.size + pokes.count { it.read != true }
 
     Screen("Friends", back = back, large = !back, actions = {
+        OnlineButton()
         if (user != null) IconButton(onClick = { loading = true; scope.launch { load() } }) { Icon(Icons.Filled.Refresh, null) }
     }) { pad ->
         if (user == null) {
@@ -582,6 +609,7 @@ fun ProfileScreen(userId: String) {
     var composing by remember { mutableStateOf(false) }
     var coverBusy by remember { mutableStateOf(false) }
     var coverMenu by remember { mutableStateOf(false) }
+    var cropping by remember { mutableStateOf<android.graphics.Bitmap?>(null) }
 
     fun readProfile(r: kotlinx.serialization.json.JsonObject) {
         user = r["user"].decodeAs<AbUser>()
@@ -611,7 +639,23 @@ fun ProfileScreen(userId: String) {
         }
     }
     val pickCover = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
-        if (uri != null) setCover(uri)
+        if (uri != null) scope.launch {
+            val b = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { PhotoTools.load(ctx, uri, 2400) }
+            if (b != null) cropping = b else Toast.makeText(ctx, tr("Couldn't load this photo"), Toast.LENGTH_LONG).show()
+        }
+    }
+    cropping?.let { b ->
+        CoverCropDialog(b, onClose = { cropping = null }) { out ->
+            cropping = null
+            coverBusy = true
+            scope.launch {
+                try {
+                    Account.setCover(PhotoTools.base64(out))
+                    load()
+                } catch (e: ApiError) { Toast.makeText(ctx, e.message, Toast.LENGTH_LONG).show() }
+                coverBusy = false
+            }
+        }
     }
     reporting?.let { t -> ReportDialog(t) { reporting = null } }
     blocking?.let { t -> BlockDialog(t, { blocking = null; scope.launch { load() } }) }
@@ -623,14 +667,15 @@ fun ProfileScreen(userId: String) {
         LazyColumn(Modifier.padding(pad)) {
             item {
                 val u = user
-                Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                // cover, photo, name, numbers and actions together, so one screen shows it all, even on a small phone
+                Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     val c = hexColor(u?.color ?: "#8C1D40")
-                    Box(Modifier.fillMaxWidth().height(202.dp)) {
-                        Box(Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(18.dp)).background(Brush.linearGradient(listOf(c, MaterialTheme.colorScheme.primary.copy(alpha = 0.75f)))))
+                    Box(Modifier.fillMaxWidth().height(112.dp)) {
+                        Box(Modifier.fillMaxWidth().height(112.dp).clip(RoundedCornerShape(16.dp)).background(Brush.linearGradient(listOf(c, MaterialTheme.colorScheme.primary))))
                         val cover = u?.cover.orEmpty()
                         if (cover.isNotEmpty()) coil.compose.AsyncImage(
                             cover, tr("View cover photo"),
-                            Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(18.dp)).clickable { PhotoPeek.show(cover) },
+                            Modifier.fillMaxWidth().height(112.dp).clip(RoundedCornerShape(16.dp)).clickable { PhotoPeek.show(cover) },
                             contentScale = androidx.compose.ui.layout.ContentScale.Crop,
                             // tall photos show their upper part, where faces and the sky usually are
                             alignment = androidx.compose.ui.BiasAlignment(0f, -0.5f),
@@ -638,63 +683,80 @@ fun ProfileScreen(userId: String) {
                         if (isMe) Box(Modifier.align(Alignment.TopEnd).padding(8.dp)) {
                             IconButton(
                                 onClick = { coverMenu = true }, enabled = !coverBusy,
-                                modifier = Modifier.size(38.dp).clip(CircleShape).background(Color.Black.copy(alpha = 0.45f)),
+                                modifier = Modifier.size(36.dp).clip(CircleShape).background(Color.Black.copy(alpha = 0.45f)),
                             ) { Icon(Icons.Filled.PhotoCamera, tr("Change cover photo"), tint = Color.White, modifier = Modifier.size(20.dp)) }
                             DropdownMenu(coverMenu, { coverMenu = false }) {
                                 DropdownMenuItem(text = { Text(tr("Choose a cover photo")) }, onClick = { coverMenu = false; pickCover.launch("image/*") })
                                 if (cover.isNotEmpty()) DropdownMenuItem(text = { Text(tr("Remove cover photo")) }, onClick = { coverMenu = false; setCover(null) })
                             }
                         }
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         // a solid disc behind the photo. A ring drawn around it left a see-through gap, and cut through the star.
-                        Box(Modifier.align(Alignment.BottomCenter), contentAlignment = Alignment.Center) {
-                            Box(Modifier.size(104.dp).clip(CircleShape).background(MaterialTheme.colorScheme.background))
-                            Avatar(u?.name ?: "", u?.color ?: "#8C1D40", 96.dp, u?.isAdmin == true, u?.avatar, u?.online)
+                        Box(Modifier.padding(start = 4.dp).graphicsLayerUp(), contentAlignment = Alignment.Center) {
+                            Box(Modifier.size(82.dp).clip(CircleShape).background(MaterialTheme.colorScheme.background))
+                            Avatar(u?.name ?: "", u?.color ?: "#8C1D40", 76.dp, u?.isAdmin == true, u?.avatar, u?.online)
+                        }
+                        Column(Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                Text(u?.name ?: "", Modifier.weight(1f, fill = false), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, maxLines = 1)
+                                if (u?.isAdmin == true) Badge(tr("ADMIN"), Brand.orange)
+                            }
+                            if (u != null) {
+                                Text("@${u.username}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+                                Text(
+                                    if (u.online == true) tr("Online now") else lastSeenText(u.lastSeen), style = MaterialTheme.typography.bodySmall,
+                                    color = if (u.online == true) Brand.green else MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1,
+                                )
+                            }
                         }
                     }
                     if (u == null) {
                         if (error == null) ABDots() else Text(error!!, color = MaterialTheme.colorScheme.error)
                     } else {
-                        Text(u.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                        Text("@${u.username}", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(
-                            if (u.online == true) tr("Online now") else lastSeenText(u.lastSeen), style = MaterialTheme.typography.bodySmall,
-                            color = if (u.online == true) Brand.green else MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
                         BadgeRow(u.badges)
-                        if (u.isAdmin) Badge(tr("ADMIN"), Brand.orange)
-                        Row(Modifier.fillMaxWidth().padding(top = 4.dp).clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.surfaceContainer).padding(vertical = 10.dp)) {
+                        Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.surfaceContainer).padding(vertical = 8.dp)) {
                             listOf(friendCount to "Friends", postCount to "Posts", messageCount to "Messages", u.badges.size to "Badges").forEach { (n, label) ->
-                                Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                                Column(
+                                    Modifier.weight(1f).clickable(enabled = isMe && label == "Friends") { nav.navigate(Routes.FRIENDS) },
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
                                     Text("$n", fontWeight = FontWeight.Bold)
                                     Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
                                 }
                             }
                         }
                         if (isMe) {
-                            OutlinedButton(onClick = { nav.navigate("account") }) { Icon(Icons.Filled.Edit, null, Modifier.size(18.dp)); Text(" " + tr("Edit profile")) }
-                        } else if (me != null && u.id !in me?.blocked.orEmpty()) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                FriendButton(u.id, friendship) { s -> friendship = s; scope.launch { load() } }
-                                if (friendship == "friends") Button(onClick = { poking = u }) { Text("👉 " + tr("Poke")) }
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Button(onClick = { nav.navigate("account") }, Modifier.weight(1f), contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 6.dp)) { Text(tr("Edit profile"), maxLines = 1) }
+                                OutlinedButton(onClick = { composing = true }, Modifier.weight(1f), contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 6.dp)) { Text(tr("Write a post"), maxLines = 1) }
+                                OutlinedButton(onClick = { nav.navigate("customize") }, Modifier.weight(1f), contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 6.dp)) { Text(tr("Customize"), maxLines = 1) }
                             }
-                            if (canMessage) OutlinedButton(onClick = { nav.navigate("dm/${u.id}") }) {
-                                Icon(Icons.AutoMirrored.Filled.Send, null, Modifier.size(18.dp))
-                                Text(" " + tr("Send a message"))
+                        } else if (me != null && u.id !in me?.blocked.orEmpty()) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                                FriendButton(u.id, friendship) { s -> friendship = s; scope.launch { load() } }
+                                if (friendship == "friends") OutlinedButton(onClick = { poking = u }) { Text("👉 " + tr("Poke"), maxLines = 1) }
+                                if (canMessage) Button(onClick = { nav.navigate("dm/${u.id}") }) {
+                                    Icon(Icons.AutoMirrored.Filled.Send, null, Modifier.size(16.dp))
+                                    Text(" " + tr("Message"), maxLines = 1)
+                                }
+                            }
+                        }
+                        val studies = listOf(u.college, u.major, u.year?.let { tr(it) }).filter { !it.isNullOrEmpty() }.joinToString(" · ")
+                        if (!u.bio.isNullOrEmpty() || studies.isNotEmpty() || !u.interests.isNullOrEmpty()) {
+                            Column(
+                                Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.surfaceContainer).padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                if (!u.bio.isNullOrEmpty()) Text(u.bio, style = MaterialTheme.typography.bodySmall, maxLines = 4)
+                                if (studies.isNotEmpty()) Text("🎓 $studies", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                if (!u.interests.isNullOrEmpty()) Text("✨ ${u.interests}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                     }
                 }
             }
             user?.let { u ->
-                if (!u.bio.isNullOrEmpty()) item { Group(header = tr("About")) { Text(u.bio, Modifier.padding(16.dp)) } }
-                if (!u.college.isNullOrEmpty() || !u.major.isNullOrEmpty() || !u.year.isNullOrEmpty()) item {
-                    Group(header = "Studies") {
-                        if (!u.college.isNullOrEmpty()) ListRow(u.college, tr("College"), icon = Icons.Filled.AccountBalance)
-                        if (!u.major.isNullOrEmpty()) { Divider(); ListRow(u.major, tr("Major"), icon = Icons.Filled.School) }
-                        if (!u.year.isNullOrEmpty()) { Divider(); ListRow(tr(u.year), tr("Year"), icon = Icons.Filled.CalendarMonth) }
-                    }
-                }
-                if (!u.interests.isNullOrEmpty()) item { Group(header = "Interests") { Text(u.interests, Modifier.padding(16.dp)) } }
                 if (!u.phone.isNullOrEmpty()) item {
                     Group(header = tr("Phone")) {
                         ListRow(u.phone, icon = Icons.Filled.Phone) {
@@ -706,7 +768,6 @@ fun ProfileScreen(userId: String) {
                         }
                     }
                 }
-                if (isMe) item { Group { ListRow("Write a post", icon = Icons.Filled.Edit) { composing = true } } }
                 items(posts, key = { it.id }) { p -> PostCard(p) { scope.launch { load() } } }
                 if (me != null && !isMe) item {
                     Group {
@@ -726,3 +787,6 @@ fun ProfileScreen(userId: String) {
         }
     }
 }
+
+/** Lifts the profile photo up over the cover */
+private fun Modifier.graphicsLayerUp() = this.then(Modifier.height(48.dp).wrapContentHeight(Alignment.Bottom, unbounded = true))

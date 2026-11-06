@@ -297,7 +297,7 @@ struct ComposeStorySheet: View {
                 Button { post() } label: {
                     Label("Share story", systemImage: "paperplane.fill").font(.headline).foregroundStyle(.white)
                         .frame(maxWidth: .infinity).frame(height: 46)
-                        .background(Color.abAccent.abGradient, in: Capsule())
+                        .background(Color.abFill.abGradient, in: Capsule())
                         .opacity(canPost ? 1 : 0.45)
                 }
                 .disabled(!canPost)

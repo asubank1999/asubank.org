@@ -122,7 +122,7 @@ struct TeacherRatingsScreen: View {
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(.white)
                             .frame(width: 38, height: 38)
-                            .background(Color.abAccent, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            .background(Color.abFill, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Rate a teacher").font(.headline).foregroundStyle(.primary)
                             Text("Anonymous · takes 5 seconds").font(.footnote).foregroundStyle(.secondary)
@@ -143,7 +143,7 @@ struct TeacherRatingsScreen: View {
                         Image(systemName: "wifi.exclamationmark").font(.largeTitle).foregroundStyle(.secondary)
                         Text("Couldn't load the ratings").font(.headline)
                         Text("Check your connection and try again.").font(.footnote).foregroundStyle(.secondary)
-                        Button("Try again") { bridge.connect(force: true) }.buttonStyle(.borderedProminent).tint(.abAccent)
+                        Button("Try again") { bridge.connect(force: true) }.buttonStyle(.borderedProminent).tint(.abFill)
                         RouteLink(Route.web("Rate your teachers", Ratings.script)) { Text("Open the web version").font(.footnote) }
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
@@ -163,7 +163,7 @@ struct TeacherRatingsScreen: View {
                             Text(query.isEmpty ? "No ratings yet" : "No teacher named “\(query)” yet").font(.headline)
                             Text("Be the first to rate them.").font(.footnote).foregroundStyle(.secondary)
                             Button("Rate \(query.isEmpty ? "a teacher" : query)") { rating = RateTarget(name: query) }
-                                .buttonStyle(.borderedProminent).tint(.abAccent)
+                                .buttonStyle(.borderedProminent).tint(.abFill)
                         }
                         .frame(maxWidth: .infinity).padding(.vertical, 12)
                     }
@@ -222,7 +222,7 @@ private struct RatingIntro: View {
                     .font(.system(size: 40, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(width: 84, height: 84)
-                    .background(Color.abAccent, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .background(Color.abFill, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                     .padding(.top, 20)
                 Text("Rate your teachers").font(.largeTitle.weight(.bold))
                 Text("Share your experience and help other students choose their sections.")
@@ -238,7 +238,7 @@ private struct RatingIntro: View {
                 Button(action: onContinue) {
                     Text("Continue").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abAccent)
+                .buttonStyle(.borderedProminent).tint(.abFill)
                 NavigationLink("Terms of Service") { SitePageView(path: "/legal/uni_tos", title: "Terms of Service") }
                     .font(.footnote)
                 Text("By continuing you agree to the Terms of Service.").font(.caption).foregroundStyle(.secondary)

@@ -185,7 +185,7 @@ struct FocusTimerScreen: View {
                     .frame(width: 220, height: 220)
                     HStack(spacing: 12) {
                         Button(end == nil ? "Start" : "Pause") { toggle() }
-                            .buttonStyle(.borderedProminent).tint(.abAccent)
+                            .buttonStyle(.borderedProminent).tint(.abFill)
                         Button("Reset") { reset() }.buttonStyle(.bordered)
                     }
                 }
@@ -269,7 +269,7 @@ struct HomeCalendarCard: View {
         RouteLink(Route.page(path, "")) {
             HStack(spacing: 12) {
                 Image(systemName: "calendar").font(.title3.weight(.semibold)).foregroundStyle(.white)
-                    .frame(width: 44, height: 44).background(Color.abAccent.abGradient, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .frame(width: 44, height: 44).background(Color.abFill.abGradient, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 VStack(alignment: .leading, spacing: 2) {
                     Text("University calendar").font(.caption).foregroundStyle(.secondary)
                     Text(next?.name ?? L("See this year's important dates")).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)

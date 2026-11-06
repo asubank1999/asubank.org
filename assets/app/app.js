@@ -499,7 +499,7 @@
             ['/swap/', 'Subject swap', 'people'], ['/requests/matcher_confirm', 'Course matcher', 'people'], ['/guides/links', 'ASU resources', 'grid']]],
         ['Help & support', [
             ['/guides/contact', 'Contact us', 'chat'], ['/guides/faqs', 'FAQs', 'help'],
-            ['/apps/donate', 'Donate (PayPal or CliQ)', 'star'], ['/legal/uni_tos', 'Terms of Service', 'page'], ['/legal/privacy', 'Privacy policy', 'page'], ['/legal/community', 'Community rules', 'page']]]
+            ['/apps/donate', 'Donate (PayPal or CliQ)', 'star'], ['/legal/uni_tos', 'Terms of Service', 'page'], ['/legal/privacy', 'Privacy policy', 'page'], ['/apps/download', 'Download the app', 'star'], ['/legal/report', 'Report something', 'help'], ['/legal/copyright', 'Copyright and removal requests', 'page'], ['/legal/community', 'Community rules', 'page']]]
     ];
     var installEvt = null;
     window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); installEvt = e; });
@@ -632,7 +632,7 @@
             var d = x[0];
             doc.addEventListener('ab:yt', function () { addYt(d); });
             // links the checker found dead are left out of search
-            d.items = d.items.filter(function (it) { return !AB.broken[it.u] && !AB.isRemoved(it.u) && it.u.indexOf('/personal/202310256_students_asu_edu_jo/') < 0; });
+            d.items = d.items.filter(function (it) { return !AB.broken[it.u] && !AB.isRemoved(it.u); });
             d.items.forEach(function (it) { it.q = AB.norm(it.t + ' ' + it.s + ' ' + (it.c || '')); it.k = it.k || AB.kind(it.u, it.t); });
             addYt(d);
             return d;

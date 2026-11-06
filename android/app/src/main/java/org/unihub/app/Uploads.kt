@@ -1,5 +1,6 @@
 package org.unihub.app
 
+import androidx.compose.material.icons.filled.PlayCircle
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -301,6 +302,7 @@ fun UploadScreen() {
     val years = remember { (0 until 8).map { (LocalDate.now().year - it).toString() } }
     val q = UploadQueue
     val busy = q.busy
+    val shareNav = LocalNav.current
 
     // the phone mustn't sleep halfway through a big file
     DisposableEffect(busy) {
@@ -313,6 +315,7 @@ fun UploadScreen() {
 
     Screen("Upload", large = true) { pad ->
         LazyColumn(Modifier.padding(pad)) {
+            item { Group { ListRow("Share a YouTube video", icon = Icons.Filled.PlayCircle) { shareNav.navigate("shareVideo") } } }
             item {
                 Column(
                     Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp).clip(RoundedCornerShape(18.dp))

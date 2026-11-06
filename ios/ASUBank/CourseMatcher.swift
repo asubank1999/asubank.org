@@ -54,7 +54,7 @@ private struct MatcherIntro: View {
                 Button(action: onContinue) {
                     Text("Continue").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abAccent)
+                .buttonStyle(.borderedProminent).tint(.abFill)
                 Text("ابحث عن زملاء دراسة يدرسون نفس المواد ومتفرغين بنفس الأوقات")
                     .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
             }
@@ -186,7 +186,7 @@ private struct MatcherForm: View {
                     }
                     .padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abAccent)
+                .buttonStyle(.borderedProminent).tint(.abFill)
                 .disabled(sending)
                 .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             } footer: {
@@ -298,7 +298,7 @@ private struct TimeChip: View {
                 .minimumScaleFactor(0.8)
                 .frame(maxWidth: .infinity, minHeight: 32)
                 .foregroundStyle(on ? Color.white : Color.primary)
-                .background(on ? AnyShapeStyle(Color.abAccent) : AnyShapeStyle(Color.secondary.opacity(0.12)), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                .background(on ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.secondary.opacity(0.12)), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
         }
         .buttonStyle(.plain)
     }

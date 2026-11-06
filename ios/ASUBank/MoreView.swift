@@ -36,6 +36,10 @@ struct MoreView: View {
                         NavigationLink { ProfileScreen(userId: u.id, fallbackName: u.displayName, fallbackColor: u.color) } label: { Label("My profile", systemImage: "person.text.rectangle") }
                     }
                     NavigationLink { ThemeScreen() } label: { Label("Theme", systemImage: "paintpalette") }
+                    NavigationLink { CustomizeScreen() } label: { Label("Customize", systemImage: "slider.horizontal.3") }
+                    NavigationLink { SafetyScreen() } label: { Label("Safety & legal", systemImage: "checkmark.shield.fill") }
+                    NavigationLink { ReportCenterScreen() } label: { Label("Report something", systemImage: "exclamationmark.bubble") }
+                    NavigationLink { OnlineScreenHost() } label: { Label("Who's online", systemImage: "circle.fill") }
                     NavigationLink { TabBarScreen() } label: { Label("Customize tab bar", systemImage: "rectangle.3.group") }
                     if UIApplication.shared.supportsAlternateIcons {
                         NavigationLink { AppIconScreen() } label: { Label("App icon", systemImage: "app.badge") }
@@ -127,7 +131,7 @@ struct MoreView: View {
                     RouteLink(Route.page("/guides/contact", "Contact us")) { Label("Contact us", systemImage: "envelope") }
                     RouteLink(Route.page("/legal/privacy", "Privacy policy")) { Label("Privacy policy", systemImage: "hand.raised") }
                     RouteLink(Route.page("/legal/community", "Community rules")) { Label("Community rules", systemImage: "checkmark.shield") }
-                    Button { reportingProblem = ReportTarget(kind: "other", targetId: "", name: "") } label: { Label("Report a problem", systemImage: "flag") }
+                    NavigationLink { ReportCenterScreen() } label: { Label("Report a problem", systemImage: "exclamationmark.bubble") }
                 }
 
                 Section {

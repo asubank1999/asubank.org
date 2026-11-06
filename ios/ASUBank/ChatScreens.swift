@@ -7,8 +7,6 @@ struct ChatTab: View {
     @State private var openRoom: ChatRoom?
     @State private var editingRoom: ChatRoom?
     @State private var addingRoom = false
-    @State private var online: [OnlineUser] = []
-    @State private var onlineCount = 0
     @State private var section = "rooms"
     @StateObject private var dms = DMListModel()
 
@@ -33,7 +31,6 @@ struct ChatTab: View {
         }
         .onAppear(perform: takeRoom)
         .onChange(of: app.pendingRoom) { _ in takeRoom() }
-        .task { await loadOnline() }
         .task(id: account.signedIn) {
             while !Task.isCancelled {
                 await dms.load()
@@ -47,12 +44,6 @@ struct ChatTab: View {
         app.pendingRoom = nil
         if id == "__dm" { section = "messages"; return }
         openRoom = account.rooms.first { $0.id == id }
-    }
-
-    private func loadOnline() async {
-        guard account.signedIn, let r = try? await account.call("online") else { return }
-        online = decode([OnlineUser].self, r["users"]) ?? []
-        onlineCount = (r["onlineCount"] as? NSNumber)?.intValue ?? 0
     }
 
     private var rooms: some View {
@@ -79,21 +70,10 @@ struct ChatTab: View {
             if section == "messages" {
                 DMConversationRows(model: dms)
             } else {
-            if !online.isEmpty {
-                Section {
-                    NavigationLink { OnlineScreen(users: online) } label: {
-                        HStack(spacing: -8) {
-                            ForEach(online.filter(\.online).prefix(6)) { u in
-                                Avatar(name: u.displayName, color: u.color ?? "#8C1D40", size: 32, photo: u.avatar, online: u.online)
-                            }
-                            VStack(alignment: .leading, spacing: 1) {
-                                Text(String(format: L("%d online now"), onlineCount)).font(.subheadline.weight(.semibold))
-                                Text(String(format: L("%d students"), online.count)).font(.caption).foregroundStyle(.secondary)
-                            }
-                            .padding(.leading, onlineCount > 0 ? 16 : 0)
-                        }
-                    }
-                }
+            Section {
+                OnlineBox()
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
             }
             Section("Rooms") {
                 ForEach(account.rooms) { r in
@@ -142,6 +122,22 @@ private struct RouteLinkAccount: View {
     var body: some View {
         Button { shown = true } label: { Image(systemName: "person.crop.circle").font(.title2) }
             .sheet(isPresented: $shown) { ABStack { AccountScreen().toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { shown = false } } } } }
+    }
+}
+
+/// The online list as a pushed screen
+struct OnlineScreenHost: View {
+    @ObservedObject private var store = OnlineStore.shared
+    @ObservedObject private var account = AccountStore.shared
+    var body: some View {
+        Group {
+            if account.signedIn {
+                OnlineScreen(users: store.users)
+            } else {
+                EmptyState(symbol: "person.2", title: String(format: L("%d online now"), store.count), text: L("Sign in to see who"))
+            }
+        }
+        .task { await store.load(force: true) }
     }
 }
 

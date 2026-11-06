@@ -107,7 +107,7 @@ struct FriendButton: View {
                 .font(.subheadline.weight(.semibold))
                 .padding(.horizontal, 12).padding(.vertical, 8)
                 .foregroundStyle(filled ? Color.white : Color.primary)
-                .background(filled ? AnyShapeStyle(Color.abAccent) : AnyShapeStyle(Color.primary.opacity(0.09)), in: Capsule())
+                .background(filled ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.primary.opacity(0.09)), in: Capsule())
                 .scaleEffect(pop ? 1.12 : 1)
         }
         .buttonStyle(.borderless)
@@ -322,6 +322,7 @@ struct PostRow: View {
     @State private var blocking: BlockTarget?
     @State private var preview: PreviewFile?
     @State private var gone = false
+    @State private var confirmDelete = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
@@ -342,21 +343,7 @@ struct PostRow: View {
                 }
                 Spacer()
                 Menu {
-                    if post.user.id == account.user?.id || account.isAdmin {
-                        Button("Delete", role: .destructive) {
-                            withAnimation { gone = true }
-                            Task {
-                                _ = try? await account.call("postDelete", ["id": post.id])
-                                await changed()
-                            }
-                        }
-                    }
-                    if post.user.id != account.user?.id {
-                        Button { reporting = ReportTarget(kind: "post", targetId: post.id, name: post.text) } label: { Label("Report", systemImage: "flag") }
-                        if !post.user.isAdmin {
-                            Button(role: .destructive) { blocking = BlockTarget(userId: post.user.id, name: post.user.displayName) } label: { Label("Block", systemImage: "nosign") }
-                        }
-                    }
+                    actions
                 } label: {
                     Image(systemName: "ellipsis").foregroundStyle(.secondary).frame(width: 32, height: 32)
                 }
@@ -401,11 +388,45 @@ struct PostRow: View {
         }
         .padding(.vertical, 4)
         .opacity(gone ? 0.25 : 1)
+        // hold a post for the same options as the ... button
+        .contextMenu { actions }
+        .confirmationDialog("Delete this post?", isPresented: $confirmDelete, titleVisibility: .visible) {
+            Button("Delete", role: .destructive) { remove() }
+            Button("Cancel", role: .cancel) {}
+        } message: { Text("This can't be undone.") }
         .sheet(item: $preview) { FilePreview(url: $0.url).ignoresSafeArea() }
         .onChange(of: post.likes) { _ in likes = nil; liked = nil }
         .onChange(of: post.comments) { _ in commentCount = nil }
         .sheet(isPresented: $showComments) { CommentsSheet(post: post) { commentCount = $0 } }
         .modifier(ModerationDialogs(report: $reporting, block: $blocking, blocked: { _ in Task { await changed() } }))
+    }
+
+    @ViewBuilder private var actions: some View {
+        if !post.text.isEmpty {
+            Button { UIPasteboard.general.string = post.text; Haptics.tap() } label: { Label("Copy", systemImage: "doc.on.doc") }
+        }
+        if post.user.id == account.user?.id || account.isAdmin {
+            Button(role: .destructive) { later { confirmDelete = true } } label: { Label("Delete", systemImage: "trash") }
+        }
+        if post.user.id != account.user?.id {
+            Button { later { reporting = ReportTarget(kind: "post", targetId: post.id, name: post.text) } } label: { Label("Report", systemImage: "flag") }
+            if account.signedIn, !post.user.isAdmin {
+                Button(role: .destructive) { later { blocking = BlockTarget(userId: post.user.id, name: post.user.displayName) } } label: { Label("Block", systemImage: "hand.raised") }
+            }
+        }
+    }
+
+    /// A sheet asked for while a hold menu is closing doesn't open
+    private func later(_ action: @escaping () -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: action)
+    }
+
+    private func remove() {
+        withAnimation { gone = true }
+        Task {
+            _ = try? await account.call("postDelete", ["id": post.id])
+            await changed()
+        }
     }
 
     private func like() async {
@@ -493,7 +514,7 @@ struct FriendsScreen: View {
                     Image(systemName: "person.2.fill").font(.system(size: 46)).foregroundStyle(Color.abAccent)
                     Text("Add your classmates as friends").font(.headline)
                     Text("Sign in to add friends, poke them and share posts.").multilineTextAlignment(.center).foregroundStyle(.secondary)
-                    Button("Sign in") { account.signInShown = true }.buttonStyle(.borderedProminent).tint(.abAccent)
+                    Button("Sign in") { account.signInShown = true }.buttonStyle(.borderedProminent).tint(.abFill)
                 }
                 .padding(32)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -501,6 +522,7 @@ struct FriendsScreen: View {
             }
         }
         .navigationTitle("Friends")
+        .toolbar { ToolbarItem(placement: .primaryAction) { OnlineButton() } }
         .onAppear { notifier.socialUnread = 0 }
         .sheet(item: $poking) { PokeSheet(user: $0) }
         .sheet(isPresented: $composing) { ComposePostSheet { await loadFeed() } }
@@ -556,7 +578,7 @@ struct FriendsScreen: View {
                     person(u) {
                         HStack(spacing: 8) {
                             Button { Task { await respond(u, true) } } label: {
-                                Image(systemName: "checkmark").foregroundStyle(.white).frame(width: 34, height: 34).background(Color.abAccent, in: Circle())
+                                Image(systemName: "checkmark").foregroundStyle(.white).frame(width: 34, height: 34).background(Color.abFill, in: Circle())
                             }
                             .accessibilityLabel(L("Accept"))
                             Button { Task { await respond(u, false) } } label: {
@@ -713,6 +735,10 @@ struct ProfileScreen: View {
     @State private var editing = false
     @State private var pickingCover = false
     @State private var coverBusy = false
+    @State private var cropping: PickedPhoto?
+    @State private var openMessage = false
+    @State private var openFriends = false
+    @State private var openCustomize = false
 
     private var isMe: Bool { userId == account.user?.id }
 
@@ -722,15 +748,6 @@ struct ProfileScreen: View {
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
             if let u = user {
-                if let b = u.bio, !b.isEmpty { Section("About") { Text(b) } }
-                if u.major?.isEmpty == false || u.college?.isEmpty == false || u.year?.isEmpty == false {
-                    Section("Studies") {
-                        if let c = u.college, !c.isEmpty { Label(c, systemImage: "building.columns") }
-                        if let m = u.major, !m.isEmpty { Label(m, systemImage: "graduationcap") }
-                        if let y = u.year, !y.isEmpty { Label(L(y), systemImage: "calendar") }
-                    }
-                }
-                if let i = u.interests, !i.isEmpty { Section("Interests") { Label(i, systemImage: "sparkles") } }
                 if let p = u.phone, !p.isEmpty {
                     Section("Phone") {
                         Button { if let url = URL(string: "tel:" + p.filter { $0.isNumber || $0 == "+" }) { UIApplication.shared.open(url) } } label: {
@@ -738,16 +755,6 @@ struct ProfileScreen: View {
                         }
                         Button { if let url = URL(string: "https://wa.me/" + p.filter(\.isNumber)) { UIApplication.shared.open(url) } } label: {
                             Label("WhatsApp", systemImage: "message.fill")
-                        }
-                    }
-                }
-                if isMe {
-                    Section { Button { composing = true } label: { Label("Write a post", systemImage: "square.and.pencil") } }
-                }
-                if canMessage && !isMe {
-                    Section {
-                        NavigationLink { DMThreadScreen(userId: u.id, name: u.displayName, color: u.color, photo: u.avatar) } label: {
-                            Label("Send a message", systemImage: "paperplane.fill").foregroundStyle(Color.abAccent)
                         }
                     }
                 }
@@ -781,7 +788,20 @@ struct ProfileScreen: View {
         .sheet(item: $poking) { PokeSheet(user: $0) }
         .sheet(isPresented: $composing) { ComposePostSheet { await load() } }
         .sheet(isPresented: $editing, onDismiss: { Task { await load() } }) { EditProfileSheet() }
-        .sheet(isPresented: $pickingCover) { AvatarPicker { image in Task { await setCover(image) } } }
+        .sheet(isPresented: $pickingCover) {
+            // the picker has to finish closing before the next screen can open
+            AvatarPicker { image in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { cropping = PickedPhoto(image: image) }
+            }
+        }
+        .fullScreenCover(item: $cropping) { p in
+            CoverCropSheet(image: p.image) { image in Task { await setCover(image) } }
+        }
+        .push(isPresented: $openMessage) {
+            if let u = user { DMThreadScreen(userId: u.id, name: u.displayName, color: u.color, photo: u.avatar) }
+        }
+        .push(isPresented: $openFriends) { FriendsScreen() }
+        .push(isPresented: $openCustomize) { CustomizeScreen() }
     }
 
     private func setCover(_ image: UIImage?) async {
@@ -794,78 +814,77 @@ struct ProfileScreen: View {
         } catch { self.error = error.localizedDescription; Haptics.error() }
     }
 
+    /// Cover, photo, name, numbers and actions together, so one screen shows it all, even on a small phone
     private var header: some View {
         let color = Color(hexString: user?.color ?? fallbackColor)
-        return VStack(spacing: 8) {
-            ZStack(alignment: .bottom) {
-                LinearGradient(colors: [color, Color.abAccent.opacity(0.75)], startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .frame(height: 150)
-                    .overlay {
-                        if let cover = user?.cover, !cover.isEmpty, let url = URL(string: cover) {
-                            Button { PhotoTools.show(cover) } label: {
-                                Color.clear.overlay(alignment: .top) { CachedPhoto(url: url, pixelSize: 1000) { Color.clear } }.clipped().contentShape(Rectangle())
-                            }
-                            .buttonStyle(.borderless)
-                            .accessibilityLabel(Text("View cover photo"))
+        return VStack(alignment: .leading, spacing: 8) {
+            LinearGradient(colors: [color, Color.abFill.opacity(0.75)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                .frame(height: 112)
+                .overlay {
+                    if let cover = user?.cover, !cover.isEmpty, let url = URL(string: cover) {
+                        Button { PhotoTools.show(cover) } label: {
+                            Color.clear.overlay(alignment: .top) { CachedPhoto(url: url, pixelSize: 1000) { Color.clear } }.clipped().contentShape(Rectangle())
                         }
+                        .buttonStyle(.borderless)
+                        .accessibilityLabel(Text("View cover photo"))
                     }
-                    .overlay(alignment: .topTrailing) {
-                        if isMe {
-                            Menu {
-                                Button { pickingCover = true } label: { Label("Choose a cover photo", systemImage: "photo") }
-                                if user?.cover?.isEmpty == false {
-                                    Button(role: .destructive) { Task { await setCover(nil) } } label: { Label("Remove cover photo", systemImage: "trash") }
-                                }
-                            } label: {
-                                Image(systemName: coverBusy ? "hourglass" : "camera.fill").font(.subheadline).foregroundStyle(.white)
-                                    .frame(width: 36, height: 36).background(.black.opacity(0.45), in: Circle())
+                }
+                .overlay(alignment: .topTrailing) {
+                    if isMe {
+                        Menu {
+                            Button { pickingCover = true } label: { Label("Choose a cover photo", systemImage: "photo") }
+                            if user?.cover?.isEmpty == false {
+                                Button(role: .destructive) { Task { await setCover(nil) } } label: { Label("Remove cover photo", systemImage: "trash") }
                             }
-                            .padding(8)
-                            .accessibilityLabel(Text("Change cover photo"))
+                        } label: {
+                            Image(systemName: coverBusy ? "hourglass" : "camera.fill").font(.subheadline).foregroundStyle(.white)
+                                .frame(width: 34, height: 34).background(.black.opacity(0.45), in: Circle())
                         }
+                        .padding(8)
+                        .accessibilityLabel(Text("Change cover photo"))
                     }
-                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                    .padding(.bottom, 52)
-                Avatar(name: user?.displayName ?? fallbackName, color: user?.color ?? fallbackColor, size: 100,
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+            HStack(alignment: .top, spacing: 12) {
+                Avatar(name: user?.displayName ?? fallbackName, color: user?.color ?? fallbackColor, size: 76,
                        admin: user?.isAdmin == true, photo: user?.avatar, online: user?.online)
-                    // behind the photo: drawn on top, this ring cut a line through the star and the online dot
-                    .background(Circle().fill(Color.abBackground).padding(-4))
+                    .background(Circle().fill(Color.abBackground).padding(-3))
+                    .padding(.top, -34)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Text(user?.displayName ?? fallbackName).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
+                        if user?.isAdmin == true { Badge(text: L("ADMIN"), color: .orange) }
+                    }
+                    if let u = user {
+                        Text("@\(u.username)").font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                        Text(u.online == true ? L("Online now") : lastSeenText(u.lastSeen)).font(.caption)
+                            .foregroundStyle(u.online == true ? Color.green : .secondary).lineLimit(1)
+                    }
+                }
+                Spacer(minLength: 0)
             }
-            Text(user?.displayName ?? fallbackName).font(.title2.weight(.bold))
+            .padding(.horizontal, 4)
+
             if let u = user {
-                Text("@\(u.username)").foregroundStyle(.secondary)
-                Text(u.online == true ? L("Online now") : lastSeenText(u.lastSeen)).font(.caption)
-                    .foregroundStyle(u.online == true ? Color.green : .secondary)
-                BadgeRow(badges: u.badges ?? [])
-                if u.isAdmin { Badge(text: L("ADMIN"), color: .orange) }
+                if u.badges?.isEmpty == false { BadgeRow(badges: u.badges ?? []).padding(.horizontal, 4) }
                 HStack(spacing: 0) {
-                    stat(friendCount, "Friends")
+                    stat(friendCount, "Friends") { if isMe { openFriends = true } }
                     stat(postCount, "Posts")
                     stat(messageCount, "Messages")
                     stat(u.badges?.count ?? 0, "Badges")
                 }
-                .padding(.vertical, 10)
+                .padding(.vertical, 8)
                 .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .padding(.top, 4)
-                if isMe {
-                    Button { editing = true } label: {
-                        Label("Edit profile", systemImage: "pencil")
-                            .font(.subheadline.weight(.semibold)).padding(.horizontal, 16).padding(.vertical, 8)
-                            .foregroundStyle(Color.primary).background(Color.primary.opacity(0.09), in: Capsule())
-                    }
-                    .buttonStyle(.borderless)
-                } else if account.signedIn, account.user?.blocked?.contains(u.id) != true {
-                    HStack(spacing: 10) {
-                        FriendButton(userId: u.id, state: $friendship) { await load() }
-                        if friendship == "friends" {
-                            Button { poking = u } label: {
-                                Label("Poke", systemImage: "hand.point.right.fill")
-                                    .font(.subheadline.weight(.semibold)).padding(.horizontal, 12).padding(.vertical, 8)
-                                    .foregroundStyle(.white).background(Color.abAccent, in: Capsule())
-                            }
-                            .buttonStyle(.borderless)
-                        }
-                    }
+
+                actionRow(u)
+
+                if let about = aboutLines(u) {
+                    VStack(alignment: .leading, spacing: 4) { about }
+                        .font(.footnote)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(10)
+                        .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
             }
         }
@@ -873,12 +892,58 @@ struct ProfileScreen: View {
         .padding(.bottom, 4)
     }
 
-    private func stat(_ n: Int, _ title: String) -> some View {
-        VStack(spacing: 2) {
-            Text("\(n)").font(.headline).monospacedDigit()
-            Text(L(title)).font(.caption2).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.8)
+    @ViewBuilder private func actionRow(_ u: ABUser) -> some View {
+        if isMe {
+            HStack(spacing: 8) {
+                pill("Edit profile", "pencil", filled: true) { editing = true }
+                pill("Write a post", "square.and.pencil") { composing = true }
+                pill("Customize", "slider.horizontal.3") { openCustomize = true }
+            }
+        } else if account.signedIn, account.user?.blocked?.contains(u.id) != true {
+            HStack(spacing: 8) {
+                FriendButton(userId: u.id, state: $friendship) { await load() }
+                if friendship == "friends" {
+                    pill("Poke", "hand.point.right.fill") { poking = u }
+                }
+                if canMessage {
+                    pill("Message", "paperplane.fill", filled: true) { openMessage = true }
+                }
+            }
         }
-        .frame(maxWidth: .infinity)
+    }
+
+    private func pill(_ title: String, _ icon: String, filled: Bool = false, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(L(title), systemImage: icon)
+                .font(.footnote.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.75)
+                .frame(maxWidth: .infinity).padding(.vertical, 8)
+                .foregroundStyle(filled ? Color.white : Color.primary)
+                .background(filled ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.primary.opacity(0.09)), in: Capsule())
+        }
+        .buttonStyle(.borderless)
+    }
+
+    /// Bio, studies and interests in one small card
+    private func aboutLines(_ u: ABUser) -> AnyView? {
+        let studies = [u.college, u.major, u.year.map { L($0) }].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · ")
+        let bio = u.bio ?? "", interests = u.interests ?? ""
+        if bio.isEmpty && studies.isEmpty && interests.isEmpty { return nil }
+        return AnyView(Group {
+            if !bio.isEmpty { Text(bio).lineLimit(4) }
+            if !studies.isEmpty { Label(studies, systemImage: "graduationcap").foregroundStyle(.secondary) }
+            if !interests.isEmpty { Label(interests, systemImage: "sparkles").foregroundStyle(.secondary) }
+        })
+    }
+
+    private func stat(_ n: Int, _ title: String, tap: (() -> Void)? = nil) -> some View {
+        Button { tap?() } label: {
+            VStack(spacing: 1) {
+                Text("\(n)").font(.subheadline.weight(.bold)).monospacedDigit().foregroundStyle(.primary)
+                Text(L(title)).font(.caption2).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.8)
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.borderless)
     }
 
     private func load() async {

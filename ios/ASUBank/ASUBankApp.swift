@@ -9,6 +9,7 @@ struct ASUBankApp: App {
     @StateObject private var pages = SitePages()
     @StateObject private var config = AppConfig()
     @AppStorage("ab.appearance") private var appearance = 0
+    @AppStorage(HomePrefs.textKey) private var textSize = 0
     @AppStorage("ab.theme.rev") private var themeRev = 0
     @State private var splash = !UserDefaults.standard.bool(forKey: "noSplash")
         && UserDefaults.standard.string(forKey: "startTab") == nil
@@ -38,7 +39,11 @@ struct ASUBankApp: App {
                 .overlay(alignment: .top) { JobsBanner().padding(.top, 4) }
                 .environmentObject(config)
                 .tint(.abAccent)
-                .preferredColorScheme(appearance == 1 ? .light : appearance >= 2 ? .dark : nil)
+                // Sand, Sky and Blush are light themes. Forcing them dark put pale text on pale backgrounds after a restart.
+                .preferredColorScheme(appearance >= 0 ? AppTheme.scheme : nil)
+                .dynamicTypeSize(HomePrefs.typeRange(textSize))
+                .onAppear { AppTheme.applyWindow() }
+                .onChange(of: appearance) { _ in AppTheme.applyWindow() }
                 .task {
                     try? await Task.sleep(nanoseconds: 600_000_000)
                     withAnimation(.easeOut(duration: 0.35)) { splash = false }
@@ -115,11 +120,6 @@ struct RootView: View {
                     .tag(t)
                     .badge(t == .friends ? notifier.socialUnread : t == .notifications ? notices.unread : 0)
             }
-            if account.isAdmin {
-                AdminTab().id(resets[.admin, default: 0])
-                    .tabItem { Label("Admin", systemImage: "shield.lefthalf.filled") }
-                    .tag(AppTab.admin)
-            }
             MoreView().id(resets[.more, default: 0])
                 .tabItem { Label("More", systemImage: "ellipsis.circle.fill") }
                 .tag(AppTab.more)
@@ -129,7 +129,7 @@ struct RootView: View {
             if t == .upload { app.tab = lastTab; app.uploadShown = true; return }
             if t == .admin && !account.isAdmin { app.tab = lastTab; return }
             // a tab that isn't in the bar opens over the one you're on
-            if t != .home && t != .more && t != .admin && !middleTabs.contains(t) {
+            if t != .home && t != .more && !middleTabs.contains(t) {
                 app.tab = lastTab
                 app.overlayTab = t
                 return
@@ -139,7 +139,7 @@ struct RootView: View {
         }
         .onAppear {
             if app.tab == .upload { app.tab = .home; app.uploadShown = true }
-            if app.tab != .home && app.tab != .more && app.tab != .admin && !middleTabs.contains(app.tab) {
+            if app.tab != .home && app.tab != .more && !middleTabs.contains(app.tab) {
                 let t = app.tab
                 app.tab = .home
                 app.overlayTab = t
@@ -150,6 +150,7 @@ struct RootView: View {
         .sheet(item: $whatsNew) { WhatsNewSheet(entry: $0) }
         .task { whatsNew = WhatsNew.pending(accepted: accepted) }
         .task { LectureStore.shared.reschedule() }
+        .task(id: account.user?.id) { await TermsProof.sync() }
         .sheet(isPresented: $account.signInShown) { SignInScreen() }
         .alert("Thank you for joining early! 🌱", isPresented: $account.earlyThanksShown) {
             Button("You're welcome", role: .cancel) {}

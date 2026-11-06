@@ -140,7 +140,7 @@ struct UpdateRequiredView: View {
             } label: {
                 Text("Update now").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
             }
-            .buttonStyle(.borderedProminent).tint(.abAccent)
+            .buttonStyle(.borderedProminent).tint(.abFill)
         }
         .padding(28)
         .interactiveDismissDisabled()
@@ -154,7 +154,7 @@ struct WelcomeTermsView: View {
     @AppStorage(WelcomeTermsView.key) private var accepted = false
     @State private var agree = false
     @Environment(\.openURL) private var openURL
-    static let key = "ab.terms.accepted.v1"
+    static let key = "ab.terms.accepted.v2"
 
     var body: some View {
         ABStack {
@@ -164,12 +164,18 @@ struct WelcomeTermsView: View {
                         Image(systemName: "books.vertical.fill")
                             .font(.system(size: 34)).foregroundStyle(.white)
                             .frame(width: 76, height: 76)
-                            .background(Color.abAccent, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .background(Color.abFill, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                         Text("Welcome to UniHub").font(.title2.weight(.bold))
                         Text("Please read this before you start").font(.subheadline).foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 8)
                     .listRowBackground(Color.clear)
+                }
+                Section("What you agree to") {
+                    term("doc.text.fill", "You read the terms", "We keep a dated record that you accepted the Terms of Service on this date. You can see it any time under More, Safety & legal.")
+                    term("person.fill.checkmark", "You answer for what you post", "Share only what you have the right to share. Don't use UniHub to cheat, harass anyone or break the law.")
+                    term("flag.fill", "We act on reports", "Admins can remove content and close accounts. Copyright owners can ask us to remove a file.")
+                    term("exclamationmark.shield.fill", "No guarantees", "Materials come from students and may contain mistakes. UniHub is offered as it is. Check your official course sources.")
                 }
                 Section("About this app") {
                     term("heart.fill", "A free, student-run project", "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it.")
@@ -189,7 +195,7 @@ struct WelcomeTermsView: View {
                         Label("Read the full Terms of Service", systemImage: "doc.text")
                     }
                     if onClose == nil {
-                        Toggle("I understand and agree / أوافق", isOn: $agree.animation()).tint(.abAccent)
+                        Toggle("I have read and accept the Terms of Service / قرأت شروط الاستخدام وأوافق عليها", isOn: $agree.animation()).tint(.abAccent)
                     }
                 }
             }
@@ -206,11 +212,12 @@ struct WelcomeTermsView: View {
                 if onClose == nil {
                     Button {
                         accepted = true
+                        TermsProof.accepted()
                         Haptics.success()
                     } label: {
                         Text("Accept and continue").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abAccent)
+                    .buttonStyle(.borderedProminent).tint(.abFill)
                     .disabled(!agree)
                     .padding(.horizontal, 20).padding(.vertical, 10)
                     .background(.bar)

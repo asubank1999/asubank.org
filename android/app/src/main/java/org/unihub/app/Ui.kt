@@ -183,7 +183,14 @@ fun AsuTheme(content: @Composable () -> Unit) {
         if (isDark) base.copy(primary = p, onPrimary = Color.Black, primaryContainer = lerp(Color.Black, p, 0.32f), onPrimaryContainer = lerp(Color.White, p, 0.2f))
         else base.copy(primary = p, onPrimary = Color.White, primaryContainer = lerp(Color.White, p, 0.16f), onPrimaryContainer = lerp(Color.Black, p, 0.6f))
     }
-    MaterialTheme(colorScheme = scheme, content = content)
+    val textSize by HomePrefs.textSize.collectAsState()
+    MaterialTheme(colorScheme = scheme) {
+        val d = androidx.compose.ui.platform.LocalDensity.current
+        androidx.compose.runtime.CompositionLocalProvider(
+            androidx.compose.ui.platform.LocalDensity provides androidx.compose.ui.unit.Density(d.density, d.fontScale * HomePrefs.textScale(textSize)),
+            content = content,
+        )
+    }
 }
 
 val accent: Color @Composable get() = MaterialTheme.colorScheme.primary
@@ -423,6 +430,7 @@ fun MaterialRow(m: Material, kind: Kind? = null, meta: String? = null, showSourc
     // hold a file to save or report it
     DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
         DropdownMenuItem(text = { Text(if (savedList.any { it.u == m.u }) "Remove from Saved" else "Save") }, onClick = { menu = false; Saved.toggle(m) })
+        if (Saved.recent.value.any { it.u == m.u }) DropdownMenuItem(text = { Text("Remove from Continue") }, onClick = { menu = false; Saved.removeRecent(m.u) })
         if (k != Kind.PAGE) DropdownMenuItem(text = { Text("Report this file") }, onClick = { menu = false; reporting = true })
         if (Account.user.value?.isAdmin == true && k != Kind.PAGE && AB.driveId(m.u) != null) {
             DropdownMenuItem(text = { Text(if (k == Kind.FOLDER) "Remove from UniHub" else "Delete from Drive", color = MaterialTheme.colorScheme.error) }, onClick = { menu = false; deleting = true })

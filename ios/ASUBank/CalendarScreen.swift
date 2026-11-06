@@ -107,7 +107,7 @@ struct CalendarScreen: View {
                     .font(.system(size: 22, weight: .bold)).foregroundStyle(isToday ? .white : .primary)
             }
             .frame(width: 50, height: 52)
-            .background(isToday ? AnyShapeStyle(Color.abAccent) : AnyShapeStyle(Color.abAccentSoft), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .background(isToday ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.abAccentSoft), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             VStack(alignment: .trailing, spacing: 4) {
                 Text(d.e.n)
                     .font(.body.weight(.medium))

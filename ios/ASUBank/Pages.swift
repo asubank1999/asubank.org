@@ -161,6 +161,8 @@ struct SitePageView: View {
             CourseMatcherScreen()
         } else if ["/requests/student_request_portal", "/requests/request", "/requests/student_request_main"].contains(path) {
             RequestMaterialScreen()
+        } else if path == "/legal/report" {
+            ReportCenterScreen()
         } else if path == "/upload/suggest_to_whatsapp" {
             SuggestMaterialScreen()
         } else if path == "/app/whatsnew" {

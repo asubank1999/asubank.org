@@ -120,47 +120,75 @@ struct HomeView: View {
     @EnvironmentObject private var library: Library
     @EnvironmentObject private var saved: SavedStore
     @ObservedObject private var notices = NoticeStore.shared
+    @ObservedObject private var account = AccountStore.shared
+    @AppStorage(HomePrefs.key) private var hidden = ""
+    @AppStorage(HomePrefs.compactKey) private var compact = false
+    @AppStorage(HomePrefs.recentKey) private var remember = true
 
     @State private var linked: Route?
+    @State private var customizing = false
+    /// CI screenshots: -startScreen report | safety | customize | share
+    @State private var startScreen = UserDefaults.standard.string(forKey: "startScreen")
 
-    private let grid = [GridItem(.adaptive(minimum: 158), spacing: 12)]
+    private var grid: [GridItem] { [GridItem(.adaptive(minimum: compact ? 104 : 158), spacing: 12)] }
+    private func on(_ id: String) -> Bool { HomePrefs.on(id, hidden) }
 
     var body: some View {
         ABStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    WeatherCard()
-                    HomeCalendarCard()
-                    NextLectureCard()
-                    HomeDueCard()
-                    hero.padding(.top, 4)
+                    if on("online") { OnlineBox().padding(.horizontal, 16).padding(.top, 8) }
+                    if on("weather") { WeatherCard() }
+                    if on("calendar") { HomeCalendarCard() }
+                    if on("lecture") { NextLectureCard() }
+                    if on("due") { HomeDueCard() }
+                    if on("hero") { hero.padding(.top, 4) }
                     SponsorCard()
-                    if !saved.recent.isEmpty {
+                    if on("continue"), remember, !saved.recent.isEmpty {
                         SectionHeader(title: "Continue")
+                            .overlay(alignment: .bottomTrailing) {
+                                Menu {
+                                    Button(role: .destructive) { saved.clearRecent(); Haptics.tap() } label: { Label("Clear the Continue list", systemImage: "trash") }
+                                    Button { hidden = HomePrefs.setting("continue", false, in: hidden); Haptics.tap() } label: { Label("Hide Continue", systemImage: "eye.slash") }
+                                    Button { customizing = true } label: { Label("Customize", systemImage: "slider.horizontal.3") }
+                                } label: {
+                                    Image(systemName: "ellipsis.circle").font(.body).frame(width: 36, height: 30)
+                                }
+                                .padding(.trailing, 12).padding(.bottom, 6)
+                                .accessibilityLabel(Text("Continue"))
+                            }
                         list(saved.recent.prefix(4).map(\.material))
                     }
-                    if !saved.saved.isEmpty {
+                    if on("saved"), !saved.saved.isEmpty {
                         SectionHeader(title: "Saved")
                         list(saved.saved.prefix(4).map(\.material))
                     }
-                    SectionHeader(title: "Quick links", arabic: "روابط سريعة")
-                    LazyVGrid(columns: grid, spacing: 12) {
-                        ForEach(Links.quick) { l in
-                            SiteLinkButton(link: l) { Card(emoji: l.emoji, title: l.title, subtitle: l.subtitle, badge: l.shownBadge) }
-                                .buttonStyle(PressStyle())
+                    if on("quick") {
+                        SectionHeader(title: "Quick links", arabic: "روابط سريعة")
+                        LazyVGrid(columns: grid, spacing: 12) {
+                            ForEach(Links.quick) { l in
+                                SiteLinkButton(link: l) { Card(emoji: l.emoji, title: l.title, subtitle: compact ? nil : l.subtitle, badge: l.shownBadge) }
+                                    .buttonStyle(PressStyle())
+                            }
                         }
+                        .padding(.horizontal, 16)
                     }
-                    .padding(.horizontal, 16)
 
-                    SectionHeader(title: "Calendars & schedules", arabic: "التقويم والجداول")
-                    group(Links.schedules)
+                    if on("schedules") {
+                        SectionHeader(title: "Calendars & schedules", arabic: "التقويم والجداول")
+                        group(Links.schedules)
+                    }
 
-                    subjects
+                    if on("subjects") { subjects }
 
-                    SectionHeader(title: "New here? Start with these", arabic: "طالب جديد؟")
-                    group(Links.newHere)
-                    SectionHeader(title: "Community & services")
-                    group(Links.community)
+                    if on("newhere") {
+                        SectionHeader(title: "New here? Start with these", arabic: "طالب جديد؟")
+                        group(Links.newHere)
+                    }
+                    if on("community") {
+                        SectionHeader(title: "Community & services")
+                        group(Links.community)
+                    }
 
                     Text("Peer-verified study materials curated by Applied Science University students, for ASU students.")
                         .font(.footnote).foregroundStyle(.secondary)
@@ -170,19 +198,44 @@ struct HomeView: View {
             }
             .background(Color.abBackground)
             .navigationTitle("UniHub")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) { MeButton() }
                 ToolbarItem(placement: .primaryAction) {
-                    Button { app.tab = .notifications; Haptics.tap() } label: {
-                        Image(systemName: notices.unread > 0 ? "bell.badge.fill" : "bell")
+                    HStack(spacing: 12) {
+                        OnlineButton()
+                        if account.isAdmin {
+                            Button { app.overlayTab = .admin; Haptics.tap() } label: { Image(systemName: "shield.lefthalf.filled") }
+                                .accessibilityLabel(Text("Admin"))
+                        }
+                        Button { app.tab = .notifications; Haptics.tap() } label: {
+                            Image(systemName: notices.unread > 0 ? "bell.badge.fill" : "bell")
+                        }
+                        .accessibilityLabel(Text("Notifications"))
                     }
-                    .accessibilityLabel(Text("Notifications"))
                 }
+            }
+            .sheet(isPresented: $customizing) {
+                ABStack {
+                    CustomizeScreen()
+                        .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { customizing = false } } }
+                }
+                .environmentObject(saved)
             }
             .refreshable { await library.load() }
             .abDestinations()
             // asubank.org links opened from outside the app show their native screen here
             .push(isPresented: Binding(get: { linked != nil }, set: { if !$0 { linked = nil } })) {
                 if let linked { RouteView(route: linked) }
+            }
+            .push(isPresented: Binding(get: { startScreen != nil }, set: { if !$0 { startScreen = nil } })) {
+                switch startScreen {
+                case "report": ReportCenterScreen()
+                case "safety": SafetyScreen()
+                case "customize": CustomizeScreen()
+                case "share": ShareVideoScreen()
+                default: EmptyView()
+                }
             }
             .onAppear(perform: takeLink)
             .onChange(of: app.pendingRoute) { _ in takeLink() }

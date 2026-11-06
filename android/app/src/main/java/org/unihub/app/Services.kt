@@ -51,7 +51,7 @@ import kotlinx.serialization.json.putJsonArray
 // Native versions of the asubank.org services: course matcher, request a material, student ads, donate.
 
 const val ADMIN_WA = "mailto:necro144@yahoo.com"
-fun waMessage(text: String) = "$ADMIN_WA?text=" + Uri.encode(text)
+fun waMessage(text: String) = "$ADMIN_WA?body=" + Uri.encode(text)
 
 fun copyText(ctx: Context, label: String, text: String) {
     (ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText(label, text))
@@ -416,7 +416,7 @@ fun RequestMaterialScreen() {
             sending = false
             r.onSuccess { v ->
                 val msg = (v as? JsonPrimitive)?.content?.takeIf { it.isNotBlank() && it != "null" }
-                dlg = Dlg("Request sent!", msg ?: "We got your request. Message us on WhatsApp to confirm the payment.", true)
+                dlg = Dlg("Request sent!", msg ?: "We got your request. Email us to confirm the payment.", true)
                 file = null; service = ""; course = ""; notes = ""
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             }.onFailure { dlg = Dlg("Couldn't send", bridgeError(it), false) }
@@ -481,7 +481,7 @@ fun RequestMaterialScreen() {
                     }
                 }
                 item {
-                    Group(header = "3. Payment · 3 JD", footer = "After you submit, message us on WhatsApp to confirm your payment.") {
+                    Group(header = "3. Payment · 3 JD", footer = "After you submit, email us to confirm your payment.") {
                         PayRow("CliQ", "Alias ALANQ99 · Bank of Jordan", Icons.Filled.AccountBalance, payment == "CliQ") { payment = "CliQ" }
                         Divider()
                         PayRow("In person", "Pay on campus", Icons.Filled.People, payment == "In-Person") { payment = "In-Person" }
@@ -503,7 +503,7 @@ fun RequestMaterialScreen() {
         }
     }
     dlg?.let { d ->
-        if (d.ok) ResultDialog(d.title, d.text, true, "Message us on WhatsApp", { openExternal(ctx, waMessage("Hi UniHub, about my material request")) }) { dlg = null }
+        if (d.ok) ResultDialog(d.title, d.text, true, "Email us", { openExternal(ctx, waMessage("Hi UniHub, about my material request")) }) { dlg = null }
         else ResultDialog(d.title, d.text, false) { dlg = null }
     }
 }

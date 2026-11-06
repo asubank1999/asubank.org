@@ -25,7 +25,7 @@ final class AppState: ObservableObject {
         // Launch arguments used by the CI screenshots, e.g. `-startTab search -startQuery calculus`
         let d = UserDefaults.standard
         let tabs: [String: AppTab] = ["feed": .feed, "home": .home, "search": .search, "upload": .upload, "chat": .chat, "saved": .saved, "admin": .admin, "more": .more, "notifications": .notifications]
-        if let t = d.string(forKey: "startTab"), let tab = tabs[t] { self.tab = tab }
+        if let t = d.string(forKey: "startTab") ?? d.string(forKey: HomePrefs.startKey), let tab = tabs[t] { self.tab = tab }
         pendingQuery = d.string(forKey: "startQuery")
         if let p = d.string(forKey: "startPath") { pendingRoute = .page(p, "") }
         pendingRoom = d.string(forKey: "startRoom")
@@ -148,6 +148,7 @@ final class SavedStore: ObservableObject {
     func removeSaved(at offsets: IndexSet) { saved.remove(atOffsets: offsets); write(saved, "ab.saved") }
 
     func opened(_ m: Material) {
+        guard HomePrefs.remembersRecent else { return }
         recent.removeAll { $0.u == m.u }
         recent.insert(SavedItem(u: m.u, t: m.t, s: m.s ?? "", date: Date()), at: 0)
         recent = Array(recent.prefix(40))
@@ -156,6 +157,7 @@ final class SavedStore: ObservableObject {
 
     func removeRecent(at offsets: IndexSet) { recent.remove(atOffsets: offsets); write(recent, "ab.recent") }
     func clearRecent() { recent = []; write(recent, "ab.recent") }
+    func removeRecent(_ u: String) { recent.removeAll { $0.u == u }; write(recent, "ab.recent") }
 
     func searched(_ q: String) {
         let q = q.trimmingCharacters(in: .whitespaces)

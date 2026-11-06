@@ -1,5 +1,10 @@
 package org.unihub.app
 
+import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.ui.draw.clip
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material.icons.filled.NotificationsNone
@@ -198,21 +203,34 @@ fun HomeScreen() {
     val notices by Notices.items.collectAsState()
     val noticesRead by Notices.lastRead.collectAsState()
     val unread = notices.any { it.created > noticesRead }
+    val hidden by HomePrefs.hidden.collectAsState()
+    val compact by HomePrefs.compact.collectAsState()
+    val remembers by HomePrefs.remember.collectAsState()
+    val me by Account.user.collectAsState()
+    var continueMenu by remember { mutableStateOf(false) }
+    fun on(id: String) = id !in hidden
     LazyColumn(Modifier.fillMaxWidth()) {
         item {
-            Row(Modifier.fillMaxWidth().statusBarsPadding().padding(start = 20.dp, end = 8.dp, top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text("UniHub", Modifier.weight(1f), fontSize = 30.sp, fontWeight = FontWeight.Bold)
+            Row(
+                Modifier.fillMaxWidth().statusBarsPadding().padding(start = 12.dp, end = 4.dp, top = 4.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                MeButton()
+                Text("UniHub", Modifier.weight(1f), fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                OnlineButton()
+                if (me?.isAdmin == true) IconButton(onClick = { nav.navigate(Routes.ADMIN) }) { Icon(Icons.Filled.Shield, tr("Admin")) }
                 IconButton(onClick = { nav.navigate(Routes.NOTIFICATIONS) }) {
                     if (unread) BadgedBox(badge = { androidx.compose.material3.Badge() }) { Icon(Icons.Filled.Notifications, tr("Notifications")) }
                     else Icon(Icons.Filled.NotificationsNone, tr("Notifications"))
                 }
             }
         }
-        item { WeatherCard() }
-        item { HomeCalendarCard() }
-        item { NextLectureCard() }
-        item { HomeDueCard() }
-        item {
+        if (on("online")) item { OnlineBox(Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)) }
+        if (on("weather")) item { WeatherCard() }
+        if (on("calendar")) item { HomeCalendarCard() }
+        if (on("lecture")) item { NextLectureCard() }
+        if (on("due")) item { HomeDueCard() }
+        if (on("hero")) item {
             Box(
                 Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp).clip(RoundedCornerShape(22.dp))
                     .background(heroBrush((Prefs.accents.firstOrNull { it.id == accentId } ?: Prefs.accents[0]).light))
@@ -251,48 +269,70 @@ fun HomeScreen() {
             }
         }
         item { SponsorCard() }
-        if (recent.isNotEmpty()) {
-            item { SectionTitle("Continue") }
+        if (on("continue") && remembers && recent.isNotEmpty()) {
+            item {
+                Box(Modifier.fillMaxWidth()) {
+                    SectionTitle("Continue")
+                    Box(Modifier.align(Alignment.BottomEnd).padding(end = 8.dp)) {
+                        IconButton(onClick = { continueMenu = true }) { Icon(Icons.Filled.MoreHoriz, tr("Continue")) }
+                        androidx.compose.material3.DropdownMenu(continueMenu, { continueMenu = false }) {
+                            androidx.compose.material3.DropdownMenuItem(text = { Text("Clear the Continue list") }, onClick = { continueMenu = false; Saved.clearRecent() })
+                            androidx.compose.material3.DropdownMenuItem(text = { Text("Hide Continue") }, onClick = { continueMenu = false; HomePrefs.setShown("continue", false) })
+                            androidx.compose.material3.DropdownMenuItem(text = { Text("Customize") }, onClick = { continueMenu = false; nav.navigate("customize") })
+                        }
+                    }
+                }
+            }
             item { Group { recent.take(4).forEachIndexed { i, s -> if (i > 0) Divider(); MaterialRow(s.material) } } }
         }
-        if (saved.isNotEmpty()) {
+        if (on("saved") && saved.isNotEmpty()) {
             item { SectionTitle("Saved") }
             item { Group { saved.take(4).forEachIndexed { i, s -> if (i > 0) Divider(); MaterialRow(s.material) } } }
         }
+        if (on("quick")) {
         item { SectionTitle("Quick links", "روابط سريعة") }
-        items(Links.quick.chunked(2)) { pair ->
+        items(Links.quick.chunked(if (compact) 3 else 2)) { pair ->
             Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 pair.forEach { l ->
                     Surface(
                         shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.surfaceContainer,
-                        modifier = Modifier.weight(1f).height(128.dp).clickable { follow(l, nav, ctx) },
+                        modifier = Modifier.weight(1f).height(if (compact) 92.dp else 128.dp).clickable { follow(l, nav, ctx) },
                     ) {
-                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Column(Modifier.padding(if (compact) 10.dp else 14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(l.emoji, fontSize = 26.sp)
+                                Text(l.emoji, fontSize = if (compact) 20.sp else 26.sp)
                                 Spacer(Modifier.weight(1f))
                                 l.shownBadge?.let { Badge(it, if (it == "NEW") Brand.green else Brand.orange) }
                             }
                             Text(l.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                            l.subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                            if (!compact) l.subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis) }
                         }
                     }
                 }
-                if (pair.size == 1) Spacer(Modifier.weight(1f))
+                repeat((if (compact) 3 else 2) - pair.size) { Spacer(Modifier.weight(1f)) }
             }
         }
-        item { SectionTitle("Calendars & schedules") }
-        item { Group { LinkRows(Links.schedules) } }
-        item { SectionTitle("Subjects", "المواد") }
-        item {
-            Group {
-                ListRow("All subjects", trf("%d subjects by faculty", subjects.size), icon = Icons.Filled.GridView) { nav.openPage("/banks/subjects", "All subjects") }
+        }
+        if (on("schedules")) {
+            item { SectionTitle("Calendars & schedules") }
+            item { Group { LinkRows(Links.schedules) } }
+        }
+        if (on("subjects")) {
+            item { SectionTitle("Subjects", "المواد") }
+            item {
+                Group {
+                    ListRow("All subjects", trf("%d subjects by faculty", subjects.size), icon = Icons.Filled.GridView) { nav.openPage("/banks/subjects", "All subjects") }
+                }
             }
         }
-        item { SectionTitle("New here?", "طالب جديد") }
-        item { Group { LinkRows(Links.newHere) } }
-        item { SectionTitle("Community & services") }
-        item { Group { LinkRows(Links.community) } }
+        if (on("newhere")) {
+            item { SectionTitle("New here?", "طالب جديد") }
+            item { Group { LinkRows(Links.newHere) } }
+        }
+        if (on("community")) {
+            item { SectionTitle("Community & services") }
+            item { Group { LinkRows(Links.community) } }
+        }
         item { SectionTitle("Help") }
         item { Group { LinkRows(Links.help) } }
         item { Spacer(Modifier.height(24.dp)) }
@@ -363,6 +403,14 @@ fun MoreScreen() {
                     } else ListRow("Sign in or create an account", "Chat with students, synced with asubank.org", icon = Icons.Filled.AccountCircle) { Account.signInShown.value = true }
                     Divider()
                     ListRow("Theme", listOf("Match my phone", "Light", "Dark", "Pitch black", "Midnight", "Forest night", "Plum", "Sand", "Sky", "Blush")[appearance.coerceIn(0, 9)], icon = Icons.Filled.Palette) { nav.navigate("theme") }
+                    Divider()
+                    ListRow("Customize", icon = Icons.Filled.Tune) { nav.navigate("customize") }
+                    Divider()
+                    ListRow("Safety & legal", icon = Icons.Filled.VerifiedUser) { nav.navigate("safety") }
+                    Divider()
+                    ListRow("Report something", icon = Icons.Filled.Flag) { nav.navigate("report") }
+                    Divider()
+                    ListRow("Who's online", icon = Icons.Filled.Circle, iconColor = Color(0xFF22B14C)) { if (Account.signedIn) nav.navigate("online") else Account.signInShown.value = true }
                     Divider()
                     ListRow("Customize tab bar", icon = Icons.Filled.Dashboard) { nav.navigate("tabBar") }
                     Divider()
@@ -455,7 +503,7 @@ fun MoreScreen() {
                     Divider()
                     ListRow("Community rules", icon = Icons.Filled.VerifiedUser) { nav.openPage("/legal/community", "Community rules") }
                     Divider()
-                    ReportProblemRow()
+                    ListRow("Report a problem", icon = Icons.Filled.Flag) { nav.navigate("report") }
                 }
             }
             item {

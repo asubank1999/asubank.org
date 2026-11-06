@@ -98,7 +98,7 @@ struct DMConversationRows: View {
                                     Spacer()
                                     if c.unread > 0 {
                                         Text("\(c.unread)").font(.caption2.weight(.bold)).foregroundStyle(.white)
-                                            .padding(.horizontal, 7).padding(.vertical, 3).background(Color.abAccent, in: Capsule())
+                                            .padding(.horizontal, 7).padding(.vertical, 3).background(Color.abFill, in: Capsule())
                                     }
                                 }
                             }
@@ -539,7 +539,7 @@ extension View {
             br: mine && joinedBelow ? small : big
         )
         return self
-            .background(mine ? AnyShapeStyle(Color.abAccent.abGradient) : AnyShapeStyle(Color.abSurface), in: shape)
+            .background(mine ? AnyShapeStyle(Color.abFill.abGradient) : AnyShapeStyle(Color.abSurface), in: shape)
             .shadow(color: .black.opacity(mine ? 0 : 0.06), radius: 3, y: 1)
     }
 }
@@ -588,7 +588,7 @@ struct ChatComposerBar: View {
                     if busy { ABDots().tint(.white) } else { Image(systemName: sendSymbol).font(.headline.weight(.bold)).foregroundStyle(.white) }
                 }
                 .frame(width: 38, height: 38)
-                .background(Color.abAccent.abGradient, in: Circle())
+                .background(Color.abFill.abGradient, in: Circle())
                 .opacity(empty && !busy ? 0.4 : 1)
             }
             .disabled(empty || busy)

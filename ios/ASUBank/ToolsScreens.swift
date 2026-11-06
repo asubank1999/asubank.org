@@ -987,7 +987,7 @@ struct LectureEditor: View {
                                     .font(.caption.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.6)
                                     .frame(maxWidth: .infinity, minHeight: 38)
                                     .foregroundStyle(on ? Color.white : Color.primary)
-                                    .background(on ? AnyShapeStyle(Color.abAccent) : AnyShapeStyle(Color.primary.opacity(0.08)), in: RoundedRectangle(cornerRadius: 9))
+                                    .background(on ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.primary.opacity(0.08)), in: RoundedRectangle(cornerRadius: 9))
                             }
                             .buttonStyle(.borderless)
                         }
@@ -1041,7 +1041,7 @@ struct NextLectureCard: View {
         if let n = store.next, n.today {
             Button { app.tab = .lectures; Haptics.tap() } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: "alarm.fill").foregroundStyle(.white).frame(width: 36, height: 36).background(Color.abAccent, in: RoundedRectangle(cornerRadius: 10))
+                    Image(systemName: "alarm.fill").foregroundStyle(.white).frame(width: 36, height: 36).background(Color.abFill, in: RoundedRectangle(cornerRadius: 10))
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Next lecture").font(.caption).foregroundStyle(.secondary)
                         Text(n.lecture.subject).font(.subheadline.weight(.semibold)).foregroundStyle(.primary).lineLimit(1)
@@ -1077,22 +1077,18 @@ enum TabBarPrefs {
         (.hacks, "hacks", "Life hacks", "lightbulb.fill")
     ]
     static let standard = "feed,chat,notifications"
-    /// Admins have one place less; Home has a search button and a bell
-    static let standardAdmin = "feed,chat"
 
     static func chosen(_ stored: String, admin: Bool) -> [AppTab] {
-        let ids = (admin && stored == standard ? standardAdmin : stored).split(separator: ",").map(String.init)
+        let ids = stored.split(separator: ",").map(String.init)
         let tabs = ids.compactMap { id in options.first { $0.id == id }?.tab }
-        return Array((tabs.isEmpty ? [.search] : tabs).prefix(admin ? 2 : 3))
+        return Array((tabs.isEmpty ? [.search] : tabs).prefix(3))
     }
 }
 
 struct TabBarScreen: View {
     @AppStorage(TabBarPrefs.key) private var stored = TabBarPrefs.standard
-    @ObservedObject private var account = AccountStore.shared
-
-    private var limit: Int { account.isAdmin ? 2 : 3 }
-    private var ids: [String] { (account.isAdmin && stored == TabBarPrefs.standard ? TabBarPrefs.standardAdmin : stored).split(separator: ",").map(String.init).filter { id in TabBarPrefs.options.contains { $0.id == id } } }
+    private let limit = 3
+    private var ids: [String] { (stored).split(separator: ",").map(String.init).filter { id in TabBarPrefs.options.contains { $0.id == id } } }
 
     var body: some View {
         List {
@@ -1116,7 +1112,6 @@ struct TabBarScreen: View {
                     list.move(fromOffsets: from, toOffset: to)
                     set(list)
                 }
-                if account.isAdmin { row("shield.lefthalf.filled", "Admin", locked: true) }
                 row("ellipsis.circle.fill", "More", locked: true)
             } header: { Text("In your tab bar") } footer: {
                 Text(String(format: L("Drag to reorder. Home and More always stay, and you can add up to %d more."), limit))

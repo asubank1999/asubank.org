@@ -411,4 +411,7 @@
   <url>
     <loc>https://asubank.org/feed/</loc>
   </url>
+  <url><loc>https://asubank.org/apps/download</loc></url>
+  <url><loc>https://asubank.org/legal/report</loc></url>
+  <url><loc>https://asubank.org/legal/copyright</loc></url>
 </urlset>

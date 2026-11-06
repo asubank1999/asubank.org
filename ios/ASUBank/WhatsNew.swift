@@ -70,7 +70,7 @@ struct WhatsNewSheet: View {
                 Button { dismiss() } label: {
                     Text("Continue").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abAccent)
+                .buttonStyle(.borderedProminent).tint(.abFill)
                 .padding(.horizontal, 20).padding(.vertical, 10)
             }
         }

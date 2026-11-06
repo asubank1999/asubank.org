@@ -83,7 +83,7 @@ struct ServiceRatingScreen: View {
                     Button { Task { await submit() } } label: {
                         HStack { Spacer(); if busy { ABDots() }; Text("Send rating").font(.headline); Spacer() }.padding(.vertical, 4)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abAccent)
+                    .buttonStyle(.borderedProminent).tint(.abFill)
                     .disabled(busy || answers.count < Self.questions.count)
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
@@ -187,7 +187,7 @@ struct VotingScreen: View {
                     Button { Task { await submit() } } label: {
                         HStack { Spacer(); if busy { ABDots() }; Text("Send my vote").font(.headline); Spacer() }.padding(.vertical, 4)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abAccent)
+                    .buttonStyle(.borderedProminent).tint(.abFill)
                     .disabled(busy || vote == nil)
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }

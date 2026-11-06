@@ -1,5 +1,6 @@
 package org.unihub.app
 
+import androidx.compose.material.icons.filled.Policy
 import androidx.compose.material.icons.filled.AddComment
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Flag
@@ -130,6 +131,8 @@ fun AdminTab() {
                     ListRow("Suggestions", icon = Icons.Filled.Lightbulb, trailing = if (pendingSuggestions > 0) "$pendingSuggestions" else null) { nav.navigate("adminSuggestions") }
                     Divider()
                     ListRow("Reports", icon = Icons.Filled.Flag) { nav.navigate("adminReports") }
+                    Divider()
+                    ListRow("Terms records", icon = Icons.Filled.Policy) { nav.navigate("adminTerms") }
                     Divider()
                     ListRow("Users", "Ban, reset passwords, make admins", icon = Icons.Filled.People) { nav.navigate("adminUsers") }
                     Divider()

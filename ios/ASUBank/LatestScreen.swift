@@ -169,7 +169,7 @@ struct LatestScreen: View {
             case 3:
                 VStack(spacing: 10) {
                     Text("Couldn't load the latest files.").font(.headline)
-                    Button("Try again") { Task { await store.load(force: true) } }.buttonStyle(.borderedProminent).tint(.abAccent)
+                    Button("Try again") { Task { await store.load(force: true) } }.buttonStyle(.borderedProminent).tint(.abFill)
                 }
                 .frame(maxWidth: .infinity).padding(20).listRowBackground(Color.clear)
             default:

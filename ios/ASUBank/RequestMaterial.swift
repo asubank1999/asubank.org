@@ -129,7 +129,7 @@ struct RequestMaterialScreen: View {
                         withAnimation { copied = true }
                     } label: { Label(copied ? "Copied ALANQ99" : "Copy CliQ alias ALANQ99", systemImage: copied ? "checkmark.circle.fill" : "doc.on.doc") }
                 }
-            } header: { Text("3. Payment · 3 JD") } footer: { Text("After you submit, message us on WhatsApp to confirm your payment.") }
+            } header: { Text("3. Payment · 3 JD") } footer: { Text("After you submit, email us to confirm your payment.") }
 
             Section {
                 Button(action: submit) {
@@ -141,7 +141,7 @@ struct RequestMaterialScreen: View {
                     }
                     .padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abAccent)
+                .buttonStyle(.borderedProminent).tint(.abFill)
                 .disabled(sending)
                 .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             } footer: {
@@ -163,7 +163,7 @@ struct RequestMaterialScreen: View {
         }
         .alert(result?.title ?? "", isPresented: Binding(get: { result != nil }, set: { if !$0 { result = nil } })) {
             if result?.ok == true {
-                Button("Message us on WhatsApp") { openURL(URL(string: Requests.whatsapp)!) }
+                Button("Email us") { openURL(URL(string: Requests.whatsapp)!) }
                 Button("Done", role: .cancel) {}
             } else {
                 Button("OK", role: .cancel) {}
@@ -184,7 +184,7 @@ struct RequestMaterialScreen: View {
             if bridge.status == .failed { bridge.connect(force: true) }
             do {
                 let r = try await bridge.call("handleFormSubmission", [data], timeout: 120)
-                result = ("Request sent!", (r as? String).flatMap { $0.isEmpty ? nil : $0 } ?? "We got your request. Message us on WhatsApp to confirm the payment.", true)
+                result = ("Request sent!", (r as? String).flatMap { $0.isEmpty ? nil : $0 } ?? "We got your request. Email us to confirm the payment.", true)
                 self.file = nil; service = ""; course = ""; notes = ""
                 Haptics.success()
             } catch {

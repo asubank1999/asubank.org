@@ -446,8 +446,8 @@ fun ThanksScreen(page: SitePage?) {
                 Surface(shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.padding(top = 8.dp)) {
                     Column(Modifier.fillMaxWidth().padding(18.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text("Want your name here?", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                        Text("Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team.", textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyMedium)
-                        Button({ openExternal(ctx, waMessage("Hi UniHub, I'd like to help the team")) }, Modifier.fillMaxWidth()) { Text("Join the team on WhatsApp") }
+                        Text("Upload materials, help sort them, or report broken links. Email us and join the team.", textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyMedium)
+                        Button({ openExternal(ctx, waMessage("Hi UniHub, I'd like to help the team")) }, Modifier.fillMaxWidth()) { Text("Join the team by email") }
                     }
                 }
             }

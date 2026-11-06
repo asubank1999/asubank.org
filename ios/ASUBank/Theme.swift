@@ -11,6 +11,8 @@ extension UIColor {
 extension Color {
     static var abAccent: Color { AppTheme.accent.color }
     static var abAccentSoft: Color { AppTheme.accent.soft }
+    /// For filled buttons and bubbles with white text. The dark themes' accents are pale, and white on those can't be read.
+    static var abFill: Color { Color(UIColor(hex: AppTheme.accent.light)) }
     static let abGold = Color(UIColor(hex: 0xFFC627))
     static var abBackground: Color { AppTheme.tint.map { Color($0) } ?? Color(UIColor.systemGroupedBackground) }
     static var abSurface: Color {
@@ -19,6 +21,8 @@ extension Color {
         case 5: return Color(UIColor(hex: 0x16291E))
         case 6: return Color(UIColor(hex: 0x281A2F))
         case 7: return Color(UIColor(hex: 0xFFFBF2))
+        case 8: return Color(UIColor(hex: 0xF6FAFF))
+        case 9: return Color(UIColor(hex: 0xFFF8FA))
         default: return Color(UIColor.secondarySystemGroupedBackground)
         }
     }
@@ -76,7 +80,7 @@ struct Chip: View {
                 .font(.subheadline.weight(.medium))
                 .padding(.horizontal, 14).padding(.vertical, 7)
                 .foregroundStyle(on ? Color.white : Color.primary)
-                .background(on ? AnyShapeStyle(Color.abAccent) : AnyShapeStyle(Color.abSurface), in: Capsule())
+                .background(on ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.abSurface), in: Capsule())
         }
         .buttonStyle(.plain)
     }
@@ -102,9 +106,9 @@ struct ChipBar<T: Hashable>: View {
 }
 
 enum Haptics {
-    static func tap() { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
-    static func success() { UINotificationFeedbackGenerator().notificationOccurred(.success) }
-    static func error() { UINotificationFeedbackGenerator().notificationOccurred(.error) }
+    static func tap() { if HomePrefs.haptics { UIImpactFeedbackGenerator(style: .light).impactOccurred() } }
+    static func success() { if HomePrefs.haptics { UINotificationFeedbackGenerator().notificationOccurred(.success) } }
+    static func error() { if HomePrefs.haptics { UINotificationFeedbackGenerator().notificationOccurred(.error) } }
 }
 
 /// App theme: appearance (system, light, dark, pitch black) and the accent color, from More > Theme
@@ -150,6 +154,14 @@ enum AppTheme {
         case 1, 7, 8, 9: return .light
         case 2...6: return .dark
         default: return nil
+        }
+    }
+
+    /// Windows follow the theme too, so sheets, alerts, menus and the keyboard match it from the first frame
+    static func applyWindow() {
+        let style: UIUserInterfaceStyle = scheme == .light ? .light : scheme == .dark ? .dark : .unspecified
+        for scene in UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }) {
+            for w in scene.windows { w.overrideUserInterfaceStyle = style }
         }
     }
 

@@ -6,7 +6,7 @@ import SwiftUI
 private let adminWhatsApp = "mailto:necro144@yahoo.com"
 
 private func waMessage(_ text: String) -> URL {
-    URL(string: adminWhatsApp + "?text=" + (text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))!
+    URL(string: adminWhatsApp + "?body=" + (text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))!
 }
 
 /// A big rounded header card used by the guide screens
@@ -26,7 +26,7 @@ private struct GuideHero: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
-        .background(Color.abAccent.abGradient, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .background(Color.abFill.abGradient, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
     }
 }
@@ -38,7 +38,7 @@ private struct StepRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Text("\(n)").font(.subheadline.weight(.bold)).foregroundStyle(.white)
-                .frame(width: 28, height: 28).background(Color.abAccent, in: Circle())
+                .frame(width: 28, height: 28).background(Color.abFill, in: Circle())
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.body.weight(.semibold))
                 Text(text).font(.subheadline).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -483,12 +483,12 @@ struct ThanksScreen: View {
 
                 VStack(spacing: 10) {
                     Text("Want your name here?").font(.headline)
-                    Text("Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team.")
+                    Text("Upload materials, help sort them, or report broken links. Email us and join the team.")
                         .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
                     Button { openURL(waMessage("Hi UniHub, I'd like to help the team")) } label: {
-                        Label("Join the team on WhatsApp", systemImage: "hand.raised.fill").frame(maxWidth: .infinity).padding(.vertical, 4)
+                        Label("Join the team by email", systemImage: "hand.raised.fill").frame(maxWidth: .infinity).padding(.vertical, 4)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abAccent)
+                    .buttonStyle(.borderedProminent).tint(.abFill)
                 }
                 .padding(18)
                 .background(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))

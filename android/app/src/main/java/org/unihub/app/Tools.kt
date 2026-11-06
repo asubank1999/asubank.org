@@ -952,9 +952,7 @@ fun NextLectureCard() {
 object TabPrefs {
     private const val KEY = "tabs"
     private const val DEFAULT = "feed,chat,notifications"
-    /** Admins have one place less; Home has a search box and a bell */
-    private val DEFAULT_ADMIN = listOf(Routes.FEED, Routes.CHAT)
-    fun shown(list: List<String>, admin: Boolean) = if (admin && list == DEFAULT.split(",")) DEFAULT_ADMIN else list.take(if (admin) 2 else 3)
+    fun shown(list: List<String>, admin: Boolean) = list.take(3)
     /** route, name */
     val options = listOf(
         Routes.FEED to "Feed", Routes.SEARCH to "Search", Routes.CHAT to "Chat", Routes.NOTIFICATIONS to "Notifications", Routes.FRIENDS to "Friends",
@@ -974,7 +972,7 @@ object TabPrefs {
 fun TabBarScreen() {
     val chosen by TabPrefs.chosen.collectAsState()
     val user by Account.user.collectAsState()
-    val limit = if (user?.isAdmin == true) 2 else 3
+    val limit = 3
     val ids = TabPrefs.shown(chosen, user?.isAdmin == true)
     Screen("Customize tab bar") { pad ->
         LazyColumn(Modifier.padding(pad).fillMaxSize()) {
@@ -990,7 +988,6 @@ fun TabBarScreen() {
                             IconButton(enabled = ids.size > 1, onClick = { TabPrefs.set(ids - id) }) { Icon(Icons.Filled.RemoveCircle, tr("Remove")) }
                         }
                     }
-                    if (user?.isAdmin == true) { Divider(); ListRow("Admin", icon = Icons.Filled.Lock) }
                     Divider()
                     ListRow("More", icon = Icons.Filled.Lock)
                 }

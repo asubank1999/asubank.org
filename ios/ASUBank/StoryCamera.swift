@@ -242,7 +242,7 @@ struct StoryCameraScreen: View {
                     Button("Open Settings") {
                         if let u = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(u) }
                     }
-                    .buttonStyle(.borderedProminent).tint(.abAccent)
+                    .buttonStyle(.borderedProminent).tint(.abFill)
                 }
             } else {
                 CameraPreview(session: model.session).ignoresSafeArea()

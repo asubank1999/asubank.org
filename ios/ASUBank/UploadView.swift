@@ -297,6 +297,10 @@ struct UploadView: View {
                     .listRowBackground(Color.clear)
                 }
 
+                Section {
+                    NavigationLink { ShareVideoScreen() } label: { Label("Share a YouTube video", systemImage: "play.rectangle.fill") }
+                }
+
                 if !q.files.isEmpty || q.adding > 0 {
                     Section {
                         ForEach(q.files) { f in fileRow(f) }
@@ -365,7 +369,7 @@ struct UploadView: View {
                         .padding(.vertical, 8)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.abAccent)
+                    .tint(.abFill)
                     .disabled(!agreed || q.readyCount == 0 || q.busy)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
@@ -435,7 +439,7 @@ struct UploadView: View {
         .foregroundStyle(.white)
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.abAccent.abGradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(Color.abFill.abGradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
     private func sourceButton(_ title: String, _ symbol: String, action: @escaping () -> Void) -> some View {

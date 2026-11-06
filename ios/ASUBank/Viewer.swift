@@ -362,7 +362,7 @@ private struct FileCard: View {
                 ShareButton(item: file) {
                     Label("Save to Files", systemImage: "square.and.arrow.down").frame(maxWidth: 260).padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abAccent)
+                .buttonStyle(.borderedProminent).tint(.abFill)
             }
             if let u = AB.absolute(material.u) {
                 Button { openURL(u) } label: { Label("Open in Drive", systemImage: "arrow.up.right.square").frame(maxWidth: 260).padding(.vertical, 6) }
@@ -385,7 +385,7 @@ private struct BrokenCard: View {
             RouteLink(Route.page("/requests/student_request_portal", "Request a material")) {
                 Label("Request this material", systemImage: "tray.and.arrow.down").frame(maxWidth: 260).padding(.vertical, 6)
             }
-            .buttonStyle(.borderedProminent).tint(.abAccent)
+            .buttonStyle(.borderedProminent).tint(.abFill)
         }
         .padding(30).frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -440,7 +440,7 @@ struct DriveFolderList: View {
                     Image(systemName: "folder.badge.questionmark").font(.system(size: 40)).foregroundStyle(.secondary)
                     Text("Couldn't open this folder").font(.headline)
                     Text("Check your connection, or the folder may be private.").font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
-                    Button("Try again") { Task { await load() } }.buttonStyle(.borderedProminent).tint(.abAccent)
+                    Button("Try again") { Task { await load() } }.buttonStyle(.borderedProminent).tint(.abFill)
                 }
                 .frame(maxWidth: .infinity).padding(20).listRowBackground(Color.clear)
             default:

@@ -98,9 +98,15 @@ object Presence {
     val count = kotlinx.coroutines.flow.MutableStateFlow(0)
     suspend fun load() {
         runCatching {
-            val r = Account.call("online")
-            users.value = r["users"].decodeAs<List<OnlineUser>>().orEmpty()
-            count.value = r.str("onlineCount")?.toIntOrNull() ?: users.value.count { it.online }
+            if (Account.signedIn) {
+                val r = Account.call("online")
+                users.value = r["users"].decodeAs<List<OnlineUser>>().orEmpty()
+                count.value = r.str("onlineCount")?.toDoubleOrNull()?.toInt() ?: users.value.count { it.online }
+            } else {
+                val r = AccountsApi.call("onlineCount")
+                users.value = emptyList()
+                count.value = r.str("onlineCount")?.toDoubleOrNull()?.toInt() ?: 0
+            }
         }
     }
 }
@@ -143,23 +149,7 @@ fun ChatTab() {
                 PillTabs(listOf("rooms" to tr("Rooms"), "messages" to (tr("Messages") + if (dmUnread > 0) " ($dmUnread)" else "")), section) { section = it }
             }
             if (section == "messages") item { DmConversations() }
-            if (section != "messages" && online.isNotEmpty()) item {
-                Group {
-                    Row(
-                        Modifier.fillMaxWidth().clickable { nav.navigate("online") }.padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Row(horizontalArrangement = Arrangement.spacedBy((-8).dp)) {
-                            online.filter { it.online }.take(6).forEach { o -> Avatar(o.displayName, o.color ?: "#8C1D40", 32.dp, photo = o.avatar, online = o.online) }
-                        }
-                        Column(Modifier.padding(start = 14.dp).weight(1f)) {
-                            Text(tr("%d online now").format(onlineCount), fontWeight = FontWeight.SemiBold)
-                            Text(trf("%d students", online.size), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                        Text("›", fontSize = 22.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                }
-            }
+            if (section != "messages") item { OnlineBox(Modifier.padding(horizontal = 16.dp, vertical = 6.dp)) }
             if (section != "messages") item {
                 Group(footer = "Be kind and helpful. Don't share exam answers during an exam, private info or anything illegal. Admins can remove messages and ban accounts.") {
                     rooms.forEachIndexed { i, r ->

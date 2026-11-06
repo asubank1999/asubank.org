@@ -72,6 +72,9 @@ struct MaterialRow: View {
                 ShareButton(item: url, subject: Text(m.t)) { Label("Share", systemImage: "square.and.arrow.up") }
                 Button { UIPasteboard.general.url = url } label: { Label("Copy link", systemImage: "link") }
             }
+            if saved.recent.contains(where: { $0.u == m.u }) {
+                Button(role: .destructive) { saved.removeRecent(m.u); Haptics.tap() } label: { Label("Remove from Continue", systemImage: "minus.circle") }
+            }
             if k != .page {
                 Button(role: .destructive) {
                     Task { @MainActor in
@@ -182,7 +185,7 @@ struct WebView: View {
                 VStack(spacing: 12) {
                     Image(systemName: "wifi.exclamationmark").font(.largeTitle).foregroundStyle(.secondary)
                     Text(err).multilineTextAlignment(.center).foregroundStyle(.secondary)
-                    Button("Try again") { model.reload() }.buttonStyle(.borderedProminent).tint(.abAccent)
+                    Button("Try again") { model.reload() }.buttonStyle(.borderedProminent).tint(.abFill)
                 }
                 .padding(32)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

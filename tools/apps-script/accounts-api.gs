@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 11;
+var SCHEMA = 12;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -71,7 +71,7 @@ var SHEETS = {
   Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited', 'fileId', 'fileName', 'fileType', 'fileSize', 'duration', 'expires'],
   Rooms: ['id', 'name', 'emoji', 'about', 'adminOnly', 'locked', 'archived', 'pinned', 'order', 'created'],
   Log: ['time', 'adminId', 'action', 'target', 'detail'],
-  Reports: ['id', 'created', 'reporterId', 'reporterName', 'contact', 'kind', 'targetId', 'targetName', 'targetUser', 'reason', 'details', 'status', 'resolvedBy', 'resolvedAt'],
+  Reports: ['id', 'created', 'reporterId', 'reporterName', 'contact', 'kind', 'targetId', 'targetName', 'targetUser', 'reason', 'details', 'status', 'resolvedBy', 'resolvedAt', 'reply', 'evidence', 'anonymous', 'place'],
   GroupRequests: ['id', 'created', 'userId', 'username', 'title', 'category', 'url', 'notes', 'status', 'resolvedBy', 'resolvedAt'],
   Friends: ['id', 'from', 'to', 'status', 'created', 'updated'],
   Pokes: ['id', 'from', 'to', 'kind', 'place', 'created', 'read'],
@@ -81,6 +81,7 @@ var SHEETS = {
   DMs: ['id', 'pair', 'from', 'to', 'text', 'created', 'deleted', 'fileId', 'fileName', 'fileType', 'fileSize', 'read', 'duration', 'expires'],
   Suggestions: ['id', 'created', 'userId', 'username', 'note', 'contact', 'status', 'resolvedBy', 'resolvedAt'],
   DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed'],
+  TermsLog: ['id', 'time', 'userId', 'username', 'version', 'source', 'appVersion', 'device', 'acceptedAt'],
   VideoLinks: ['id', 'userId', 'url', 'title', 'subject', 'page', 'category', 'created'],
   Swaps: ['id', 'userId', 'have', 'want', 'section', 'note', 'fullName', 'studentId', 'major', 'phone', 'email', 'status', 'created']
 };
@@ -211,7 +212,11 @@ function truthy(v) { return v === true || v === 'TRUE' || v === 'true'; }
 
 // MARK: - moderation
 
-var REPORT_REASONS = ['spam', 'harassment', 'hate', 'sexual', 'violence', 'privacy', 'copyright', 'wrong', 'other'];
+var REPORT_REASONS = ['spam', 'harassment', 'hate', 'sexual', 'violence', 'privacy', 'copyright', 'wrong', 'other',
+                      'safety', 'impersonation', 'scam', 'cheating', 'bug', 'account'];
+var URGENT_REASONS = ['safety', 'violence', 'sexual', 'privacy'];
+/** Bump when the Terms of Service change: the apps ask everyone to accept again, and the log shows which version they accepted */
+var TERMS_VERSION = '2026-11-06';
 
 /** Whole words only, so "class" or "عكس" never match. Add words here and publish a new version. */
 var BANNED_WORDS = ['fuck', 'fucking', 'fucker', 'motherfucker', 'bitch', 'cunt', 'asshole', 'whore', 'slut', 'nigger', 'nigga', 'faggot',
@@ -844,6 +849,26 @@ function swapPublic(r, me) {
            created: r.created, mine: !!me && r.userId === me.id };
 }
 
+/** Screenshots sent with a report stay private: the folder and its files are never shared */
+function reportsFolder() {
+  var p = PropertiesService.getScriptProperties();
+  var id = p.getProperty('REPORTS_FOLDER');
+  if (id) { try { return DriveApp.getFolderById(id); } catch (e) {} }
+  var f = DriveApp.createFolder('UniHub Reports (private)');
+  p.setProperty('REPORTS_FOLDER', f.getId());
+  return f;
+}
+
+/** One line in the proof log: who accepted which version of the terms, when, and from where */
+function logTerms(user, b) {
+  var version = String(b.termsVersion || b.version || TERMS_VERSION).slice(0, 20);
+  var source = String(b.source || b.platform || '').slice(0, 20);
+  var row = { id: newId(), time: new Date().toISOString(), userId: user ? user.id : '', username: user ? user.username : '', version: version, source: source,
+              appVersion: String(b.appVersion || '').slice(0, 20), device: String(b.device || '').slice(0, 60), acceptedAt: String(b.acceptedAt || '').slice(0, 40) };
+  append('TermsLog', row);
+  return row;
+}
+
 /** One clean YouTube address from whatever was pasted, or '' if it isn't a YouTube video or playlist */
 function youtubeUrl(raw) {
   var u = String(raw || '').trim();
@@ -860,6 +885,56 @@ function videoLinkOut(r, me) {
 }
 
 var ACTIONS = {
+  /** Records that this person or device accepted the terms. The server's clock is the proof; acceptedAt is what the device said. */
+  termsAccept: function (b) {
+    var me = null;
+    try { me = b.token ? auth(b) : null; } catch (e) {}
+    if (!me && !b.device) fail('Missing device.');
+    if (tooMany('terms:' + (me ? me.id : b.device), 12)) fail('Too many requests. Try again later.');
+    var version = String(b.version || TERMS_VERSION).slice(0, 20);
+    return withLock(function () {
+      var old = rows('TermsLog').filter(function (r) { return String(r.version) === version && (me ? r.userId === me.id : !r.userId && r.device === String(b.device).slice(0, 60)); })[0];
+      var row = old || logTerms(me, b);
+      return { ok: true, at: row.time, version: version, current: TERMS_VERSION };
+    });
+  },
+
+  /** What this account accepted, for its own records */
+  termsStatus: function (b) {
+    var s = auth(b);
+    var mine = rows('TermsLog').filter(function (r) { return r.userId === s.id; }).map(function (r) { return { at: r.time, version: String(r.version), source: r.source, appVersion: String(r.appVersion) }; });
+    mine.sort(function (x, y) { return String(y.at).localeCompare(String(x.at)); });
+    return { ok: true, current: TERMS_VERSION, accepted: mine };
+  },
+
+  /** Admins: the proof log for one account, by username, email or university ID */
+  adminTerms: function (b) {
+    var a = auth(b, { admin: true });
+    var q = norm(b.query);
+    if (!q) fail('Type a username, email or university ID.');
+    var u = rows('Users').filter(function (x) { return norm(x.username) === q || norm(x.email) === q || norm(plainCell(x.uniId)) === q; })[0];
+    if (!u) fail('User not found.');
+    log(a, 'terms lookup', u.username, '');
+    var list = rows('TermsLog').filter(function (r) { return r.userId === u.id; }).map(function (r) { return { at: r.time, version: String(r.version), source: r.source, appVersion: String(r.appVersion), device: r.device }; });
+    return { ok: true, username: u.username, created: u.created, current: TERMS_VERSION, accepted: list };
+  },
+
+  /** How many students are online. Public, and only a number: the list itself needs an account. */
+  onlineCount: function () {
+    var p = presence(), now = Date.now();
+    return { ok: true, onlineCount: Object.keys(p).filter(function (k) { return now - new Date(p[k]) < ONLINE_MS; }).length };
+  },
+
+  /** The reports this account sent, with what happened to them */
+  myReports: function (b) {
+    var s = auth(b);
+    var hidden = hashPassword(s.id, 'report');
+    var list = rows('Reports').filter(function (r) { return r.reporterId === s.id || r.reporterId === hidden; }).slice(-50).reverse().map(function (r) {
+      return { ref: String(r.id).slice(0, 8).toUpperCase(), created: r.created, reason: r.reason, kind: r.kind, targetName: String(r.targetName), status: r.status, reply: String(r.reply || ''), resolvedAt: r.resolvedAt || '' };
+    });
+    return { ok: true, reports: list };
+  },
+
   /** YouTube links students shared, newest first. Public, and carries nothing about who shared them */
   linksList: function (b) {
     var me = null;
@@ -1013,6 +1088,7 @@ var ACTIONS = {
                 created: new Date().toISOString(), lastSeen: new Date().toISOString(), color: COLORS[all.length % COLORS.length], mustReset: false,
                 avatar: '', phone: '', showPhone: false, bio: '', badges: startBadges.join(',') };
       append('Users', u);
+      if (b.termsVersion) logTerms(u, b);
       u.uniId = uniId;
       CacheService.getScriptCache().remove('people');
       return { ok: true, token: newSession(u, b.platform), user: publicUser(u, true), earlySupporter: early };
@@ -1281,7 +1357,7 @@ var ACTIONS = {
   report: function (b) {
     var me = b.token ? auth(b) : null;
     var kind = String(b.kind || '');
-    if (['message', 'user', 'file', 'post', 'comment', 'story', 'dm', 'other'].indexOf(kind) < 0) fail('Bad report.');
+    if (['message', 'user', 'file', 'post', 'comment', 'story', 'dm', 'other', 'outside', 'app'].indexOf(kind) < 0) fail('Bad report.');
     var reason = String(b.reason || '');
     if (REPORT_REASONS.indexOf(reason) < 0) fail('Choose what is wrong first.');
     if (tooMany(me ? 'report:' + me.id : 'report:guest', me ? 15 : 40)) fail('Too many reports. Try again later.');
@@ -1319,18 +1395,30 @@ var ACTIONS = {
       targetUser = cu ? cu.username : '';
     }
     return withLock(function () {
-      if (me && rows('Reports').some(function (r) { return r.reporterId === me.id && r.kind === kind && r.targetId === targetId && r.status === 'open' && kind !== 'other'; })) return { ok: true };
-      var rep = { id: newId(), created: new Date().toISOString(), reporterId: me ? me.id : '', reporterName: me ? me.username : 'Guest',
+      if (me && rows('Reports').some(function (r) { return r.reporterId === me.id && r.kind === kind && r.targetId === targetId && r.status === 'open' && ['other', 'outside', 'app'].indexOf(kind) < 0; })) return { ok: true };
+      // anonymous: a one-way code instead of the name, so "My reports" still works but nobody can read who sent it
+      var anon = !!me && truthy(b.anonymous);
+      var evidence = '';
+      if (b.photo) {
+        var photo = String(b.photo).replace(/^data:[^,]+,/, '');
+        if (photo.length > 100 && photo.length < 4000000) {
+          evidence = reportsFolder().createFile(Utilities.newBlob(Utilities.base64Decode(photo), 'image/jpeg', 'report-' + Date.now() + '.jpg')).getUrl();
+        }
+      }
+      var rep = { id: newId(), created: new Date().toISOString(), reporterId: me ? (anon ? hashPassword(me.id, 'report') : me.id) : '', reporterName: anon ? 'Anonymous' : me ? me.username : 'Guest',
                   contact: String(b.contact || '').trim().slice(0, 120), kind: kind, targetId: targetId, targetName: targetName, targetUser: targetUser,
-                  reason: reason, details: String(b.details || '').trim().slice(0, 1000), status: 'open', resolvedBy: '', resolvedAt: '' };
+                  reason: reason, details: String(b.details || '').trim().slice(0, 4000), status: 'open', resolvedBy: '', resolvedAt: '',
+                  reply: '', evidence: evidence, anonymous: anon, place: String(b.place || '').trim().slice(0, 80) };
       append('Reports', rep);
+      var ref = String(rep.id).slice(0, 8).toUpperCase();
       try {
-        MailApp.sendEmail(OWNER_EMAIL, 'UniHub report: ' + reason + ' (' + kind + ')',
+        MailApp.sendEmail(OWNER_EMAIL, (URGENT_REASONS.indexOf(reason) >= 0 ? 'URGENT ' : '') + 'UniHub report ' + ref + ': ' + reason + ' (' + kind + ')',
           'Reported by: ' + rep.reporterName + (rep.contact ? ' (' + rep.contact + ')' : '') + '\n' +
           'What: ' + kind + (targetUser ? ' by @' + targetUser : '') + '\n' + targetName + '\n' + (kind === 'file' ? targetId + '\n' : '') +
+          (rep.place ? 'Where: ' + rep.place + '\n' : '') + (evidence ? 'Screenshot: ' + evidence + '\n' : '') +
           '\nDetails: ' + (rep.details || 'none') + '\n\nReview it in the app: Admin > Reports, or https://asubank.org/admin/');
       } catch (err) { /* the report is saved even when the daily email limit is used up */ }
-      return { ok: true };
+      return { ok: true, ref: ref };
     });
   },
 
@@ -1376,7 +1464,9 @@ var ACTIONS = {
     return withLock(function () {
       var r = rows('Reports').filter(function (x) { return x.id === b.id; })[0];
       if (!r) fail('Report not found.');
-      update('Reports', r._row, { status: status, resolvedBy: a.username, resolvedAt: new Date().toISOString() });
+      var change = { status: status, resolvedBy: a.username, resolvedAt: new Date().toISOString() };
+      if (b.reply !== undefined) change.reply = asText(String(b.reply).trim().slice(0, 1000));
+      update('Reports', r._row, change);
       log(a, 'report ' + status, r.kind, String(r.targetName).slice(0, 80));
       return { ok: true };
     });

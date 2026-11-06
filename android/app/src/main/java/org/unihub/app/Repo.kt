@@ -228,10 +228,12 @@ object Saved {
     }
     fun remove(u: String) { saved.value = saved.value.filter { it.u != u }; write("saved", saved.value) }
     fun opened(m: Material) {
+        if (!HomePrefs.remember.value) return
         recent.value = (listOf(SavedItem(m.u, m.t, m.s ?: "", System.currentTimeMillis())) + recent.value.filter { it.u != m.u }).take(30)
         write("recent", recent.value)
     }
     fun clearRecent() { recent.value = emptyList(); write("recent", emptyList()) }
+    fun removeRecent(u: String) { recent.value = recent.value.filter { it.u != u }; write("recent", recent.value) }
     fun searched(q: String) {
         val t = q.trim()
         if (t.length < 2) return

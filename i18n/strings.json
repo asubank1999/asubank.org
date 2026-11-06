@@ -335,14 +335,6 @@
   "ru": "06 = Номер зала (Зал 06)",
   "tr": "06 = Salon Numarası (Salon 06)"
  },
- "necro144@yahoo.com · fastest reply": {
-  "ar": "necro144@yahoo.com · أسرع رد",
-  "de": "necro144@yahoo.com · schnellste Antwort",
-  "es": "necro144@yahoo.com · respuesta más rápida",
-  "fr": "necro144@yahoo.com · réponse la plus rapide",
-  "ru": "necro144@yahoo.com · самый быстрый ответ",
-  "tr": "necro144@yahoo.com · en hızlı cevap"
- },
  "1 - College of IT": {
   "ar": "1 - كلية تكنولوجيا المعلومات",
   "de": "1 - Hochschule für IT",
@@ -645,6 +637,10 @@
   "ru": "@%s забанен",
   "tr": "@%s yasaklandı"
  },
+ "A bug in the app or website": {
+  "ar": "خلل في التطبيق أو الموقع",
+  "es": "Un error en la app o el sitio web"
+ },
  "A cleaner loading effect": {
   "ar": "تأثير تحميل أنظف",
   "es": "Un efecto de carga más limpio"
@@ -682,6 +678,10 @@
   "ar": "شاشة قصص جديدة بخطوط وتأثيرات نصية وألوان أكثر، وخلفيات متدرجة ونص متحرك",
   "es": "Una nueva pantalla de historias con más fuentes, efectos de texto, colores, fondos degradados y texto en movimiento"
  },
+ "A new top bar: your photo on the top left opens your profile, and admins find Admin at the top": {
+  "ar": "شريط علوي جديد: صورتك في أعلى اليسار تفتح ملفك الشخصي، ويجد المشرفون زر الإدارة في الأعلى",
+  "es": "Nueva barra superior: tu foto arriba a la izquierda abre tu perfil, y los administradores encuentran Admin arriba"
+ },
  "A plan to study it easily": {
   "ar": "خطة لدراستها بسهولة",
   "de": "Ein Plan, um es leicht zu studieren",
@@ -689,6 +689,10 @@
   "fr": "Un plan pour l'étudier facilement",
   "ru": "План, чтобы изучить это легко",
   "tr": "Kolayca incelemek için bir plan"
+ },
+ "A problem with my account": {
+  "ar": "مشكلة في حسابي",
+  "es": "Un problema con mi cuenta"
  },
  "A ringtone from my phone…": {
   "ar": "نغمة من هاتفي…",
@@ -701,6 +705,10 @@
  "A student's phone and email show only to signed-in students who open their swap": {
   "ar": "يظهر هاتف الطالب وبريده فقط للطلاب المسجلين الذين يفتحون طلبه",
   "es": "El teléfono y el correo de un estudiante solo se muestran a quienes tienen sesión iniciada y abren su intercambio"
+ },
+ "A tidier profile: photo, numbers, badges, posts and messages fit on one screen": {
+  "ar": "ملف شخصي أكثر ترتيباً: الصورة والأرقام والشارات والمنشورات والرسائل في شاشة واحدة",
+  "es": "Un perfil más ordenado: foto, cifras, insignias, publicaciones y mensajes en una pantalla"
  },
  "ADMIN": {
   "ar": "مشرف",
@@ -1058,6 +1066,10 @@
   "ru": "Добавить комнату",
   "tr": "Oda ekle"
  },
+ "Add a screenshot": {
+  "ar": "إضافة لقطة شاشة",
+  "es": "Añadir una captura"
+ },
  "Add a tab": {
   "ar": "أضف تبويباً",
   "de": "Fügen Sie eine Registerkarte hinzu",
@@ -1195,6 +1207,10 @@
   "ru": "Адрес",
   "tr": "Adres"
  },
+ "Adjust cover photo": {
+  "ar": "ضبط صورة الغلاف",
+  "es": "Ajustar la foto de portada"
+ },
  "Admin": {
   "ar": "الإدارة",
   "de": "Admin",
@@ -1242,6 +1258,10 @@
   "fr": "Administrateurs",
   "ru": "Админы",
   "tr": "Yöneticiler"
+ },
+ "Admins can remove content and close accounts. Copyright owners can ask us to remove a file.": {
+  "ar": "يمكن للمشرفين إزالة المحتوى وإغلاق الحسابات، ويمكن لأصحاب الحقوق طلب إزالة أي ملف.",
+  "es": "Los administradores pueden retirar contenido y cerrar cuentas. Los titulares de derechos pueden pedirnos retirar un archivo."
  },
  "Admins may warn, mute, remove, or block any member who violates these Terms, at their sole discretion, without prior notice. Content shared in the group may be removed or reported if it violates these Terms or applicable law.": {
   "ar": "يجوز للمشرفين تحذير أي عضو يخالف هذه الشروط أو كتمه أو إزالته أو حظره، وفق تقديرهم ودون إشعار مسبق. وقد يُحذف المحتوى أو يُبلَّغ عنه إذا خالف هذه الشروط أو القانون.",
@@ -1339,6 +1359,10 @@
   "fr": "Après avoir soumis votre profil, vous devrez attendre qu'un autre étudiant ayant des intérêts similaires soumette également son profil. Ce processus peut prendre un certain temps en fonction du nombre d'étudiants qui utilisent le service.",
   "ru": "После отправки профиля вам придется подождать, пока другой студент с похожими интересами также не отправит свой профиль. Этот процесс может занять некоторое время в зависимости от того, сколько студентов используют эту услугу.",
   "tr": "Profilinizi gönderdikten sonra, benzer ilgi alanlarına sahip başka bir öğrencinin de profilini göndermesini beklemeniz gerekecektir. Bu süreç, hizmeti kullanan öğrenci sayısına bağlı olarak biraz zaman alabilir."
+ },
+ "After you submit, email us to confirm your payment.": {
+  "ar": "بعد الإرسال، راسلنا بالبريد الإلكتروني لتأكيد الدفع.",
+  "es": "Después de enviar, escríbenos por correo para confirmar tu pago."
  },
  "After you submit, message us on WhatsApp to confirm your payment.": {
   "ar": "بعد الإرسال، راسلنا على واتساب لتأكيد الدفع.",
@@ -2603,6 +2627,10 @@
   "ru": "Финальный расчет",
   "tr": "Matematik finali"
  },
+ "Calendar": {
+  "ar": "التقويم",
+  "es": "Calendario"
+ },
  "Calendar 2025–2026": {
   "ar": "التقويم 2025–2026",
   "de": "Kalender 2025–2026",
@@ -2877,6 +2905,10 @@
   "ru": "Чат со студентами, синхронизированный с asubank.org",
   "tr": "asubank.org ile senkronize edilmiş öğrencilerle sohbet edin"
  },
+ "Cheating or a rule of the university": {
+  "ar": "غش أو مخالفة لأنظمة الجامعة",
+  "es": "Trampa o una norma de la universidad"
+ },
  "Check for updates": {
   "ar": "البحث عن تحديثات",
   "de": "Suchen Sie nach Updates",
@@ -3145,6 +3177,10 @@
   "ru": "Очистить недавние поисковые запросы",
   "tr": "Son aramaları temizle"
  },
+ "Clear the Continue list": {
+  "ar": "مسح قائمة المتابعة",
+  "es": "Borrar la lista de Continuar"
+ },
  "Clear the cache?": {
   "ar": "مسح الذاكرة المؤقتة؟",
   "de": "Den Cache leeren?",
@@ -3248,6 +3284,10 @@
   "fr": "Fermez et rouvrez UniHub pour terminer le changement de langue.",
   "ru": "Закройте и снова откройте UniHub, чтобы завершить переключение языка.",
   "tr": "Dili değiştirmeyi tamamlamak için UniHub'ı kapatıp yeniden açın."
+ },
+ "Closed": {
+  "ar": "مغلق",
+  "es": "Cerrado"
  },
  "Cloudy": {
   "ar": "غائم",
@@ -3554,6 +3594,10 @@
   "ar": "التواصل",
   "es": "Contacto"
  },
+ "Contact details now use email": {
+  "ar": "بيانات التواصل أصبحت عبر البريد الإلكتروني",
+  "es": "Los datos de contacto ahora usan correo"
+ },
  "Contact me by": {
   "ar": "تواصل معي عبر",
   "de": "Kontaktieren Sie mich per",
@@ -3580,6 +3624,10 @@
   "fr": "Continuer",
   "ru": "Продолжать",
   "tr": "Devam etmek"
+ },
+ "Continue lists the files you opened lately. It stays on this phone. Turn off Remember and the app stops keeping this list.": {
+  "ar": "تعرض «المتابعة» الملفات التي فتحتها مؤخراً، وتبقى على هذا الهاتف فقط. أوقف خيار التذكر ولن يحتفظ التطبيق بهذه القائمة.",
+  "es": "Continuar muestra los archivos que abriste hace poco. Se queda en este teléfono. Desactiva Recordar y la app dejará de guardar esta lista."
  },
  "Continuous Distributions": {
   "ar": "التوزيعات المتصلة",
@@ -3648,6 +3696,10 @@
   "fr": "Droit d'auteur",
   "ru": "Авторское право",
   "tr": "Telif hakkı"
+ },
+ "Copyright and removal requests": {
+  "ar": "حقوق النشر وطلبات الإزالة",
+  "es": "Derechos de autor y solicitudes de retirada"
  },
  "Copyright: I own this or represent the owner": {
   "ar": "حقوق نشر: أنا المالك أو أمثله",
@@ -3895,6 +3947,10 @@
  "Custom summaries and test banks made for you (3 JD).": {
   "ar": "ملخصات وبنوك أسئلة مخصصة لك (3 دنانير)."
  },
+ "Customize": {
+  "ar": "تخصيص",
+  "es": "Personalizar"
+ },
  "Customize tab bar": {
   "ar": "تخصيص شريط التبويب",
   "es": "Personalizar la barra de pestañas"
@@ -3991,6 +4047,10 @@
   "ar": "حذف هذه المحاضرة",
   "es": "Eliminar esta clase"
  },
+ "Delete this post?": {
+  "ar": "حذف هذا المنشور؟",
+  "es": "¿Eliminar esta publicación?"
+ },
  "Delete this room?": {
   "ar": "حذف هذه الغرفة؟",
   "es": "¿Eliminar esta sala?"
@@ -4007,7 +4067,8 @@
   "es": "Eliminar archivo"
  },
  "Delete your account": {
-  "ar": "حذف حسابك"
+  "ar": "حذف حسابك",
+  "es": "Eliminar tu cuenta"
  },
  "Delete your account?": {
   "ar": "حذف حسابك؟",
@@ -4186,6 +4247,10 @@
  "Downloading…": {
   "ar": "جارٍ التنزيل…"
  },
+ "Drag to move, pinch to zoom": {
+  "ar": "اسحب للتحريك، وقرّب بإصبعين للتكبير",
+  "es": "Arrastra para mover, pellizca para ampliar"
+ },
  "Drag to reorder. Home and More always stay, and you can add up to %d more.": {
   "ar": "اسحب لتغيير الترتيب. تبقى الرئيسية والمزيد دائماً، ويمكنك إضافة حتى %d.",
   "es": "Arrastra para reordenar. Inicio y Más siempre se quedan, y puedes añadir hasta %d más."
@@ -4304,6 +4369,10 @@
  "Email necro144@yahoo.com from the address on your account and we will delete it for you.": {
   "ar": "راسل necro144@yahoo.com من البريد المسجل في حسابك وسنحذفه لك."
  },
+ "Email us": {
+  "ar": "راسلنا بالبريد",
+  "es": "Escríbenos"
+ },
  "Email, WhatsApp or ASU ID": {
   "ar": "البريد أو واتساب أو الرقم الجامعي",
   "es": "Correo, WhatsApp o ID de ASU"
@@ -4311,6 +4380,10 @@
  "Emerald": {
   "ar": "زمردي",
   "es": "Esmeralda"
+ },
+ "Emergency": {
+  "ar": "الطوارئ",
+  "es": "Emergencia"
  },
  "Empty folder": {
   "ar": "مجلد فارغ",
@@ -4485,6 +4558,10 @@
  "Explore all faculties and the courses offered at ASU": {
   "ar": "تعرّف على جميع الكليات والمواد التي تقدمها ASU"
  },
+ "Extra large": {
+  "ar": "كبير جداً",
+  "es": "Muy grande"
+ },
  "FAQs": {
   "ar": "الأسئلة الشائعة",
   "es": "Preguntas frecuentes"
@@ -4510,6 +4587,10 @@
  "False": {
   "ar": "خطأ"
  },
+ "False reports made to harm someone break the community rules.": {
+  "ar": "البلاغات الكاذبة التي تهدف إلى إيذاء شخص ما مخالفة لقواعد المجتمع.",
+  "es": "Los reportes falsos hechos para perjudicar a alguien incumplen las normas de la comunidad."
+ },
  "Faster: the app starts quicker, and lists and photos scroll more smoothly": {},
  "Feed": {
   "ar": "المنشورات",
@@ -4518,6 +4599,10 @@
  "Feed now has Friends, Strangers and Guest": {
   "ar": "صار في آخر المنشورات: الأصدقاء، الغرباء والضيف",
   "es": "El Feed ahora tiene Amigos, Desconocidos e Invitado"
+ },
+ "Feel safe here": {
+  "ar": "لتشعر بالأمان هنا",
+  "es": "Siéntete seguro aquí"
  },
  "Feels safe": {
   "ar": "أشعر بالأمان",
@@ -4669,6 +4754,10 @@
   "es": "Corregido el rebote de la pantalla de chat y la barra de mensajes al abrir una conversación"
  },
  "Fixed the star and online dot on profile photos": {},
+ "Fixed the themes: Sand, Sky, Blush, Midnight, Forest night and Plum now stay clear after a restart": {
+  "ar": "إصلاح المظاهر: الرمل والسماء والوردي ومنتصف الليل وليل الغابة والبرقوقي تبقى واضحة بعد إعادة التشغيل",
+  "es": "Temas corregidos: Arena, Cielo, Rubor, Medianoche, Noche de bosque y Ciruela se ven claros tras reiniciar"
+ },
  "Fixed: settings under More sometimes wouldn't open or froze": {},
  "Fixes: sharper profile photos, and the online row shows only people who are online": {
   "ar": "إصلاحات: صور شخصية أوضح، وصف المتصلين يعرض المتصلين فقط",
@@ -4866,6 +4955,10 @@
   "ar": "جيد",
   "es": "Bien"
  },
+ "Good for small screens: turn off what you don't use, so more fits on one screen.": {
+  "ar": "مناسب للشاشات الصغيرة: أوقف ما لا تستخدمه ليظهر المزيد في شاشة واحدة.",
+  "es": "Ideal para pantallas pequeñas: desactiva lo que no uses para que quepa más en una pantalla."
+ },
  "Google Drive": {},
  "Google Drive materials": {
   "ar": "مواد Google Drive",
@@ -4961,7 +5054,8 @@
   "ar": "تتبع أرقام القاعات نمطًا محددًا لتسهيل الوصول إليها. مثال:\n1206 تعني:\n1 = رقم الكلية (كلية تكنولوجيا المعلومات)\n2 = رقم الطابق (الطابق الثاني)\n06 = رقم القاعة (القاعة 06)\nاستخدم هذا النمط للوصول إلى قاعتك."
  },
  "Handled": {
-  "ar": "تمت المعالجة"
+  "ar": "تمت المعالجة",
+  "es": "Atendido"
  },
  "Handwriting": {},
  "Harassment or bullying": {
@@ -5004,6 +5098,14 @@
   "ar": "مرحباً، %@",
   "es": "Hola, %@"
  },
+ "Hide Continue": {
+  "ar": "إخفاء المتابعة",
+  "es": "Ocultar Continuar"
+ },
+ "Hide my name from the team": {
+  "ar": "إخفاء اسمي عن الفريق",
+  "es": "Ocultar mi nombre al equipo"
+ },
  "Hide your university number and name on scans.": {
   "ar": "أخفِ رقمك الجامعي واسمك في الصور الممسوحة.",
   "es": "Oculta tu número universitario y nombre en los escaneos."
@@ -5014,6 +5116,10 @@
  },
  "Histogram": {
   "ar": "المدرج التكراري"
+ },
+ "Hold a post or comment to copy, delete or report it": {
+  "ar": "اضغط مطولاً على منشور أو تعليق لنسخه أو حذفه أو الإبلاغ عنه",
+  "es": "Mantén pulsada una publicación o comentario para copiarlo, eliminarlo o reportarlo"
  },
  "Hold anyone's photo to see it bigger": {
   "ar": "اضغط مطولاً على صورة أي شخص لرؤيتها أكبر",
@@ -5114,6 +5220,10 @@
   "ar": "لدي سؤال",
   "es": "Tengo una pregunta"
  },
+ "I have read and accept the Terms of Service / قرأت شروط الاستخدام وأوافق عليها": {
+  "ar": "قرأت شروط الاستخدام وأوافق عليها",
+  "es": "He leído y acepto los Términos de servicio"
+ },
  "I need your notes": {
   "ar": "أحتاج ملخصاتك",
   "es": "Necesito tus apuntes"
@@ -5141,6 +5251,10 @@
  "Ideas for the community (optional)": {
   "ar": "أفكار للمجتمع (اختياري)",
   "es": "Ideas para la comunidad (opcional)"
+ },
+ "If someone is in danger right now, call 911. UniHub can't reach emergency services.": {
+  "ar": "إذا كان أحد في خطر الآن، فاتصل بالرقم 911. لا يستطيع UniHub الوصول إلى خدمات الطوارئ.",
+  "es": "Si alguien está en peligro ahora mismo, llama al 911. UniHub no puede contactar con los servicios de emergencia."
  },
  "If the first name gives nothing, try the other.": {
   "ar": "إذا لم يعطِ الاسم الأول نتيجة، جرّب الآخر.",
@@ -5196,6 +5310,10 @@
  "In %d days": {
   "ar": "بعد %d أيام",
   "es": "En %d días"
+ },
+ "In a WhatsApp group": {
+  "ar": "في مجموعة واتساب",
+  "es": "En un grupo de WhatsApp"
  },
  "In an emergency": {
   "ar": "في حالات الطوارئ",
@@ -5301,6 +5419,10 @@
   "ar": "الجو حار. اشرب الماء وابقَ في الظل.",
   "es": "Hace calor. Bebe agua y busca la sombra."
  },
+ "It's published at once, for every student. Share only videos that are public on YouTube.": {
+  "ar": "يُنشر فوراً لجميع الطلاب. شارك فقط الفيديوهات العامة على يوتيوب.",
+  "es": "Se publica al instante para todos los estudiantes. Comparte solo videos públicos en YouTube."
+ },
  "Its messages disappear from the apps. This can't be undone.": {
   "ar": "ستختفي رسائلها من التطبيقات. لا يمكن التراجع عن ذلك.",
   "es": "Sus mensajes desaparecen de las apps. No se puede deshacer."
@@ -5328,6 +5450,10 @@
  },
  "Join the student community — share your experience and help others make smarter course choices.\nAll feedback is anonymous and free to submit.": {
   "ar": "انضم إلى مجتمع الطلاب: شارك تجربتك وساعد غيرك على اختيار مواده بذكاء.\nجميع التقييمات مجهولة ومجانية."
+ },
+ "Join the team by email": {
+  "ar": "انضم إلى الفريق عبر البريد",
+  "es": "Únete al equipo por correo"
  },
  "Join the team on WhatsApp": {
   "ar": "انضم للفريق على واتساب",
@@ -5389,6 +5515,10 @@
   "es": "Idioma"
  },
  "Language: English, Arabic, Spanish or your phone's language, in More > Language.": {},
+ "Large": {
+  "ar": "كبير",
+  "es": "Grande"
+ },
  "Large files with no size limit.": {
   "ar": "ملفات كبيرة دون حد للحجم."
  },
@@ -5435,6 +5565,10 @@
  "Law": {
   "ar": "الحقوق",
   "es": "Derecho"
+ },
+ "Leave a way to reach you if you want a reply. Without one, we can't answer you.": {
+  "ar": "اترك وسيلة للتواصل إذا أردت رداً. بدونها لا يمكننا الرد عليك.",
+  "es": "Deja una forma de contactarte si quieres respuesta. Sin ella no podemos contestarte."
  },
  "Lecture": {
   "ar": "المحاضرة",
@@ -5559,6 +5693,10 @@
   "ar": "اضغط مطولاً على رسالة لتثبيتها أو حذفها أو حظر مرسلها.",
   "es": "Mantén pulsado un mensaje para fijarlo, borrarlo o bloquear a quien lo envió."
  },
+ "Look and feel": {
+  "ar": "المظهر",
+  "es": "Apariencia"
+ },
  "Looking for something specific? Request it": {
   "ar": "تبحث عن شيء محدد؟ اطلبه",
   "es": "¿Buscas algo concreto? Solicítalo"
@@ -5654,6 +5792,10 @@
  "Materials by college": {
   "ar": "المواد حسب الكلية",
   "es": "Materiales por facultad"
+ },
+ "Materials come from students and may contain mistakes. UniHub is offered as it is. Check your official course sources.": {
+  "ar": "المواد من الطلاب وقد تحتوي على أخطاء. يُقدَّم UniHub كما هو، فراجع المصادر الرسمية لمقرراتك.",
+  "es": "Los materiales vienen de estudiantes y pueden tener errores. UniHub se ofrece tal cual. Revisa las fuentes oficiales de tu curso."
  },
  "Materials · %d": {
   "ar": "المواد · %d",
@@ -5801,6 +5943,10 @@
   "ar": "الحركة",
   "es": "Movimiento"
  },
+ "Move and zoom your cover photo before you save it": {
+  "ar": "حرّك صورة الغلاف وكبّرها قبل حفظها",
+  "es": "Mueve y amplía tu foto de portada antes de guardarla"
+ },
  "Multiple Choice Questions": {
   "ar": "أسئلة اختيار من متعدد"
  },
@@ -5821,6 +5967,10 @@
  "My profile": {
   "ar": "ملفي الشخصي",
   "es": "Mi perfil"
+ },
+ "My reports": {
+  "ar": "بلاغاتي",
+  "es": "Mis reportes"
  },
  "NEW": {
   "ar": "جديد",
@@ -5866,6 +6016,10 @@
  "New %d": {
   "ar": "الجديد %d"
  },
+ "New Customize screen: choose what Home shows, smaller links, text size and the first screen": {
+  "ar": "شاشة تخصيص جديدة: اختر ما يظهر في الرئيسية، وروابط أصغر، وحجم النص، والشاشة الأولى",
+  "es": "Nueva pantalla Personalizar: elige qué muestra Inicio, enlaces más pequeños, tamaño del texto y la primera pantalla"
+ },
  "New Exams & tasks list and a Focus timer": {
   "ar": "قائمة جديدة للامتحانات والمهام ومؤقت للتركيز",
   "es": "Nueva lista de exámenes y tareas y un temporizador de estudio"
@@ -5875,6 +6029,14 @@
   "es": "Nuevo feed: publicaciones con fotos, comentarios y me gusta de todos o solo de tus amigos"
  },
  "New Notifications tab: friend requests, pokes, new uploads, announcements and admin requests in one list": {},
+ "New Report section: report anything inside or outside the app, with a screenshot, a reference number and replies": {
+  "ar": "قسم بلاغات جديد: أبلغ عن أي شيء داخل التطبيق أو خارجه، مع لقطة شاشة ورقم مرجع وردود",
+  "es": "Nueva sección de reportes: reporta lo que sea dentro o fuera de la app, con captura, número de referencia y respuestas"
+ },
+ "New Safety & legal screen, updated Terms of Service, and a dated record of when you accepted them": {
+  "ar": "شاشة جديدة للأمان والشؤون القانونية، وشروط خدمة محدثة، وسجل مؤرخ بموافقتك عليها",
+  "es": "Nueva pantalla de Seguridad y legal, Términos de servicio actualizados y un registro con fecha de cuando los aceptaste"
+ },
  "New Student Guide": {
   "ar": "دليل الطالب الجديد"
  },
@@ -6050,6 +6212,10 @@
   "ar": "لم يتم العثور على مجموعات",
   "es": "No se encontraron grupos"
  },
+ "No guarantees": {
+  "ar": "دون ضمانات",
+  "es": "Sin garantías"
+ },
  "No illegal or sensitive materials": {
   "ar": "لا مواد غير قانونية أو حساسة"
  },
@@ -6104,6 +6270,14 @@
  "No ratings yet": {
   "ar": "لا تقييمات بعد"
  },
+ "No record for this account yet.": {
+  "ar": "لا يوجد سجل لهذا الحساب بعد.",
+  "es": "Aún no hay registro para esta cuenta."
+ },
+ "No reports yet": {
+  "ar": "لا توجد بلاغات بعد",
+  "es": "Aún no hay reportes"
+ },
  "No results": {
   "ar": "لا نتائج"
  },
@@ -6146,6 +6320,10 @@
  },
  "Nobody, not even the admins, can see who rated.": {
   "ar": "لا أحد، حتى المشرفون، يمكنه معرفة من قيّم."
+ },
+ "Normal": {
+  "ar": "عادي",
+  "es": "Normal"
  },
  "Normal Distribution": {
   "ar": "التوزيع الطبيعي"
@@ -6327,6 +6505,10 @@
  "On asubank.org the search box is at the top of every page. Type the subject, press Enter, and the results load from the subject pages and the Drive together. Add the site to your home screen from Safari's Share menu to open it like an app.": {
   "ar": "في asubank.org يوجد مربع البحث أعلى كل صفحة. اكتب اسم المادة واضغط Enter، فتظهر النتائج من صفحات المواد وDrive معًا. أضف الموقع إلى شاشتك الرئيسية من قائمة المشاركة في Safari لفتحه كتطبيق."
  },
+ "On campus": {
+  "ar": "داخل الجامعة",
+  "es": "En el campus"
+ },
  "On subject pages · %d": {
   "ar": "في صفحات المواد · %d",
   "es": "En páginas de materias · %d"
@@ -6385,6 +6567,10 @@
  "Only the UniHub team posts here.": {
   "ar": "ينشر فريق UniHub فقط هنا.",
   "es": "Aquí solo publica el equipo de UniHub."
+ },
+ "Only the UniHub team reads it. Urgent reports are looked at first.": {
+  "ar": "لا يقرؤه إلا فريق UniHub، وتُراجع البلاغات العاجلة أولاً.",
+  "es": "Solo lo lee el equipo de UniHub. Los reportes urgentes se revisan primero."
  },
  "Open": {
   "ar": "مفتوحة",
@@ -6449,11 +6635,19 @@
  "Open the Chat tab or More and go to your account.": {
   "ar": "افتح تبويب الدردشة أو المزيد وانتقل إلى حسابك."
  },
+ "Open the app on": {
+  "ar": "فتح التطبيق على",
+  "es": "Abrir la app en"
+ },
  "Open the file (%s)": {
   "ar": "افتح الملف (%s)"
  },
  "Open the request form": {
   "ar": "افتح نموذج الطلب"
+ },
+ "Open the screenshot": {
+  "ar": "فتح لقطة الشاشة",
+  "es": "Abrir la captura"
  },
  "Open the subject page": {
   "ar": "افتح صفحة المادة",
@@ -6917,6 +7111,10 @@
  "Press and hold a message, open a profile, or use the menu on a file to report it. You can also block anyone from their profile or a message. Reports go straight to the admins.": {
   "ar": "اضغط مطولًا على رسالة أو افتح ملفًا شخصيًا أو استخدم قائمة الملف للإبلاغ عنه. ويمكنك أيضًا حظر أي شخص من ملفه الشخصي أو رسالته. تصل البلاغات مباشرة إلى المشرفين."
  },
+ "Pretending to be someone else": {
+  "ar": "انتحال شخصية شخص آخر",
+  "es": "Hacerse pasar por otra persona"
+ },
  "Preview in Google Drive": {
   "ar": "معاينة في Google Drive",
   "es": "Vista previa en Google Drive"
@@ -7127,6 +7325,18 @@
   "ar": "سجّل رسالة صوتية",
   "es": "Grabar un mensaje de voz"
  },
+ "Reference": {
+  "ar": "رقم المرجع",
+  "es": "Referencia"
+ },
+ "Reference: %@": {
+  "ar": "رقم المرجع: %@",
+  "es": "Referencia: %@"
+ },
+ "Reference: %s": {
+  "ar": "رقم المرجع: %s",
+  "es": "Referencia: %s"
+ },
  "Refresh": {
   "ar": "تحديث",
   "es": "Actualizar"
@@ -7146,6 +7356,10 @@
   "ar": "مرفوض",
   "es": "Rechazado"
  },
+ "Remember what I open": {
+  "ar": "تذكّر ما أفتحه",
+  "es": "Recordar lo que abro"
+ },
  "Remove": {
   "ar": "إزالة",
   "es": "Quitar"
@@ -7160,6 +7374,10 @@
  "Remove friend": {
   "ar": "إزالة الصديق",
   "es": "Eliminar amigo"
+ },
+ "Remove from Continue": {
+  "ar": "إزالة من المتابعة",
+  "es": "Quitar de Continuar"
  },
  "Remove from Saved": {
   "ar": "إزالة من المحفوظات",
@@ -7219,15 +7437,24 @@
   "es": "Reportar"
  },
  "Report a problem": {
-  "ar": "الإبلاغ عن مشكلة"
+  "ar": "الإبلاغ عن مشكلة",
+  "es": "Reportar un problema"
  },
  "Report and block": {
   "ar": "الإبلاغ والحظر"
  },
  "Report any file: hold it in a list, or use the menu when it's open": {},
+ "Report anything, inside or outside the app. You can report without an account, and only the UniHub team reads your report.": {
+  "ar": "أبلغ عن أي شيء داخل التطبيق أو خارجه. يمكنك الإبلاغ دون حساب، ولا يقرأ بلاغك إلا فريق UniHub.",
+  "es": "Reporta cualquier cosa, dentro o fuera de la app. Puedes hacerlo sin cuenta, y solo el equipo de UniHub lee tu reporte."
+ },
  "Report anything: press and hold a chat message, open a profile, or use the menu on any file to report it. Anyone can report a problem from More, even without an account.": {},
  "Report message": {
   "ar": "الإبلاغ عن الرسالة"
+ },
+ "Report something": {
+  "ar": "إرسال بلاغ",
+  "es": "Reportar algo"
  },
  "Report this file": {
   "ar": "الإبلاغ عن هذا الملف"
@@ -7241,6 +7468,10 @@
  "Reports": {
   "ar": "البلاغات",
   "es": "Reportes"
+ },
+ "Reports you send show here.": {
+  "ar": "تظهر هنا البلاغات التي ترسلها.",
+  "es": "Los reportes que envíes aparecen aquí."
  },
  "Request a file": {
   "ar": "اطلب ملفًا"
@@ -7347,11 +7578,19 @@
   "ar": "أزرق ملكي",
   "es": "Azul real"
  },
+ "Rules and your rights": {
+  "ar": "القواعد وحقوقك",
+  "es": "Normas y tus derechos"
+ },
  "Russian": {},
  "Safe and reliable payment process": {
   "ar": "عملية دفع آمنة وموثوقة"
  },
  "Safer chat: abusive words are filtered, and deleting your account removes your name from your old messages.": {},
+ "Safety & legal": {
+  "ar": "الأمان والشؤون القانونية",
+  "es": "Seguridad y legal"
+ },
  "Sand": {
   "ar": "رملي",
   "es": "Arena"
@@ -7392,6 +7631,14 @@
   "ar": "المواد المحفوظة",
   "es": "Materiales guardados"
  },
+ "Saved on your account: %@": {
+  "ar": "محفوظ في حسابك: %@",
+  "es": "Guardado en tu cuenta: %@"
+ },
+ "Saved on your account: %s": {
+  "ar": "محفوظ في حسابك: %s",
+  "es": "Guardado en tu cuenta: %s"
+ },
  "Saved · %d": {
   "ar": "المحفوظات · %d",
   "es": "Guardados · %d"
@@ -7406,6 +7653,10 @@
  "Say hi, ask anything about ASU": {
   "ar": "سلّم على الجميع واسأل أي شيء عن ASU",
   "es": "Saluda y pregunta lo que sea sobre ASU"
+ },
+ "Scam or fraud": {
+  "ar": "احتيال أو نصب",
+  "es": "Estafa o fraude"
  },
  "Scan": {
   "ar": "مسح ضوئي",
@@ -7423,6 +7674,10 @@
  },
  "Science Groups": {
   "ar": "مجموعات العلوم"
+ },
+ "Screenshots stay private. Only the UniHub team can open them.": {
+  "ar": "تبقى لقطات الشاشة خاصة، ولا يفتحها إلا فريق UniHub.",
+  "es": "Las capturas son privadas. Solo el equipo de UniHub puede abrirlas."
  },
  "Script": {},
  "Search": {
@@ -7444,6 +7699,10 @@
  "Search UniHub first, it may already be there": {
   "ar": "ابحث في UniHub أولاً، قد يكون موجوداً",
   "es": "Busca primero en UniHub, puede que ya esté"
+ },
+ "Search banner": {
+  "ar": "شريط البحث",
+  "es": "Banner de búsqueda"
  },
  "Search events": {
   "ar": "ابحث في الأحداث",
@@ -7546,6 +7805,10 @@
  },
  "See averages and rate anonymously.": {
   "ar": "اطلع على المتوسطات وقيّم دون كشف هويتك."
+ },
+ "See everyone": {
+  "ar": "عرض الجميع",
+  "es": "Ver a todos"
  },
  "See this year's important dates": {
   "ar": "اطّلع على مواعيد هذا العام المهمة",
@@ -7679,6 +7942,18 @@
   "ar": "شارك UniHub مع أصدقائك من قائمة المزيد",
   "es": "Comparte UniHub con tus amigos desde Más"
  },
+ "Share a YouTube video": {
+  "ar": "مشاركة فيديو من يوتيوب",
+  "es": "Compartir un video de YouTube"
+ },
+ "Share a YouTube video from the Upload screen": {
+  "ar": "شارك فيديو يوتيوب من شاشة الرفع",
+  "es": "Comparte un video de YouTube desde la pantalla Subir"
+ },
+ "Share a video": {
+  "ar": "مشاركة فيديو",
+  "es": "Compartir un video"
+ },
  "Share academic resources relevant to the cohort/group (notes, past exams, study guides).": {
   "ar": "مشاركة المصادر الأكاديمية المتعلقة بالدفعة أو المجموعة (ملاحظات، امتحانات سابقة، أدلة دراسة)."
  },
@@ -7693,6 +7968,10 @@
   "ar": "مشاركة الرابط",
   "es": "Compartir enlace"
  },
+ "Share only what you have the right to share. Don't use UniHub to cheat, harass anyone or break the law.": {
+  "ar": "شارك فقط ما يحق لك مشاركته. لا تستخدم UniHub للغش أو مضايقة أحد أو مخالفة القانون.",
+  "es": "Comparte solo lo que tienes derecho a compartir. No uses UniHub para hacer trampa, acosar a nadie ni incumplir la ley."
+ },
  "Share something with other ASU students.": {
   "ar": "شارك شيئاً مع طلاب ASU الآخرين.",
   "es": "Comparte algo con otros estudiantes de ASU."
@@ -7704,6 +7983,10 @@
  "Share the file so anyone with the link can view it.": {
   "ar": "شارك الملف بحيث يستطيع أي شخص لديه الرابط عرضه.",
   "es": "Comparte el archivo para que cualquiera con el enlace pueda verlo."
+ },
+ "Share video": {
+  "ar": "مشاركة الفيديو",
+  "es": "Compartir video"
  },
  "Share your educational resources with the ASU community": {
   "ar": "شارك مصادرك التعليمية مع مجتمع ASU"
@@ -7730,12 +8013,20 @@
   "ar": "تُشارك فقط مع الطلاب الذين تتوافق معهم.",
   "es": "Solo se comparte con los estudiantes con los que coincidas."
  },
+ "Shared. Thank you!": {
+  "ar": "تمت المشاركة. شكراً لك!",
+  "es": "Compartido. ¡Gracias!"
+ },
  "Shares someone's private information": {
   "ar": "يشارك معلومات خاصة بشخص ما"
  },
  "Shariah": {
   "ar": "الشريعة",
   "es": "Sharía"
+ },
+ "Sharing a video needs an account.": {
+  "ar": "تحتاج مشاركة الفيديو إلى حساب.",
+  "es": "Para compartir un video necesitas una cuenta."
  },
  "Sharing another member's personal information without consent.": {
   "ar": "مشاركة المعلومات الشخصية لعضو آخر دون موافقته."
@@ -7766,6 +8057,10 @@
  "Show %d more": {
   "ar": "عرض %d إضافية",
   "es": "Mostrar %d más"
+ },
+ "Show Continue on Home": {
+  "ar": "إظهار المتابعة في الرئيسية",
+  "es": "Mostrar Continuar en Inicio"
  },
  "Show my number on my profile": {
   "ar": "أظهر رقمي في ملفي الشخصي",
@@ -7833,6 +8128,10 @@
   "ar": "سجّل الدخول لرؤية بيانات التواصل مع هذا الطالب.",
   "es": "Inicia sesión para ver los datos de contacto de este estudiante."
  },
+ "Sign in to see who": {
+  "ar": "سجّل الدخول لترى من",
+  "es": "Inicia sesión para ver quién"
+ },
  "Sign in to see your notifications": {
   "ar": "سجّل الدخول لرؤية إشعاراتك",
   "es": "Inicia sesión para ver tus notificaciones"
@@ -7875,6 +8174,14 @@
   "ar": "شرائح",
   "es": "Diapositivas"
  },
+ "Small": {
+  "ar": "صغير",
+  "es": "Pequeño"
+ },
+ "Smaller Quick links": {
+  "ar": "روابط سريعة أصغر",
+  "es": "Enlaces rápidos más pequeños"
+ },
  "Smooth download": {
   "ar": "تنزيل سلس",
   "es": "Descarga fluida"
@@ -7899,6 +8206,10 @@
   "ar": "خلفية وردية ناعمة",
   "es": "Fondo rosa suave"
  },
+ "Someone's safety is at risk": {
+  "ar": "سلامة شخص ما في خطر",
+  "es": "La seguridad de alguien está en riesgo"
+ },
  "Something else": {
   "ar": "شيء آخر"
  },
@@ -7909,6 +8220,10 @@
  "Something went wrong. Try again.": {
   "ar": "حدث خطأ ما. حاول مجددًا."
  },
+ "Somewhere else": {
+  "ar": "مكان آخر",
+  "es": "En otro lugar"
+ },
  "Sophomore": {
   "ar": "سنة ثانية"
  },
@@ -7917,6 +8232,10 @@
   "es": "Ordenar"
  },
  "Sound": {},
+ "Sounds": {
+  "ar": "الأصوات",
+  "es": "Sonidos"
+ },
  "Source": {
   "ar": "المصدر",
   "es": "Fuente"
@@ -8108,6 +8427,10 @@
  "Subject": {
   "ar": "مادة",
   "es": "Materia"
+ },
+ "Subject (optional)": {
+  "ar": "المادة (اختياري)",
+  "es": "Materia (opcional)"
  },
  "Subject / course, e.g. Calculus 1": {
   "ar": "المادة، مثل تفاضل 1",
@@ -8377,6 +8700,10 @@
  "Terms of Service — WhatsApp Study Groups": {
   "ar": "شروط الخدمة: مجموعات واتساب الدراسية"
  },
+ "Terms records": {
+  "ar": "سجلات الشروط",
+  "es": "Registros de términos"
+ },
  "Test Bank": {
   "ar": "بنك أسئلة"
  },
@@ -8389,6 +8716,10 @@
   "es": "Bancos de preguntas"
  },
  "Text alignment": {},
+ "Text size": {
+  "ar": "حجم النص",
+  "es": "Tamaño del texto"
+ },
  "Text story": {
   "ar": "قصة نصية",
   "es": "Historia de texto"
@@ -8807,6 +9138,10 @@
   "ar": "أوقف غرفة لإيقاف إشعارات رسائلها. ستصلك الردود عليك إذا كانت مفعّلة.",
   "es": "Desactiva una sala para dejar de recibir sus avisos. Las respuestas a ti siguen avisando si está activo."
  },
+ "Turn off Continue, clear it, or remove one file from it": {
+  "ar": "أوقف «المتابعة» أو امسحها أو أزل ملفاً واحداً منها",
+  "es": "Desactiva Continuar, bórralo o quita un archivo"
+ },
  "Turn on “I agree” first.": {
   "ar": "فعّل “أوافق” أولاً.",
   "es": "Activa “Acepto” primero."
@@ -9110,6 +9445,10 @@
   "ar": "ارفعه للآخرين",
   "es": "Súbelo para los demás"
  },
+ "Upload materials, help sort them, or report broken links. Email us and join the team.": {
+  "ar": "ارفع المواد، أو ساعد في ترتيبها، أو أبلغ عن الروابط المعطلة. راسلنا وانضم إلى الفريق.",
+  "es": "Sube materiales, ayuda a ordenarlos o reporta enlaces rotos. Escríbenos y únete al equipo."
+ },
  "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team.": {
   "ar": "ارفع مواد، ساعد في ترتيبها، أو أبلغ عن روابط معطلة. راسل ASU-Requests وانضم للفريق.",
   "es": "Sube materiales, ayuda a ordenarlos o informa enlaces rotos. Escribe a ASU-Requests y únete al equipo."
@@ -9157,6 +9496,10 @@
  },
  "Use materials responsibly": {
   "ar": "استخدم المواد بمسؤولية"
+ },
+ "Use photo": {
+  "ar": "استخدام الصورة",
+  "es": "Usar foto"
  },
  "Use the filter button to show only subject pages, only Drive files, or one year.": {
   "ar": "استخدم زر الفلترة لعرض صفحات المواد فقط أو ملفات Drive فقط أو سنة واحدة."
@@ -9250,6 +9593,10 @@
   "ar": "ضعيف جدًا",
   "es": "Muy malo"
  },
+ "Vibration": {
+  "ar": "الاهتزاز",
+  "es": "Vibración"
+ },
  "Video": {
   "ar": "فيديو",
   "es": "Vídeo"
@@ -9261,6 +9608,10 @@
  "Videos in stories no longer show small": {
   "ar": "لم تعد الفيديوهات في القصص تظهر بحجم صغير",
   "es": "Los videos en las historias ya no se ven pequeños"
+ },
+ "Videos students shared": {
+  "ar": "فيديوهات شاركها الطلاب",
+  "es": "Videos que compartieron los estudiantes"
  },
  "View File": {
   "ar": "عرض الملف"
@@ -9328,6 +9679,14 @@
   "ar": "خلفية فاتحة دافئة",
   "es": "Fondo claro cálido"
  },
+ "We act on reports": {
+  "ar": "نتعامل مع البلاغات",
+  "es": "Actuamos ante los reportes"
+ },
+ "We got your report": {
+  "ar": "وصلنا بلاغك",
+  "es": "Recibimos tu reporte"
+ },
  "We got your request. Message us on WhatsApp to confirm the payment.": {
   "ar": "وصلنا طلبك. راسلنا على واتساب لتأكيد الدفع."
  },
@@ -9340,6 +9699,10 @@
  },
  "We have zero tolerance for abuse. Admins can remove content and ban accounts that break these rules.": {
   "ar": "لا نتسامح مطلقًا مع الإساءة. يمكن للمشرفين إزالة المحتوى وحظر الحسابات المخالفة لهذه القواعد."
+ },
+ "We keep a dated record that you accepted the Terms of Service on this date. You can see it any time under More, Safety & legal.": {
+  "ar": "نحتفظ بسجل مؤرخ بموافقتك على شروط الخدمة في هذا التاريخ. يمكنك رؤيته في أي وقت من «المزيد» ثم «الأمان والشؤون القانونية».",
+  "es": "Guardamos un registro con fecha de que aceptaste los Términos de servicio en este día. Puedes verlo en Más, Seguridad y legal."
  },
  "We look for matches": {
   "ar": "نبحث عن زملاء متوافقين",
@@ -9365,6 +9728,10 @@
  },
  "We're building a dedicated platform for students to advertise their services,\nproducts, and talents to the university community. Affordable, targeted, and effective\nadvertising tailored specifically for the student market.": {
   "ar": "نبني منصة مخصصة ليعلن الطلاب عن خدماتهم ومنتجاتهم ومواهبهم لمجتمع الجامعة.\nإعلانات بسعر مناسب وموجهة وفعالة،\nمصممة خصيصًا للطلاب."
+ },
+ "Weather": {
+  "ar": "الطقس",
+  "es": "Clima"
  },
  "Weather is back at the top of Home, and the banner and search box are smaller": {
   "ar": "عاد الطقس إلى أعلى الرئيسية، وصار الشريط ومربع البحث أصغر",
@@ -9398,6 +9765,14 @@
   "ar": "محتوى منظم",
   "es": "Contenido bien organizado"
  },
+ "What Home shows": {
+  "ar": "ما يظهر في الرئيسية",
+  "es": "Qué muestra Inicio"
+ },
+ "What I wrote is true, to the best of my knowledge": {
+  "ar": "ما كتبته صحيح حسب علمي",
+  "es": "Lo que escribí es cierto, según mi conocimiento"
+ },
  "What UniHub collects, why, and how to delete it.": {
   "ar": "ما الذي يجمعه UniHub ولماذا وكيف تحذفه."
  },
@@ -9416,6 +9791,10 @@
  "What formats are the test banks available in?": {
   "ar": "ما صيغ بنوك الأسئلة؟"
  },
+ "What happened?": {
+  "ar": "ماذا حدث؟",
+  "es": "¿Qué pasó?"
+ },
  "What happens": {
   "ar": "ماذا يحدث"
  },
@@ -9427,6 +9806,10 @@
  },
  "What is and isn’t allowed in the chat, profiles and uploads.": {
   "ar": "ما هو مسموح وممنوع في الدردشة والملفات الشخصية والمرفوعات."
+ },
+ "What is it about?": {
+  "ar": "عمّ يتعلق البلاغ؟",
+  "es": "¿De qué se trata?"
  },
  "What it's for": {
   "ar": "الغرض منها",
@@ -9441,6 +9824,10 @@
  },
  "What we collect when you make an account": {
   "ar": "ما نجمعه عند إنشاء حساب"
+ },
+ "What you agree to": {
+  "ar": "ما توافق عليه",
+  "es": "A qué aceptas"
  },
  "What you send us without an account": {
   "ar": "ما ترسله دون حساب"
@@ -9501,6 +9888,10 @@
   "ar": "متى تكون متفرغاً؟",
   "es": "¿Cuándo estás libre?"
  },
+ "When did it happen?": {
+  "ar": "متى حدث ذلك؟",
+  "es": "¿Cuándo pasó?"
+ },
  "When someone replies to your message": {
   "ar": "عندما يرد أحد على رسالتك",
   "es": "Cuando alguien responde a tu mensaje"
@@ -9519,6 +9910,10 @@
  "Where and when? Like: the library at 2:00": {
   "ar": "أين ومتى؟ مثل: المكتبة الساعة 2:00",
   "es": "¿Dónde y cuándo? Ej.: la biblioteca a las 2:00"
+ },
+ "Where did it happen?": {
+  "ar": "أين حدث ذلك؟",
+  "es": "¿Dónde pasó?"
  },
  "Where it is kept and who gets it": {
   "ar": "أين تُحفظ ومن يحصل عليها"
@@ -9539,12 +9934,20 @@
   "ar": "من المتصل",
   "es": "Quién está en línea"
  },
+ "Who or what: a name, username, file or link": {
+  "ar": "من أو ماذا: اسم أو اسم مستخدم أو ملف أو رابط",
+  "es": "Quién o qué: un nombre, usuario, archivo o enlace"
+ },
  "Who we are": {
   "ar": "من نحن"
  },
  "Who's online": {
   "ar": "من المتصل",
   "es": "Quién está en línea"
+ },
+ "Who's online is now on Home, Feed, Friends and Chat, with a clearer box": {
+  "ar": "قائمة المتصلين الآن في الرئيسية والمنشورات والأصدقاء والدردشة، بمربع أوضح",
+  "es": "Quién está en línea ahora aparece en Inicio, Feed, Amigos y Chat, con un cuadro más claro"
  },
  "Who's online now lists every registered student, with search": {
   "ar": "قائمة المتصلين تعرض الآن كل الطلاب المسجلين مع إمكانية البحث",
@@ -9562,6 +9965,10 @@
  "With the contact method you chose": {
   "ar": "بطريقة التواصل التي اخترتها",
   "es": "Con el método de contacto que elegiste"
+ },
+ "With your name hidden, you can still follow the report under My reports.": {
+  "ar": "مع إخفاء اسمك، تظل قادراً على متابعة البلاغ في «بلاغاتي».",
+  "es": "Con tu nombre oculto, aún puedes seguir el reporte en Mis reportes."
  },
  "Without this, Android may ring a few minutes late.": {
   "ar": "بدون هذا، قد يتأخر Android بضع دقائق.",
@@ -9641,6 +10048,18 @@
   "ar": "أنت",
   "es": "Tú"
  },
+ "You accepted the Terms of Service on %@.": {
+  "ar": "وافقت على شروط الخدمة بتاريخ %@.",
+  "es": "Aceptaste los Términos de servicio el %@."
+ },
+ "You accepted the Terms of Service on %s.": {
+  "ar": "وافقت على شروط الخدمة بتاريخ %s.",
+  "es": "Aceptaste los Términos de servicio el %s."
+ },
+ "You answer for what you post": {
+  "ar": "أنت مسؤول عما تنشره",
+  "es": "Respondes por lo que publicas"
+ },
  "You both get an email": {
   "ar": "يصلكما بريد إلكتروني",
   "es": "Ambos reciben un correo"
@@ -9701,6 +10120,10 @@
   "ar": "تدفع النصف الثاني فقط إذا قُبل إعلانك.",
   "es": "Pagas la segunda mitad solo si se acepta tu anuncio."
  },
+ "You read the terms": {
+  "ar": "قرأت الشروط",
+  "es": "Leíste los términos"
+ },
  "You won't see their messages or get notifications from them. You can undo this in your account.": {
   "ar": "لن ترى رسائله ولن تصلك إشعارات منه. يمكنك التراجع عن ذلك من حسابك."
  },
@@ -9723,6 +10146,10 @@
  "You're welcome": {
   "ar": "على الرحب والسعة",
   "es": "De nada"
+ },
+ "YouTube link": {
+  "ar": "رابط يوتيوب",
+  "es": "Enlace de YouTube"
  },
  "Your Edugate | Quizzes, course materials, and assignment submissions": {
   "ar": "إيديوجيت الخاص بك: الكويزات ومواد المساق وتسليم الواجبات"
@@ -9764,7 +10191,8 @@
   "es": "Tus datos solo se comparten con quienes coincidas."
  },
  "Your email or phone (optional)": {
-  "ar": "بريدك أو هاتفك (اختياري)"
+  "ar": "بريدك أو هاتفك (اختياري)",
+  "es": "Tu correo o teléfono (opcional)"
  },
  "Your estimate": {
   "ar": "تقديرك",
@@ -9901,6 +10329,14 @@
  },
  "link": {
   "ar": "رابط"
+ },
+ "necro144@yahoo.com · fastest reply": {
+  "ar": "necro144@yahoo.com · أسرع رد",
+  "de": "necro144@yahoo.com · schnellste Antwort",
+  "es": "necro144@yahoo.com · respuesta más rápida",
+  "fr": "necro144@yahoo.com · réponse la plus rapide",
+  "ru": "necro144@yahoo.com · самый быстрый ответ",
+  "tr": "necro144@yahoo.com · en hızlı cevap"
  },
  "no connection": {
   "ar": "لا يوجد اتصال"

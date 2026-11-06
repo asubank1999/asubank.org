@@ -72,40 +72,50 @@ jobs:
             xcrun simctl io "$UDID" screenshot "$RUNNER_TEMP/shots/$name.png"
           }
           shot 0-welcome-terms 25 -startTab home
-          shot 1-home 8 -ab.terms.accepted.v1 YES -startTab home
-          shot 2-home-dark 8 -ab.terms.accepted.v1 YES -startTab home -ab.appearance 2
-          shot 3-search 15 -ab.terms.accepted.v1 YES -startTab search -startQuery calculus
-          shot 4-search-dark 15 -ab.terms.accepted.v1 YES -startTab search -startQuery "pharmacology" -ab.appearance 2
-          shot 5-upload 6 -ab.terms.accepted.v1 YES -startTab upload
-          shot 6-saved 5 -ab.terms.accepted.v1 YES -startTab saved
-          shot 7-more 5 -ab.terms.accepted.v1 YES -startTab more
-          shot 8-more-dark 5 -ab.terms.accepted.v1 YES -startTab more -ab.appearance 2
-          shot 9-halls 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/halls
-          shot 10-ratings-intro 6 -ab.terms.accepted.v1 YES -startTab home -startPath /requests/portal_to_rating
-          shot 11-ratings 25 -ab.terms.accepted.v1 YES -ab.rate.intro.v1 YES -startTab home -startPath /requests/portal_to_rating
-          shot 12-matcher 20 -ab.terms.accepted.v1 YES -startTab home -ab.matcher.intro.v1 YES -startPath /requests/matcher_confirm
-          shot 13-request 20 -ab.terms.accepted.v1 YES -startTab home -startPath /requests/student_request_portal
-          shot 14-grading 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/grading-scale-asu
-          shot 15-groups 8 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/groups
-          shot 16-thanks 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/thankslist
-          shot 17-search-guide 6 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/tutorial
-          shot 40-suggest 6 -ab.terms.accepted.v1 YES -startTab home -startPath /upload/suggest_to_whatsapp
-          shot 41-coverage 8 -ab.terms.accepted.v1 YES -startTab home -startPath /app/coverage
-          shot 43-whatsnew-all 6 -ab.terms.accepted.v1 YES -startTab home -startPath /app/whatsnew
-          shot 44-whatsnew-prompt 6 -ab.terms.accepted.v1 YES -startTab home -showWhatsNew YES
-          shot 42-notifications 6 -ab.terms.accepted.v1 YES -startTab notifications
-          shot 18-ads 6 -ab.terms.accepted.v1 YES -startTab home -startPath /requests/student_ads
-          shot 19-latest 25 -ab.terms.accepted.v1 YES -startTab home -startPath /guides/latest
-          shot 20-chat 6 -ab.terms.accepted.v1 YES -startTab chat
-          shot 21-theme 6 -ab.terms.accepted.v1 YES -startTab home -startPath /app/theme
-          shot 22-submissions 14 -ab.terms.accepted.v1 YES -startTab home -startPath /upload/student_submissions_board
-          shot 23-account 6 -ab.terms.accepted.v1 YES -startTab home -startPath /account
-          shot 24-pitch-black 6 -ab.terms.accepted.v1 YES -ab.appearance 3 -startTab more
-          shot 50-feed 6 -ab.terms.accepted.v1 YES -startTab feed
-          shot 51-home-midnight 8 -ab.terms.accepted.v1 YES -startTab home -ab.appearance 4
-          shot 52-home-sand 8 -ab.terms.accepted.v1 YES -startTab home -ab.appearance 7
-          shot 53-planner 6 -ab.terms.accepted.v1 YES -startTab home -startPath /app/planner
-          shot 54-focus 6 -ab.terms.accepted.v1 YES -startTab home -startPath /app/focus
+          shot 1-home 8 -ab.terms.accepted.v2 YES -startTab home
+          shot 2-home-dark 8 -ab.terms.accepted.v2 YES -startTab home -ab.appearance 2
+          shot 2a-home-sand 8 -ab.terms.accepted.v2 YES -startTab home -ab.appearance 7
+          shot 2b-more-sky 5 -ab.terms.accepted.v2 YES -startTab more -ab.appearance 8
+          shot 2c-home-blush 8 -ab.terms.accepted.v2 YES -startTab home -ab.appearance 9
+          shot 2d-home-midnight 8 -ab.terms.accepted.v2 YES -startTab home -ab.appearance 4
+          shot 2e-more-forest 5 -ab.terms.accepted.v2 YES -startTab more -ab.appearance 5
+          shot 2f-home-plum 8 -ab.terms.accepted.v2 YES -startTab home -ab.appearance 6
+          shot 2g-report 6 -ab.terms.accepted.v2 YES -startTab home -startScreen report
+          shot 2h-safety 6 -ab.terms.accepted.v2 YES -startTab home -startScreen safety
+          shot 2i-customize 6 -ab.terms.accepted.v2 YES -startTab home -startScreen customize
+          shot 2j-share 6 -ab.terms.accepted.v2 YES -startTab home -startScreen share
+          shot 3-search 15 -ab.terms.accepted.v2 YES -startTab search -startQuery calculus
+          shot 4-search-dark 15 -ab.terms.accepted.v2 YES -startTab search -startQuery "pharmacology" -ab.appearance 2
+          shot 5-upload 6 -ab.terms.accepted.v2 YES -startTab upload
+          shot 6-saved 5 -ab.terms.accepted.v2 YES -startTab saved
+          shot 7-more 5 -ab.terms.accepted.v2 YES -startTab more
+          shot 8-more-dark 5 -ab.terms.accepted.v2 YES -startTab more -ab.appearance 2
+          shot 9-halls 6 -ab.terms.accepted.v2 YES -startTab home -startPath /guides/halls
+          shot 10-ratings-intro 6 -ab.terms.accepted.v2 YES -startTab home -startPath /requests/portal_to_rating
+          shot 11-ratings 25 -ab.terms.accepted.v2 YES -ab.rate.intro.v1 YES -startTab home -startPath /requests/portal_to_rating
+          shot 12-matcher 20 -ab.terms.accepted.v2 YES -startTab home -ab.matcher.intro.v1 YES -startPath /requests/matcher_confirm
+          shot 13-request 20 -ab.terms.accepted.v2 YES -startTab home -startPath /requests/student_request_portal
+          shot 14-grading 6 -ab.terms.accepted.v2 YES -startTab home -startPath /guides/grading-scale-asu
+          shot 15-groups 8 -ab.terms.accepted.v2 YES -startTab home -startPath /guides/groups
+          shot 16-thanks 6 -ab.terms.accepted.v2 YES -startTab home -startPath /guides/thankslist
+          shot 17-search-guide 6 -ab.terms.accepted.v2 YES -startTab home -startPath /guides/tutorial
+          shot 40-suggest 6 -ab.terms.accepted.v2 YES -startTab home -startPath /upload/suggest_to_whatsapp
+          shot 41-coverage 8 -ab.terms.accepted.v2 YES -startTab home -startPath /app/coverage
+          shot 43-whatsnew-all 6 -ab.terms.accepted.v2 YES -startTab home -startPath /app/whatsnew
+          shot 44-whatsnew-prompt 6 -ab.terms.accepted.v2 YES -startTab home -showWhatsNew YES
+          shot 42-notifications 6 -ab.terms.accepted.v2 YES -startTab notifications
+          shot 18-ads 6 -ab.terms.accepted.v2 YES -startTab home -startPath /requests/student_ads
+          shot 19-latest 25 -ab.terms.accepted.v2 YES -startTab home -startPath /guides/latest
+          shot 20-chat 6 -ab.terms.accepted.v2 YES -startTab chat
+          shot 21-theme 6 -ab.terms.accepted.v2 YES -startTab home -startPath /app/theme
+          shot 22-submissions 14 -ab.terms.accepted.v2 YES -startTab home -startPath /upload/student_submissions_board
+          shot 23-account 6 -ab.terms.accepted.v2 YES -startTab home -startPath /account
+          shot 24-pitch-black 6 -ab.terms.accepted.v2 YES -ab.appearance 3 -startTab more
+          shot 50-feed 6 -ab.terms.accepted.v2 YES -startTab feed
+          shot 51-home-midnight 8 -ab.terms.accepted.v2 YES -startTab home -ab.appearance 4
+          shot 52-home-sand 8 -ab.terms.accepted.v2 YES -startTab home -ab.appearance 7
+          shot 53-planner 6 -ab.terms.accepted.v2 YES -startTab home -startPath /app/planner
+          shot 54-focus 6 -ab.terms.accepted.v2 YES -startTab home -startPath /app/focus
           cd "$RUNNER_TEMP/shots" && ls -la
           git init -q && git checkout -q -b ios-screenshots
           echo "Simulator screenshots of ${{ github.sha }} (made by .github/workflows/ios.yml)" > README.md

@@ -51,6 +51,12 @@ object Moderation {
         "copyright" to "Copyright: I own this or represent the owner",
         "wrong" to "Wrong, broken or misleading file",
         "other" to "Something else",
+        "safety" to "Someone's safety is at risk",
+        "impersonation" to "Pretending to be someone else",
+        "scam" to "Scam or fraud",
+        "cheating" to "Cheating or a rule of the university",
+        "bug" to "A bug in the app or website",
+        "account" to "A problem with my account",
     )
     val rules = listOf(
         "Be respectful. No harassment, bullying, threats or hate speech.",
@@ -79,16 +85,20 @@ fun ReportDialog(target: ReportTarget, onClose: () -> Unit) {
     var contact by remember { mutableStateOf("") }
     var busy by remember { mutableStateOf(false) }
     var sent by remember { mutableStateOf(false) }
+    var reference by remember { mutableStateOf<String?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     AlertDialog(
         onDismissRequest = onClose,
         icon = { androidx.compose.material3.Icon(Icons.Filled.Flag, null) },
         title = { Text("Report") },
         text = {
-            if (sent) Text("Thank you. Our team will review your report.")
+            if (sent) Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("Thank you. Our team will review your report.")
+                reference?.let { Text(trf("Reference: %s", it), fontWeight = FontWeight.SemiBold) }
+            }
             else Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 if (target.name.isNotEmpty()) Text(target.name, style = MaterialTheme.typography.bodySmall, maxLines = 3)
-                Moderation.reasons.forEach { (id, label) ->
+                Moderation.reasons.filter { it.first != "bug" && it.first != "account" }.forEach { (id, label) ->
                     Row(Modifier.fillMaxWidth().clickable { reason = id }, verticalAlignment = Alignment.CenterVertically) {
                         RadioButton(reason == id, { reason = id })
                         Text(label, style = MaterialTheme.typography.bodyMedium)
@@ -105,11 +115,12 @@ fun ReportDialog(target: ReportTarget, onClose: () -> Unit) {
                 busy = true
                 scope.launch {
                     try {
-                        AccountsApi.call(
+                        val reply = AccountsApi.call(
                             "report",
                             mapOf("kind" to target.kind, "targetId" to target.targetId, "targetName" to target.name, "reason" to reason, "details" to details, "contact" to contact),
                             Account.token,
                         )
+                        reference = reply.str("ref")
                         sent = true
                         error = null
                     } catch (e: ApiError) { error = e.message }
@@ -207,6 +218,9 @@ fun BlockedScreen() {
 @Composable
 fun AdminReportsScreen() {
     val scope = rememberCoroutineScope()
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    var replying by remember { mutableStateOf<String?>(null) }
+    var replyText by remember { mutableStateOf("") }
     var reports by remember { mutableStateOf<List<JsonObject>>(emptyList()) }
     var showAll by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(true) }
@@ -227,6 +241,25 @@ fun AdminReportsScreen() {
         }
     }
     LaunchedEffect(showAll) { load() }
+    replying?.let { id ->
+        AlertDialog(
+            onDismissRequest = { replying = null },
+            title = { Text("Reply") },
+            text = { OutlinedTextField(replyText, { replyText = it }, modifier = Modifier.fillMaxWidth().heightIn(min = 110.dp)) },
+            confirmButton = {
+                TextButton(enabled = replyText.isNotBlank(), onClick = {
+                    replying = null
+                    scope.launch {
+                        try {
+                            Account.call("adminReportSet", mapOf("id" to id, "status" to "done", "reply" to replyText))
+                            load()
+                        } catch (e: ApiError) { error = e.message }
+                    }
+                }) { Text("Send") }
+            },
+            dismissButton = { TextButton(onClick = { replying = null }) { Text("Cancel") } },
+        )
+    }
     Screen(tr("Reports")) { pad ->
         LazyColumn(Modifier.padding(pad).fillMaxSize()) {
             item {
@@ -247,6 +280,11 @@ fun AdminReportsScreen() {
                         r.str("targetName")?.takeIf { it.isNotEmpty() }?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
                         r.str("targetUser")?.takeIf { it.isNotEmpty() }?.let { Text("@$it", style = MaterialTheme.typography.bodySmall) }
                         r.str("details")?.takeIf { it.isNotEmpty() }?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                        r.str("place")?.takeIf { it.isNotEmpty() }?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                        r.str("evidence")?.takeIf { it.isNotEmpty() }?.let { url ->
+                            TextButton(onClick = { openExternal(ctx, url) }) { Text("Open the screenshot") }
+                        }
+                        r.str("reply")?.takeIf { it.isNotEmpty() }?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = accent) }
                         Text(
                             listOfNotNull(r.str("reporterName"), r.str("contact")?.ifEmpty { null }, r.str("created")).joinToString(" · "),
                             style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -254,6 +292,7 @@ fun AdminReportsScreen() {
                         if (r.str("status") == "open") Row {
                             TextButton(onClick = { set(r, "done") }) { Text("Done") }
                             TextButton(onClick = { set(r, "dismissed") }) { Text("Dismiss") }
+                            TextButton(onClick = { replying = r.str("id"); replyText = "" }) { Text("Reply") }
                             if (r.str("kind") == "post") TextButton(onClick = {
                                 scope.launch {
                                     try {

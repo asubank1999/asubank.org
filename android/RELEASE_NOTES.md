@@ -1,5 +1,19 @@
 **UniHub for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.16.0
+- A new top bar: your photo on the top left opens your profile, and admins find Admin at the top
+- Who's online is now on Home, Feed, Friends and Chat, with a clearer box
+- A tidier profile: photo, numbers, badges, posts and messages fit on one screen
+- Hold a post or comment to copy, delete or report it
+- Move and zoom your cover photo before you save it
+- Turn off Continue, clear it, or remove one file from it
+- New Customize screen: choose what Home shows, smaller links, text size and the first screen
+- New Report section: report anything inside or outside the app, with a screenshot, a reference number and replies
+- New Safety & legal screen, updated Terms of Service, and a dated record of when you accepted them
+- Fixed the themes: Sand, Sky, Blush, Midnight, Forest night and Plum now stay clear after a restart
+- Share a YouTube video from the Upload screen
+- Contact details now use email
+
 ### What's new in 1.15.0
 - New: Subject swap. Trade a registered subject with another student, on the website and in the apps
 - Post the subject you have and the one you want, and swaps that match yours show first

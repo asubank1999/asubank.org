@@ -37,7 +37,38 @@
     function isBlocked(id) { return !!(user && user.blocked && user.blocked.indexOf(id) >= 0); }
     var REPORT_REASONS = [['spam', 'Spam or advertising'], ['harassment', 'Harassment or bullying'], ['hate', 'Hate speech'], ['sexual', 'Sexual content'],
         ['violence', 'Violence or threats'], ['privacy', "Shares someone's private information"], ['copyright', 'Copyright: I own this or represent the owner'],
-        ['wrong', 'Wrong, broken or misleading file'], ['other', 'Something else']];
+        ['impersonation', 'Pretending to be someone else'], ['scam', 'Scam or fraud'], ['wrong', 'Wrong, broken or misleading file'], ['other', 'Something else']];
+    /** Same as TERMS_VERSION in accounts-api.gs */
+    var TERMS_VERSION = '2026-11-06';
+    /** When this account accepted the terms; older accounts can accept here */
+    function termsCard() {
+        var box = h('div', { class: 'acc-card' }, h('h2', { text: 'Terms of Service' }), h('p', { class: 'acc-muted', text: 'Checking…' }));
+        function when(iso) { var d = new Date(iso); return isNaN(d) ? iso : d.toLocaleString(); }
+        function show(list) {
+            while (box.childNodes.length > 1) box.removeChild(box.lastChild);
+            var cur = list.filter(function (x) { return String(x.version) === TERMS_VERSION; })[0];
+            if (cur) {
+                box.appendChild(h('p', { text: 'You accepted the Terms of Service on ' + when(cur.at) + '.' }));
+                box.appendChild(h('p', { class: 'acc-muted acc-small' }, 'Version ' + cur.version + '. ', h('a', { href: '/legal/uni_tos', text: 'Read them' })));
+                return;
+            }
+            var c = h('input', { type: 'checkbox' });
+            var e = h('p', { class: 'acc-err', role: 'alert' });
+            var b = h('button', { type: 'button', class: 'ab-btn', text: 'Accept', onclick: function () {
+                if (!c.checked) { e.textContent = 'Please tick the box first.'; return; }
+                b.disabled = true;
+                call('termsAccept', { device: 'web', version: TERMS_VERSION, source: 'web', acceptedAt: new Date().toISOString() })
+                    .then(function (r) { show([{ at: r.at, version: r.version }]); })
+                    .catch(function (x) { e.textContent = x.message; b.disabled = false; });
+            } });
+            box.appendChild(h('p', { text: 'The Terms of Service changed. Please read them and accept them.' }));
+            box.appendChild(h('label', { class: 'acc-check' }, c, ' I have read and accept the ', h('a', { href: '/legal/uni_tos', target: '_blank', text: 'Terms of Service' })));
+            box.appendChild(e);
+            box.appendChild(b);
+        }
+        call('termsStatus').then(function (r) { show(r.accepted || []); }).catch(function () { show([]); });
+        return box;
+    }
     function reportSheet(kind, targetId, name) {
         var s = sheet('Report');
         var pick = h('select', { 'aria-label': "What's wrong?" }, h('option', { value: '', text: "What's wrong?" }));
@@ -449,13 +480,16 @@
                 } }));
             var err = errBox();
             var submit = h('button', { type: 'submit', class: 'ab-btn acc-wide', text: mode === 0 ? 'Sign in' : 'Create account' });
+            var terms = h('input', { type: 'checkbox', required: 'required' });
+            var termsEl = h('label', { class: 'acc-check' }, terms, ' I have read and accept the ', h('a', { href: '/legal/uni_tos', target: '_blank', text: 'Terms of Service' }), ' and the ', h('a', { href: '/legal/privacy', target: '_blank', text: 'Privacy policy' }), '. قرأت الشروط وأوافق عليها.');
             var form = h('form', { onsubmit: function (ev) {
                 ev.preventDefault(); showErr(err, null);
                 if (mode === 1 && pw.input.value !== pw2.input.value) { showErr(err, new Error("The passwords don't match.")); return; }
+                if (mode === 1 && !terms.checked) { showErr(err, new Error('Please accept the Terms of Service first.')); return; }
                 busy(submit, true, submit.textContent);
                 var p = mode === 0
                     ? call('login', { login: login.input.value.trim(), password: pw.input.value, platform: 'web' })
-                    : call('register', { username: login.input.value.trim(), password: pw.input.value, displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(), code: code.input.value.trim(), platform: 'web' });
+                    : call('register', { termsVersion: TERMS_VERSION, source: 'web', acceptedAt: new Date().toISOString(), username: login.input.value.trim(), password: pw.input.value, displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(), code: code.input.value.trim(), platform: 'web' });
                 p.then(function (r) {
                     adopt(r); after();
                     if (r.earlySupporter) {
@@ -466,7 +500,7 @@
                     .catch(function (e) { showErr(err, e); if (e.needCode) codeBox.hidden = false; busy(submit, false, mode === 0 ? 'Sign in' : 'Create account'); });
             } },
                 login.el, pw.el,
-                mode === 1 ? [pw2.el, dn.el, em.el, uid.el, codeBox] : null,
+                mode === 1 ? [pw2.el, dn.el, em.el, uid.el, codeBox, termsEl] : null,
                 err, submit);
             if (mode === 1) pw.input.autocomplete = pw2.input.autocomplete = 'new-password';
             wrap.appendChild(h('img', { src: '/icons/icon-192x192.png', alt: '', width: 72, height: 72, class: 'acc-logo' }));
@@ -537,9 +571,11 @@
                 .catch(function (e) { showErr(err, e); busy(change, false, 'Change password'); });
         } }, h('h2', { text: 'Password' }), old.el, nw.el, change));
 
+        root.appendChild(termsCard());
         root.appendChild(err);
         root.appendChild(h('div', { class: 'acc-card acc-actions' },
             h('a', { class: 'ab-btn tinted', href: '/chat/', text: 'Open the chat' }),
+            h('a', { class: 'ab-btn tinted', href: '/legal/report', text: 'Report something' }),
             isAdmin() ? h('a', { class: 'ab-btn tinted', href: '/admin/', text: 'Admin' }) : null,
             h('button', { type: 'button', class: 'ab-btn gray', text: 'Sign out', onclick: function () {
                 call('logout').catch(function () {}).then(function () { signOutLocally(); accountView(); });

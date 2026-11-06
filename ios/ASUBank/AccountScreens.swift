@@ -257,7 +257,7 @@ struct SignInScreen: View {
                         }
                         .padding(.vertical, 6)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abAccent)
+                    .buttonStyle(.borderedProminent).tint(.abFill)
                     .disabled(!canSubmit || busy)
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 } footer: {
@@ -602,7 +602,7 @@ struct SignInPrompt: View {
             Button { account.signInShown = true } label: {
                 Text("Sign in or create account").font(.headline).frame(maxWidth: 280).padding(.vertical, 6)
             }
-            .buttonStyle(.borderedProminent).tint(.abAccent)
+            .buttonStyle(.borderedProminent).tint(.abFill)
             Spacer()
         }
         .frame(maxWidth: .infinity)

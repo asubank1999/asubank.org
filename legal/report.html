@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Report something | UniHub</title>
+    <meta name="description" content="Report a safety problem, abuse, a copyright issue or a bug to the UniHub team. No account needed.">
+    <link rel="canonical" href="https://asubank.org/legal/report">
+    <meta name="theme-color" content="#f2f2f7">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/assets/img/favicon2.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="UniHub">
+    <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
+    <link rel="stylesheet" href="/assets/app/app.css?v=4">
+    <link rel="stylesheet" href="/assets/app/accounts.css?v=7">
+    <script src="/assets/app/app.js?v=4" defer></script>
+</head>
+<body class="ab" data-ab-recent="Report something">
+    <a class="ab-skip" href="#main">Skip to content</a>
+    <header class="ab-nav">
+        <div class="ab-wrap ab-nav-row">
+            <div class="ab-nav-l"><a class="ab-brand" href="/"><img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="30" height="30"><span>UniHub</span></a></div>
+            <div class="ab-nav-title" aria-hidden="true">Report something</div>
+            <div class="ab-nav-r"></div>
+        </div>
+    </header>
+
+    <main id="main" class="ab-wrap">
+        <div class="ab-head">
+            <h1 class="ab-large">Report something</h1>
+            <p class="ab-sub">Report anything, inside or outside the app. No account needed. Only the UniHub team reads it.</p>
+            <p class="ab-sub-ar" lang="ar" dir="rtl">أبلغ عن أي شيء داخل التطبيق أو خارجه، دون حساب. لا يقرأ البلاغ إلا فريق UniHub.</p>
+        </div>
+        <section class="ab-section">
+            <p><strong>If someone is in danger right now, call 911.</strong> UniHub can't reach emergency services.</p>
+            <form id="rep" class="acc-card">
+                <label class="acc-field"><span>What is it about?</span>
+                    <select id="rep-reason" required>
+                        <option value="">Choose</option>
+                        <option value="safety">Someone's safety is at risk</option>
+                        <option value="harassment">Harassment or bullying</option>
+                        <option value="hate">Hate speech</option>
+                        <option value="sexual">Sexual content</option>
+                        <option value="violence">Violence or threats</option>
+                        <option value="privacy">Shares someone's private information</option>
+                        <option value="impersonation">Pretending to be someone else</option>
+                        <option value="scam">Scam or fraud</option>
+                        <option value="copyright">Copyright: I own this or represent the owner</option>
+                        <option value="wrong">Wrong, broken or misleading file</option>
+                        <option value="cheating">Cheating or a rule of the university</option>
+                        <option value="spam">Spam or advertising</option>
+                        <option value="bug">A bug in the app or website</option>
+                        <option value="account">A problem with my account</option>
+                        <option value="other">Something else</option>
+                    </select></label>
+                <label class="acc-field"><span>Where did it happen?</span>
+                    <select id="rep-place">
+                        <option value="app">In the app</option>
+                        <option value="website">On the website</option>
+                        <option value="whatsapp">In a WhatsApp group</option>
+                        <option value="campus">On campus</option>
+                        <option value="elsewhere">Somewhere else</option>
+                    </select></label>
+                <label class="acc-field"><span>What happened?</span><textarea id="rep-details" rows="6" maxlength="3900" required minlength="10"></textarea></label>
+                <label class="acc-field"><span>Who or what: a name, username, file or link (optional)</span><input id="rep-what" maxlength="200"></label>
+                <label class="acc-field"><span>When did it happen? (optional)</span><input id="rep-when" maxlength="80"></label>
+                <label class="acc-field"><span>A screenshot (optional, stays private)</span><input id="rep-photo" type="file" accept="image/*"></label>
+                <label class="acc-field"><span>Your email or phone (optional). Without one, we can't answer you.</span><input id="rep-contact" maxlength="120"></label>
+                <label class="acc-check"><input id="rep-true" type="checkbox" required> What I wrote is true, to the best of my knowledge</label>
+                <p id="rep-err" class="acc-err" role="alert"></p>
+                <button class="ab-btn" type="submit" id="rep-send">Send report</button>
+            </form>
+            <div id="rep-done" hidden>
+                <h2>We got your report</h2>
+                <p>Only the UniHub team reads it. Urgent reports are looked at first.</p>
+                <p>Reference: <strong id="rep-ref"></strong></p>
+            </div>
+            <p class="ab-foot">False reports made to harm someone break the <a href="/legal/community">community rules</a>. Owners of a file can also read <a href="/legal/copyright">how removal works</a>.</p>
+        </section>
+        <script>
+        (function () {
+            var API = 'https://script.google.com/macros/s/AKfycbzXDE0Km2mxL_gAJFqspZeaADtugupeLN0YQlkEbXnrCkSTKBfImW_lLCKF8_SMI0i_/exec';
+            function $(id) { return document.getElementById(id); }
+            // a smaller copy of the screenshot, as JPEG
+            function shrink(file) {
+                return new Promise(function (ok, no) {
+                    var img = new Image(), url = URL.createObjectURL(file);
+                    img.onload = function () {
+                        var k = Math.min(1, 1600 / Math.max(img.width, img.height));
+                        var c = document.createElement('canvas');
+                        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+                        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                        URL.revokeObjectURL(url);
+                        ok(c.toDataURL('image/jpeg', 0.78));
+                    };
+                    img.onerror = function () { no(new Error("Couldn't read this picture.")); };
+                    img.src = url;
+                });
+            }
+            $('rep').addEventListener('submit', function (ev) {
+                ev.preventDefault();
+                $('rep-err').textContent = '';
+                $('rep-send').disabled = true;
+                var when = $('rep-when').value.trim();
+                var body = { action: 'report', kind: $('rep-place').value === 'app' ? 'app' : 'outside', targetId: '', targetName: $('rep-what').value.trim(),
+                    reason: $('rep-reason').value, place: $('rep-place').value, contact: $('rep-contact').value.trim(),
+                    details: $('rep-details').value.trim() + (when ? '\n\nWhen: ' + when : '') };
+                try { var t = localStorage.getItem('ab.acc.token'); if (t) body.token = t; } catch (e) {}
+                var file = $('rep-photo').files[0];
+                (file ? shrink(file) : Promise.resolve('')).then(function (photo) {
+                    if (photo) body.photo = photo;
+                    // text/plain: Apps Script answers no preflight
+                    return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+                }).then(function (r) { return r.json(); }).then(function (o) {
+                    if (!o || !o.ok) throw new Error((o && o.error) || 'Something went wrong.');
+                    $('rep').hidden = true;
+                    $('rep-ref').textContent = o.ref || '-';
+                    $('rep-done').hidden = false;
+                }).catch(function (e) {
+                    $('rep-err').textContent = e.message;
+                    $('rep-send').disabled = false;
+                });
+            });
+        })();
+        </script>
+    </main>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4DE6YQ7Q2M');
+    </script>
+</body>
+</html>
