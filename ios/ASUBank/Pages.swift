@@ -159,6 +159,8 @@ struct SitePageView: View {
             TeacherRatingsScreen()
         } else if path == "/requests/matcher" || path == "/requests/matcher_confirm" {
             CourseMatcherScreen()
+        } else if ["/swap", "/swap/", "/swap/index"].contains(path) {
+            SwapsScreen()
         } else if ["/requests/student_request_portal", "/requests/request", "/requests/student_request_main"].contains(path) {
             RequestMaterialScreen()
         } else if path == "/legal/report" {

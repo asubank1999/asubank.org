@@ -83,7 +83,7 @@ import kotlin.math.roundToInt
 /** More > Customize: what Home shows, the Continue list, text size. Kept on this device. */
 object HomePrefs {
     val sections = listOf(
-        "online" to "Who's online", "weather" to "Weather", "calendar" to "Calendar", "lecture" to "Next lecture",
+        "online" to "Who's online", "top" to "Top picks", "weather" to "Weather", "calendar" to "Calendar", "lecture" to "Next lecture",
         "due" to "Exams & tasks", "hero" to "Search banner", "continue" to "Continue", "saved" to "Saved",
         "quick" to "Quick links", "schedules" to "Calendars & schedules", "subjects" to "Subjects",
         "newhere" to "New students", "community" to "Community & services",

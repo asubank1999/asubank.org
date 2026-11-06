@@ -93,6 +93,7 @@ fun SitePageScreen(path: String, title: String) {
         path == "/guides/halls" || path == "/guides/colleges_hall" -> HallsScreen()
         path == "/requests/portal_to_rating" || path == "/requests/rating" -> TeacherRatingsScreen()
         path == "/requests/matcher" || path == "/requests/matcher_confirm" -> CourseMatcherScreen()
+        path == "/swap" || path == "/swap/" || path == "/swap/index" -> SwapsScreen()
         path in setOf("/requests/student_request_portal", "/requests/request", "/requests/student_request_main") -> RequestMaterialScreen()
         path == "/legal/report" -> ReportCenterScreen()
         path == "/upload/suggest_to_whatsapp" -> SuggestMaterialScreen()

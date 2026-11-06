@@ -9065,6 +9065,10 @@
   "ar": "أعلى السلم",
   "es": "Lo más alto de la escala"
  },
+ "Top picks": {
+  "ar": "الأكثر استخداماً",
+  "es": "Lo más usado"
+ },
  "Top rated": {
   "ar": "الأعلى تقييمًا",
   "es": "Mejor valorados"
@@ -9084,6 +9088,10 @@
  "Total": {
   "ar": "الإجمالي",
   "es": "Total"
+ },
+ "Trade a registered subject": {
+  "ar": "بدّل مادة مسجّلة",
+  "es": "Intercambia una materia inscrita"
  },
  "Trade a registered subject with another student. Say what you have and what you want.": {
   "ar": "بدّل مادة مسجّلة مع طالب آخر. اكتب المادة التي لديك والمادة التي تريدها.",
