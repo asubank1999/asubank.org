@@ -307,6 +307,7 @@
 "Archive" = "أرشفة";
 "Archived (hidden from students)" = "مؤرشفة (مخفية عن الطلاب)";
 "Are the test banks free to use?" = "هل بنوك الأسئلة مجانية؟";
+"Area or pickup point" = "المنطقة أو نقطة الصعود";
 "Arts & Design" = "الفنون والتصميم";
 "Arts & Sciences" = "الآداب والعلوم";
 "Arts & humanities" = "الفنون والعلوم الإنسانية";
@@ -572,6 +573,7 @@
 "Couldn't connect. Check your connection and try again." = "تعذر الاتصال. تحقق من اتصالك وحاول مجددًا.";
 "Couldn't delete" = "تعذر الحذف";
 "Couldn't do that" = "تعذر تنفيذ ذلك";
+"Couldn't load the bus times. Check your connection." = "تعذّر تحميل مواعيد الحافلات. تحقّق من اتصالك.";
 "Couldn't load the latest files." = "تعذر تحميل أحدث الملفات.";
 "Couldn't load the ratings" = "تعذر تحميل التقييمات";
 "Couldn't load the tips. Check your connection and try again." = "تعذر تحميل النصائح. تحقق من اتصالك وحاول مرة أخرى.";
@@ -926,6 +928,7 @@
 "Get matched with classmates who take the same courses and are free at the same times." = "نوفّق بينك وبين زملاء يدرسون نفس المواد ولديهم نفس أوقات الفراغ.";
 "Gives them a temporary password" = "يمنحه كلمة مرور مؤقتة";
 "Glow" = "Glow";
+"Going home (PM)" = "العودة (مساءً)";
 "Gold" = "ذهبي";
 "Good" = "جيد";
 "Good for small screens: turn off what you don't use, so more fits on one screen." = "مناسب للشاشات الصغيرة: أوقف ما لا تستخدمه ليظهر المزيد في شاشة واحدة.";
@@ -1296,6 +1299,8 @@
 "No Drive files match these filters." = "لا ملفات في Drive تطابق هذه الفلاتر.";
 "No Drive files match." = "لا ملفات مطابقة في Drive.";
 "No app can open this link" = "لا يوجد تطبيق يفتح هذا الرابط";
+"No bus line matches." = "لا يوجد خط حافلة مطابق.";
+"No buses at this time" = "لا توجد حافلات في هذا الوقت";
 "No comments yet" = "لا توجد تعليقات بعد";
 "No events" = "لا توجد أحداث";
 "No files" = "لا توجد ملفات";
@@ -2117,6 +2122,7 @@
 "Thunderstorms" = "عواصف رعدية";
 "Thursday" = "الخميس";
 "Time" = "الوقت";
+"Times can change. The transport office has the final word." = "قد تتغير المواعيد، والقرار النهائي لدائرة النقل.";
 "Tips" = "نصائح";
 "Title" = "العنوان";
 "Title or student" = "العنوان أو الطالب";
@@ -2125,6 +2131,7 @@
 "To remove a file or anything else, report it or email us." = "لإزالة ملف أو أي شيء آخر، أبلغ عنه أو راسلنا بالبريد.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "للإبلاغ عن ملف يخالف القواعد أو حقوقك، أرسل رابطه على واتساب وسيُزال.";
 "To report something, press and hold a message or open a profile." = "للإبلاغ عن شيء، اضغط مطولًا على رسالة أو افتح ملفًا شخصيًا.";
+"To the university (AM)" = "إلى الجامعة (صباحاً)";
 "Today" = "اليوم";
 "Today on campus" = "اليوم في الجامعة";
 "Tomorrow" = "غدًا";

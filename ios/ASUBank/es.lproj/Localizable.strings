@@ -307,6 +307,7 @@
 "Archive" = "Archivar";
 "Archived (hidden from students)" = "Archivada (oculta para estudiantes)";
 "Are the test banks free to use?" = "¿Los bancos de prueba son de uso gratuito?";
+"Area or pickup point" = "Zona o punto de recogida";
 "Arts & Design" = "Artes y diseño";
 "Arts & Sciences" = "Artes y ciencias";
 "Arts & humanities" = "Artes y humanidades";
@@ -572,6 +573,7 @@
 "Couldn't connect. Check your connection and try again." = "No se pudo conectar. Comprueba tu conexión y vuelve a intentarlo.";
 "Couldn't delete" = "No se pudo eliminar";
 "Couldn't do that" = "No se pudo hacer";
+"Couldn't load the bus times. Check your connection." = "No se pudieron cargar los horarios. Revisa tu conexión.";
 "Couldn't load the latest files." = "No se pudieron cargar los últimos archivos.";
 "Couldn't load the ratings" = "No se pudieron cargar las valoraciones";
 "Couldn't load the tips. Check your connection and try again." = "No se pudieron cargar los consejos. Revisa tu conexión e inténtalo de nuevo.";
@@ -926,6 +928,7 @@
 "Get matched with classmates who take the same courses and are free at the same times." = "Te emparejamos con compañeros que toman los mismos cursos y están libres a la misma hora.";
 "Gives them a temporary password" = "Le da una contraseña temporal";
 "Glow" = "Glow";
+"Going home (PM)" = "De regreso (PM)";
 "Gold" = "Dorado";
 "Good" = "Bien";
 "Good for small screens: turn off what you don't use, so more fits on one screen." = "Ideal para pantallas pequeñas: desactiva lo que no uses para que quepa más en una pantalla.";
@@ -1296,6 +1299,8 @@
 "No Drive files match these filters." = "Ningún archivo de Drive coincide con estos filtros.";
 "No Drive files match." = "Ningún archivo de Drive coincide.";
 "No app can open this link" = "No app can open this link";
+"No bus line matches." = "Ninguna línea coincide.";
+"No buses at this time" = "No hay autobuses a esta hora";
 "No comments yet" = "Aún no hay comentarios";
 "No events" = "Sin eventos";
 "No files" = "Sin archivos";
@@ -2117,6 +2122,7 @@
 "Thunderstorms" = "Tormentas";
 "Thursday" = "Thursday";
 "Time" = "Time";
+"Times can change. The transport office has the final word." = "Los horarios pueden cambiar. La oficina de transporte tiene la última palabra.";
 "Tips" = "Consejos";
 "Title" = "Título";
 "Title or student" = "Title or student";
@@ -2125,6 +2131,7 @@
 "To remove a file or anything else, report it or email us." = "To remove a file or anything else, report it or email us.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed.";
 "To report something, press and hold a message or open a profile." = "To report something, press and hold a message or open a profile.";
+"To the university (AM)" = "A la universidad (AM)";
 "Today" = "Hoy";
 "Today on campus" = "Hoy en el campus";
 "Tomorrow" = "Mañana";

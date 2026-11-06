@@ -1863,6 +1863,10 @@
   "ru": "Можно ли использовать тестовые банки бесплатно?",
   "tr": "Test bankalarının kullanımı ücretsiz mi?"
  },
+ "Area or pickup point": {
+  "ar": "المنطقة أو نقطة الصعود",
+  "es": "Zona o punto de recogida"
+ },
  "Arts & Design": {
   "ar": "الفنون والتصميم",
   "de": "Kunst & Design",
@@ -3761,6 +3765,10 @@
   "ru": "Не мог этого сделать",
   "tr": "Bunu yapamadım"
  },
+ "Couldn't load the bus times. Check your connection.": {
+  "ar": "تعذّر تحميل مواعيد الحافلات. تحقّق من اتصالك.",
+  "es": "No se pudieron cargar los horarios. Revisa tu conexión."
+ },
  "Couldn't load the latest files.": {
   "ar": "تعذر تحميل أحدث الملفات.",
   "de": "Die neuesten Dateien konnten nicht geladen werden.",
@@ -4955,6 +4963,10 @@
   "es": "Le da una contraseña temporal"
  },
  "Glow": {},
+ "Going home (PM)": {
+  "ar": "العودة (مساءً)",
+  "es": "De regreso (PM)"
+ },
  "Gold": {
   "ar": "ذهبي",
   "es": "Dorado"
@@ -6202,6 +6214,14 @@
  },
  "No app can open this link": {
   "ar": "لا يوجد تطبيق يفتح هذا الرابط"
+ },
+ "No bus line matches.": {
+  "ar": "لا يوجد خط حافلة مطابق.",
+  "es": "Ninguna línea coincide."
+ },
+ "No buses at this time": {
+  "ar": "لا توجد حافلات في هذا الوقت",
+  "es": "No hay autobuses a esta hora"
  },
  "No comments yet": {
   "ar": "لا توجد تعليقات بعد",
@@ -9034,6 +9054,10 @@
  "Time": {
   "ar": "الوقت"
  },
+ "Times can change. The transport office has the final word.": {
+  "ar": "قد تتغير المواعيد، والقرار النهائي لدائرة النقل.",
+  "es": "Los horarios pueden cambiar. La oficina de transporte tiene la última palabra."
+ },
  "Tips": {
   "ar": "نصائح",
   "es": "Consejos"
@@ -9060,6 +9084,10 @@
  },
  "To report something, press and hold a message or open a profile.": {
   "ar": "للإبلاغ عن شيء، اضغط مطولًا على رسالة أو افتح ملفًا شخصيًا."
+ },
+ "To the university (AM)": {
+  "ar": "إلى الجامعة (صباحاً)",
+  "es": "A la universidad (AM)"
  },
  "Today": {
   "ar": "اليوم",

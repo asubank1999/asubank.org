@@ -155,7 +155,9 @@ struct SitePageView: View {
             LatestScreen()
         } else if path == "/guides/halls" || path == "/guides/colleges_hall" {
             HallsScreen()
-        } else if path == "/requests/portal_to_rating" || path == "/requests/rating" {
+        } else if path == BusTimes.path {
+            BusTimesScreen()
+        } else if path == "/requests/portal_to_rating" || path == "/requests/rating" || path == "/students_requests/rating" {
             TeacherRatingsScreen()
         } else if path == "/requests/matcher" || path == "/requests/matcher_confirm" {
             CourseMatcherScreen()

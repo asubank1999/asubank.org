@@ -307,6 +307,7 @@
 "Archive" = "Archive";
 "Archived (hidden from students)" = "Archived (hidden from students)";
 "Are the test banks free to use?" = "Are the test banks free to use?";
+"Area or pickup point" = "Area or pickup point";
 "Arts & Design" = "Arts & Design";
 "Arts & Sciences" = "Arts & Sciences";
 "Arts & humanities" = "Arts & humanities";
@@ -572,6 +573,7 @@
 "Couldn't connect. Check your connection and try again." = "Couldn't connect. Check your connection and try again.";
 "Couldn't delete" = "Couldn't delete";
 "Couldn't do that" = "Couldn't do that";
+"Couldn't load the bus times. Check your connection." = "Couldn't load the bus times. Check your connection.";
 "Couldn't load the latest files." = "Couldn't load the latest files.";
 "Couldn't load the ratings" = "Couldn't load the ratings";
 "Couldn't load the tips. Check your connection and try again." = "Couldn't load the tips. Check your connection and try again.";
@@ -926,6 +928,7 @@
 "Get matched with classmates who take the same courses and are free at the same times." = "Get matched with classmates who take the same courses and are free at the same times.";
 "Gives them a temporary password" = "Gives them a temporary password";
 "Glow" = "Glow";
+"Going home (PM)" = "Going home (PM)";
 "Gold" = "Gold";
 "Good" = "Good";
 "Good for small screens: turn off what you don't use, so more fits on one screen." = "Good for small screens: turn off what you don't use, so more fits on one screen.";
@@ -1296,6 +1299,8 @@
 "No Drive files match these filters." = "No Drive files match these filters.";
 "No Drive files match." = "No Drive files match.";
 "No app can open this link" = "No app can open this link";
+"No bus line matches." = "No bus line matches.";
+"No buses at this time" = "No buses at this time";
 "No comments yet" = "No comments yet";
 "No events" = "No events";
 "No files" = "No files";
@@ -2117,6 +2122,7 @@
 "Thunderstorms" = "Thunderstorms";
 "Thursday" = "Thursday";
 "Time" = "Time";
+"Times can change. The transport office has the final word." = "Times can change. The transport office has the final word.";
 "Tips" = "Tips";
 "Title" = "Title";
 "Title or student" = "Title or student";
@@ -2125,6 +2131,7 @@
 "To remove a file or anything else, report it or email us." = "To remove a file or anything else, report it or email us.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed.";
 "To report something, press and hold a message or open a profile." = "To report something, press and hold a message or open a profile.";
+"To the university (AM)" = "To the university (AM)";
 "Today" = "Today";
 "Today on campus" = "Today on campus";
 "Tomorrow" = "Tomorrow";
