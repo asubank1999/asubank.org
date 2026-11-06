@@ -28,7 +28,7 @@ Students share the materials and students run the app. **UniHub isn't made by or
 
 | | Download | How to install |
 |---|---|---|
-| 🤖 **Android app (v1.15.0)** | **[⬇️ Download for Android (APK)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.15.0/UniHub-1.15.0.apk)** | Open the link on your phone, tap the downloaded file, then allow "Install unknown apps" if Android asks. Android 8 or newer. |
+| 🤖 **Android app (v1.16.0)** | **[⬇️ Download for Android (APK)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.16.0/UniHub-1.16.0.apk)** | Open the link on your phone, tap the downloaded file, then allow "Install unknown apps" if Android asks. Android 8 or newer. |
 | 🍎 **iPhone app (v1.15.0)** | **[⬇️ Download for iPhone (IPA)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.15.0/UniHub-1.15.0-unsigned.ipa)** | Install it with [Sideloadly](https://sideloadly.io) or AltStore on a computer (they sign it with your Apple ID). iOS 15 or newer. |
 | 🌐 **Website** | **[asubank.org](https://asubank.org)** | Works on any phone or computer, nothing to install. |
 
