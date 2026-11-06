@@ -180,6 +180,7 @@
             })));
             var b = badgeRow(u.badges); if (b) body.appendChild(b);
             if (u.bio) body.appendChild(h('p', { class: 'acc-bio', text: u.bio }));
+            if (u.gender === 'male' || u.gender === 'female') body.appendChild(h('p', { class: 'acc-muted', text: '👤 ' + (u.gender === 'male' ? 'Male' : 'Female') }));
             if (u.college || u.major) body.appendChild(h('p', { class: 'acc-muted', text: '🎓 ' + [u.college, u.major].filter(Boolean).join(' · ') }));
             if (u.phone) {
                 var digits = u.phone.replace(/[^0-9+]/g, '');
@@ -218,6 +219,15 @@
             img.onerror = function () { URL.revokeObjectURL(url); bad(new Error("That file isn't a photo we can read.")); };
             img.src = url;
         });
+    }
+    // Male / Female (required at sign-up) and whether the profile shows it
+    function genderField(value, shown) {
+        var sel = h('select', { required: 'required' }, h('option', { value: '', text: 'Choose…' }), h('option', { value: 'male', text: 'Male' }), h('option', { value: 'female', text: 'Female' }));
+        sel.value = value || '';
+        var show = h('input', { type: 'checkbox' }); show.checked = !!shown;
+        return { el: [h('label', { class: 'acc-field' }, h('span', { text: 'Sex' }), sel, h('small', { text: 'Required. Hidden from others unless you choose to show it.' })),
+                      h('label', { class: 'acc-check' }, show, ' Show it on my profile')],
+                 value: function () { return sel.value; }, shown: function () { return show.checked; } };
     }
     function field(label, type, value, hint) {
         var input = h('input', { type: type || 'text', value: value || '', autocomplete: type === 'password' ? 'current-password' : 'off', autocapitalize: 'off', spellcheck: 'false' });
@@ -474,6 +484,7 @@
             var dn = field('Display name (optional)');
             var em = field('University email (optional)', 'email');
             var uid = field('University ID (optional)', 'text');
+            var sex = genderField('', false);
             var code = field('6-digit code', 'text');
             var codeBox = h('div', { class: 'acc-code', hidden: true },
                 h('b', { text: 'Admin verification' }),
@@ -493,11 +504,12 @@
             var form = h('form', { onsubmit: function (ev) {
                 ev.preventDefault(); showErr(err, null);
                 if (mode === 1 && pw.input.value !== pw2.input.value) { showErr(err, new Error("The passwords don't match.")); return; }
+                if (mode === 1 && !sex.value()) { showErr(err, new Error('Choose male or female.')); return; }
                 if (mode === 1 && !terms.checked) { showErr(err, new Error('Please accept the Terms of Service first.')); return; }
                 busy(submit, true, submit.textContent);
                 var p = mode === 0
                     ? call('login', { login: login.input.value.trim(), password: pw.input.value, platform: 'web' })
-                    : call('register', { termsVersion: TERMS_VERSION, source: 'web', acceptedAt: new Date().toISOString(), username: login.input.value.trim(), password: pw.input.value, displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(), code: code.input.value.trim(), platform: 'web' });
+                    : call('register', { termsVersion: TERMS_VERSION, source: 'web', acceptedAt: new Date().toISOString(), username: login.input.value.trim(), password: pw.input.value, displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(), code: code.input.value.trim(), platform: 'web', gender: sex.value(), showGender: sex.shown() });
                 p.then(function (r) {
                     adopt(r); after();
                     if (r.earlySupporter) {
@@ -508,7 +520,7 @@
                     .catch(function (e) { showErr(err, e); if (e.needCode) codeBox.hidden = false; busy(submit, false, mode === 0 ? 'Sign in' : 'Create account'); });
             } },
                 login.el, pw.el,
-                mode === 1 ? [pw2.el, dn.el, em.el, uid.el, codeBox, termsEl] : null,
+                mode === 1 ? [pw2.el, dn.el].concat(sex.el, [em.el, uid.el, codeBox, termsEl]) : null,
                 err, submit);
             if (mode === 1) pw.input.autocomplete = pw2.input.autocomplete = 'new-password';
             wrap.appendChild(h('img', { src: '/icons/icon-192x192.png', alt: '', width: 72, height: 72, class: 'acc-logo' }));
@@ -559,15 +571,28 @@
         var ph = field('Phone number (optional)', 'tel', u.phone, 'Like +962 79 123 4567');
         var showPh = h('input', { type: 'checkbox' }); showPh.checked = !!u.showPhone;
         var bio = h('textarea', { rows: 2, maxlength: 160, placeholder: 'A line about you: major, year, what you can help with' }); bio.value = u.bio || '';
+        var sex = genderField(u.gender, u.showGender);
+        if (!u.gender) {
+            var ask = genderField('', false), askBtn = h('button', { type: 'submit', class: 'ab-btn', text: 'Save' }), askErr = errBox();
+            root.insertBefore(h('form', { class: 'acc-card acc-ask', onsubmit: function (ev) {
+                ev.preventDefault();
+                if (!ask.value()) { showErr(askErr, new Error('Choose male or female.')); return; }
+                busy(askBtn, true, 'Save');
+                call('updateProfile', { gender: ask.value(), showGender: ask.shown() }).then(function (r) { adopt(r); accountView(); })
+                    .catch(function (e) { showErr(askErr, e); busy(askBtn, false, 'Save'); });
+            } }, h('h2', { text: 'One quick thing' }), h('p', { class: 'acc-muted', text: 'UniHub now asks every account for its sex. Choose yours to keep going.' }), ask.el, askErr, askBtn), root.firstChild);
+        }
         var save = h('button', { type: 'submit', class: 'ab-btn', text: 'Save profile' });
         root.appendChild(h('form', { class: 'acc-card', onsubmit: function (ev) {
-            ev.preventDefault(); busy(save, true, 'Save profile');
+            ev.preventDefault();
+            if (!sex.value()) { showErr(err, new Error('Choose male or female.')); return; }
+            busy(save, true, 'Save profile');
             call('updateProfile', { displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(),
-                phone: ph.input.value.trim(), showPhone: showPh.checked, bio: bio.value.trim(), major: major.input.value.trim(), college: college.value })
+                phone: ph.input.value.trim(), showPhone: showPh.checked, bio: bio.value.trim(), major: major.input.value.trim(), college: college.value, gender: sex.value(), showGender: sex.shown() })
                 .then(function (r) { adopt(r); showErr(err, null); save.textContent = 'Saved ✓'; save.disabled = false; })
                 .catch(function (e) { showErr(err, e); busy(save, false, 'Save profile'); });
         } }, h('h2', { text: 'Profile' }), dn.el, h('label', { class: 'acc-field' }, h('span', { text: 'About you' }), bio), h('label', { class: 'acc-field' }, h('span', { text: 'College' }), college), major.el, em.el, uid.el, ph.el,
-            h('label', { class: 'acc-check' }, showPh, ' Show my phone number on my profile'), save));
+            h('label', { class: 'acc-check' }, showPh, ' Show my phone number on my profile'), sex.el, save));
 
         var old = field('Current password', 'password'), nw = field('New password', 'password', '', 'At least 6 characters');
         nw.input.autocomplete = 'new-password';
