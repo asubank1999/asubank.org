@@ -692,6 +692,9 @@
                 notify.src = '/assets/app/chat-notify.js';
                 notify.defer = true;
                 doc.head.appendChild(notify);
+                // the round Messages button at the bottom right (inbox.js decides where it shows)
+                var css = doc.createElement('link'); css.rel = 'stylesheet'; css.href = '/assets/app/inbox.css?v=1'; doc.head.appendChild(css);
+                var inbox = doc.createElement('script'); inbox.src = '/assets/app/inbox.js?v=1'; inbox.defer = true; doc.head.appendChild(inbox);
             }
         } catch (e) {}
         doc.addEventListener('ab:ab.saved', syncStars);
