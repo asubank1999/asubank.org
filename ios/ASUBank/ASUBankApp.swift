@@ -157,6 +157,8 @@ struct RootView: View {
         .task { LectureStore.shared.reschedule() }
         .task(id: account.user?.id) { await TermsProof.sync() }
         .sheet(isPresented: $account.signInShown) { SignInScreen() }
+        .sheet(isPresented: Binding(get: { accepted && !config.mustUpdate && !account.signInShown && whatsNew == nil && app.overlayTab == nil && !app.uploadShown && account.user != nil && (account.user?.gender ?? "").isEmpty },
+                                    set: { _ in })) { GenderAskView() }
         .alert("Thank you for joining early! 🌱", isPresented: $account.earlyThanksShown) {
             Button("You're welcome", role: .cancel) {}
         } message: {

@@ -50,6 +50,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -231,6 +232,8 @@ fun SignInDialog(onClose: () -> Unit) {
     var password by remember { mutableStateOf("") }
     var confirm by remember { mutableStateOf("") }
     var displayName by remember { mutableStateOf("") }
+    var gender by remember { mutableStateOf("") }
+    var showGender by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var uniId by remember { mutableStateOf("") }
     var code by remember { mutableStateOf("") }
@@ -242,11 +245,12 @@ fun SignInDialog(onClose: () -> Unit) {
     fun submit() {
         error = null
         if (mode == 1 && password != confirm) { error = "The passwords don't match."; return }
+        if (mode == 1 && gender.isEmpty()) { error = tr("Choose male or female."); return }
         busy = true
         scope.launch {
             try {
                 if (mode == 0) Account.signIn(login, password)
-                else Account.register(login, password, displayName, email, uniId, code)
+                else Account.register(login, password, displayName, email, uniId, code, gender, showGender)
                 onClose()
             } catch (e: ApiError) {
                 error = e.message
@@ -282,6 +286,7 @@ fun SignInDialog(onClose: () -> Unit) {
                     if (mode == 1) {
                         Field(confirm, { confirm = it }, "Confirm password", password = true)
                         Field(displayName, { displayName = it }, "Display name (optional)")
+                        GenderChoice(gender, { gender = it }, showGender, { showGender = it })
                         Field(email, { email = it }, "University email (optional)", keyboard = KeyboardType.Email)
                         Field(uniId, { uniId = it }, "University ID (optional)", keyboard = KeyboardType.Number)
                         if (needCode) {
@@ -304,7 +309,7 @@ fun SignInDialog(onClose: () -> Unit) {
                     }
                     error?.let { Text(it, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center) }
                     Button(
-                        onClick = ::submit, enabled = !busy && login.isNotBlank() && password.isNotEmpty(),
+                        onClick = ::submit, enabled = !busy && login.isNotBlank() && password.isNotEmpty() && (mode == 0 || gender.isNotEmpty()),
                         modifier = Modifier.fillMaxWidth().height(50.dp),
                     ) {
                         if (busy) ABDots(Modifier.size(20.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
@@ -458,6 +463,8 @@ fun AccountScreen() {
         var uni by remember { mutableStateOf(u.uniId ?: "") }
         var phone by remember { mutableStateOf(u.phone ?: "") }
         var showPhone by remember { mutableStateOf(u.showPhone == true) }
+        var gender by remember { mutableStateOf(u.gender ?: "") }
+        var showGender by remember { mutableStateOf(u.showGender == true) }
         var bio by remember { mutableStateOf(u.bio ?: "") }
         var major by remember { mutableStateOf(u.major ?: "") }
         var college by remember { mutableStateOf(u.college ?: "") }
@@ -495,6 +502,7 @@ fun AccountScreen() {
                         }
                     }
                     Field(interests, { if (it.length <= 160) interests = it }, "Football, coding, photography…")
+                    GenderChoice(gender, { gender = it }, showGender, { showGender = it })
                     Field(phone, { phone = it }, "Phone number (optional)", keyboard = KeyboardType.Phone)
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Show my number on my profile", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
@@ -506,7 +514,7 @@ fun AccountScreen() {
                     err?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                 }
             },
-            confirmButton = { TextButton(onClick = { scope.launch { try { Account.updateProfile(name, email, uni, phone, showPhone, bio, major, college, year, interests); editing = false } catch (e: ApiError) { err = e.message } } }) { Text("Save") } },
+            confirmButton = { TextButton(enabled = gender.isNotEmpty(), onClick = { scope.launch { try { Account.updateProfile(name, email, uni, phone, showPhone, bio, major, college, year, interests, gender, showGender); editing = false } catch (e: ApiError) { err = e.message } } }) { Text("Save") } },
             dismissButton = { TextButton(onClick = { editing = false }) { Text("Cancel") } },
         )
     }
@@ -560,5 +568,52 @@ fun AccountScreen() {
         title = { Text("Sign out?") },
         confirmButton = { TextButton(onClick = { confirmOut = false; scope.launch { Account.signOut() } }) { Text("Sign out") } },
         dismissButton = { TextButton(onClick = { confirmOut = false }) { Text("Cancel") } },
+    )
+}
+
+/** Male / Female, asked at sign-up, in Edit profile and once for older accounts */
+@Composable
+fun GenderChoice(gender: String, onChange: (String) -> Unit, show: Boolean, onShow: (Boolean) -> Unit) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text("Sex", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+        SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+            listOf("male" to "Male", "female" to "Female").forEachIndexed { i, (k, l) ->
+                SegmentedButton(selected = gender == k, onClick = { onChange(k) }, shape = SegmentedButtonDefaults.itemShape(i, 2)) { Text(l) }
+            }
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("Show it on my profile", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+            Switch(show, onShow)
+        }
+        Text("Hidden from others unless you choose to show it.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+/** Asked once of accounts made before sex was part of sign-up. It's required, so back and tapping outside don't close it. */
+@Composable
+fun GenderAskDialog() {
+    val scope = rememberCoroutineScope()
+    var gender by remember { mutableStateOf("") }
+    var show by remember { mutableStateOf(false) }
+    var busy by remember { mutableStateOf(false) }
+    var err by remember { mutableStateOf<String?>(null) }
+    AlertDialog(
+        onDismissRequest = {},
+        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
+        icon = { Icon(Icons.Filled.Person, null) },
+        title = { Text("One quick thing") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text("UniHub now asks every account for its sex. Choose yours to keep going.")
+                GenderChoice(gender, { gender = it }, show, { show = it })
+                err?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+            }
+        },
+        confirmButton = {
+            TextButton(enabled = gender.isNotEmpty() && !busy, onClick = {
+                busy = true; err = null
+                scope.launch { try { Account.setGender(gender, show) } catch (e: ApiError) { err = e.message }; busy = false }
+            }) { Text(if (busy) "Saving…" else "Save") }
+        },
     )
 }

@@ -761,12 +761,14 @@ fun ProfileScreen(userId: String) {
                             }
                         }
                         val studies = listOf(u.college, u.major, u.year?.let { tr(it) }).filter { !it.isNullOrEmpty() }.joinToString(" · ")
-                        if (!u.bio.isNullOrEmpty() || studies.isNotEmpty() || !u.interests.isNullOrEmpty()) {
+                        val sex = when (u.gender) { "male" -> tr("Male"); "female" -> tr("Female"); else -> "" }
+                        if (!u.bio.isNullOrEmpty() || studies.isNotEmpty() || !u.interests.isNullOrEmpty() || sex.isNotEmpty()) {
                             Column(
                                 Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.surfaceContainer).padding(10.dp),
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
                             ) {
                                 if (!u.bio.isNullOrEmpty()) Text(u.bio, style = MaterialTheme.typography.bodySmall, maxLines = 4)
+                                if (sex.isNotEmpty()) Text("👤 $sex", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 if (studies.isNotEmpty()) Text("🎓 $studies", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 if (!u.interests.isNullOrEmpty()) Text("✨ ${u.interests}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }

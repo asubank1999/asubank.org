@@ -3077,6 +3077,10 @@
   "ru": "Выберите способ оплаты.",
   "tr": "Nasıl ödeyeceğinizi seçin."
  },
+ "Choose male or female.": {
+  "ar": "اختر ذكر أو أنثى.",
+  "es": "Elige hombre o mujer."
+ },
  "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week": {
   "ar": "اختر متى يختفي المحتوى: بعد دقيقة أو 60 دقيقة أو يوم أو أسبوع",
   "es": "Elige cuándo desaparece: tras 1 minuto, 60 minutos, 1 día o 1 semana"
@@ -5126,6 +5130,14 @@
   "ar": "مرحباً، %@",
   "es": "Hola, %@"
  },
+ "Hidden from others unless you choose to show it.": {
+  "ar": "مخفي عن الآخرين إلا إذا اخترت إظهاره.",
+  "es": "Oculto para los demás salvo que elijas mostrarlo."
+ },
+ "Hidden from others unless you choose to show it. You can change this later in Edit profile.": {
+  "ar": "مخفي عن الآخرين إلا إذا اخترت إظهاره. يمكنك تغييره لاحقاً من تعديل الملف الشخصي.",
+  "es": "Oculto para los demás salvo que elijas mostrarlo. Puedes cambiarlo luego en Editar perfil."
+ },
  "Hide Continue": {
   "ar": "إخفاء المتابعة",
   "es": "Ocultar Continuar"
@@ -6569,6 +6581,10 @@
   "ar": "على الموقع",
   "es": "En la web"
  },
+ "One quick thing": {
+  "ar": "أمر سريع واحد",
+  "es": "Una cosa rápida"
+ },
  "One-on-one help": {
   "ar": "مساعدة فردية"
  },
@@ -7568,6 +7584,10 @@
   "ar": "الطلبات التي أرسلتها",
   "es": "Solicitudes enviadas"
  },
+ "Required. Hidden from others unless you choose to show it.": {
+  "ar": "مطلوب. مخفي عن الآخرين إلا إذا اخترت إظهاره.",
+  "es": "Obligatorio. Oculto para los demás salvo que elijas mostrarlo."
+ },
  "Researcher": {
   "ar": "باحث",
   "es": "Investigador"
@@ -7700,7 +7720,8 @@
   "es": "Guardados · %d"
  },
  "Saving…": {
-  "ar": "جارٍ الحفظ…"
+  "ar": "جارٍ الحفظ…",
+  "es": "Guardando…"
  },
  "Say hello. Only the two of you see this chat.": {
   "ar": "قل مرحباً. أنتما الاثنان فقط تريان هذه الدردشة.",
@@ -7982,6 +8003,10 @@
   "ar": "الإعدادات",
   "es": "Ajustes"
  },
+ "Sex": {
+  "ar": "الجنس",
+  "es": "Sexo"
+ },
  "Sexual content": {
   "ar": "محتوى جنسي"
  },
@@ -8117,6 +8142,10 @@
  "Show Continue on Home": {
   "ar": "إظهار المتابعة في الرئيسية",
   "es": "Mostrar Continuar en Inicio"
+ },
+ "Show it on my profile": {
+  "ar": "أظهره في ملفي الشخصي",
+  "es": "Mostrarlo en mi perfil"
  },
  "Show my number on my profile": {
   "ar": "أظهر رقمي في ملفي الشخصي",
@@ -9382,6 +9411,10 @@
   "ar": "UniHub مجاني للطلاب ويديره طالب. تدعمه الإعلانات على الموقع والرعاة والتبرعات.",
   "es": "UniHub es gratis para los estudiantes y lo lleva un estudiante. Lo apoyan los anuncios del sitio web, los patrocinadores y las donaciones."
  },
+ "UniHub now asks every account for its sex. Choose yours to keep going.": {
+  "ar": "يطلب UniHub الآن من كل حساب تحديد الجنس. اختر لتكمل.",
+  "es": "UniHub ahora pide el sexo a cada cuenta. Elige el tuyo para continuar."
+ },
  "UniHub team": {
   "ar": "فريق UniHub",
   "de": "UniHub-Team",
@@ -10327,6 +10360,10 @@
  "Your privacy": {
   "ar": "خصوصيتك",
   "es": "Tu privacidad"
+ },
+ "Your profile": {
+  "ar": "ملفك الشخصي",
+  "es": "Tu perfil"
  },
  "Your profile, photo, email, university ID, phone number and sign-ins are deleted straight away. Your old messages stay in the chat as “Deleted user”, with nothing that points to you.": {
   "ar": "تُحذف فورًا بياناتك وصورتك وبريدك ورقمك الجامعي وهاتفك وجلسات الدخول. وتبقى رسائلك القديمة في الدردشة باسم «مستخدم محذوف» دون ما يدل عليك."

@@ -377,6 +377,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>, startScreen: Str
 
         if (mustUpdate) UpdateRequired()
         else if (!accepted) WelcomeTerms(onAccept = { Saved.prefs.edit().putBoolean(TERMS_KEY, true).apply(); TermsProof.accepted(); accepted = true })
+        else if (user != null && user?.gender.isNullOrEmpty() && !signInShown) GenderAskDialog()
 
         whatsNew?.takeIf { !mustUpdate && !splash }?.let { e ->
             WhatsNewDialog(e, onClose = { whatsNew = null }, onSeeAll = { whatsNew = null; nav.openPage("/app/whatsnew", "What's New") })

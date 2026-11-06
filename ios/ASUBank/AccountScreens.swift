@@ -174,6 +174,8 @@ struct SignInScreen: View {
     @State private var login = ""
     @State private var username = ""
     @State private var displayName = ""
+    @State private var gender = ""
+    @State private var showGender = false
     @State private var password = ""
     @State private var password2 = ""
     @State private var email = ""
@@ -187,7 +189,7 @@ struct SignInScreen: View {
 
     private var canSubmit: Bool {
         if creating {
-            return username.count >= 3 && password.count >= 6 && password == password2 && (!needCode || code.count == 6)
+            return username.count >= 3 && password.count >= 6 && password == password2 && !gender.isEmpty && (!needCode || code.count == 6)
         }
         return !login.isEmpty && !password.isEmpty
     }
@@ -224,6 +226,10 @@ struct SignInScreen: View {
                         if !password2.isEmpty && password != password2 { Text("The passwords don't match.").foregroundStyle(.red) }
                         else { Text("Usernames are 3 to 20 letters, numbers, dots or underscores.") }
                     }
+                    Section {
+                        GenderChoice(gender: $gender)
+                        Toggle("Show it on my profile", isOn: $showGender)
+                    } header: { Text("Sex") } footer: { Text("Required. Hidden from others unless you choose to show it.") }
                     Section {
                         TextField("University email (optional)", text: $email).textContentType(.emailAddress).keyboardType(.emailAddress).autocapitalization(.none)
                         TextField("University ID (optional)", text: $uniId).keyboardType(.numberPad)
@@ -292,7 +298,8 @@ struct SignInScreen: View {
         busy = true; error = nil
         do {
             if creating {
-                try await account.register(username: username, password: password, displayName: displayName, email: email, uniId: uniId, code: code)
+                try await account.register(username: username, password: password, displayName: displayName, email: email, uniId: uniId, code: code,
+                                           gender: gender, showGender: showGender)
             } else {
                 try await account.signIn(login: login, password: password)
             }
@@ -444,6 +451,8 @@ struct EditProfileSheet: View {
     @State private var uniId = ""
     @State private var phone = ""
     @State private var showPhone = false
+    @State private var gender = ""
+    @State private var showGender = false
     @State private var bio = ""
     @State private var major = ""
     @State private var college = ""
@@ -472,6 +481,10 @@ struct EditProfileSheet: View {
                 }
                 Section("Interests") { TextField("Football, coding, photography…", text: $interests) }
                 Section {
+                    GenderChoice(gender: $gender)
+                    Toggle("Show it on my profile", isOn: $showGender)
+                } header: { Text("Sex") } footer: { Text("Hidden from others unless you choose to show it.") }
+                Section {
                     TextField("Phone number", text: $phone).keyboardType(.phonePad).textContentType(.telephoneNumber)
                     Toggle("Show my number on my profile", isOn: $showPhone)
                 } header: { Text("Phone") } footer: { Text("Only admins see it unless you choose to show it.") }
@@ -491,21 +504,85 @@ struct EditProfileSheet: View {
                             do {
                                 try await account.updateProfile(displayName: name, email: email, uniId: uniId, phone: phone, showPhone: showPhone,
                                                                 bio: String(bio.prefix(160)), major: String(major.prefix(60)), college: college,
-                                                                year: year, interests: String(interests.prefix(160)))
+                                                                year: year, interests: String(interests.prefix(160)),
+                                                                gender: gender, showGender: showGender)
                                 dismiss()
                             } catch { self.error = error.localizedDescription }
                             busy = false
                         }
-                    }.disabled(busy)
+                    }.disabled(busy || gender.isEmpty)
                 }
             }
             .onAppear {
                 let u = account.user
+                gender = u?.gender ?? ""; showGender = u?.showGender == true
                 name = u?.displayName ?? ""; email = u?.email ?? ""; uniId = u?.uniId ?? ""
                 phone = u?.phone ?? ""; showPhone = u?.showPhone == true; bio = u?.bio ?? ""
                 major = u?.major ?? ""; college = u?.college ?? ""; year = u?.year ?? ""; interests = u?.interests ?? ""
             }
         }
+    }
+}
+
+/// Male / Female, asked at sign-up and in Edit profile
+struct GenderChoice: View {
+    @Binding var gender: String
+    var body: some View {
+        Picker("Sex", selection: $gender) {
+            Text("Male").tag("male")
+            Text("Female").tag("female")
+        }
+        .pickerStyle(.segmented)
+    }
+}
+
+/// Asked once of accounts made before sex was part of sign-up. It's required, so it can't be swiped away.
+struct GenderAskView: View {
+    @ObservedObject private var account = AccountStore.shared
+    @State private var gender = ""
+    @State private var show = false
+    @State private var busy = false
+    @State private var error: String?
+
+    var body: some View {
+        ABStack {
+            Form {
+                Section {
+                    VStack(spacing: 8) {
+                        Image(systemName: "person.crop.circle.badge.questionmark")
+                            .font(.system(size: 34)).foregroundStyle(.white)
+                            .frame(width: 70, height: 70)
+                            .background(Color.abFill, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        Text("One quick thing").font(.title3.weight(.bold))
+                        Text("UniHub now asks every account for its sex. Choose yours to keep going.")
+                            .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity).padding(.vertical, 6)
+                    .listRowBackground(Color.clear)
+                }
+                Section {
+                    GenderChoice(gender: $gender)
+                    Toggle("Show it on my profile", isOn: $show)
+                } header: { Text("Sex") } footer: { Text("Hidden from others unless you choose to show it. You can change this later in Edit profile.") }
+                if let error { Section { Text(error).foregroundStyle(.red) } }
+                Section {
+                    Button {
+                        Task {
+                            busy = true; error = nil
+                            do { try await account.setGender(gender, show: show); Haptics.success() } catch { self.error = error.localizedDescription }
+                            busy = false
+                        }
+                    } label: {
+                        HStack { Spacer(); if busy { ABDots().tint(.white) }; Text("Save").font(.headline); Spacer() }.padding(.vertical, 6)
+                    }
+                    .buttonStyle(.borderedProminent).tint(.abFill)
+                    .disabled(gender.isEmpty || busy)
+                    .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+                }
+            }
+            .navigationTitle("Your profile").navigationBarTitleDisplayMode(.inline)
+        }
+        .interactiveDismissDisabled()
     }
 }
 

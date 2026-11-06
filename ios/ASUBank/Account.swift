@@ -55,6 +55,9 @@ struct ABUser: Codable, Identifiable, Hashable {
     var cover: String?
     var phone: String?
     var showPhone: Bool?
+    /// "male" or "female"; others only get it when the person chose to show it
+    var gender: String?
+    var showGender: Bool?
     var bio: String?
     var major: String?
     var college: String?
@@ -272,11 +275,12 @@ final class AccountStore: ObservableObject {
         ChatNotifier.shared.signedIn()
     }
 
-    func register(username: String, password: String, displayName: String, email: String, uniId: String, code: String) async throws {
+    func register(username: String, password: String, displayName: String, email: String, uniId: String, code: String, gender: String, showGender: Bool) async throws {
         let reply = try await AccountsAPI.call("register", [
             "username": username.trimmingCharacters(in: .whitespaces), "password": password, "displayName": displayName,
             "email": email.trimmingCharacters(in: .whitespaces), "uniId": uniId.trimmingCharacters(in: .whitespaces),
             "code": code.trimmingCharacters(in: .whitespaces), "platform": "ios", "device": UIDevice.current.identifierForVendor?.uuidString ?? "",
+            "gender": gender, "showGender": showGender,
         ])
         adopt(reply)
         await refresh()
@@ -299,9 +303,15 @@ final class AccountStore: ObservableObject {
         adopt(r)
     }
 
-    func updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Bool, bio: String, major: String, college: String, year: String, interests: String) async throws {
+    func updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Bool, bio: String, major: String, college: String, year: String, interests: String, gender: String, showGender: Bool) async throws {
         adopt(try await call("updateProfile", ["displayName": displayName, "email": email, "uniId": uniId,
-                                               "phone": phone, "showPhone": showPhone, "bio": bio, "major": major, "college": college, "year": year, "interests": interests]))
+                                               "phone": phone, "showPhone": showPhone, "bio": bio, "major": major, "college": college, "year": year, "interests": interests,
+                                               "gender": gender, "showGender": showGender]))
+    }
+
+    /// For accounts made before sex was asked at sign-up
+    func setGender(_ gender: String, show: Bool) async throws {
+        adopt(try await call("updateProfile", ["gender": gender, "showGender": show]))
     }
 
     /// Uploads a cover photo, or removes it with nil

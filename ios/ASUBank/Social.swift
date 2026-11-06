@@ -946,9 +946,11 @@ struct ProfileScreen: View {
     private func aboutLines(_ u: ABUser) -> AnyView? {
         let studies = [u.college, u.major, u.year.map { L($0) }].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · ")
         let bio = u.bio ?? "", interests = u.interests ?? ""
-        if bio.isEmpty && studies.isEmpty && interests.isEmpty { return nil }
+        let sex = u.gender == "male" ? L("Male") : u.gender == "female" ? L("Female") : ""
+        if bio.isEmpty && studies.isEmpty && interests.isEmpty && sex.isEmpty { return nil }
         return AnyView(Group {
             if !bio.isEmpty { Text(bio).lineLimit(4) }
+            if !sex.isEmpty { Label(sex, systemImage: "person.fill").foregroundStyle(.secondary) }
             if !studies.isEmpty { Label(studies, systemImage: "graduationcap").foregroundStyle(.secondary) }
             if !interests.isEmpty { Label(interests, systemImage: "sparkles").foregroundStyle(.secondary) }
         })

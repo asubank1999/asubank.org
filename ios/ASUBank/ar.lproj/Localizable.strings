@@ -475,6 +475,7 @@
 "Choose files" = "اختر ملفات";
 "Choose from photos" = "اختر من الصور";
 "Choose how you'll pay." = "اختر طريقة الدفع.";
+"Choose male or female." = "اختر ذكر أو أنثى.";
 "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week" = "اختر متى يختفي المحتوى: بعد دقيقة أو 60 دقيقة أو يوم أو أسبوع";
 "Choose who sees each new post or story: everyone, ASU students or friends" = "اختر من يرى كل منشور أو قصة جديدة: الجميع أو طلاب ASU أو الأصدقاء";
 "Choose your app icon under More > App icon" = "Choose your app icon under More > App icon";
@@ -976,6 +977,8 @@
 "Helper" = "مساعد";
 "Helpers" = "المساعدون";
 "Hi, %@" = "مرحباً، %@";
+"Hidden from others unless you choose to show it." = "مخفي عن الآخرين إلا إذا اخترت إظهاره.";
+"Hidden from others unless you choose to show it. You can change this later in Edit profile." = "مخفي عن الآخرين إلا إذا اخترت إظهاره. يمكنك تغييره لاحقاً من تعديل الملف الشخصي.";
 "Hide Continue" = "إخفاء المتابعة";
 "Hide my name from the team" = "إخفاء اسمي عن الفريق";
 "Hide your university number and name on scans." = "أخفِ رقمك الجامعي واسمك في الصور الممسوحة.";
@@ -1401,6 +1404,7 @@
 "On subject pages · %lld" = "في صفحات المواد · %lld";
 "On subject pages · %@" = "في صفحات المواد · %@";
 "On the website" = "على الموقع";
+"One quick thing" = "أمر سريع واحد";
 "One-on-one help" = "مساعدة فردية";
 "Online (Zoom/Teams)" = "عبر الإنترنت (Zoom/Teams)";
 "Online now" = "متصل الآن";
@@ -1693,6 +1697,7 @@
 "Requested" = "تم الطلب";
 "Requests" = "الطلبات";
 "Requests you sent" = "الطلبات التي أرسلتها";
+"Required. Hidden from others unless you choose to show it." = "مطلوب. مخفي عن الآخرين إلا إذا اخترت إظهاره.";
 "Researcher" = "باحث";
 "Reset" = "إعادة ضبط";
 "Reset password" = "إعادة تعيين كلمة المرور";
@@ -1816,6 +1821,7 @@
 "Session type" = "نوع الجلسة";
 "Sessions today" = "جلسات اليوم";
 "Settings" = "الإعدادات";
+"Sex" = "الجنس";
 "Sexual content" = "محتوى جنسي";
 "Shadow" = "Shadow";
 "Share" = "مشاركة";
@@ -1855,6 +1861,7 @@
 "Show %lld more" = "عرض %lld إضافية";
 "Show %@ more" = "عرض %@ إضافية";
 "Show Continue on Home" = "إظهار المتابعة في الرئيسية";
+"Show it on my profile" = "أظهره في ملفي الشخصي";
 "Show my number on my profile" = "أظهر رقمي في ملفي الشخصي";
 "Show password" = "إظهار كلمة المرور";
 "Show past events" = "إظهار الأحداث السابقة";
@@ -2205,6 +2212,7 @@
 "UniHub is free and run by a volunteer student. Donations keep it online and growing." = "UniHub مجاني ويديره طالب متطوع. التبرعات تُبقيه متاحًا وتساعده على النمو.";
 "UniHub is free and student-run. Donations help keep it running." = "UniHub مشروع طلابي مجاني. التبرعات تساعد في استمراره.";
 "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it." = "UniHub مجاني للطلاب ويديره طالب. تدعمه الإعلانات على الموقع والرعاة والتبرعات.";
+"UniHub now asks every account for its sex. Choose yours to keep going." = "يطلب UniHub الآن من كل حساب تحديد الجنس. اختر لتكمل.";
 "UniHub team" = "فريق UniHub";
 "UniHub · Student Community Groups" = "مركز مكتبة ASU · مجموعات مجتمع الطلاب";
 "UniHub مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة." = "UniHub مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.";
@@ -2472,6 +2480,7 @@
 "Your password" = "كلمة مرورك";
 "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email." = "تبقى معلوماتك الشخصية خاصة حتى إيجاد تطابق. وعند توافق طالبين بنسبة 50% على الأقل فقط، تُتبادل بيانات الاتصال عبر البريد الإلكتروني.";
 "Your privacy" = "خصوصيتك";
+"Your profile" = "ملفك الشخصي";
 "Your profile, photo, email, university ID, phone number and sign-ins are deleted straight away. Your old messages stay in the chat as “Deleted user”, with nothing that points to you." = "تُحذف فورًا بياناتك وصورتك وبريدك ورقمك الجامعي وهاتفك وجلسات الدخول. وتبقى رسائلك القديمة في الدردشة باسم «مستخدم محذوف» دون ما يدل عليك.";
 "Your rating" = "تقييمك";
 "Your rating helps us make UniHub better for everyone." = "تقييمك يساعدنا على تحسين UniHub للجميع.";

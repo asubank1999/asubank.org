@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 12;
+var SCHEMA = 13;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -66,7 +66,7 @@ var ONLINE_MS = 3 * 60000;
 
 var SHEETS = {
   Users: ['id', 'username', 'email', 'uniId', 'displayName', 'salt', 'hash', 'role', 'banned', 'banReason', 'created', 'lastSeen', 'color', 'mustReset',
-          'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college', 'blocked', 'year', 'interests', 'cover'],
+          'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college', 'blocked', 'year', 'interests', 'cover', 'gender', 'showGender'],
   Sessions: ['token', 'userId', 'created', 'lastUsed', 'platform'],
   Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited', 'fileId', 'fileName', 'fileType', 'fileSize', 'duration', 'expires'],
   Rooms: ['id', 'name', 'emoji', 'about', 'adminOnly', 'locked', 'archived', 'pinned', 'order', 'created'],
@@ -274,9 +274,11 @@ function publicUser(u, full) {
   o.cover = String(u.cover || '');
   o.online = !!o.lastSeen && (new Date() - new Date(o.lastSeen)) < ONLINE_MS;
   if (truthy(u.showPhone)) o.phone = u.phone ? String(u.phone) : '';
+  if (truthy(u.showGender) && cleanGender(u.gender)) o.gender = cleanGender(u.gender);
   if (full) {
     o.email = u.email || ''; o.uniId = u.uniId ? String(u.uniId) : '';
     o.phone = u.phone ? String(u.phone) : ''; o.showPhone = truthy(u.showPhone);
+    o.gender = cleanGender(u.gender); o.showGender = truthy(u.showGender);
     o.banned = truthy(u.banned); o.banReason = u.banReason || '';
     o.created = u.created; o.mustReset = truthy(u.mustReset);
     o.blocked = blockedIds(u);
@@ -298,6 +300,8 @@ function validUsername(s) { return /^[a-zA-Z0-9_.]{3,20}$/.test(s); }
 function validEmail(s) { return !s || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s); }
 function validUniId(s) { return !s || /^\d{6,12}$/.test(s); }
 function validPhone(s) { return !s || /^\+?[0-9 ]{7,18}$/.test(s); }
+/** Sex is 'male' or 'female'; empty means not chosen yet (accounts made before 1.18, or older apps) */
+function cleanGender(g) { g = String(g || '').trim().toLowerCase(); return g === 'male' || g === 'female' ? g : ''; }
 function validPassword(s) { return String(s || '').length >= 6 && String(s).length <= 100; }
 
 function tooMany(key, max) {
@@ -1066,6 +1070,8 @@ var ACTIONS = {
     if (!validPassword(b.password)) fail('Passwords need at least 6 characters.');
     if (!validEmail(email)) fail('That email does not look right.');
     if (!validUniId(uniId)) fail('University IDs are numbers only, like 202112345.');
+    var gender = cleanGender(b.gender);
+    if (b.gender !== undefined && !gender) fail('Choose male or female.');
     if (tooMany('reg:' + (b.device || 'x'), 6)) fail('Too many sign-ups. Try again later.');
     var admin = isAdminIdentity({ username: username, email: email, uniId: uniId });
     if (admin) {
@@ -1086,7 +1092,8 @@ var ACTIONS = {
       var u = { id: newId(), username: username, email: email, uniId: uniId ? "'" + uniId : '', displayName: displayName, salt: salt,
                 hash: hashPassword(b.password, salt), role: admin ? 'admin' : 'user', banned: false, banReason: '',
                 created: new Date().toISOString(), lastSeen: new Date().toISOString(), color: COLORS[all.length % COLORS.length], mustReset: false,
-                avatar: '', phone: '', showPhone: false, bio: '', badges: startBadges.join(',') };
+                avatar: '', phone: '', showPhone: false, bio: '', badges: startBadges.join(','),
+                gender: gender, showGender: !!(gender && b.showGender) };
       append('Users', u);
       if (b.termsVersion) logTerms(u, b);
       u.uniId = uniId;
@@ -1131,6 +1138,8 @@ var ACTIONS = {
       if (!validEmail(email)) fail('That email does not look right.');
       if (!validUniId(uniId)) fail('University IDs are numbers only.');
       if (!validPhone(phone)) fail('Phone numbers are digits only, like +962 79 123 4567.');
+      var gender = b.gender === undefined ? cleanGender(u.gender) : cleanGender(b.gender);
+      if (b.gender !== undefined && !gender) fail('Choose male or female.');
       var others = rows('Users').filter(function (x) { return x.id !== u.id; });
       if (email && others.some(function (x) { return norm(x.email) === norm(email); })) fail('An account already uses that email.');
       if (uniId && others.some(function (x) { return norm(x.uniId) === norm(uniId); })) fail('An account already uses that university ID.');
@@ -1142,10 +1151,11 @@ var ACTIONS = {
                  major: b.major === undefined ? (u.major || '') : String(b.major).trim().slice(0, 60),
                  college: b.college === undefined ? (u.college || '') : String(b.college).trim().slice(0, 60),
                  year: b.year === undefined ? (u.year || '') : String(b.year).trim().slice(0, 30),
-                 interests: b.interests === undefined ? (u.interests || '') : String(b.interests).trim().slice(0, 160) };
+                 interests: b.interests === undefined ? (u.interests || '') : String(b.interests).trim().slice(0, 160),
+                 gender: gender, showGender: !!gender && (b.showGender === undefined ? truthy(u.showGender) : !!b.showGender) };
       update('Users', u._row, ch);
       forgetUser(u.id);
-      u.displayName = ch.displayName; u.email = email; u.uniId = uniId; u.phone = phone; u.showPhone = ch.showPhone; u.bio = ch.bio; u.major = ch.major; u.college = ch.college; u.year = ch.year; u.interests = ch.interests;
+      u.displayName = ch.displayName; u.email = email; u.uniId = uniId; u.phone = phone; u.showPhone = ch.showPhone; u.bio = ch.bio; u.major = ch.major; u.college = ch.college; u.year = ch.year; u.interests = ch.interests; u.gender = ch.gender; u.showGender = ch.showGender;
       return { ok: true, user: publicUser(u, true) };
     });
   },

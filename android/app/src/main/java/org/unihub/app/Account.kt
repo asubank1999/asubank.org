@@ -106,6 +106,9 @@ data class AbUser(
     val cover: String? = null,
     val phone: String? = null,
     val showPhone: Boolean? = null,
+    /** "male" or "female"; others only get it when the person chose to show it */
+    val gender: String? = null,
+    val showGender: Boolean? = null,
     val bio: String? = null,
     val major: String? = null,
     val college: String? = null,
@@ -302,10 +305,11 @@ object Account {
     /** The thank-you after signing up during the early supporter period */
     val earlyThanks = MutableStateFlow(false)
 
-    suspend fun register(username: String, password: String, displayName: String, email: String, uniId: String, code: String) {
+    suspend fun register(username: String, password: String, displayName: String, email: String, uniId: String, code: String, gender: String, showGender: Boolean) {
         val reply = AccountsApi.call("register", mapOf(
             "username" to username.trim(), "password" to password, "displayName" to displayName.trim(),
             "email" to email.trim(), "uniId" to uniId.trim(), "code" to code.trim(), "platform" to "android", "device" to device(),
+            "gender" to gender, "showGender" to showGender,
         ))
         adopt(reply)
         if ((reply["earlySupporter"] as? JsonPrimitive)?.booleanOrNull == true) earlyThanks.value = true
@@ -322,9 +326,13 @@ object Account {
         runCatching { adopt(call("me")) }
     }
 
-    suspend fun updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Boolean, bio: String, major: String, college: String, year: String, interests: String) =
+    suspend fun updateProfile(displayName: String, email: String, uniId: String, phone: String, showPhone: Boolean, bio: String, major: String, college: String, year: String, interests: String, gender: String, showGender: Boolean) =
         adopt(call("updateProfile", mapOf("displayName" to displayName, "email" to email, "uniId" to uniId,
-            "phone" to phone, "showPhone" to showPhone, "bio" to bio.take(160), "major" to major.take(60), "college" to college, "year" to year, "interests" to interests.take(160))))
+            "phone" to phone, "showPhone" to showPhone, "bio" to bio.take(160), "major" to major.take(60), "college" to college, "year" to year, "interests" to interests.take(160),
+            "gender" to gender, "showGender" to showGender)))
+
+    /** For accounts made before sex was asked at sign-up */
+    suspend fun setGender(gender: String, show: Boolean) = adopt(call("updateProfile", mapOf("gender" to gender, "showGender" to show)))
 
     /** Uploads a profile photo (a 256 px JPEG, base64), or removes it with null */
     suspend fun setCover(jpegBase64: String?) = adopt(

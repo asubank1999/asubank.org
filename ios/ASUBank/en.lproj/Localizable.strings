@@ -475,6 +475,7 @@
 "Choose files" = "Choose files";
 "Choose from photos" = "Choose from photos";
 "Choose how you'll pay." = "Choose how you'll pay.";
+"Choose male or female." = "Choose male or female.";
 "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week" = "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week";
 "Choose who sees each new post or story: everyone, ASU students or friends" = "Choose who sees each new post or story: everyone, ASU students or friends";
 "Choose your app icon under More > App icon" = "Choose your app icon under More > App icon";
@@ -976,6 +977,8 @@
 "Helper" = "Helper";
 "Helpers" = "Helpers";
 "Hi, %@" = "Hi, %@";
+"Hidden from others unless you choose to show it." = "Hidden from others unless you choose to show it.";
+"Hidden from others unless you choose to show it. You can change this later in Edit profile." = "Hidden from others unless you choose to show it. You can change this later in Edit profile.";
 "Hide Continue" = "Hide Continue";
 "Hide my name from the team" = "Hide my name from the team";
 "Hide your university number and name on scans." = "Hide your university number and name on scans.";
@@ -1401,6 +1404,7 @@
 "On subject pages · %lld" = "On subject pages · %lld";
 "On subject pages · %@" = "On subject pages · %@";
 "On the website" = "On the website";
+"One quick thing" = "One quick thing";
 "One-on-one help" = "One-on-one help";
 "Online (Zoom/Teams)" = "Online (Zoom/Teams)";
 "Online now" = "Online now";
@@ -1693,6 +1697,7 @@
 "Requested" = "Requested";
 "Requests" = "Requests";
 "Requests you sent" = "Requests you sent";
+"Required. Hidden from others unless you choose to show it." = "Required. Hidden from others unless you choose to show it.";
 "Researcher" = "Researcher";
 "Reset" = "Reset";
 "Reset password" = "Reset password";
@@ -1816,6 +1821,7 @@
 "Session type" = "Session type";
 "Sessions today" = "Sessions today";
 "Settings" = "Settings";
+"Sex" = "Sex";
 "Sexual content" = "Sexual content";
 "Shadow" = "Shadow";
 "Share" = "Share";
@@ -1855,6 +1861,7 @@
 "Show %lld more" = "Show %lld more";
 "Show %@ more" = "Show %@ more";
 "Show Continue on Home" = "Show Continue on Home";
+"Show it on my profile" = "Show it on my profile";
 "Show my number on my profile" = "Show my number on my profile";
 "Show password" = "Show password";
 "Show past events" = "Show past events";
@@ -2205,6 +2212,7 @@
 "UniHub is free and run by a volunteer student. Donations keep it online and growing." = "UniHub is free and run by a volunteer student. Donations keep it online and growing.";
 "UniHub is free and student-run. Donations help keep it running." = "UniHub is free and student-run. Donations help keep it running.";
 "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it." = "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it.";
+"UniHub now asks every account for its sex. Choose yours to keep going." = "UniHub now asks every account for its sex. Choose yours to keep going.";
 "UniHub team" = "UniHub team";
 "UniHub · Student Community Groups" = "UniHub · Student Community Groups";
 "UniHub مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة." = "UniHub مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.";
@@ -2472,6 +2480,7 @@
 "Your password" = "Your password";
 "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email." = "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email.";
 "Your privacy" = "Your privacy";
+"Your profile" = "Your profile";
 "Your profile, photo, email, university ID, phone number and sign-ins are deleted straight away. Your old messages stay in the chat as “Deleted user”, with nothing that points to you." = "Your profile, photo, email, university ID, phone number and sign-ins are deleted straight away. Your old messages stay in the chat as “Deleted user”, with nothing that points to you.";
 "Your rating" = "Your rating";
 "Your rating helps us make UniHub better for everyone." = "Your rating helps us make UniHub better for everyone.";

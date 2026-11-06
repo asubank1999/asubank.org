@@ -475,6 +475,7 @@
 "Choose files" = "Elegir archivos";
 "Choose from photos" = "Elegir de las fotos";
 "Choose how you'll pay." = "Elige cómo pagarás.";
+"Choose male or female." = "Elige hombre o mujer.";
 "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week" = "Elige cuándo desaparece: tras 1 minuto, 60 minutos, 1 día o 1 semana";
 "Choose who sees each new post or story: everyone, ASU students or friends" = "Elige quién ve cada publicación o historia: todos, estudiantes de ASU o amigos";
 "Choose your app icon under More > App icon" = "Choose your app icon under More > App icon";
@@ -976,6 +977,8 @@
 "Helper" = "Ayudante";
 "Helpers" = "Ayudantes";
 "Hi, %@" = "Hola, %@";
+"Hidden from others unless you choose to show it." = "Oculto para los demás salvo que elijas mostrarlo.";
+"Hidden from others unless you choose to show it. You can change this later in Edit profile." = "Oculto para los demás salvo que elijas mostrarlo. Puedes cambiarlo luego en Editar perfil.";
 "Hide Continue" = "Ocultar Continuar";
 "Hide my name from the team" = "Ocultar mi nombre al equipo";
 "Hide your university number and name on scans." = "Oculta tu número universitario y nombre en los escaneos.";
@@ -1401,6 +1404,7 @@
 "On subject pages · %lld" = "En páginas de materias · %lld";
 "On subject pages · %@" = "En páginas de materias · %@";
 "On the website" = "En la web";
+"One quick thing" = "Una cosa rápida";
 "One-on-one help" = "One-on-one help";
 "Online (Zoom/Teams)" = "Online (Zoom/Teams)";
 "Online now" = "En línea ahora";
@@ -1693,6 +1697,7 @@
 "Requested" = "Solicitado";
 "Requests" = "Requests";
 "Requests you sent" = "Solicitudes enviadas";
+"Required. Hidden from others unless you choose to show it." = "Obligatorio. Oculto para los demás salvo que elijas mostrarlo.";
 "Researcher" = "Investigador";
 "Reset" = "Reiniciar";
 "Reset password" = "Restablecer contraseña";
@@ -1734,7 +1739,7 @@
 "Saved · %d" = "Guardados · %d";
 "Saved · %lld" = "Guardados · %lld";
 "Saved · %@" = "Guardados · %@";
-"Saving…" = "Saving…";
+"Saving…" = "Guardando…";
 "Say hello. Only the two of you see this chat." = "Saluda. Solo vosotros dos veis este chat.";
 "Say hi, ask anything about ASU" = "Saluda y pregunta lo que sea sobre ASU";
 "Scam or fraud" = "Estafa o fraude";
@@ -1816,6 +1821,7 @@
 "Session type" = "Tipo de sesión";
 "Sessions today" = "Sesiones de hoy";
 "Settings" = "Ajustes";
+"Sex" = "Sexo";
 "Sexual content" = "Sexual content";
 "Shadow" = "Shadow";
 "Share" = "Compartir";
@@ -1855,6 +1861,7 @@
 "Show %lld more" = "Mostrar %lld más";
 "Show %@ more" = "Mostrar %@ más";
 "Show Continue on Home" = "Mostrar Continuar en Inicio";
+"Show it on my profile" = "Mostrarlo en mi perfil";
 "Show my number on my profile" = "Mostrar mi número en mi perfil";
 "Show password" = "Mostrar contraseña";
 "Show past events" = "Mostrar eventos pasados";
@@ -2205,6 +2212,7 @@
 "UniHub is free and run by a volunteer student. Donations keep it online and growing." = "UniHub es gratuito y está dirigido por un estudiante voluntario. Las donaciones lo mantienen en línea y en crecimiento.";
 "UniHub is free and student-run. Donations help keep it running." = "UniHub es gratis y lo llevan estudiantes. Las donaciones ayudan a mantenerlo.";
 "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it." = "UniHub es gratis para los estudiantes y lo lleva un estudiante. Lo apoyan los anuncios del sitio web, los patrocinadores y las donaciones.";
+"UniHub now asks every account for its sex. Choose yours to keep going." = "UniHub ahora pide el sexo a cada cuenta. Elige el tuyo para continuar.";
 "UniHub team" = "Equipo de UniHub";
 "UniHub · Student Community Groups" = "UniHub · Grupos comunitarios de estudiantes";
 "UniHub مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة." = "UniHub مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.";
@@ -2472,6 +2480,7 @@
 "Your password" = "Tu contraseña";
 "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email." = "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email.";
 "Your privacy" = "Tu privacidad";
+"Your profile" = "Tu perfil";
 "Your profile, photo, email, university ID, phone number and sign-ins are deleted straight away. Your old messages stay in the chat as “Deleted user”, with nothing that points to you." = "Your profile, photo, email, university ID, phone number and sign-ins are deleted straight away. Your old messages stay in the chat as “Deleted user”, with nothing that points to you.";
 "Your rating" = "Tu valoración";
 "Your rating helps us make UniHub better for everyone." = "Tu valoración nos ayuda a mejorar UniHub para todos.";
