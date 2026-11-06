@@ -418,7 +418,7 @@ enum class RatingSort(val label: String) { VOTES("Most votes"), TOP("Top rated")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TeacherRatingsScreen() {
+fun TeacherRatingsScreen(back: Boolean = true) {
     val nav = LocalNav.current
     var introSeen by remember { mutableStateOf(Saved.prefs.getBoolean("rate.intro.v1", false)) }
     val status by RatingBridge.status.collectAsState()
@@ -429,7 +429,7 @@ fun TeacherRatingsScreen() {
     var retry by remember { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
 
-    Screen("Rate your teachers", large = introSeen) { pad ->
+    Screen("Rate your teachers", back = back, large = introSeen) { pad ->
         Box(Modifier.padding(pad).fillMaxSize()) {
             // the hidden page that talks to the ratings sheet
             AndroidView(factory = { RatingBridge.create(it) }, onRelease = { RatingBridge.release(it) }, modifier = Modifier.size(1.dp).alpha(0f))

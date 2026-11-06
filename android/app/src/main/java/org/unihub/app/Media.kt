@@ -586,6 +586,18 @@ fun SkeletonPost() {
     }
 }
 
+/** Profile numbers, buttons and about card while the profile loads */
+@Composable
+fun ProfileSkeleton() {
+    val fill = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f)
+    Column(Modifier.fillMaxWidth().shimmer(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) { repeat(3) { Box(Modifier.width(64.dp).height(18.dp).clip(CircleShape).background(fill)) } }
+        Box(Modifier.fillMaxWidth().height(50.dp).clip(RoundedCornerShape(14.dp)).background(fill))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) { repeat(3) { Box(Modifier.weight(1f).height(36.dp).clip(CircleShape).background(fill)) } }
+        Box(Modifier.fillMaxWidth().height(64.dp).clip(RoundedCornerShape(14.dp)).background(fill))
+    }
+}
+
 @Composable
 fun SkeletonRow() {
     val fill = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f)

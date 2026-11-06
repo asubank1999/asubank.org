@@ -51,7 +51,7 @@ data class SwapContact(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SwapsScreen() {
+fun SwapsScreen(back: Boolean = true) {
     val scope = rememberCoroutineScope()
     val user by Account.user.collectAsState()
     var swaps by remember { mutableStateOf<List<SwapListing>>(emptyList()) }
@@ -84,7 +84,7 @@ fun SwapsScreen() {
         }
     }
 
-    Screen("Subject swap", actions = {
+    Screen("Subject swap", back = back, actions = {
         IconButton(onClick = { loading = true; scope.launch { load() } }) { Icon(Icons.Filled.Refresh, null) }
     }) { pad ->
         LazyColumn(Modifier.padding(pad).fillMaxSize()) {

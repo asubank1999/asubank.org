@@ -3,6 +3,7 @@ import SwiftUI
 
 enum AppTab: Hashable, Identifiable {
     case home, search, upload, chat, saved, admin, more, friends, lectures, hacks, notifications, feed
+    case swap, rating, matcher, planner, focus
     var id: Self { self }
 }
 

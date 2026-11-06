@@ -307,6 +307,7 @@
 "Archive" = "Archivar";
 "Archived (hidden from students)" = "Archivada (oculta para estudiantes)";
 "Are the test banks free to use?" = "¿Los bancos de prueba son de uso gratuito?";
+"Area or pickup point" = "Zona o punto de recogida";
 "Arts & Design" = "Artes y diseño";
 "Arts & Sciences" = "Artes y ciencias";
 "Arts & humanities" = "Artes y humanidades";
@@ -361,6 +362,7 @@
 "Be the first to rate them." = "Sé el primero en valorarlo.";
 "Be the first to say something." = "Sé el primero en decir algo.";
 "Before you pay" = "Antes de pagar";
+"Before you report a study file" = "Antes de denunciar un archivo de estudio";
 "Before you upload" = "Antes de subir";
 "Bell" = "Campana";
 "Below 60 the average is under the passing limit." = "Por debajo de 60 el promedio no llega al aprobado.";
@@ -571,6 +573,7 @@
 "Couldn't connect. Check your connection and try again." = "No se pudo conectar. Comprueba tu conexión y vuelve a intentarlo.";
 "Couldn't delete" = "No se pudo eliminar";
 "Couldn't do that" = "No se pudo hacer";
+"Couldn't load the bus times. Check your connection." = "No se pudieron cargar los horarios. Revisa tu conexión.";
 "Couldn't load the latest files." = "No se pudieron cargar los últimos archivos.";
 "Couldn't load the ratings" = "No se pudieron cargar las valoraciones";
 "Couldn't load the tips. Check your connection and try again." = "No se pudieron cargar los consejos. Revisa tu conexión e inténtalo de nuevo.";
@@ -738,6 +741,7 @@
 "Email (your matches are sent here)" = "Correo (aquí recibirás tus coincidencias)";
 "Email Verification Required" = "Email Verification Required";
 "Email necro144@yahoo.com from the address on your account and we will delete it for you." = "Email necro144@yahoo.com from the address on your account and we will delete it for you.";
+"Email the owner" = "Escribir al propietario";
 "Email us" = "Escríbenos";
 "Email, WhatsApp or ASU ID" = "Correo, WhatsApp o ID de ASU";
 "Emerald" = "Esmeralda";
@@ -924,6 +928,7 @@
 "Get matched with classmates who take the same courses and are free at the same times." = "Te emparejamos con compañeros que toman los mismos cursos y están libres a la misma hora.";
 "Gives them a temporary password" = "Le da una contraseña temporal";
 "Glow" = "Glow";
+"Going home (PM)" = "De regreso (PM)";
 "Gold" = "Dorado";
 "Good" = "Bien";
 "Good for small screens: turn off what you don't use, so more fits on one screen." = "Ideal para pantallas pequeñas: desactiva lo que no uses para que quepa más en una pantalla.";
@@ -1022,6 +1027,7 @@
 "If you do not agree, please do not join, and leave the group if you're already a member." = "If you do not agree, please do not join, and leave the group if you're already a member.";
 "If you encounter any issues or have questions about the service, please call or WhatsApp us at: necro144@yahoo.com" = "If you encounter any issues or have questions about the service, please call or WhatsApp us at: necro144@yahoo.com";
 "If you own something on UniHub or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it." = "If you own something on UniHub or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it.";
+"If you want a file removed, email the owner and you will get an answer. The WhatsApp community moderators don't manage uploads, so please don't ask them." = "Si quieres que se quite un archivo, escribe al propietario por correo y recibirás una respuesta. Los moderadores de la comunidad de WhatsApp no gestionan los archivos, así que no les preguntes a ellos.";
 "If you're still having trouble understanding how this service works, our support team is here to help!" = "If you're still having trouble understanding how this service works, our support team is here to help!";
 "If your teacher isn’t listed yet, be the first to rate! Others will see your submission and join in." = "If your teacher isn’t listed yet, be the first to rate! Others will see your submission and join in.";
 "Image" = "Imagen";
@@ -1169,6 +1175,7 @@
 "Mark as done" = "Marcar como hecho";
 "Mark as not done" = "Marcar como no hecho";
 "Match my phone" = "Como el teléfono";
+"Matcher" = "Coincidir";
 "Matches found: %d" = "Matches found: %d";
 "Matches found: %lld" = "Matches found: %lld";
 "Matches found: %@" = "Matches found: %@";
@@ -1216,6 +1223,7 @@
 "More: see how our files are spread across the colleges" = "More: see how our files are spread across the colleges";
 "Morning" = "Morning";
 "Most Wanted Files" = "Most Wanted Files";
+"Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships." = "La mayoría de los archivos de estudio vienen de la propia universidad o los compartieron estudiantes, mediante enlaces que ya eran públicos. Una de las facultades de la universidad revisó y aprobó la colección.";
 "Most test banks are available in PDF format, but other formats may also be available depending on the resource." = "Most test banks are available in PDF format, but other formats may also be available depending on the resource.";
 "Most votes" = "Más votos";
 "Most wanted files" = "Archivos más buscados";
@@ -1291,6 +1299,8 @@
 "No Drive files match these filters." = "Ningún archivo de Drive coincide con estos filtros.";
 "No Drive files match." = "Ningún archivo de Drive coincide.";
 "No app can open this link" = "No app can open this link";
+"No bus line matches." = "Ninguna línea coincide.";
+"No buses at this time" = "No hay autobuses a esta hora";
 "No comments yet" = "Aún no hay comentarios";
 "No events" = "Sin eventos";
 "No files" = "Sin archivos";
@@ -1977,6 +1987,7 @@
 "Sunset" = "Sunset";
 "Support" = "Soporte";
 "Support UniHub" = "Apoya UniHub";
+"Swap" = "Cambio";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Desliza de lado en el Feed para abrir la cámara y crear una historia con foto o vídeo, a 60 FPS si tu teléfono puede";
 "Switch camera" = "Cambiar de cámara";
 "System language" = "Idioma del sistema";
@@ -2003,11 +2014,13 @@
 "Targeted" = "Dirigido";
 "Targeted Audience" = "Targeted Audience";
 "Task" = "Tarea";
+"Tasks" = "Tareas";
 "Teacher" = "Profesor";
 "Teacher not listed?" = "Teacher not listed?";
 "Teacher ratings connect more reliably." = "Teacher ratings connect more reliably.";
 "Teacher's full name" = "Nombre completo del profesor";
 "Teacher's full name, e.g. Dr. Ahmad Malik" = "Nombre completo, p. ej. Dr. Ahmad Malik";
+"Teachers" = "Profesores";
 "Teaching Method" = "Teaching Method";
 "Teal" = "Verde azulado";
 "Tell me when it opens" = "Avísame cuando abra";
@@ -2109,6 +2122,7 @@
 "Thunderstorms" = "Tormentas";
 "Thursday" = "Thursday";
 "Time" = "Time";
+"Times can change. The transport office has the final word." = "Los horarios pueden cambiar. La oficina de transporte tiene la última palabra.";
 "Tips" = "Consejos";
 "Title" = "Título";
 "Title or student" = "Title or student";
@@ -2117,16 +2131,19 @@
 "To remove a file or anything else, report it or email us." = "To remove a file or anything else, report it or email us.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed.";
 "To report something, press and hold a message or open a profile." = "To report something, press and hold a message or open a profile.";
+"To the university (AM)" = "A la universidad (AM)";
 "Today" = "Hoy";
 "Today on campus" = "Hoy en el campus";
 "Tomorrow" = "Mañana";
 "Tomorrow on campus" = "Mañana en el campus";
 "Top of the scale" = "Lo más alto de la escala";
+"Top picks" = "Lo más usado";
 "Top rated" = "Mejor valorados";
 "Top student" = "Mejor estudiante";
 "Topic" = "Tema";
 "Topics" = "Temas";
 "Total" = "Total";
+"Trade a registered subject" = "Intercambia una materia inscrita";
 "Trade a registered subject with another student. Say what you have and what you want." = "Cambia una materia registrada con otro estudiante. Di cuál tienes y cuál quieres.";
 "Training 2" = "Training 2";
 "Translator" = "Traductor";

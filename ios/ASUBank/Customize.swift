@@ -14,6 +14,7 @@ enum HomePrefs {
 
     static let sections: [(id: String, name: String, icon: String)] = [
         ("online", "Who's online", "circle.fill"),
+        ("top", "Top picks", "star.circle"),
         ("weather", "Weather", "cloud.sun"),
         ("calendar", "Calendar", "calendar"),
         ("lecture", "Next lecture", "alarm"),

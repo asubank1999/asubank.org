@@ -620,6 +620,8 @@ fun ProfileScreen(userId: String) {
         messageCount = r.str("messageCount")?.toDoubleOrNull()?.toInt() ?: 0
         posts = r["posts"].decodeAs<List<FeedPost>>().orEmpty()
     }
+    // a profile seen before shows from the first frame, then refreshes
+    remember(userId) { Account.saved("profile", userId)?.let { readProfile(it) }; true }
     suspend fun load() {
         if (user == null) Account.saved("profile", userId)?.let { readProfile(it) }
         try {
@@ -712,7 +714,7 @@ fun ProfileScreen(userId: String) {
                         }
                     }
                     if (u == null) {
-                        if (error == null) ABDots() else Text(error!!, color = MaterialTheme.colorScheme.error)
+                        if (error == null) ProfileSkeleton() else Text(error!!, color = MaterialTheme.colorScheme.error)
                     } else {
                         BadgeRow(u.badges)
                         Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.surfaceContainer).padding(vertical = 8.dp)) {
@@ -756,6 +758,7 @@ fun ProfileScreen(userId: String) {
                     }
                 }
             }
+            if (user == null && error == null) items(2) { SkeletonPost() }
             user?.let { u ->
                 if (!u.phone.isNullOrEmpty()) item {
                     Group(header = tr("Phone")) {

@@ -72,14 +72,14 @@ object Planner {
 }
 
 @Composable
-fun PlannerScreen() {
+fun PlannerScreen(back: Boolean = true) {
     val items by Planner.items.collectAsState()
     var editing by remember { mutableStateOf<PlannerItem?>(null) }
     editing?.let { e -> PlannerEditor(e) { editing = null } }
     val upcoming = Planner.upcoming(items)
     val done = items.filter { it.done }.sortedByDescending { it.due }
 
-    Screen("Exams & tasks", actions = {
+    Screen("Exams & tasks", back = back, actions = {
         IconButton(onClick = { editing = PlannerItem(title = "", due = LocalDate.now().plusDays(7).toString()) }) { Icon(Icons.Filled.Add, tr("Add")) }
     }) { pad ->
         LazyColumn(Modifier.padding(pad)) {
@@ -153,7 +153,7 @@ private fun PlannerEditor(start: PlannerItem, onClose: () -> Unit) {
 
 /** Focus timer: work, then a break. Counts from an end time, so it stays right if the screen locks. */
 @Composable
-fun FocusTimerScreen() {
+fun FocusTimerScreen(back: Boolean = true) {
     val ctx = LocalContext.current
     val prefs = Saved.prefs
     var minutes by remember { mutableIntStateOf(prefs.getInt("focus.minutes", 25)) }
@@ -188,7 +188,7 @@ fun FocusTimerScreen() {
         }
     }
 
-    Screen("Focus timer") { pad ->
+    Screen("Focus timer", back = back) { pad ->
         LazyColumn(Modifier.padding(pad)) {
             item {
                 Group {

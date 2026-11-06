@@ -951,12 +951,15 @@ fun NextLectureCard() {
 /** Which tabs sit between Home and More. Apps only. */
 object TabPrefs {
     private const val KEY = "tabs"
-    private const val DEFAULT = "feed,chat,notifications"
+    /** Home, Feed, Chat, Search, More. People who already picked their tabs keep them. */
+    private const val DEFAULT = "feed,chat,search"
     fun shown(list: List<String>, admin: Boolean) = list.take(3)
     /** route, name */
     val options = listOf(
         Routes.FEED to "Feed", Routes.SEARCH to "Search", Routes.CHAT to "Chat", Routes.NOTIFICATIONS to "Notifications", Routes.FRIENDS to "Friends",
         Routes.SAVED to "Saved", Routes.LECTURES to "My lectures", Routes.HACKS to "Life hacks",
+        Routes.SWAPS to "Subject swap", Routes.RATINGS to "Rate your teachers", Routes.MATCHER to "Course matcher",
+        Routes.PLANNER to "Exams & tasks", Routes.FOCUS to "Focus timer",
     )
     val chosen = MutableStateFlow(DEFAULT.split(","))
     fun init() { chosen.value = parse(Saved.prefs.getString(KEY, DEFAULT) ?: DEFAULT) }

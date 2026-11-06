@@ -115,6 +115,12 @@ data class SiteLink(
 }
 
 object Links {
+    /** The three tools students use most, first on Home */
+    val top = listOf(
+        SiteLink("📝", "Rate your teachers", "See averages and rate anonymously.", web = "/requests/portal_to_rating"),
+        SiteLink("👥", "Course matcher", "Find classmates with similar schedules", web = "/requests/matcher_confirm"),
+        SiteLink("🔄", "Subject swap", "Trade a registered subject", web = "/swap"),
+    )
     val quick = listOf(
         SiteLink("📅", "Calendar 2026–2027", "This year's important dates.", added = "2026-08-31", web = "/schedules/calendar27"),
         SiteLink("⏰", "My lectures", "Your timetable, with reminders.", tab = Routes.LECTURES),
@@ -125,7 +131,6 @@ object Links {
         SiteLink("📥", "Recent uploads", "Latest study materials and resources.", web = "/portal/confirm_device"),
         SiteLink("📬", "Request a material", "Can't find it? Ask for it.", web = "/requests/student_request_portal"),
         SiteLink("📤", "Upload files", "Share your study materials.", tab = Routes.UPLOAD),
-        SiteLink("📝", "Rate your teachers", "See averages and rate anonymously.", web = "/requests/portal_to_rating"),
         SiteLink("➕", "Useful gate", "University resources in one place.", web = "/guides/links"),
     )
     val newHere = listOf(
@@ -147,7 +152,6 @@ object Links {
     )
     val community = listOf(
         SiteLink("💬", "WhatsApp community", "Updates, shared files and help", external = AB.WHATSAPP),
-        SiteLink("👥", "Course matcher", "Find classmates with similar schedules", web = "/requests/matcher_confirm"),
         SiteLink("🖥️", "Upload your presentations", "For the campus display screen", web = "/upload/submit_file"),
         SiteLink("📋", "Submitted files (students)", "Files uploaded by students", web = "/upload/student_submissions_board"),
         SiteLink("📢", "Student ads & services", "Tutoring, design help, items for sale", web = "/requests/student_ads"),
@@ -226,6 +230,30 @@ fun HomeScreen() {
             }
         }
         if (on("online")) item { OnlineBox(Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)) }
+        if (on("top")) {
+        item { SectionTitle("Top picks", "الأكثر استخداماً") }
+        items(Links.top.chunked(if (compact) 3 else 2)) { pair ->
+            Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                pair.forEach { l ->
+                    Surface(
+                        shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.surfaceContainer,
+                        modifier = Modifier.weight(1f).height(if (compact) 92.dp else 128.dp).clickable { follow(l, nav, ctx) },
+                    ) {
+                        Column(Modifier.padding(if (compact) 10.dp else 14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(l.emoji, fontSize = if (compact) 20.sp else 26.sp)
+                                Spacer(Modifier.weight(1f))
+                                l.shownBadge?.let { Badge(it, if (it == "NEW") Brand.green else Brand.orange) }
+                            }
+                            Text(l.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                            if (!compact) l.subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                        }
+                    }
+                }
+                repeat((if (compact) 3 else 2) - pair.size) { Spacer(Modifier.weight(1f)) }
+            }
+        }
+        }
         if (on("weather")) item { WeatherCard() }
         if (on("calendar")) item { HomeCalendarCard() }
         if (on("lecture")) item { NextLectureCard() }

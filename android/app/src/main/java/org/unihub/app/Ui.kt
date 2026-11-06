@@ -211,6 +211,10 @@ object Routes {
     const val NOTIFICATIONS = "notifications"
     const val FEED = "feed"
     const val SWAPS = "swaps"
+    const val RATINGS = "ratings"
+    const val MATCHER = "matcher"
+    const val PLANNER = "planner"
+    const val FOCUS = "focus"
 }
 
 val LocalNav = staticCompositionLocalOf<NavController> { error("no nav") }

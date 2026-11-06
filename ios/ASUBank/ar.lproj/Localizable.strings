@@ -307,6 +307,7 @@
 "Archive" = "أرشفة";
 "Archived (hidden from students)" = "مؤرشفة (مخفية عن الطلاب)";
 "Are the test banks free to use?" = "هل بنوك الأسئلة مجانية؟";
+"Area or pickup point" = "المنطقة أو نقطة الصعود";
 "Arts & Design" = "الفنون والتصميم";
 "Arts & Sciences" = "الآداب والعلوم";
 "Arts & humanities" = "الفنون والعلوم الإنسانية";
@@ -361,6 +362,7 @@
 "Be the first to rate them." = "كن أول من يقيّمه.";
 "Be the first to say something." = "كن أول من يكتب شيئاً.";
 "Before you pay" = "قبل الدفع";
+"Before you report a study file" = "قبل أن تبلّغ عن ملف دراسي";
 "Before you upload" = "قبل الرفع";
 "Bell" = "جرس";
 "Below 60 the average is under the passing limit." = "المعدل تحت 60 أقل من حد النجاح.";
@@ -571,6 +573,7 @@
 "Couldn't connect. Check your connection and try again." = "تعذر الاتصال. تحقق من اتصالك وحاول مجددًا.";
 "Couldn't delete" = "تعذر الحذف";
 "Couldn't do that" = "تعذر تنفيذ ذلك";
+"Couldn't load the bus times. Check your connection." = "تعذّر تحميل مواعيد الحافلات. تحقّق من اتصالك.";
 "Couldn't load the latest files." = "تعذر تحميل أحدث الملفات.";
 "Couldn't load the ratings" = "تعذر تحميل التقييمات";
 "Couldn't load the tips. Check your connection and try again." = "تعذر تحميل النصائح. تحقق من اتصالك وحاول مرة أخرى.";
@@ -738,6 +741,7 @@
 "Email (your matches are sent here)" = "البريد الإلكتروني (تُرسل نتائجك إليه)";
 "Email Verification Required" = "يلزم بريد إلكتروني فعّال";
 "Email necro144@yahoo.com from the address on your account and we will delete it for you." = "راسل necro144@yahoo.com من البريد المسجل في حسابك وسنحذفه لك.";
+"Email the owner" = "راسل المالك";
 "Email us" = "راسلنا بالبريد";
 "Email, WhatsApp or ASU ID" = "البريد أو واتساب أو الرقم الجامعي";
 "Emerald" = "زمردي";
@@ -924,6 +928,7 @@
 "Get matched with classmates who take the same courses and are free at the same times." = "نوفّق بينك وبين زملاء يدرسون نفس المواد ولديهم نفس أوقات الفراغ.";
 "Gives them a temporary password" = "يمنحه كلمة مرور مؤقتة";
 "Glow" = "Glow";
+"Going home (PM)" = "العودة (مساءً)";
 "Gold" = "ذهبي";
 "Good" = "جيد";
 "Good for small screens: turn off what you don't use, so more fits on one screen." = "مناسب للشاشات الصغيرة: أوقف ما لا تستخدمه ليظهر المزيد في شاشة واحدة.";
@@ -1022,6 +1027,7 @@
 "If you do not agree, please do not join, and leave the group if you're already a member." = "إذا لم توافق، فلا تنضم، وغادر المجموعة إن كنت عضوًا فيها.";
 "If you encounter any issues or have questions about the service, please call or WhatsApp us at: necro144@yahoo.com" = "إذا واجهت مشكلة أو كان لديك سؤال عن الخدمة، فاتصل بنا أو راسلنا على واتساب: necro144@yahoo.com";
 "If you own something on UniHub or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it." = "إذا كنت تملك شيئًا في UniHub أو تمثل مالكه وتريد إزالته، فأبلغ عن الملف أو راسل necro144@yahoo.com مع رابطه.";
+"If you want a file removed, email the owner and you will get an answer. The WhatsApp community moderators don't manage uploads, so please don't ask them." = "إذا أردت إزالة ملف، راسل المالك عبر البريد وستصلك الإجابة. مشرفو مجتمع واتساب لا يديرون الملفات المرفوعة، لذا يرجى عدم سؤالهم.";
 "If you're still having trouble understanding how this service works, our support team is here to help!" = "إذا كنت ما زلت لا تفهم كيف تعمل الخدمة، ففريق الدعم هنا لمساعدتك!";
 "If your teacher isn’t listed yet, be the first to rate! Others will see your submission and join in." = "إذا لم يكن مدرسك في القائمة، فكن أول من يقيّمه! سيرى الآخرون تقييمك وينضمون.";
 "Image" = "صورة";
@@ -1169,6 +1175,7 @@
 "Mark as done" = "تم التبديل";
 "Mark as not done" = "تحديد كغير منجز";
 "Match my phone" = "حسب الهاتف";
+"Matcher" = "المطابقة";
 "Matches found: %d" = "المطابقات: %d";
 "Matches found: %lld" = "المطابقات: %lld";
 "Matches found: %@" = "المطابقات: %@";
@@ -1216,6 +1223,7 @@
 "More: see how our files are spread across the colleges" = "More: see how our files are spread across the colleges";
 "Morning" = "صباحًا";
 "Most Wanted Files" = "الملفات الأكثر طلبًا";
+"Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships." = "معظم الملفات الدراسية هنا مصدرها الجامعة نفسها أو شاركها طلاب عبر روابط كانت متاحة للعموم. وقد راجعت المجموعة ووافقت عليها إحدى عمادات الجامعة.";
 "Most test banks are available in PDF format, but other formats may also be available depending on the resource." = "معظمها بصيغة PDF، وقد تتوفر صيغ أخرى حسب المصدر.";
 "Most votes" = "الأكثر أصواتًا";
 "Most wanted files" = "الملفات الأكثر طلباً";
@@ -1291,6 +1299,8 @@
 "No Drive files match these filters." = "لا ملفات في Drive تطابق هذه الفلاتر.";
 "No Drive files match." = "لا ملفات مطابقة في Drive.";
 "No app can open this link" = "لا يوجد تطبيق يفتح هذا الرابط";
+"No bus line matches." = "لا يوجد خط حافلة مطابق.";
+"No buses at this time" = "لا توجد حافلات في هذا الوقت";
 "No comments yet" = "لا توجد تعليقات بعد";
 "No events" = "لا توجد أحداث";
 "No files" = "لا توجد ملفات";
@@ -1977,6 +1987,7 @@
 "Sunset" = "غروب";
 "Support" = "الدعم";
 "Support UniHub" = "ادعم UniHub";
+"Swap" = "تبديل";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "اسحب جانباً في آخر المنشورات لفتح الكاميرا لقصة بصورة أو فيديو، بسرعة 60 إطاراً إن كان هاتفك يدعمها";
 "Switch camera" = "تبديل الكاميرا";
 "System language" = "لغة النظام";
@@ -2003,11 +2014,13 @@
 "Targeted" = "موجّه";
 "Targeted Audience" = "جمهور مستهدف";
 "Task" = "مهمة";
+"Tasks" = "المهام";
 "Teacher" = "الدكتور";
 "Teacher not listed?" = "المدرس غير موجود؟";
 "Teacher ratings connect more reliably." = "Teacher ratings connect more reliably.";
 "Teacher's full name" = "الاسم الكامل للدكتور";
 "Teacher's full name, e.g. Dr. Ahmad Malik" = "الاسم الكامل للدكتور، مثل د. أحمد مالك";
+"Teachers" = "المدرّسون";
 "Teaching Method" = "طريقة شرح";
 "Teal" = "أزرق مخضر";
 "Tell me when it opens" = "أخبرني عندما يُفتح";
@@ -2109,6 +2122,7 @@
 "Thunderstorms" = "عواصف رعدية";
 "Thursday" = "الخميس";
 "Time" = "الوقت";
+"Times can change. The transport office has the final word." = "قد تتغير المواعيد، والقرار النهائي لدائرة النقل.";
 "Tips" = "نصائح";
 "Title" = "العنوان";
 "Title or student" = "العنوان أو الطالب";
@@ -2117,16 +2131,19 @@
 "To remove a file or anything else, report it or email us." = "لإزالة ملف أو أي شيء آخر، أبلغ عنه أو راسلنا بالبريد.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "للإبلاغ عن ملف يخالف القواعد أو حقوقك، أرسل رابطه على واتساب وسيُزال.";
 "To report something, press and hold a message or open a profile." = "للإبلاغ عن شيء، اضغط مطولًا على رسالة أو افتح ملفًا شخصيًا.";
+"To the university (AM)" = "إلى الجامعة (صباحاً)";
 "Today" = "اليوم";
 "Today on campus" = "اليوم في الجامعة";
 "Tomorrow" = "غدًا";
 "Tomorrow on campus" = "غداً في الجامعة";
 "Top of the scale" = "أعلى السلم";
+"Top picks" = "الأكثر استخداماً";
 "Top rated" = "الأعلى تقييمًا";
 "Top student" = "طالب متفوق";
 "Topic" = "الموضوع";
 "Topics" = "المواضيع";
 "Total" = "الإجمالي";
+"Trade a registered subject" = "بدّل مادة مسجّلة";
 "Trade a registered subject with another student. Say what you have and what you want." = "بدّل مادة مسجّلة مع طالب آخر. اكتب المادة التي لديك والمادة التي تريدها.";
 "Training 2" = "التدريب 2";
 "Translator" = "مترجم";

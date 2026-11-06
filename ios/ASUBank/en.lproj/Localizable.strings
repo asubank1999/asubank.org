@@ -307,6 +307,7 @@
 "Archive" = "Archive";
 "Archived (hidden from students)" = "Archived (hidden from students)";
 "Are the test banks free to use?" = "Are the test banks free to use?";
+"Area or pickup point" = "Area or pickup point";
 "Arts & Design" = "Arts & Design";
 "Arts & Sciences" = "Arts & Sciences";
 "Arts & humanities" = "Arts & humanities";
@@ -361,6 +362,7 @@
 "Be the first to rate them." = "Be the first to rate them.";
 "Be the first to say something." = "Be the first to say something.";
 "Before you pay" = "Before you pay";
+"Before you report a study file" = "Before you report a study file";
 "Before you upload" = "Before you upload";
 "Bell" = "Bell";
 "Below 60 the average is under the passing limit." = "Below 60 the average is under the passing limit.";
@@ -571,6 +573,7 @@
 "Couldn't connect. Check your connection and try again." = "Couldn't connect. Check your connection and try again.";
 "Couldn't delete" = "Couldn't delete";
 "Couldn't do that" = "Couldn't do that";
+"Couldn't load the bus times. Check your connection." = "Couldn't load the bus times. Check your connection.";
 "Couldn't load the latest files." = "Couldn't load the latest files.";
 "Couldn't load the ratings" = "Couldn't load the ratings";
 "Couldn't load the tips. Check your connection and try again." = "Couldn't load the tips. Check your connection and try again.";
@@ -738,6 +741,7 @@
 "Email (your matches are sent here)" = "Email (your matches are sent here)";
 "Email Verification Required" = "Email Verification Required";
 "Email necro144@yahoo.com from the address on your account and we will delete it for you." = "Email necro144@yahoo.com from the address on your account and we will delete it for you.";
+"Email the owner" = "Email the owner";
 "Email us" = "Email us";
 "Email, WhatsApp or ASU ID" = "Email, WhatsApp or ASU ID";
 "Emerald" = "Emerald";
@@ -924,6 +928,7 @@
 "Get matched with classmates who take the same courses and are free at the same times." = "Get matched with classmates who take the same courses and are free at the same times.";
 "Gives them a temporary password" = "Gives them a temporary password";
 "Glow" = "Glow";
+"Going home (PM)" = "Going home (PM)";
 "Gold" = "Gold";
 "Good" = "Good";
 "Good for small screens: turn off what you don't use, so more fits on one screen." = "Good for small screens: turn off what you don't use, so more fits on one screen.";
@@ -1022,6 +1027,7 @@
 "If you do not agree, please do not join, and leave the group if you're already a member." = "If you do not agree, please do not join, and leave the group if you're already a member.";
 "If you encounter any issues or have questions about the service, please call or WhatsApp us at: necro144@yahoo.com" = "If you encounter any issues or have questions about the service, please call or WhatsApp us at: necro144@yahoo.com";
 "If you own something on UniHub or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it." = "If you own something on UniHub or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it.";
+"If you want a file removed, email the owner and you will get an answer. The WhatsApp community moderators don't manage uploads, so please don't ask them." = "If you want a file removed, email the owner and you will get an answer. The WhatsApp community moderators don't manage uploads, so please don't ask them.";
 "If you're still having trouble understanding how this service works, our support team is here to help!" = "If you're still having trouble understanding how this service works, our support team is here to help!";
 "If your teacher isn’t listed yet, be the first to rate! Others will see your submission and join in." = "If your teacher isn’t listed yet, be the first to rate! Others will see your submission and join in.";
 "Image" = "Image";
@@ -1169,6 +1175,7 @@
 "Mark as done" = "Mark as done";
 "Mark as not done" = "Mark as not done";
 "Match my phone" = "Match my phone";
+"Matcher" = "Matcher";
 "Matches found: %d" = "Matches found: %d";
 "Matches found: %lld" = "Matches found: %lld";
 "Matches found: %@" = "Matches found: %@";
@@ -1216,6 +1223,7 @@
 "More: see how our files are spread across the colleges" = "More: see how our files are spread across the colleges";
 "Morning" = "Morning";
 "Most Wanted Files" = "Most Wanted Files";
+"Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships." = "Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships.";
 "Most test banks are available in PDF format, but other formats may also be available depending on the resource." = "Most test banks are available in PDF format, but other formats may also be available depending on the resource.";
 "Most votes" = "Most votes";
 "Most wanted files" = "Most wanted files";
@@ -1291,6 +1299,8 @@
 "No Drive files match these filters." = "No Drive files match these filters.";
 "No Drive files match." = "No Drive files match.";
 "No app can open this link" = "No app can open this link";
+"No bus line matches." = "No bus line matches.";
+"No buses at this time" = "No buses at this time";
 "No comments yet" = "No comments yet";
 "No events" = "No events";
 "No files" = "No files";
@@ -1977,6 +1987,7 @@
 "Sunset" = "Sunset";
 "Support" = "Support";
 "Support UniHub" = "Support UniHub";
+"Swap" = "Swap";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can";
 "Switch camera" = "Switch camera";
 "System language" = "System language";
@@ -2003,11 +2014,13 @@
 "Targeted" = "Targeted";
 "Targeted Audience" = "Targeted Audience";
 "Task" = "Task";
+"Tasks" = "Tasks";
 "Teacher" = "Teacher";
 "Teacher not listed?" = "Teacher not listed?";
 "Teacher ratings connect more reliably." = "Teacher ratings connect more reliably.";
 "Teacher's full name" = "Teacher's full name";
 "Teacher's full name, e.g. Dr. Ahmad Malik" = "Teacher's full name, e.g. Dr. Ahmad Malik";
+"Teachers" = "Teachers";
 "Teaching Method" = "Teaching Method";
 "Teal" = "Teal";
 "Tell me when it opens" = "Tell me when it opens";
@@ -2109,6 +2122,7 @@
 "Thunderstorms" = "Thunderstorms";
 "Thursday" = "Thursday";
 "Time" = "Time";
+"Times can change. The transport office has the final word." = "Times can change. The transport office has the final word.";
 "Tips" = "Tips";
 "Title" = "Title";
 "Title or student" = "Title or student";
@@ -2117,16 +2131,19 @@
 "To remove a file or anything else, report it or email us." = "To remove a file or anything else, report it or email us.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed.";
 "To report something, press and hold a message or open a profile." = "To report something, press and hold a message or open a profile.";
+"To the university (AM)" = "To the university (AM)";
 "Today" = "Today";
 "Today on campus" = "Today on campus";
 "Tomorrow" = "Tomorrow";
 "Tomorrow on campus" = "Tomorrow on campus";
 "Top of the scale" = "Top of the scale";
+"Top picks" = "Top picks";
 "Top rated" = "Top rated";
 "Top student" = "Top student";
 "Topic" = "Topic";
 "Topics" = "Topics";
 "Total" = "Total";
+"Trade a registered subject" = "Trade a registered subject";
 "Trade a registered subject with another student. Say what you have and what you want." = "Trade a registered subject with another student. Say what you have and what you want.";
 "Training 2" = "Training 2";
 "Translator" = "Translator";

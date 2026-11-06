@@ -64,6 +64,27 @@ enum Moderation {
     }
 }
 
+/// Shown above the form when someone reports a study file: removal requests go to the owner by email.
+struct StudyFileNotice: View {
+    static let ownerMail = "mailto:necro144@yahoo.com?subject=" + "UniHub file removal request".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+
+    var body: some View {
+        Section {
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Before you report a study file", systemImage: "info.circle.fill").font(.headline)
+                Text("Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships.")
+                Text("If you want a file removed, email the owner and you will get an answer. The WhatsApp community moderators don't manage uploads, so please don't ask them.")
+                    .foregroundColor(.secondary)
+            }
+            .font(.subheadline)
+            .padding(.vertical, 4)
+            if let url = URL(string: Self.ownerMail) {
+                Link(destination: url) { Label("Email the owner", systemImage: "envelope.fill") }
+            }
+        }
+    }
+}
+
 /// Lets anyone report a message, a person, a file or a problem. Signing in isn't needed.
 struct ReportSheet: View {
     let target: ReportTarget
@@ -87,6 +108,7 @@ struct ReportSheet: View {
                         if let reference { Text(String(format: L("Reference: %@"), reference)).font(.body.monospaced()).textSelection(.enabled) }
                     }
                 } else {
+                    if target.kind == "file" { StudyFileNotice() }
                     if !target.name.isEmpty { Section("Reporting") { Text(target.name).lineLimit(3) } }
                     Section("What's wrong?") {
                         ForEach(Moderation.reasons.filter { $0.id != "bug" && $0.id != "account" }, id: \.id) { r in

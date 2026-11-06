@@ -15,6 +15,13 @@ struct SiteLink: Identifiable {
 }
 
 enum Links {
+    /// The three tools students use most, first on Home
+    static let top: [SiteLink] = [
+        .init(emoji: "📝", title: "Rate your teachers", subtitle: "See averages and rate anonymously.", target: .web("/requests/portal_to_rating")),
+        .init(emoji: "👥", title: "Course matcher", subtitle: "Find classmates with similar schedules", target: .web("/requests/matcher_confirm")),
+        .init(emoji: "🔄", title: "Subject swap", subtitle: "Trade a registered subject", target: .web("/swap"))
+    ]
+
     static let quick: [SiteLink] = [
         .init(emoji: "📅", title: "Calendar 2026–2027", subtitle: "This year's important dates.", added: "2026-08-31", target: .web("/schedules/calendar27")),
         .init(emoji: "⏰", title: "My lectures", subtitle: "Your timetable, with reminders.", target: .tab(.lectures)),
@@ -25,7 +32,6 @@ enum Links {
         .init(emoji: "📥", title: "Recent uploads", subtitle: "Latest study materials and resources.", target: .web("/portal/confirm_device")),
         .init(emoji: "📬", title: "Request a material", subtitle: "Can't find it? Ask for it.", target: .web("/requests/student_request_portal")),
         .init(emoji: "📤", title: "Upload files", subtitle: "Share your study materials.", target: .tab(.upload)),
-        .init(emoji: "📝", title: "Rate your teachers", subtitle: "See averages and rate anonymously.", target: .web("/requests/portal_to_rating")),
         .init(emoji: "➕", title: "Useful gate", subtitle: "University resources in one place.", target: .web("/guides/links"))
     ]
 
@@ -50,7 +56,6 @@ enum Links {
 
     static let community: [SiteLink] = [
         .init(emoji: "💬", title: "WhatsApp community", subtitle: "Updates, shared files and help", target: .external(AB.whatsapp)),
-        .init(emoji: "👥", title: "Course matcher", subtitle: "Find classmates with similar schedules", target: .web("/requests/matcher_confirm")),
         .init(emoji: "🖥️", title: "Upload your presentations", subtitle: "For the campus display screen", target: .web("/upload/submit_file")),
         .init(emoji: "📋", title: "Submitted files (students)", subtitle: "Files uploaded by students", target: .web("/upload/student_submissions_board")),
         .init(emoji: "📢", title: "Student ads & services", subtitle: "Tutoring, design help, items for sale", target: .web("/requests/student_ads")),
@@ -138,6 +143,16 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     if on("online") { OnlineBox().padding(.horizontal, 16).padding(.top, 8) }
+                    if on("top") {
+                        SectionHeader(title: "Top picks", arabic: "الأكثر استخداماً")
+                        LazyVGrid(columns: grid, spacing: 12) {
+                            ForEach(Links.top) { l in
+                                SiteLinkButton(link: l) { Card(emoji: l.emoji, title: l.title, subtitle: compact ? nil : l.subtitle, badge: l.shownBadge) }
+                                    .buttonStyle(PressStyle())
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                    }
                     if on("weather") { WeatherCard() }
                     if on("calendar") { HomeCalendarCard() }
                     if on("lecture") { NextLectureCard() }
