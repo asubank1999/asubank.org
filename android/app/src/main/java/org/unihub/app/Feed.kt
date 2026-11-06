@@ -1,5 +1,10 @@
 package org.unihub.app
 
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -265,21 +270,12 @@ fun FeedScreen(back: Boolean = false) {
     draft?.let { d -> ComposeStoryDialog(d.media, { draft = null }) { scope.launch { loadStories() } } }
     viewing?.let { start -> StoryViewer(groups, start) { viewing = null; scope.launch { loadStories() } } }
 
+    SlideToCamera(enabled = me != null, open = { camera = true }) {
     Screen("Feed", back = back, large = true, actions = {
         OnlineButton()
         if (me != null) IconButton(onClick = { camera = true }) { Icon(Icons.Filled.PhotoCamera, tr("Add story")) }
     }) { pad ->
-        var swipe by remember { mutableFloatStateOf(0f) }
-        Box(
-            Modifier.padding(pad).pointerInput(me?.id) {
-                if (me == null) return@pointerInput
-                // swiping sideways opens the camera. The stories row scrolls by itself and takes its own swipes first.
-                detectHorizontalDragGestures(onDragStart = { swipe = 0f }, onDragEnd = { if (kotlin.math.abs(swipe) > size.width * 0.22f) camera = true }) { c, d ->
-                    c.consume()
-                    swipe += d
-                }
-            },
-        ) {
+        Box(Modifier.padding(pad)) {
             LazyColumn {
                 if (me != null || groups.isNotEmpty()) item { StoriesRow(groups, { camera = true }, { viewing = it }) }
                 if (me != null) {
@@ -348,6 +344,70 @@ fun FeedScreen(back: Boolean = false) {
                 item { Spacer(Modifier.height(24.dp)) }
             }
         }
+    }
+    }
+}
+
+/** Instagram-style: the whole Feed follows the finger sideways and the camera shows underneath.
+ *  Let go past a third of the screen (or flick) and the camera opens; otherwise the Feed springs back. */
+@Composable
+private fun SlideToCamera(enabled: Boolean, open: () -> Unit, content: @Composable () -> Unit) {
+    val scope = rememberCoroutineScope()
+    var width by remember { mutableFloatStateOf(1f) }
+    var dragX by remember { mutableFloatStateOf(0f) }
+    var dragging by remember { mutableStateOf(false) }
+    val settle = remember { androidx.compose.animation.core.Animatable(0f) }
+    val x = if (dragging) dragX else settle.value
+    Box(
+        Modifier.fillMaxSize()
+            .onSizeChanged { width = it.width.toFloat().coerceAtLeast(1f) }
+            .pointerInput(enabled) {
+                if (!enabled) return@pointerInput
+                val tracker = androidx.compose.ui.input.pointer.util.VelocityTracker()
+                fun release(fling: Float) {
+                    val from = dragX
+                    dragging = false
+                    scope.launch {
+                        settle.snapTo(from)
+                        if (kotlin.math.abs(from) > width * 0.3f || (kotlin.math.abs(fling) > 1400f && from * fling > 0)) {
+                            settle.animateTo(kotlin.math.sign(from) * width, tween(170))
+                            open()
+                            delay(350)
+                            settle.snapTo(0f)
+                        } else settle.animateTo(0f, androidx.compose.animation.core.spring(dampingRatio = 0.85f, stiffness = 500f))
+                    }
+                }
+                // the stories row scrolls by itself and takes its own swipes first
+                detectHorizontalDragGestures(
+                    onDragStart = { tracker.resetTracking(); dragX = settle.value; dragging = true },
+                    onDragEnd = { release(tracker.calculateVelocity().x) },
+                    onDragCancel = { release(0f) },
+                ) { c, d ->
+                    c.consume()
+                    tracker.addPosition(c.uptimeMillis, c.position)
+                    dragX = (dragX + d).coerceIn(-width, width)
+                }
+            },
+    ) {
+        if (x != 0f) {
+            val p = (kotlin.math.abs(x) / width).coerceIn(0f, 1f)
+            Box(Modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.Center) {
+                Column(
+                    Modifier.graphicsLayer { alpha = (p * 1.4f).coerceAtMost(1f); scaleX = 0.7f + 0.3f * p; scaleY = scaleX },
+                    horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Icon(Icons.Filled.PhotoCamera, null, tint = Color.White, modifier = Modifier.size(40.dp))
+                    Text(tr("Add story"), color = Color.White, style = MaterialTheme.typography.titleMedium)
+                }
+            }
+        }
+        Box(
+            Modifier.fillMaxSize().graphicsLayer {
+                translationX = x
+                shadowElevation = if (x != 0f) 28f else 0f
+                if (x != 0f) { shape = RoundedCornerShape((24f * (kotlin.math.abs(x) / width).coerceIn(0f, 1f) * 4f).coerceAtMost(24f).dp); clip = true }
+            },
+        ) { content() }
     }
 }
 

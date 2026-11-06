@@ -76,6 +76,28 @@ enum Links {
 }
 
 /// Wraps a SiteLink's destination around any label
+/// Small square shortcut on Home (Top picks): an emoji in a tinted circle and a short name
+struct TopPickTile: View {
+    let link: SiteLink
+    var body: some View {
+        VStack(spacing: 6) {
+            Text(link.emoji).font(.system(size: 22))
+                .frame(width: 42, height: 42)
+                .background(Circle().fill(Color.accentColor.opacity(0.14)))
+            Text(link.title).font(.caption.weight(.semibold)).foregroundStyle(.primary)
+                .lineLimit(2).multilineTextAlignment(.center).minimumScaleFactor(0.85)
+        }
+        .frame(maxWidth: .infinity, minHeight: 86)
+        .padding(.vertical, 8).padding(.horizontal, 4)
+        .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(alignment: .topTrailing) {
+            if link.shownBadge != nil { Circle().fill(Color.orange).frame(width: 8, height: 8).padding(8) }
+        }
+        .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .accessibilityElement(children: .combine)
+    }
+}
+
 struct SiteLinkButton<Label: View>: View {
     let link: SiteLink
     @ViewBuilder let label: () -> Label
@@ -144,14 +166,13 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     if on("online") { OnlineBox().padding(.horizontal, 16).padding(.top, 8) }
                     if on("top") {
-                        SectionHeader(title: "Top picks", arabic: "الأكثر استخداماً")
-                        LazyVGrid(columns: grid, spacing: 12) {
+                        HStack(spacing: 10) {
                             ForEach(Links.top) { l in
-                                SiteLinkButton(link: l) { Card(emoji: l.emoji, title: l.title, subtitle: compact ? nil : l.subtitle, badge: l.shownBadge) }
+                                SiteLinkButton(link: l) { TopPickTile(link: l) }
                                     .buttonStyle(PressStyle())
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 16).padding(.top, 12).padding(.bottom, 4)
                     }
                     if on("weather") { WeatherCard() }
                     if on("calendar") { HomeCalendarCard() }

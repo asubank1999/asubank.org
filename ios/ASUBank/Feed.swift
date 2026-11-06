@@ -143,8 +143,18 @@ struct AvatarPeek: ViewModifier {
     }
 }
 
+/// Instagram-style: the whole Feed follows the finger sideways and the camera shows underneath
 struct FeedTab: View {
-    var body: some View { ABStack { FeedScreen(swipeCamera: true) } }
+    @State private var slide: CGFloat = 0
+    var body: some View {
+        ZStack {
+            if slide != 0 { CameraPeek(progress: min(1, abs(slide) / max(1, UIScreen.main.bounds.width))) }
+            ABStack { FeedScreen(swipeCamera: true, slide: $slide) }
+                .clipShape(RoundedRectangle(cornerRadius: slide == 0 ? 0 : 24, style: .continuous))
+                .shadow(color: .black.opacity(slide == 0 ? 0 : 0.35), radius: 18)
+                .offset(x: slide)
+        }
+    }
 }
 
 /// Who a post or story is for
@@ -161,9 +171,10 @@ struct AudiencePicker: View {
     }
 }
 
-/// Notices a sideways swipe on the list behind it, without getting in the way of scrolling
+/// Follows a sideways drag on the list behind it, without getting in the way of scrolling
 private struct SwipeCatcher: UIViewRepresentable {
-    var swiped: () -> Void
+    var moved: (CGFloat) -> Void
+    var ended: (CGFloat, CGFloat) -> Void
 
     func makeUIView(context: Context) -> UIView {
         let v = UIView()
@@ -171,15 +182,17 @@ private struct SwipeCatcher: UIViewRepresentable {
         return v
     }
     func updateUIView(_ uiView: UIView, context: Context) {
-        context.coordinator.swiped = swiped
+        context.coordinator.moved = moved
+        context.coordinator.ended = ended
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { context.coordinator.attach(from: uiView) }
     }
-    func makeCoordinator() -> Coordinator { Coordinator(swiped) }
+    func makeCoordinator() -> Coordinator { Coordinator(moved, ended) }
 
     final class Coordinator: NSObject, UIGestureRecognizerDelegate {
-        var swiped: () -> Void
+        var moved: (CGFloat) -> Void
+        var ended: (CGFloat, CGFloat) -> Void
         private weak var list: UIScrollView?
-        init(_ s: @escaping () -> Void) { swiped = s }
+        init(_ m: @escaping (CGFloat) -> Void, _ e: @escaping (CGFloat, CGFloat) -> Void) { moved = m; ended = e }
 
         private func search(_ v: UIView) -> UIScrollView? {
             if v is UITableView || v is UICollectionView { return v as? UIScrollView }
@@ -193,19 +206,37 @@ private struct SwipeCatcher: UIViewRepresentable {
             while let s = up {
                 if let f = search(s) {
                     list = f
-                    for d in [UISwipeGestureRecognizer.Direction.left, .right] {
-                        let g = UISwipeGestureRecognizer(target: self, action: #selector(fire))
-                        g.direction = d
-                        g.delegate = self
-                        f.addGestureRecognizer(g)
-                    }
+                    let g = UIPanGestureRecognizer(target: self, action: #selector(pan(_:)))
+                    g.delegate = self
+                    f.addGestureRecognizer(g)
                     return
                 }
                 up = s.superview
             }
         }
 
-        @objc private func fire() { swiped() }
+        @objc private func pan(_ g: UIPanGestureRecognizer) {
+            let win = g.view?.window
+            let x = g.translation(in: win).x
+            switch g.state {
+            case .began:
+                // stop the list from scrolling up or down while the page slides
+                list?.panGestureRecognizer.isEnabled = false
+                list?.panGestureRecognizer.isEnabled = true
+                moved(x)
+            case .changed: moved(x)
+            case .ended: ended(x, g.velocity(in: win).x)
+            case .cancelled, .failed: ended(0, 0)
+            default: break
+            }
+        }
+
+        /// Only a mostly sideways drag slides the page
+        func gestureRecognizerShouldBegin(_ g: UIGestureRecognizer) -> Bool {
+            guard let p = g as? UIPanGestureRecognizer else { return true }
+            let v = p.velocity(in: p.view)
+            return abs(v.x) > abs(v.y) * 1.6
+        }
 
         func gestureRecognizer(_ g: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { true }
 
@@ -221,8 +252,27 @@ private struct SwipeCatcher: UIViewRepresentable {
     }
 }
 
+/// What shows under the Feed while it slides away
+private struct CameraPeek: View {
+    let progress: CGFloat
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            VStack(spacing: 10) {
+                Image(systemName: "camera.fill").font(.system(size: 36, weight: .semibold))
+                Text("Add story").font(.headline)
+            }
+            .foregroundColor(.white)
+            .scaleEffect(0.7 + 0.3 * progress)
+            .opacity(Double(min(1, progress * 1.4)))
+        }
+    }
+}
+
 struct FeedScreen: View {
     var swipeCamera = false
+    /// How far the Feed has slid sideways towards the camera (FeedTab draws it)
+    var slide: Binding<CGFloat> = .constant(0)
     @ObservedObject private var account = AccountStore.shared
     @AppStorage("ab.feed.scope") private var savedScope = "friends"
     @State private var posts: [FeedPost] = []
@@ -314,7 +364,14 @@ struct FeedScreen: View {
             }
         }
         .listStyle(.insetGrouped)
-        .background(swipeCamera && account.signedIn ? AnyView(SwipeCatcher { camera = true }) : AnyView(EmptyView()))
+        .background(swipeCamera && account.signedIn ? AnyView(SwipeCatcher(moved: { x in
+            let w = UIScreen.main.bounds.width
+            slide.wrappedValue = max(-w, min(w, x))
+        }, ended: { x, v in
+            let w = UIScreen.main.bounds.width
+            if abs(x) > w * 0.3 || (abs(v) > 700 && x * v > 0) { openCamera(x < 0 ? -1 : 1) }
+            else { withAnimation(.spring(response: 0.32, dampingFraction: 0.86)) { slide.wrappedValue = 0 } }
+        })) : AnyView(EmptyView()))
         .navigationTitle("Feed")
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) { OnlineButton() }
@@ -339,6 +396,18 @@ struct FeedScreen: View {
         .sheet(item: $draft) { d in ComposeStorySheet(media: d.media) { await loadStories() } }
         .fullScreenCover(item: $viewing, onDismiss: { Task { await loadStories() } }) { start in
             StoryViewer(groups: groups, startGroup: start.index)
+        }
+    }
+
+    /// Finishes the slide, then shows the camera without its usual slide-up
+    private func openCamera(_ side: CGFloat) {
+        withAnimation(.easeOut(duration: 0.17)) { slide.wrappedValue = side * UIScreen.main.bounds.width }
+        Haptics.tap()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.17) {
+            UIView.setAnimationsEnabled(false)
+            camera = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { UIView.setAnimationsEnabled(true) }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { slide.wrappedValue = 0 }
         }
     }
 

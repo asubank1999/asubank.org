@@ -39,12 +39,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -96,6 +98,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
@@ -231,26 +234,32 @@ fun HomeScreen() {
         }
         if (on("online")) item { OnlineBox(Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)) }
         if (on("top")) {
-        item { SectionTitle("Top picks", "الأكثر استخداماً") }
-        items(Links.top.chunked(if (compact) 3 else 2)) { pair ->
-            Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                pair.forEach { l ->
+        // three small squares in one row, right under Who's online
+        item {
+            Row(Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Links.top.forEach { l ->
                     Surface(
-                        shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.surfaceContainer,
-                        modifier = Modifier.weight(1f).height(if (compact) 92.dp else 128.dp).clickable { follow(l, nav, ctx) },
+                        shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surfaceContainer,
+                        modifier = Modifier.weight(1f).heightIn(min = 96.dp).clip(RoundedCornerShape(16.dp)).clickable { follow(l, nav, ctx) },
                     ) {
-                        Column(Modifier.padding(if (compact) 10.dp else 14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(l.emoji, fontSize = if (compact) 20.sp else 26.sp)
-                                Spacer(Modifier.weight(1f))
-                                l.shownBadge?.let { Badge(it, if (it == "NEW") Brand.green else Brand.orange) }
+                        Box {
+                            Column(
+                                Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 10.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp),
+                            ) {
+                                Box(
+                                    Modifier.size(42.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)),
+                                    contentAlignment = Alignment.Center,
+                                ) { Text(l.emoji, fontSize = 20.sp) }
+                                Text(
+                                    l.title, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold,
+                                    maxLines = 2, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center,
+                                )
                             }
-                            Text(l.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                            if (!compact) l.subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                            if (l.shownBadge != null) Box(Modifier.align(Alignment.TopEnd).padding(8.dp).size(8.dp).clip(CircleShape).background(Brand.orange))
                         }
                     }
                 }
-                repeat((if (compact) 3 else 2) - pair.size) { Spacer(Modifier.weight(1f)) }
             }
         }
         }
