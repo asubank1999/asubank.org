@@ -641,16 +641,17 @@
         }
         var room = decodeURIComponent((location.hash || '').replace('#', ''));
         if (room.indexOf('@dm/') === 0) return dmThread(room.slice(4));
-        if (room && room !== '@messages') return roomView(room);
+        if (room && room !== '@messages' && room !== '@rooms') return roomView(room);
+        var dmMode = room !== '@rooms';
         clear();
         root.appendChild(h('div', { class: 'acc-intro' }, h('h1', { class: 'ab-large', text: 'Chat' })));
         var tabs = h('div', { class: 'acc-pills', role: 'tablist' });
-        var msgTab = h('button', { type: 'button', role: 'tab', class: room ? 'on' : '', 'aria-selected': room ? 'true' : 'false', text: 'Messages', onclick: function () { location.hash = '@messages'; } });
-        tabs.appendChild(h('button', { type: 'button', role: 'tab', class: room ? '' : 'on', 'aria-selected': room ? 'false' : 'true', text: 'Rooms', onclick: function () { location.hash = ''; } }));
+        var msgTab = h('button', { type: 'button', role: 'tab', class: dmMode ? 'on' : '', 'aria-selected': dmMode ? 'true' : 'false', text: 'Messages', onclick: function () { location.hash = ''; } });
         tabs.appendChild(msgTab);
+        tabs.appendChild(h('button', { type: 'button', role: 'tab', class: dmMode ? '' : 'on', 'aria-selected': dmMode ? 'false' : 'true', text: 'Rooms', onclick: function () { location.hash = '@rooms'; } }));
         root.appendChild(tabs);
-        call('dmList').then(function (r) { cachePut('dms', r); if (r.unread) msgTab.textContent = 'Messages (' + r.unread + ')'; if (room) drawDms(r); })
-            .catch(function (e) { if (room) { dmBox.textContent = e.message; } });
+        call('dmList').then(function (r) { cachePut('dms', r); if (r.unread) msgTab.textContent = 'Messages (' + r.unread + ')'; if (dmMode) drawDms(r); })
+            .catch(function (e) { if (dmMode) { dmBox.textContent = e.message; } });
         var dmBox = h('div', null, skel('row', 5));
         function drawDms(r) {
             while (dmBox.firstChild) dmBox.removeChild(dmBox.firstChild);
@@ -671,7 +672,7 @@
                         h('span', { class: 'acc-dm-top' }, h('small', { class: 'acc-dm-preview', text: preview }), c.unread ? h('i', { class: 'acc-count', text: String(c.unread) }) : null)));
             })));
         }
-        if (room) { var savedDms = cacheGet('dms'); if (savedDms) drawDms(savedDms); root.appendChild(dmBox); return; }
+        if (dmMode) { var savedDms = cacheGet('dms'); if (savedDms) drawDms(savedDms); root.appendChild(dmBox); return; }
         var strip = h('div', { class: 'acc-card acc-rooms', hidden: true });
         root.appendChild(strip);
         call('online').then(function (r) {
@@ -712,7 +713,7 @@
         call('online').then(function (r) {
             while (box.firstChild) box.removeChild(box.firstChild);
             var users = r.users || [];
-            if (!users.length) box.appendChild(h('p', { class: 'acc-muted', text: 'Nobody has been around lately.' }));
+            if (!users.length) box.appendChild(h('p', { class: 'acc-muted', text: 'Nobody is online right now.' }));
             users.forEach(function (x) {
                 box.appendChild(h('button', { type: 'button', class: 'acc-user-row', onclick: function () { s.close(); showProfile(x.id); } },
                     avatar(x.displayName, x.color, 36, x.role === 'admin', x.avatar, !!x.online),
@@ -828,7 +829,7 @@
                 if (rm) setInfo(rm); else location.hash = '';
             });
         } });
-        root.appendChild(h('div', { class: 'acc-room-head' }, h('a', { href: '#', class: 'acc-back', 'aria-label': 'Back to rooms', text: '‹' }), titleEmoji,
+        root.appendChild(h('div', { class: 'acc-room-head' }, h('a', { href: '#@rooms', class: 'acc-back', 'aria-label': 'Back to rooms', text: '‹' }), titleEmoji,
             h('span', { class: 'acc-room-t' }, title, titleAbout), settings));
         root.appendChild(pinBar);
         root.appendChild(feed);

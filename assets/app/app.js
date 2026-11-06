@@ -695,6 +695,9 @@
                 // the round Messages button at the bottom right (inbox.js decides where it shows)
                 var css = doc.createElement('link'); css.rel = 'stylesheet'; css.href = '/assets/app/inbox.css?v=3'; doc.head.appendChild(css);
                 var inbox = doc.createElement('script'); inbox.src = '/assets/app/inbox.js?v=3'; inbox.defer = true; doc.head.appendChild(inbox);
+            } else {
+                // visitors without an account: a free sign-up card with the app download, once, after a few seconds
+                var join = doc.createElement('script'); join.src = '/assets/app/join.js?v=1'; join.defer = true; doc.head.appendChild(join);
             }
         } catch (e) {}
         doc.addEventListener('ab:ab.saved', syncStars);
