@@ -1,15 +1,15 @@
 {
   "share": "https://asubank.org/",
   "ios": {
-    "latest": "1.15.0",
+    "latest": "1.16.0",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.15.0",
-    "notes": "New: Subject swap. Trade a registered subject with another student. Post what you have and what you want, and matching swaps show first. Also fixes the chat screen bouncing on iPhone."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.16.0",
+    "notes": "New: your photo at the top opens your profile, Who's online on more screens, a Report section, a Customize screen, and hold a post to delete it. You can also crop your cover photo and turn off Continue. Themes now stay clear after a restart."
   },
   "android": {
-    "latest": "1.15.0",
+    "latest": "1.16.0",
     "minimum": "1.0.0",
-    "notes": "New: Subject swap. Trade a registered subject with another student. Post what you have and what you want, and matching swaps show first. Also fixes the chat screen bouncing on iPhone."
+    "notes": "New: your photo at the top opens your profile, Who's online on more screens, a Report section, a Customize screen, and hold a post to delete it. You can also crop your cover photo and turn off Continue. Themes now stay clear after a restart."
   },
   "donate": true
 }
