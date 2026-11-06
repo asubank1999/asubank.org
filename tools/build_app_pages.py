@@ -20,7 +20,7 @@ SKIP_FILES = {'404.html', 'offline.html', 'guides/latest_updates.html', 'guides/
               'upload/uploadmethod.html', 'index.html'}
 DROP_TAGS = {'script', 'style', 'noscript', 'svg', 'button', 'nav', 'footer', 'head', 'template', 'form', 'select',
              'input', 'textarea', 'label', 'canvas'}
-DROP_CLASS = re.compile(r'toggle|theme|back-?(btn|button|link)|scroll|fab|mode-|lang-btn|language-toggle|ab-tabbar|loading|spinner|sr-only|empty|no-?results|not-?found|ab-nav|ab-skip', re.I)
+DROP_CLASS = re.compile(r'toggle|theme|back-?(btn|button|link)|scroll|fab|mode-|lang-btn|language-toggle|ab-tabbar|loading|spinner|sr-only|empty|no-?results|not-?found|ab-nav|ab-skip|web-only', re.I)
 VOID = {'br', 'img', 'hr', 'meta', 'link', 'input', 'source', 'wbr', 'area', 'col', 'embed', 'param', 'track'}
 BLOCK = {'p', 'div', 'section', 'article', 'main', 'aside', 'header', 'ul', 'ol', 'li', 'table', 'h1', 'h2', 'h3', 'h4',
          'h5', 'h6', 'details', 'summary', 'blockquote', 'figure', 'iframe', 'img', 'dl', 'dt', 'dd', 'tr', 'pre'}
