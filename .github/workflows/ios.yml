@@ -28,7 +28,9 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-15
+    # macos-15-intel: GitHub's Apple-chip Macs (macos-15) were full on 2026-11-06 and jobs were dropped after 15 minutes.
+    # Same macOS 15 and Xcode 16, a separate pool. Switch back to macos-15 if Intel ever gets slow.
+    runs-on: macos-15-intel
     permissions:
       contents: write # pushes the screenshots branch
     defaults:
@@ -185,7 +187,9 @@ jobs:
   release:
     if: github.event_name == 'workflow_dispatch' && inputs.release
     needs: build
-    runs-on: macos-15
+    # macos-15-intel: GitHub's Apple-chip Macs (macos-15) were full on 2026-11-06 and jobs were dropped after 15 minutes.
+    # Same macOS 15 and Xcode 16, a separate pool. Switch back to macos-15 if Intel ever gets slow.
+    runs-on: macos-15-intel
     defaults:
       run:
         working-directory: ios
