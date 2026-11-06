@@ -98,15 +98,10 @@ object Presence {
     val count = kotlinx.coroutines.flow.MutableStateFlow(0)
     suspend fun load() {
         runCatching {
-            if (Account.signedIn) {
-                val r = Account.call("online")
-                users.value = r["users"].decodeAs<List<OnlineUser>>().orEmpty()
-                count.value = r.str("onlineCount")?.toDoubleOrNull()?.toInt() ?: users.value.count { it.online }
-            } else {
-                val r = AccountsApi.call("onlineCount")
-                users.value = emptyList()
-                count.value = r.str("onlineCount")?.toDoubleOrNull()?.toInt() ?: 0
-            }
+            // everyone sees who is online now; only admins also get who is offline
+            val r = if (Account.signedIn) Account.call("online") else AccountsApi.call("online", emptyMap())
+            users.value = r["users"].decodeAs<List<OnlineUser>>().orEmpty()
+            count.value = r.str("onlineCount")?.toDoubleOrNull()?.toInt() ?: users.value.count { it.online }
         }
     }
 }
@@ -126,7 +121,7 @@ fun ChatTab() {
     var menuFor by remember { mutableStateOf<String?>(null) }
     var adding by remember { mutableStateOf(false) }
     var editing by remember { mutableStateOf<ChatRoom?>(null) }
-    var section by rememberSaveable { mutableStateOf("rooms") }
+    var section by rememberSaveable { mutableStateOf("messages") }
     val dmUnread by Dms.unread.collectAsState()
     LaunchedEffect(pending, user) {
         val r = pending ?: return@LaunchedEffect
@@ -146,7 +141,7 @@ fun ChatTab() {
         if (u == null) { Box(Modifier.padding(pad)) { SignInPrompt() }; return@Screen }
         LazyColumn(Modifier.padding(pad)) {
             item {
-                PillTabs(listOf("rooms" to tr("Rooms"), "messages" to (tr("Messages") + if (dmUnread > 0) " ($dmUnread)" else "")), section) { section = it }
+                PillTabs(listOf("messages" to (tr("Messages") + if (dmUnread > 0) " ($dmUnread)" else ""), "rooms" to tr("Rooms")), section) { section = it }
             }
             if (section == "messages") item { DmConversations() }
             if (section != "messages") item { OnlineBox(Modifier.padding(horizontal = 16.dp, vertical = 6.dp)) }

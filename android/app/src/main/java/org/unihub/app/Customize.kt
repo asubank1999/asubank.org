@@ -235,7 +235,7 @@ private fun KeepOnlineFresh() {
 }
 
 private fun openOnline(nav: androidx.navigation.NavController) {
-    if (Account.signedIn) nav.navigate("online") else Account.signInShown.value = true
+    nav.navigate("online")
 }
 
 /** A green dot and how many are online, for top bars */

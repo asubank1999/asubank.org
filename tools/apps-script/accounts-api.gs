@@ -273,6 +273,7 @@ function publicUser(u, full) {
             avatar: u.avatar || '', bio: String(u.bio || ''), major: String(u.major || ''), college: String(u.college || ''), year: String(u.year || ''), interests: String(u.interests || ''), badges: badgeList(u), lastSeen: lastActive(u) };
   o.cover = String(u.cover || '');
   o.online = !!o.lastSeen && (new Date() - new Date(o.lastSeen)) < ONLINE_MS;
+  if (!o.online && !full && !VIEWER_ADMIN) o.lastSeen = '';
   if (truthy(u.showPhone)) o.phone = u.phone ? String(u.phone) : '';
   if (truthy(u.showGender) && cleanGender(u.gender)) o.gender = cleanGender(u.gender);
   if (full) {
@@ -344,6 +345,9 @@ function newSession(u, platform) {
   return token;
 }
 
+/** True once auth() saw an admin in this request: only admins see who is offline and when people were last seen */
+var VIEWER_ADMIN = false;
+
 /** The signed-in user for a request (cached for 10 minutes; changes clear it), or throws */
 function auth(b, opts) {
   var t = String(b.token || '');
@@ -365,6 +369,7 @@ function auth(b, opts) {
   }
   if (u.banned) fail('This account is banned' + (u.banReason ? ': ' + u.banReason : '.'));
   if (opts && opts.admin && u.role !== 'admin') fail('Only admins can do that.');
+  VIEWER_ADMIN = u.role === 'admin';
   touch(u);
   return u;
 }
@@ -404,7 +409,7 @@ function peopleFor(ids) {
     if (!all[id]) return;
     var o = JSON.parse(JSON.stringify(all[id]));
     o.online = !!p[id] && now - new Date(p[id]) < ONLINE_MS;
-    o.lastSeen = p[id] || '';
+    o.lastSeen = o.online || VIEWER_ADMIN ? (p[id] || '') : '';
     outp[id] = o;
   });
   return outp;
@@ -2164,17 +2169,21 @@ var ACTIONS = {
     });
   },
 
-  /** Every registered person: online first, then by last seen. Someone who never came back shows last. */
+  /** Who is online. Admins get everyone (online first, then by last seen); students and guests only the people online now. */
   online: function (b) {
-    var s = auth(b);
+    var s = null;
+    if (b.token) { try { s = auth(b); } catch (e) { s = null; } }
+    var admin = !!s && s.role === 'admin';
     var p = presence(), now = Date.now(), users = rows('Users');
-    var me = users.filter(function (u) { return u.id === s.id; })[0];
-    var mine = blockedIds(me);
+    var isOn = function (u) { return !!p[u.id] && now - new Date(p[u.id]) < ONLINE_MS; };
+    var me = s ? users.filter(function (u) { return u.id === s.id; })[0] : null;
+    var mine = me ? blockedIds(me) : [];
     var list = users.filter(function (u) {
-      return !truthy(u.banned) && mine.indexOf(u.id) < 0 && blockedIds(u).indexOf(s.id) < 0;
+      if (truthy(u.banned) || (!admin && !isOn(u))) return false;
+      return !s || (mine.indexOf(u.id) < 0 && blockedIds(u).indexOf(s.id) < 0);
     }).map(function (u) {
       return { id: u.id, displayName: String(u.displayName || u.username), avatar: u.avatar || '', color: u.color || '', role: u.role || 'user', badges: badgeList(u),
-               lastSeen: lastActive(u) || '', online: !!p[u.id] && now - new Date(p[u.id]) < ONLINE_MS };
+               lastSeen: admin || isOn(u) ? (lastActive(u) || '') : '', online: isOn(u) };
     });
     list.sort(function (a, c) {
       if (a.online !== c.online) return a.online ? -1 : 1;

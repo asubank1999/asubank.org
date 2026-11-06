@@ -7,7 +7,7 @@ struct ChatTab: View {
     @State private var openRoom: ChatRoom?
     @State private var editingRoom: ChatRoom?
     @State private var addingRoom = false
-    @State private var section = "rooms"
+    @State private var section = "messages"
     @StateObject private var dms = DMListModel()
 
     var body: some View {
@@ -61,8 +61,8 @@ struct ChatTab: View {
                 .padding(.vertical, 2)
             }
             Picker("Show", selection: $section) {
-                Text("Rooms").tag("rooms")
                 Text(dms.unread > 0 ? "\(L("Messages")) (\(dms.unread))" : L("Messages")).tag("messages")
+                Text("Rooms").tag("rooms")
             }
             .pickerStyle(.segmented)
             .listRowInsets(EdgeInsets())
@@ -131,11 +131,7 @@ struct OnlineScreenHost: View {
     @ObservedObject private var account = AccountStore.shared
     var body: some View {
         Group {
-            if account.signedIn {
-                OnlineScreen(users: store.users)
-            } else {
-                EmptyState(symbol: "person.2", title: String(format: L("%d online now"), store.count), text: L("Sign in to see who"))
-            }
+            OnlineScreen(users: store.users)
         }
         .task { await store.load(force: true) }
     }

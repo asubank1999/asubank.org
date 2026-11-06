@@ -447,7 +447,7 @@ fun MoreScreen() {
                     Divider()
                     ListRow("Report something", icon = Icons.Filled.Flag) { nav.navigate("report") }
                     Divider()
-                    ListRow("Who's online", icon = Icons.Filled.Circle, iconColor = Color(0xFF22B14C)) { if (Account.signedIn) nav.navigate("online") else Account.signInShown.value = true }
+                    ListRow("Who's online", icon = Icons.Filled.Circle, iconColor = Color(0xFF22B14C)) { nav.navigate("online") }
                     Divider()
                     ListRow("Customize tab bar", icon = Icons.Filled.Dashboard) { nav.navigate("tabBar") }
                     Divider()

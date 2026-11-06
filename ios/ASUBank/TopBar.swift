@@ -3,7 +3,7 @@ import SwiftUI
 // The Home top bar (your photo on the left, who's online and the bell on the right) and the who's online box.
 // Apps only.
 
-/// Who's online, shared by Home, Feed, Friends and Chat. The list needs an account; guests only see how many.
+/// Who's online, shared by Home, Feed, Friends and Chat. Everyone sees who is online now; only admins also get who is offline.
 @MainActor final class OnlineStore: ObservableObject {
     static let shared = OnlineStore()
     @Published var users: [OnlineUser] = []
@@ -14,15 +14,11 @@ import SwiftUI
     func load(force: Bool = false) async {
         guard force || Date().timeIntervalSince(last) > 45 else { return }
         last = Date()
-        if AccountStore.shared.signedIn {
-            guard let r = try? await AccountStore.shared.call("online") else { return }
-            users = decode([OnlineUser].self, r["users"]) ?? []
-            count = (r["onlineCount"] as? NSNumber)?.intValue ?? users.filter(\.online).count
-        } else {
-            guard let r = try? await AccountsAPI.call("onlineCount") else { return }
-            users = []
-            count = (r["onlineCount"] as? NSNumber)?.intValue ?? 0
-        }
+        let r: [String: Any]?
+        if AccountStore.shared.signedIn { r = try? await AccountStore.shared.call("online") } else { r = try? await AccountsAPI.call("online", [:]) }
+        guard let r else { return }
+        users = decode([OnlineUser].self, r["users"]) ?? []
+        count = (r["onlineCount"] as? NSNumber)?.intValue ?? users.filter(\.online).count
         loaded = true
     }
 
@@ -57,7 +53,7 @@ struct OnlineButton: View {
     var body: some View {
         Button {
             Haptics.tap()
-            if account.signedIn { shown = true } else { account.signInShown = true }
+            shown = true
         } label: {
             HStack(spacing: 4) {
                 Circle().fill(Color.green).frame(width: 8, height: 8)
@@ -83,7 +79,7 @@ struct OnlineBox: View {
     var body: some View {
         Button {
             Haptics.tap()
-            if account.signedIn { shown = true } else { account.signInShown = true }
+            shown = true
         } label: {
             HStack(spacing: 10) {
                 if faces.isEmpty {
