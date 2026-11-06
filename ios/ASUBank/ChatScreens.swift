@@ -94,7 +94,7 @@ struct ChatTab: View {
             }
         }
         .listStyle(.insetGrouped)
-        .refreshable { await account.refresh(); await loadOnline(); await dms.load() }
+        .refreshable { await account.refresh(); await OnlineStore.shared.load(force: true); await dms.load() }
     }
 
     private func roomLabel(_ r: ChatRoom) -> some View {
