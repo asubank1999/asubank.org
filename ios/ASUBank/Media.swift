@@ -665,6 +665,22 @@ struct SkeletonPost: View {
     }
 }
 
+/// Profile numbers, buttons and about card while the profile loads
+struct ProfileSkeleton: View {
+    private let fill = Color.secondary.opacity(0.16)
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) { ForEach(0..<3, id: \.self) { _ in Capsule().fill(fill).frame(width: 64, height: 18) } }
+            RoundedRectangle(cornerRadius: 14, style: .continuous).fill(fill).frame(height: 50)
+            HStack(spacing: 8) { ForEach(0..<3, id: \.self) { _ in Capsule().fill(fill).frame(height: 34) } }
+            RoundedRectangle(cornerRadius: 14, style: .continuous).fill(fill).frame(height: 64)
+        }
+        .padding(.horizontal, 4)
+        .shimmer()
+        .accessibilityLabel(Text("Loading"))
+    }
+}
+
 struct SkeletonRow: View {
     private let fill = Color.secondary.opacity(0.16)
     var body: some View {

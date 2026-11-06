@@ -777,9 +777,13 @@ struct ProfileScreen: View {
                     Section { NavigationLink { AdminUserScreen(user: u) { await load() } } label: { Label("Manage this user", systemImage: "checkmark.shield") } }
                 }
             }
+            if user == nil && error == nil {
+                Section { ForEach(0..<2, id: \.self) { _ in SkeletonPost() } }
+            }
             if let error { Section { Text(error).foregroundStyle(.red) } }
         }
         .listStyle(.insetGrouped)
+        .animation(.easeOut(duration: 0.25), value: user == nil)
         .modifier(ModerationDialogs(report: $reporting, block: $blocking, blocked: { _ in Task { await load() } }))
         .navigationTitle(user?.displayName ?? fallbackName)
         .navigationBarTitleDisplayMode(.inline)
@@ -886,6 +890,8 @@ struct ProfileScreen: View {
                         .padding(10)
                         .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
+            } else if error == nil {
+                ProfileSkeleton()
             }
         }
         .frame(maxWidth: .infinity)
