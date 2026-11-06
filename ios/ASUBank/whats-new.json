@@ -1,5 +1,16 @@
 [
  {
+  "version": "1.17.0",
+  "changes": [
+   "Top picks on Home: Rate your teachers, Course matcher and Subject swap come first",
+   "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them",
+   "More tabs to choose from: Subject swap, Rate your teachers, Course matcher, Exams & tasks and Focus timer",
+   "Profiles open faster, with a loading preview",
+   "Bus times are now a native screen, with search and morning or evening times",
+   "Before you report a study file, the app shows where the files come from and how to ask the owner to remove one"
+  ]
+ },
+ {
   "version": "1.16.0",
   "changes": [
    "A new top bar: your photo on the top left opens your profile, and admins find Admin at the top",

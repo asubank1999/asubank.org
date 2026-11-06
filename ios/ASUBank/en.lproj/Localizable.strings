@@ -363,6 +363,7 @@
 "Be the first to say something." = "Be the first to say something.";
 "Before you pay" = "Before you pay";
 "Before you report a study file" = "Before you report a study file";
+"Before you report a study file, the app shows where the files come from and how to ask the owner to remove one" = "Before you report a study file, the app shows where the files come from and how to ask the owner to remove one";
 "Before you upload" = "Before you upload";
 "Bell" = "Bell";
 "Below 60 the average is under the passing limit." = "Below 60 the average is under the passing limit.";
@@ -394,6 +395,7 @@
 "Buildings 10 and 21 use two digits, so their halls have 5 digits: 21105 = Dentistry, 1st floor, room 05." = "Buildings 10 and 21 use two digits, so their halls have 5 digits: 21105 = Dentistry, 1st floor, room 05.";
 "Bus Times" = "Bus Times";
 "Bus times" = "Bus times";
+"Bus times are now a native screen, with search and morning or evening times" = "Bus times are now a native screen, with search and morning or evening times";
 "Business" = "Business";
 "Business & Humanities" = "Business & Humanities";
 "Business & arts" = "Business & arts";
@@ -1220,6 +1222,7 @@
 "Monday & Wednesday" = "Monday & Wednesday";
 "More" = "More";
 "More badges, such as Mentor, Top student, Class rep, Translator and Legend." = "More badges, such as Mentor, Top student, Class rep, Translator and Legend.";
+"More tabs to choose from: Subject swap, Rate your teachers, Course matcher, Exams & tasks and Focus timer" = "More tabs to choose from: Subject swap, Rate your teachers, Course matcher, Exams & tasks and Focus timer";
 "More: see how our files are spread across the colleges" = "More: see how our files are spread across the colleges";
 "Morning" = "Morning";
 "Most Wanted Files" = "Most Wanted Files";
@@ -1590,6 +1593,7 @@
 "Profile" = "Profile";
 "Profile photo" = "Profile photo";
 "Profile saved" = "Profile saved";
+"Profiles open faster, with a loading preview" = "Profiles open faster, with a loading preview";
 "Profiles: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp." = "Profiles: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp.";
 "Projects" = "Projects";
 "Promo code" = "Promo code";
@@ -2077,6 +2081,7 @@
 "The server didn't answer. Try again." = "The server didn't answer. Try again.";
 "The server sent something unexpected. Try again." = "The server sent something unexpected. Try again.";
 "The submissions server sent something unexpected." = "The submissions server sent something unexpected.";
+"The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them" = "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them";
 "The team reviews it before it goes on the campus display screen." = "The team reviews it before it goes on the campus display screen.";
 "The upload expired. Please try again." = "The upload expired. Please try again.";
 "The weather card shows the exact day and date, plus the day's high and low" = "The weather card shows the exact day and date, plus the day's high and low";
@@ -2138,6 +2143,7 @@
 "Tomorrow on campus" = "Tomorrow on campus";
 "Top of the scale" = "Top of the scale";
 "Top picks" = "Top picks";
+"Top picks on Home: Rate your teachers, Course matcher and Subject swap come first" = "Top picks on Home: Rate your teachers, Course matcher and Subject swap come first";
 "Top rated" = "Top rated";
 "Top student" = "Top student";
 "Topic" = "Topic";

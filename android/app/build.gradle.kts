@@ -19,7 +19,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = (System.getenv("BUILD_NUMBER") ?: "1").toInt()
-        versionName = "1.16.0"
+        versionName = "1.17.0"
         // STORE_BUILD=true: for Google Play, so no updates from GitHub and no payments outside Play
         buildConfigField("boolean", "STORE_BUILD", if (System.getenv("STORE_BUILD") == "true") "true" else "false")
     }

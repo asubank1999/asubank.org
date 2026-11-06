@@ -363,6 +363,7 @@
 "Be the first to say something." = "Sé el primero en decir algo.";
 "Before you pay" = "Antes de pagar";
 "Before you report a study file" = "Antes de denunciar un archivo de estudio";
+"Before you report a study file, the app shows where the files come from and how to ask the owner to remove one" = "Antes de denunciar un archivo de estudio, la app muestra de dónde vienen los archivos y cómo pedir al propietario que quite uno";
 "Before you upload" = "Antes de subir";
 "Bell" = "Campana";
 "Below 60 the average is under the passing limit." = "Por debajo de 60 el promedio no llega al aprobado.";
@@ -394,6 +395,7 @@
 "Buildings 10 and 21 use two digits, so their halls have 5 digits: 21105 = Dentistry, 1st floor, room 05." = "Los edificios 10 y 21 usan dos dígitos, por lo que sus pasillos tienen 5 dígitos: 21105 = Odontología, 1er piso, sala 05.";
 "Bus Times" = "Horarios de autobuses";
 "Bus times" = "Horarios de autobús";
+"Bus times are now a native screen, with search and morning or evening times" = "Los horarios de autobús ahora son una pantalla nativa, con búsqueda y horarios de mañana o tarde";
 "Business" = "Negocios";
 "Business & Humanities" = "Negocios y Humanidades";
 "Business & arts" = "Negocios y artes";
@@ -1220,6 +1222,7 @@
 "Monday & Wednesday" = "Monday & Wednesday";
 "More" = "Más";
 "More badges, such as Mentor, Top student, Class rep, Translator and Legend." = "More badges, such as Mentor, Top student, Class rep, Translator and Legend.";
+"More tabs to choose from: Subject swap, Rate your teachers, Course matcher, Exams & tasks and Focus timer" = "Más pestañas para elegir: Intercambio de materias, Valorar profesores, Coincidir materias, Exámenes y tareas y Temporizador de enfoque";
 "More: see how our files are spread across the colleges" = "More: see how our files are spread across the colleges";
 "Morning" = "Morning";
 "Most Wanted Files" = "Most Wanted Files";
@@ -1590,6 +1593,7 @@
 "Profile" = "Perfil";
 "Profile photo" = "Foto de perfil";
 "Profile saved" = "Perfil guardado";
+"Profiles open faster, with a loading preview" = "Los perfiles se abren más rápido, con una vista previa mientras cargan";
 "Profiles: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp." = "Profiles: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp.";
 "Projects" = "Proyectos";
 "Promo code" = "Código promocional";
@@ -2077,6 +2081,7 @@
 "The server didn't answer. Try again." = "The server didn't answer. Try again.";
 "The server sent something unexpected. Try again." = "The server sent something unexpected. Try again.";
 "The submissions server sent something unexpected." = "The submissions server sent something unexpected.";
+"The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them" = "La barra de pestañas ahora es Inicio, Publicaciones, Chat, Buscar y Más. Si ya cambiaste tus pestañas, se quedan como las pusiste";
 "The team reviews it before it goes on the campus display screen." = "El equipo lo revisa antes de mostrarlo en la pantalla del campus.";
 "The upload expired. Please try again." = "La subida caducó. Inténtalo de nuevo.";
 "The weather card shows the exact day and date, plus the day's high and low" = "The weather card shows the exact day and date, plus the day's high and low";
@@ -2138,6 +2143,7 @@
 "Tomorrow on campus" = "Mañana en el campus";
 "Top of the scale" = "Lo más alto de la escala";
 "Top picks" = "Lo más usado";
+"Top picks on Home: Rate your teachers, Course matcher and Subject swap come first" = "Lo más usado en Inicio: Valorar profesores, Coincidir materias e Intercambio de materias van primero";
 "Top rated" = "Mejor valorados";
 "Top student" = "Mejor estudiante";
 "Topic" = "Tema";

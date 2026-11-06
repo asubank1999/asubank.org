@@ -363,6 +363,7 @@
 "Be the first to say something." = "كن أول من يكتب شيئاً.";
 "Before you pay" = "قبل الدفع";
 "Before you report a study file" = "قبل أن تبلّغ عن ملف دراسي";
+"Before you report a study file, the app shows where the files come from and how to ask the owner to remove one" = "قبل الإبلاغ عن ملف دراسي، يوضّح التطبيق مصدر الملفات وكيف تطلب من المالك إزالة ملف";
 "Before you upload" = "قبل الرفع";
 "Bell" = "جرس";
 "Below 60 the average is under the passing limit." = "المعدل تحت 60 أقل من حد النجاح.";
@@ -394,6 +395,7 @@
 "Buildings 10 and 21 use two digits, so their halls have 5 digits: 21105 = Dentistry, 1st floor, room 05." = "المبنيان 10 و21 لهما رقمان، لذا تتكون قاعاتهما من 5 أرقام: 21105 = طب الأسنان، الطابق الأول، القاعة 05.";
 "Bus Times" = "مواعيد الحافلات";
 "Bus times" = "مواعيد الحافلات";
+"Bus times are now a native screen, with search and morning or evening times" = "مواعيد الحافلات أصبحت شاشة أصلية مع البحث ومواعيد الصباح والمساء";
 "Business" = "الأعمال";
 "Business & Humanities" = "الأعمال والعلوم الإنسانية";
 "Business & arts" = "الأعمال والآداب";
@@ -1220,6 +1222,7 @@
 "Monday & Wednesday" = "الاثنين والأربعاء";
 "More" = "المزيد";
 "More badges, such as Mentor, Top student, Class rep, Translator and Legend." = "More badges, such as Mentor, Top student, Class rep, Translator and Legend.";
+"More tabs to choose from: Subject swap, Rate your teachers, Course matcher, Exams & tasks and Focus timer" = "تبويبات جديدة للاختيار: تبديل المواد، تقييم المدرّسين، مطابقة المواد، الامتحانات والمهام، مؤقّت التركيز";
 "More: see how our files are spread across the colleges" = "More: see how our files are spread across the colleges";
 "Morning" = "صباحًا";
 "Most Wanted Files" = "الملفات الأكثر طلبًا";
@@ -1590,6 +1593,7 @@
 "Profile" = "الملف الشخصي";
 "Profile photo" = "صورة الملف الشخصي";
 "Profile saved" = "تم حفظ الملف";
+"Profiles open faster, with a loading preview" = "الملفات الشخصية تفتح أسرع مع معاينة أثناء التحميل";
 "Profiles: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp." = "Profiles: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp.";
 "Projects" = "المشاريع";
 "Promo code" = "رمز الخصم";
@@ -2077,6 +2081,7 @@
 "The server didn't answer. Try again." = "لم يرد الخادم. حاول مجددًا.";
 "The server sent something unexpected. Try again." = "أرسل الخادم ردًا غير متوقع. حاول مجددًا.";
 "The submissions server sent something unexpected." = "أرسل خادم المشاركات ردًا غير متوقع.";
+"The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them" = "شريط التبويبات أصبح: الرئيسية، المنشورات، الدردشة، البحث، المزيد. إذا غيّرت تبويباتك سابقاً فستبقى كما اخترتها";
 "The team reviews it before it goes on the campus display screen." = "يراجعه الفريق قبل عرضه على شاشة الحرم الجامعي.";
 "The upload expired. Please try again." = "انتهت صلاحية الرفع. يرجى المحاولة مرة أخرى.";
 "The weather card shows the exact day and date, plus the day's high and low" = "The weather card shows the exact day and date, plus the day's high and low";
@@ -2138,6 +2143,7 @@
 "Tomorrow on campus" = "غداً في الجامعة";
 "Top of the scale" = "أعلى السلم";
 "Top picks" = "الأكثر استخداماً";
+"Top picks on Home: Rate your teachers, Course matcher and Subject swap come first" = "الأكثر استخداماً في الرئيسية: تقييم المدرّسين ومطابقة المواد وتبديل المواد أولاً";
 "Top rated" = "الأعلى تقييمًا";
 "Top student" = "طالب متفوق";
 "Topic" = "الموضوع";

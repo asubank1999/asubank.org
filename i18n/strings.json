@@ -2267,6 +2267,10 @@
   "ar": "قبل أن تبلّغ عن ملف دراسي",
   "es": "Antes de denunciar un archivo de estudio"
  },
+ "Before you report a study file, the app shows where the files come from and how to ask the owner to remove one": {
+  "ar": "قبل الإبلاغ عن ملف دراسي، يوضّح التطبيق مصدر الملفات وكيف تطلب من المالك إزالة ملف",
+  "es": "Antes de denunciar un archivo de estudio, la app muestra de dónde vienen los archivos y cómo pedir al propietario que quite uno"
+ },
  "Before you upload": {
   "ar": "قبل الرفع",
   "de": "Bevor Sie hochladen",
@@ -2489,6 +2493,10 @@
   "fr": "Horaires des bus",
   "ru": "Расписание автобусов",
   "tr": "Otobüs saatleri"
+ },
+ "Bus times are now a native screen, with search and morning or evening times": {
+  "ar": "مواعيد الحافلات أصبحت شاشة أصلية مع البحث ومواعيد الصباح والمساء",
+  "es": "Los horarios de autobús ahora son una pantalla nativa, con búsqueda y horarios de mañana o tarde"
  },
  "Business": {
   "ar": "الأعمال",
@@ -5945,6 +5953,10 @@
   "es": "Más"
  },
  "More badges, such as Mentor, Top student, Class rep, Translator and Legend.": {},
+ "More tabs to choose from: Subject swap, Rate your teachers, Course matcher, Exams & tasks and Focus timer": {
+  "ar": "تبويبات جديدة للاختيار: تبديل المواد، تقييم المدرّسين، مطابقة المواد، الامتحانات والمهام، مؤقّت التركيز",
+  "es": "Más pestañas para elegir: Intercambio de materias, Valorar profesores, Coincidir materias, Exámenes y tareas y Temporizador de enfoque"
+ },
  "More: see how our files are spread across the colleges": {},
  "Morning": {
   "ar": "صباحًا"
@@ -7217,6 +7229,10 @@
  "Profile saved": {
   "ar": "تم حفظ الملف",
   "es": "Perfil guardado"
+ },
+ "Profiles open faster, with a loading preview": {
+  "ar": "الملفات الشخصية تفتح أسرع مع معاينة أثناء التحميل",
+  "es": "Los perfiles se abren más rápido, con una vista previa mientras cargan"
  },
  "Profiles: add a profile photo, a line about yourself and your phone number (shown only if you choose). Tap anyone in the chat to see their profile, call them or open WhatsApp.": {},
  "Projects": {
@@ -8901,6 +8917,10 @@
  "The submissions server sent something unexpected.": {
   "ar": "أرسل خادم المشاركات ردًا غير متوقع."
  },
+ "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them": {
+  "ar": "شريط التبويبات أصبح: الرئيسية، المنشورات، الدردشة، البحث، المزيد. إذا غيّرت تبويباتك سابقاً فستبقى كما اخترتها",
+  "es": "La barra de pestañas ahora es Inicio, Publicaciones, Chat, Buscar y Más. Si ya cambiaste tus pestañas, se quedan como las pusiste"
+ },
  "The team reviews it before it goes on the campus display screen.": {
   "ar": "يراجعه الفريق قبل عرضه على شاشة الحرم الجامعي.",
   "es": "El equipo lo revisa antes de mostrarlo en la pantalla del campus."
@@ -9112,6 +9132,10 @@
  "Top picks": {
   "ar": "الأكثر استخداماً",
   "es": "Lo más usado"
+ },
+ "Top picks on Home: Rate your teachers, Course matcher and Subject swap come first": {
+  "ar": "الأكثر استخداماً في الرئيسية: تقييم المدرّسين ومطابقة المواد وتبديل المواد أولاً",
+  "es": "Lo más usado en Inicio: Valorar profesores, Coincidir materias e Intercambio de materias van primero"
  },
  "Top rated": {
   "ar": "الأعلى تقييمًا",
