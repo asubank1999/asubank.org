@@ -1,8 +1,30 @@
-# UniHub: study materials and tools for university students
+<div align="center">
 
-## 📲 Download the app / حمّل التطبيق
+<img src="icons/icon-192x192.png" width="96" alt="UniHub icon">
 
-**[Download page with direct links and a step by step guide](https://asubank.org/apps/download)**
+# UniHub
+
+**The student app for Applied Science University (Jordan): study materials, campus tools and a student community in one place.**
+
+Free. Run by students. On the web, iPhone and Android.
+
+[**Website**](https://asubank.org) · [**Download the app**](https://asubank.org/apps/download) · [**Report a problem**](https://asubank.org/legal/report)
+
+</div>
+
+---
+
+## What is UniHub?
+
+Finding study files usually means digging through scattered drives and group chats. UniHub puts them in one searchable library, then adds the things students need every day: their schedule, campus information and a place to talk to each other.
+
+Students share the materials and students run the app. **UniHub isn't made by or affiliated with the university.**
+
+**بالعربي:** يونيهب تطبيق وموقع مجاني لطلاب جامعة العلوم التطبيقية، يديره طلاب ولا يتبع للجامعة رسميًا. يجمع الملخصات والامتحانات السابقة وبنوك الأسئلة في مكتبة واحدة سهلة البحث، مع جدول المحاضرات وتنبيهاتها، ودليل القاعات، ومحادثات الطلاب والمنشورات، وتبديل المواد.
+
+## Download
+
+**[Download page with direct links and a step by step install guide](https://asubank.org/apps/download)**
 
 | | Download | How to install |
 |---|---|---|
@@ -12,67 +34,98 @@
 
 **بالعربي:** للأندرويد اضغط على رابط التحميل من جوالك، افتح الملف، ووافق على "تثبيت التطبيقات غير المعروفة". للآيفون ثبّت الملف عن طريق Sideloadly أو AltStore من الكمبيوتر. أو استخدم الموقع مباشرة: asubank.org
 
-The apps tell you when a new version is out. All versions: [Releases](https://github.com/asubank1999/asubank.org/releases).
+The apps aren't in the App Store or Google Play yet. They tell you when a new version is out. All versions: [Releases](https://github.com/asubank1999/asubank.org/releases).
 
----
+## What you can do
 
-This project is created to support students at **Applied Science University** by providing a centralized, organized collection of academic resources, including:
+### 📚 Study
 
-- 📚 Past **final exams**
-- 📘 **Midterm** exams
-- ✏️ Practice **quizzes**
-- 📄 Study guides and **PDFs**
-- 📂 Course notes and supplementary materials
+- **Materials library:** summaries, past papers, test banks and guides, sorted by college and subject
+- **Smart search:** type a course in Arabic or English, even with mistakes
+- **Latest uploads**, plus **Continue** to get back to the file you were reading
+- **Share files:** upload documents of any size, suggest a material, or share a YouTube video
+- **Grade calculator:** grading scale with term and cumulative averages
+- **Exams & tasks list** and a **focus timer**
 
----
+### 🗓️ Campus life
 
- 🎯 Purpose
-The goal of this repository is to help students prepare effectively for their courses by giving access to high-quality, real exam materials and study resources — all shared in a collaborative and ethical manner.
-All materials are intended for **educational and review purposes only**. We encourage responsible use to enhance understanding and academic success.
+- **My lectures:** add subject, hall and time, and get a reminder 10 minutes before
+- **Calendars and schedules:** academic dates, exams and timetables
+- **Hall finder:** type the number on a door to see the building, floor and room
+- **Teacher ratings:** see and give ratings out of 10
+- **Subject swap:** trade a registered subject with another student
+- **Course matcher:** find classmates with the same courses and free times
+- **Student guide:** FAQs, official links, groups by college, and life hacks for first aid, safety and saving money
+- **Campus weather** on Home
 
----
+### 💬 Community
 
- 📁 How to Use
-1. Navigate to https://asubank.org
-2. Download PDFs, review past exams, or access study guides.
-3. Use the materials to test your knowledge and prepare for upcoming assessments.
+- **Feed:** posts with photos, video and voice, with likes and comments
+- **Stories:** photo, video or text for 24 hours, with a choice of who sees them and a list of who viewed them
+- **Chat rooms and private messages:** files, voice notes, disappearing media and delete for everyone
+- **Friends and profiles:** cover photos, badges, interests and pokes
+- **Who's online**, reachable from Home, Feed, Friends and Chat
 
----
+### 🎨 Make it yours
 
- 🛠️ Contribute
-Help make this resource even better! If you have:
-- Clean, readable scans or digital copies of exams
-- Answer keys (with verification)
-- Summarized notes or study guides
+- **Customize:** choose what Home shows, text size and the first screen
+- **Themes:** light, dark, pitch black and many color themes, plus accent colors and app icons (where the phone allows it)
+- **Tabs and notifications:** pick your tabs, sounds and which alerts you get
+- **Languages:** English and Arabic, with Spanish in progress
 
-> ⚠️ **Note**: Only submit materials you are authorized to share. Do not upload copyrighted content without permission.
+### 🛡️ Safety and privacy
 
----
+- **Report Center:** report anything inside or outside the app, with a screenshot, a reference number and replies
+- **Hold to report:** hold a post, comment, message or file to report it, and block people you don't want to hear from
+- **Moderation:** a team reviews reports, and chat filters abusive words
+- **You control your account:** university email and ID are optional, and you can delete your account
+- **Clear rules:** you see the terms before you sign up, with a dated record of when you accepted them
 
- 🙏 Acknowledgments
-Special thanks to students and faculty who contribute their time and knowledge to support academic excellence at Applied Science University.
+## Website and apps
 
----
+The same account works everywhere.
 
-📚 Study smart, succeed together!
+| | Website | iPhone | Android |
+|---|---|---|---|
+| Materials, search, guides | ✅ | ✅ | ✅ |
+| Accounts, feed, chat, messages | ✅ | ✅ | ✅ |
+| Subject swap, reports | ✅ | ✅ | ✅ |
+| Adding stories, pokes | | ✅ | ✅ |
+| Lecture reminders, focus timer, Customize | | ✅ | ✅ |
+| Requirements | Any browser | iOS 15 or newer | Android 8 or newer |
 
----
+## Rules and legal
 
-## 🗂️ Project Structure
+[Terms of Service](https://asubank.org/legal/uni_tos) · [Privacy](https://asubank.org/legal/privacy) · [Community rules](https://asubank.org/legal/community) · [Copyright](https://asubank.org/legal/copyright) · [Report something](https://asubank.org/legal/report)
+
+- Materials are for **study and review only**. Always check important information with your university and instructors.
+- Share only what you have the right to share. **If you own something posted here and want it removed, use the [copyright page](https://asubank.org/legal/copyright).**
+- UniHub is supported by ads on the website, sponsors and donations.
+
+## Contribute
+
+Clean scans, summaries and study guides are welcome. Use [Upload](https://asubank.org/upload/uploadmethod) on the website or in the app. To report a bug or a problem, use the [report form](https://asubank.org/legal/report) or email necro144@yahoo.com.
+
+## For developers
+
+| | Built with |
+|---|---|
+| Website | Static HTML, CSS and JavaScript on GitHub Pages |
+| iPhone app | SwiftUI (`ios/`) |
+| Android app | Kotlin and Jetpack Compose (`android/`) |
+| Backend | Google Apps Script and Sheets (`tools/apps-script/`) |
+| Builds and releases | GitHub Actions (`.github/workflows/`) |
 
 | Folder | Contents |
 |---|---|
-| `/` | `index.html`, `404.html` (also redirects old URLs), `sw.js`, `manifest.json`, `sitemap.xml`, `CNAME` |
-| `banks/` | Test bank pages per college/subject |
-| `schedules/` | Calendars, countdowns, syllabi, exam/bus/Ramadan timetables |
-| `guides/` | FAQs, halls, links, groups, gallery, search, latest files, tutorials |
-| `portal/` | Device selection, agreement and refusal pages |
-| `legal/` | Terms of service and PDF access terms |
-| `upload/` | File upload and submission pages |
-| `requests/` | Material requests, matching, ratings |
-| `students_requests/` | Teacher rating / request portal (unchanged) |
-| `apps/` | Daftari, voting, photoshoot booking, donate, admin panel |
-| `archive/` | Old/test versions of pages (still reachable; a few, like the 2024 old style, are linked from the site) |
-| `assets/css`, `assets/js`, `assets/img`, `assets/media` | Shared styles, scripts, images, video |
+| `banks/` | Materials pages by college and subject |
+| `guides/`, `schedules/` | Guides, search, halls, calendars and timetables |
+| `feed/`, `chat/`, `account/`, `swap/` | Community and account pages |
+| `upload/`, `requests/` | Uploads, material requests, matching and ratings |
+| `legal/` | Terms, privacy, community rules, copyright and report form |
+| `apps/`, `admin/` | App downloads, student tools and the admin panel |
+| `assets/app/` | Shared code and live data: `materials.json`, `app-config.json` |
+| `i18n/` | Translations for both apps |
+| `archive/` | Older versions of pages |
 
-All internal links use root-absolute paths (e.g. `/banks/english`). Old URLs such as `/english` are redirected by `404.html`.
+Internal links use root-absolute paths (for example `/banks/english`). `404.html` redirects old URLs such as `/english`.
