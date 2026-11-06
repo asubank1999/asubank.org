@@ -361,6 +361,7 @@
 "Be the first to rate them." = "كن أول من يقيّمه.";
 "Be the first to say something." = "كن أول من يكتب شيئاً.";
 "Before you pay" = "قبل الدفع";
+"Before you report a study file" = "قبل أن تبلّغ عن ملف دراسي";
 "Before you upload" = "قبل الرفع";
 "Bell" = "جرس";
 "Below 60 the average is under the passing limit." = "المعدل تحت 60 أقل من حد النجاح.";
@@ -738,6 +739,7 @@
 "Email (your matches are sent here)" = "البريد الإلكتروني (تُرسل نتائجك إليه)";
 "Email Verification Required" = "يلزم بريد إلكتروني فعّال";
 "Email necro144@yahoo.com from the address on your account and we will delete it for you." = "راسل necro144@yahoo.com من البريد المسجل في حسابك وسنحذفه لك.";
+"Email the owner" = "راسل المالك";
 "Email us" = "راسلنا بالبريد";
 "Email, WhatsApp or ASU ID" = "البريد أو واتساب أو الرقم الجامعي";
 "Emerald" = "زمردي";
@@ -1022,6 +1024,7 @@
 "If you do not agree, please do not join, and leave the group if you're already a member." = "إذا لم توافق، فلا تنضم، وغادر المجموعة إن كنت عضوًا فيها.";
 "If you encounter any issues or have questions about the service, please call or WhatsApp us at: necro144@yahoo.com" = "إذا واجهت مشكلة أو كان لديك سؤال عن الخدمة، فاتصل بنا أو راسلنا على واتساب: necro144@yahoo.com";
 "If you own something on UniHub or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it." = "إذا كنت تملك شيئًا في UniHub أو تمثل مالكه وتريد إزالته، فأبلغ عن الملف أو راسل necro144@yahoo.com مع رابطه.";
+"If you want a file removed, email the owner and you will get an answer. The WhatsApp community moderators don't manage uploads, so please don't ask them." = "إذا أردت إزالة ملف، راسل المالك عبر البريد وستصلك الإجابة. مشرفو مجتمع واتساب لا يديرون الملفات المرفوعة، لذا يرجى عدم سؤالهم.";
 "If you're still having trouble understanding how this service works, our support team is here to help!" = "إذا كنت ما زلت لا تفهم كيف تعمل الخدمة، ففريق الدعم هنا لمساعدتك!";
 "If your teacher isn’t listed yet, be the first to rate! Others will see your submission and join in." = "إذا لم يكن مدرسك في القائمة، فكن أول من يقيّمه! سيرى الآخرون تقييمك وينضمون.";
 "Image" = "صورة";
@@ -1216,6 +1219,7 @@
 "More: see how our files are spread across the colleges" = "More: see how our files are spread across the colleges";
 "Morning" = "صباحًا";
 "Most Wanted Files" = "الملفات الأكثر طلبًا";
+"Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships." = "معظم الملفات الدراسية هنا مصدرها الجامعة نفسها أو شاركها طلاب عبر روابط كانت متاحة للعموم. وقد راجعت المجموعة ووافقت عليها إحدى عمادات الجامعة.";
 "Most test banks are available in PDF format, but other formats may also be available depending on the resource." = "معظمها بصيغة PDF، وقد تتوفر صيغ أخرى حسب المصدر.";
 "Most votes" = "الأكثر أصواتًا";
 "Most wanted files" = "الملفات الأكثر طلباً";

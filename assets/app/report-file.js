@@ -21,6 +21,15 @@
         var form = el('form', { method: 'dialog' }, [
             el('h3', { textContent: 'Report this file', style: 'margin:0 0 6px' }),
             el('p', { textContent: name, style: 'margin:0 0 8px;font-size:.9rem;opacity:.75;overflow-wrap:anywhere' }),
+            el('div', { style: 'margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(29,78,216,.08);font-size:.88rem;line-height:1.45' }, [
+                el('b', { textContent: 'Before you report a study file' }),
+                el('p', { textContent: "Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships.", style: 'margin:6px 0' }),
+                el('p', { style: 'margin:0' }, [
+                    document.createTextNode('If you want a file removed, '),
+                    el('a', { href: 'mailto:necro144@yahoo.com?subject=' + encodeURIComponent('UniHub file removal request'), textContent: 'email the owner' }),
+                    document.createTextNode(" and you will get an answer. The WhatsApp community moderators don't manage uploads, so please don't ask them.")
+                ])
+            ]),
             pick, details, msg, send, cancel
         ]);
         var box = el('dialog', { style: 'border:0;border-radius:16px;padding:20px;width:min(420px,90vw)' }, [form]);

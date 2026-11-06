@@ -76,6 +76,18 @@ object Moderation {
     }
 }
 
+/** Shown above the form when someone reports a study file: removal requests go to the owner by email. */
+@Composable
+fun StudyFileNotice() {
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    Column(Modifier.fillMaxWidth().padding(bottom = 8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text("Before you report a study file", fontWeight = FontWeight.SemiBold)
+        Text("Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships.", style = MaterialTheme.typography.bodySmall)
+        Text("If you want a file removed, email the owner and you will get an answer. The WhatsApp community moderators don't manage uploads, so please don't ask them.", style = MaterialTheme.typography.bodySmall)
+        TextButton(onClick = { openExternal(ctx, "$ADMIN_WA?subject=" + android.net.Uri.encode("UniHub file removal request")) }) { Text("Email the owner") }
+    }
+}
+
 /** Lets anyone report a message, a person, a file or a problem. Signing in isn't needed. */
 @Composable
 fun ReportDialog(target: ReportTarget, onClose: () -> Unit) {
@@ -97,6 +109,7 @@ fun ReportDialog(target: ReportTarget, onClose: () -> Unit) {
                 reference?.let { Text(trf("Reference: %s", it), fontWeight = FontWeight.SemiBold) }
             }
             else Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                if (target.kind == "file") StudyFileNotice()
                 if (target.name.isNotEmpty()) Text(target.name, style = MaterialTheme.typography.bodySmall, maxLines = 3)
                 Moderation.reasons.filter { it.first != "bug" && it.first != "account" }.forEach { (id, label) ->
                     Row(Modifier.fillMaxWidth().clickable { reason = id }, verticalAlignment = Alignment.CenterVertically) {

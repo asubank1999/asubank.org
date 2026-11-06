@@ -2259,6 +2259,10 @@
   "ru": "Прежде чем платить",
   "tr": "Ödeme yapmadan önce"
  },
+ "Before you report a study file": {
+  "ar": "قبل أن تبلّغ عن ملف دراسي",
+  "es": "Antes de denunciar un archivo de estudio"
+ },
  "Before you upload": {
   "ar": "قبل الرفع",
   "de": "Bevor Sie hochladen",
@@ -4369,6 +4373,10 @@
  "Email necro144@yahoo.com from the address on your account and we will delete it for you.": {
   "ar": "راسل necro144@yahoo.com من البريد المسجل في حسابك وسنحذفه لك."
  },
+ "Email the owner": {
+  "ar": "راسل المالك",
+  "es": "Escribir al propietario"
+ },
  "Email us": {
   "ar": "راسلنا بالبريد",
   "es": "Escríbenos"
@@ -5272,6 +5280,10 @@
  "If you own something on UniHub or represent the owner and want it removed, report the file or email necro144@yahoo.com with a link to it.": {
   "ar": "إذا كنت تملك شيئًا في UniHub أو تمثل مالكه وتريد إزالته، فأبلغ عن الملف أو راسل necro144@yahoo.com مع رابطه."
  },
+ "If you want a file removed, email the owner and you will get an answer. The WhatsApp community moderators don't manage uploads, so please don't ask them.": {
+  "ar": "إذا أردت إزالة ملف، راسل المالك عبر البريد وستصلك الإجابة. مشرفو مجتمع واتساب لا يديرون الملفات المرفوعة، لذا يرجى عدم سؤالهم.",
+  "es": "Si quieres que se quite un archivo, escribe al propietario por correo y recibirás una respuesta. Los moderadores de la comunidad de WhatsApp no gestionan los archivos, así que no les preguntes a ellos."
+ },
  "If you're still having trouble understanding how this service works, our support team is here to help!": {
   "ar": "إذا كنت ما زلت لا تفهم كيف تعمل الخدمة، ففريق الدعم هنا لمساعدتك!"
  },
@@ -5923,6 +5935,10 @@
  },
  "Most Wanted Files": {
   "ar": "الملفات الأكثر طلبًا"
+ },
+ "Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships.": {
+  "ar": "معظم الملفات الدراسية هنا مصدرها الجامعة نفسها أو شاركها طلاب عبر روابط كانت متاحة للعموم. وقد راجعت المجموعة ووافقت عليها إحدى عمادات الجامعة.",
+  "es": "La mayoría de los archivos de estudio vienen de la propia universidad o los compartieron estudiantes, mediante enlaces que ya eran públicos. Una de las facultades de la universidad revisó y aprobó la colección."
  },
  "Most test banks are available in PDF format, but other formats may also be available depending on the resource.": {
   "ar": "معظمها بصيغة PDF، وقد تتوفر صيغ أخرى حسب المصدر."
