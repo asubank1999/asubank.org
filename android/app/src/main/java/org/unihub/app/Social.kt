@@ -589,6 +589,22 @@ fun FriendsScreen(back: Boolean = false) {
 }
 
 /** A person's page: photo, counts, friend and poke buttons, studies and posts */
+/** wa.me needs the number with its country code and no leading 0: 0791234567 becomes 962791234567.
+ *  Arabic digits count too. Numbers that already have a country code stay as they are. */
+fun whatsAppNumber(phone: String): String {
+    var d = phone.mapNotNull { c ->
+        when (c) {
+            in '0'..'9' -> c
+            in '\u0660'..'\u0669' -> '0' + (c - '\u0660')
+            in '\u06F0'..'\u06F9' -> '0' + (c - '\u06F0')
+            else -> null
+        }
+    }.joinToString("")
+    if (d.startsWith("00")) d = d.drop(2)
+    if (d.startsWith("0")) d = "962" + d.drop(1) else if (d.length == 9 && d.startsWith("7")) d = "962$d"
+    return d
+}
+
 @Composable
 fun ProfileScreen(userId: String) {
     val nav = LocalNav.current
@@ -767,7 +783,7 @@ fun ProfileScreen(userId: String) {
                         }
                         Divider()
                         ListRow("WhatsApp", emoji = "💬") {
-                            runCatching { ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/" + u.phone.filter { it.isDigit() }))) }
+                            runCatching { ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/" + whatsAppNumber(u.phone)))) }
                         }
                     }
                 }

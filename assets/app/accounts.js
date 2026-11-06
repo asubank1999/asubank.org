@@ -90,6 +90,14 @@
         if (!window.confirm('Block ' + name + "? You won't see their messages. You can undo this from their profile.")) return;
         call('block', { userId: id, on: true }).then(function (r) { user.blocked = r.blocked; if (done) done(); }).catch(function (e) { window.alert(e.message); });
     }
+    // wa.me needs the country code and no leading 0: 0791234567 becomes 962791234567 (Arabic digits count too)
+    function waNumber(p) {
+        var d = String(p || '').replace(/[\u0660-\u0669]/g, function (c) { return String(c.charCodeAt(0) - 0x660); })
+            .replace(/[\u06F0-\u06F9]/g, function (c) { return String(c.charCodeAt(0) - 0x6F0); }).replace(/[^0-9]/g, '');
+        if (d.indexOf('00') === 0) d = d.slice(2);
+        if (d.charAt(0) === '0') d = '962' + d.slice(1); else if (d.length === 9 && d.charAt(0) === '7') d = '962' + d;
+        return d;
+    }
     function nameOf(u) { return (u && (u.displayName || u.username)) || ''; }
 
     // ---- tiny DOM helper (text is always set with textContent, never HTML)
@@ -177,7 +185,7 @@
                 var digits = u.phone.replace(/[^0-9+]/g, '');
                 body.appendChild(h('div', { class: 'acc-actions acc-center-row' },
                     h('a', { class: 'ab-btn tinted', href: 'tel:' + digits, text: '📞 ' + u.phone }),
-                    h('a', { class: 'ab-btn tinted', href: 'https://wa.me/' + digits.replace('+', ''), target: '_blank', rel: 'noopener', text: 'WhatsApp' })));
+                    h('a', { class: 'ab-btn tinted', href: 'https://wa.me/' + waNumber(u.phone), target: '_blank', rel: 'noopener', text: 'WhatsApp' })));
             }
             if (signedIn && r.friendship && r.friendship !== 'self') body.appendChild(h('div', { class: 'acc-actions acc-center-row' }, friendControls(u, r.friendship)));
             if (signedIn && r.canMessage && u.id !== user.id) body.appendChild(h('div', { class: 'acc-actions acc-center-row' },

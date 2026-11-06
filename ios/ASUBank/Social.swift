@@ -715,6 +715,19 @@ struct FriendsScreen: View {
 }
 
 /// A person's page: photo, counts, friend and poke buttons, studies and posts
+/// wa.me needs the number with its country code and no leading 0: 0791234567 becomes 962791234567.
+/// Arabic digits count too. Numbers that already have a country code stay as they are.
+func whatsAppNumber(_ phone: String) -> String {
+    let arabic = Array("٠١٢٣٤٥٦٧٨٩"), persian = Array("۰۱۲۳۴۵۶۷۸۹")
+    var d = String(phone.compactMap { c -> Character? in
+        if let i = arabic.firstIndex(of: c) ?? persian.firstIndex(of: c) { return Character(String(i)) }
+        return c.isASCII && c.isNumber ? c : nil
+    })
+    if d.hasPrefix("00") { d.removeFirst(2) }
+    if d.hasPrefix("0") { d = "962" + String(d.dropFirst()) } else if d.count == 9 && d.hasPrefix("7") { d = "962" + d }
+    return d
+}
+
 struct ProfileScreen: View {
     let userId: String
     var fallbackName = ""
@@ -753,7 +766,7 @@ struct ProfileScreen: View {
                         Button { if let url = URL(string: "tel:" + p.filter { $0.isNumber || $0 == "+" }) { UIApplication.shared.open(url) } } label: {
                             Label(p, systemImage: "phone.fill")
                         }
-                        Button { if let url = URL(string: "https://wa.me/" + p.filter(\.isNumber)) { UIApplication.shared.open(url) } } label: {
+                        Button { if let url = URL(string: "https://wa.me/" + whatsAppNumber(p)) { UIApplication.shared.open(url) } } label: {
                             Label("WhatsApp", systemImage: "message.fill")
                         }
                     }
