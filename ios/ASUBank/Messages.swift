@@ -242,11 +242,20 @@ final class DMThreadModel: ObservableObject {
     @Published var loading = true
     @Published var error: String?
     private var poll: Task<Void, Never>?
+    /// false until the first full answer from the server; until then the saved copy is on screen
+    private var synced = false
 
     init(userId: String) { self.userId = userId }
 
     func start() {
         ChatNotifier.shared.openDM = userId
+        // the chat as it was last time shows at once; the server's answer replaces it a moment later
+        if messages.isEmpty, let r = AccountStore.shared.saved("dmThread", tag: userId) {
+            messages = (decode([DMMessage].self, r["messages"]) ?? []).filter { !Disappear.expired($0.expires) }
+            if let u = decode(ABUser.self, r["user"]) { user = u }
+            if let c = r["canSend"] as? Bool { canSend = c }
+            if !messages.isEmpty { loading = false }
+        }
         poll?.cancel()
         poll = Task { [weak self] in
             while !Task.isCancelled {
@@ -263,12 +272,16 @@ final class DMThreadModel: ObservableObject {
 
     func fetch() async {
         var fields: [String: Any] = ["userId": userId]
-        if let last = messages.last(where: { $0.pending != true })?.id { fields["after"] = last }
+        if synced, let last = messages.last(where: { $0.pending != true })?.id { fields["after"] = last }
         do {
-            let r = try await AccountStore.shared.call("dmThread", fields)
+            let full = !synced
+            let r = full ? try await AccountStore.shared.callSaving("dmThread", fields, tag: userId) : try await AccountStore.shared.call("dmThread", fields)
+            synced = true
             let new = decode([DMMessage].self, r["messages"]) ?? []
             let gone = Set((r["deleted"] as? [String]) ?? [])
-            let kept = messages.filter { !gone.contains($0.id) && !Disappear.expired($0.expires) }
+            // a full answer replaces the saved copy (only messages still sending stay)
+            let base = full ? messages.filter { $0.pending == true } : messages
+            let kept = base.filter { !gone.contains($0.id) && !Disappear.expired($0.expires) }
             var list = kept.filter { $0.pending != true }
             let have = Set(list.map(\.id))
             list += new.filter { !have.contains($0.id) && !gone.contains($0.id) && !Disappear.expired($0.expires) }

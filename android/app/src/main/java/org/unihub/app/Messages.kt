@@ -314,11 +314,17 @@ fun DmThreadScreen(userId: String) {
     reporting?.let { t -> ReportDialog(t) { reporting = null } }
     blocking?.let { t -> BlockDialog(t, { blocking = null }) }
 
+    // false until the first full answer from the server; until then the saved copy is on screen
+    var synced by remember(userId) { mutableStateOf(false) }
     suspend fun fetch() {
         val f = mutableMapOf<String, Any?>("userId" to userId)
-        messages.lastOrNull { !it.pending }?.let { f["after"] = it.id }
+        if (synced) messages.lastOrNull { !it.pending }?.let { f["after"] = it.id }
         try {
-            val r = Account.call("dmThread", f)
+            val full = !synced
+            val r = if (full) Account.callSaving("dmThread", f, userId) else Account.call("dmThread", f)
+            synced = true
+            // a full answer replaces the saved copy (only messages still sending stay)
+            if (full) messages.removeAll { !it.pending }
             val gone = (r["deleted"] as? JsonArray)?.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }?.toSet().orEmpty()
             messages.removeAll { it.id in gone || Disappear.expired(it.expires) }
             val have = messages.map { it.id }.toSet()
@@ -375,7 +381,16 @@ fun DmThreadScreen(userId: String) {
         ChatNotifier.openDM = userId
         onDispose { if (ChatNotifier.openDM == userId) ChatNotifier.openDM = null }
     }
-    LaunchedEffect(userId) { while (true) { fetch(); delay(3000) } }
+    LaunchedEffect(userId) {
+        // the chat as it was last time shows at once; the server's answer replaces it a moment later
+        if (messages.isEmpty()) Account.saved("dmThread", userId)?.let { r ->
+            messages.addAll(r["messages"].decodeAs<List<DmMessage>>().orEmpty().filter { !Disappear.expired(it.expires) })
+            r["user"].decodeAs<AbUser>()?.let { other = it }
+            if (r.containsKey("canSend")) canSend = r.bool("canSend")
+            if (messages.isNotEmpty()) loading = false
+        }
+        while (true) { fetch(); delay(3000) }
+    }
     LaunchedEffect(messages.size) { if (messages.isNotEmpty()) list.animateScrollToItem(messages.size) }
 
     val lastSeenMine = if (seenUpTo.isEmpty()) null else messages.lastOrNull { it.from == me?.id && (it.created ?: "") <= seenUpTo }?.id

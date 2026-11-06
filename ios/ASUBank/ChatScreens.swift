@@ -292,11 +292,21 @@ final class RoomModel: ObservableObject {
     @Published var loading = true
     @Published var error: String?
     private var poll: Task<Void, Never>?
+    /// false until the first full answer from the server; until then the saved copy is on screen
+    private var synced = false
 
     init(room: ChatRoom) { self.room = room }
 
     func start() {
         ChatNotifier.shared.openRoom = room.id
+        // the room as it was last time shows at once; the server's answer replaces it a moment later
+        if messages.isEmpty, let r = AccountStore.shared.saved("chat", tag: room.id) {
+            let blocked = Set(AccountStore.shared.user?.blocked ?? [])
+            messages = (decode([ChatMessage].self, r["messages"]) ?? []).filter { !blocked.contains($0.userId) && !Disappear.expired($0.expires) }
+            if let p = decode([String: ChatPerson].self, r["people"]) { people = p }
+            pinned = decode(ChatMessage.self, r["pinned"])
+            if !messages.isEmpty { loading = false }
+        }
         poll?.cancel()
         poll = Task { [weak self] in
             while !Task.isCancelled {
@@ -315,9 +325,13 @@ final class RoomModel: ObservableObject {
 
     func fetch() async {
         var fields: [String: Any] = ["room": room.id]
-        if let last = messages.last(where: { $0.pending != true })?.id { fields["after"] = last }
+        if synced, let last = messages.last(where: { $0.pending != true })?.id { fields["after"] = last }
         do {
-            let r = try await AccountStore.shared.call("chat", fields)
+            let full = !synced
+            let r = full ? try await AccountStore.shared.callSaving("chat", fields, tag: room.id) : try await AccountStore.shared.call("chat", fields)
+            synced = true
+            // a full answer replaces the saved copy (only messages still sending stay)
+            if full { messages.removeAll { $0.pending != true } }
             let new = decode([ChatMessage].self, r["messages"]) ?? []
             let gone = Set((r["deleted"] as? [String]) ?? [])
             let edits = (r["edited"] as? [[String: Any]]) ?? []

@@ -282,11 +282,17 @@ fun ChatRoomScreen(roomId: String) {
     blocking?.let { t -> BlockDialog(t, { blocking = null }, { id -> messages.removeAll { it.userId == id } }) }
     val canPost = admin || (room.adminOnly != true && room.locked != true && room.archived != true)
 
+    // false until the first full answer from the server; until then the saved copy is on screen
+    var synced by remember(roomId) { mutableStateOf(false) }
     suspend fun fetch() {
         val f = mutableMapOf<String, Any?>("room" to roomId)
-        messages.lastOrNull { !it.pending }?.let { f["after"] = it.id }
+        if (synced) messages.lastOrNull { !it.pending }?.let { f["after"] = it.id }
         try {
-            val r = Account.call("chat", f)
+            val full = !synced
+            val r = if (full) Account.callSaving("chat", f, roomId) else Account.call("chat", f)
+            synced = true
+            // a full answer replaces the saved copy (only messages still sending stay)
+            if (full) messages.removeAll { !it.pending }
             val gone = (r["deleted"] as? JsonArray)?.mapNotNull { it.prim() }?.toSet() ?: emptySet()
             messages.removeAll { it.id in gone || Disappear.expired(it.expires) }
             (r["edited"] as? JsonArray).objects().forEach { e ->
@@ -312,7 +318,16 @@ fun ChatRoomScreen(roomId: String) {
         onDispose { if (ChatNotifier.openRoom == roomId) ChatNotifier.openRoom = null }
     }
     // about every 3 seconds while the room is on screen
-    LaunchedEffect(roomId) { while (true) { fetch(); delay(3000) } }
+    LaunchedEffect(roomId) {
+        // the room as it was last time shows at once; the server's answer replaces it a moment later
+        if (messages.isEmpty()) Account.saved("chat", roomId)?.let { r ->
+            val blocked = Account.user.value?.blocked.orEmpty()
+            messages.addAll(r["messages"].decodeAs<List<ChatMessage>>().orEmpty().filter { it.userId !in blocked && !Disappear.expired(it.expires) })
+            r["people"].decodeAs<Map<String, ChatPerson>>()?.let { people.putAll(it) }
+            if (messages.isNotEmpty()) loading = false
+        }
+        while (true) { fetch(); delay(3000) }
+    }
     LaunchedEffect(messages.size) { if (messages.isNotEmpty()) list.animateScrollToItem(messages.size - 1) }
 
     /** The message shows at once and is replaced by the real one when the server has it. Leaving the room doesn't stop it. */
