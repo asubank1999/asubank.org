@@ -122,7 +122,7 @@ object DmFiles {
         if (file.length() > 0) return@withContext file
         val data = Account.call("dmFile", mapOf("id" to m.id)).str("data") ?: throw ApiError(tr("File not found."))
         dir.mkdirs()
-        file.writeBytes(Base64.decode(data, Base64.DEFAULT))
+        writeWhole(file, Base64.decode(data, Base64.DEFAULT))
         file
     }
 

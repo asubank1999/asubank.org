@@ -132,7 +132,7 @@ object MediaFiles {
         if (file.length() > 0) return@withContext file
         val data = Account.call("mediaFile", mapOf("scope" to scope, "id" to id)).str("data") ?: throw ApiError(tr("File not found."))
         dir.mkdirs()
-        file.writeBytes(Base64.decode(data, Base64.DEFAULT))
+        writeWhole(file, Base64.decode(data, Base64.DEFAULT))
         file
     }
 }
@@ -226,9 +226,31 @@ fun rememberVoiceRecorder(onLimit: (File, Int) -> Unit = { _, _ -> }): VoiceReco
 
 fun hasMic(ctx: Context) = ctx.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
 
+/** Writes the whole file or nothing: a cut-off download never leaves half a file that then refuses to play */
+fun writeWhole(file: File, bytes: ByteArray) {
+    val part = File(file.parentFile, file.name + ".part")
+    part.writeBytes(bytes)
+    if (!part.renameTo(file)) { file.delete(); if (!part.renameTo(file)) { file.writeBytes(bytes); part.delete() } }
+}
+
 // MARK: - playing
 
-private object VoiceNow { var stop: (() -> Unit)? = null }
+private object VoiceNow { var stop: (() -> Unit)? = null; var owner: String? = null }
+
+/** Plays on the media volume (not the call or ringer volume), from the file itself */
+private fun openVoice(path: String): MediaPlayer {
+    val m = MediaPlayer()
+    try {
+        m.setAudioAttributes(
+            android.media.AudioAttributes.Builder()
+                .setUsage(android.media.AudioAttributes.USAGE_MEDIA)
+                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SPEECH).build(),
+        )
+        java.io.FileInputStream(path).use { m.setDataSource(it.fd) }
+        m.prepare()
+        return m
+    } catch (e: Exception) { m.release(); throw e }
+}
 
 fun voiceTime(s: Int) = "%d:%02d".format(s / 60, s % 60)
 
@@ -236,11 +258,11 @@ fun voiceTime(s: Int) = "%d:%02d".format(s / 60, s % 60)
 @Composable
 fun VoiceBubble(id: String, duration: Int, mine: Boolean = false, local: String? = null, fetch: suspend () -> File) {
     val scope = rememberCoroutineScope()
-    var player by remember { mutableStateOf<MediaPlayer?>(null) }
-    var playing by remember { mutableStateOf(false) }
-    var progress by remember { mutableFloatStateOf(0f) }
-    var loading by remember { mutableStateOf(false) }
-    var failed by remember { mutableStateOf(false) }
+    var player by remember(id) { mutableStateOf<MediaPlayer?>(null) }
+    var playing by remember(id) { mutableStateOf(false) }
+    var progress by remember(id) { mutableFloatStateOf(0f) }
+    var loading by remember(id) { mutableStateOf(false) }
+    var failed by remember(id) { mutableStateOf(false) }
     val fg = if (mine) MaterialTheme.colorScheme.onPrimary else accent
     val bars = remember(id) {
         var seed = id.hashCode()
@@ -248,7 +270,7 @@ fun VoiceBubble(id: String, duration: Int, mine: Boolean = false, local: String?
     }
 
     fun halt() { runCatching { player?.pause() }; playing = false }
-    DisposableEffect(Unit) { onDispose { runCatching { player?.release() }; player = null; playing = false } }
+    DisposableEffect(id) { onDispose { if (VoiceNow.owner == id) VoiceNow.stop = null; runCatching { player?.release() }; player = null; playing = false } }
     LaunchedEffect(playing) {
         while (playing) {
             val p = player ?: break
@@ -263,13 +285,18 @@ fun VoiceBubble(id: String, duration: Int, mine: Boolean = false, local: String?
             loading = true
             try {
                 val p = player ?: withContext(Dispatchers.IO) {
-                    val path = local?.let { Uri.parse(it).path ?: it } ?: fetch().path
-                    MediaPlayer().apply { setDataSource(path); prepare() }
+                    val path = local?.let { Uri.parse(it).path ?: it }
+                    // a cached file that won't open is thrown away and downloaded again, once
+                    if (path != null && File(path).length() > 0) openVoice(path) else {
+                        val f = fetch()
+                        runCatching { openVoice(f.path) }.getOrElse { f.delete(); openVoice(fetch().path) }
+                    }
                 }.also { m ->
                     m.setOnCompletionListener { playing = false; progress = 0f; runCatching { it.seekTo(0) } }
                     player = m
                 }
-                VoiceNow.stop?.invoke()
+                if (VoiceNow.owner != id) VoiceNow.stop?.invoke()
+                VoiceNow.owner = id
                 VoiceNow.stop = { halt() }
                 p.start()
                 playing = true
