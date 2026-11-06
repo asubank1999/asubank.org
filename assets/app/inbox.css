@@ -1,7 +1,7 @@
 /* Round Messages button and inbox panel (assets/app/inbox.js) */
 .abx-btn, .abx-panel, .abx-panel * { box-sizing: border-box; font-family: var(--ab-font); letter-spacing: normal; text-transform: none; text-shadow: none; }
 .abx-btn {
-    position: fixed; z-index: 2147483001; right: 18px; bottom: calc(18px + var(--ab-safe-b, 0px));
+    position: fixed; z-index: 2147483647; right: 18px; bottom: calc(18px + var(--ab-safe-b, 0px));
     width: 58px; height: 58px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
     display: grid; place-items: center; color: #fff;
     background: linear-gradient(135deg, var(--ab-accent, #8C1D40), var(--ab-accent-2, #b8325f));
@@ -22,7 +22,7 @@ body.abx-has-tabbar .abx-btn { bottom: calc(var(--ab-tabbar-h, 58px) + var(--ab-
 @media (min-width: 900px) { body.abx-has-tabbar .abx-btn { bottom: 22px; right: 24px; } }
 
 .abx-panel {
-    position: fixed; z-index: 2147483002; right: 18px; bottom: calc(90px + var(--ab-safe-b, 0px));
+    position: fixed; z-index: 2147483647; right: 18px; bottom: calc(90px + var(--ab-safe-b, 0px));
     width: 370px; max-width: calc(100vw - 24px); height: min(560px, calc(100vh - 140px));
     display: flex; flex-direction: column; overflow: hidden;
     background: var(--ab-surface, #fff); color: var(--ab-label, #000);
@@ -40,7 +40,7 @@ body.abx-has-tabbar .abx-panel { bottom: calc(var(--ab-tabbar-h, 58px) + var(--a
 @keyframes abx-in { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
 
 .abx-head { display: flex; align-items: center; gap: 8px; padding: 14px 14px 8px 18px; }
-.abx-head b { font-size: 20px; font-weight: 700; }
+.abx-title { font-size: 20px; font-weight: 700; }
 .abx-sp { flex: 1; }
 .abx-x, .abx-new {
     width: 34px; height: 34px; border-radius: 50%; border: 0; display: grid; place-items: center; cursor: pointer;
@@ -55,7 +55,7 @@ body.abx-has-tabbar .abx-panel { bottom: calc(var(--ab-tabbar-h, 58px) + var(--a
 .abx-body { flex: 1; overflow-y: auto; padding: 6px; overscroll-behavior: contain; }
 .abx-row {
     display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 14px;
-    color: inherit; text-decoration: none;
+    color: inherit; text-decoration: none; width: 100%; border: 0; background: transparent; font: inherit; text-align: start; cursor: pointer;
 }
 .abx-row b { color: var(--ab-label, #000); }
 .abx-row:hover { background: var(--ab-fill, rgba(118, 118, 128, .12)); }
@@ -90,3 +90,50 @@ body.abx-has-tabbar .abx-panel { bottom: calc(var(--ab-tabbar-h, 58px) + var(--a
 .abx-skel { animation: abx-pulse 1.2s ease-in-out infinite; }
 @keyframes abx-pulse { 50% { opacity: .5; } }
 @media (prefers-reduced-motion: reduce) { .abx-btn, .abx-panel, .abx-skel { animation: none; transition: none; } }
+
+/* ---- a chat inside the panel */
+.abx-chead { padding: 10px 10px 10px 8px; gap: 8px; border-bottom: .5px solid var(--ab-sep, rgba(60, 60, 67, .2)); }
+.abx-back { font-size: 26px; line-height: 1; padding-bottom: 3px; background: transparent; }
+.abx-av-s { width: 36px; height: 36px; font-size: 15px; }
+.abx-av-s .abx-dot { width: 10px; height: 10px; }
+.abx-emoji.abx-av-s { font-size: 19px; }
+.abx-cname { font-size: 15px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.abx-csub { font-size: 12px; color: var(--ab-label-2, #5e5e66); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.abx-csub:empty { display: none; }
+.abx-pad { padding: 10px 14px 4px; }
+.abx-search { width: 100%; padding: 9px 12px; border-radius: 10px; border: 0; background: var(--ab-fill, rgba(118, 118, 128, .12)); color: inherit; font: inherit; font-size: 15px; }
+.abx-feed { flex: 1; overflow-y: auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; overscroll-behavior: contain; }
+.abx-msg { display: flex; align-items: flex-end; gap: 6px; max-width: 100%; margin-top: 6px; }
+.abx-msg.grouped { margin-top: 0; }
+.abx-msg.mine { justify-content: flex-end; }
+.abx-av-gap { flex: none; width: 36px; }
+.abx-bubble {
+    max-width: 78%; padding: 7px 12px 5px; border-radius: 18px; background: var(--ab-fill, rgba(118, 118, 128, .14));
+    font-size: 14.5px; line-height: 1.35; overflow-wrap: anywhere; display: flex; flex-direction: column;
+}
+.abx-msg.mine .abx-bubble { background: var(--ab-accent, #8C1D40); color: #fff; }
+.abx-bubble.pending { opacity: .6; }
+.abx-text { white-space: pre-wrap; }
+.abx-from { font-size: 12px; font-weight: 700; margin-bottom: 1px; }
+.abx-file { color: inherit; font-weight: 600; text-decoration: underline; }
+.abx-time { font-size: 10.5px; opacity: .6; align-self: flex-end; margin-top: 1px; }
+.abx-seen { align-self: flex-end; font-size: 11px; color: var(--ab-label-2, #5e5e66); margin: 2px 4px 0; }
+.abx-feed .abx-empty { margin: auto 0; }
+.abx-err { margin: 0; padding: 6px 14px; font-size: 13px; color: var(--ab-red, #d70015); }
+.abx-err[hidden], .abx-closed[hidden], .abx-composer[hidden] { display: none; }
+.abx-closed { margin: 0; padding: 12px 14px; text-align: center; font-size: 13px; color: var(--ab-label-2, #5e5e66); border-top: .5px solid var(--ab-sep, rgba(60, 60, 67, .2)); }
+.abx-composer { display: flex; align-items: flex-end; gap: 8px; padding: 10px 12px; border-top: .5px solid var(--ab-sep, rgba(60, 60, 67, .2)); }
+.abx-composer textarea {
+    flex: 1; resize: none; min-height: 38px; max-height: 110px; padding: 9px 14px; border-radius: 19px;
+    border: .5px solid var(--ab-sep, rgba(60, 60, 67, .3)); background: var(--ab-bg, #fff); color: inherit; font: inherit; font-size: 15px; line-height: 1.3;
+}
+.abx-composer textarea:focus { outline: 2px solid var(--ab-accent-soft, rgba(140, 29, 64, .3)); }
+.abx-send {
+    flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer;
+    background: var(--ab-accent, #8C1D40); color: #fff; font-size: 19px; font-weight: 700;
+}
+.abx-send:disabled { opacity: .35; cursor: default; }
+.abx-bubbles { display: flex; flex-direction: column; gap: 10px; padding: 6px 0; }
+.abx-bubbles i { display: block; height: 30px; border-radius: 15px; background: var(--ab-fill, rgba(118, 118, 128, .14)); width: 55%; }
+.abx-bubbles i:nth-child(2) { align-self: flex-end; width: 45%; }
+.abx-bubbles i:nth-child(3) { width: 65%; }
