@@ -110,27 +110,3 @@ The same account works everywhere.
 ## Contribute
 
 Clean scans, summaries and study guides are welcome. Use [Upload](https://asubank.org/upload/uploadmethod) on the website or in the app. To report a bug or a problem, use the [report form](https://asubank.org/legal/report) or email necro144@yahoo.com.
-
-## For developers
-
-| | Built with |
-|---|---|
-| Website | Static HTML, CSS and JavaScript on GitHub Pages |
-| iPhone app | SwiftUI (`ios/`) |
-| Android app | Kotlin and Jetpack Compose (`android/`) |
-| Backend | Google Apps Script and Sheets (`tools/apps-script/`) |
-| Builds and releases | GitHub Actions (`.github/workflows/`) |
-
-| Folder | Contents |
-|---|---|
-| `banks/` | Materials pages by college and subject |
-| `guides/`, `schedules/` | Guides, search, halls, calendars and timetables |
-| `feed/`, `chat/`, `account/`, `swap/` | Community and account pages |
-| `upload/`, `requests/` | Uploads, material requests, matching and ratings |
-| `legal/` | Terms, privacy, community rules, copyright and report form |
-| `apps/`, `admin/` | App downloads, student tools and the admin panel |
-| `assets/app/` | Shared code and live data: `materials.json`, `app-config.json` |
-| `i18n/` | Translations for both apps |
-| `archive/` | Older versions of pages |
-
-Internal links use root-absolute paths (for example `/banks/english`). `404.html` redirects old URLs such as `/english`.
