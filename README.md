@@ -89,9 +89,14 @@ The same account works everywhere.
 |---|---|---|---|
 | Materials, search, guides | ✅ | ✅ | ✅ |
 | Accounts, feed, chat, messages | ✅ | ✅ | ✅ |
-| Subject swap, reports | ✅ | ✅ | ✅ |
+| Subject swap, reports | | ✅ | ✅ |
 | Adding stories, pokes | | ✅ | ✅ |
-| Lecture reminders, focus timer, Customize | | ✅ | ✅ |
+| Story camera, 30-second video stories, swipe to camera | | ✅ | ✅ |
+| Save stories to your phone with the UniHub watermark | | ✅ | ✅ |
+| Phone notifications for messages, replies, friends and new uploads | | ✅ | ✅ |
+| Lecture reminders 10 minutes before class | | ✅ | ✅ |
+| Study planner, focus timer | | ✅ | ✅ |
+| Customize: tabs, Home, themes, app icons, notification sounds | | ✅ | ✅ |
 | Requirements | Any browser | iOS 15 or newer | Android 8 or newer |
 
 ## Rules and legal
