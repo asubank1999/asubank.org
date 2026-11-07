@@ -230,6 +230,7 @@
 "Admins only" = "Admins only";
 "Admins reserve the right to keep their personal information (phone number visibility, identity, contact details) private and are not obligated to disclose it beyond what WhatsApp itself displays." = "Admins reserve the right to keep their personal information (phone number visibility, identity, contact details) private and are not obligated to disclose it beyond what WhatsApp itself displays.";
 "Admins: delete any file from Drive by holding it, and it stays gone after a refresh" = "Admins: delete any file from Drive by holding it, and it stays gone after a refresh";
+"Admins: terms records list everyone, no typing needed" = "Admins: terms records list everyone, no typing needed";
 "Admissions & Registration" = "Admissions & Registration";
 "Admissions, fees, majors, scholarships" = "Admissions, fees, majors, scholarships";
 "Admissions, fees, majors, scholarships and e-services." = "Admissions, fees, majors, scholarships and e-services.";
@@ -259,7 +260,9 @@
 "All subjects" = "All subjects";
 "All university resources, materials and tools in one place." = "All university resources, materials and tools in one place.";
 "Allied Medical Sciences" = "Allied Medical Sciences";
+"Allow UniHub to add photos in Settings to save stories." = "Allow UniHub to add photos in Settings to save stories.";
 "Allow exact reminders" = "Allow exact reminders";
+"Allow storage to save stories." = "Allow storage to save stories.";
 "Almost there" = "Almost there";
 "Also searching for" = "Also searching for";
 "Alumni" = "Alumni";
@@ -568,6 +571,7 @@
 "Copper" = "Copper";
 "Copy" = "Copy";
 "Copy CliQ alias ALANQ99" = "Copy CliQ alias ALANQ99";
+"Copy anyone's username from their profile" = "Copy anyone's username from their profile";
 "Copy link" = "Copy link";
 "Copy username" = "Copy username";
 "Copyright" = "Copyright";
@@ -579,6 +583,7 @@
 "Couldn't connect. Check your connection and try again." = "Couldn't connect. Check your connection and try again.";
 "Couldn't delete" = "Couldn't delete";
 "Couldn't do that" = "Couldn't do that";
+"Couldn't download the story. Try again." = "Couldn't download the story. Try again.";
 "Couldn't load the bus times. Check your connection." = "Couldn't load the bus times. Check your connection.";
 "Couldn't load the latest files." = "Couldn't load the latest files.";
 "Couldn't load the ratings" = "Couldn't load the ratings";
@@ -594,6 +599,7 @@
 "Couldn't read this file." = "Couldn't read this file.";
 "Couldn't record the video. Try again." = "Couldn't record the video. Try again.";
 "Couldn't save" = "Couldn't save";
+"Couldn't save the story. Try again." = "Couldn't save the story. Try again.";
 "Couldn't send" = "Couldn't send";
 "Couldn't send this file." = "Couldn't send this file.";
 "Couldn't send your booking. Check your connection and try again." = "Couldn't send your booking. Check your connection and try again.";
@@ -1644,6 +1650,7 @@
 "Rate your teachers, fully native: search, sort, averages out of 10, and anonymous ratings in a few taps" = "Rate your teachers, fully native: search, sort, averages out of 10, and anonymous ratings in a few taps";
 "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous." = "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous.";
 "Reach the exact audience you need" = "Reach the exact audience you need";
+"React to a story with an emoji or send a reply" = "React to a story with an emoji or send a reply";
 "Read public posts and stories without an account, also on the website" = "Read public posts and stories without an account, also on the website";
 "Read the full Terms of Service" = "Read the full Terms of Service";
 "Read the terms" = "Read the terms";
@@ -1739,8 +1746,11 @@
 "Save it for later" = "Save it for later";
 "Save materials, see what you opened recently, upload materials to share with other students" = "Save materials, see what you opened recently, upload materials to share with other students";
 "Save rating" = "Save rating";
+"Save stories to your phone. Saved photos and videos carry the UniHub watermark" = "Save stories to your phone. Saved photos and videos carry the UniHub watermark";
 "Save to Files" = "Save to Files";
 "Save to Files / share file" = "Save to Files / share file";
+"Save to Photos" = "Save to Photos";
+"Save to your gallery" = "Save to your gallery";
 "Saved" = "Saved";
 "Saved %d" = "Saved %d";
 "Saved %lld" = "Saved %lld";
@@ -1748,6 +1758,8 @@
 "Saved files stay on this device." = "Saved files stay on this device.";
 "Saved materials" = "Saved materials";
 "Saved on your account: %@" = "Saved on your account: %@";
+"Saved to Photos" = "Saved to Photos";
+"Saved to your gallery" = "Saved to your gallery";
 "Saved · %d" = "Saved · %d";
 "Saved · %lld" = "Saved · %lld";
 "Saved · %@" = "Saved · %@";
@@ -1944,6 +1956,7 @@
 "Storage" = "Storage";
 "Stored on" = "Stored on";
 "Stories: share a photo or text for 24 hours" = "Stories: share a photo or text for 24 hours";
+"Story videos can be up to 30 seconds and now play to the very end" = "Story videos can be up to 30 seconds and now play to the very end";
 "Strangers" = "Strangers";
 "Strong and steady" = "Strong and steady";
 "Structured submission" = "Structured submission";
@@ -2148,6 +2161,7 @@
 "Three ways to find any material" = "Three ways to find any material";
 "Thunderstorms" = "Thunderstorms";
 "Thursday" = "Thursday";
+"Tidier profile: the buttons and details line up, and it shows when someone joined" = "Tidier profile: the buttons and details line up, and it shows when someone joined";
 "Time" = "Time";
 "Times can change. The transport office has the final word." = "Times can change. The transport office has the final word.";
 "Tips" = "Tips";
@@ -2229,6 +2243,7 @@
 "UniHub is free and student-run. Donations help keep it running." = "UniHub is free and student-run. Donations help keep it running.";
 "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it." = "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it.";
 "UniHub news" = "UniHub news";
+"UniHub news and fun facts in the Feed" = "UniHub news and fun facts in the Feed";
 "UniHub now asks every account for its sex. Choose yours to keep going." = "UniHub now asks every account for its sex. Choose yours to keep going.";
 "UniHub team" = "UniHub team";
 "UniHub · Student Community Groups" = "UniHub · Student Community Groups";

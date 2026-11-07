@@ -10,8 +10,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "1.18.0"
-    CURRENT_PROJECT_VERSION: "18"
+    MARKETING_VERSION: "1.19.0"
+    CURRENT_PROJECT_VERSION: "19"
     DEVELOPMENT_TEAM: ""
     AB_STORE_BUILD: "NO"
 targets:
@@ -46,6 +46,7 @@ targets:
         NSCameraUsageDescription: UniHub uses the camera for stories and to scan paper notes and exams into a PDF you can upload.
         NSMicrophoneUsageDescription: UniHub records sound for voice messages and when you film a video story.
         NSPhotoLibraryUsageDescription: UniHub lets you pick photos and videos of notes to upload.
+        NSPhotoLibraryAddUsageDescription: UniHub saves stories you download to your photos, with a UniHub watermark.
         BGTaskSchedulerPermittedIdentifiers:
           - org.unihub.app.chat
         UIBackgroundModes:

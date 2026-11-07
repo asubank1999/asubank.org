@@ -19,7 +19,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = (System.getenv("BUILD_NUMBER") ?: "1").toInt()
-        versionName = "1.18.0"
+        versionName = "1.19.0"
         // STORE_BUILD=true: for Google Play, so no updates from GitHub and no payments outside Play
         buildConfigField("boolean", "STORE_BUILD", if (System.getenv("STORE_BUILD") == "true") "true" else "false")
     }
@@ -81,4 +81,8 @@ dependencies {
     implementation("androidx.camera:camera-view:1.4.1")
     // background checks for new chat messages
     implementation("androidx.work:work-runtime-ktx:2.9.1")
+    // saved stories get a UniHub watermark on every video frame
+    implementation("androidx.media3:media3-transformer:1.4.1")
+    implementation("androidx.media3:media3-effect:1.4.1")
+    implementation("androidx.media3:media3-common:1.4.1")
 }

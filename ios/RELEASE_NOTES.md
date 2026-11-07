@@ -3,6 +3,15 @@
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
 UniHub is free and student-run. It is not made by or affiliated with the university.
 
+### What's new in 1.19.0
+- Save stories to your phone. Saved photos and videos carry the UniHub watermark
+- Story videos can be up to 30 seconds and now play to the very end
+- React to a story with an emoji or send a reply
+- UniHub news and fun facts in the Feed
+- Copy anyone's username from their profile
+- Tidier profile: the buttons and details line up, and it shows when someone joined
+- Admins: terms records list everyone, no typing needed
+
 ### What's new in 1.18.0
 - Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it
 - Chats and rooms open at once, and new messages follow

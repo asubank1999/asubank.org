@@ -230,6 +230,7 @@
 "Admins only" = "Solo admins";
 "Admins reserve the right to keep their personal information (phone number visibility, identity, contact details) private and are not obligated to disclose it beyond what WhatsApp itself displays." = "Los administradores se reservan el derecho de mantener privada su información personal (visibilidad del número de teléfono, identidad, detalles de contacto) y no están obligados a revelarla más allá de lo que muestra WhatsApp.";
 "Admins: delete any file from Drive by holding it, and it stays gone after a refresh" = "Admins: delete any file from Drive by holding it, and it stays gone after a refresh";
+"Admins: terms records list everyone, no typing needed" = "Administradores: los registros de términos muestran a todos, sin escribir";
 "Admissions & Registration" = "Admisiones y registro";
 "Admissions, fees, majors, scholarships" = "Admisiones, tarifas, carreras, becas.";
 "Admissions, fees, majors, scholarships and e-services." = "Admisiones, tarifas, carreras, becas y servicios electrónicos.";
@@ -259,7 +260,9 @@
 "All subjects" = "Todas las materias";
 "All university resources, materials and tools in one place." = "Todos los recursos, materiales y herramientas universitarias en un solo lugar.";
 "Allied Medical Sciences" = "Ciencias médicas aplicadas";
+"Allow UniHub to add photos in Settings to save stories." = "Permite que UniHub añada fotos en Ajustes para guardar historias.";
 "Allow exact reminders" = "Permitir recordatorios exactos";
+"Allow storage to save stories." = "Permite el almacenamiento para guardar historias.";
 "Almost there" = "Ya casi";
 "Also searching for" = "También buscamos";
 "Alumni" = "Egresado";
@@ -568,6 +571,7 @@
 "Copper" = "Cobre";
 "Copy" = "Copiar";
 "Copy CliQ alias ALANQ99" = "Copiar alias CliQ ALANQ99";
+"Copy anyone's username from their profile" = "Copia el nombre de usuario de cualquiera desde su perfil";
 "Copy link" = "Copiar enlace";
 "Copy username" = "Copiar nombre de usuario";
 "Copyright" = "Derechos de autor";
@@ -579,6 +583,7 @@
 "Couldn't connect. Check your connection and try again." = "No se pudo conectar. Comprueba tu conexión y vuelve a intentarlo.";
 "Couldn't delete" = "No se pudo eliminar";
 "Couldn't do that" = "No se pudo hacer";
+"Couldn't download the story. Try again." = "No se pudo descargar la historia. Inténtalo de nuevo.";
 "Couldn't load the bus times. Check your connection." = "No se pudieron cargar los horarios. Revisa tu conexión.";
 "Couldn't load the latest files." = "No se pudieron cargar los últimos archivos.";
 "Couldn't load the ratings" = "No se pudieron cargar las valoraciones";
@@ -594,6 +599,7 @@
 "Couldn't read this file." = "No se pudo leer este archivo.";
 "Couldn't record the video. Try again." = "No se pudo grabar el vídeo. Inténtalo de nuevo.";
 "Couldn't save" = "No se pudo guardar";
+"Couldn't save the story. Try again." = "No se pudo guardar la historia. Inténtalo de nuevo.";
 "Couldn't send" = "Couldn't send";
 "Couldn't send this file." = "Couldn't send this file.";
 "Couldn't send your booking. Check your connection and try again." = "No se pudo enviar tu reserva. Revisa tu conexión e inténtalo de nuevo.";
@@ -1644,6 +1650,7 @@
 "Rate your teachers, fully native: search, sort, averages out of 10, and anonymous ratings in a few taps" = "Rate your teachers, fully native: search, sort, averages out of 10, and anonymous ratings in a few taps";
 "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous." = "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous.";
 "Reach the exact audience you need" = "Reach the exact audience you need";
+"React to a story with an emoji or send a reply" = "Reacciona a una historia con un emoji o envía una respuesta";
 "Read public posts and stories without an account, also on the website" = "Lee publicaciones e historias públicas sin cuenta, también en la web";
 "Read the full Terms of Service" = "Leer los Términos del servicio completos";
 "Read the terms" = "Leer los términos";
@@ -1739,8 +1746,11 @@
 "Save it for later" = "Guárdalo para después";
 "Save materials, see what you opened recently, upload materials to share with other students" = "Save materials, see what you opened recently, upload materials to share with other students";
 "Save rating" = "Save rating";
+"Save stories to your phone. Saved photos and videos carry the UniHub watermark" = "Guarda historias en tu teléfono. Las fotos y vídeos guardados llevan la marca de UniHub";
 "Save to Files" = "Guardar en Archivos";
 "Save to Files / share file" = "Guardar en Archivos / compartir";
+"Save to Photos" = "Guardar en Fotos";
+"Save to your gallery" = "Guardar en tu galería";
 "Saved" = "Guardados";
 "Saved %d" = "Guardados %d";
 "Saved %lld" = "Guardados %lld";
@@ -1748,6 +1758,8 @@
 "Saved files stay on this device." = "Los archivos guardados se quedan en este dispositivo.";
 "Saved materials" = "Materiales guardados";
 "Saved on your account: %@" = "Guardado en tu cuenta: %@";
+"Saved to Photos" = "Guardado en Fotos";
+"Saved to your gallery" = "Guardado en tu galería";
 "Saved · %d" = "Guardados · %d";
 "Saved · %lld" = "Guardados · %lld";
 "Saved · %@" = "Guardados · %@";
@@ -1944,6 +1956,7 @@
 "Storage" = "Almacenamiento";
 "Stored on" = "Guardado en";
 "Stories: share a photo or text for 24 hours" = "Historias: comparte una foto o un texto durante 24 horas";
+"Story videos can be up to 30 seconds and now play to the very end" = "Los vídeos de las historias duran hasta 30 segundos y ahora se reproducen hasta el final";
 "Strangers" = "Desconocidos";
 "Strong and steady" = "Strong and steady";
 "Structured submission" = "Envío estructurado";
@@ -2148,6 +2161,7 @@
 "Three ways to find any material" = "Three ways to find any material";
 "Thunderstorms" = "Tormentas";
 "Thursday" = "Thursday";
+"Tidier profile: the buttons and details line up, and it shows when someone joined" = "Perfil más ordenado: los botones y datos quedan alineados, y muestra cuándo se unió alguien";
 "Time" = "Time";
 "Times can change. The transport office has the final word." = "Los horarios pueden cambiar. La oficina de transporte tiene la última palabra.";
 "Tips" = "Consejos";
@@ -2229,6 +2243,7 @@
 "UniHub is free and student-run. Donations help keep it running." = "UniHub es gratis y lo llevan estudiantes. Las donaciones ayudan a mantenerlo.";
 "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it." = "UniHub es gratis para los estudiantes y lo lleva un estudiante. Lo apoyan los anuncios del sitio web, los patrocinadores y las donaciones.";
 "UniHub news" = "Noticias de UniHub";
+"UniHub news and fun facts in the Feed" = "Noticias de UniHub y datos curiosos en el Feed";
 "UniHub now asks every account for its sex. Choose yours to keep going." = "UniHub ahora pide el sexo a cada cuenta. Elige el tuyo para continuar.";
 "UniHub team" = "Equipo de UniHub";
 "UniHub · Student Community Groups" = "UniHub · Grupos comunitarios de estudiantes";

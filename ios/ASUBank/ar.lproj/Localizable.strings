@@ -230,6 +230,7 @@
 "Admins only" = "للمشرفين فقط";
 "Admins reserve the right to keep their personal information (phone number visibility, identity, contact details) private and are not obligated to disclose it beyond what WhatsApp itself displays." = "يحق للمشرفين إبقاء معلوماتهم الشخصية (ظهور رقم الهاتف، الهوية، بيانات الاتصال) خاصة، وليسوا ملزمين بالكشف عن أكثر مما يعرضه واتساب نفسه.";
 "Admins: delete any file from Drive by holding it, and it stays gone after a refresh" = "Admins: delete any file from Drive by holding it, and it stays gone after a refresh";
+"Admins: terms records list everyone, no typing needed" = "للمشرفين: سجلات الشروط تعرض الجميع دون الحاجة للكتابة";
 "Admissions & Registration" = "القبول والتسجيل";
 "Admissions, fees, majors, scholarships" = "القبول والرسوم والتخصصات والمنح";
 "Admissions, fees, majors, scholarships and e-services." = "القبول والرسوم والتخصصات والمنح والخدمات الإلكترونية.";
@@ -259,7 +260,9 @@
 "All subjects" = "كل المواد";
 "All university resources, materials and tools in one place." = "جميع مصادر الجامعة وموادها وأدواتها في مكان واحد.";
 "Allied Medical Sciences" = "العلوم الطبية المساندة";
+"Allow UniHub to add photos in Settings to save stories." = "اسمح لـ UniHub بإضافة الصور من الإعدادات لحفظ القصص.";
 "Allow exact reminders" = "السماح بالتذكيرات الدقيقة";
+"Allow storage to save stories." = "اسمح بالوصول إلى التخزين لحفظ القصص.";
 "Almost there" = "اقتربت";
 "Also searching for" = "نبحث أيضًا عن";
 "Alumni" = "خريج";
@@ -568,6 +571,7 @@
 "Copper" = "نحاسي";
 "Copy" = "نسخ";
 "Copy CliQ alias ALANQ99" = "انسخ اسم CliQ المستعار ALANQ99";
+"Copy anyone's username from their profile" = "انسخ اسم المستخدم لأي شخص من ملفه";
 "Copy link" = "نسخ الرابط";
 "Copy username" = "نسخ اسم المستخدم";
 "Copyright" = "حقوق النشر";
@@ -579,6 +583,7 @@
 "Couldn't connect. Check your connection and try again." = "تعذر الاتصال. تحقق من اتصالك وحاول مجددًا.";
 "Couldn't delete" = "تعذر الحذف";
 "Couldn't do that" = "تعذر تنفيذ ذلك";
+"Couldn't download the story. Try again." = "تعذر تنزيل القصة. حاول مرة أخرى.";
 "Couldn't load the bus times. Check your connection." = "تعذّر تحميل مواعيد الحافلات. تحقّق من اتصالك.";
 "Couldn't load the latest files." = "تعذر تحميل أحدث الملفات.";
 "Couldn't load the ratings" = "تعذر تحميل التقييمات";
@@ -594,6 +599,7 @@
 "Couldn't read this file." = "تعذرت قراءة هذا الملف.";
 "Couldn't record the video. Try again." = "تعذر تسجيل الفيديو. حاول مرة أخرى.";
 "Couldn't save" = "تعذر الحفظ";
+"Couldn't save the story. Try again." = "تعذر حفظ القصة. حاول مرة أخرى.";
 "Couldn't send" = "تعذر الإرسال";
 "Couldn't send this file." = "Couldn't send this file.";
 "Couldn't send your booking. Check your connection and try again." = "تعذر إرسال حجزك. تحقق من اتصالك وحاول مرة أخرى.";
@@ -1644,6 +1650,7 @@
 "Rate your teachers, fully native: search, sort, averages out of 10, and anonymous ratings in a few taps" = "Rate your teachers, fully native: search, sort, averages out of 10, and anonymous ratings in a few taps";
 "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous." = "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous.";
 "Reach the exact audience you need" = "صل إلى الجمهور الذي تحتاجه تمامًا";
+"React to a story with an emoji or send a reply" = "تفاعل مع القصة بإيموجي أو أرسل رداً";
 "Read public posts and stories without an account, also on the website" = "اقرأ المنشورات والقصص العامة بدون حساب، وعلى الموقع أيضاً";
 "Read the full Terms of Service" = "اقرأ شروط الخدمة كاملة";
 "Read the terms" = "اقرأ الشروط";
@@ -1739,8 +1746,11 @@
 "Save it for later" = "احفظه لوقت لاحق";
 "Save materials, see what you opened recently, upload materials to share with other students" = "Save materials, see what you opened recently, upload materials to share with other students";
 "Save rating" = "حفظ التقييم";
+"Save stories to your phone. Saved photos and videos carry the UniHub watermark" = "احفظ القصص على هاتفك. الصور والفيديوهات المحفوظة تحمل علامة UniHub";
 "Save to Files" = "حفظ في الملفات";
 "Save to Files / share file" = "حفظ في الملفات / مشاركة الملف";
+"Save to Photos" = "حفظ في الصور";
+"Save to your gallery" = "حفظ في المعرض";
 "Saved" = "المحفوظات";
 "Saved %d" = "المحفوظات %d";
 "Saved %lld" = "المحفوظات %lld";
@@ -1748,6 +1758,8 @@
 "Saved files stay on this device." = "تبقى الملفات المحفوظة على هذا الجهاز.";
 "Saved materials" = "المواد المحفوظة";
 "Saved on your account: %@" = "محفوظ في حسابك: %@";
+"Saved to Photos" = "تم الحفظ في الصور";
+"Saved to your gallery" = "تم الحفظ في المعرض";
 "Saved · %d" = "المحفوظات · %d";
 "Saved · %lld" = "المحفوظات · %lld";
 "Saved · %@" = "المحفوظات · %@";
@@ -1944,6 +1956,7 @@
 "Storage" = "التخزين";
 "Stored on" = "محفوظ على";
 "Stories: share a photo or text for 24 hours" = "القصص: شارك صورة أو نصاً لمدة 24 ساعة";
+"Story videos can be up to 30 seconds and now play to the very end" = "فيديوهات القصص حتى 30 ثانية وتعمل الآن حتى النهاية";
 "Strangers" = "الغرباء";
 "Strong and steady" = "قوي وثابت";
 "Structured submission" = "إرسال منظّم";
@@ -2148,6 +2161,7 @@
 "Three ways to find any material" = "ثلاث طرق لإيجاد أي مادة";
 "Thunderstorms" = "عواصف رعدية";
 "Thursday" = "الخميس";
+"Tidier profile: the buttons and details line up, and it shows when someone joined" = "ملف أكثر ترتيباً: الأزرار والتفاصيل مصطفة، ويظهر متى انضم الشخص";
 "Time" = "الوقت";
 "Times can change. The transport office has the final word." = "قد تتغير المواعيد، والقرار النهائي لدائرة النقل.";
 "Tips" = "نصائح";
@@ -2229,6 +2243,7 @@
 "UniHub is free and student-run. Donations help keep it running." = "UniHub مشروع طلابي مجاني. التبرعات تساعد في استمراره.";
 "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it." = "UniHub مجاني للطلاب ويديره طالب. تدعمه الإعلانات على الموقع والرعاة والتبرعات.";
 "UniHub news" = "أخبار UniHub";
+"UniHub news and fun facts in the Feed" = "أخبار UniHub ومعلومات ممتعة في الأخبار";
 "UniHub now asks every account for its sex. Choose yours to keep going." = "يطلب UniHub الآن من كل حساب تحديد الجنس. اختر لتكمل.";
 "UniHub team" = "فريق UniHub";
 "UniHub · Student Community Groups" = "مركز مكتبة ASU · مجموعات مجتمع الطلاب";

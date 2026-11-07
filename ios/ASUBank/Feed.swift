@@ -752,8 +752,33 @@ struct StoryViewer: View {
         }
     }
 
+    /// Saves the photo or video with the UniHub watermark; anyone can save a story
+    private func save(_ item: StoryItem, _ u: ABUser) {
+        paused = true
+        sentNote = L("Saving…")
+        Task {
+            do {
+                if let v = item.video, !v.isEmpty, let url = URL(string: v) {
+                    try await StorySave.saveVideo(url, username: u.username)
+                } else if let i = item.image, !i.isEmpty, let url = PhotoTools.large(i) {
+                    try await StorySave.savePhoto(url, username: u.username)
+                }
+                Haptics.success()
+                sentNote = L("Saved to Photos")
+            } catch {
+                sentNote = error.localizedDescription
+            }
+            try? await Task.sleep(nanoseconds: 1_600_000_000)
+            sentNote = nil
+            paused = false
+        }
+    }
+
     private func menu(_ u: ABUser) -> some View {
         Menu {
+            if let story, story.video?.isEmpty == false || story.image?.isEmpty == false {
+                Button { save(story, u) } label: { Label("Save to Photos", systemImage: "square.and.arrow.down") }
+            }
             if u.id == account.user?.id || account.isAdmin {
                 Button(role: .destructive) { Task { await delete() } } label: { Label("Delete", systemImage: "trash") }
             }

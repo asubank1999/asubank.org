@@ -521,6 +521,26 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
     var typing by remember { mutableStateOf(false) }
     val ctx = LocalContext.current
     val focus = androidx.compose.ui.platform.LocalFocusManager.current
+    // saving a story: the photo or video gets the UniHub watermark; anyone can save
+    var saving by remember { mutableStateOf(false) }
+    fun saveStory() {
+        val item = groups.getOrNull(g)?.stories?.filter { it.id !in removed }?.getOrNull(s) ?: return
+        val owner = groups.getOrNull(g)?.user ?: return
+        saving = true
+        android.widget.Toast.makeText(ctx, tr("Saving…"), android.widget.Toast.LENGTH_SHORT).show()
+        scope.launch {
+            val msg = try {
+                if (item.video.isNotEmpty()) StorySave.saveVideo(ctx, item.video, owner.username)
+                else StorySave.savePhoto(ctx, PhotoTools.large(item.image), owner.username)
+                tr("Saved to your gallery")
+            } catch (e: Exception) { e.message ?: tr("Couldn't save the story. Try again.") }
+            saving = false
+            android.widget.Toast.makeText(ctx, msg, android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
+    val storageAsk = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.RequestPermission()) { ok ->
+        if (ok) saveStory() else android.widget.Toast.makeText(ctx, tr("Allow storage to save stories."), android.widget.Toast.LENGTH_LONG).show()
+    }
     // reactions and replies reach the owner as a private message, like Instagram
     fun sendToOwner(text: String, note: String) {
         val to = groups.getOrNull(g)?.user?.id ?: return
@@ -553,7 +573,7 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
         val item = story ?: return@LaunchedEffect
         if (!item.seen && Account.user.value != null) launch { runCatching { Account.call("storySeen", mapOf("id" to item.id)) } }
         val isVideo = item.video.isNotEmpty()
-        val stopped = { paused || typing || reporting != null || menu || viewersOf != null }
+        val stopped = { paused || typing || saving || reporting != null || menu || viewersOf != null }
         while (true) {
             delay(50)
             if (isVideo) {
@@ -582,7 +602,7 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
                     if (item.image.isNotEmpty()) AsyncImage(PhotoTools.large(item.image), null, Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
                     else Box(Modifier.fillMaxSize().background(storyBrush(item.bg.ifEmpty { "#8C1D40" }, look.bg2)))
                     if (item.video.isNotEmpty()) key(item.id) {
-                        StoryVideoPlayer(item.video, paused || typing || reporting != null || menu || viewersOf != null,
+                        StoryVideoPlayer(item.video, paused || typing || saving || reporting != null || menu || viewersOf != null,
                             onPlayed = { videoPlayed = it }, onEnd = { videoEnded = true }) { videoLength = it }
                     }
                     if (item.text.isNotEmpty()) StoryTextView(item.text, look, Modifier.align(Alignment.Center))
@@ -626,10 +646,20 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
                             Text(u.name, color = Color.White, fontWeight = FontWeight.SemiBold, maxLines = 1)
                             Text(Social.ago(story?.created), color = Color.White.copy(alpha = 0.8f), style = MaterialTheme.typography.bodySmall)
                         }
-                        if (me != null) Box {
+                        Box {
                             IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, null, tint = Color.White) }
                             DropdownMenu(menu, { menu = false }) {
-                                if (u.id == me?.id || Account.isAdmin) DropdownMenuItem(text = { Text(tr("Delete")) }, onClick = {
+                                if (story != null && (story.video.isNotEmpty() || story.image.isNotEmpty())) DropdownMenuItem(
+                                    text = { Text(tr("Save to your gallery")) },
+                                    leadingIcon = { Icon(Icons.Filled.Download, null) },
+                                    enabled = !saving,
+                                    onClick = {
+                                        menu = false
+                                        val needs = android.os.Build.VERSION.SDK_INT < 29 && androidx.core.content.ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                                        if (needs) storageAsk.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) else saveStory()
+                                    },
+                                )
+                                if (me != null && (u.id == me?.id || Account.isAdmin)) DropdownMenuItem(text = { Text(tr("Delete")) }, onClick = {
                                     menu = false
                                     val id = story?.id ?: return@DropdownMenuItem
                                     scope.launch { runCatching { Account.call("storyDelete", mapOf("id" to id)) } }
@@ -637,7 +667,7 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
                                     val left = stories.size - 1
                                     if (left <= 0) forward() else if (s >= left) s = left - 1
                                 })
-                                if (u.id != me?.id) DropdownMenuItem(text = { Text(tr("Report")) }, onClick = {
+                                if (me != null && u.id != me?.id) DropdownMenuItem(text = { Text(tr("Report")) }, onClick = {
                                     menu = false
                                     story?.let { reporting = ReportTarget("story", it.id, it.text) }
                                 })

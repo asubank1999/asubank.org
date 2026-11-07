@@ -1288,6 +1288,10 @@
   "tr": "Yöneticiler kişisel bilgilerini (telefon numarası görünürlüğü, kimlik, iletişim bilgileri) gizli tutma hakkını saklı tutar ve bunları WhatsApp'ın kendisinin gösterdiğinin ötesinde açıklamak zorunda değildir."
  },
  "Admins: delete any file from Drive by holding it, and it stays gone after a refresh": {},
+ "Admins: terms records list everyone, no typing needed": {
+  "ar": "للمشرفين: سجلات الشروط تعرض الجميع دون الحاجة للكتابة",
+  "es": "Administradores: los registros de términos muestran a todos, sin escribir"
+ },
  "Admissions & Registration": {
   "ar": "القبول والتسجيل",
   "de": "Zulassungen und Registrierung",
@@ -1493,6 +1497,10 @@
   "ru": "Союзные медицинские науки",
   "tr": "Müttefik Tıp Bilimleri"
  },
+ "Allow UniHub to add photos in Settings to save stories.": {
+  "ar": "اسمح لـ UniHub بإضافة الصور من الإعدادات لحفظ القصص.",
+  "es": "Permite que UniHub añada fotos en Ajustes para guardar historias."
+ },
  "Allow exact reminders": {
   "ar": "السماح بالتذكيرات الدقيقة",
   "de": "Erlauben Sie genaue Erinnerungen",
@@ -1500,6 +1508,10 @@
   "fr": "Autoriser les rappels précis",
   "ru": "Разрешить точные напоминания",
   "tr": "Tam hatırlatıcılara izin ver"
+ },
+ "Allow storage to save stories.": {
+  "ar": "اسمح بالوصول إلى التخزين لحفظ القصص.",
+  "es": "Permite el almacenamiento para guardar historias."
  },
  "Almost there": {
   "ar": "اقتربت",
@@ -3709,6 +3721,10 @@
   "ru": "Скопировать псевдоним CliQ ALANQ99",
   "tr": "CliQ takma adını ALANQ99 kopyalayın"
  },
+ "Copy anyone's username from their profile": {
+  "ar": "انسخ اسم المستخدم لأي شخص من ملفه",
+  "es": "Copia el nombre de usuario de cualquiera desde su perfil"
+ },
  "Copy link": {
   "ar": "نسخ الرابط",
   "de": "Link kopieren",
@@ -3788,6 +3804,10 @@
   "fr": "Je ne pouvais pas faire ça",
   "ru": "Не мог этого сделать",
   "tr": "Bunu yapamadım"
+ },
+ "Couldn't download the story. Try again.": {
+  "ar": "تعذر تنزيل القصة. حاول مرة أخرى.",
+  "es": "No se pudo descargar la historia. Inténtalo de nuevo."
  },
  "Couldn't load the bus times. Check your connection.": {
   "ar": "تعذّر تحميل مواعيد الحافلات. تحقّق من اتصالك.",
@@ -3888,6 +3908,10 @@
  "Couldn't save": {
   "ar": "تعذر الحفظ",
   "es": "No se pudo guardar"
+ },
+ "Couldn't save the story. Try again.": {
+  "ar": "تعذر حفظ القصة. حاول مرة أخرى.",
+  "es": "No se pudo guardar la historia. Inténtalo de nuevo."
  },
  "Couldn't send": {
   "ar": "تعذر الإرسال"
@@ -7391,6 +7415,10 @@
  "Reach the exact audience you need": {
   "ar": "صل إلى الجمهور الذي تحتاجه تمامًا"
  },
+ "React to a story with an emoji or send a reply": {
+  "ar": "تفاعل مع القصة بإيموجي أو أرسل رداً",
+  "es": "Reacciona a una historia con un emoji o envía una respuesta"
+ },
  "Read public posts and stories without an account, also on the website": {
   "ar": "اقرأ المنشورات والقصص العامة بدون حساب، وعلى الموقع أيضاً",
   "es": "Lee publicaciones e historias públicas sin cuenta, también en la web"
@@ -7723,6 +7751,10 @@
  "Save rating": {
   "ar": "حفظ التقييم"
  },
+ "Save stories to your phone. Saved photos and videos carry the UniHub watermark": {
+  "ar": "احفظ القصص على هاتفك. الصور والفيديوهات المحفوظة تحمل علامة UniHub",
+  "es": "Guarda historias en tu teléfono. Las fotos y vídeos guardados llevan la marca de UniHub"
+ },
  "Save to Files": {
   "ar": "حفظ في الملفات",
   "es": "Guardar en Archivos"
@@ -7730,6 +7762,14 @@
  "Save to Files / share file": {
   "ar": "حفظ في الملفات / مشاركة الملف",
   "es": "Guardar en Archivos / compartir"
+ },
+ "Save to Photos": {
+  "ar": "حفظ في الصور",
+  "es": "Guardar en Fotos"
+ },
+ "Save to your gallery": {
+  "ar": "حفظ في المعرض",
+  "es": "Guardar en tu galería"
  },
  "Saved": {
   "ar": "المحفوظات",
@@ -7754,6 +7794,14 @@
  "Saved on your account: %s": {
   "ar": "محفوظ في حسابك: %s",
   "es": "Guardado en tu cuenta: %s"
+ },
+ "Saved to Photos": {
+  "ar": "تم الحفظ في الصور",
+  "es": "Guardado en Fotos"
+ },
+ "Saved to your gallery": {
+  "ar": "تم الحفظ في المعرض",
+  "es": "Guardado en tu galería"
  },
  "Saved · %d": {
   "ar": "المحفوظات · %d",
@@ -8441,6 +8489,10 @@
  "Stories: share a photo or text for 24 hours": {
   "ar": "القصص: شارك صورة أو نصاً لمدة 24 ساعة",
   "es": "Historias: comparte una foto o un texto durante 24 horas"
+ },
+ "Story videos can be up to 30 seconds and now play to the very end": {
+  "ar": "فيديوهات القصص حتى 30 ثانية وتعمل الآن حتى النهاية",
+  "es": "Los vídeos de las historias duran hasta 30 segundos y ahora se reproducen hasta el final"
  },
  "Strangers": {
   "ar": "الغرباء",
@@ -9152,6 +9204,10 @@
  "Thursday": {
   "ar": "الخميس"
  },
+ "Tidier profile: the buttons and details line up, and it shows when someone joined": {
+  "ar": "ملف أكثر ترتيباً: الأزرار والتفاصيل مصطفة، ويظهر متى انضم الشخص",
+  "es": "Perfil más ordenado: los botones y datos quedan alineados, y muestra cuándo se unió alguien"
+ },
  "Time": {
   "ar": "الوقت"
  },
@@ -9470,6 +9526,10 @@
  "UniHub news": {
   "ar": "أخبار UniHub",
   "es": "Noticias de UniHub"
+ },
+ "UniHub news and fun facts in the Feed": {
+  "ar": "أخبار UniHub ومعلومات ممتعة في الأخبار",
+  "es": "Noticias de UniHub y datos curiosos en el Feed"
  },
  "UniHub now asks every account for its sex. Choose yours to keep going.": {
   "ar": "يطلب UniHub الآن من كل حساب تحديد الجنس. اختر لتكمل.",
