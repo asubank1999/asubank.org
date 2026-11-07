@@ -52,6 +52,7 @@ SUBJECTS = {
     'hanafi': ('Shariah', 'الشريعة', 'Arts, languages & Shariah', '🕌'),
     'agricultural': ('Agricultural technology', 'التكنولوجيا الزراعية', 'Other faculties', '🌱'),
     'special': ('Special request', 'طلب خاص', 'Other faculties', '✨'),
+    'law': ('Law', 'كلية الحقوق', 'Other faculties', '⚖️'),
     'facultiescourseslist': ('Faculty course lists', 'قوائم مواد الكليات', 'Other faculties', '🏛️'),
     'math': ('Math', 'الرياضيات', 'Business, maths & statistics', '➗'),
 }
