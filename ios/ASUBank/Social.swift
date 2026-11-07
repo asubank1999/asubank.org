@@ -752,6 +752,7 @@ struct ProfileScreen: View {
     @State private var openMessage = false
     @State private var openFriends = false
     @State private var openCustomize = false
+    @State private var copied = false
 
     private var isMe: Bool { userId == account.user?.id }
 
@@ -874,7 +875,22 @@ struct ProfileScreen: View {
                         if user?.isAdmin == true { Badge(text: L("ADMIN"), color: .orange) }
                     }
                     if let u = user {
-                        Text("@\(u.username)").font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                        HStack(spacing: 4) {
+                            Text("@\(u.username)").font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                                .textSelection(.enabled)
+                            Button {
+                                UIPasteboard.general.string = u.username
+                                Haptics.success()
+                                copied = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
+                            } label: {
+                                Image(systemName: copied ? "checkmark" : "doc.on.doc").font(.caption2.weight(.semibold))
+                                    .foregroundStyle(copied ? Color.green : Color.secondary)
+                                    .frame(width: 24, height: 20).contentShape(Rectangle())
+                            }
+                            .buttonStyle(.borderless)
+                            .accessibilityLabel(Text("Copy username"))
+                        }
                         Text(u.online == true ? L("Online now") : lastSeenText(u.lastSeen)).font(.caption)
                             .foregroundStyle(u.online == true ? Color.green : .secondary).lineLimit(1)
                     }
@@ -933,9 +949,12 @@ struct ProfileScreen: View {
 
     private func pill(_ title: String, _ icon: String, filled: Bool = false, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Label(L(title), systemImage: icon)
-                .font(.footnote.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.75)
-                .frame(maxWidth: .infinity).padding(.vertical, 8)
+            // the icon sits in a box of its own, so every button lines up whatever its title
+            HStack(spacing: 5) {
+                Image(systemName: icon).font(.footnote.weight(.semibold)).frame(width: 16, height: 16)
+                Text(L(title)).font(.footnote.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.7)
+            }
+                .frame(maxWidth: .infinity, minHeight: 36).padding(.horizontal, 6)
                 .foregroundStyle(filled ? Color.white : Color.primary)
                 .background(filled ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.primary.opacity(0.09)), in: Capsule())
         }
@@ -947,13 +966,35 @@ struct ProfileScreen: View {
         let studies = [u.college, u.major, u.year.map { L($0) }].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · ")
         let bio = u.bio ?? "", interests = u.interests ?? ""
         let sex = u.gender == "male" ? L("Male") : u.gender == "female" ? L("Female") : ""
-        if bio.isEmpty && studies.isEmpty && interests.isEmpty && sex.isEmpty { return nil }
+        if bio.isEmpty && studies.isEmpty && interests.isEmpty && sex.isEmpty && u.created == nil { return nil }
+        let joined = Self.joinedText(u.created)
         return AnyView(Group {
-            if !bio.isEmpty { Text(bio).lineLimit(4) }
-            if !sex.isEmpty { Label(sex, systemImage: "person.fill").foregroundStyle(.secondary) }
-            if !studies.isEmpty { Label(studies, systemImage: "graduationcap").foregroundStyle(.secondary) }
-            if !interests.isEmpty { Label(interests, systemImage: "sparkles").foregroundStyle(.secondary) }
+            if !bio.isEmpty { Text(bio).lineLimit(4).textSelection(.enabled) }
+            if !sex.isEmpty { aboutRow("person.fill", sex) }
+            if !studies.isEmpty { aboutRow("graduationcap.fill", studies) }
+            if !interests.isEmpty { aboutRow("sparkles", interests) }
+            if let joined { aboutRow("calendar", joined) }
         })
+    }
+
+    private func aboutRow(_ icon: String, _ text: String) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Image(systemName: icon).frame(width: 18, alignment: .center)
+            Text(text).frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .foregroundStyle(.secondary)
+    }
+
+    /// "Joined March 2026"
+    static func joinedText(_ iso: String?) -> String? {
+        guard let iso = iso else { return nil }
+        let precise = ISO8601DateFormatter()
+        precise.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        guard let d = precise.date(from: iso) ?? ISO8601DateFormatter().date(from: iso) else { return nil }
+        let f = DateFormatter()
+        f.locale = Locale(identifier: AppLanguage.code)
+        f.setLocalizedDateFormatFromTemplate("MMMM yyyy")
+        return String(format: L("Joined %@"), f.string(from: d))
     }
 
     private func stat(_ n: Int, _ title: String, tap: (() -> Void)? = nil) -> some View {

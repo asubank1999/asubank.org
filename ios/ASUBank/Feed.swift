@@ -269,6 +269,70 @@ private struct CameraPeek: View {
     }
 }
 
+/// News about UniHub and random facts, mixed into the Feed. They come live from assets/app/feed-extras.json.
+struct FeedExtra: Decodable, Identifiable, Equatable {
+    let id: String
+    let kind: String
+    let emoji: String
+    let title: String
+    let text: String
+    /// "apps" or "web" when the card is only for one of them
+    var only: String? = nil
+}
+
+@MainActor final class FeedExtras: ObservableObject {
+    static let shared = FeedExtras()
+    @Published private(set) var items: [FeedExtra] = []
+    private var fetched = false
+    private let cacheKey = "ab.feedExtras"
+    /// a different order each day, the same all day
+    private var offset: Int { Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0 }
+
+    private init() { if let d = UserDefaults.standard.data(forKey: cacheKey) { _ = apply(d) } }
+
+    private func apply(_ data: Data) -> Bool {
+        guard let all = try? JSONDecoder().decode([String: [FeedExtra]].self, from: data) else { return false }
+        let list = (all[AppLanguage.code] ?? all["en"] ?? []).filter { $0.only != "web" }
+        guard !list.isEmpty else { return false }
+        items = list
+        return true
+    }
+
+    func load() async {
+        guard !fetched else { return }
+        fetched = true
+        if let u = URL(string: "https://asubank.org/assets/app/feed-extras.json"),
+           let (data, _) = try? await URLSession.shared.data(from: u), apply(data) {
+            UserDefaults.standard.set(data, forKey: cacheKey)
+        }
+    }
+
+    /// the n-th card to show in the Feed
+    func pick(_ n: Int) -> FeedExtra? { items.isEmpty ? nil : items[(n + offset) % items.count] }
+}
+
+struct FeedExtraCard: View {
+    let item: FeedExtra
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Text(item.emoji).font(.system(size: 26))
+                .frame(width: 46, height: 46)
+                .background(Color.abAccentSoft, in: Circle())
+            VStack(alignment: .leading, spacing: 4) {
+                if item.kind == "news" {
+                    Text("UniHub news")
+                        .font(.caption.weight(.semibold)).textCase(.uppercase).foregroundStyle(Color.abAccent)
+                }
+                Text(item.title).font(.headline)
+                Text(item.text).font(.subheadline).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 6)
+        .accessibilityElement(children: .combine)
+    }
+}
+
 struct FeedScreen: View {
     var swipeCamera = false
     /// How far the Feed has slid sideways towards the camera (FeedTab draws it)
@@ -286,6 +350,7 @@ struct FeedScreen: View {
     @State private var pendingDraft: StoryDraft?
     @State private var draft: StoryDraft?
     @State private var viewing: StoryStart?
+    @ObservedObject private var extras = FeedExtras.shared
 
     struct StoryStart: Identifiable { let index: Int; var id: Int { index } }
 
@@ -351,9 +416,19 @@ struct FeedScreen: View {
                         ForEach(0..<3, id: \.self) { _ in SkeletonPost() }
                     }
                 }
+                // an empty feed still has something to read
+                if loaded {
+                    ForEach(0..<min(3, extras.items.count), id: \.self) { n in
+                        if let x = extras.pick(n) { Section { FeedExtraCard(item: x) } }
+                    }
+                }
             }
-            ForEach(posts) { p in
+            ForEach(Array(posts.enumerated()), id: \.element.id) { i, p in
                 Section { PostRow(post: p) { await load() } }
+                // a news card or a fact after every fourth post
+                if (i + 1) % 4 == 0, let x = extras.pick(i / 4) {
+                    Section { FeedExtraCard(item: x) }
+                }
             }
             if more && !posts.isEmpty {
                 Section {
@@ -382,6 +457,7 @@ struct FeedScreen: View {
             }
         }
         .refreshable { await load() }
+        .task { await extras.load() }
         .task(id: scope) {
             posts = []
             loaded = false
@@ -513,7 +589,13 @@ struct StoryViewer: View {
     @State private var removed = Set<String>()
     @State private var reporting: ReportTarget?
     @State private var videoLength: Double?
+    @State private var videoPlayed: Double?
+    @State private var videoEnded = false
     @State private var viewersOf: ViewersTarget?
+    @State private var reply = ""
+    @State private var sentNote: String?
+    @FocusState private var typing: Bool
+    private static let reactions = ["❤️", "😂", "😮", "😢", "👏", "🔥"]
 
     struct ViewersTarget: Identifiable { let id: String }
 
@@ -571,6 +653,14 @@ struct StoryViewer: View {
                     }
                 }
                 Spacer()
+                if let note = sentNote {
+                    Text(note).font(.footnote.weight(.semibold)).foregroundStyle(.white)
+                        .padding(.horizontal, 14).padding(.vertical, 8).background(.black.opacity(0.55), in: Capsule())
+                        .transition(.opacity)
+                }
+                if account.signedIn, let u = group?.user, u.id != account.user?.id {
+                    replyBar(u)
+                }
                 if let v = story?.views, group?.user.id == account.user?.id {
                     Button {
                         paused = true
@@ -585,7 +675,9 @@ struct StoryViewer: View {
             .padding(12)
         }
         .statusBar(hidden: true)
+        .onChange(of: typing) { on in paused = on }
         .animation(.easeInOut(duration: 0.22), value: story?.id)
+        .animation(.easeInOut(duration: 0.2), value: sentNote)
         .sheet(item: $reporting, onDismiss: { paused = false }) { ReportSheet(target: $0) }
         .sheet(item: $viewersOf, onDismiss: { paused = false }) { StoryViewersSheet(storyId: $0.id) }
         .task(id: "\(g)-\(s)-\(story?.id ?? "")") { await run() }
@@ -594,7 +686,7 @@ struct StoryViewer: View {
     @ViewBuilder private func page(_ item: StoryItem) -> some View {
         ZStack {
             if let video = item.video, !video.isEmpty, let url = URL(string: video) {
-                StoryVideoView(url: url, paused: paused, duration: $videoLength).id(item.id)
+                StoryVideoView(url: url, paused: paused, duration: $videoLength, played: $videoPlayed) { videoEnded = true }.id(item.id)
             } else if let image = item.image, !image.isEmpty, let url = PhotoTools.large(image) {
                 StoryPhoto(url: url).id(item.id)
             } else {
@@ -603,6 +695,60 @@ struct StoryViewer: View {
             if let t = item.text, !t.isEmpty {
                 StoryTextView(text: t, style: StoryStyle(json: item.style)).id(item.id)
             }
+        }
+    }
+
+    /// Quick reactions and a reply box, like Instagram. Both reach the owner as a private message.
+    @ViewBuilder private func replyBar(_ u: ABUser) -> some View {
+        VStack(spacing: 10) {
+            if !typing {
+                HStack(spacing: 8) {
+                    ForEach(Self.reactions, id: \.self) { e in
+                        Button {
+                            Haptics.tap()
+                            send(to: u, "\(e) Reacted to your story", note: L("Sent") + " " + e)
+                        } label: {
+                            Text(e).font(.system(size: 24)).frame(width: 42, height: 42).background(.white.opacity(0.14), in: Circle())
+                        }
+                    }
+                }
+            }
+            HStack(spacing: 8) {
+                TextField("", text: $reply, prompt: Text("Send a reply…").foregroundColor(.white.opacity(0.75)))
+                    .focused($typing)
+                    .foregroundStyle(.white)
+                    .submitLabel(.send)
+                    .onSubmit { sendReply(u) }
+                    .padding(.horizontal, 16).padding(.vertical, 10)
+                    .overlay(Capsule().stroke(.white.opacity(0.6), lineWidth: 1))
+                if !reply.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Button { sendReply(u) } label: {
+                        Image(systemName: "paperplane.fill").font(.headline).foregroundStyle(.white).frame(width: 42, height: 42)
+                    }
+                    .accessibilityLabel(Text("Send"))
+                }
+            }
+        }
+    }
+
+    private func sendReply(_ u: ABUser) {
+        let t = reply.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !t.isEmpty else { return }
+        reply = ""
+        typing = false
+        send(to: u, "↩️ Replied to your story: " + t, note: L("Reply sent"))
+    }
+
+    private func send(to u: ABUser, _ text: String, note: String) {
+        Task {
+            do {
+                _ = try await account.call("dmSend", ["userId": u.id, "text": text])
+                sentNote = note
+            } catch {
+                sentNote = error.localizedDescription
+            }
+            try? await Task.sleep(nanoseconds: 1_600_000_000)
+            sentNote = nil
         }
     }
 
@@ -625,15 +771,25 @@ struct StoryViewer: View {
     private func run() async {
         progress = 0
         videoLength = nil
+        videoPlayed = nil
+        videoEnded = false
         guard let story else { return }
         if story.seen != true, account.signedIn { Task { _ = try? await account.call("storySeen", ["id": story.id]) } }
         let isVideo = story.video?.isEmpty == false
-        while progress < 1 {
+        while true {
             try? await Task.sleep(nanoseconds: 50_000_000)
             if Task.isCancelled { return }
-            // a video's bar starts once the video has loaded, and follows its length
-            if isVideo && videoLength == nil { continue }
-            if !paused { progress += 0.05 / (videoLength ?? Self.seconds) }
+            if isVideo {
+                // the bar follows the real video and the story moves on when the video has ended,
+                // so a video that loads or plays slowly is never cut short
+                guard let length = videoLength else { continue }
+                if videoEnded { break }
+                if let at = videoPlayed { progress = min(1, at / length) }
+                else if !paused { progress += 0.05 / length; if progress >= 1 { break } }   // the video could not play
+            } else {
+                if !paused { progress += 0.05 / Self.seconds }
+                if progress >= 1 { break }
+            }
         }
         forward()
     }

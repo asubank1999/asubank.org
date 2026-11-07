@@ -3717,6 +3717,10 @@
   "ru": "Копировать ссылку",
   "tr": "Bağlantıyı kopyala"
  },
+ "Copy username": {
+  "ar": "نسخ اسم المستخدم",
+  "es": "Copiar nombre de usuario"
+ },
  "Copyright": {
   "ar": "حقوق النشر",
   "de": "Copyright",
@@ -4148,6 +4152,10 @@
   "ar": "مطوّر",
   "es": "Desarrollador"
  },
+ "Did you know?": {
+  "ar": "هل تعلم؟",
+  "es": "¿Sabías que…?"
+ },
  "Did you mean?": {
   "ar": "هل تقصد؟",
   "es": "¿Quisiste decir?"
@@ -4533,6 +4541,10 @@
  "Everyone": {
   "ar": "الجميع",
   "es": "Todos"
+ },
+ "Everyone (%d)": {
+  "ar": "الجميع (%d)",
+  "es": "Todos (%d)"
  },
  "Everyone, also guests": {
   "ar": "الجميع، والضيوف أيضاً",
@@ -5529,6 +5541,10 @@
   "ar": "تاريخ الانضمام",
   "es": "Se unió"
  },
+ "Joined %s": {
+  "ar": "انضم في %s",
+  "es": "Se unió en %s"
+ },
  "Jordan's emergency number: ambulance, fire and police": {
   "ar": "رقم الطوارئ في الأردن: الإسعاف والدفاع المدني والشرطة",
   "es": "Número de emergencias de Jordania: ambulancia, bomberos y policía"
@@ -5756,6 +5772,10 @@
  "Look and feel": {
   "ar": "المظهر",
   "es": "Apariencia"
+ },
+ "Look up this account": {
+  "ar": "ابحث عن هذا الحساب",
+  "es": "Buscar esta cuenta"
  },
  "Looking for something specific? Request it": {
   "ar": "تبحث عن شيء محدد؟ اطلبه",
@@ -7512,6 +7532,10 @@
   "ar": "رد",
   "es": "Responder"
  },
+ "Reply sent": {
+  "ar": "تم إرسال الرد",
+  "es": "Respuesta enviada"
+ },
  "Replying to %@": {
   "ar": "رد على %@",
   "es": "Respondiendo a %@"
@@ -7926,6 +7950,10 @@
  "Send a message": {
   "ar": "أرسل رسالة",
   "es": "Enviar un mensaje"
+ },
+ "Send a reply…": {
+  "ar": "أرسل رداً…",
+  "es": "Envía una respuesta…"
  },
  "Send again": {
   "ar": "إرسال مرة أخرى"
@@ -9439,6 +9467,10 @@
   "ar": "UniHub مجاني للطلاب ويديره طالب. تدعمه الإعلانات على الموقع والرعاة والتبرعات.",
   "es": "UniHub es gratis para los estudiantes y lo lleva un estudiante. Lo apoyan los anuncios del sitio web, los patrocinadores y las donaciones."
  },
+ "UniHub news": {
+  "ar": "أخبار UniHub",
+  "es": "Noticias de UniHub"
+ },
  "UniHub now asks every account for its sex. Choose yours to keep going.": {
   "ar": "يطلب UniHub الآن من كل حساب تحديد الجنس. اختر لتكمل.",
   "es": "UniHub ahora pide el sexo a cada cuenta. Elige el tuyo para continuar."
@@ -9672,6 +9704,10 @@
  "Username": {
   "ar": "اسم المستخدم",
   "es": "Nombre de usuario"
+ },
+ "Username copied": {
+  "ar": "تم نسخ اسم المستخدم",
+  "es": "Nombre de usuario copiado"
  },
  "Username or email": {
   "ar": "اسم المستخدم أو البريد",

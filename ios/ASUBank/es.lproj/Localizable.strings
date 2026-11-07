@@ -569,6 +569,7 @@
 "Copy" = "Copiar";
 "Copy CliQ alias ALANQ99" = "Copiar alias CliQ ALANQ99";
 "Copy link" = "Copiar enlace";
+"Copy username" = "Copiar nombre de usuario";
 "Copyright" = "Derechos de autor";
 "Copyright and removal requests" = "Derechos de autor y solicitudes de retirada";
 "Copyright: I own this or represent the owner" = "Copyright: Soy propietario de esto o represento al propietario.";
@@ -670,6 +671,7 @@
 "Details (optional)" = "Detalles (opcional)";
 "Deutsch" = "Deutsch";
 "Developer" = "Desarrollador";
+"Did you know?" = "¿Sabías que…?";
 "Did you mean?" = "¿Quisiste decir?";
 "Diploma courses" = "Cursos de diploma";
 "Disagreements with an admin decision should be raised respectfully and privately. Abusive behavior toward an admin is grounds for immediate removal and may be reported to WhatsApp or relevant university authorities." = "Disagreements with an admin decision should be raised respectfully and privately. Abusive behavior toward an admin is grounds for immediate removal and may be reported to WhatsApp or relevant university authorities.";
@@ -787,6 +789,9 @@
 "Every teacher shows an average out of 10 and how many students voted." = "Every teacher shows an average out of 10 and how many students voted.";
 "Every year and doctor in one place." = "Todos los años y profesores en un solo lugar.";
 "Everyone" = "Todos";
+"Everyone (%d)" = "Todos (%d)";
+"Everyone (%lld)" = "Todos (%lld)";
+"Everyone (%@)" = "Todos (%@)";
 "Everyone, also guests" = "Todos, también invitados";
 "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive." = "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive.";
 "Everything students uploaded, updated live." = "Everything students uploaded, updated live.";
@@ -1095,6 +1100,7 @@
 "Join your college's WhatsApp groups, buses and study resources." = "Join your college's WhatsApp groups, buses and study resources.";
 "Join your virtual classes and meetings via Microsoft Teams" = "Join your virtual classes and meetings via Microsoft Teams";
 "Joined" = "Se unió";
+"Joined %@" = "Se unió en %@";
 "Jordan's emergency number: ambulance, fire and police" = "Número de emergencias de Jordania: ambulancia, bomberos y policía";
 "Junior" = "Junior";
 "Just now" = "Ahora";
@@ -1161,6 +1167,7 @@
 "Locked rooms are read-only. Archived rooms are hidden from students but kept." = "Las salas bloqueadas son de solo lectura. Las archivadas se ocultan a los estudiantes pero se conservan.";
 "Long-press a chat message to pin or delete it, or ban its sender." = "Mantén pulsado un mensaje para fijarlo, borrarlo o bloquear a quien lo envió.";
 "Look and feel" = "Apariencia";
+"Look up this account" = "Buscar esta cuenta";
 "Looking for something specific? Request it" = "¿Buscas algo concreto? Solicítalo";
 "MCQs with or without answers" = "MCQs with or without answers";
 "Made by a fellow student" = "Made by a fellow student";
@@ -1675,6 +1682,7 @@
 "Repeat password" = "Repite la contraseña";
 "Replies to me" = "Respuestas para mí";
 "Reply" = "Responder";
+"Reply sent" = "Respuesta enviada";
 "Replying to %@" = "Respondiendo a %@";
 "Report" = "Reportar";
 "Report a problem" = "Reportar un problema";
@@ -1799,6 +1807,7 @@
 "Seen" = "Visto";
 "Send" = "Enviar";
 "Send a message" = "Enviar un mensaje";
+"Send a reply…" = "Envía una respuesta…";
 "Send again" = "Send again";
 "Send an announcement" = "Enviar un anuncio";
 "Send another" = "Enviar otra";
@@ -2219,6 +2228,7 @@
 "UniHub is free and run by a volunteer student. Donations keep it online and growing." = "UniHub es gratuito y está dirigido por un estudiante voluntario. Las donaciones lo mantienen en línea y en crecimiento.";
 "UniHub is free and student-run. Donations help keep it running." = "UniHub es gratis y lo llevan estudiantes. Las donaciones ayudan a mantenerlo.";
 "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it." = "UniHub es gratis para los estudiantes y lo lleva un estudiante. Lo apoyan los anuncios del sitio web, los patrocinadores y las donaciones.";
+"UniHub news" = "Noticias de UniHub";
 "UniHub now asks every account for its sex. Choose yours to keep going." = "UniHub ahora pide el sexo a cada cuenta. Elige el tuyo para continuar.";
 "UniHub team" = "Equipo de UniHub";
 "UniHub · Student Community Groups" = "UniHub · Grupos comunitarios de estudiantes";
@@ -2288,6 +2298,7 @@
 "Useful gate" = "Portal útil";
 "User-Agent" = "User-Agent";
 "Username" = "Nombre de usuario";
+"Username copied" = "Nombre de usuario copiado";
 "Username or email" = "Usuario o correo";
 "Username, display name and a scrambled copy of your password." = "Username, display name and a scrambled copy of your password.";
 "Username, email or ID" = "Username, email or ID";

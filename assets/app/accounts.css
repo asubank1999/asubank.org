@@ -390,3 +390,12 @@ body:has(.acc-story) .ab-tabbar { display: none; }
 .acc-swap { display: flex; flex-direction: column; gap: 4px; width: 100%; text-align: start; border: 0; font: inherit; color: inherit; cursor: pointer; margin: 10px 0; }
 .acc-swap-match { color: #1f9d55; font-weight: 700; }
 .acc-swap-head { margin: 18px 4px 6px; font-size: 15px; }
+/* news and facts in the Feed */
+.acc-extra { display: flex; gap: 12px; align-items: flex-start; }
+.acc-extra-e { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-size: 24px; background: color-mix(in srgb, var(--ab-accent,#8c1d40) 12%, transparent); }
+.acc-extra small { display: block; text-transform: uppercase; font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--ab-accent,#8c1d40); }
+.acc-extra b { display: block; margin: 2px 0; }
+.acc-extra p { margin: 0; color: var(--ab-text-2,#6b6b70); }
+.acc-uname { -webkit-user-select: all; user-select: all; }
+.acc-copy { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
+.acc-copy:hover { background: var(--ab-fill-2, rgba(0,0,0,.06)); }

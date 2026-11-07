@@ -101,6 +101,12 @@ object Social {
         val ms = runCatching { java.time.Instant.parse(iso ?: "").toEpochMilli() }.getOrNull() ?: return ""
         return DateUtils.getRelativeTimeSpanString(ms, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString()
     }
+    /** "Joined March 2026" */
+    fun joinedText(iso: String?): String? {
+        val at = runCatching { java.time.Instant.parse(iso ?: "") }.getOrNull() ?: return null
+        val f = java.time.format.DateTimeFormatter.ofPattern("LLLL yyyy", java.util.Locale.forLanguageTag(Lang.code))
+        return trf("Joined %s", at.atZone(java.time.ZoneId.systemDefault()).format(f))
+    }
 }
 
 /** Add friend / Requested / Friends, for a person's row or profile */
@@ -721,7 +727,22 @@ fun ProfileScreen(userId: String) {
                                 if (u?.isAdmin == true) Badge(tr("ADMIN"), Brand.orange)
                             }
                             if (u != null) {
-                                Text("@${u.username}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+                                // the username can be selected, and the button copies it
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    androidx.compose.foundation.text.selection.SelectionContainer(Modifier.weight(1f, fill = false)) {
+                                        Text("@${u.username}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+                                    }
+                                    val clip = androidx.compose.ui.platform.LocalClipboardManager.current
+                                    val ctx = androidx.compose.ui.platform.LocalContext.current
+                                    Icon(
+                                        Icons.Filled.ContentCopy, tr("Copy username"),
+                                        Modifier.padding(start = 4.dp).size(26.dp).clip(CircleShape).clickable {
+                                            clip.setText(androidx.compose.ui.text.AnnotatedString(u.username))
+                                            android.widget.Toast.makeText(ctx, tr("Username copied"), android.widget.Toast.LENGTH_SHORT).show()
+                                        }.padding(5.dp),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
                                 Text(
                                     if (u.online == true) tr("Online now") else lastSeenText(u.lastSeen), style = MaterialTheme.typography.bodySmall,
                                     color = if (u.online == true) Brand.green else MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1,
@@ -762,15 +783,21 @@ fun ProfileScreen(userId: String) {
                         }
                         val studies = listOf(u.college, u.major, u.year?.let { tr(it) }).filter { !it.isNullOrEmpty() }.joinToString(" · ")
                         val sex = when (u.gender) { "male" -> tr("Male"); "female" -> tr("Female"); else -> "" }
-                        if (!u.bio.isNullOrEmpty() || studies.isNotEmpty() || !u.interests.isNullOrEmpty() || sex.isNotEmpty()) {
+                        if (!u.bio.isNullOrEmpty() || studies.isNotEmpty() || !u.interests.isNullOrEmpty() || sex.isNotEmpty() || u.created != null) {
                             Column(
                                 Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.surfaceContainer).padding(10.dp),
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
                             ) {
-                                if (!u.bio.isNullOrEmpty()) Text(u.bio, style = MaterialTheme.typography.bodySmall, maxLines = 4)
-                                if (sex.isNotEmpty()) Text("👤 $sex", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                if (studies.isNotEmpty()) Text("🎓 $studies", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                if (!u.interests.isNullOrEmpty()) Text("✨ ${u.interests}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                if (!u.bio.isNullOrEmpty()) androidx.compose.foundation.text.selection.SelectionContainer { Text(u.bio, style = MaterialTheme.typography.bodySmall, maxLines = 4) }
+                                // every line's icon in the same column
+                                @Composable fun line(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String) = Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    Icon(icon, null, Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(text, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                                if (sex.isNotEmpty()) line(Icons.Filled.Person, sex)
+                                if (studies.isNotEmpty()) line(Icons.Filled.School, studies)
+                                if (!u.interests.isNullOrEmpty()) line(Icons.Filled.AutoAwesome, u.interests.orEmpty())
+                                Social.joinedText(u.created)?.let { line(Icons.Filled.CalendarMonth, it) }
                             }
                         }
                     }

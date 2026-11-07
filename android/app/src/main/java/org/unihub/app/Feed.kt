@@ -1,6 +1,7 @@
 package org.unihub.app
 
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.filled.PhotoCamera
@@ -228,6 +229,8 @@ fun AudienceMenu(audience: String, onChange: (String) -> Unit) {
 
 @Composable
 fun FeedScreen(back: Boolean = false) {
+    val extras by FeedExtras.items
+    LaunchedEffect(Unit) { FeedExtras.load() }
     val scope = rememberCoroutineScope()
     val me by Account.user.collectAsState()
     var chosen by remember { mutableStateOf(Saved.prefs.getString("ab.feed.scope", "friends") ?: "friends") }
@@ -324,7 +327,15 @@ fun FeedScreen(back: Boolean = false) {
                         else -> Column { repeat(3) { SkeletonPost() } }
                     }
                 }
-                items(posts, key = { it.id }) { p -> Box(Modifier.animateItem()) { PostCard(p) { scope.launch { load() } } } }
+                // an empty feed still has something to read
+                if (posts.isEmpty() && loaded && error == null) items(minOf(3, extras.size)) { n -> FeedExtras.pick(n)?.let { FeedExtraCard(it) } }
+                itemsIndexed(posts, key = { _, p -> p.id }) { i, p ->
+                    Column(Modifier.animateItem()) {
+                        PostCard(p) { scope.launch { load() } }
+                        // a news card or a fact after every fourth post
+                        if ((i + 1) % 4 == 0) FeedExtras.pick(i / 4)?.let { FeedExtraCard(it) }
+                    }
+                }
                 if (more && posts.isNotEmpty()) item {
                     Box(Modifier.fillMaxWidth().padding(10.dp), contentAlignment = Alignment.Center) {
                         TextButton(enabled = !loadingMore, onClick = {
@@ -444,6 +455,52 @@ private fun StoriesRow(groups: List<StoryGroup>, add: () -> Unit, open: (Int) ->
     }
 }
 
+/** News about UniHub and random facts, mixed into the Feed. They come live from assets/app/feed-extras.json. */
+@kotlinx.serialization.Serializable
+data class FeedExtra(val id: String = "", val kind: String = "", val emoji: String = "", val title: String = "", val text: String = "", val only: String = "")
+
+object FeedExtras {
+    val items = mutableStateOf<List<FeedExtra>>(emptyList())
+    private var fetched = false
+    private fun apply(text: String): Boolean {
+        val all = runCatching { json.decodeFromString<Map<String, List<FeedExtra>>>(text) }.getOrNull() ?: return false
+        val list = (all[Lang.code] ?: all["en"].orEmpty()).filter { it.only != "web" }
+        if (list.isEmpty()) return false
+        items.value = list
+        return true
+    }
+    suspend fun load() {
+        if (items.value.isEmpty()) Saved.prefs.getString("feedExtras.cache", null)?.let { apply(it) }
+        if (fetched) return
+        fetched = true
+        Net.text("https://asubank.org/assets/app/feed-extras.json")?.let { if (apply(it)) Saved.prefs.edit().putString("feedExtras.cache", it).apply() }
+    }
+    /** the n-th card to show; a different order each day, the same all day */
+    fun pick(n: Int): FeedExtra? {
+        val l = items.value
+        if (l.isEmpty()) return null
+        val day = (System.currentTimeMillis() / 86_400_000L).toInt()
+        return l[(n + day) % l.size]
+    }
+}
+
+@Composable
+fun FeedExtraCard(item: FeedExtra) {
+    Group {
+        Row(Modifier.padding(14.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Box(Modifier.size(46.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)), contentAlignment = Alignment.Center) {
+                Text(item.emoji, fontSize = 24.sp)
+            }
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                if (item.kind == "news") Text(tr("UniHub news").uppercase(), style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
+                Text(item.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(item.text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+    }
+}
+
 @Composable
 private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Unit) {
     val scope = rememberCoroutineScope()
@@ -456,8 +513,22 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
     var menu by remember { mutableStateOf(false) }
     var reporting by remember { mutableStateOf<ReportTarget?>(null) }
     var videoLength by remember { mutableStateOf<Double?>(null) }
+    var videoPlayed by remember { mutableStateOf<Double?>(null) }
+    var videoEnded by remember { mutableStateOf(false) }
     var swipe by remember { mutableFloatStateOf(0f) }
     var viewersOf by remember { mutableStateOf<String?>(null) }
+    var reply by remember { mutableStateOf("") }
+    var typing by remember { mutableStateOf(false) }
+    val ctx = LocalContext.current
+    val focus = androidx.compose.ui.platform.LocalFocusManager.current
+    // reactions and replies reach the owner as a private message, like Instagram
+    fun sendToOwner(text: String, note: String) {
+        val to = groups.getOrNull(g)?.user?.id ?: return
+        scope.launch {
+            val msg = try { Account.call("dmSend", mapOf("userId" to to, "text" to text)); note } catch (e: ApiError) { e.message ?: tr("Something went wrong.") }
+            android.widget.Toast.makeText(ctx, msg, android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
 
     val group = groups.getOrNull(g)
     val stories = group?.stories?.filter { it.id !in removed }.orEmpty()
@@ -477,14 +548,26 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
     LaunchedEffect(g, s, story?.id) {
         progress = 0f
         videoLength = null
+        videoPlayed = null
+        videoEnded = false
         val item = story ?: return@LaunchedEffect
         if (!item.seen && Account.user.value != null) launch { runCatching { Account.call("storySeen", mapOf("id" to item.id)) } }
         val isVideo = item.video.isNotEmpty()
-        while (progress < 1f) {
+        val stopped = { paused || typing || reporting != null || menu || viewersOf != null }
+        while (true) {
             delay(50)
-            // a video's bar starts once the video has loaded, and follows its length
-            if (isVideo && videoLength == null) continue
-            if (!paused && reporting == null && !menu && viewersOf == null) progress += 0.05f / (videoLength ?: 6.0).toFloat()
+            if (isVideo) {
+                // the bar follows the real video and the story moves on when the video has ended,
+                // so a video that loads or plays slowly is never cut short
+                val length = videoLength ?: continue
+                if (videoEnded) break
+                val at = videoPlayed
+                if (at != null) progress = (at / length).toFloat().coerceAtMost(1f)
+                else if (!stopped()) { progress += 0.05f / length.toFloat(); if (progress >= 1f) break }   // the video could not play
+            } else {
+                if (!stopped()) progress += 0.05f / 6f
+                if (progress >= 1f) break
+            }
         }
         forward()
     }
@@ -499,7 +582,8 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
                     if (item.image.isNotEmpty()) AsyncImage(PhotoTools.large(item.image), null, Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
                     else Box(Modifier.fillMaxSize().background(storyBrush(item.bg.ifEmpty { "#8C1D40" }, look.bg2)))
                     if (item.video.isNotEmpty()) key(item.id) {
-                        StoryVideoPlayer(item.video, paused || reporting != null || menu || viewersOf != null) { videoLength = it }
+                        StoryVideoPlayer(item.video, paused || typing || reporting != null || menu || viewersOf != null,
+                            onPlayed = { videoPlayed = it }, onEnd = { videoEnded = true }) { videoLength = it }
                     }
                     if (item.text.isNotEmpty()) StoryTextView(item.text, look, Modifier.align(Alignment.Center))
                 }
@@ -571,6 +655,45 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
             ) {
                 Icon(Icons.Filled.Visibility, null, tint = Color.White, modifier = Modifier.size(16.dp))
                 Text(trf("%d views", views), color = Color.White, style = MaterialTheme.typography.labelMedium)
+            }
+            val owner = group?.user
+            if (me != null && owner != null && owner.id != me?.id) Column(
+                Modifier.align(Alignment.BottomCenter).fillMaxWidth().navigationBarsPadding().imePadding().padding(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                if (!typing) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf("❤️", "😂", "😮", "😢", "👏", "🔥").forEach { e ->
+                        Box(
+                            Modifier.size(42.dp).clip(CircleShape).background(Color.White.copy(alpha = 0.14f))
+                                .clickable { sendToOwner("$e Reacted to your story", tr("Sent") + " " + e) },
+                            contentAlignment = Alignment.Center,
+                        ) { Text(e, fontSize = 22.sp) }
+                    }
+                }
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    fun go() {
+                        val t = reply.trim()
+                        if (t.isEmpty()) return
+                        reply = ""
+                        focus.clearFocus()
+                        sendToOwner("↩️ Replied to your story: $t", tr("Reply sent"))
+                    }
+                    OutlinedTextField(
+                        reply, { reply = it.take(500) },
+                        Modifier.weight(1f).onFocusChanged { typing = it.isFocused },
+                        placeholder = { Text(tr("Send a reply…"), color = Color.White.copy(alpha = 0.75f)) },
+                        singleLine = true, shape = RoundedCornerShape(50),
+                        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Send),
+                        keyboardActions = androidx.compose.foundation.text.KeyboardActions(onSend = { go() }),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color.White, unfocusedTextColor = Color.White, cursorColor = Color.White,
+                            focusedBorderColor = Color.White, unfocusedBorderColor = Color.White.copy(alpha = 0.6f),
+                        ),
+                    )
+                    if (reply.isNotBlank()) IconButton(onClick = { go() }) {
+                        Icon(Icons.AutoMirrored.Filled.Send, tr("Send"), tint = Color.White)
+                    }
+                }
             }
         }
     }

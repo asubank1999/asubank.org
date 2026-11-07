@@ -328,14 +328,25 @@ struct AdminTermsScreen: View {
     @State private var who: String?
     @State private var busy = false
     @State private var error: String?
+    @State private var people: [ABUser] = []
+    @State private var peopleLoaded = false
+
+    /// everyone, or the people the search box matches
+    private var shown: [ABUser] {
+        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !q.isEmpty else { return people }
+        return people.filter { u in
+            [u.username, u.displayName, u.email ?? "", u.uniId ?? ""].contains { $0.lowercased().contains(q) }
+        }
+    }
 
     var body: some View {
         List {
             Section {
                 TextField("Username, email or university ID", text: $query)
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
-                Button { Task { await find() } } label: { HStack { Text("Search"); if busy { Spacer(); ABDots() } } }
-                    .disabled(query.trimmingCharacters(in: .whitespaces).isEmpty || busy)
+                    .onSubmit { if shown.isEmpty { Task { await find(query) } } }
+                if busy { ABDots() }
                 if let error { Text(error).foregroundStyle(.red) }
             }
             if let who {
@@ -349,16 +360,47 @@ struct AdminTermsScreen: View {
                     }
                 }
             }
+            Section(people.isEmpty ? "" : String(format: L("Everyone (%d)"), shown.count)) {
+                if !peopleLoaded {
+                    ForEach(0..<5, id: \.self) { _ in SkeletonRow() }
+                } else if shown.isEmpty {
+                    Button { Task { await find(query) } } label: { Text("Look up this account") }
+                        .disabled(query.trimmingCharacters(in: .whitespaces).isEmpty || busy)
+                }
+                ForEach(shown) { u in
+                    Button { Task { await find(u.username) } } label: {
+                        HStack(spacing: 10) {
+                            Avatar(name: u.displayName, color: u.color, size: 34, admin: u.isAdmin, photo: u.avatar)
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(u.displayName).foregroundStyle(.primary)
+                                Text("@" + u.username).font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            if who == u.username { Image(systemName: "checkmark").foregroundStyle(Color.abAccent) }
+                        }
+                    }
+                }
+            }
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Terms records")
+        .task { await loadPeople() }
+        .refreshable { await loadPeople() }
     }
 
-    private func find() async {
+    private func loadPeople() async {
+        if people.isEmpty, let r = account.saved("adminUsers") { people = decode([ABUser].self, r["users"]) ?? [] }
+        if let r = try? await account.callSaving("adminUsers", ["q": ""]) { people = decode([ABUser].self, r["users"]) ?? people }
+        peopleLoaded = true
+    }
+
+    private func find(_ q: String) async {
+        let q = q.trimmingCharacters(in: .whitespaces)
+        guard !q.isEmpty else { return }
         busy = true
         defer { busy = false }
         do {
-            let r = try await account.call("adminTerms", ["query": query.trimmingCharacters(in: .whitespaces)])
+            let r = try await account.call("adminTerms", ["query": q])
             who = r["username"] as? String
             rows = decode([Row].self, r["accepted"]) ?? []
             error = nil

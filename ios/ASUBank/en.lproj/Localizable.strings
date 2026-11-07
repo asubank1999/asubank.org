@@ -569,6 +569,7 @@
 "Copy" = "Copy";
 "Copy CliQ alias ALANQ99" = "Copy CliQ alias ALANQ99";
 "Copy link" = "Copy link";
+"Copy username" = "Copy username";
 "Copyright" = "Copyright";
 "Copyright and removal requests" = "Copyright and removal requests";
 "Copyright: I own this or represent the owner" = "Copyright: I own this or represent the owner";
@@ -670,6 +671,7 @@
 "Details (optional)" = "Details (optional)";
 "Deutsch" = "Deutsch";
 "Developer" = "Developer";
+"Did you know?" = "Did you know?";
 "Did you mean?" = "Did you mean?";
 "Diploma courses" = "Diploma courses";
 "Disagreements with an admin decision should be raised respectfully and privately. Abusive behavior toward an admin is grounds for immediate removal and may be reported to WhatsApp or relevant university authorities." = "Disagreements with an admin decision should be raised respectfully and privately. Abusive behavior toward an admin is grounds for immediate removal and may be reported to WhatsApp or relevant university authorities.";
@@ -787,6 +789,9 @@
 "Every teacher shows an average out of 10 and how many students voted." = "Every teacher shows an average out of 10 and how many students voted.";
 "Every year and doctor in one place." = "Every year and doctor in one place.";
 "Everyone" = "Everyone";
+"Everyone (%d)" = "Everyone (%d)";
+"Everyone (%lld)" = "Everyone (%lld)";
+"Everyone (%@)" = "Everyone (%@)";
 "Everyone, also guests" = "Everyone, also guests";
 "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive." = "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive.";
 "Everything students uploaded, updated live." = "Everything students uploaded, updated live.";
@@ -1095,6 +1100,7 @@
 "Join your college's WhatsApp groups, buses and study resources." = "Join your college's WhatsApp groups, buses and study resources.";
 "Join your virtual classes and meetings via Microsoft Teams" = "Join your virtual classes and meetings via Microsoft Teams";
 "Joined" = "Joined";
+"Joined %@" = "Joined %@";
 "Jordan's emergency number: ambulance, fire and police" = "Jordan's emergency number: ambulance, fire and police";
 "Junior" = "Junior";
 "Just now" = "Just now";
@@ -1161,6 +1167,7 @@
 "Locked rooms are read-only. Archived rooms are hidden from students but kept." = "Locked rooms are read-only. Archived rooms are hidden from students but kept.";
 "Long-press a chat message to pin or delete it, or ban its sender." = "Long-press a chat message to pin or delete it, or ban its sender.";
 "Look and feel" = "Look and feel";
+"Look up this account" = "Look up this account";
 "Looking for something specific? Request it" = "Looking for something specific? Request it";
 "MCQs with or without answers" = "MCQs with or without answers";
 "Made by a fellow student" = "Made by a fellow student";
@@ -1675,6 +1682,7 @@
 "Repeat password" = "Repeat password";
 "Replies to me" = "Replies to me";
 "Reply" = "Reply";
+"Reply sent" = "Reply sent";
 "Replying to %@" = "Replying to %@";
 "Report" = "Report";
 "Report a problem" = "Report a problem";
@@ -1799,6 +1807,7 @@
 "Seen" = "Seen";
 "Send" = "Send";
 "Send a message" = "Send a message";
+"Send a reply…" = "Send a reply…";
 "Send again" = "Send again";
 "Send an announcement" = "Send an announcement";
 "Send another" = "Send another";
@@ -2219,6 +2228,7 @@
 "UniHub is free and run by a volunteer student. Donations keep it online and growing." = "UniHub is free and run by a volunteer student. Donations keep it online and growing.";
 "UniHub is free and student-run. Donations help keep it running." = "UniHub is free and student-run. Donations help keep it running.";
 "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it." = "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it.";
+"UniHub news" = "UniHub news";
 "UniHub now asks every account for its sex. Choose yours to keep going." = "UniHub now asks every account for its sex. Choose yours to keep going.";
 "UniHub team" = "UniHub team";
 "UniHub · Student Community Groups" = "UniHub · Student Community Groups";
@@ -2288,6 +2298,7 @@
 "Useful gate" = "Useful gate";
 "User-Agent" = "User-Agent";
 "Username" = "Username";
+"Username copied" = "Username copied";
 "Username or email" = "Username or email";
 "Username, display name and a scrambled copy of your password." = "Username, display name and a scrambled copy of your password.";
 "Username, email or ID" = "Username, email or ID";

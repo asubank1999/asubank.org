@@ -16,7 +16,7 @@ struct StoryDraft: Identifiable {
 }
 
 enum StoryVideo {
-    static let maxSeconds = 15.0
+    static let maxSeconds = 30.0
     static let maxBytes = 12_000_000
 
     static func poster(_ url: URL) -> UIImage? {
@@ -27,7 +27,7 @@ enum StoryVideo {
         return UIImage(cgImage: cg)
     }
 
-    /// An MP4 of at most 15 seconds that fits the upload limit. Camera videos are already small, so they are only rewrapped and keep their 60 FPS.
+    /// An MP4 of at most 30 seconds that fits the upload limit. Camera videos are already small, so they are only rewrapped and keep their 60 FPS.
     static func prepare(_ url: URL, fromCamera: Bool) async -> URL? {
         let presets = fromCamera
             ? [AVAssetExportPresetPassthrough, AVAssetExportPreset1280x720, AVAssetExportPreset960x540]
@@ -142,7 +142,7 @@ final class StoryCameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureD
             if movies.availableVideoCodecTypes.contains(.h264) {
                 movies.setOutputSettings([
                     AVVideoCodecKey: AVVideoCodecType.h264,
-                    AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: 4_000_000],
+                    AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: 2_800_000],
                 ], for: c)
             }
         }
@@ -393,13 +393,18 @@ private struct PlayerLayer: UIViewRepresentable {
     func updateUIView(_ uiView: PlayerLayerView, context: Context) {}
 }
 
-/// A story's video. Reports its length, so the progress bar can follow it.
+/// A story's video. Reports its length and how far it has played, so the progress bar follows the real video
+/// and the next story starts only when this one has ended.
 struct StoryVideoView: View {
     let url: URL
     let paused: Bool
     @Binding var duration: Double?
+    @Binding var played: Double?
+    var ended: () -> Void = {}
     @State private var player: AVPlayer?
     @State private var failed = false
+    @State private var watch: Any?
+    @State private var endWatch: NSObjectProtocol?
 
     var body: some View {
         Group {
@@ -424,12 +429,24 @@ struct StoryVideoView: View {
             try? AVAudioSession.sharedInstance().setCategory(.playback)
             let asset = AVURLAsset(url: file)
             let length = (try? await asset.load(.duration))?.seconds ?? 6
-            let p = AVPlayer(playerItem: AVPlayerItem(asset: asset))
+            let item = AVPlayerItem(asset: asset)
+            let p = AVPlayer(playerItem: item)
+            p.actionAtItemEnd = .pause
+            watch = p.addPeriodicTimeObserver(forInterval: CMTime(value: 1, timescale: 20), queue: .main) { t in
+                if t.seconds.isFinite { played = t.seconds }
+            }
+            endWatch = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { _ in ended() }
             player = p
             duration = length.isFinite && length > 0.5 ? length : 6
             if !paused { p.play() }
         }
         .onChange(of: paused) { on in if on { player?.pause() } else { player?.play() } }
-        .onDisappear { player?.pause() }
+        .onDisappear {
+            player?.pause()
+            if let watch { player?.removeTimeObserver(watch) }
+            if let endWatch { NotificationCenter.default.removeObserver(endWatch) }
+            watch = nil
+            endWatch = nil
+        }
     }
 }

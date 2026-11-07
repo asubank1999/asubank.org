@@ -174,7 +174,13 @@
             body.appendChild(cover);
             body.appendChild(h('div', { class: 'acc-cover-av' }, avatar(nameOf(u), u.color, 96, u.role === 'admin', u.avatar, signedIn ? !!u.online : null)));
             body.appendChild(h('h2', { text: nameOf(u) }));
-            body.appendChild(h('p', { class: 'acc-muted', text: '@' + u.username + (u.role === 'admin' ? ' · Admin' : '') + (signedIn ? ' · ' + lastSeenText(u.lastSeen, u.online) : '') }));
+            // the username can be selected, and the button copies it
+            var copyBtn = h('button', { type: 'button', class: 'acc-copy', 'aria-label': 'Copy username', title: 'Copy username', text: '⧉', onclick: function () {
+                var done = function () { copyBtn.textContent = '✓'; setTimeout(function () { copyBtn.textContent = '⧉'; }, 1500); if (window.AB && AB.toast) AB.toast('Username copied'); };
+                if (navigator.clipboard) navigator.clipboard.writeText(u.username).then(done, function () {});
+            } });
+            body.appendChild(h('p', { class: 'acc-muted' }, h('span', { class: 'acc-uname', text: '@' + u.username }), copyBtn,
+                (u.role === 'admin' ? ' · Admin' : '') + (signedIn ? ' · ' + lastSeenText(u.lastSeen, u.online) : '')));
             if (signedIn) body.appendChild(h('div', { class: 'acc-pstats' }, [['Friends', r.friendCount], ['Posts', r.postCount], ['Messages', r.messageCount]].map(function (s) {
                 return h('span', null, h('b', { text: String(s[1] || 0) }), h('small', { text: s[0] }));
             })));
@@ -1824,6 +1830,21 @@
         document.body.appendChild(box);
         draw();
     }
+    // news about UniHub and random facts for the Feed, live from assets/app/feed-extras.json
+    var extrasP = null;
+    function feedExtras() {
+        if (!extrasP) extrasP = fetch('/assets/app/feed-extras.json').then(function (r) { return r.json(); }).then(function (d) {
+            var lang = (document.documentElement.lang || 'en').slice(0, 2);
+            return (d[lang] || d.en || []).filter(function (x) { return x.only !== 'apps'; });
+        }).catch(function () { return []; });
+        return extrasP;
+    }
+    function extraCard(list, n) {
+        var day = Math.floor(Date.now() / 86400000), x = list[(n + day) % list.length];
+        return h('div', { class: 'acc-card acc-extra' },
+            h('span', { class: 'acc-extra-e', 'aria-hidden': 'true', text: x.emoji }),
+            h('div', {}, x.kind === 'news' ? h('small', { text: 'UniHub news' }) : null, h('b', { text: x.title }), h('p', { text: x.text })));
+    }
     function feedView() {
         var signedIn = !!(token && user);
         var scope = signedIn ? (get('ab.feed.scope') || 'friends') : 'guest';
@@ -1870,6 +1891,7 @@
         }
         function posts(fresh) {
             var mine = ++loadToken;
+            var shown = fresh ? 0 : offset;
             if (fresh) {
                 offset = 0;
                 while (list.firstChild) list.removeChild(list.firstChild);
@@ -1883,9 +1905,22 @@
                 if (fresh) while (list.firstChild) list.removeChild(list.firstChild);
                 var got = r.posts || [];
                 if (fresh) cachePut('feed.' + scope, got.slice(0, 12));
-                if (fresh && !got.length) list.appendChild(h('p', { class: 'acc-muted acc-center', text:
-                    scope === 'friends' ? 'No posts from friends yet.' : scope === 'strangers' ? 'No posts from other students yet.' : 'No public posts yet.' }));
-                got.forEach(function (p) { list.appendChild(postCard(p)); });
+                if (fresh && !got.length) {
+                    list.appendChild(h('p', { class: 'acc-muted acc-center', text:
+                        scope === 'friends' ? 'No posts from friends yet.' : scope === 'strangers' ? 'No posts from other students yet.' : 'No public posts yet.' }));
+                    // an empty feed still has something to read
+                    feedExtras().then(function (x) { if (mine === loadToken) for (var n = 0; n < Math.min(3, x.length); n++) list.appendChild(extraCard(x, n)); });
+                }
+                var holders = [];
+                got.forEach(function (p, i) {
+                    list.appendChild(postCard(p));
+                    // a news card or a fact after every fourth post
+                    var k = shown + i + 1;
+                    if (k % 4 === 0) { var slot = h('div', {}); list.appendChild(slot); holders.push([slot, k / 4 - 1]); }
+                });
+                if (holders.length) feedExtras().then(function (x) {
+                    if (x.length) holders.forEach(function (s) { s[0].appendChild(extraCard(x, s[1])); });
+                });
                 offset += got.length;
                 moreBtn.hidden = got.length < 25;
             }).catch(function (e) {

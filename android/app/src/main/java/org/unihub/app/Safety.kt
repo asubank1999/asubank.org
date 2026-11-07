@@ -35,6 +35,9 @@ import androidx.compose.material.icons.filled.Policy
 import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -353,6 +356,30 @@ fun AdminTermsScreen() {
     var rows by remember { mutableStateOf<List<JsonObject>>(emptyList()) }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
+    // everyone is listed: tap a person to see their record, or type to filter
+    var people by remember { mutableStateOf<List<AbUser>>(emptyList()) }
+    var peopleLoaded by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        Account.saved("adminUsers")?.let { r -> people = r["users"].decodeAs<List<AbUser>>().orEmpty() }
+        runCatching { Account.callSaving("adminUsers", mapOf("q" to "")) }.getOrNull()?.let { r -> people = r["users"].decodeAs<List<AbUser>>() ?: people }
+        peopleLoaded = true
+    }
+    fun find(q: String) {
+        val t = q.trim()
+        if (t.isEmpty()) return
+        busy = true
+        scope.launch {
+            try {
+                val r = Account.call("adminTerms", mapOf("query" to t))
+                who = r.str("username")
+                rows = (r["accepted"] as? JsonArray).objects()
+                error = null
+            } catch (e: ApiError) { who = null; rows = emptyList(); error = e.message }
+            busy = false
+        }
+    }
+    val q = query.trim().lowercase()
+    val shown = if (q.isEmpty()) people else people.filter { u -> listOf(u.username, u.name, u.email.orEmpty(), u.uniId.orEmpty()).any { it.lowercase().contains(q) } }
     Screen("Terms records") { pad ->
         LazyColumn(Modifier.padding(pad).fillMaxSize()) {
             item {
@@ -360,22 +387,8 @@ fun AdminTermsScreen() {
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         OutlinedTextField(query, { query = it }, label = { Text("Username, email or university ID") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                         error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                        Button(
-                            enabled = query.isNotBlank() && !busy,
-                            onClick = {
-                                busy = true
-                                scope.launch {
-                                    try {
-                                        val r = Account.call("adminTerms", mapOf("query" to query.trim()))
-                                        who = r.str("username")
-                                        rows = (r["accepted"] as? JsonArray).objects()
-                                        error = null
-                                    } catch (e: ApiError) { who = null; rows = emptyList(); error = e.message }
-                                    busy = false
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                        ) { Text("Search") }
+                        if (busy) LinearProgressIndicator(Modifier.fillMaxWidth())
+                        if (peopleLoaded && shown.isEmpty()) Button(enabled = q.isNotEmpty() && !busy, onClick = { find(query) }, modifier = Modifier.fillMaxWidth()) { Text("Look up this account") }
                     }
                 }
             }
@@ -386,6 +399,25 @@ fun AdminTermsScreen() {
                         rows.forEachIndexed { i, r ->
                             if (i > 0) Divider()
                             ListRow(r.str("at") ?: "", listOfNotNull(r.str("version"), r.str("source"), r.str("appVersion")).joinToString(" · "))
+                        }
+                    }
+                }
+            }
+            item {
+                Group(header = if (people.isEmpty()) null else trf("Everyone (%d)", shown.size)) {
+                    if (!peopleLoaded) repeat(5) { SkeletonRow() }
+                    shown.forEachIndexed { i, u ->
+                        if (i > 0) Divider()
+                        Row(
+                            Modifier.fillMaxWidth().clickable { find(u.username) }.padding(horizontal = 14.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            Avatar(u.name, u.color, 34.dp, admin = u.isAdmin, photo = u.avatar)
+                            Column(Modifier.weight(1f)) {
+                                Text(u.name, maxLines = 1)
+                                Text("@" + u.username, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+                            }
+                            if (who == u.username) Icon(Icons.Filled.Check, null, tint = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }

@@ -80,7 +80,7 @@ sealed class StoryMedia {
 class StoryDraft(val media: StoryMedia?)
 
 object StoryVideo {
-    const val MAX_SECONDS = 15
+    const val MAX_SECONDS = 30
     const val MAX_BYTES = 12_000_000
 
     private fun folder(ctx: Context) = File(ctx.cacheDir, "stories").apply { mkdirs() }
@@ -199,7 +199,7 @@ fun StoryCameraDialog(onClose: () -> Unit, done: (StoryMedia?) -> Unit) {
                 fun build(range: Range<Int>?): VideoCapture<Recorder> {
                     val recorder = Recorder.Builder()
                         .setQualitySelector(QualitySelector.from(Quality.HD, FallbackStrategy.lowerQualityOrHigherThan(Quality.HD)))
-                        .setTargetVideoEncodingBitRate(3_500_000)
+                        .setTargetVideoEncodingBitRate(2_800_000)
                         .build()
                     val b = VideoCapture.Builder(recorder)
                     if (range != null) b.setTargetFrameRate(range)
@@ -350,13 +350,22 @@ private fun RoundCameraButton(enabled: Boolean, onClick: () -> Unit, content: @C
     ) { content() }
 }
 
-/** A story's video, centered. onLength gets its length in seconds, or the usual story length when it can't play. */
+/** A story's video, centered. onLength gets its length in seconds, or the usual story length when it can't play.
+ *  onPlayed gets how far it has played and onEnd fires when it has ended, so the progress bar follows the real video. */
 @Composable
-fun StoryVideoPlayer(url: String, paused: Boolean, onLength: (Double) -> Unit) {
+fun StoryVideoPlayer(url: String, paused: Boolean, onPlayed: (Double) -> Unit = {}, onEnd: () -> Unit = {}, onLength: (Double) -> Unit) {
     val ctx = LocalContext.current
     var file by remember(url) { mutableStateOf<File?>(null) }
     var failed by remember(url) { mutableStateOf(false) }
     var prepared by remember(url) { mutableStateOf(false) }
+    var view by remember(url) { mutableStateOf<VideoView?>(null) }
+    LaunchedEffect(view, prepared) {
+        val v = view ?: return@LaunchedEffect
+        while (prepared) {
+            if (v.isPlaying) onPlayed(v.currentPosition / 1000.0)
+            kotlinx.coroutines.delay(50)
+        }
+    }
     LaunchedEffect(url) {
         file = StoryVideo.local(ctx, url)
         if (file == null) {
@@ -376,6 +385,8 @@ fun StoryVideoPlayer(url: String, paused: Boolean, onLength: (Double) -> Unit) {
                     FrameLayout(c).apply {
                         addView(
                             VideoView(c).apply {
+                                view = this
+                                setOnCompletionListener { onEnd() }
                                 setOnPreparedListener { mp ->
                                     prepared = true
                                     onLength((mp.duration / 1000.0).coerceAtLeast(1.0))

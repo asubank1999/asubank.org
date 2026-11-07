@@ -99,7 +99,7 @@ struct OnlineBox: View {
                         Circle().fill(Color.green).frame(width: 8, height: 8)
                         Text(String(format: L("%d online now"), store.count)).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
                     }
-                    Text(account.signedIn ? L("See everyone") : L("Sign in to see who")).font(.caption).foregroundStyle(.secondary)
+                    Text(L("See everyone")).font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.forward").font(.caption.weight(.semibold)).foregroundStyle(.tertiary)

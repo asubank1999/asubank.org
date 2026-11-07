@@ -281,7 +281,7 @@ fun OnlineBox(modifier: Modifier = Modifier) {
                     Box(Modifier.size(8.dp).clip(CircleShape).background(onlineGreen))
                     Text(tr("%d online now").format(count), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
                 }
-                Text(if (me != null) "See everyone" else "Sign in to see who", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("See everyone", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Text("›", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.titleLarge)
         }

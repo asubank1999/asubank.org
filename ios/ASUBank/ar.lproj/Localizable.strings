@@ -569,6 +569,7 @@
 "Copy" = "نسخ";
 "Copy CliQ alias ALANQ99" = "انسخ اسم CliQ المستعار ALANQ99";
 "Copy link" = "نسخ الرابط";
+"Copy username" = "نسخ اسم المستخدم";
 "Copyright" = "حقوق النشر";
 "Copyright and removal requests" = "حقوق النشر وطلبات الإزالة";
 "Copyright: I own this or represent the owner" = "حقوق نشر: أنا المالك أو أمثله";
@@ -670,6 +671,7 @@
 "Details (optional)" = "التفاصيل (اختياري)";
 "Deutsch" = "Deutsch";
 "Developer" = "مطوّر";
+"Did you know?" = "هل تعلم؟";
 "Did you mean?" = "هل تقصد؟";
 "Diploma courses" = "مواد الدبلوم";
 "Disagreements with an admin decision should be raised respectfully and privately. Abusive behavior toward an admin is grounds for immediate removal and may be reported to WhatsApp or relevant university authorities." = "يجب طرح أي اعتراض على قرار المشرف باحترام وبشكل خاص. السلوك المسيء تجاه المشرف سبب للإزالة الفورية وقد يُبلَّغ عنه إلى واتساب أو الجهات الجامعية المختصة.";
@@ -787,6 +789,9 @@
 "Every teacher shows an average out of 10 and how many students voted." = "يظهر لكل مدرس متوسط من 10 وعدد المصوتين.";
 "Every year and doctor in one place." = "كل السنوات والدكاترة في مكان واحد.";
 "Everyone" = "الجميع";
+"Everyone (%d)" = "الجميع (%d)";
+"Everyone (%lld)" = "الجميع (%lld)";
+"Everyone (%@)" = "الجميع (%@)";
 "Everyone, also guests" = "الجميع، والضيوف أيضاً";
 "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive." = "يمكن البحث في كل ما في UniHub من مربع واحد: صفحات المواد وGoogle Drive المشترك.";
 "Everything students uploaded, updated live." = "كل ما رفعه الطلاب، يتحدث مباشرة.";
@@ -1095,6 +1100,7 @@
 "Join your college's WhatsApp groups, buses and study resources." = "انضم إلى مجموعات واتساب لكليتك وحافلاتها ومصادرها الدراسية.";
 "Join your virtual classes and meetings via Microsoft Teams" = "انضم إلى محاضراتك واجتماعاتك عبر Microsoft Teams";
 "Joined" = "تاريخ الانضمام";
+"Joined %@" = "انضم في %@";
 "Jordan's emergency number: ambulance, fire and police" = "رقم الطوارئ في الأردن: الإسعاف والدفاع المدني والشرطة";
 "Junior" = "سنة ثالثة";
 "Just now" = "الآن";
@@ -1161,6 +1167,7 @@
 "Locked rooms are read-only. Archived rooms are hidden from students but kept." = "الغرف المقفلة للقراءة فقط. الغرف المؤرشفة مخفية عن الطلاب لكنها محفوظة.";
 "Long-press a chat message to pin or delete it, or ban its sender." = "اضغط مطولاً على رسالة لتثبيتها أو حذفها أو حظر مرسلها.";
 "Look and feel" = "المظهر";
+"Look up this account" = "ابحث عن هذا الحساب";
 "Looking for something specific? Request it" = "تبحث عن شيء محدد؟ اطلبه";
 "MCQs with or without answers" = "اختيار من متعدد بإجابات أو دونها";
 "Made by a fellow student" = "من صنع زميل طالب";
@@ -1675,6 +1682,7 @@
 "Repeat password" = "كرر كلمة المرور";
 "Replies to me" = "الردود عليّ";
 "Reply" = "رد";
+"Reply sent" = "تم إرسال الرد";
 "Replying to %@" = "رد على %@";
 "Report" = "إبلاغ";
 "Report a problem" = "الإبلاغ عن مشكلة";
@@ -1799,6 +1807,7 @@
 "Seen" = "تمت الرؤية";
 "Send" = "إرسال";
 "Send a message" = "أرسل رسالة";
+"Send a reply…" = "أرسل رداً…";
 "Send again" = "إرسال مرة أخرى";
 "Send an announcement" = "أرسل إعلاناً";
 "Send another" = "إرسال اقتراح آخر";
@@ -2219,6 +2228,7 @@
 "UniHub is free and run by a volunteer student. Donations keep it online and growing." = "UniHub مجاني ويديره طالب متطوع. التبرعات تُبقيه متاحًا وتساعده على النمو.";
 "UniHub is free and student-run. Donations help keep it running." = "UniHub مشروع طلابي مجاني. التبرعات تساعد في استمراره.";
 "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it." = "UniHub مجاني للطلاب ويديره طالب. تدعمه الإعلانات على الموقع والرعاة والتبرعات.";
+"UniHub news" = "أخبار UniHub";
 "UniHub now asks every account for its sex. Choose yours to keep going." = "يطلب UniHub الآن من كل حساب تحديد الجنس. اختر لتكمل.";
 "UniHub team" = "فريق UniHub";
 "UniHub · Student Community Groups" = "مركز مكتبة ASU · مجموعات مجتمع الطلاب";
@@ -2288,6 +2298,7 @@
 "Useful gate" = "البوابة المفيدة";
 "User-Agent" = "User-Agent";
 "Username" = "اسم المستخدم";
+"Username copied" = "تم نسخ اسم المستخدم";
 "Username or email" = "اسم المستخدم أو البريد";
 "Username, display name and a scrambled copy of your password." = "اسم المستخدم والاسم الظاهر ونسخة مشفرة من كلمة المرور.";
 "Username, email or ID" = "اسم المستخدم أو البريد أو الرقم";
