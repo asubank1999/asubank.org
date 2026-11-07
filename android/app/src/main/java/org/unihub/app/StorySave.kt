@@ -127,7 +127,7 @@ object StorySave {
             .build()
         val overlay = BitmapOverlay.createStaticBitmapOverlay(mark, settings)
         val item = EditedMediaItem.Builder(MediaItem.fromUri(Uri.fromFile(file)))
-            .setEffects(Effects(ImmutableList.of(), ImmutableList.of(OverlayEffect(ImmutableList.of(overlay)))))
+            .setEffects(Effects(listOf(), listOf<androidx.media3.common.Effect>(OverlayEffect(ImmutableList.of(overlay)))))
             .build()
         val out = File(ctx.cacheDir, "stories/saved-" + System.currentTimeMillis() + ".mp4")
         out.parentFile?.mkdirs()
