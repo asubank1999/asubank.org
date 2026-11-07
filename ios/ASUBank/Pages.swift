@@ -116,7 +116,9 @@ enum SiteRouter {
             case "/guides/saved": return .tab(.saved)
             case "/chat", "/chat/", "/chat/index": return .tab(.chat)
             case "/admin", "/admin/", "/admin/index": return .tab(.admin) // non-admins are sent back by RootView
-            case "/upload/uploadmethod", "/upload", "/upload/dupload", "/upload/gupload", "/upload/googledrive_fileupload", "/upload/discord_fileupload": return .tab(.upload)
+            case "/upload/dupload", "/upload/discord_fileupload": UploadMode.next = true; return .tab(.upload)
+            case "/upload/gupload", "/upload/googledrive_fileupload": UploadMode.next = false; return .tab(.upload)
+            case "/upload/uploadmethod", "/upload": return .tab(.upload)
             default: return .push(.page(path, title))
             }
         }

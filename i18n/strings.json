@@ -1730,6 +1730,10 @@
   "ru": "Любой размер файла, столько файлов, сколько захотите.",
   "tr": "İstediğiniz dosya boyutunda, istediğiniz kadar dosya."
  },
+ "Any file, details optional. It shows in Latest uploads at once.": {
+  "ar": "أي ملف، والتفاصيل اختيارية. يظهر في آخر الملفات فورًا.",
+  "es": "Cualquier archivo, detalles opcionales. Aparece enseguida en Últimas subidas."
+ },
  "Any illegal activity, including academic dishonesty in violation of university policy.": {
   "ar": "أي نشاط غير قانوني، بما في ذلك الغش الأكاديمي المخالف لسياسة الجامعة.",
   "de": "Jegliche illegale Aktivität, einschließlich akademischer Unehrlichkeit, die gegen die Richtlinien der Universität verstößt.",
@@ -3077,6 +3081,10 @@
   "ar": "اختر مادة",
   "es": "Elige una materia"
  },
+ "Choose a subject.": {
+  "ar": "اختر المادة.",
+  "es": "Elige una materia."
+ },
  "Choose files": {
   "ar": "اختر ملفات",
   "de": "Wählen Sie Dateien aus",
@@ -3104,6 +3112,14 @@
  "Choose male or female.": {
   "ar": "اختر ذكر أو أنثى.",
   "es": "Elige hombre o mujer."
+ },
+ "Choose the year.": {
+  "ar": "اختر السنة.",
+  "es": "Elige el año."
+ },
+ "Choose what kind of file it is.": {
+  "ar": "اختر نوع الملف.",
+  "es": "Elige qué tipo de archivo es."
  },
  "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week": {
   "ar": "اختر متى يختفي المحتوى: بعد دقيقة أو 60 دقيقة أو يوم أو أسبوع",
@@ -4907,6 +4923,10 @@
  },
  "For admins: add, rename, reorder, lock, archive, clear and delete chat rooms, pin a message to the top of a room, and give or remove badges.": {},
  "For admins: an Admin tab to see every registered student, ban or unban, reset passwords, make admins, delete accounts, delete chat messages and uploads, send announcements and see the activity log.": {},
+ "For formal files: a subject, type, year and title are needed, and only PDF, Word, PowerPoint and photos are taken.": {
+  "ar": "للملفات الرسمية: يلزم اختيار المادة والنوع والسنة وكتابة عنوان، وتُقبل ملفات PDF وWord وPowerPoint والصور فقط.",
+  "es": "Para archivos formales: se necesitan materia, tipo, año y título, y solo se aceptan PDF, Word, PowerPoint y fotos."
+ },
  "For the campus display screen": {
   "ar": "لشاشة العرض في الحرم الجامعي"
  },
@@ -4925,6 +4945,10 @@
  "Forgot your password? Ask an admin in the chat or on WhatsApp to reset it.": {
   "ar": "نسيت كلمة المرور؟ اطلب من مشرف في الدردشة أو على واتساب إعادة تعيينها.",
   "es": "¿Olvidaste tu contraseña? Pide a un admin en el chat o por WhatsApp que la restablezca."
+ },
+ "Formal files with full details, filed by subject.": {
+  "ar": "ملفات رسمية بتفاصيل كاملة، مرتبة حسب المادة.",
+  "es": "Archivos formales con todos los detalles, ordenados por materia."
  },
  "Found materials quickly": {
   "ar": "وجدت المواد بسرعة",
@@ -5025,6 +5049,10 @@
  "Get matched with classmates who take the same courses and are free at the same times.": {
   "ar": "نوفّق بينك وبين زملاء يدرسون نفس المواد ولديهم نفس أوقات الفراغ.",
   "es": "Te emparejamos con compañeros que toman los mismos cursos y están libres a la misma hora."
+ },
+ "Give it a title.": {
+  "ar": "اكتب عنوانًا.",
+  "es": "Ponle un título."
  },
  "Gives them a temporary password": {
   "ar": "يمنحه كلمة مرور مؤقتة",
@@ -7368,6 +7396,10 @@
   "ar": "أسئلة سريعة",
   "es": "Preguntas rápidas"
  },
+ "Quick upload": {
+  "ar": "رفع سريع",
+  "es": "Subida rápida"
+ },
  "Quiz": {
   "ar": "كويز",
   "es": "Prueba"
@@ -8517,6 +8549,10 @@
   "ar": "إرسال منظّم",
   "es": "Envío estructurado"
  },
+ "Structured submissions take PDF, Word, PowerPoint and photos only.": {
+  "ar": "الإرسال المنظم يقبل ملفات PDF وWord وPowerPoint والصور فقط.",
+  "es": "Los envíos estructurados solo aceptan PDF, Word, PowerPoint y fotos."
+ },
  "Stuck on something? Ask other students": {
   "ar": "واجهت صعوبة؟ اسأل الطلاب الآخرين",
   "es": "¿Atascado? Pregunta a otros estudiantes"
@@ -9238,6 +9274,10 @@
  "Title or student": {
   "ar": "العنوان أو الطالب"
  },
+ "Title, e.g. Calculus 1 Midterm 2025": {
+  "ar": "العنوان، مثل: تفاضل 1 امتحان منتصف 2025",
+  "es": "Título, p. ej. Cálculo 1 parcial 2025"
+ },
  "To": {
   "ar": "إلى",
   "es": "Hasta"
@@ -9717,6 +9757,10 @@
  "Upload rules": {
   "ar": "قواعد الرفع",
   "es": "Normas de subida"
+ },
+ "Upload type": {
+  "ar": "نوع الرفع",
+  "es": "Tipo de subida"
  },
  "Upload your presentations": {
   "ar": "ارفع عروضك التقديمية"

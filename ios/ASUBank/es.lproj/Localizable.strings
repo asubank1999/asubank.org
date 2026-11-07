@@ -291,6 +291,7 @@
 "Answers to common questions." = "Respuestas a preguntas comunes.";
 "Any" = "Cualquiera";
 "Any file size, as many files as you like." = "Cualquier tamaño de archivo y tantos archivos como quieras.";
+"Any file, details optional. It shows in Latest uploads at once." = "Cualquier archivo, detalles opcionales. Aparece enseguida en Últimas subidas.";
 "Any illegal activity, including academic dishonesty in violation of university policy." = "Cualquier actividad ilegal, incluida la deshonestidad académica en violación de la política universitaria.";
 "Any year" = "Cualquier año";
 "Anything special? (optional)" = "¿Algo especial? (opcional)";
@@ -477,11 +478,14 @@
 "Choose a photo" = "Elegir una foto";
 "Choose a service." = "Elige un servicio.";
 "Choose a subject" = "Elige una materia";
+"Choose a subject." = "Elige una materia.";
 "Choose files" = "Elegir archivos";
 "Choose from photos" = "Elegir de las fotos";
 "Choose how you'll pay." = "Elige cómo pagarás.";
 "Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it" = "Elige hombre o mujer al registrarte. A las cuentas antiguas se les pregunta una vez, y tú decides si tu perfil lo muestra";
 "Choose male or female." = "Elige hombre o mujer.";
+"Choose the year." = "Elige el año.";
+"Choose what kind of file it is." = "Elige qué tipo de archivo es.";
 "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week" = "Elige cuándo desaparece: tras 1 minuto, 60 minutos, 1 día o 1 semana";
 "Choose who sees each new post or story: everyone, ASU students or friends" = "Elige quién ve cada publicación o historia: todos, estudiantes de ASU o amigos";
 "Choose your app icon under More > App icon" = "Choose your app icon under More > App icon";
@@ -909,11 +913,13 @@
 "Football, coding, photography…" = "Fútbol, programación, fotografía…";
 "For admins: add, rename, reorder, lock, archive, clear and delete chat rooms, pin a message to the top of a room, and give or remove badges." = "For admins: add, rename, reorder, lock, archive, clear and delete chat rooms, pin a message to the top of a room, and give or remove badges.";
 "For admins: an Admin tab to see every registered student, ban or unban, reset passwords, make admins, delete accounts, delete chat messages and uploads, send announcements and see the activity log." = "For admins: an Admin tab to see every registered student, ban or unban, reset passwords, make admins, delete accounts, delete chat messages and uploads, send announcements and see the activity log.";
+"For formal files: a subject, type, year and title are needed, and only PDF, Word, PowerPoint and photos are taken." = "Para archivos formales: se necesitan materia, tipo, año y título, y solo se aceptan PDF, Word, PowerPoint y fotos.";
 "For the campus display screen" = "For the campus display screen";
 "Forest" = "Bosque";
 "Forest night" = "Bosque nocturno";
 "Forgot your password? Ask an admin in the WhatsApp community to reset it." = "¿Olvidaste tu contraseña? Pide a un admin en la comunidad de WhatsApp que la restablezca.";
 "Forgot your password? Ask an admin in the chat or on WhatsApp to reset it." = "¿Olvidaste tu contraseña? Pide a un admin en el chat o por WhatsApp que la restablezca.";
+"Formal files with full details, filed by subject." = "Archivos formales con todos los detalles, ordenados por materia.";
 "Found materials quickly" = "Encontré materiales rápido";
 "Founder" = "Fundador";
 "Founder · builds and runs UniHub" = "Fundador · crea y dirige UniHub";
@@ -945,6 +951,7 @@
 "General University Resources" = "General University Resources";
 "German" = "German";
 "Get matched with classmates who take the same courses and are free at the same times." = "Te emparejamos con compañeros que toman los mismos cursos y están libres a la misma hora.";
+"Give it a title." = "Ponle un título.";
 "Gives them a temporary password" = "Le da una contraseña temporal";
 "Glow" = "Glow";
 "Going home (PM)" = "De regreso (PM)";
@@ -1633,6 +1640,7 @@
 "Quick answers about UniHub." = "Quick answers about UniHub.";
 "Quick links" = "Quick links";
 "Quick questions" = "Preguntas rápidas";
+"Quick upload" = "Subida rápida";
 "Quiz" = "Prueba";
 "Rain" = "Lluvia";
 "Rainbow" = "Rainbow";
@@ -1963,6 +1971,7 @@
 "Strangers" = "Desconocidos";
 "Strong and steady" = "Strong and steady";
 "Structured submission" = "Envío estructurado";
+"Structured submissions take PDF, Word, PowerPoint and photos only." = "Los envíos estructurados solo aceptan PDF, Word, PowerPoint y fotos.";
 "Stuck on something? Ask other students" = "¿Atascado? Pregunta a otros estudiantes";
 "Student Advertisement Service" = "Student Advertisement Service";
 "Student Submissions" = "Student Submissions";
@@ -2170,6 +2179,7 @@
 "Tips" = "Consejos";
 "Title" = "Título";
 "Title or student" = "Title or student";
+"Title, e.g. Calculus 1 Midterm 2025" = "Título, p. ej. Cálculo 1 parcial 2025";
 "To" = "Hasta";
 "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information." = "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.";
 "To remove a file or anything else, report it or email us." = "To remove a file or anything else, report it or email us.";
@@ -2297,6 +2307,7 @@
 "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team." = "Sube materiales, ayuda a ordenarlos o informa enlaces rotos. Escribe a ASU-Requests y únete al equipo.";
 "Upload more" = "Subir más";
 "Upload rules" = "Normas de subida";
+"Upload type" = "Tipo de subida";
 "Upload your presentations" = "Upload your presentations";
 "Uploaded" = "Subido";
 "Uploaded content" = "Uploaded content";

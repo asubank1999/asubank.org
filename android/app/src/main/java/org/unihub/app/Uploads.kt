@@ -29,6 +29,9 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -100,7 +103,30 @@ object UploadQueue {
     var kind by mutableStateOf("")
     var year by mutableStateOf("")
     var note by mutableStateOf("")
+    /** Structured submission (asubank.org/upload/dupload): subject, type, year and a title are required, documents and photos only */
+    var structured by mutableStateOf(false)
+    var title by mutableStateOf("")
     var busy by mutableStateOf(false)
+
+    private val structuredTypes = setOf("pdf", "doc", "docx", "ppt", "pptx", "jpg", "jpeg", "png", "heic")
+
+    /** What still stops a structured submission, or null when it can go */
+    val structuredProblem: String? get() {
+        if (!structured) return null
+        if (subject.isEmpty()) return tr("Choose a subject.")
+        if (kind.isEmpty()) return tr("Choose what kind of file it is.")
+        if (year.isEmpty()) return tr("Choose the year.")
+        if (title.trim().length < 3) return tr("Give it a title.")
+        if (files.any { it.state == "ready" && it.name.substringAfterLast('.', "").lowercase() !in structuredTypes }) {
+            return tr("Structured submissions take PDF, Word, PowerPoint and photos only.")
+        }
+        return null
+    }
+
+    private val noteToSend: String get() {
+        val n = note.trim()
+        return if (structured) "Structured submission: " + title.trim() + (if (n.isEmpty()) "" else " · $n") else n
+    }
     var finished by mutableStateOf<Int?>(null)
 
     val overall: Float get() {
@@ -143,6 +169,7 @@ object UploadQueue {
     fun clearDone() {
         files.removeAll { it.state == "done" }
         finished = null
+        title = ""
     }
 
     fun start(ctx: Context) {
@@ -188,7 +215,7 @@ object UploadQueue {
     private fun startSession(f: Pending, size: Long): String {
         val body = buildJsonObject {
             put("action", "start"); put("name", f.name); put("mimeType", f.mime); put("size", size)
-            put("subject", subject); put("kind", kind); put("year", year); put("note", note.trim())
+            put("subject", subject); put("kind", kind); put("year", year); put("note", noteToSend)
         }.toString()
         val req = Request.Builder().url(AB.UPLOAD).post(body.toRequestBody("text/plain;charset=utf-8".toMediaType())).build()
         Net.http.newCall(req).execute().use { r ->
@@ -317,6 +344,19 @@ fun UploadScreen() {
         LazyColumn(Modifier.padding(pad)) {
             item { Group { ListRow("Share a YouTube video", icon = Icons.Filled.PlayCircle) { shareNav.navigate("shareVideo") } } }
             item {
+                Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+                        listOf("Quick upload", "Structured submission").forEachIndexed { i, l ->
+                            SegmentedButton(selected = q.structured == (i == 1), onClick = { if (!busy) q.structured = i == 1 }, shape = SegmentedButtonDefaults.itemShape(i, 2)) { Text(l, maxLines = 1) }
+                        }
+                    }
+                    Text(
+                        if (q.structured) "For formal files: a subject, type, year and title are needed, and only PDF, Word, PowerPoint and photos are taken." else "Any file, details optional. It shows in Latest uploads at once.",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+            }
+            item {
                 Column(
                     Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp).clip(RoundedCornerShape(18.dp))
                         .background(Brush.verticalGradient(listOf(accent.copy(alpha = 0.82f), accent))).padding(16.dp),
@@ -328,8 +368,8 @@ fun UploadScreen() {
                             val done = q.finished
                             if (done != null) Text(trf("Thank you! %d files uploaded. They're in Latest uploads now.", done), color = Color.White, fontWeight = FontWeight.SemiBold)
                             else {
-                                Text("Share your study files", color = Color.White, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
-                                Text("Any file size, as many files as you like.", color = Color.White.copy(alpha = 0.9f), style = MaterialTheme.typography.bodyMedium)
+                                Text(if (q.structured) "Structured submission" else "Share your study files", color = Color.White, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
+                                Text(if (q.structured) "Formal files with full details, filed by subject." else "Any file size, as many files as you like.", color = Color.White.copy(alpha = 0.9f), style = MaterialTheme.typography.bodyMedium)
                             }
                         }
                     }
@@ -384,9 +424,11 @@ fun UploadScreen() {
             item {
                 Group(header = "Details", footer = "Files are named like “[Subject] [Final 2025] name.pdf” so other students can find them.") {
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        UploadPicker("Subject", q.subject, listOf("") + subjects.filter { it.c != "Archive" }.map { it.t }) { q.subject = it }
-                        UploadPicker("Type", q.kind, listOf("") + uploadKinds) { q.kind = it }
-                        UploadPicker("Year", q.year, listOf("") + years) { q.year = it }
+                        val empty = if (q.structured) "Choose" else "Any"
+                        UploadPicker("Subject", q.subject, listOf("") + subjects.filter { it.c != "Archive" }.map { it.t }, empty) { q.subject = it }
+                        UploadPicker("Type", q.kind, listOf("") + uploadKinds, empty) { q.kind = it }
+                        UploadPicker("Year", q.year, listOf("") + years, empty) { q.year = it }
+                        if (q.structured) OutlinedTextField(value = q.title, onValueChange = { q.title = it.take(120) }, label = { Text("Title, e.g. Calculus 1 Midterm 2025") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                         OutlinedTextField(value = q.note, onValueChange = { q.note = it }, label = { Text("Doctor / note (optional)") }, modifier = Modifier.fillMaxWidth())
                     }
                 }
@@ -411,8 +453,10 @@ fun UploadScreen() {
             }
             item {
                 val ready = q.files.count { it.state == "ready" }
+                val problem = q.structuredProblem
+                if (problem != null && !busy) Text(problem, Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp), color = Color(0xFFE67E00), style = MaterialTheme.typography.bodyMedium)
                 Button(
-                    onClick = { q.start(ctx) }, enabled = agreed && !busy && ready > 0,
+                    onClick = { q.start(ctx) }, enabled = agreed && !busy && ready > 0 && problem == null,
                     modifier = Modifier.fillMaxWidth().padding(16.dp).height(52.dp),
                 ) {
                     Icon(Icons.Filled.CloudUpload, null)

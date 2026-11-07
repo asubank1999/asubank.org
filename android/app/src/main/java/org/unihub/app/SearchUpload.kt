@@ -254,16 +254,16 @@ class ProgressBody(private val bytes: ByteArray, private val type: MediaType, pr
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UploadPicker(label: String, value: String, options: List<String>, onPick: (String) -> Unit) {
+fun UploadPicker(label: String, value: String, options: List<String>, empty: String = "Any", onPick: (String) -> Unit) {
     var open by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(expanded = open, onExpandedChange = { open = it }) {
         OutlinedTextField(
-            value = value.ifEmpty { "Any" }, onValueChange = {}, readOnly = true, label = { Text(label) },
+            value = value.ifEmpty { tr(empty) }, onValueChange = {}, readOnly = true, label = { Text(label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(open) },
             modifier = Modifier.menuAnchor().fillMaxWidth(),
         )
         ExposedDropdownMenu(expanded = open, onDismissRequest = { open = false }) {
-            options.forEach { o -> DropdownMenuItem(text = { Text(o.ifEmpty { "Any" }) }, onClick = { onPick(o); open = false }) }
+            options.forEach { o -> DropdownMenuItem(text = { Text(o.ifEmpty { empty }) }, onClick = { onPick(o); open = false }) }
         }
     }
 }

@@ -126,6 +126,11 @@ func copyPickedPhoto(_ source: URL, name: String) -> URL? {
     return (try? FileManager.default.copyItem(at: source, to: target)) != nil ? target : nil
 }
 
+/// Which mode a website link asked for: /upload/dupload opens the structured submission, /upload/gupload the quick upload
+enum UploadMode {
+    static var next: Bool?
+}
+
 /// Keeps uploading when the upload screen is closed, as long as the app stays open
 @MainActor
 final class UploadQueue: ObservableObject {
@@ -135,7 +140,25 @@ final class UploadQueue: ObservableObject {
     @Published var kind = ""
     @Published var year = ""
     @Published var note = ""
+    /// Structured submission (asubank.org/upload/dupload): subject, type, year and a title are required, documents and photos only
+    @Published var structured = false
+    @Published var title = ""
     @Published private(set) var busy = false
+
+    static let structuredTypes: Set<String> = ["pdf", "doc", "docx", "ppt", "pptx", "jpg", "jpeg", "png", "heic"]
+
+    /// What still stops a structured submission, or nil when it can go
+    var structuredProblem: String? {
+        guard structured else { return nil }
+        if subject.isEmpty { return L("Choose a subject.") }
+        if kind.isEmpty { return L("Choose what kind of file it is.") }
+        if year.isEmpty { return L("Choose the year.") }
+        if title.trimmingCharacters(in: .whitespaces).count < 3 { return L("Give it a title.") }
+        if files.contains(where: { $0.state == .ready && !Self.structuredTypes.contains(($0.name as NSString).pathExtension.lowercased()) }) {
+            return L("Structured submissions take PDF, Word, PowerPoint and photos only.")
+        }
+        return nil
+    }
     @Published private(set) var adding = 0
     @Published var finished: Int?
 
@@ -217,6 +240,7 @@ final class UploadQueue: ObservableObject {
         for f in done { try? FileManager.default.removeItem(at: f.url.deletingLastPathComponent()) }
         files.removeAll { f in done.contains { $0.id == f.id } }
         finished = nil
+        title = ""
     }
 
     private func set(_ id: UUID, _ s: PendingFile.State) {
@@ -229,7 +253,12 @@ final class UploadQueue: ObservableObject {
         finished = nil
         UIApplication.shared.isIdleTimerDisabled = true
         background = UIApplication.shared.beginBackgroundTask(withName: "upload") { [weak self] in self?.endBackground() }
-        let subject = self.subject, kind = self.kind, year = self.year, note = self.note.trimmingCharacters(in: .whitespaces)
+        let subject = self.subject, kind = self.kind, year = self.year
+        var note = self.note.trimmingCharacters(in: .whitespaces)
+        if structured {
+            let t = title.trimmingCharacters(in: .whitespaces)
+            note = "Structured submission: " + t + (note.isEmpty ? "" : " · " + note)
+        }
         Task {
             var ok = 0
             for f in files where f.state == .ready {
@@ -285,6 +314,19 @@ struct UploadView: View {
                     .listRowBackground(Color.clear)
 
                 Section {
+                    Picker("Upload type", selection: $q.structured) {
+                        Text("Quick upload").tag(false)
+                        Text("Structured submission").tag(true)
+                    }
+                    .pickerStyle(.segmented)
+                    .disabled(q.busy)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+                } footer: {
+                    Text(LocalizedStringKey(q.structured ? "For formal files: a subject, type, year and title are needed, and only PDF, Word, PowerPoint and photos are taken." : "Any file, details optional. It shows in Latest uploads at once."))
+                }
+
+                Section {
                     HStack(spacing: 10) {
                         sourceButton("Files", "folder") { showImporter = true }
                         sourceButton("Photos", "photo.on.rectangle") { showPhotos = true }
@@ -321,17 +363,23 @@ struct UploadView: View {
 
                 Section {
                     Picker(selection: $q.subject) {
-                        Text("Choose (optional)").tag("")
+                        Text(LocalizedStringKey(q.structured ? "Choose" : "Choose (optional)")).tag("")
                         ForEach(library.subjects.filter { $0.c != "Archive" }) { Text($0.t).tag($0.t) }
                     } label: { Label("Subject", systemImage: "books.vertical") }
                     Picker(selection: $q.kind) {
-                        Text("Any").tag("")
+                        Text(LocalizedStringKey(q.structured ? "Choose" : "Any")).tag("")
                         ForEach(kinds, id: \.self) { Text($0).tag($0) }
                     } label: { Label("Type", systemImage: "tag") }
                     Picker(selection: $q.year) {
-                        Text("Any").tag("")
+                        Text(LocalizedStringKey(q.structured ? "Choose" : "Any")).tag("")
                         ForEach(years, id: \.self) { Text(verbatim: $0).tag($0) }
                     } label: { Label("Year", systemImage: "calendar") }
+                    if q.structured {
+                        HStack(spacing: 12) {
+                            Image(systemName: "textformat").foregroundStyle(Color.abAccent).frame(width: 28)
+                            TextField("Title, e.g. Calculus 1 Midterm 2025", text: $q.title)
+                        }
+                    }
                     HStack(spacing: 12) {
                         Image(systemName: "text.bubble").foregroundStyle(Color.abAccent).frame(width: 28)
                         TextField("Doctor / note (optional)", text: $q.note)
@@ -370,9 +418,11 @@ struct UploadView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.abFill)
-                    .disabled(!agreed || q.readyCount == 0 || q.busy)
+                    .disabled(!agreed || q.readyCount == 0 || q.busy || q.structuredProblem != nil)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
+                } footer: {
+                    if let problem = q.structuredProblem, !q.busy { Text(verbatim: problem).foregroundStyle(.orange) }
                 }
 
                 Section("Other ways to share") {
@@ -399,6 +449,9 @@ struct UploadView: View {
                 PhotoPicker { showPhotos = false }.ignoresSafeArea()
             }
             .abDestinations()
+            .onAppear {
+                if let s = UploadMode.next { q.structured = s; UploadMode.next = nil }
+            }
         }
     }
 
@@ -417,8 +470,8 @@ struct UploadView: View {
                     if let n = q.finished {
                         Text(verbatim: String(format: L("Thank you! %d files uploaded. They're in Latest uploads now."), n)).font(.headline)
                     } else {
-                        Text("Share your study files").font(.headline)
-                        Text("Any file size, as many files as you like.").font(.subheadline).opacity(0.9)
+                        Text(LocalizedStringKey(q.structured ? "Structured submission" : "Share your study files")).font(.headline)
+                        Text(LocalizedStringKey(q.structured ? "Formal files with full details, filed by subject." : "Any file size, as many files as you like.")).font(.subheadline).opacity(0.9)
                     }
                 }
                 Spacer(minLength: 0)

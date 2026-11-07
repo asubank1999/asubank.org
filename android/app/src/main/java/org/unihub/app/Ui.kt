@@ -251,7 +251,9 @@ object SiteRouter {
                 "/" -> SiteTarget.Tab(Routes.HOME)
                 "/guides/search" -> SiteTarget.Tab(Routes.SEARCH)
                 "/guides/saved" -> SiteTarget.Tab(Routes.SAVED)
-                "/upload/uploadmethod", "/upload", "/upload/dupload", "/upload/gupload", "/upload/googledrive_fileupload", "/upload/discord_fileupload" -> SiteTarget.Tab(Routes.UPLOAD)
+                "/upload/dupload", "/upload/discord_fileupload" -> { if (!UploadQueue.busy) UploadQueue.structured = true; SiteTarget.Tab(Routes.UPLOAD) }
+                "/upload/gupload", "/upload/googledrive_fileupload" -> { if (!UploadQueue.busy) UploadQueue.structured = false; SiteTarget.Tab(Routes.UPLOAD) }
+                "/upload/uploadmethod", "/upload" -> SiteTarget.Tab(Routes.UPLOAD)
                 "/chat", "/chat/", "/chat/index" -> SiteTarget.Tab(Routes.CHAT)
                 "/admin", "/admin/", "/admin/index" -> SiteTarget.Tab(if (Account.isAdmin) Routes.ADMIN else Routes.MORE)
                 else -> SiteTarget.Page(path, title)

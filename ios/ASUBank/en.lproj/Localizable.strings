@@ -291,6 +291,7 @@
 "Answers to common questions." = "Answers to common questions.";
 "Any" = "Any";
 "Any file size, as many files as you like." = "Any file size, as many files as you like.";
+"Any file, details optional. It shows in Latest uploads at once." = "Any file, details optional. It shows in Latest uploads at once.";
 "Any illegal activity, including academic dishonesty in violation of university policy." = "Any illegal activity, including academic dishonesty in violation of university policy.";
 "Any year" = "Any year";
 "Anything special? (optional)" = "Anything special? (optional)";
@@ -477,11 +478,14 @@
 "Choose a photo" = "Choose a photo";
 "Choose a service." = "Choose a service.";
 "Choose a subject" = "Choose a subject";
+"Choose a subject." = "Choose a subject.";
 "Choose files" = "Choose files";
 "Choose from photos" = "Choose from photos";
 "Choose how you'll pay." = "Choose how you'll pay.";
 "Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it" = "Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it";
 "Choose male or female." = "Choose male or female.";
+"Choose the year." = "Choose the year.";
+"Choose what kind of file it is." = "Choose what kind of file it is.";
 "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week" = "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week";
 "Choose who sees each new post or story: everyone, ASU students or friends" = "Choose who sees each new post or story: everyone, ASU students or friends";
 "Choose your app icon under More > App icon" = "Choose your app icon under More > App icon";
@@ -909,11 +913,13 @@
 "Football, coding, photography…" = "Football, coding, photography…";
 "For admins: add, rename, reorder, lock, archive, clear and delete chat rooms, pin a message to the top of a room, and give or remove badges." = "For admins: add, rename, reorder, lock, archive, clear and delete chat rooms, pin a message to the top of a room, and give or remove badges.";
 "For admins: an Admin tab to see every registered student, ban or unban, reset passwords, make admins, delete accounts, delete chat messages and uploads, send announcements and see the activity log." = "For admins: an Admin tab to see every registered student, ban or unban, reset passwords, make admins, delete accounts, delete chat messages and uploads, send announcements and see the activity log.";
+"For formal files: a subject, type, year and title are needed, and only PDF, Word, PowerPoint and photos are taken." = "For formal files: a subject, type, year and title are needed, and only PDF, Word, PowerPoint and photos are taken.";
 "For the campus display screen" = "For the campus display screen";
 "Forest" = "Forest";
 "Forest night" = "Forest night";
 "Forgot your password? Ask an admin in the WhatsApp community to reset it." = "Forgot your password? Ask an admin in the WhatsApp community to reset it.";
 "Forgot your password? Ask an admin in the chat or on WhatsApp to reset it." = "Forgot your password? Ask an admin in the chat or on WhatsApp to reset it.";
+"Formal files with full details, filed by subject." = "Formal files with full details, filed by subject.";
 "Found materials quickly" = "Found materials quickly";
 "Founder" = "Founder";
 "Founder · builds and runs UniHub" = "Founder · builds and runs UniHub";
@@ -945,6 +951,7 @@
 "General University Resources" = "General University Resources";
 "German" = "German";
 "Get matched with classmates who take the same courses and are free at the same times." = "Get matched with classmates who take the same courses and are free at the same times.";
+"Give it a title." = "Give it a title.";
 "Gives them a temporary password" = "Gives them a temporary password";
 "Glow" = "Glow";
 "Going home (PM)" = "Going home (PM)";
@@ -1633,6 +1640,7 @@
 "Quick answers about UniHub." = "Quick answers about UniHub.";
 "Quick links" = "Quick links";
 "Quick questions" = "Quick questions";
+"Quick upload" = "Quick upload";
 "Quiz" = "Quiz";
 "Rain" = "Rain";
 "Rainbow" = "Rainbow";
@@ -1963,6 +1971,7 @@
 "Strangers" = "Strangers";
 "Strong and steady" = "Strong and steady";
 "Structured submission" = "Structured submission";
+"Structured submissions take PDF, Word, PowerPoint and photos only." = "Structured submissions take PDF, Word, PowerPoint and photos only.";
 "Stuck on something? Ask other students" = "Stuck on something? Ask other students";
 "Student Advertisement Service" = "Student Advertisement Service";
 "Student Submissions" = "Student Submissions";
@@ -2170,6 +2179,7 @@
 "Tips" = "Tips";
 "Title" = "Title";
 "Title or student" = "Title or student";
+"Title, e.g. Calculus 1 Midterm 2025" = "Title, e.g. Calculus 1 Midterm 2025";
 "To" = "To";
 "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information." = "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.";
 "To remove a file or anything else, report it or email us." = "To remove a file or anything else, report it or email us.";
@@ -2297,6 +2307,7 @@
 "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team." = "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team.";
 "Upload more" = "Upload more";
 "Upload rules" = "Upload rules";
+"Upload type" = "Upload type";
 "Upload your presentations" = "Upload your presentations";
 "Uploaded" = "Uploaded";
 "Uploaded content" = "Uploaded content";

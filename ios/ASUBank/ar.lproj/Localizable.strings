@@ -291,6 +291,7 @@
 "Answers to common questions." = "إجابات عن الأسئلة المتكررة.";
 "Any" = "أي";
 "Any file size, as many files as you like." = "أي حجم للملف، وبالعدد الذي تريده.";
+"Any file, details optional. It shows in Latest uploads at once." = "أي ملف، والتفاصيل اختيارية. يظهر في آخر الملفات فورًا.";
 "Any illegal activity, including academic dishonesty in violation of university policy." = "أي نشاط غير قانوني، بما في ذلك الغش الأكاديمي المخالف لسياسة الجامعة.";
 "Any year" = "أي سنة";
 "Anything special? (optional)" = "أي طلب خاص؟ (اختياري)";
@@ -477,11 +478,14 @@
 "Choose a photo" = "اختر صورة";
 "Choose a service." = "اختر خدمة.";
 "Choose a subject" = "اختر مادة";
+"Choose a subject." = "اختر المادة.";
 "Choose files" = "اختر ملفات";
 "Choose from photos" = "اختر من الصور";
 "Choose how you'll pay." = "اختر طريقة الدفع.";
 "Choose male or female when you sign up. Older accounts are asked once, and you decide if your profile shows it" = "اختر ذكر أو أنثى عند التسجيل. الحسابات القديمة يُطلب منها مرة واحدة، وأنت تقرر إن كان يظهر في ملفك";
 "Choose male or female." = "اختر ذكر أو أنثى.";
+"Choose the year." = "اختر السنة.";
+"Choose what kind of file it is." = "اختر نوع الملف.";
 "Choose when something disappears: after 1 minute, 60 minutes, 1 day or 1 week" = "اختر متى يختفي المحتوى: بعد دقيقة أو 60 دقيقة أو يوم أو أسبوع";
 "Choose who sees each new post or story: everyone, ASU students or friends" = "اختر من يرى كل منشور أو قصة جديدة: الجميع أو طلاب ASU أو الأصدقاء";
 "Choose your app icon under More > App icon" = "Choose your app icon under More > App icon";
@@ -909,11 +913,13 @@
 "Football, coding, photography…" = "كرة القدم، البرمجة، التصوير…";
 "For admins: add, rename, reorder, lock, archive, clear and delete chat rooms, pin a message to the top of a room, and give or remove badges." = "For admins: add, rename, reorder, lock, archive, clear and delete chat rooms, pin a message to the top of a room, and give or remove badges.";
 "For admins: an Admin tab to see every registered student, ban or unban, reset passwords, make admins, delete accounts, delete chat messages and uploads, send announcements and see the activity log." = "For admins: an Admin tab to see every registered student, ban or unban, reset passwords, make admins, delete accounts, delete chat messages and uploads, send announcements and see the activity log.";
+"For formal files: a subject, type, year and title are needed, and only PDF, Word, PowerPoint and photos are taken." = "للملفات الرسمية: يلزم اختيار المادة والنوع والسنة وكتابة عنوان، وتُقبل ملفات PDF وWord وPowerPoint والصور فقط.";
 "For the campus display screen" = "لشاشة العرض في الحرم الجامعي";
 "Forest" = "غابة";
 "Forest night" = "غابة ليلية";
 "Forgot your password? Ask an admin in the WhatsApp community to reset it." = "نسيت كلمة المرور؟ اطلب من مشرف في مجتمع واتساب إعادة تعيينها.";
 "Forgot your password? Ask an admin in the chat or on WhatsApp to reset it." = "نسيت كلمة المرور؟ اطلب من مشرف في الدردشة أو على واتساب إعادة تعيينها.";
+"Formal files with full details, filed by subject." = "ملفات رسمية بتفاصيل كاملة، مرتبة حسب المادة.";
 "Found materials quickly" = "وجدت المواد بسرعة";
 "Founder" = "المؤسس";
 "Founder · builds and runs UniHub" = "المؤسس · يبني ويدير UniHub";
@@ -945,6 +951,7 @@
 "General University Resources" = "مصادر الجامعة العامة";
 "German" = "German";
 "Get matched with classmates who take the same courses and are free at the same times." = "نوفّق بينك وبين زملاء يدرسون نفس المواد ولديهم نفس أوقات الفراغ.";
+"Give it a title." = "اكتب عنوانًا.";
 "Gives them a temporary password" = "يمنحه كلمة مرور مؤقتة";
 "Glow" = "Glow";
 "Going home (PM)" = "العودة (مساءً)";
@@ -1633,6 +1640,7 @@
 "Quick answers about UniHub." = "إجابات سريعة عن UniHub.";
 "Quick links" = "روابط سريعة";
 "Quick questions" = "أسئلة سريعة";
+"Quick upload" = "رفع سريع";
 "Quiz" = "كويز";
 "Rain" = "مطر";
 "Rainbow" = "Rainbow";
@@ -1963,6 +1971,7 @@
 "Strangers" = "الغرباء";
 "Strong and steady" = "قوي وثابت";
 "Structured submission" = "إرسال منظّم";
+"Structured submissions take PDF, Word, PowerPoint and photos only." = "الإرسال المنظم يقبل ملفات PDF وWord وPowerPoint والصور فقط.";
 "Stuck on something? Ask other students" = "واجهت صعوبة؟ اسأل الطلاب الآخرين";
 "Student Advertisement Service" = "خدمة إعلانات الطلاب";
 "Student Submissions" = "مشاركات الطلاب";
@@ -2170,6 +2179,7 @@
 "Tips" = "نصائح";
 "Title" = "العنوان";
 "Title or student" = "العنوان أو الطالب";
+"Title, e.g. Calculus 1 Midterm 2025" = "العنوان، مثل: تفاضل 1 امتحان منتصف 2025";
 "To" = "إلى";
 "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information." = "للاستفادة من الخدمة يجب أن يكون لديك بريد إلكتروني يعمل. عند إيجاد تطابق (50% فأكثر) ستصلك أنت وزميلك رسالة بالتعليمات وبيانات الاتصال.";
 "To remove a file or anything else, report it or email us." = "لإزالة ملف أو أي شيء آخر، أبلغ عنه أو راسلنا بالبريد.";
@@ -2297,6 +2307,7 @@
 "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team." = "ارفع مواد، ساعد في ترتيبها، أو أبلغ عن روابط معطلة. راسل ASU-Requests وانضم للفريق.";
 "Upload more" = "رفع المزيد";
 "Upload rules" = "قواعد الرفع";
+"Upload type" = "نوع الرفع";
 "Upload your presentations" = "ارفع عروضك التقديمية";
 "Uploaded" = "تم الرفع";
 "Uploaded content" = "المحتوى المرفوع";

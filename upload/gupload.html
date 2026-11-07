@@ -1,213 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>📁 UniHub Drive Uploader</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --primary: #6366f1;
-      --accent: #22d3ee;
-      --bg1: #eef2ff;
-      --bg2: #e0f2fe;
-      --text: #1e293b;
-      --muted: #475569;
-      --radius: 1.25rem;
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
-      --transition: all 0.3s ease;
-    }
-    [data-theme="dark"] {
-      --primary: #818cf8;
-      --accent: #22d3ee;
-      --bg1: #0f172a;
-      --bg2: #1e293b;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: "Inter", system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, var(--bg1), var(--bg2));
-      color: var(--text);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: var(--transition);
-    }
-
-    header {
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      color: white;
-      padding: 1rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      box-shadow: var(--shadow);
-      z-index: 10;
-    }
-
-    header h1 {
-      font-size: 1.2rem;
-      letter-spacing: 0.5px;
-    }
-
-    .theme-toggle {
-      background: rgba(255,255,255,.2);
-      border: none;
-      border-radius: 50%;
-      width: 38px; height: 38px;
-      font-size: 1.25rem;
-      color: white;
-      cursor: pointer;
-      transition: transform .25s ease;
-    }
-
-    .theme-toggle:hover {
-      transform: scale(1.15) rotate(20deg);
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .frame-wrapper {
-      width: 90%;
-      max-width: 900px;
-      height: 80vh;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(14px);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      animation: fadeIn 0.6s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: stretch;
-    }
-
-    iframe {
-      flex: 1;
-      border: none;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-    }
-
-    .loading {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: var(--muted);
-      font-weight: 500;
-      background: linear-gradient(135deg, var(--bg1), var(--bg2));
-      animation: fadeIn 0.4s ease;
-      z-index: 5;
-    }
-
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(99,102,241,0.25);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 1rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Quick upload | UniHub</title>
+    <meta name="description" content="Upload past exams, summaries, slides and notes to UniHub in seconds. Drag and drop several files, works on phones.">
     <link rel="canonical" href="https://asubank.org/upload/gupload">
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="theme-color" content="#f2f2f7">
     <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/assets/img/favicon2.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="UniHub">
+    <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
     <link rel="stylesheet" href="/assets/app/app.css?v=5">
     <script src="/assets/app/app.js?v=5" defer></script>
+    <script src="/assets/app/upload-page.js?v=1" defer></script>
+    <style>
+        .up-grid { display: grid; gap: 0 28px; }
+        @media (min-width: 960px) { .up-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; } }
+        .up-modes { display: flex; margin: 4px 0 2px; }
+        .up-modes a { flex: 1; text-align: center; color: var(--ab-label); text-decoration: none; font-size: 14px; font-weight: 500; padding: 7px 14px; border-radius: 8px; }
+        .up-modes a[aria-current="page"] { background: var(--ab-surface); box-shadow: 0 1px 3px rgba(0,0,0,.12); font-weight: 600; }
+        .agree { display: flex; gap: 12px; align-items: flex-start; padding: 14px; background: var(--ab-surface); border-radius: var(--ab-radius); box-shadow: var(--ab-shadow); cursor: pointer; font-size: 15px; }
+        .agree input { width: 24px; height: 24px; flex-shrink: 0; accent-color: var(--ab-accent); margin: 0; }
+        .rules { margin: 0; padding: 14px 14px 14px 32px; background: var(--ab-surface); border-radius: var(--ab-radius); box-shadow: var(--ab-shadow); font-size: 15px; color: var(--ab-label-2); }
+        .rules li + li { margin-top: 4px; }
+        .locked { opacity: .45; filter: grayscale(.4); transition: opacity .3s; }
+        .locked .meta-list, .locked .ab-btn-row { pointer-events: none; }
+        .meta-list { margin-top: 12px; }
+        .meta-row { display: grid; grid-template-columns: 1fr 1fr; }
+        .meta-row .ab-field + .ab-field { border-top: 0; border-left: .5px solid var(--ab-sep); }
+        .ab-field .req { display: inline; color: var(--ab-red); }
+        .queue .ab-row { align-items: flex-start; padding-top: 12px; padding-bottom: 12px; }
+        .queue .ab-row-text { padding-top: 2px; }
+        .queue .st { font-size: 13px; margin-top: 4px; color: var(--ab-label-2); }
+        .queue .st.ok { color: var(--ab-green); } .queue .st.err { color: var(--ab-red); }
+        .queue .ab-icon-btn { font-size: 18px; text-decoration: none; }
+        .q-info { font-size: 13px; color: var(--ab-label-2); font-weight: 400; }
+        .problem { color: #e67e00; font-size: 14px; margin: 8px 2px 0; }
+        .problem:empty { display: none; }
+        .done { display: flex; gap: 14px; align-items: center; padding: 16px; margin-top: 14px; border-radius: var(--ab-radius); background: var(--ab-accent); color: #fff; }
+        html.dark .done { color: #000; }
+        .done .ico { font-size: 30px; line-height: 1; }
+        .done p { margin: 0; font-weight: 600; }
+        .done .links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .done .links a, .done .links button { background: rgba(255,255,255,.22); color: inherit; border: 0; border-radius: 99px; padding: 6px 14px; font: inherit; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; }
+    </style>
 </head>
+<body class="ab" data-mode="quick">
+    <a class="ab-skip" href="#main">Skip to content</a>
+    <header class="ab-nav">
+        <div class="ab-wrap ab-nav-row">
+            <div class="ab-nav-l"><a class="ab-brand" href="/"><img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="30" height="30"><span>UniHub</span></a></div>
+            <div class="ab-nav-title" aria-hidden="true">Quick upload</div>
+            <div class="ab-nav-r"></div>
+        </div>
+    </header>
 
-<body>
-  <header>
-    <h1>UniHub Uploader</h1>
-    <button id="themeToggle" class="theme-toggle">🌙</button>
-  </header>
+    <main id="main" class="ab-wrap">
+        <div class="ab-head">
+            <h1 class="ab-large">Quick upload</h1>
+            <p class="ab-sub">Any file, details optional. It shows in Latest uploads right away. <span lang="ar" dir="rtl">ارفع ملفاتك بسرعة</span></p>
+        </div>
 
-  <main>
-    <div class="frame-wrapper">
-      <!-- Loader -->
-      <div id="loader" class="loading">
-        <div class="spinner"></div>
-        <p>Loading secure upload interface...</p>
-      </div>
+        <nav class="ab-seg up-modes" aria-label="Upload type">
+            <a href="/upload/gupload" aria-current="page">Quick upload</a>
+            <a href="/upload/dupload">Structured submission</a>
+        </nav>
 
-      <!-- Iframe loading your Google Apps Script Web App -->
-      <iframe id="uploadFrame"
-        src=""
-        title="UniHub Upload Portal"
-        onload="document.getElementById('loader').style.display='none';">
-      </iframe>
-    </div>
-  </main>
+        <div class="up-grid">
+            <div>
+                <section class="ab-section" style="margin-top:8px" aria-labelledby="h-rules">
+                    <div class="ab-section-h"><h2 id="h-rules" style="font-size:17px">Before you upload</h2></div>
+                    <ul class="rules">
+                        <li>PDF, Word, PowerPoint, Excel, images, ZIP, audio or video · up to <strong>25 MB</strong> per file on the website.</li>
+                        <li><strong>Hide your university number and name</strong> on scans.</li>
+                        <li>No illegal, private or copyrighted material. Files that break the rules are removed.</li>
+                        <li>Adding a subject, type and year helps other students find your file.</li>
+                    </ul>
+                    <label class="agree" style="margin-top:10px">
+                        <input type="checkbox" id="agree">
+                        <span>I agree to the <a href="/legal/uni_tos" target="_blank">Terms of Service</a>. <span lang="ar" dir="rtl">أوافق على شروط الخدمة</span></span>
+                    </label>
+                </section>
 
-  <footer>
-    © 2025 UniHub — Secure File Uploads Powered by Google Drive
-  </footer>
+                <section class="ab-section locked" id="work" aria-labelledby="h-drop">
+                    <div class="ab-section-h"><h2 id="h-drop" style="font-size:17px">Your files <span class="q-info" id="qInfo"></span></h2></div>
+                    <label class="ab-drop" id="drop">
+                        <span class="ab-drop-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></span>
+                        <strong>Drop files here</strong>
+                        <span>or tap to choose files or take a photo · PDF, Office, images, ZIP, audio and video</span>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.heic,.webp,.zip,.rar,.7z,.csv,.mp4,.mov,.m4v,.webm,.mp3,.m4a,image/*" aria-label="Choose files to upload">
+                    </label>
+                    <ul class="ab-list queue" id="queue" style="margin-top:12px" hidden></ul>
+                    <div class="ab-list meta-list">
+                        <label class="ab-field"><span>Subject</span><select id="mSubject"><option value="">Choose a subject (optional)</option></select></label>
+                        <div class="meta-row">
+                            <label class="ab-field"><span>Type</span><select id="mKind"><option value="">Any</option><option>Final</option><option>Midterm</option><option>Quiz</option><option>Summary</option><option>Notes</option><option>Slides</option><option>Test bank</option><option>Assignment</option></select></label>
+                            <label class="ab-field"><span>Year</span><select id="mYear"><option value="">Any</option></select></label>
+                        </div>
+                        <label class="ab-field"><span>Doctor / note (optional)</span><input id="mNote" maxlength="200" placeholder="e.g. Dr. Ahmad, section 2"></label>
+                    </div>
+                    <div class="ab-btn-row" style="margin-top:12px">
+                        <button class="ab-btn" type="button" id="startBtn" style="flex:1" disabled>Upload</button>
+                        <button class="ab-btn gray" type="button" id="clearBtn" hidden>Clear</button>
+                    </div>
+                    <p class="problem" id="problem" role="status"></p>
+                    <div class="done" id="done" role="status" hidden>
+                        <span class="ico" aria-hidden="true">🎉</span>
+                        <div>
+                            <p id="doneText"></p>
+                            <div class="links"><a href="/guides/latest">Latest uploads</a><button type="button" id="moreBtn">Upload more</button></div>
+                        </div>
+                    </div>
+                    <p class="ab-foot">Files are named like “[Subject] [Final 2025] name.pdf” so other students can find them.</p>
+                </section>
+            </div>
 
-  <script>
-    // ---- 1️⃣ Your Google Apps Script /exec URL here ----
-    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbytiybq0hOfnyDAO9xxQbpaAQJYEL_jrkZa8K2K00n9Dp1uxfQH-JYSe5mSmLSBpRus/exec";
+            <div>
+                <section class="ab-section" aria-labelledby="h-app">
+                    <div class="ab-section-h"><h2 id="h-app" style="font-size:17px">Bigger files?</h2></div>
+                    <ul class="ab-list">
+                        <li><a class="ab-row" href="/apps/download.html"><span class="ab-row-main"><span class="ab-tile emoji">📱</span><span class="ab-row-text"><span class="ab-row-title">Upload from the UniHub app</span><span class="ab-row-meta">Any file size, scan pages with the camera, keeps going if the connection drops</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                    </ul>
+                </section>
+                <section class="ab-section" aria-labelledby="h-more">
+                    <div class="ab-section-h"><h2 id="h-more" style="font-size:17px">Other ways to share</h2></div>
+                    <ul class="ab-list">
+                        <li><a class="ab-row" href="/upload/uploadmethod"><span class="ab-row-main"><span class="ab-tile emoji">▶️</span><span class="ab-row-text"><span class="ab-row-title">Share a YouTube video</span><span class="ab-row-meta">Videos and playlists show in Search at once</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                        <li><a class="ab-row" href="/upload/submit_file"><span class="ab-row-main"><span class="ab-tile emoji">🖥️</span><span class="ab-row-text"><span class="ab-row-title">Campus display presentations</span><span class="ab-row-meta">Submit a link and track approval</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                        <li><a class="ab-row" href="/upload/student_submissions_board"><span class="ab-row-main"><span class="ab-tile emoji">📋</span><span class="ab-row-text"><span class="ab-row-title">Submitted files board</span><span class="ab-row-meta">See files other students submitted</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                        <li><a class="ab-row" href="/requests/student_request_portal"><span class="ab-row-main"><span class="ab-tile emoji">📬</span><span class="ab-row-text"><span class="ab-row-title">Looking for a file instead?</span><span class="ab-row-meta">Request a material</span></span></span><svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </main>
 
-    // ---- 2️⃣ Load iframe ----
-    document.getElementById("uploadFrame").src = WEBAPP_URL;
-
-    // ---- 3️⃣ Theme toggler ----
-    const themeToggle = document.getElementById("themeToggle");
-    const html = document.documentElement;
-    const savedTheme = localStorage.getItem("asubank-theme") || "light";
-
-    html.setAttribute("data-theme", savedTheme);
-    themeToggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
-
-    themeToggle.addEventListener("click", () => {
-      const current = html.getAttribute("data-theme");
-      const next = current === "dark" ? "light" : "dark";
-      html.setAttribute("data-theme", next);
-      localStorage.setItem("asubank-theme", next);
-      themeToggle.textContent = next === "dark" ? "☀️" : "🌙";
-    });
-  </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-4DE6YQ7Q2M');
-</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4DE6YQ7Q2M');
+    </script>
 </body>
 </html>
