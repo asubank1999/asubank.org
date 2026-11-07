@@ -535,6 +535,11 @@ object ChatNotifier {
             .setContentIntent(tap)
             .build()
         runCatching { NotificationManagerCompat.from(ctx).notify(e.id.hashCode(), n) }
+        // the server's list has the social ones; keep chat and private messages on the phone
+        if (isDm || !(isPrivate || e.type == "upload" || e.type == "announcement")) {
+            val line = if (e.type == "upload" || e.roomName.isNullOrEmpty()) text else "${e.roomName}: $text"
+            runCatching { LocalNotices.add(e.id, if (isDm) "dm" else "chat", title, line, e.room) }
+        }
     }
 }
 

@@ -542,6 +542,11 @@ final class ChatNotifier: ObservableObject {
         c.threadIdentifier = e.room ?? e.type
         c.userInfo = ["room": e.type == "dm" ? "__dm" : (e.room ?? ""), "url": e.url ?? "", "open": e.type == "group_request" ? "admin" : isPrivate && !e.type.hasPrefix("group_") ? "friends" : ""]
         try? await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: e.id, content: c, trigger: nil))
+        // the server's list has the social ones; keep chat and private messages on the phone
+        if e.type == "dm" || e.type == "message" || !["upload", "announcement", "friend_request", "friend_accept", "poke", "post_comment", "group_request", "group_approved", "group_rejected"].contains(e.type) {
+            let line = c.subtitle.isEmpty ? c.body : c.subtitle + ": " + c.body
+            LocalNotices.shared.add(id: e.id, type: e.type == "dm" ? "dm" : "chat", title: c.title, body: line, room: e.room)
+        }
     }
 
     // background refresh (iOS decides when; usually a few times a day)
@@ -566,13 +571,17 @@ final class ChatNotifier: ObservableObject {
 /// Shows notifications while the app is open too, and opens the chat when one is tapped
 final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationDelegate()
-    func userNotificationCenter(_ c: UNUserNotificationCenter, willPresent n: UNNotification) async -> UNNotificationPresentationOptions { [.banner, .sound, .list] }
+    func userNotificationCenter(_ c: UNUserNotificationCenter, willPresent n: UNNotification) async -> UNNotificationPresentationOptions {
+        if n.request.identifier.hasPrefix("lecture-") { await MainActor.run { LocalNotices.shared.catchUpLectures() } }
+        return [.banner, .sound, .list]
+    }
     func userNotificationCenter(_ c: UNUserNotificationCenter, didReceive r: UNNotificationResponse) async {
         let info = r.notification.request.content.userInfo
         let room = info["room"] as? String ?? ""
         let url = info["url"] as? String ?? ""
         let open = info["open"] as? String ?? ""
         await MainActor.run {
+            if open == "lectures" { LocalNotices.shared.catchUpLectures() }
             if open == "lectures" {
                 AppState.shared?.tab = .lectures
             } else if open == "friends" {

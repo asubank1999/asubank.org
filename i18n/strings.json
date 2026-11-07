@@ -8305,6 +8305,10 @@
   "ar": "سجّل الدخول لتنشر وتعلّق وتعجب وتضيف قصصاً.",
   "es": "Inicia sesión para publicar, comentar, dar me gusta y añadir historias."
  },
+ "Sign in to see friend requests, pokes and uploads too": {
+  "ar": "سجّل الدخول لترى طلبات الصداقة والنكزات والملفات الجديدة أيضاً",
+  "es": "Inicia sesión para ver también solicitudes de amistad, toques y archivos nuevos"
+ },
  "Sign in to see the feed": {
   "ar": "سجّل الدخول لرؤية آخر المنشورات",
   "es": "Inicia sesión para ver el feed"

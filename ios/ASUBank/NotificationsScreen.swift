@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// One line in the Notifications tab, from the accounts API (action "notifications")
-struct Notice: Decodable, Identifiable, Equatable {
+struct Notice: Codable, Identifiable, Equatable {
     var id: String
     var type: String
     var created: String
@@ -14,6 +14,53 @@ struct Notice: Decodable, Identifiable, Equatable {
     var url: String?
 }
 
+/// Phone notifications the app showed by itself (lecture reminders, chat and private messages), kept on this
+/// phone so the Notifications tab lists everything that rang, not only what the server keeps.
+@MainActor
+final class LocalNotices {
+    static let shared = LocalNotices()
+    private static let key = "ab.notices.local"
+    private static let lectureCheckKey = "ab.notices.lectureCheck"
+    private(set) var items: [Notice] = {
+        guard let d = UserDefaults.standard.data(forKey: LocalNotices.key) else { return [] }
+        return (try? JSONDecoder().decode([Notice].self, from: d)) ?? []
+    }()
+
+    func add(id: String, type: String, title: String, body: String, room: String? = nil, at: Date = Date()) {
+        guard !items.contains(where: { $0.id == id }) else { return }
+        items.append(Notice(id: id, type: type, created: ISO8601DateFormatter.ab.string(from: at), text: body, name: title, kind: room))
+        items.sort { $0.created > $1.created }
+        if items.count > 150 { items.removeLast(items.count - 150) }
+        if let d = try? JSONEncoder().encode(items) { UserDefaults.standard.set(d, forKey: Self.key) }
+        NoticeStore.shared.refreshLocal()
+    }
+
+    /// Lecture reminders are set ahead and ring while the app is closed, so add the ones that rang since the last look
+    func catchUpLectures() {
+        let now = Date()
+        let d = UserDefaults.standard
+        guard let last = d.object(forKey: Self.lectureCheckKey) as? Date else { d.set(now, forKey: Self.lectureCheckKey); return }
+        d.set(now, forKey: Self.lectureCheckKey)
+        let cal = Calendar.current
+        let from = max(last, now.addingTimeInterval(-8 * 86400))
+        var day = cal.startOfDay(for: from)
+        while day <= now {
+            let weekday = cal.component(.weekday, from: day)
+            for l in LectureStore.shared.lectures where l.enabled && l.days.contains(weekday) {
+                guard let start = cal.date(bySettingHour: l.hour, minute: l.minute, second: 0, of: day) else { continue }
+                let rang = start.addingTimeInterval(TimeInterval(-LectureStore.before * 60))
+                guard rang > last, rang <= now else { continue }
+                add(id: "lecture-\(l.id)-\(Int(rang.timeIntervalSince1970))", type: "lecture",
+                    title: String(format: L("%@ in 10 minutes"), l.subject),
+                    body: l.hall.isEmpty ? String(format: L("Starts at %@"), l.timeText) : String(format: L("Hall %@ · starts at %@"), l.hall, l.timeText),
+                    at: rang)
+            }
+            guard let next = cal.date(byAdding: .day, value: 1, to: day) else { break }
+            day = next
+        }
+    }
+}
+
 /// The list and what's unread. Kept in one place so the tab's badge and the screen agree.
 @MainActor
 final class NoticeStore: ObservableObject {
@@ -24,17 +71,26 @@ final class NoticeStore: ObservableObject {
     @Published private(set) var loaded = false
     @Published private(set) var failed: String?
     @Published private(set) var lastRead = UserDefaults.standard.string(forKey: NoticeStore.readKey) ?? ""
+    /// what the server keeps; `items` adds the phone's own notifications to it
+    private var server: [Notice] = []
+
+    func refreshLocal() {
+        let all = (server + LocalNotices.shared.items).sorted { $0.created > $1.created }
+        if all != items { items = all }
+        if !AccountStore.shared.signedIn { loaded = true }
+    }
 
     var unread: Int { items.filter { $0.created > lastRead }.count }
 
     func load() async {
         let account = AccountStore.shared
-        guard account.signedIn else { items = []; loaded = false; return }
-        if items.isEmpty, let r = account.saved("notifications") { items = decode([Notice].self, r["items"]) ?? []; loaded = true }
+        LocalNotices.shared.catchUpLectures()
+        guard account.signedIn else { server = []; refreshLocal(); return }
+        if server.isEmpty, let r = account.saved("notifications") { server = decode([Notice].self, r["items"]) ?? []; refreshLocal(); loaded = true }
         do {
             let r = try await account.callSaving("notifications", ["social2": true])
-            let list = decode([Notice].self, r["items"]) ?? []
-            if list != items { items = list }
+            server = decode([Notice].self, r["items"]) ?? []
+            refreshLocal()
             failed = nil
             // the first time, what's already there isn't "new"
             if lastRead.isEmpty { markRead() }
@@ -43,7 +99,8 @@ final class NoticeStore: ObservableObject {
     }
 
     func reset() {
-        items = []
+        server = []
+        items = LocalNotices.shared.items
         loaded = false
         lastRead = ""
         UserDefaults.standard.removeObject(forKey: Self.readKey)
@@ -69,8 +126,11 @@ struct NotificationsScreen: View {
 
     var body: some View {
         Group {
-            if account.signedIn {
+            if account.signedIn || !store.items.isEmpty {
                 List {
+                    if !account.signedIn {
+                        Button("Sign in to see friend requests, pokes and uploads too") { account.signInShown = true }
+                    }
                     if let e = store.failed, store.items.isEmpty { Text(e).foregroundStyle(.red) }
                     if !store.loaded { HStack { Spacer(); ABDots(); Spacer() } }
                     else if store.items.isEmpty && store.failed == nil {
@@ -114,6 +174,10 @@ struct NotificationsScreen: View {
             NavigationLink { AdminReportsScreen() } label: { content(n) }
         case "suggestion":
             NavigationLink { AdminSuggestionsScreen() } label: { content(n) }
+        case "lecture":
+            Button { app.tab = .lectures } label: { content(n) }.buttonStyle(.plain)
+        case "chat", "dm":
+            Button { app.pendingRoom = n.type == "dm" ? "__dm" : (n.kind ?? ""); app.tab = .chat } label: { content(n) }.buttonStyle(.plain)
         default:
             content(n)
         }
@@ -154,6 +218,8 @@ struct NotificationsScreen: View {
         case "group_rejected": return "❌"
         case "group_request": return "💬"
         case "post_comment": return "💬"
+        case "lecture": return "⏰"
+        case "chat", "dm": return "💬"
         default: return "🔔"
         }
     }

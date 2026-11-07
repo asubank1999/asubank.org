@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import java.time.Duration
 import java.time.Instant
 
@@ -50,6 +52,28 @@ data class Notice(
     val url: String? = null,
 )
 
+/**
+ * Phone notifications the app showed by itself (lecture reminders, chat and private messages), kept on this
+ * phone so the Notifications tab lists everything that rang, not only what the server keeps.
+ */
+object LocalNotices {
+    private const val KEY = "notices.local"
+    private var cache: List<Notice>? = null
+
+    fun items(): List<Notice> = cache ?: (Saved.prefs.getString(KEY, null)?.let { runCatching { json.decodeFromString<List<Notice>>(it) }.getOrNull() }.orEmpty()).also { cache = it }
+
+    @Synchronized
+    fun add(id: String, type: String, title: String, body: String, room: String? = null) {
+        val now = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(java.time.ZoneOffset.UTC).format(Instant.now())
+        val list = items()
+        if (list.any { it.id == id }) return
+        val next = (list + Notice(id = id, type = type, created = now, text = body, name = title, kind = room)).sortedByDescending { it.created }.take(150)
+        cache = next
+        Saved.prefs.edit().putString(KEY, json.encodeToString(next)).apply()
+        Notices.refreshLocal()
+    }
+}
+
 /** The list and what's unread. Kept in one place so the tab's badge and the screen agree. */
 object Notices {
     private const val READ_KEY = "notices.lastRead"
@@ -57,13 +81,21 @@ object Notices {
     val loaded = MutableStateFlow(false)
     val failed = MutableStateFlow<String?>(null)
     val lastRead = MutableStateFlow("")
+    /** what the server keeps; [items] adds the phone's own notifications to it */
+    @Volatile private var server: List<Notice> = emptyList()
+
+    fun refreshLocal() {
+        items.value = (server + LocalNotices.items()).sortedByDescending { it.created }
+        if (Account.user.value == null) loaded.value = true
+    }
 
     suspend fun load() {
-        if (Account.user.value == null) { items.value = emptyList(); loaded.value = false; return }
         if (lastRead.value.isEmpty()) lastRead.value = Saved.prefs.getString(READ_KEY, "") ?: ""
-        if (items.value.isEmpty()) Account.saved("notifications")?.let { items.value = it["items"].decodeAs<List<Notice>>().orEmpty(); loaded.value = true }
+        if (Account.user.value == null) { server = emptyList(); refreshLocal(); return }
+        if (server.isEmpty()) Account.saved("notifications")?.let { server = it["items"].decodeAs<List<Notice>>().orEmpty(); refreshLocal(); loaded.value = true }
         try {
-            items.value = Account.callSaving("notifications", mapOf("social2" to true))["items"].decodeAs<List<Notice>>().orEmpty()
+            server = Account.callSaving("notifications", mapOf("social2" to true))["items"].decodeAs<List<Notice>>().orEmpty()
+            refreshLocal()
             failed.value = null
             // the first time, what's already there isn't "new"
             if (lastRead.value.isEmpty()) markRead()
@@ -72,7 +104,8 @@ object Notices {
     }
 
     fun reset() {
-        items.value = emptyList()
+        server = emptyList()
+        items.value = LocalNotices.items()
         loaded.value = false
         lastRead.value = ""
         Saved.prefs.edit().remove(READ_KEY).apply()
@@ -105,6 +138,8 @@ private fun emoji(type: String) = when (type) {
     "group_approved" -> "✅"
     "group_rejected" -> "❌"
     "group_request", "post_comment" -> "💬"
+    "lecture" -> "⏰"
+    "chat", "dm" -> "💬"
     else -> "🔔"
 }
 
@@ -159,12 +194,16 @@ fun NotificationsScreen(back: Boolean = false) {
             "group_request" -> nav.navigate("adminGroups")
             "report" -> nav.navigate("adminReports")
             "suggestion" -> nav.navigate("adminSuggestions")
+            "lecture" -> nav.openTab(Routes.LECTURES)
+            "dm" -> ChatNotifier.pendingRoom.value = "__dm"
+            "chat" -> n.kind?.takeIf { it.isNotEmpty() }?.let { ChatNotifier.pendingRoom.value = it }
         }
     }
 
     Screen(tr("Notifications"), back = back, large = !back) { pad ->
-        if (user == null) Box(Modifier.padding(pad)) { SignInPrompt("Sign in to see your notifications", "Friend requests, pokes, new uploads and announcements will show up here.") }
+        if (user == null && list.isEmpty()) Box(Modifier.padding(pad)) { SignInPrompt("Sign in to see your notifications", "Friend requests, pokes, new uploads and announcements will show up here.") }
         else LazyColumn(Modifier.padding(pad).fillMaxSize()) {
+            if (user == null) item { ListRow("Sign in to see friend requests, pokes and uploads too", icon = Icons.Filled.Notifications) { Account.signInShown.value = true } }
             failed?.takeIf { list.isEmpty() }?.let { e -> item { Text(e, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
             if (!loaded) item { Box(Modifier.fillMaxWidth().padding(40.dp), contentAlignment = Alignment.Center) { ABDots() } }
             else if (list.isEmpty() && failed == null) item { EmptyState(Icons.Filled.Notifications, "Nothing yet", "Friend requests, pokes, new uploads and announcements will show up here.") }

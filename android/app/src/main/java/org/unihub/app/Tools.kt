@@ -790,6 +790,7 @@ object Lectures {
             .setContentIntent(tap)
             .build()
         runCatching { NotificationManagerCompat.from(ctx).notify(l.id.hashCode(), n) }
+        runCatching { LocalNotices.add("lecture-${l.id}-${System.currentTimeMillis() / 60000}", "lecture", trf("%s in 10 minutes", l.subject), text) }
     }
 
     /** The next lecture still to come today */
