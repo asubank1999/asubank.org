@@ -1688,44 +1688,136 @@
             });
         }).catch(function (e) { list.textContent = e.message; });
     }
+    // a Drive photo that fails on drive.google.com/thumbnail is tried once more on Google's photo host
+    function photoFallback(e) {
+        var img = e.currentTarget, m = /[?&]id=([\w-]+)/.exec(img.src);
+        if (!m || img.dataset.alt) return;
+        img.dataset.alt = '1';
+        img.src = 'https://lh3.googleusercontent.com/d/' + m[1] + '=w1600';
+    }
+    var STORY_MS = 6000, STORY_EMOJI = ['❤️', '😂', '😮', '😢', '👏', '🔥'];
+    // full screen story viewer: tap the right side for next, the left for back, hold to pause,
+    // swipe down to close, react or reply (both go to the owner as a private message)
     function storyViewer(groups, start) {
-        var g = start, s = 0, timer = null;
+        var g = start, s = 0, timer = null, left = STORY_MS, began = 0, paused = false, cur = null;
+        var pad = h('div', { class: 'acc-story-pad' });
         var stage = h('div', { class: 'acc-story-stage' });
         var bars = h('div', { class: 'acc-story-bars' });
         var head = h('div', { class: 'acc-story-head' });
+        var foot = h('div', { class: 'acc-story-foot' });
         var box = h('div', { class: 'acc-story', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Story' });
-        function close() { clearTimeout(timer); document.removeEventListener('keydown', keys); box.remove(); }
+        var scrollY = window.scrollY;
+        document.documentElement.classList.add('acc-story-open');
+        function close() {
+            clearTimeout(timer); document.removeEventListener('keydown', keys); box.remove();
+            document.documentElement.classList.remove('acc-story-open');
+            window.scrollTo(0, scrollY);
+        }
         function step(d) {
             var list = groups[g].stories;
             if (s + d >= 0 && s + d < list.length) s += d;
             else if (d > 0 && g + 1 < groups.length) { g++; s = 0; }
             else if (d < 0 && g > 0) { g--; s = groups[g].stories.length - 1; }
             else if (d > 0) return close();
+            else s = 0;
             draw();
         }
-        function keys(e) { if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1); }
+        function bar() { return bars.children[s] && bars.children[s].firstChild; }
+        function pause() {
+            if (paused || !cur || cur.vid) return;
+            paused = true; clearTimeout(timer);
+            left = Math.max(0, left - (Date.now() - began));
+            var b = bar(); if (b) { b.style.width = getComputedStyle(b).width; b.style.transition = 'none'; }
+            box.classList.add('paused');
+        }
+        function play() {
+            if (!cur || cur.vid) return;
+            paused = false; box.classList.remove('paused');
+            began = Date.now(); clearTimeout(timer);
+            timer = setTimeout(function () { step(1); }, left);
+            var b = bar();
+            if (b) { void b.offsetWidth; b.style.transition = 'width ' + left + 'ms linear'; b.style.width = '100%'; }
+        }
+        function keys(e) {
+            if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) { if (e.key === 'Escape') e.target.blur(); return; }
+            if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1);
+            else if (e.key === ' ') { e.preventDefault(); paused ? play() : pause(); }
+        }
+        function sendToOwner(text, done) {
+            var u = groups[g].user;
+            call('dmSend', { userId: u.id, text: text }).then(function () { (window.AB && AB.toast ? AB.toast(done) : 0); })
+                .catch(function (e) { if (window.AB && AB.toast) AB.toast(e.message); });
+        }
         function draw() {
-            clearTimeout(timer);
+            clearTimeout(timer); paused = false; box.classList.remove('paused');
             var group = groups[g], item = group.stories[s], u = group.user;
-            while (stage.firstChild) stage.removeChild(stage.firstChild);
-            while (bars.firstChild) bars.removeChild(bars.firstChild);
-            while (head.firstChild) head.removeChild(head.firstChild);
-            group.stories.forEach(function (_, i) { bars.appendChild(h('i', { class: i <= s ? 'on' : '' })); });
-            head.appendChild(avatar(nameOf(u), u.color, 36, u.role === 'admin', u.avatar));
-            head.appendChild(h('span', { class: 'acc-post-who' }, h('b', { text: nameOf(u) }), h('small', { text: ago(item.created) })));
+            [stage, bars, head, foot].forEach(function (el) { while (el.firstChild) el.removeChild(el.firstChild); });
+            stage.appendChild(pad);
+            group.stories.forEach(function (_, i) { bars.appendChild(h('i', {}, h('b', { style: 'width:' + (i < s ? '100%' : '0') }))); });
+            head.appendChild(h('button', { type: 'button', class: 'acc-story-who', 'aria-label': 'Open the profile of ' + nameOf(u), onclick: function () { close(); showProfile(u.id, nameOf(u)); } },
+                avatar(nameOf(u), u.color, 36, u.role === 'admin', u.avatar),
+                h('span', { class: 'acc-post-who' }, h('b', { text: nameOf(u) }), h('small', { text: ago(item.created) }))));
             head.appendChild(h('button', { type: 'button', class: 'acc-story-x', 'aria-label': 'Close', text: '×', onclick: close }));
             var vid = driveId(item.video);
+            cur = { vid: vid };
             stage.style.background = (item.image || vid) ? '#000' : storyBackground(item);
             stage.classList.remove('fade'); void stage.offsetWidth; stage.classList.add('fade');
-            if (vid) stage.appendChild(h('iframe', { src: 'https://drive.google.com/file/d/' + vid + '/preview', title: 'Story video', allow: 'autoplay; fullscreen', referrerpolicy: 'no-referrer' }));
-            else if (safePhoto(item.image)) stage.appendChild(h('img', { src: bigPhoto(item.image), alt: '', referrerpolicy: 'no-referrer' }));
+            if (vid) stage.appendChild(h('iframe', { src: 'https://drive.google.com/file/d/' + vid + '/preview', title: 'Story video', allow: 'autoplay; fullscreen', allowfullscreen: 'true', referrerpolicy: 'no-referrer' }));
+            else if (safePhoto(item.image)) stage.appendChild(h('img', { src: bigPhoto(item.image), alt: '', referrerpolicy: 'no-referrer', onerror: photoFallback }));
             if (item.text) stage.appendChild(storyText(item));
-            if (item.views != null && user && u.id === user.id) stage.appendChild(h('button', { type: 'button', class: 'acc-story-views', text: '👁 ' + item.views + ' views', onclick: function () { clearTimeout(timer); storyViewers(item.id); } }));
+            var mine = user && u.id === user.id;
+            if (item.views != null && mine) foot.appendChild(h('button', { type: 'button', class: 'acc-story-views', text: '👁 ' + item.views + ' views', onclick: function () { pause(); storyViewers(item.id); } }));
+            else if (token && user && !mine) {
+                var input = h('input', { type: 'text', maxlength: 500, placeholder: 'Reply to ' + nameOf(u) + '…', 'aria-label': 'Reply to the story',
+                    onfocus: pause, onblur: function () { if (!input.value) play(); } });
+                var form = h('form', { class: 'acc-story-reply', onsubmit: function (e) {
+                    e.preventDefault();
+                    var t = input.value.trim(); if (!t) return;
+                    input.value = ''; input.blur();
+                    sendToOwner('↩️ Replied to your story: ' + t, 'Reply sent');
+                } }, input, h('button', { type: 'submit', class: 'acc-send', 'aria-label': 'Send', text: '↑' }));
+                var react = h('div', { class: 'acc-story-react' });
+                STORY_EMOJI.forEach(function (em) {
+                    react.appendChild(h('button', { type: 'button', 'aria-label': 'React ' + em, text: em, onclick: function (e) {
+                        var b = e.currentTarget; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+                        sendToOwner(em + ' Reacted to your story', 'Sent ' + em);
+                    } }));
+                });
+                foot.appendChild(react); foot.appendChild(form);
+            }
             if (token && user && !item.seen) { item.seen = true; call('storySeen', { id: item.id }).catch(function () {}); }
             // a video moves on when the person taps next: the Drive player doesn't say when it has ended
-            if (!vid) timer = setTimeout(function () { step(1); }, 6000);
+            box.classList.toggle('video', !!vid);
+            if (vid) { var b = bar(); if (b) b.style.width = '100%'; }
+            else { left = STORY_MS; play(); }
         }
-        box.appendChild(bars); box.appendChild(head); box.appendChild(stage);
+        // taps, holds and swipes on the picture (not on a video: the Drive player needs its own taps)
+        var down = null;
+        pad.addEventListener('pointerdown', function (e) {
+            down = { x: e.clientX, y: e.clientY, t: Date.now() };
+            down.hold = setTimeout(pause, 220);
+        });
+        pad.addEventListener('pointermove', function (e) {
+            if (!down) return;
+            var dy = e.clientY - down.y;
+            if (dy > 0) { box.style.transform = 'translateY(' + dy + 'px)'; box.style.opacity = String(Math.max(.4, 1 - dy / 600)); }
+        });
+        function up(e) {
+            if (!down) return;
+            clearTimeout(down.hold);
+            var dx = e.clientX - down.x, dy = e.clientY - down.y, quick = Date.now() - down.t < 220;
+            box.style.transform = ''; box.style.opacity = '';
+            down = null;
+            if (dy > 110) return close();
+            if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) return step(dx < 0 ? 1 : -1);
+            if (quick && Math.abs(dx) < 12 && Math.abs(dy) < 12) return step(e.clientX < window.innerWidth / 3 ? -1 : 1);
+            if (paused) play();
+        }
+        pad.addEventListener('pointerup', up);
+        pad.addEventListener('pointercancel', up);
+        pad.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+        var top = h('div', { class: 'acc-story-top' }, bars, head);
+        box.appendChild(stage); box.appendChild(top); box.appendChild(foot);
         box.appendChild(h('button', { type: 'button', class: 'acc-story-nav prev', 'aria-label': 'Previous story', text: '‹', onclick: function () { step(-1); } }));
         box.appendChild(h('button', { type: 'button', class: 'acc-story-nav next', 'aria-label': 'Next story', text: '›', onclick: function () { step(1); } }));
         document.addEventListener('keydown', keys);
