@@ -58,6 +58,26 @@ sleep 6
 adb exec-out screencap -p > shots/22-submissions-later.png
 shot 23-account --es startPath /account
 shot 24-pitch-black --es startTab more --ei appearance 3
+# My lectures: add one, open the time picker, save (a crash shows up in crash-log.txt)
+tap_text() { # taps the first element whose text or description is $1
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
+  local b; b=$(adb shell cat /sdcard/ui.xml | tr '>' '\n' | grep -E "(text|content-desc)=\"$1\"" | head -1 | sed -n 's/.*bounds="\[\([0-9]*\),\([0-9]*\)\]\[\([0-9]*\),\([0-9]*\)\]".*/\1 \2 \3 \4/p')
+  [ -z "$b" ] && { echo "not found: $1"; return 1; }
+  set -- $b; adb shell input tap $(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 ))
+}
+shot 43-lectures --es startTab lectures
+tap_text "Add a lecture"; sleep 3
+adb exec-out screencap -p > shots/44-lecture-add.png
+tap_text "Subject" && adb shell input text "Calculus"; sleep 1
+tap_text "Starts at: 9:00 AM"; sleep 3
+adb exec-out screencap -p > shots/45-lecture-time.png
+adb shell input keyevent 4; sleep 2
+adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
+adb shell cat /sdcard/ui.xml | tr '>' '\n' | grep -o 'text="[^"]*"' | head -40 > shots/lecture-ui.txt
+tap_text "Mon" || tap_text "Sun"; sleep 1
+tap_text "Save"; sleep 3
+adb exec-out screencap -p > shots/46-lecture-saved.png
+adb logcat -d -s AndroidRuntime:E > shots/lecture-crash.txt
 adb shell pm clear org.unihub.app
 adb shell am start -n org.unihub.app/.MainActivity
 sleep 10
