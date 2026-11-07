@@ -154,18 +154,23 @@ struct ShareVideoScreen: View {
     }
 
     @ObservedObject private var account = AccountStore.shared
+    @EnvironmentObject private var library: Library
     @Environment(\.openURL) private var openURL
     @State private var url = ""
     @State private var title = ""
-    @State private var subject = ""
+    /// the chosen subject's page, e.g. /banks/it
+    @State private var page = ""
     @State private var links: [Link] = []
     @State private var busy = false
     @State private var error: String?
     @State private var sent = false
 
     private var ready: Bool {
-        url.lowercased().contains("youtu") && title.trimmingCharacters(in: .whitespaces).count >= 3 && !busy
+        url.lowercased().contains("youtu") && title.trimmingCharacters(in: .whitespaces).count >= 3 && chosen != nil && !busy
     }
+
+    private var choices: [Subject] { library.subjects.filter { $0.c != "Archive" } }
+    private var chosen: Subject? { choices.first { $0.p == page } }
 
     var body: some View {
         List {
@@ -174,7 +179,13 @@ struct ShareVideoScreen: View {
                     TextField("YouTube link", text: $url)
                         .keyboardType(.URL).textInputAutocapitalization(.never).autocorrectionDisabled()
                     TextField("Title", text: $title)
-                    TextField("Subject (optional)", text: $subject)
+                    Button {
+                        if let s = UIPasteboard.general.string { url = s.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    } label: { Label("Paste link", systemImage: "doc.on.clipboard") }
+                    Picker("Subject", selection: $page) {
+                        Text("Choose a subject").tag("")
+                        ForEach(choices) { s in Text(s.t).tag(s.p) }
+                    }
                     if let error { Text(error).foregroundStyle(.red) }
                     if sent { Label("Shared. Thank you!", systemImage: "checkmark.seal.fill").foregroundStyle(.green) }
                     Button { Task { await send() } } label: {
@@ -241,9 +252,11 @@ struct ShareVideoScreen: View {
             _ = try await account.call("linkAdd", [
                 "url": url.trimmingCharacters(in: .whitespaces),
                 "title": title.trimmingCharacters(in: .whitespaces),
-                "subject": subject.trimmingCharacters(in: .whitespaces)
+                "subject": chosen?.t ?? "",
+                "page": page,
+                "category": chosen?.c ?? ""
             ])
-            url = ""; title = ""; subject = ""
+            url = ""; title = ""; page = ""
             error = nil
             sent = true
             Haptics.success()

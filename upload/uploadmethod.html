@@ -255,7 +255,7 @@
                 e.preventDefault();
                 if (btn.disabled) return;
                 var s = subjects[subject.value];
-                if (!s) return;
+                if (!s) { err.textContent = 'Choose a subject.'; subject.focus(); return; }
                 err.textContent = ''; btn.disabled = true; btn.textContent = 'Sharing…';
                 call('linkAdd', { url: url.value.trim(), title: title.value.trim(), subject: s.t, page: s.p, category: s.c || '' }).then(function (o) {
                     AB.ytItems = [o.link].concat(AB.ytItems);

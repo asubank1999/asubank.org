@@ -476,6 +476,7 @@
 "Choose a file" = "اختر ملفاً";
 "Choose a photo" = "اختر صورة";
 "Choose a service." = "اختر خدمة.";
+"Choose a subject" = "اختر مادة";
 "Choose files" = "اختر ملفات";
 "Choose from photos" = "اختر من الصور";
 "Choose how you'll pay." = "اختر طريقة الدفع.";
@@ -1501,6 +1502,7 @@
 "Password changed" = "تم تغيير كلمة المرور";
 "Past exams and finals" = "امتحانات سابقة ونهائية";
 "Past exams or quizzes (with solutions if possible)" = "امتحانات أو كويزات سابقة (مع الحلول إن أمكن)";
+"Paste link" = "لصق الرابط";
 "Paste the group's invite link, starting with https://" = "الصق رابط دعوة المجموعة، ويبدأ بـ https://";
 "Pause" = "إيقاف مؤقت";
 "Pay on campus" = "ادفع في الجامعة";

@@ -3073,6 +3073,10 @@
   "ru": "Выберите услугу.",
   "tr": "Bir hizmet seçin."
  },
+ "Choose a subject": {
+  "ar": "اختر مادة",
+  "es": "Elige una materia"
+ },
  "Choose files": {
   "ar": "اختر ملفات",
   "de": "Wählen Sie Dateien aus",
@@ -6911,6 +6915,10 @@
  "Past exams or quizzes (with solutions if possible)": {
   "ar": "امتحانات أو كويزات سابقة (مع الحلول إن أمكن)",
   "es": "Exámenes o pruebas anteriores (con soluciones si es posible)"
+ },
+ "Paste link": {
+  "ar": "لصق الرابط",
+  "es": "Pegar enlace"
  },
  "Paste the group's invite link, starting with https://": {
   "ar": "الصق رابط دعوة المجموعة، ويبدأ بـ https://",

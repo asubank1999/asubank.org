@@ -705,7 +705,8 @@ data class Lecture(
 ) {
     fun timeText(): String {
         val h = if (hour % 12 == 0) 12 else hour % 12
-        return "%d:%02d %s".format(Locale.ENGLISH, h, if (hour < 12) "AM" else "PM")
+        // plain text, no String.format: that call crashed the Add a lecture box on Android
+        return "$h:" + minute.toString().padStart(2, '0') + if (hour < 12) " AM" else " PM"
     }
 }
 

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,6 +27,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Groups
@@ -369,7 +371,12 @@ fun ShareVideoScreen() {
     val me by Account.user.collectAsState()
     var url by remember { mutableStateOf("") }
     var title by remember { mutableStateOf("") }
-    var subject by remember { mutableStateOf("") }
+    // the subject comes from the same list as the website; the server needs its page, e.g. /banks/it
+    val all by Library.subjects.collectAsState()
+    val choices = remember(all) { all.filter { it.c != "Archive" } }
+    var chosen by remember { mutableStateOf<Subject?>(null) }
+    var picking by remember { mutableStateOf(false) }
+    val clip = androidx.compose.ui.platform.LocalClipboardManager.current
     var links by remember { mutableStateOf<List<JsonObject>>(emptyList()) }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -389,17 +396,29 @@ fun ShareVideoScreen() {
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         OutlinedTextField(url, { url = it }, label = { Text("YouTube link") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                         OutlinedTextField(title, { title = it }, label = { Text("Title") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                        OutlinedTextField(subject, { subject = it }, label = { Text("Subject (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                        androidx.compose.material3.TextButton(onClick = { clip.getText()?.text?.trim()?.let { url = it } }) { Text("Paste link") }
+                        Box {
+                            androidx.compose.material3.OutlinedButton(onClick = { picking = true }, Modifier.fillMaxWidth()) {
+                                Text(chosen?.t ?: tr("Choose a subject"), Modifier.weight(1f), maxLines = 1)
+                                Icon(Icons.Filled.ArrowDropDown, null)
+                            }
+                            DropdownMenu(picking, { picking = false }, Modifier.heightIn(max = 420.dp)) {
+                                choices.forEach { s ->
+                                    DropdownMenuItem(text = { Text(s.t) }, onClick = { chosen = s; picking = false })
+                                }
+                            }
+                        }
                         error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                         if (sent) Text("Shared. Thank you!", color = Brand.green)
                         androidx.compose.material3.Button(
-                            enabled = !busy && "youtu" in url.lowercase() && title.trim().length >= 3,
+                            enabled = !busy && "youtu" in url.lowercase() && title.trim().length >= 3 && chosen != null,
                             onClick = {
                                 busy = true
                                 scope.launch {
                                     try {
-                                        Account.call("linkAdd", mapOf("url" to url.trim(), "title" to title.trim(), "subject" to subject.trim()))
-                                        url = ""; title = ""; subject = ""; error = null; sent = true
+                                        val s = chosen
+                                        Account.call("linkAdd", mapOf("url" to url.trim(), "title" to title.trim(), "subject" to s?.t, "page" to s?.p, "category" to s?.c))
+                                        url = ""; title = ""; chosen = null; error = null; sent = true
                                         load()
                                     } catch (e: ApiError) { error = e.message; sent = false }
                                     busy = false
