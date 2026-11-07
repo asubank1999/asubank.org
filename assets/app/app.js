@@ -9,6 +9,17 @@
 (function () {
     'use strict';
     var AB = window.AB = window.AB || {};
+
+    // no zooming, like an app: the page never zooms in on a text box, and pinching doesn't zoom it
+    (function () {
+        var vp = document.querySelector('meta[name=viewport]');
+        if (!vp) { vp = document.createElement('meta'); vp.name = 'viewport'; document.head.appendChild(vp); }
+        vp.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover');
+        // Safari ignores user-scalable, so its pinch gesture is stopped here
+        ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (n) {
+            document.addEventListener(n, function (e) { e.preventDefault(); }, { passive: false });
+        });
+    })();
     var doc = document, root = doc.documentElement;
 
     /* ---------- first visit: the same opening as the apps, once per visit, never inside the apps ---------- */
@@ -693,8 +704,8 @@
                 notify.defer = true;
                 doc.head.appendChild(notify);
                 // the round Messages button at the bottom right (inbox.js decides where it shows)
-                var css = doc.createElement('link'); css.rel = 'stylesheet'; css.href = '/assets/app/inbox.css?v=3'; doc.head.appendChild(css);
-                var inbox = doc.createElement('script'); inbox.src = '/assets/app/inbox.js?v=3'; inbox.defer = true; doc.head.appendChild(inbox);
+                var css = doc.createElement('link'); css.rel = 'stylesheet'; css.href = '/assets/app/inbox.css?v=4'; doc.head.appendChild(css);
+                var inbox = doc.createElement('script'); inbox.src = '/assets/app/inbox.js?v=4'; inbox.defer = true; doc.head.appendChild(inbox);
             } else {
                 // visitors without an account: a free sign-up card with the app download, once, after a few seconds
                 var join = doc.createElement('script'); join.src = '/assets/app/join.js?v=1'; join.defer = true; doc.head.appendChild(join);

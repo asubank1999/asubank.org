@@ -151,3 +151,6 @@ body.abx-has-tabbar .abx-panel { bottom: calc(var(--ab-tabbar-h, 58px) + var(--a
 .abx-bubbles i { display: block; height: 30px; border-radius: 15px; background: var(--ab-fill, rgba(118, 118, 128, .14)); width: 55%; }
 .abx-bubbles i:nth-child(2) { align-self: flex-end; width: 45%; }
 .abx-bubbles i:nth-child(3) { width: 65%; }
+
+html.dark .abx-msg:not(.mine) .abx-bubble { background: #2c2c30; }
+.abx-play { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; }

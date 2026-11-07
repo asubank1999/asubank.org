@@ -223,7 +223,7 @@ html.dark .acc-count { color: #000; }
 .acc-msg.below:not(.mine) .acc-bubble { border-bottom-left-radius: 6px; }
 .acc-msg.mine.grouped .acc-bubble { border-top-right-radius: 6px; }
 .acc-msg.mine.below .acc-bubble { border-bottom-right-radius: 6px; }
-.acc-msg.mine .acc-bubble { background: linear-gradient(135deg, var(--ab-accent,#8c1d40), color-mix(in srgb, var(--ab-accent,#8c1d40) 80%, #000)); }
+.acc-msg.mine .acc-bubble { background: var(--ab-accent,#8c1d40); background: linear-gradient(135deg, var(--ab-accent,#8c1d40), color-mix(in srgb, var(--ab-accent,#8c1d40) 80%, #000)); }
 .acc-msg-actions { display: none; flex-wrap: wrap; }
 .acc-msg:hover .acc-msg-actions, .acc-msg:focus-within .acc-msg-actions, .acc-bubble.show .acc-msg-actions { display: flex; }
 @media (hover: none) { .acc-msg-actions { display: none; } .acc-msg:hover .acc-msg-actions { display: none; } .acc-bubble.show .acc-msg-actions { display: flex; } }
@@ -251,7 +251,7 @@ body:has(#acc-app .acc-feed) .ab-tabbar { display: none; }
 body:has(#acc-app .acc-feed) { padding-bottom: 0 !important; }
 #acc-app .acc-feed { height: calc(100vh - 196px); height: calc(100dvh - 196px); }
 .acc-from { color: var(--from,#8c1d40); }
-html.dark .acc-from { color: color-mix(in srgb, var(--from,#8c1d40) 50%, #fff); }
+html.dark .acc-from { color: #f3a9c1; color: color-mix(in srgb, var(--from,#8c1d40) 50%, #fff); }
 .acc-msg.mine .acc-time { opacity: .85; }
 
 /* feed: posting, likes, comments, friends */
@@ -392,10 +392,17 @@ body:has(.acc-story) .ab-tabbar { display: none; }
 .acc-swap-head { margin: 18px 4px 6px; font-size: 15px; }
 /* news and facts in the Feed */
 .acc-extra { display: flex; gap: 12px; align-items: flex-start; }
-.acc-extra-e { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-size: 24px; background: color-mix(in srgb, var(--ab-accent,#8c1d40) 12%, transparent); }
+.acc-extra-e { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-size: 24px; background: rgba(140,29,64,.12); background: color-mix(in srgb, var(--ab-accent,#8c1d40) 12%, transparent); }
 .acc-extra small { display: block; text-transform: uppercase; font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--ab-accent,#8c1d40); }
 .acc-extra b { display: block; margin: 2px 0; }
 .acc-extra p { margin: 0; color: var(--ab-text-2,#6b6b70); }
 .acc-uname { -webkit-user-select: all; user-select: all; }
 .acc-copy { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
 .acc-copy:hover { background: var(--ab-fill-2, rgba(0,0,0,.06)); }
+
+/* chat: clearer in dark mode, and the play button is a plain symbol, not an emoji */
+html.dark .acc-msg:not(.mine) .acc-bubble { background: #2c2c30; }
+html.dark .acc-msg.mine .acc-bubble { color: #fff; }
+html.dark .acc-msg.mine .acc-voice-btn { background: rgba(0,0,0,.25); }
+.acc-voice-btn { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; line-height: 38px; padding: 0; }
+.acc-voice small.bad { color: #ff6b6b; opacity: 1; }

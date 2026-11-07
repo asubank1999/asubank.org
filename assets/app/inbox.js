@@ -108,13 +108,13 @@
     var audios = {}, audioNow = null;
     function voicePlayer(isDm, m) {
         var key = (isDm ? 'dm' : 'room') + m.id;
-        var play = h('button', { type: 'button', class: 'abx-play', 'aria-label': 'Play voice message', text: '▶' });
+        var play = h('button', { type: 'button', class: 'abx-play', 'aria-label': 'Play voice message', text: '\u25B6\uFE0E' });
         var bar = h('span', { class: 'abx-track' }, h('i'));
         var time = h('small', { class: 'abx-vtime', text: voiceTime(m.duration) });
         var box = h('span', { class: 'abx-voice' }, play, bar, time);
         function draw(a) {
             var on = a && !a.paused;
-            play.textContent = on ? '❚❚' : '▶';
+            play.textContent = on ? '\u275A\u275A' : '\u25B6\uFE0E';
             play.setAttribute('aria-label', on ? 'Pause' : 'Play voice message');
             bar.firstChild.style.width = (a && a.duration && isFinite(a.duration) ? Math.min(100, a.currentTime / a.duration * 100) : 0) + '%';
             if (a && on) time.textContent = voiceTime(a.currentTime);
@@ -133,14 +133,19 @@
                 return;
             }
             play.disabled = true; play.textContent = '…';
+            if (audioNow) audioNow.pause();
+            // Safari only plays sound started inside the tap: start a silent sound now, swap in the file when it's here
+            var player = new Audio('data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA');
+            var unlock = player.play(); if (unlock && unlock.catch) unlock.catch(function () {});
             fileUrl(isDm, m).then(function (u) {
-                a = audios[key] = new Audio(u);
-                a.onerror = function () { delete audios[key]; time.textContent = "Can't play here"; play.textContent = '▶'; };
+                a = audios[key] = player;
+                a.pause();
+                a.onerror = function () { delete audios[key]; time.textContent = "Can't play here"; play.textContent = '\u25B6\uFE0E'; };
+                a.src = u;
                 bind(a);
-                if (audioNow) audioNow.pause();
                 audioNow = a;
                 return a.play();
-            }).catch(function () { time.textContent = "Couldn't load"; play.textContent = '▶'; })
+            }).catch(function () { delete audios[key]; time.textContent = "Couldn't load"; play.textContent = '\u25B6\uFE0E'; })
               .then(function () { play.disabled = false; });
         });
         return box;

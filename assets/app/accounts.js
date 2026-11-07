@@ -343,6 +343,8 @@
     }
     function voiceTime(s) { s = Math.round(s || 0); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
     var voices = {}, voiceNow = null;
+    // a tiny silent sound: playing it inside the tap lets Safari play the real file a moment later
+    var SILENT = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
     function voiceBubble(id, duration, fetchUrl) {
         var seed = 7; for (var c = 0; c < id.length; c++) seed = (seed * 31 + id.charCodeAt(c)) >>> 0;
         var wave = h('span', { class: 'acc-wave', 'aria-hidden': 'true' });
@@ -350,14 +352,14 @@
             seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
             wave.appendChild(h('i', { style: 'height:' + (6 + (seed >>> 28)) + 'px' }));
         }
-        var btn = h('button', { type: 'button', class: 'acc-voice-btn', 'aria-label': 'Play voice message', text: '▶' });
+        var btn = h('button', { type: 'button', class: 'acc-voice-btn', 'aria-label': 'Play voice message', text: '\u25B6\uFE0E' });
         var time = h('small', { text: voiceTime(duration) });
         var box = h('div', { class: 'acc-voice' }, btn, wave, time);
         function draw(a) {
             var p = a && a.duration ? a.currentTime / a.duration : 0;
             Array.prototype.forEach.call(wave.children, function (b, i) { b.className = i / 26 <= p && p > 0 ? 'on' : ''; });
             var on = a && !a.paused;
-            btn.textContent = on ? '❚❚' : '▶';
+            btn.textContent = on ? '\u275A\u275A' : '\u25B6\uFE0E';
             btn.setAttribute('aria-label', on ? 'Pause' : 'Play voice message');
         }
         function bind(a) { a.ontimeupdate = function () { draw(a); }; a.onended = function () { a.currentTime = 0; draw(a); }; a.onpause = a.onplay = function () { draw(a); }; draw(a); }
@@ -370,14 +372,19 @@
                 return;
             }
             btn.disabled = true; btn.textContent = '…';
+            if (voiceNow) voiceNow.pause();
+            var player = new Audio(SILENT);
+            player.setAttribute('playsinline', '');
+            var unlock = player.play(); if (unlock && unlock.catch) unlock.catch(function () {});
             fetchUrl().then(function (u) {
-                a = voices[id] = new Audio(u);
-                a.onerror = function () { delete voices[id]; time.textContent = "This browser can't play it"; btn.textContent = '▶'; };
+                a = voices[id] = player;
+                a.pause();
+                a.onerror = function () { delete voices[id]; time.textContent = "This browser can't play it"; time.className = 'bad'; btn.textContent = '\u25B6\uFE0E'; };
+                a.src = u;
                 bind(a);
-                if (voiceNow) voiceNow.pause();
                 voiceNow = a;
                 return a.play();
-            }).catch(function () { time.textContent = "Couldn't play it"; btn.textContent = '▶'; })
+            }).catch(function () { time.textContent = "Couldn't play it. Tap again."; time.className = 'bad'; delete voices[id]; btn.textContent = '\u25B6\uFE0E'; })
               .then(function () { btn.disabled = false; });
         });
         return box;

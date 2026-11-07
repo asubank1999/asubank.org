@@ -206,7 +206,7 @@ html.dark .ab-chip[aria-pressed="true"], html.dark .ab-chip.on { color: #000; }
     content-visibility: auto; contain-intrinsic-size: auto 60px;
 }
 .ab-row + .ab-row::before, .ab-list > li + li > .ab-row::before { content: ""; position: absolute; top: 0; right: 0; left: 62px; border-top: .5px solid var(--ab-sep); }
-.ab-row:hover { background: color-mix(in srgb, var(--ab-surface) 94%, var(--ab-label)); }
+.ab-row:hover { background: var(--ab-fill); background: color-mix(in srgb, var(--ab-surface) 94%, var(--ab-label)); }
 .ab-row:active { background: var(--ab-fill); }
 .ab-row-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; color: inherit !important; min-height: 44px; }
 .ab-row-text { flex: 1; min-width: 0; }
@@ -500,3 +500,9 @@ html.dark .ab-splash { background: #000; color: #fff; }
 /* every spinner on the site becomes the three dots */
 .ab-spinner { width: 8px !important; height: 8px !important; border: 0 !important; border-radius: 50%; background: var(--ab-accent,#8c1d40) !important; color: var(--ab-accent,#8c1d40); box-shadow: -14px 0 0 currentColor, 14px 0 0 currentColor; animation: ab-splash-dot 1.05s ease-in-out infinite !important; margin-left: 14px; margin-right: 14px; }
 @media (prefers-reduced-motion: reduce) { .ab-splash img, .ab-splash b, .ab-splash-dots i, .ab-spinner { animation: none !important; } }
+
+/* look like an app on phones: inputs of 16px stop Safari zooming in when typing, and taps don't double-tap zoom */
+@media (hover: none) and (pointer: coarse) {
+    input, textarea, select { font-size: 16px !important; }
+}
+html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
