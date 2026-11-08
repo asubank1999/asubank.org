@@ -62,7 +62,7 @@ struct CalendarScreen: View {
                             .font(.subheadline).fg14(.white.opacity(0.85))
                     }
                     .padding(16)
-                    .background(
+                    .bgIn14(
                         LinearGradient(gradient: Gradient(colors: [Color(UIColor(hex: 0x8C1D40)), Color(UIColor(hex: 0x5a0f28))]), startPoint: .topLeading, endPoint: .bottomTrailing),
                         in: RoundedRectangle(cornerRadius: 18, style: .continuous)
                     )
@@ -85,7 +85,7 @@ struct CalendarScreen: View {
         }
         .listStyle(InsetGroupedListStyle())
         .searchable14(text: $query, prompt: "Search events")
-        .navigationTitle(title.count > 24 ? "Academic calendar" : title)
+        .navigationTitle(Text(title.count > 24 ? L("Academic calendar") : title))
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

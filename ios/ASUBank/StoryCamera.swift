@@ -55,7 +55,7 @@ enum StoryVideo {
         let name = "story-" + String(abs(remote.absoluteString.hashValue)) + ".mp4"
         let file = FileManager.default.temporaryDirectory.appendingPathComponent(name)
         if FileManager.default.fileExists(atPath: file.path) { return file }
-        guard let (tmp, response) = try? await URLSession.shared.download(from: remote),
+        guard let (tmp, response) = try? await URLSession.shared.download14(from: remote),
               (response as? HTTPURLResponse)?.statusCode ?? 200 < 400 else { return nil }
         try? FileManager.default.moveItem(at: tmp, to: file)
         return FileManager.default.fileExists(atPath: file.path) ? file : nil

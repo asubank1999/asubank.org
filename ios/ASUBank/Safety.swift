@@ -153,7 +153,7 @@ struct ReportCenterScreen: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Label("We got your report", systemImage: "checkmark.seal.fill").font(.headline).fg14(.green)
                         Text("Only the UniHub team reads it. Urgent reports are looked at first.").font(.subheadline)
-                        Text(String(format: L("Reference: %@"), reference)).font(.body.monospaced())
+                        Text(String(format: L("Reference: %@"), reference)).font(.body.monoFont14())
                     }
                     .padding(.vertical, 4)
                     Button { UIPasteboard.general.string = reference; Haptics.success() } label: { Label("Copy link", systemImage: "doc.on.doc") }
@@ -354,7 +354,7 @@ struct AdminTermsScreen: View {
                     if rows.isEmpty { Text("No record for this account yet.").fg14(.secondary) }
                     ForEach(rows) { r in
                         VStack(alignment: .leading, spacing: 3) {
-                            Text(r.at).font(.subheadline.monospaced())
+                            Text(r.at).font(.subheadline.monoFont14())
                             Text("\(r.version ?? "") · \(r.source ?? "") \(r.appVersion ?? "")").font(.caption).fg14(.secondary)
                         }
                     }

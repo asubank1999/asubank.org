@@ -715,7 +715,7 @@ struct StoryViewer: View {
                 }
             }
             HStack(spacing: 8) {
-                TextField("", text: $reply, prompt: Text("Send a reply…").foregroundColor(.white.opacity(0.75)))
+                TextField("Send a reply…", text: $reply)
                     .focused14($typing)
                     .fg14(.white)
                     

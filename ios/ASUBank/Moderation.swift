@@ -106,7 +106,7 @@ struct ReportSheet: View {
                 if sent {
                     Section14 {
                         Label("Thank you. Our team will review your report.", systemImage: "checkmark.seal.fill")
-                        if let reference { Text(String(format: L("Reference: %@"), reference)).font(.body.monospaced()) }
+                        if let reference { Text(String(format: L("Reference: %@"), reference)).font(.body.monoFont14()) }
                     }
                 } else {
                     if target.kind == "file" { StudyFileNotice() }

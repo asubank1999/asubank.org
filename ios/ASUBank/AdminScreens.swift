@@ -271,7 +271,7 @@ struct AdminUserScreen: View {
                     Button { Task { await reset() } } label: { Label("Reset password", systemImage: "key.fill") }
                     if let p = tempPassword {
                         HStack {
-                            Text(p).font(.body.monospaced().weight(.semibold))
+                            Text(p).font(.body.monoFont14().weight(.semibold))
                             Spacer()
                             Button("Copy") { UIPasteboard.general.string = p; Haptics.success() }
                         }

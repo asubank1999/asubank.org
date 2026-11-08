@@ -110,7 +110,7 @@ class ScriptBridge: NSObject, ObservableObject, WKScriptMessageHandler, WKNaviga
         """
         let out: Any?
         do {
-            out = try await web.callAsyncJavaScript(js, arguments: ["fn": fn, "args": args], in: frame, contentWorld: .page)
+            out = try await web.callJS14(js, arguments: ["fn": fn, "args": args], in: frame)
         } catch let e as NSError where e.domain == WKErrorDomain && e.code != WKError.Code.javaScriptExceptionOccurred.rawValue {
             // the frame went away (e.g. Google reloaded it): reconnect. A script error (the server
             // refusing something) is a real answer and is passed on as it is.

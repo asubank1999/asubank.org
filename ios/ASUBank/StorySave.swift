@@ -72,7 +72,7 @@ enum StorySave {
         guard await allowed() else { throw Failure.denied }
         guard let file = await StoryVideo.local(remote) else { throw Failure.download }
         let asset = AVURLAsset(url: file)
-        guard let track = try? await asset.loadTracks(withMediaType: .video).first,
+        guard let track = asset.tracks(withMediaType: .video).first,
               let natural = Optional(track.naturalSize),
               let transform = Optional(track.preferredTransform) else { throw Failure.export }
         let shown = natural.applying(transform)

@@ -206,8 +206,8 @@ enum AppTheme {
         }
         UINavigationBar.appearance().standardAppearance = nav
         UINavigationBar.appearance().compactAppearance = nav
-        if tint != nil { UINavigationBar.appearance().scrollEdgeAppearance = nav } else { UINavigationBar.appearance().scrollEdgeAppearance = nil }
+        if tint != nil { if #available(iOS 15, *) { UINavigationBar.appearance().scrollEdgeAppearance = nav } } else { if #available(iOS 15, *) { UINavigationBar.appearance().scrollEdgeAppearance = nil } }
         UITabBar.appearance().standardAppearance = tab
-        UITabBar.appearance().scrollEdgeAppearance = tint != nil ? tab : nil
+        if #available(iOS 15, *) { UITabBar.appearance().scrollEdgeAppearance = tint != nil ? tab : nil }
     }
 }

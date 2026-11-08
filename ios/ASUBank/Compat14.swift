@@ -1,5 +1,7 @@
 import SwiftUI
 import UIKit
+import WebKit
+import AVFoundation
 
 // iOS 14 build only (branch ios14, made by MyApps/tools/ios14/make_ios14.py).
 // The normal app needs iOS 15. This build swaps iOS 15-only SwiftUI calls for these helpers:
@@ -16,6 +18,10 @@ extension Color {
 
 extension Font {
     func monoDigit14() -> Font { monospacedDigit() }
+    func monoFont14() -> Font {
+        if #available(iOS 15, *) { return monospaced() }
+        return self
+    }
 }
 
 /// Replacement for AnyShapeStyle (iOS 15): a colour or a gradient
@@ -38,6 +44,8 @@ extension Shape {
 // MARK: - View helpers
 
 enum Vis14 { case automatic, visible, hidden }
+enum HEdge14 { case leading, trailing }
+enum VEdge14 { case top, bottom }
 
 extension View {
     // foregroundStyle
@@ -97,14 +105,14 @@ extension View {
     }
 
     // swipeActions: a long-press menu on iOS 14
-    @ViewBuilder func swipeActions14<V: View>(edge: HorizontalEdge = .trailing, allowsFullSwipe: Bool = true, @ViewBuilder content: () -> V) -> some View {
-        if #available(iOS 15, *) { self.swipeActions(edge: edge, allowsFullSwipe: allowsFullSwipe, content: content) } else { self.contextMenu { content() } }
+    @ViewBuilder func swipeActions14<V: View>(edge: HEdge14 = .trailing, allowsFullSwipe: Bool = true, @ViewBuilder content: () -> V) -> some View {
+        if #available(iOS 15, *) { self.swipeActions(edge: edge == .leading ? .leading : .trailing, allowsFullSwipe: allowsFullSwipe, content: content) } else { self.contextMenu { content() } }
     }
 
     // safeAreaInset
-    @ViewBuilder func safeAreaInset14<V: View>(edge: VerticalEdge, spacing: CGFloat? = nil, @ViewBuilder content: () -> V) -> some View {
+    @ViewBuilder func safeAreaInset14<V: View>(edge: VEdge14, spacing: CGFloat? = nil, @ViewBuilder content: () -> V) -> some View {
         if #available(iOS 15, *) {
-            self.safeAreaInset(edge: edge, spacing: spacing, content: content)
+            self.safeAreaInset(edge: edge == .top ? .top : .bottom, spacing: spacing, content: content)
         } else if edge == .top {
             VStack(spacing: 0) { content(); self }
         } else {
@@ -141,6 +149,32 @@ extension View {
             self.confirmationDialog(title, isPresented: isPresented, titleVisibility: titleVisibility == .visible ? .visible : titleVisibility == .hidden ? .hidden : .automatic, actions: actions, message: message)
         } else {
             self.sheet(isPresented: isPresented) { Dialog14(title: Text(title), actions: actions(), message: message(), isPresented: isPresented) }
+        }
+    }
+
+    @ViewBuilder func confirmationDialog14<S: StringProtocol, A: View>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Vis14 = .automatic, @ViewBuilder actions: () -> A) -> some View {
+        if #available(iOS 15, *) {
+            self.confirmationDialog(title, isPresented: isPresented, titleVisibility: titleVisibility == .visible ? .visible : titleVisibility == .hidden ? .hidden : .automatic, actions: actions)
+        } else {
+            self.sheet(isPresented: isPresented) { Dialog14(title: Text(title), actions: actions(), message: EmptyView(), isPresented: isPresented) }
+        }
+    }
+    @ViewBuilder func confirmationDialog14<S: StringProtocol, T, A: View, M: View>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Vis14 = .automatic, presenting data: T?, @ViewBuilder actions: @escaping (T) -> A, @ViewBuilder message: @escaping (T) -> M) -> some View {
+        if #available(iOS 15, *) {
+            self.confirmationDialog(title, isPresented: isPresented, titleVisibility: titleVisibility == .visible ? .visible : titleVisibility == .hidden ? .hidden : .automatic, presenting: data, actions: actions, message: message)
+        } else {
+            self.sheet(isPresented: isPresented) {
+                if let d = data { Dialog14(title: Text(title), actions: actions(d), message: message(d), isPresented: isPresented) }
+            }
+        }
+    }
+    @ViewBuilder func confirmationDialog14<S: StringProtocol, T, A: View>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Vis14 = .automatic, presenting data: T?, @ViewBuilder actions: @escaping (T) -> A) -> some View {
+        if #available(iOS 15, *) {
+            self.confirmationDialog(title, isPresented: isPresented, titleVisibility: titleVisibility == .visible ? .visible : titleVisibility == .hidden ? .hidden : .automatic, presenting: data, actions: actions)
+        } else {
+            self.sheet(isPresented: isPresented) {
+                if let d = data { Dialog14(title: Text(title), actions: actions(d), message: EmptyView(), isPresented: isPresented) }
+            }
         }
     }
 
@@ -311,6 +345,31 @@ extension URLSession {
             uploadTask(with: req, from: body) { d, r, e in
                 if let r { c.resume(returning: (d ?? Data(), r)) } else { c.resume(throwing: e ?? URLError(.badServerResponse)) }
             }.resume()
+        }
+    }
+}
+
+extension URLSession {
+    func download14(from url: URL) async throws -> (URL, URLResponse) {
+        if #available(iOS 15, *) { return try await download(from: url) }
+        return try await withCheckedThrowingContinuation { c in
+            downloadTask(with: url) { tmp, r, e in
+                guard let tmp, let r else { c.resume(throwing: e ?? URLError(.badServerResponse)); return }
+                // the system deletes tmp when this handler returns, so keep a copy
+                let keep = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + "-" + tmp.lastPathComponent)
+                do { try FileManager.default.moveItem(at: tmp, to: keep); c.resume(returning: (keep, r)) } catch { c.resume(throwing: error) }
+            }.resume()
+        }
+    }
+}
+
+extension WKWebView {
+    @MainActor func callJS14(_ js: String, arguments: [String: Any], in frame: WKFrameInfo?) async throws -> Any? {
+        if #available(iOS 15, *) { return try await callAsyncJavaScript(js, arguments: arguments, in: frame, contentWorld: .page) }
+        return try await withCheckedThrowingContinuation { c in
+            callAsyncJavaScript(js, arguments: arguments, in: frame, in: .page) { r in
+                switch r { case .success(let v): c.resume(returning: v); case .failure(let e): c.resume(throwing: e) }
+            }
         }
     }
 }

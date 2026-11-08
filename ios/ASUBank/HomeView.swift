@@ -313,7 +313,7 @@ struct HomeView: View {
             }
         }
         .padding(14)
-        .background(
+        .bgIn14(
             LinearGradient(gradient: Gradient(colors: AppTheme.heroColors), startPoint: .topLeading, endPoint: .bottomTrailing),
             in: RoundedRectangle(cornerRadius: 22, style: .continuous)
         )
