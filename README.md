@@ -4,7 +4,7 @@
 
 # UniHub
 
-**The student app for Applied Science University (Jordan): study materials, campus tools and a student community in one place.**
+**The student app for university students in Jordan: study materials, campus tools and a student community in one place.**
 
 Free. Run by students. On the web, iPhone and Android.
 
@@ -18,7 +18,9 @@ Free. Run by students. On the web, iPhone and Android.
 
 Finding study files usually means digging through scattered drives and group chats. UniHub puts them in one searchable library, then adds the things students need every day: their schedule, campus information and a place to talk to each other.
 
-Students share the materials and students run the app. **UniHub isn't made by or affiliated with the university.**
+Most of the materials come from students of Applied Science Private University (ASPU), the University of Jordan and Yarmouk University.
+
+Students share the materials and students run the app. **UniHub isn't made by or affiliated with any university.**
 
 **بالعربي:** يونيهب تطبيق وموقع مجاني لطلاب جامعة العلوم التطبيقية، يديره طلاب ولا يتبع للجامعة رسميًا. يجمع الملخصات والامتحانات السابقة وبنوك الأسئلة في مكتبة واحدة سهلة البحث، مع جدول المحاضرات وتنبيهاتها، ودليل القاعات، ومحادثات الطلاب والمنشورات، وتبديل المواد.
 
