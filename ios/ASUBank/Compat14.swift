@@ -159,6 +159,13 @@ extension View {
             self.sheet(isPresented: isPresented) { Dialog14(title: Text(title), actions: actions(), message: EmptyView(), isPresented: isPresented) }
         }
     }
+    @ViewBuilder func confirmationDialog14<S: StringProtocol, A: View, M: View>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Vis14 = .automatic, @ViewBuilder actions: () -> A, @ViewBuilder message: () -> M) -> some View {
+        if #available(iOS 15, *) {
+            self.confirmationDialog(title, isPresented: isPresented, titleVisibility: titleVisibility == .visible ? .visible : titleVisibility == .hidden ? .hidden : .automatic, actions: actions, message: message)
+        } else {
+            self.sheet(isPresented: isPresented) { Dialog14(title: Text(title), actions: actions(), message: message(), isPresented: isPresented) }
+        }
+    }
     @ViewBuilder func confirmationDialog14<S: StringProtocol, T, A: View, M: View>(_ title: S, isPresented: Binding<Bool>, titleVisibility: Vis14 = .automatic, presenting data: T?, @ViewBuilder actions: @escaping (T) -> A, @ViewBuilder message: @escaping (T) -> M) -> some View {
         if #available(iOS 15, *) {
             self.confirmationDialog(title, isPresented: isPresented, titleVisibility: titleVisibility == .visible ? .visible : titleVisibility == .hidden ? .hidden : .automatic, presenting: data, actions: actions, message: message)

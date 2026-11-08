@@ -236,7 +236,7 @@ struct RoomEditor: View {
                 }
                 if let error { Section14 { Text(error).fg14(.red) } }
             }
-            .navigationTitle(room == nil ? "New room" : "Edit room").navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(Text(LocalizedStringKey(room == nil ? "New room" : "Edit room"))).navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {

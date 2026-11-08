@@ -271,7 +271,7 @@ struct SignInScreen: View {
                     Text("By continuing you agree to the Terms of Service and the WhatsApp group rules. Be kind; admins can remove messages and accounts.")
                 }
             }
-            .navigationTitle(creating ? "Create account" : "Sign in")
+            .navigationTitle(Text(LocalizedStringKey(creating ? "Create account" : "Sign in")))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Close") { dismiss() } } }
             .dismissKeyboardOnScroll()

@@ -370,7 +370,7 @@ private struct RateSheet: View {
                     Text("Your rating is anonymous.")
                 }
             }
-            .navigationTitle(target.name.isEmpty ? "Rate a teacher" : "Rate")
+            .navigationTitle(Text(LocalizedStringKey(target.name.isEmpty ? "Rate a teacher" : "Rate")))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Close") { presentation.wrappedValue.dismiss() } }

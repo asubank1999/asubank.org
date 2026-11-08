@@ -1004,7 +1004,7 @@ struct LectureEditor: View {
                     }
                 }
             }
-            .navigationTitle(isNew ? "Add a lecture" : "Edit lecture")
+            .navigationTitle(Text(LocalizedStringKey(isNew ? "Add a lecture" : "Edit lecture")))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }

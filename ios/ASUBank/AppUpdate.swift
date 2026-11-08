@@ -200,7 +200,7 @@ struct WelcomeTermsView: View {
                 }
             }
             .listStyle(InsetGroupedListStyle())
-            .navigationTitle(onClose == nil ? "" : "About UniHub")
+            .navigationTitle(Text(LocalizedStringKey(onClose == nil ? "" : "About UniHub")))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 // (an `if` around a ToolbarItem needs iOS 16)

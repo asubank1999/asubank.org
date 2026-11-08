@@ -43,7 +43,7 @@ struct SavedView: View {
                 }
             }
             .listStyle(InsetGroupedListStyle())
-            .navigationTitle(mode == 0 ? "Saved" : "Recent")
+            .navigationTitle(Text(LocalizedStringKey(mode == 0 ? "Saved" : "Recent")))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if mode == 1 && !saved.recent.isEmpty {
