@@ -17,7 +17,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SKIP_DIRS = {'archive', 'tools', 'assets', 'icons', 'banks', 'ios', '.github', '.git', 'qrscan'}
 SKIP_FILES = {'404.html', 'offline.html', 'guides/latest_updates.html', 'guides/search.html', 'guides/saved.html',
-              'upload/uploadmethod.html', 'index.html'}
+              'upload/uploadmethod.html', 'index.html',
+              'guides/final-mark.html', 'guides/absences.html', 'guides/flashcards.html'}
 DROP_TAGS = {'script', 'style', 'noscript', 'svg', 'button', 'nav', 'footer', 'head', 'template', 'form', 'select',
              'input', 'textarea', 'label', 'canvas'}
 DROP_CLASS = re.compile(r'toggle|theme|back-?(btn|button|link)|scroll|fab|mode-|lang-btn|language-toggle|ab-tabbar|loading|spinner|sr-only|empty|no-?results|not-?found|ab-nav|ab-skip|web-only', re.I)

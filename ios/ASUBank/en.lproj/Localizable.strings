@@ -16,12 +16,26 @@
 "%d TEACHERS RATED" = "%d TEACHERS RATED";
 "%lld TEACHERS RATED" = "%lld TEACHERS RATED";
 "%@ TEACHERS RATED" = "%@ TEACHERS RATED";
+"%d absences left" = "%d absences left";
+"%lld absences left" = "%lld absences left";
+"%@ absences left" = "%@ absences left";
 "%d accounts" = "%d accounts";
 "%lld accounts" = "%lld accounts";
 "%@ accounts" = "%@ accounts";
+"%d cards" = "%d cards";
+"%lld cards" = "%lld cards";
+"%@ cards" = "%@ cards";
+"%d cards added" = "%d cards added";
+"%lld cards added" = "%lld cards added";
+"%@ cards added" = "%@ cards added";
+"%d cards in %d rounds" = "%d cards in %d rounds";
+"%lld cards in %lld rounds" = "%lld cards in %lld rounds";
 "%d d ago" = "%d d ago";
 "%lld d ago" = "%lld d ago";
 "%@ d ago" = "%@ d ago";
+"%d days" = "%d days";
+"%lld days" = "%lld days";
+"%@ days" = "%@ days";
 "%d days ago" = "%d days ago";
 "%lld days ago" = "%lld days ago";
 "%@ days ago" = "%@ days ago";
@@ -48,6 +62,9 @@
 "%@ materials" = "%@ materials";
 "%d materials in %d subjects." = "%d materials in %d subjects.";
 "%lld materials in %lld subjects." = "%lld materials in %lld subjects.";
+"%d min" = "%d min";
+"%lld min" = "%lld min";
+"%@ min" = "%@ min";
 "%d min ago" = "%d min ago";
 "%lld min ago" = "%lld min ago";
 "%@ min ago" = "%@ min ago";
@@ -56,11 +73,16 @@
 "%@ muted" = "%@ muted";
 "%d of %d answered" = "%d of %d answered";
 "%lld of %lld answered" = "%lld of %lld answered";
+"%d of %d minutes today" = "%d of %d minutes today";
+"%lld of %lld minutes today" = "%lld of %lld minutes today";
 "%d of %d · Long-press a file to save or share it." = "%d of %d · Long-press a file to save or share it.";
 "%lld of %lld · Long-press a file to save or share it." = "%lld of %lld · Long-press a file to save or share it.";
 "%d online now" = "%d online now";
 "%lld online now" = "%lld online now";
 "%@ online now" = "%@ online now";
+"%d over the limit" = "%d over the limit";
+"%lld over the limit" = "%lld over the limit";
+"%@ over the limit" = "%@ over the limit";
 "%d picked" = "%d picked";
 "%lld picked" = "%lld picked";
 "%@ picked" = "%@ picked";
@@ -88,9 +110,13 @@
 "%d%% off applied" = "%d%% off applied";
 "%lld%% off applied" = "%lld%% off applied";
 "%@%% off applied" = "%@%% off applied";
+"%d-day study streak" = "%d-day study streak";
+"%lld-day study streak" = "%lld-day study streak";
+"%@-day study streak" = "%@-day study streak";
 "06 = Hall Number (Hall 06)" = "06 = Hall Number (Hall 06)";
 "1 - College of IT" = "1 - College of IT";
 "1 = College Number (College of IT)" = "1 = College Number (College of IT)";
+"1 absence left" = "1 absence left";
 "1 day" = "1 day";
 "1 minute" = "1 minute";
 "1 week" = "1 week";
@@ -171,6 +197,7 @@
 "About the group" = "About the group";
 "About this app" = "About this app";
 "About you" = "About you";
+"Absence tracker" = "Absence tracker";
 "Academic calendar" = "Academic calendar";
 "Academic calendar 2026" = "Academic calendar 2026";
 "Academic calendar 2026–2027" = "Academic calendar 2026–2027";
@@ -190,6 +217,7 @@
 "Active today" = "Active today";
 "Add" = "Add";
 "Add a backup link" = "Add a backup link";
+"Add a card" = "Add a card";
 "Add a course" = "Add a course";
 "Add a course, e.g. Calculus 1" = "Add a course, e.g. Calculus 1";
 "Add a cover photo to your profile" = "Add a cover photo to your profile";
@@ -198,6 +226,8 @@
 "Add a photo or video" = "Add a photo or video";
 "Add a room" = "Add a room";
 "Add a screenshot" = "Add a screenshot";
+"Add a subject" = "Add a subject";
+"Add a subject, then tap + each time you miss a lecture. We warn you before you reach the limit." = "Add a subject, then tap + each time you miss a lecture. We warn you before you reach the limit.";
 "Add a tab" = "Add a tab";
 "Add a topic, e.g. Integrals, Midterm review" = "Add a topic, e.g. Integrals, Midterm review";
 "Add a video" = "Add a video";
@@ -208,9 +238,12 @@
 "Add friends first. Then you can message them here." = "Add friends first. Then you can message them here.";
 "Add friends or write the first one." = "Add friends or write the first one.";
 "Add friends, or look at what other students share under Strangers." = "Add friends, or look at what other students share under Strangers.";
+"Add one" = "Add one";
 "Add story" = "Add story";
+"Add up everything before the final: midterm, quizzes, assignments, labs. Example: 22 out of 50." = "Add up everything before the final: midterm, quizzes, assignments, labs. Example: 22 out of 50.";
 "Add your classmates as friends" = "Add your classmates as friends";
 "Add your exams and assignments, and the next ones show on Home." = "Add your exams and assignments, and the next ones show on Home.";
+"Add your first card." = "Add your first card.";
 "Add your group" = "Add your group";
 "Add your group's link" = "Add your group's link";
 "Add your subject, hall and time. We'll remind you 10 minutes before it starts." = "Add your subject, hall and time. We'll remind you 10 minutes before it starts.";
@@ -243,6 +276,7 @@
 "After you submit, email us to confirm your payment." = "After you submit, email us to confirm your payment.";
 "After you submit, message us on WhatsApp to confirm your payment." = "After you submit, message us on WhatsApp to confirm your payment.";
 "Afternoon" = "Afternoon";
+"Again" = "Again";
 "Agricultural technology" = "Agricultural technology";
 "Alan" = "Alan";
 "Alert" = "Alert";
@@ -263,7 +297,12 @@
 "Allow UniHub to add photos in Settings to save stories." = "Allow UniHub to add photos in Settings to save stories.";
 "Allow exact reminders" = "Allow exact reminders";
 "Allow storage to save stories." = "Allow storage to save stories.";
+"Allowed absences" = "Allowed absences";
+"Allowed absences: %d" = "Allowed absences: %d";
+"Allowed absences: %lld" = "Allowed absences: %lld";
+"Allowed absences: %@" = "Allowed absences: %@";
 "Almost there" = "Almost there";
+"Already reached" = "Already reached";
 "Also searching for" = "Also searching for";
 "Alumni" = "Alumni";
 "Alumni Follow-up Platform | منصة متابعة الخريجين" = "Alumni Follow-up Platform | منصة متابعة الخريجين";
@@ -288,6 +327,7 @@
 "Announcements only" = "Announcements only";
 "Anonymous · takes 5 seconds" = "Anonymous · takes 5 seconds";
 "Another game?" = "Another game?";
+"Answer" = "Answer";
 "Answers to common questions." = "Answers to common questions.";
 "Any" = "Any";
 "Any file size, as many files as you like." = "Any file size, as many files as you like.";
@@ -329,10 +369,12 @@
 "Ask your college's WhatsApp group" = "Ask your college's WhatsApp group";
 "Assignment" = "Assignment";
 "At least 6 characters" = "At least 6 characters";
+"At the limit: don't miss another lecture" = "At the limit: don't miss another lecture";
 "Attach a file" = "Attach a file";
 "Attach the PDF you want it made from." = "Attach the PDF you want it made from.";
 "BANNED" = "BANNED";
 "Back" = "Back";
+"Back (answer)" = "Back (answer)";
 "Background" = "Background";
 "Backup" = "Backup";
 "Backup %d (%@)" = "Backup %d (%@)";
@@ -610,6 +652,7 @@
 "Couldn't send your booking. Check your connection and try again." = "Couldn't send your booking. Check your connection and try again.";
 "Couldn't start the recording." = "Couldn't start the recording.";
 "Couldn't take the photo. Try again." = "Couldn't take the photo. Try again.";
+"Count missed lectures, stay under the limit." = "Count missed lectures, stay under the limit.";
 "Countdown Timer" = "Countdown Timer";
 "Course" = "Course";
 "Course %d" = "Course %d";
@@ -639,6 +682,9 @@
 "Customize" = "Customize";
 "Customize tab bar" = "Customize tab bar";
 "Cyber security 🫀" = "Cyber security 🫀";
+"Daily goal: %d minutes" = "Daily goal: %d minutes";
+"Daily goal: %lld minutes" = "Daily goal: %lld minutes";
+"Daily goal: %@ minutes" = "Daily goal: %@ minutes";
 "Dark" = "Dark";
 "Dark green background" = "Dark green background";
 "Dark navy background" = "Dark navy background";
@@ -649,6 +695,7 @@
 "Days" = "Days";
 "Dead or private links are hidden. If you open one from Saved, you can request it instead." = "Dead or private links are hidden. If you open one from Saved, you can request it instead.";
 "Deanship" = "Deanship";
+"Deck name, e.g. Biochemistry" = "Deck name, e.g. Biochemistry";
 "Decline" = "Decline";
 "Delete" = "Delete";
 "Delete @%@?" = "Delete @%@?";
@@ -662,6 +709,7 @@
 "Delete post" = "Delete post";
 "Delete room" = "Delete room";
 "Delete submission" = "Delete submission";
+"Delete this deck?" = "Delete this deck?";
 "Delete this lecture" = "Delete this lecture";
 "Delete this post?" = "Delete this post?";
 "Delete this room?" = "Delete this room?";
@@ -738,6 +786,7 @@
 "Early supporter badge for everyone who joins by the end of November 2026, with our thanks" = "Early supporter badge for everyone who joins by the end of November 2026, with our thanks";
 "Easy to navigate" = "Easy to navigate";
 "Edit" = "Edit";
+"Edit card" = "Edit card";
 "Edit lecture" = "Edit lecture";
 "Edit profile" = "Edit profile";
 "Edit quality" = "Edit quality";
@@ -861,6 +910,7 @@
 "Fill out your profile with your academic interests, class schedule, and hobbies. Our system will match you with classmates who share at least 50% compatibility." = "Fill out your profile with your academic interests, class schedule, and hobbies. Our system will match you with classmates who share at least 50% compatibility.";
 "Final" = "Final";
 "Final Exam Timings with Countdown" = "Final Exam Timings with Countdown";
+"Final mark calculator" = "Final mark calculator";
 "Find" = "Find";
 "Find a hall" = "Find a hall";
 "Find a subject" = "Find a subject";
@@ -892,6 +942,7 @@
 "Fixed: settings under More sometimes wouldn't open or froze" = "Fixed: settings under More sometimes wouldn't open or froze";
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "Fixes: sharper profile photos, and the online row shows only people who are online";
 "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online";
+"Flashcards" = "Flashcards";
 "Flexible" = "Flexible";
 "Float" = "Float";
 "Floor" = "Floor";
@@ -943,7 +994,9 @@
 "Friends, Users and the admin screens open much faster" = "Friends, Users and the admin screens open much faster";
 "Friends: add classmates, accept requests, poke them or ask to meet, study or grab coffee, and share posts in a new Friends tab" = "Friends: add classmates, accept requests, poke them or ask to meet, study or grab coffee, and share posts in a new Friends tab";
 "From" = "From";
+"From My lectures" = "From My lectures";
 "From your phone, Drive or Downloads" = "From your phone, Drive or Downloads";
+"Front (question)" = "Front (question)";
 "Full Q&A from your PDF" = "Full Q&A from your PDF";
 "Full name" = "Full name";
 "G/B - Clinics Building" = "G/B - Clinics Building";
@@ -956,6 +1009,7 @@
 "Give it a title." = "Give it a title.";
 "Gives them a temporary password" = "Gives them a temporary password";
 "Glow" = "Glow";
+"Goal total" = "Goal total";
 "Going home (PM)" = "Going home (PM)";
 "Gold" = "Gold";
 "Good" = "Good";
@@ -1125,6 +1179,7 @@
 "Keep the app open until your files finish. You can leave this screen." = "Keep the app open until your files finish. You can leave this screen.";
 "Keep this screen open. A 5 minute break starts after each session." = "Keep this screen open. A 5 minute break starts after each session.";
 "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21)." = "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21).";
+"Knew it" = "Knew it";
 "Lab Materials" = "Lab Materials";
 "Lab materials" = "Lab materials";
 "Label" = "Label";
@@ -1133,6 +1188,7 @@
 "Language: English, Arabic, Spanish or your phone's language, in More > Language." = "Language: English, Arabic, Spanish or your phone's language, in More > Language.";
 "Large" = "Large";
 "Large files with no size limit." = "Large files with no size limit.";
+"Last 7 days" = "Last 7 days";
 "Last name" = "Last name";
 "Last seen" = "Last seen";
 "Last seen %@" = "Last seen %@";
@@ -1160,6 +1216,9 @@
 "Life hacks: first aid, safety, studying, exams and saving money, plus 911 one tap away" = "Life hacks: first aid, safety, studying, exams and saving money, plus 911 one tap away";
 "Light" = "Light";
 "Light and dark mode" = "Light and dark mode";
+"Limit %d absences" = "Limit %d absences";
+"Limit %lld absences" = "Limit %lld absences";
+"Limit %@ absences" = "Limit %@ absences";
 "Linear Properties for Expected Value and Variance" = "Linear Properties for Expected Value and Variance";
 "Linear Regression Equation" = "Linear Regression Equation";
 "Link" = "Link";
@@ -1195,8 +1254,11 @@
 "Major, e.g. Pharmacy" = "Major, e.g. Pharmacy";
 "Make a PowerPoint" = "Make a PowerPoint";
 "Make a WORD Document" = "Make a WORD Document";
+"Make a deck for a subject, write a question on the front and the answer on the back, then test yourself." = "Make a deck for a subject, write a question on the front and the answer on the back, then test yourself.";
 "Make admin" = "Make admin";
+"Make cards and test yourself." = "Make cards and test yourself.";
 "Make sure to hide your university number/name" = "Make sure to hide your university number/name";
+"Make your own flashcards" = "Make your own flashcards";
 "Makes a temporary password for you to send them. They're asked to change it." = "Makes a temporary password for you to send them. They're asked to change it.";
 "Male" = "Male";
 "Manage" = "Manage";
@@ -1206,6 +1268,7 @@
 "Mark" = "Mark";
 "Mark as done" = "Mark as done";
 "Mark as not done" = "Mark as not done";
+"Marks so far" = "Marks so far";
 "Match my phone" = "Match my phone";
 "Matcher" = "Matcher";
 "Matches found: %d" = "Matches found: %d";
@@ -1243,6 +1306,12 @@
 "Midnight book" = "Midnight book";
 "Midterm" = "Midterm";
 "Mint" = "Mint";
+"Minutes count when a focus timer session ends. Green days reached your goal." = "Minutes count when a focus timer session ends. Green days reached your goal.";
+"Minutes today" = "Minutes today";
+"Missed so far" = "Missed so far";
+"Missed so far: %d" = "Missed so far: %d";
+"Missed so far: %lld" = "Missed so far: %lld";
+"Missed so far: %@" = "Missed so far: %@";
 "Mobile-friendly design" = "Mobile-friendly design";
 "Mode" = "Mode";
 "Moderation" = "Moderation";
@@ -1258,6 +1327,7 @@
 "Most Wanted Files" = "Most Wanted Files";
 "Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships." = "Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships.";
 "Most test banks are available in PDF format, but other formats may also be available depending on the resource." = "Most test banks are available in PDF format, but other formats may also be available depending on the resource.";
+"Most universities in Jordan allow about 15% of a subject's lectures. Check your own university's rule and set the limit to match." = "Most universities in Jordan allow about 15% of a subject's lectures. Check your own university's rule and set the limit to match.";
 "Most votes" = "Most votes";
 "Most wanted files" = "Most wanted files";
 "Most wanted games" = "Most wanted games";
@@ -1298,6 +1368,7 @@
 "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan)." = "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan).";
 "New chat messages" = "New chat messages";
 "New cumulative" = "New cumulative";
+"New deck" = "New deck";
 "New files" = "New files";
 "New files show up in Latest uploads on the Home tab." = "New files show up in Latest uploads on the Home tab.";
 "New friend request" = "New friend request";
@@ -1334,6 +1405,7 @@
 "No app can open this link" = "No app can open this link";
 "No bus line matches." = "No bus line matches.";
 "No buses at this time" = "No buses at this time";
+"No cards yet" = "No cards yet";
 "No comments yet" = "No comments yet";
 "No events" = "No events";
 "No files" = "No files";
@@ -1378,6 +1450,7 @@
 "Normal Distribution (Continued 3)" = "Normal Distribution (Continued 3)";
 "Not from the university" = "Not from the university";
 "Not in the list of buildings" = "Not in the list of buildings";
+"Not possible" = "Not possible";
 "Not set" = "Not set";
 "Not signed in" = "Not signed in";
 "Not sure of the name? Browse by college" = "Not sure of the name? Browse by college";
@@ -1486,6 +1559,7 @@
 "Other faculties" = "Other faculties";
 "Other ways to share" = "Other ways to share";
 "Our support hours are Sun-Thu" = "Our support hours are Sun-Thu";
+"Out of" = "Out of";
 "Outline" = "Outline";
 "Outside ASU" = "Outside ASU";
 "Outside ASU adds a 5 JD travel fee." = "Outside ASU adds a 5 JD travel fee.";
@@ -1633,6 +1707,7 @@
 "Properties of Density Function" = "Properties of Density Function";
 "Publishing your post…" = "Publishing your post…";
 "Pulse" = "Pulse";
+"Question" = "Question";
 "Questions & Answers" = "Questions & Answers";
 "Questions Without Answers" = "Questions Without Answers";
 "Questions about donating" = "Questions about donating";
@@ -1692,11 +1767,13 @@
 "Remove from Saved" = "Remove from Saved";
 "Remove from UniHub" = "Remove from UniHub";
 "Remove from UniHub?" = "Remove from UniHub?";
+"Remove one" = "Remove one";
 "Remove photo" = "Remove photo";
 "Remove this friend?" = "Remove this friend?";
 "Remove video" = "Remove video";
 "Remove voice message" = "Remove voice message";
 "Removed from the chat by an admin" = "Removed from the chat by an admin";
+"Rename" = "Rename";
 "Repeat new password" = "Repeat new password";
 "Repeat password" = "Repeat password";
 "Replies to me" = "Replies to me";
@@ -1747,6 +1824,8 @@
 "Rooms" = "Rooms";
 "Rose" = "Rose";
 "Round" = "Round";
+"Round %d · %d left · %d known" = "Round %d · %d left · %d known";
+"Round %lld · %lld left · %lld known" = "Round %lld · %lld left · %lld known";
 "Royal blue" = "Royal blue";
 "Rules and your rights" = "Rules and your rights";
 "Russian" = "Russian";
@@ -1958,6 +2037,8 @@
 "Sponsored" = "Sponsored";
 "Standard" = "Standard";
 "Start" = "Start";
+"Start a new streak today" = "Start a new streak today";
+"Start a session" = "Start a session";
 "Start the conversation!" = "Start the conversation!";
 "Starts at" = "Starts at";
 "Starts at %@" = "Starts at %@";
@@ -1972,6 +2053,8 @@
 "Stories: share a photo or text for 24 hours" = "Stories: share a photo or text for 24 hours";
 "Story videos can be up to 30 seconds and now play to the very end" = "Story videos can be up to 30 seconds and now play to the very end";
 "Strangers" = "Strangers";
+"Streak" = "Streak";
+"Streak, daily goal and minutes per subject" = "Streak, daily goal and minutes per subject";
 "Strong and steady" = "Strong and steady";
 "Structured submission" = "Structured submission";
 "Structured submissions take PDF, Word, PowerPoint and photos only." = "Structured submissions take PDF, Word, PowerPoint and photos only.";
@@ -1992,8 +2075,10 @@
 "Students offering" = "Students offering";
 "Students often share what you need" = "Students often share what you need";
 "Studies" = "Studies";
+"Study" = "Study";
 "Study Hall" = "Study Hall";
 "Study Plans" = "Study Plans";
+"Study again" = "Study again";
 "Study cards" = "Study cards";
 "Study guides or cheat sheets" = "Study guides or cheat sheets";
 "Study help" = "Study help";
@@ -2002,8 +2087,10 @@
 "Study place" = "Study place";
 "Study plans" = "Study plans";
 "Study resources" = "Study resources";
+"Study stats" = "Study stats";
 "Study together" = "Study together";
 "Study topics" = "Study topics";
+"Studying" = "Studying";
 "Subject" = "Subject";
 "Subject (optional)" = "Subject (optional)";
 "Subject / course, e.g. Calculus 1" = "Subject / course, e.g. Calculus 1";
@@ -2061,6 +2148,7 @@
 "Tap the bin next to an upload to delete it" = "Tap the bin next to an upload to delete it";
 "Tap the bin, or hold any file, to delete it" = "Tap the bin, or hold any file, to delete it";
 "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline." = "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline.";
+"Tap the card to see the answer" = "Tap the card to see the answer";
 "Tap the star on any material to keep it here, even offline." = "Tap the star on any material to keep it here, even offline.";
 "Tap to turn them on in Android settings" = "Tap to turn them on in Android settings";
 "Tap ☆ on any file, or swipe right on it, to keep it here." = "Tap ☆ on any file, or swipe right on it, to keep it here.";
@@ -2119,6 +2207,7 @@
 "The file changed while uploading. Please add it again." = "The file changed while uploading. Please add it again.";
 "The file is empty." = "The file is empty.";
 "The file may already be on UniHub." = "The file may already be on UniHub.";
+"The final is out of" = "The final is out of";
 "The hard parts, made simple" = "The hard parts, made simple";
 "The key points of your PDF" = "The key points of your PDF";
 "The minimum to pass" = "The minimum to pass";
@@ -2134,6 +2223,7 @@
 "The submissions server sent something unexpected." = "The submissions server sent something unexpected.";
 "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them" = "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them";
 "The team reviews it before it goes on the campus display screen." = "The team reviews it before it goes on the campus display screen.";
+"The total is out of %@." = "The total is out of %@.";
 "The upload expired. Please try again." = "The upload expired. Please try again.";
 "The weather card shows the exact day and date, plus the day's high and low" = "The weather card shows the exact day and date, plus the day's high and low";
 "Theme" = "Theme";
@@ -2173,6 +2263,7 @@
 "This username, email or ID belongs to the admin. We'll email a code to confirm it's you." = "This username, email or ID belongs to the admin. We'll email a code to confirm it's you.";
 "This version of UniHub (%@) no longer works. Please install %@ to keep using the app." = "This version of UniHub (%@) no longer works. Please install %@ to keep using the app.";
 "This week" = "This week";
+"This week by subject" = "This week by subject";
 "This year's important dates." = "This year's important dates.";
 "Three ways to find any material" = "Three ways to find any material";
 "Thunderstorms" = "Thunderstorms";
@@ -2186,6 +2277,7 @@
 "Title, e.g. Calculus 1 Midterm 2025" = "Title, e.g. Calculus 1 Midterm 2025";
 "To" = "To";
 "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information." = "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.";
+"To get %@" = "To get %@";
 "To remove a file or anything else, report it or email us." = "To remove a file or anything else, report it or email us.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed.";
 "To report something, press and hold a message or open a profile." = "To report something, press and hold a message or open a profile.";
@@ -2203,6 +2295,7 @@
 "Topic" = "Topic";
 "Topics" = "Topics";
 "Total" = "Total";
+"Track your absences" = "Track your absences";
 "Trade a registered subject" = "Trade a registered subject";
 "Trade a registered subject with another student. Say what you have and what you want." = "Trade a registered subject with another student. Say what you have and what you want.";
 "Training 2" = "Training 2";
@@ -2343,6 +2436,7 @@
 "Users' accounts live in the \"UniHub Accounts\" sheet in necro1442's Drive." = "Users' accounts live in the \"UniHub Accounts\" sheet in necro1442's Drive.";
 "Uses the ADMIN_SECRET of the submissions script. It's kept in this phone's keychain." = "Uses the ADMIN_SECRET of the submissions script. It's kept in this phone's keychain.";
 "Uses the term above. The university's own calculation is final." = "Uses the term above. The university's own calculation is final.";
+"Usually 50 is the pass mark out of 100. Check your grading scale." = "Usually 50 is the pass mark out of 100. Check your grading scale.";
 "VIP" = "VIP";
 "Variance 1" = "Variance 1";
 "Variance 2" = "Variance 2";
@@ -2420,6 +2514,8 @@
 "What to share" = "What to share";
 "What we collect when you make an account" = "What we collect when you make an account";
 "What you agree to" = "What you agree to";
+"What you need on the final" = "What you need on the final";
+"What you need on the final to pass." = "What you need on the final to pass.";
 "What you send us without an account" = "What you send us without an account";
 "What's New" = "What's New";
 "What's my grade?" = "What's my grade?";
@@ -2502,6 +2598,7 @@
 "You haven't added any friends yet." = "You haven't added any friends yet.";
 "You haven't blocked anyone." = "You haven't blocked anyone.";
 "You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU." = "You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.";
+"You know every card!" = "You know every card!";
 "You pay the second half only if your ad is accepted." = "You pay the second half only if your ad is accepted.";
 "You read the terms" = "You read the terms";
 "You won't see their messages or get notifications from them. You can undo this in your account." = "You won't see their messages or get notifications from them. You can undo this in your account.";
@@ -2528,8 +2625,11 @@
 "Your group wasn't accepted" = "Your group wasn't accepted";
 "Your iPhone blocked this change (error -54). Restart the iPhone and try again. If it keeps happening, the way this copy of the app was installed is the likely reason." = "Your iPhone blocked this change (error -54). Restart the iPhone and try again. If it keeps happening, the way this copy of the app was installed is the likely reason.";
 "Your major" = "Your major";
+"Your marks so far" = "Your marks so far";
+"Your marks so far can't be more than the total." = "Your marks so far can't be more than the total.";
 "Your name" = "Your name";
 "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins." = "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins.";
+"Your own goal" = "Your own goal";
 "Your password" = "Your password";
 "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email." = "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email.";
 "Your privacy" = "Your privacy";
@@ -2543,6 +2643,7 @@
 "Your story" = "Your story";
 "Your story disappears after 24 hours and is deleted from our database after 2 days." = "Your story disappears after 24 hours and is deleted from our database after 2 days.";
 "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days." = "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days.";
+"Your streak and minutes studied." = "Your streak and minutes studied.";
 "Your studies" = "Your studies";
 "Your swaps" = "Your swaps";
 "Your timetable, with reminders." = "Your timetable, with reminders.";

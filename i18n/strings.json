@@ -35,6 +35,10 @@
   "ru": "%d ОЦЕНКА УЧИТЕЛЕЙ",
   "tr": "%d ÖĞRETMENLER DEĞERLENDİRİLDİ"
  },
+ "%d absences left": {
+  "ar": "باقي %d غيابات",
+  "es": "Te quedan %d faltas"
+ },
  "%d accounts": {
   "ar": "%d حساب",
   "de": "%d Konten",
@@ -43,6 +47,18 @@
   "ru": "%d аккаунтов",
   "tr": "%d hesap"
  },
+ "%d cards": {
+  "ar": "%d بطاقات",
+  "es": "%d tarjetas"
+ },
+ "%d cards added": {
+  "ar": "تمت إضافة %d بطاقات",
+  "es": "%d tarjetas añadidas"
+ },
+ "%d cards in %d rounds": {
+  "ar": "%d بطاقات في %d جولات",
+  "es": "%d tarjetas en %d rondas"
+ },
  "%d d ago": {
   "ar": "قبل %d يوم",
   "de": "Vor %d Tagen",
@@ -50,6 +66,10 @@
   "fr": "il y a %d jours",
   "ru": "%d дней назад",
   "tr": "%d gün önce"
+ },
+ "%d days": {
+  "ar": "%d أيام",
+  "es": "%d días"
  },
  "%d days ago": {
   "ar": "منذ %d أيام",
@@ -123,6 +143,10 @@
   "ru": "%d материалов по %d темам.",
   "tr": "%d konulardaki %d materyalleri."
  },
+ "%d min": {
+  "ar": "%d د",
+  "es": "%d min"
+ },
  "%d min ago": {
   "ar": "منذ %d دقيقة",
   "de": "Vor %d Minuten",
@@ -147,6 +171,10 @@
   "ru": "%d из %d ответили",
   "tr": "%d / %d yanıtlandı"
  },
+ "%d of %d minutes today": {
+  "ar": "%d من %d دقيقة اليوم",
+  "es": "%d de %d minutos hoy"
+ },
  "%d of %d · Long-press a file to save or share it.": {
   "ar": "%d من %d · اضغط مطولًا على الملف لحفظه أو مشاركته.",
   "de": "%d von %d · Drücken Sie lange auf eine Datei, um sie zu speichern oder zu teilen.",
@@ -162,6 +190,10 @@
   "fr": "%d en ligne maintenant",
   "ru": "%d сейчас онлайн",
   "tr": "%d şu anda çevrimiçi"
+ },
+ "%d over the limit": {
+  "ar": "تجاوزت الحد بـ %d",
+  "es": "%d por encima del límite"
  },
  "%d picked": {
   "ar": "تم اختيار %d",
@@ -226,6 +258,10 @@
   "fr": "%d%% de réduction appliquée",
   "ru": "Применена скидка %d%%",
   "tr": "%d%% indirim uygulandı"
+ },
+ "%d-day study streak": {
+  "ar": "سلسلة دراسة %d أيام",
+  "es": "Racha de estudio de %d días"
  },
  "%s accepted your friend request": {
   "ar": "%s قبل طلب صداقتك",
@@ -350,6 +386,10 @@
   "fr": "1 = Numéro de collège (Collège d'informatique)",
   "ru": "1 = Номер колледжа (ИТ-колледж)",
   "tr": "1 = Üniversite Numarası (Bilgi Teknolojileri Fakültesi)"
+ },
+ "1 absence left": {
+  "ar": "باقي غياب واحد",
+  "es": "Te queda 1 falta"
  },
  "1 day": {
   "ar": "يوم واحد",
@@ -880,6 +920,10 @@
   "ru": "О вас",
   "tr": "senin hakkında"
  },
+ "Absence tracker": {
+  "ar": "متتبع الغياب",
+  "es": "Control de faltas"
+ },
  "Academic calendar": {
   "ar": "التقويم الأكاديمي",
   "de": "Akademischer Kalender",
@@ -1025,6 +1069,10 @@
   "ru": "Добавить резервную ссылку",
   "tr": "Yedek bağlantı ekle"
  },
+ "Add a card": {
+  "ar": "أضف بطاقة",
+  "es": "Añadir tarjeta"
+ },
  "Add a course": {
   "ar": "أضف مادة",
   "de": "Fügen Sie einen Kurs hinzu",
@@ -1069,6 +1117,14 @@
  "Add a screenshot": {
   "ar": "إضافة لقطة شاشة",
   "es": "Añadir una captura"
+ },
+ "Add a subject": {
+  "ar": "أضف مادة",
+  "es": "Añadir materia"
+ },
+ "Add a subject, then tap + each time you miss a lecture. We warn you before you reach the limit.": {
+  "ar": "أضف مادة، ثم اضغط + كلما غبت عن محاضرة. ننبهك قبل أن تصل إلى الحد.",
+  "es": "Añade una materia y toca + cada vez que faltes a una clase. Te avisamos antes de llegar al límite."
  },
  "Add a tab": {
   "ar": "أضف تبويباً",
@@ -1135,9 +1191,17 @@
   "ar": "أضف أصدقاء، أو شاهد ما يشاركه الطلاب الآخرون في الغرباء.",
   "es": "Añade amigos o mira lo que comparten otros estudiantes en Desconocidos."
  },
+ "Add one": {
+  "ar": "أضف واحدًا",
+  "es": "Sumar uno"
+ },
  "Add story": {
   "ar": "أضف قصة",
   "es": "Añadir historia"
+ },
+ "Add up everything before the final: midterm, quizzes, assignments, labs. Example: 22 out of 50.": {
+  "ar": "اجمع كل علاماتك قبل الفاينل: الميد والكويزات والواجبات والعملي. مثال: 22 من 50.",
+  "es": "Suma todo antes del final: parcial, quizzes, tareas, laboratorios. Ejemplo: 22 de 50."
  },
  "Add your classmates as friends": {
   "ar": "أضف زملاءك كأصدقاء",
@@ -1150,6 +1214,10 @@
  "Add your exams and assignments, and the next ones show on Home.": {
   "ar": "أضف امتحاناتك وواجباتك، وستظهر القادمة في الرئيسية.",
   "es": "Añade tus exámenes y tareas, y los próximos aparecerán en Inicio."
+ },
+ "Add your first card.": {
+  "ar": "أضف أول بطاقة.",
+  "es": "Añade tu primera tarjeta."
  },
  "Add your group": {
   "ar": "أضف مجموعتك",
@@ -1384,6 +1452,10 @@
   "ru": "Полдень",
   "tr": "Öğleden sonra"
  },
+ "Again": {
+  "ar": "مرة أخرى",
+  "es": "Otra vez"
+ },
  "Agricultural technology": {
   "ar": "التكنولوجيا الزراعية",
   "de": "Landtechnik",
@@ -1513,6 +1585,14 @@
   "ar": "اسمح بالوصول إلى التخزين لحفظ القصص.",
   "es": "Permite el almacenamiento para guardar historias."
  },
+ "Allowed absences": {
+  "ar": "الغيابات المسموحة",
+  "es": "Faltas permitidas"
+ },
+ "Allowed absences: %d": {
+  "ar": "الغيابات المسموحة: %d",
+  "es": "Faltas permitidas: %d"
+ },
  "Almost there": {
   "ar": "اقتربت",
   "de": "Fast da",
@@ -1520,6 +1600,10 @@
   "fr": "Presque là",
   "ru": "Почти там",
   "tr": "Neredeyse orada"
+ },
+ "Already reached": {
+  "ar": "وصلت لها",
+  "es": "Ya alcanzado"
  },
  "Also searching for": {
   "ar": "نبحث أيضًا عن",
@@ -1705,6 +1789,10 @@
   "fr": "Un autre jeu ?",
   "ru": "Еще одна игра?",
   "tr": "Başka bir oyun mu?"
+ },
+ "Answer": {
+  "ar": "الجواب",
+  "es": "Respuesta"
  },
  "Answers to common questions.": {
   "ar": "إجابات عن الأسئلة المتكررة.",
@@ -2019,6 +2107,10 @@
   "ru": "Минимум 6 символов",
   "tr": "En az 6 karakter"
  },
+ "At the limit: don't miss another lecture": {
+  "ar": "وصلت للحد: لا تغب عن أي محاضرة أخرى",
+  "es": "En el límite: no faltes a otra clase"
+ },
  "Attach a file": {
   "ar": "إرفاق ملف",
   "es": "Adjuntar un archivo"
@@ -2046,6 +2138,10 @@
   "fr": "Dos",
   "ru": "Назад",
   "tr": "Geri"
+ },
+ "Back (answer)": {
+  "ar": "الخلف (الجواب)",
+  "es": "Reverso (respuesta)"
  },
  "Background": {
   "ar": "الخلفية",
@@ -3946,6 +4042,10 @@
   "ar": "تعذر التقاط الصورة. حاول مرة أخرى.",
   "es": "No se pudo hacer la foto. Inténtalo de nuevo."
  },
+ "Count missed lectures, stay under the limit.": {
+  "ar": "احسب غياباتك وابقَ تحت الحد.",
+  "es": "Cuenta tus faltas y no pases el límite."
+ },
  "Countdown Timer": {
   "ar": "العد التنازلي"
  },
@@ -4038,6 +4138,10 @@
  "Cyber security 🫀": {
   "ar": "الأمن السيبراني 🫀"
  },
+ "Daily goal: %d minutes": {
+  "ar": "الهدف اليومي: %d دقيقة",
+  "es": "Meta diaria: %d minutos"
+ },
  "Dark": {
   "ar": "داكن",
   "es": "Oscuro"
@@ -4070,6 +4174,10 @@
  "Dead or private links are hidden. If you open one from Saved, you can request it instead.": {},
  "Deanship": {
   "ar": "العمادة"
+ },
+ "Deck name, e.g. Biochemistry": {
+  "ar": "اسم المجموعة، مثل: كيمياء حيوية",
+  "es": "Nombre del mazo, p. ej. Bioquímica"
  },
  "Decline": {
   "ar": "رفض",
@@ -4122,6 +4230,10 @@
  },
  "Delete submission": {
   "ar": "حذف المشاركة"
+ },
+ "Delete this deck?": {
+  "ar": "حذف هذه المجموعة؟",
+  "es": "¿Eliminar este mazo?"
  },
  "Delete this lecture": {
   "ar": "حذف هذه المحاضرة",
@@ -4384,6 +4496,10 @@
  "Edit": {
   "ar": "تعديل",
   "es": "Editar"
+ },
+ "Edit card": {
+  "ar": "تعديل البطاقة",
+  "es": "Editar tarjeta"
  },
  "Edit lecture": {
   "ar": "تعديل المحاضرة",
@@ -4781,6 +4897,10 @@
  "Final Exam Timings with Countdown": {
   "ar": "مواعيد الامتحانات النهائية مع العد التنازلي"
  },
+ "Final mark calculator": {
+  "ar": "حاسبة علامة الفاينل",
+  "es": "Calculadora de nota final"
+ },
  "Find": {
   "ar": "بحث",
   "es": "Buscar"
@@ -4874,6 +4994,10 @@
  "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online": {
   "ar": "إصلاحات: صور شخصية أوضح، ولم تعد الصور مائلة على أندرويد، وصف المتصلين يعرض المتصلين فقط",
   "es": "Correcciones: fotos de perfil más nítidas, las fotos ya no salen de lado en Android y la fila de conectados solo muestra a quien está en línea"
+ },
+ "Flashcards": {
+  "ar": "بطاقات المراجعة",
+  "es": "Tarjetas de estudio"
  },
  "Flexible": {
   "ar": "مرن",
@@ -5025,9 +5149,17 @@
   "ar": "من",
   "es": "Desde"
  },
+ "From My lectures": {
+  "ar": "من محاضراتي",
+  "es": "De Mis clases"
+ },
  "From your phone, Drive or Downloads": {
   "ar": "من هاتفك أو Drive أو التنزيلات",
   "es": "Desde tu teléfono, Drive o Descargas"
+ },
+ "Front (question)": {
+  "ar": "الوجه (السؤال)",
+  "es": "Anverso (pregunta)"
  },
  "Full Q&A from your PDF": {
   "ar": "أسئلة وأجوبة كاملة من ملفك"
@@ -5067,6 +5199,10 @@
   "es": "Le da una contraseña temporal"
  },
  "Glow": {},
+ "Goal total": {
+  "ar": "المجموع المطلوب",
+  "es": "Total objetivo"
+ },
  "Going home (PM)": {
   "ar": "العودة (مساءً)",
   "es": "De regreso (PM)"
@@ -5638,6 +5774,10 @@
  "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21).": {
   "ar": "تابع الكتابة: أرقام القاعات من 4 أرقام (5 للمبنيين 10 و21)."
  },
+ "Knew it": {
+  "ar": "عرفتها",
+  "es": "La sabía"
+ },
  "Lab Materials": {
   "ar": "مواد المختبرات"
  },
@@ -5661,6 +5801,10 @@
  },
  "Large files with no size limit.": {
   "ar": "ملفات كبيرة دون حد للحجم."
+ },
+ "Last 7 days": {
+  "ar": "آخر 7 أيام",
+  "es": "Últimos 7 días"
  },
  "Last name": {
   "ar": "اسم العائلة",
@@ -5758,6 +5902,10 @@
   "es": "Claro"
  },
  "Light and dark mode": {},
+ "Limit %d absences": {
+  "ar": "الحد %d غيابات",
+  "es": "Límite: %d faltas"
+ },
  "Linear Properties for Expected Value and Variance": {
   "ar": "الخصائص الخطية للقيمة المتوقعة والتباين"
  },
@@ -5878,11 +6026,23 @@
  "Make a WORD Document": {
   "ar": "إنشاء مستند Word"
  },
+ "Make a deck for a subject, write a question on the front and the answer on the back, then test yourself.": {
+  "ar": "أنشئ مجموعة لمادة، واكتب السؤال على الوجه والجواب على الخلف، ثم اختبر نفسك.",
+  "es": "Crea un mazo para una materia, escribe la pregunta delante y la respuesta detrás, y ponte a prueba."
+ },
  "Make admin": {
   "ar": "تعيين مشرفًا"
  },
+ "Make cards and test yourself.": {
+  "ar": "أنشئ بطاقات واختبر نفسك.",
+  "es": "Crea tarjetas y ponte a prueba."
+ },
  "Make sure to hide your university number/name": {
   "ar": "تأكد من إخفاء رقمك الجامعي واسمك"
+ },
+ "Make your own flashcards": {
+  "ar": "أنشئ بطاقات المراجعة الخاصة بك",
+  "es": "Crea tus propias tarjetas"
  },
  "Makes a temporary password for you to send them. They're asked to change it.": {
   "ar": "ينشئ كلمة مرور مؤقتة لترسلها إليه، وسيُطلب منه تغييرها."
@@ -5917,6 +6077,10 @@
  "Mark as not done": {
   "ar": "تحديد كغير منجز",
   "es": "Marcar como no hecho"
+ },
+ "Marks so far": {
+  "ar": "علاماتك حتى الآن",
+  "es": "Notas hasta ahora"
  },
  "Match my phone": {
   "ar": "حسب الهاتف",
@@ -6038,6 +6202,22 @@
   "ar": "نعناعي",
   "es": "Menta"
  },
+ "Minutes count when a focus timer session ends. Green days reached your goal.": {
+  "ar": "تُحسب الدقائق عند انتهاء جلسة مؤقت التركيز. الأيام الخضراء وصلت فيها لهدفك.",
+  "es": "Los minutos cuentan al terminar una sesión del temporizador. Los días verdes alcanzaron tu meta."
+ },
+ "Minutes today": {
+  "ar": "دقائق اليوم",
+  "es": "Minutos hoy"
+ },
+ "Missed so far": {
+  "ar": "الغيابات حتى الآن",
+  "es": "Faltas hasta ahora"
+ },
+ "Missed so far: %d": {
+  "ar": "الغيابات حتى الآن: %d",
+  "es": "Faltas hasta ahora: %d"
+ },
  "Mobile-friendly design": {
   "ar": "تصميم مناسب للجوال",
   "es": "Diseño adaptado al móvil"
@@ -6082,6 +6262,10 @@
  },
  "Most test banks are available in PDF format, but other formats may also be available depending on the resource.": {
   "ar": "معظمها بصيغة PDF، وقد تتوفر صيغ أخرى حسب المصدر."
+ },
+ "Most universities in Jordan allow about 15% of a subject's lectures. Check your own university's rule and set the limit to match.": {
+  "ar": "معظم جامعات الأردن تسمح بنحو 15% من محاضرات المادة. تأكد من نظام جامعتك واضبط الحد بناءً عليه.",
+  "es": "La mayoría de las universidades de Jordania permiten un 15% de las clases de una materia. Revisa la norma de tu universidad y ajusta el límite."
  },
  "Most votes": {
   "ar": "الأكثر أصواتًا",
@@ -6208,6 +6392,10 @@
  "New cumulative": {
   "ar": "التراكمي الجديد",
   "es": "Nuevo acumulado"
+ },
+ "New deck": {
+  "ar": "مجموعة جديدة",
+  "es": "Nuevo mazo"
  },
  "New files": {
   "ar": "ملفات جديدة",
@@ -6346,6 +6534,10 @@
  "No buses at this time": {
   "ar": "لا توجد حافلات في هذا الوقت",
   "es": "No hay autobuses a esta hora"
+ },
+ "No cards yet": {
+  "ar": "لا توجد بطاقات بعد",
+  "es": "Aún no hay tarjetas"
  },
  "No comments yet": {
   "ar": "لا توجد تعليقات بعد",
@@ -6506,6 +6698,10 @@
  },
  "Not in the list of buildings": {
   "ar": "ليس في قائمة المباني"
+ },
+ "Not possible": {
+  "ar": "غير ممكن",
+  "es": "No es posible"
  },
  "Not set": {
   "ar": "غير محدد",
@@ -6871,6 +7067,10 @@
  },
  "Our support hours are Sun-Thu": {
   "ar": "ساعات الدعم من الأحد إلى الخميس"
+ },
+ "Out of": {
+  "ar": "من أصل",
+  "es": "Sobre"
  },
  "Outline": {},
  "Outside ASU": {
@@ -7375,6 +7575,10 @@
   "es": "Publicando tu publicación…"
  },
  "Pulse": {},
+ "Question": {
+  "ar": "السؤال",
+  "es": "Pregunta"
+ },
  "Questions & Answers": {
   "ar": "أسئلة وأجوبة"
  },
@@ -7575,6 +7779,10 @@
   "ar": "إزالة من UniHub؟",
   "es": "¿Quitar de UniHub?"
  },
+ "Remove one": {
+  "ar": "أزل واحدًا",
+  "es": "Quitar uno"
+ },
  "Remove photo": {
   "ar": "إزالة الصورة",
   "es": "Quitar foto"
@@ -7591,6 +7799,10 @@
  "Removed from the chat by an admin": {
   "ar": "أزاله مشرف من الدردشة",
   "es": "Expulsado del chat por un admin"
+ },
+ "Rename": {
+  "ar": "إعادة التسمية",
+  "es": "Renombrar"
  },
  "Repeat new password": {
   "ar": "كرر كلمة المرور الجديدة",
@@ -7766,6 +7978,10 @@
   "es": "Rosa"
  },
  "Round": {},
+ "Round %d · %d left · %d known": {
+  "ar": "الجولة %d · باقي %d · عرفت %d",
+  "es": "Ronda %d · quedan %d · sabidas %d"
+ },
  "Royal blue": {
   "ar": "أزرق ملكي",
   "es": "Azul real"
@@ -8504,6 +8720,14 @@
   "ar": "ابدأ",
   "es": "Empezar"
  },
+ "Start a new streak today": {
+  "ar": "ابدأ سلسلة جديدة اليوم",
+  "es": "Empieza una nueva racha hoy"
+ },
+ "Start a session": {
+  "ar": "ابدأ جلسة",
+  "es": "Empezar una sesión"
+ },
  "Start the conversation!": {
   "ar": "ابدأ المحادثة!"
  },
@@ -8553,6 +8777,14 @@
  "Strangers": {
   "ar": "الغرباء",
   "es": "Desconocidos"
+ },
+ "Streak": {
+  "ar": "السلسلة",
+  "es": "Racha"
+ },
+ "Streak, daily goal and minutes per subject": {
+  "ar": "السلسلة والهدف اليومي والدقائق لكل مادة",
+  "es": "Racha, meta diaria y minutos por materia"
  },
  "Strong and steady": {
   "ar": "قوي وثابت"
@@ -8619,12 +8851,20 @@
   "ar": "الدراسة",
   "es": "Estudios"
  },
+ "Study": {
+  "ar": "ادرس",
+  "es": "Estudiar"
+ },
  "Study Hall": {
   "ar": "قاعة الدراسة",
   "es": "Sala de estudio"
  },
  "Study Plans": {
   "ar": "الخطط الدراسية"
+ },
+ "Study again": {
+  "ar": "ادرس مرة أخرى",
+  "es": "Estudiar otra vez"
  },
  "Study cards": {
   "ar": "بطاقات دراسية",
@@ -8657,6 +8897,10 @@
   "ar": "مصادر الدراسة",
   "es": "Recursos de estudio"
  },
+ "Study stats": {
+  "ar": "إحصائيات الدراسة",
+  "es": "Estadísticas de estudio"
+ },
  "Study together": {
   "ar": "الدراسة معاً",
   "es": "Estudiar juntos"
@@ -8664,6 +8908,10 @@
  "Study topics": {
   "ar": "مواضيع الدراسة",
   "es": "Temas de estudio"
+ },
+ "Studying": {
+  "ar": "تدرس",
+  "es": "Estudiando"
  },
  "Subject": {
   "ar": "مادة",
@@ -8872,6 +9120,10 @@
  "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline.": {
   "ar": "اضغط علامة الحفظ على أي ملف أو مادة ليظهر في تبويب المحفوظات، حتى دون إنترنت."
  },
+ "Tap the card to see the answer": {
+  "ar": "اضغط على البطاقة لترى الجواب",
+  "es": "Toca la tarjeta para ver la respuesta"
+ },
  "Tap the star on any material to keep it here, even offline.": {
   "ar": "اضغط النجمة على أي مادة للاحتفاظ بها هنا، حتى دون إنترنت."
  },
@@ -9071,6 +9323,10 @@
  "The file may already be on UniHub.": {
   "ar": "قد يكون الملف موجودًا في UniHub."
  },
+ "The final is out of": {
+  "ar": "الفاينل من",
+  "es": "El final es sobre"
+ },
  "The hard parts, made simple": {
   "ar": "تبسيط الأجزاء الصعبة"
  },
@@ -9121,6 +9377,10 @@
  "The team reviews it before it goes on the campus display screen.": {
   "ar": "يراجعه الفريق قبل عرضه على شاشة الحرم الجامعي.",
   "es": "El equipo lo revisa antes de mostrarlo en la pantalla del campus."
+ },
+ "The total is out of %s.": {
+  "ar": "المجموع من %s.",
+  "es": "El total es sobre %s."
  },
  "The upload expired. Please try again.": {
   "ar": "انتهت صلاحية الرفع. يرجى المحاولة مرة أخرى.",
@@ -9255,6 +9515,10 @@
   "ar": "هذا الأسبوع",
   "es": "Esta semana"
  },
+ "This week by subject": {
+  "ar": "هذا الأسبوع حسب المادة",
+  "es": "Esta semana por materia"
+ },
  "This year's important dates.": {
   "ar": "مواعيد هذا العام المهمة."
  },
@@ -9300,6 +9564,10 @@
  },
  "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.": {
   "ar": "للاستفادة من الخدمة يجب أن يكون لديك بريد إلكتروني يعمل. عند إيجاد تطابق (50% فأكثر) ستصلك أنت وزميلك رسالة بالتعليمات وبيانات الاتصال."
+ },
+ "To get %s": {
+  "ar": "لتحصل على %s",
+  "es": "Para llegar a %s"
  },
  "To remove a file or anything else, report it or email us.": {
   "ar": "لإزالة ملف أو أي شيء آخر، أبلغ عنه أو راسلنا بالبريد."
@@ -9365,6 +9633,10 @@
  "Total": {
   "ar": "الإجمالي",
   "es": "Total"
+ },
+ "Track your absences": {
+  "ar": "تتبّع غياباتك",
+  "es": "Controla tus faltas"
  },
  "Trade a registered subject": {
   "ar": "بدّل مادة مسجّلة",
@@ -9881,6 +10153,10 @@
   "ar": "يستخدم الفصل أعلاه. حساب الجامعة هو المعتمد.",
   "es": "Usa el semestre de arriba. El cálculo oficial de la universidad es el definitivo."
  },
+ "Usually 50 is the pass mark out of 100. Check your grading scale.": {
+  "ar": "عادةً علامة النجاح 50 من 100. تأكد من سلم التقديرات.",
+  "es": "Normalmente se aprueba con 50 de 100. Revisa tu escala de notas."
+ },
  "VIP": {
   "ar": "مميّز",
   "es": "VIP"
@@ -10153,6 +10429,14 @@
  "What you agree to": {
   "ar": "ما توافق عليه",
   "es": "A qué aceptas"
+ },
+ "What you need on the final": {
+  "ar": "ما تحتاجه في الفاينل",
+  "es": "Lo que necesitas en el final"
+ },
+ "What you need on the final to pass.": {
+  "ar": "ما تحتاجه في الفاينل لتنجح.",
+  "es": "Lo que necesitas en el final para aprobar."
  },
  "What you send us without an account": {
   "ar": "ما ترسله دون حساب"
@@ -10445,6 +10729,10 @@
   "ar": "انضممت إلى UniHub في أيامه الأولى، لذا أصبحت شارة «داعم مبكر» على ملفك الشخصي. شكراً لمساعدتك طلاب الجامعة.",
   "es": "Te uniste a UniHub en sus primeros días, así que tu perfil ya tiene la insignia de Early supporter. Gracias por ayudar a los estudiantes de ASU."
  },
+ "You know every card!": {
+  "ar": "عرفت كل البطاقات!",
+  "es": "¡Te sabes todas las tarjetas!"
+ },
  "You pay the second half only if your ad is accepted.": {
   "ar": "تدفع النصف الثاني فقط إذا قُبل إعلانك.",
   "es": "Pagas la segunda mitad solo si se acepta tu anuncio."
@@ -10547,12 +10835,24 @@
   "ar": "تخصصك",
   "es": "Tu carrera"
  },
+ "Your marks so far": {
+  "ar": "علاماتك حتى الآن",
+  "es": "Tus notas hasta ahora"
+ },
+ "Your marks so far can't be more than the total.": {
+  "ar": "لا يمكن أن تكون علاماتك أكثر من المجموع.",
+  "es": "Tus notas no pueden superar el total."
+ },
  "Your name": {
   "ar": "اسمك",
   "es": "Tu nombre"
  },
  "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins.": {
   "ar": "اسمك واسم المستخدم وصورتك ونبذتك وتخصصك وكليتك وشاراتك وآخر ظهور لك. يظهر رقم هاتفك فقط إذا فعّلت ذلك. أما بريدك ورقمك الجامعي فلا يراهما سواك والمشرفون."
+ },
+ "Your own goal": {
+  "ar": "هدفك الخاص",
+  "es": "Tu propia meta"
  },
  "Your password": {
   "ar": "كلمة مرورك",
@@ -10602,6 +10902,10 @@
  "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days.": {
   "ar": "يرى طلاب UniHub قصتك لمدة 24 ساعة ثم تختفي، وتُحذف من قاعدة بياناتنا بعد يومين.",
   "es": "Los estudiantes de UniHub ven tu historia durante 24 horas y luego desaparece. Se borra de nuestra base de datos a los 2 días."
+ },
+ "Your streak and minutes studied.": {
+  "ar": "سلسلتك ودقائق دراستك.",
+  "es": "Tu racha y minutos de estudio."
  },
  "Your studies": {
   "ar": "دراستك",

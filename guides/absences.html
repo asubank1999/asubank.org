@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Absence tracker | UniHub</title>
+    <meta name="description" content="Count your missed lectures for each subject and get warned before you reach the absence limit.">
+    <link rel="canonical" href="https://asubank.org/guides/absences">
+    <meta name="theme-color" content="#f2f2f7">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/assets/img/favicon2.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="UniHub">
+    <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
+    <link rel="stylesheet" href="/assets/app/app.css?v=5">
+    <script src="/assets/app/app.js?v=5" defer></script>
+    <script src="/assets/app/study-tools.js?v=1" defer></script>
+    <style>
+        .res { font-weight: 700; white-space: nowrap; }
+        .res.ok { color: var(--ab-green); } .res.bad { color: var(--ab-red); } .res.warn { color: #e67e00; }
+        .ab-list li.ab-row { display: flex; align-items: center; gap: 10px; }
+        .msg { color: var(--ab-red); margin: 8px 2px; } .msg:empty { display: none; }
+        .ab-field input[type=number] { text-align: right; }
+        .abs .ab-row { gap: 6px; }
+        .abs .count { min-width: 52px; text-align: center; font-variant-numeric: tabular-nums; }
+        .abs .ab-icon-btn { font-size: 22px; }
+        .abs .ab-icon-btn.del { font-size: 15px; opacity: .55; }
+        .bar { height: 6px; margin: 0 16px 12px; border-radius: 3px; overflow: hidden; background: color-mix(in srgb, currentColor 15%, transparent); }
+        .bar i { display: block; height: 100%; background: currentColor; border-radius: 3px; }
+        .bar.ok { color: var(--ab-green); } .bar.warn { color: #e67e00; } .bar.bad { color: var(--ab-red); }
+        .add-row { display: grid; grid-template-columns: 1fr 120px; }
+        .add-row .ab-field + .ab-field { border-top: 0; border-left: .5px solid var(--ab-sep); }
+        button.ab-row { width: 100%; background: none; border: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+        .card-wrap { perspective: 1200px; margin: 14px 0; }
+        .flashcard { position: relative; min-height: 260px; cursor: pointer; transition: transform .45s; transform-style: preserve-3d; }
+        .flashcard.flip { transform: rotateY(180deg); }
+        .flashcard .face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+            padding: 24px; border-radius: 20px; background: var(--ab-surface); box-shadow: var(--ab-shadow); backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            font-size: 22px; font-weight: 500; text-align: center; white-space: pre-wrap; overflow-wrap: anywhere; }
+        .flashcard .back { transform: rotateY(180deg); background: color-mix(in srgb, var(--ab-accent) 12%, var(--ab-surface)); }
+        .flashcard small { font-size: 13px; font-weight: 600; color: var(--ab-accent); }
+        .center { text-align: center; color: var(--ab-label-2); }
+        .fin { text-align: center; padding: 30px 0; } .fin .big { font-size: 56px; }
+        .btn-green { background: var(--ab-green) !important; }
+        textarea { resize: vertical; min-height: 54px; }
+    </style>
+</head>
+<body class="ab" data-tool="absences">
+    <a class="ab-skip" href="#main">Skip to content</a>
+    <header class="ab-nav">
+        <div class="ab-wrap ab-nav-row">
+            <div class="ab-nav-l"><a class="ab-brand" href="/"><img src="/assets/img/ASU_Jordan_logo-removebg-preview.png" alt="" width="30" height="30"><span>UniHub</span></a></div>
+            <div class="ab-nav-title" aria-hidden="true">Absence tracker</div>
+            <div class="ab-nav-r"></div>
+        </div>
+    </header>
+
+    <main id="main" class="ab-wrap">
+        <div class="ab-head">
+            <h1 class="ab-large">Absence tracker</h1>
+            <p class="ab-sub">Count missed lectures and stay under the limit. <span lang="ar" dir="rtl">احسب غياباتك</span></p>
+        </div>
+
+        <section class="ab-section" aria-labelledby="h-subj">
+            <div class="ab-section-h"><h2 id="h-subj" style="font-size:17px">Your subjects</h2></div>
+            <p class="center" id="empty">Add a subject, then tap + each time you miss a lecture. We warn you before you reach the limit.</p>
+            <ul class="ab-list" id="list"></ul>
+            <p class="ab-foot">Most universities in Jordan allow about 15% of a subject's lectures: about 4 for a subject that meets twice a week, 7 for three times a week. Check your own university's rule and set the limit to match.</p>
+        </section>
+        <section class="ab-section" aria-labelledby="h-add">
+            <div class="ab-section-h"><h2 id="h-add" style="font-size:17px">Add a subject</h2></div>
+            <form id="addForm">
+                <div class="ab-list add-row">
+                    <label class="ab-field"><span>Subject</span><input id="aName" maxlength="80" placeholder="e.g. Calculus 1" required></label>
+                    <label class="ab-field"><span>Allowed</span><input id="aLimit" type="number" inputmode="numeric" min="1" max="60" value="4" required></label>
+                </div>
+                <div class="ab-btn-row" style="margin-top:10px"><button class="ab-btn" type="submit" style="flex:1">Add</button></div>
+            </form>
+        </section>
+
+        <section class="ab-section" aria-labelledby="h-more">
+            <div class="ab-section-h"><h2 id="h-more" style="font-size:17px">More study tools</h2></div>
+            <ul class="ab-list">
+                <li><a class="ab-row" href="/guides/final-mark"><span class="ab-row-main"><span class="ab-tile emoji">🧮</span><span class="ab-row-text"><span class="ab-row-title">Final mark calculator</span><span class="ab-row-meta">What you need on the final to pass or reach your goal</span></span></span></a></li>
+                <li><a class="ab-row" href="/guides/flashcards"><span class="ab-row-main"><span class="ab-tile emoji">🃏</span><span class="ab-row-text"><span class="ab-row-title">Flashcards</span><span class="ab-row-meta">Make your own cards and test yourself</span></span></span></a></li>
+                <li><a class="ab-row" href="/apps/download.html"><span class="ab-row-main"><span class="ab-tile emoji">📱</span><span class="ab-row-text"><span class="ab-row-title">Get the UniHub app</span><span class="ab-row-meta">These tools plus a focus timer, study streaks and lecture reminders</span></span></span></a></li>
+            </ul>
+            <p class="ab-foot">Saved in this browser only. Nothing is sent to UniHub.</p>
+        </section>
+    </main>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DE6YQ7Q2M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4DE6YQ7Q2M');
+    </script>
+</body>
+</html>

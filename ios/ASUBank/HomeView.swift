@@ -29,6 +29,10 @@ enum Links {
         .init(emoji: "🆕", title: "Latest uploads", subtitle: "Newest PDFs, midterms, finals and quizzes.", target: .web("/guides/latest")),
         .init(emoji: "⚡", title: "Google Drive materials", subtitle: "Search every uploaded file.", badge: "FAST", target: .tab(.search)),
         .init(emoji: "🎯", title: "Focus timer", subtitle: "Study in short sessions with breaks.", target: .web("/app/focus")),
+        .init(emoji: "🙋", title: "Absence tracker", subtitle: "Count missed lectures, stay under the limit.", added: "2026-11-08", target: .web("/app/absences")),
+        .init(emoji: "🧮", title: "Final mark calculator", subtitle: "What you need on the final to pass.", added: "2026-11-08", target: .web("/app/finalmark")),
+        .init(emoji: "🃏", title: "Flashcards", subtitle: "Make cards and test yourself.", added: "2026-11-08", target: .web("/app/flashcards")),
+        .init(emoji: "🔥", title: "Study stats", subtitle: "Your streak and minutes studied.", added: "2026-11-08", target: .web("/app/stats")),
         .init(emoji: "📥", title: "Recent uploads", subtitle: "Latest study materials and resources.", target: .web("/portal/confirm_device")),
         .init(emoji: "📬", title: "Request a material", subtitle: "Can't find it? Ask for it.", target: .web("/requests/student_request_portal")),
         .init(emoji: "📤", title: "Upload files", subtitle: "Share your study materials.", target: .tab(.upload)),
@@ -178,6 +182,7 @@ struct HomeView: View {
                     if on("calendar") { HomeCalendarCard() }
                     if on("lecture") { NextLectureCard() }
                     if on("due") { HomeDueCard() }
+                    if on("due") { HomeStudyCard() }
                     if on("hero") { hero.padding(.top, 4) }
                     SponsorCard()
                     if on("continue"), remember, !saved.recent.isEmpty {

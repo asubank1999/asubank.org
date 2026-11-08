@@ -4,6 +4,8 @@ import android.app.DatePickerDialog
 import android.view.WindowManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -163,6 +165,9 @@ fun FocusTimerScreen(back: Boolean = true) {
     var now by remember { mutableStateOf(System.currentTimeMillis()) }
     val today = LocalDate.now().toString()
     var count by remember { mutableIntStateOf(if (prefs.getString("focus.day", "") == today) prefs.getInt("focus.count", 0) else 0) }
+    var subject by remember { mutableStateOf(prefs.getString("focus.subject", "") ?: "") }
+    val subjects = remember { lectureSubjects() }
+    val nav = LocalNav.current
     val total = (if (onBreak) 5 else minutes) * 60_000L
     val remaining = end?.let { maxOf(0L, it - now) } ?: if (left > 0) left else total
 
@@ -181,6 +186,7 @@ fun FocusTimerScreen(back: Boolean = true) {
                 if (!onBreak) {
                     count += 1
                     prefs.edit().putString("focus.day", today).putInt("focus.count", count).apply()
+                    StudyLog.add(minutes, subject)
                 }
                 onBreak = !onBreak
                 end = now + (if (onBreak) 5 else minutes) * 60_000L
@@ -225,6 +231,18 @@ fun FocusTimerScreen(back: Boolean = true) {
                         Text(tr("Sessions today"), Modifier.weight(1f))
                         Text("$count", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
+                    if (subjects.isNotEmpty()) {
+                        Divider()
+                        Text(tr("Studying"), Modifier.padding(start = 16.dp, top = 12.dp), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            (listOf("") + subjects).forEach { s ->
+                                FilterChip(selected = subject == s, enabled = end == null, onClick = { subject = s; prefs.edit().putString("focus.subject", s).apply() },
+                                    label = { Text(if (s.isEmpty()) tr("General") else s, maxLines = 1) })
+                            }
+                        }
+                    }
+                    Divider()
+                    ListRow("Study stats", "Streak, daily goal and minutes per subject", icon = Icons.Filled.LocalFireDepartment) { nav.openPage("/app/stats", "") }
                 }
             }
         }

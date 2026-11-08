@@ -16,12 +16,26 @@
 "%d TEACHERS RATED" = "تم تقييم %d مدرسًا";
 "%lld TEACHERS RATED" = "تم تقييم %lld مدرسًا";
 "%@ TEACHERS RATED" = "تم تقييم %@ مدرسًا";
+"%d absences left" = "باقي %d غيابات";
+"%lld absences left" = "باقي %lld غيابات";
+"%@ absences left" = "باقي %@ غيابات";
 "%d accounts" = "%d حساب";
 "%lld accounts" = "%lld حساب";
 "%@ accounts" = "%@ حساب";
+"%d cards" = "%d بطاقات";
+"%lld cards" = "%lld بطاقات";
+"%@ cards" = "%@ بطاقات";
+"%d cards added" = "تمت إضافة %d بطاقات";
+"%lld cards added" = "تمت إضافة %lld بطاقات";
+"%@ cards added" = "تمت إضافة %@ بطاقات";
+"%d cards in %d rounds" = "%d بطاقات في %d جولات";
+"%lld cards in %lld rounds" = "%lld بطاقات في %lld جولات";
 "%d d ago" = "قبل %d يوم";
 "%lld d ago" = "قبل %lld يوم";
 "%@ d ago" = "قبل %@ يوم";
+"%d days" = "%d أيام";
+"%lld days" = "%lld أيام";
+"%@ days" = "%@ أيام";
 "%d days ago" = "منذ %d أيام";
 "%lld days ago" = "منذ %lld أيام";
 "%@ days ago" = "منذ %@ أيام";
@@ -48,6 +62,9 @@
 "%@ materials" = "%@ مادة";
 "%d materials in %d subjects." = "%d مادة في %d قسمًا.";
 "%lld materials in %lld subjects." = "%lld مادة في %lld قسمًا.";
+"%d min" = "%d د";
+"%lld min" = "%lld د";
+"%@ min" = "%@ د";
 "%d min ago" = "منذ %d دقيقة";
 "%lld min ago" = "منذ %lld دقيقة";
 "%@ min ago" = "منذ %@ دقيقة";
@@ -56,11 +73,16 @@
 "%@ muted" = "%@ مكتومة";
 "%d of %d answered" = "تمت الإجابة عن %d من %d";
 "%lld of %lld answered" = "تمت الإجابة عن %lld من %lld";
+"%d of %d minutes today" = "%d من %d دقيقة اليوم";
+"%lld of %lld minutes today" = "%lld من %lld دقيقة اليوم";
 "%d of %d · Long-press a file to save or share it." = "%d من %d · اضغط مطولًا على الملف لحفظه أو مشاركته.";
 "%lld of %lld · Long-press a file to save or share it." = "%lld من %lld · اضغط مطولًا على الملف لحفظه أو مشاركته.";
 "%d online now" = "%d متصل الآن";
 "%lld online now" = "%lld متصل الآن";
 "%@ online now" = "%@ متصل الآن";
+"%d over the limit" = "تجاوزت الحد بـ %d";
+"%lld over the limit" = "تجاوزت الحد بـ %lld";
+"%@ over the limit" = "تجاوزت الحد بـ %@";
 "%d picked" = "تم اختيار %d";
 "%lld picked" = "تم اختيار %lld";
 "%@ picked" = "تم اختيار %@";
@@ -88,9 +110,13 @@
 "%d%% off applied" = "تم تطبيق خصم %d%%";
 "%lld%% off applied" = "تم تطبيق خصم %lld%%";
 "%@%% off applied" = "تم تطبيق خصم %@%%";
+"%d-day study streak" = "سلسلة دراسة %d أيام";
+"%lld-day study streak" = "سلسلة دراسة %lld أيام";
+"%@-day study streak" = "سلسلة دراسة %@ أيام";
 "06 = Hall Number (Hall 06)" = "06 = رقم القاعة (القاعة 06)";
 "1 - College of IT" = "1 - كلية تكنولوجيا المعلومات";
 "1 = College Number (College of IT)" = "1 = رقم الكلية (كلية تكنولوجيا المعلومات)";
+"1 absence left" = "باقي غياب واحد";
 "1 day" = "يوم واحد";
 "1 minute" = "دقيقة واحدة";
 "1 week" = "أسبوع واحد";
@@ -171,6 +197,7 @@
 "About the group" = "عن المجموعة";
 "About this app" = "حول هذا التطبيق";
 "About you" = "عنك";
+"Absence tracker" = "متتبع الغياب";
 "Academic calendar" = "التقويم الأكاديمي";
 "Academic calendar 2026" = "التقويم الأكاديمي 2026";
 "Academic calendar 2026–2027" = "التقويم الأكاديمي 2026–2027";
@@ -190,6 +217,7 @@
 "Active today" = "نشطون اليوم";
 "Add" = "إضافة";
 "Add a backup link" = "أضف رابطاً احتياطياً";
+"Add a card" = "أضف بطاقة";
 "Add a course" = "أضف مادة";
 "Add a course, e.g. Calculus 1" = "أضف مادة، مثل Calculus 1";
 "Add a cover photo to your profile" = "أضف صورة غلاف إلى ملفك الشخصي";
@@ -198,6 +226,8 @@
 "Add a photo or video" = "Add a photo or video";
 "Add a room" = "أضف غرفة";
 "Add a screenshot" = "إضافة لقطة شاشة";
+"Add a subject" = "أضف مادة";
+"Add a subject, then tap + each time you miss a lecture. We warn you before you reach the limit." = "أضف مادة، ثم اضغط + كلما غبت عن محاضرة. ننبهك قبل أن تصل إلى الحد.";
 "Add a tab" = "أضف تبويباً";
 "Add a topic, e.g. Integrals, Midterm review" = "أضف موضوعًا، مثل التكامل أو مراجعة الميد";
 "Add a video" = "Add a video";
@@ -208,9 +238,12 @@
 "Add friends first. Then you can message them here." = "أضف أصدقاء أولاً، وبعدها يمكنك مراسلتهم هنا.";
 "Add friends or write the first one." = "أضف أصدقاء أو اكتب أول منشور.";
 "Add friends, or look at what other students share under Strangers." = "أضف أصدقاء، أو شاهد ما يشاركه الطلاب الآخرون في الغرباء.";
+"Add one" = "أضف واحدًا";
 "Add story" = "أضف قصة";
+"Add up everything before the final: midterm, quizzes, assignments, labs. Example: 22 out of 50." = "اجمع كل علاماتك قبل الفاينل: الميد والكويزات والواجبات والعملي. مثال: 22 من 50.";
 "Add your classmates as friends" = "أضف زملاءك كأصدقاء";
 "Add your exams and assignments, and the next ones show on Home." = "أضف امتحاناتك وواجباتك، وستظهر القادمة في الرئيسية.";
+"Add your first card." = "أضف أول بطاقة.";
 "Add your group" = "أضف مجموعتك";
 "Add your group's link" = "أضف رابط مجموعتك";
 "Add your subject, hall and time. We'll remind you 10 minutes before it starts." = "أضف المادة والقاعة والوقت، وسنذكرك قبل البدء بـ 10 دقائق.";
@@ -243,6 +276,7 @@
 "After you submit, email us to confirm your payment." = "بعد الإرسال، راسلنا بالبريد الإلكتروني لتأكيد الدفع.";
 "After you submit, message us on WhatsApp to confirm your payment." = "بعد الإرسال، راسلنا على واتساب لتأكيد الدفع.";
 "Afternoon" = "بعد الظهر";
+"Again" = "مرة أخرى";
 "Agricultural technology" = "التكنولوجيا الزراعية";
 "Alan" = "Alan";
 "Alert" = "تنبيه";
@@ -263,7 +297,12 @@
 "Allow UniHub to add photos in Settings to save stories." = "اسمح لـ UniHub بإضافة الصور من الإعدادات لحفظ القصص.";
 "Allow exact reminders" = "السماح بالتذكيرات الدقيقة";
 "Allow storage to save stories." = "اسمح بالوصول إلى التخزين لحفظ القصص.";
+"Allowed absences" = "الغيابات المسموحة";
+"Allowed absences: %d" = "الغيابات المسموحة: %d";
+"Allowed absences: %lld" = "الغيابات المسموحة: %lld";
+"Allowed absences: %@" = "الغيابات المسموحة: %@";
 "Almost there" = "اقتربت";
+"Already reached" = "وصلت لها";
 "Also searching for" = "نبحث أيضًا عن";
 "Alumni" = "خريج";
 "Alumni Follow-up Platform | منصة متابعة الخريجين" = "منصة متابعة الخريجين";
@@ -288,6 +327,7 @@
 "Announcements only" = "الإعلانات فقط";
 "Anonymous · takes 5 seconds" = "مجهول · يستغرق 5 ثوانٍ";
 "Another game?" = "لعبة أخرى؟";
+"Answer" = "الجواب";
 "Answers to common questions." = "إجابات عن الأسئلة المتكررة.";
 "Any" = "أي";
 "Any file size, as many files as you like." = "أي حجم للملف، وبالعدد الذي تريده.";
@@ -329,10 +369,12 @@
 "Ask your college's WhatsApp group" = "اسأل مجموعة واتساب لكليتك";
 "Assignment" = "واجب";
 "At least 6 characters" = "6 أحرف على الأقل";
+"At the limit: don't miss another lecture" = "وصلت للحد: لا تغب عن أي محاضرة أخرى";
 "Attach a file" = "إرفاق ملف";
 "Attach the PDF you want it made from." = "أرفق ملف PDF الذي تريد العمل عليه.";
 "BANNED" = "محظور";
 "Back" = "رجوع";
+"Back (answer)" = "الخلف (الجواب)";
 "Background" = "الخلفية";
 "Backup" = "نسخة احتياطية";
 "Backup %d (%@)" = "نسخة احتياطية %d (%@)";
@@ -610,6 +652,7 @@
 "Couldn't send your booking. Check your connection and try again." = "تعذر إرسال حجزك. تحقق من اتصالك وحاول مرة أخرى.";
 "Couldn't start the recording." = "Couldn't start the recording.";
 "Couldn't take the photo. Try again." = "تعذر التقاط الصورة. حاول مرة أخرى.";
+"Count missed lectures, stay under the limit." = "احسب غياباتك وابقَ تحت الحد.";
 "Countdown Timer" = "العد التنازلي";
 "Course" = "المادة";
 "Course %d" = "المادة %d";
@@ -639,6 +682,9 @@
 "Customize" = "تخصيص";
 "Customize tab bar" = "تخصيص شريط التبويب";
 "Cyber security 🫀" = "الأمن السيبراني 🫀";
+"Daily goal: %d minutes" = "الهدف اليومي: %d دقيقة";
+"Daily goal: %lld minutes" = "الهدف اليومي: %lld دقيقة";
+"Daily goal: %@ minutes" = "الهدف اليومي: %@ دقيقة";
 "Dark" = "داكن";
 "Dark green background" = "خلفية خضراء داكنة";
 "Dark navy background" = "خلفية كحلية داكنة";
@@ -649,6 +695,7 @@
 "Days" = "الأيام";
 "Dead or private links are hidden. If you open one from Saved, you can request it instead." = "Dead or private links are hidden. If you open one from Saved, you can request it instead.";
 "Deanship" = "العمادة";
+"Deck name, e.g. Biochemistry" = "اسم المجموعة، مثل: كيمياء حيوية";
 "Decline" = "رفض";
 "Delete" = "حذف";
 "Delete @%@?" = "حذف @%@؟";
@@ -662,6 +709,7 @@
 "Delete post" = "حذف المنشور";
 "Delete room" = "حذف الغرفة";
 "Delete submission" = "حذف المشاركة";
+"Delete this deck?" = "حذف هذه المجموعة؟";
 "Delete this lecture" = "حذف هذه المحاضرة";
 "Delete this post?" = "حذف هذا المنشور؟";
 "Delete this room?" = "حذف هذه الغرفة؟";
@@ -738,6 +786,7 @@
 "Early supporter badge for everyone who joins by the end of November 2026, with our thanks" = "Early supporter badge for everyone who joins by the end of November 2026, with our thanks";
 "Easy to navigate" = "سهل التنقل";
 "Edit" = "تعديل";
+"Edit card" = "تعديل البطاقة";
 "Edit lecture" = "تعديل المحاضرة";
 "Edit profile" = "تعديل الملف الشخصي";
 "Edit quality" = "جودة التعديل";
@@ -861,6 +910,7 @@
 "Fill out your profile with your academic interests, class schedule, and hobbies. Our system will match you with classmates who share at least 50% compatibility." = "املأ ملفك باهتماماتك الأكاديمية وجدولك وهواياتك، وسيطابقك النظام مع زملاء يتوافقون معك بنسبة 50% على الأقل.";
 "Final" = "نهائي";
 "Final Exam Timings with Countdown" = "مواعيد الامتحانات النهائية مع العد التنازلي";
+"Final mark calculator" = "حاسبة علامة الفاينل";
 "Find" = "بحث";
 "Find a hall" = "ابحث عن قاعة";
 "Find a subject" = "ابحث عن مادة";
@@ -892,6 +942,7 @@
 "Fixed: settings under More sometimes wouldn't open or froze" = "Fixed: settings under More sometimes wouldn't open or froze";
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "إصلاحات: صور شخصية أوضح، وصف المتصلين يعرض المتصلين فقط";
 "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "إصلاحات: صور شخصية أوضح، ولم تعد الصور مائلة على أندرويد، وصف المتصلين يعرض المتصلين فقط";
+"Flashcards" = "بطاقات المراجعة";
 "Flexible" = "مرن";
 "Float" = "Float";
 "Floor" = "الطابق";
@@ -943,7 +994,9 @@
 "Friends, Users and the admin screens open much faster" = "Friends, Users and the admin screens open much faster";
 "Friends: add classmates, accept requests, poke them or ask to meet, study or grab coffee, and share posts in a new Friends tab" = "Friends: add classmates, accept requests, poke them or ask to meet, study or grab coffee, and share posts in a new Friends tab";
 "From" = "من";
+"From My lectures" = "من محاضراتي";
 "From your phone, Drive or Downloads" = "من هاتفك أو Drive أو التنزيلات";
+"Front (question)" = "الوجه (السؤال)";
 "Full Q&A from your PDF" = "أسئلة وأجوبة كاملة من ملفك";
 "Full name" = "الاسم الكامل";
 "G/B - Clinics Building" = "G/B - مبنى العيادات";
@@ -956,6 +1009,7 @@
 "Give it a title." = "اكتب عنوانًا.";
 "Gives them a temporary password" = "يمنحه كلمة مرور مؤقتة";
 "Glow" = "Glow";
+"Goal total" = "المجموع المطلوب";
 "Going home (PM)" = "العودة (مساءً)";
 "Gold" = "ذهبي";
 "Good" = "جيد";
@@ -1125,6 +1179,7 @@
 "Keep the app open until your files finish. You can leave this screen." = "أبقِ التطبيق مفتوحاً حتى تنتهي ملفاتك. يمكنك مغادرة هذه الشاشة.";
 "Keep this screen open. A 5 minute break starts after each session." = "أبقِ هذه الشاشة مفتوحة. تبدأ استراحة 5 دقائق بعد كل جلسة.";
 "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21)." = "تابع الكتابة: أرقام القاعات من 4 أرقام (5 للمبنيين 10 و21).";
+"Knew it" = "عرفتها";
 "Lab Materials" = "مواد المختبرات";
 "Lab materials" = "مواد المختبرات";
 "Label" = "Label";
@@ -1133,6 +1188,7 @@
 "Language: English, Arabic, Spanish or your phone's language, in More > Language." = "Language: English, Arabic, Spanish or your phone's language, in More > Language.";
 "Large" = "كبير";
 "Large files with no size limit." = "ملفات كبيرة دون حد للحجم.";
+"Last 7 days" = "آخر 7 أيام";
 "Last name" = "اسم العائلة";
 "Last seen" = "آخر ظهور";
 "Last seen %@" = "آخر ظهور %@";
@@ -1160,6 +1216,9 @@
 "Life hacks: first aid, safety, studying, exams and saving money, plus 911 one tap away" = "Life hacks: first aid, safety, studying, exams and saving money, plus 911 one tap away";
 "Light" = "فاتح";
 "Light and dark mode" = "Light and dark mode";
+"Limit %d absences" = "الحد %d غيابات";
+"Limit %lld absences" = "الحد %lld غيابات";
+"Limit %@ absences" = "الحد %@ غيابات";
 "Linear Properties for Expected Value and Variance" = "الخصائص الخطية للقيمة المتوقعة والتباين";
 "Linear Regression Equation" = "معادلة الانحدار الخطي";
 "Link" = "رابط";
@@ -1195,8 +1254,11 @@
 "Major, e.g. Pharmacy" = "التخصص، مثل الصيدلة";
 "Make a PowerPoint" = "إنشاء عرض PowerPoint";
 "Make a WORD Document" = "إنشاء مستند Word";
+"Make a deck for a subject, write a question on the front and the answer on the back, then test yourself." = "أنشئ مجموعة لمادة، واكتب السؤال على الوجه والجواب على الخلف، ثم اختبر نفسك.";
 "Make admin" = "تعيين مشرفًا";
+"Make cards and test yourself." = "أنشئ بطاقات واختبر نفسك.";
 "Make sure to hide your university number/name" = "تأكد من إخفاء رقمك الجامعي واسمك";
+"Make your own flashcards" = "أنشئ بطاقات المراجعة الخاصة بك";
 "Makes a temporary password for you to send them. They're asked to change it." = "ينشئ كلمة مرور مؤقتة لترسلها إليه، وسيُطلب منه تغييرها.";
 "Male" = "ذكر";
 "Manage" = "الإدارة";
@@ -1206,6 +1268,7 @@
 "Mark" = "العلامة";
 "Mark as done" = "تم التبديل";
 "Mark as not done" = "تحديد كغير منجز";
+"Marks so far" = "علاماتك حتى الآن";
 "Match my phone" = "حسب الهاتف";
 "Matcher" = "المطابقة";
 "Matches found: %d" = "المطابقات: %d";
@@ -1243,6 +1306,12 @@
 "Midnight book" = "كتاب ليلي";
 "Midterm" = "ميد";
 "Mint" = "نعناعي";
+"Minutes count when a focus timer session ends. Green days reached your goal." = "تُحسب الدقائق عند انتهاء جلسة مؤقت التركيز. الأيام الخضراء وصلت فيها لهدفك.";
+"Minutes today" = "دقائق اليوم";
+"Missed so far" = "الغيابات حتى الآن";
+"Missed so far: %d" = "الغيابات حتى الآن: %d";
+"Missed so far: %lld" = "الغيابات حتى الآن: %lld";
+"Missed so far: %@" = "الغيابات حتى الآن: %@";
 "Mobile-friendly design" = "تصميم مناسب للجوال";
 "Mode" = "المنوال";
 "Moderation" = "الإشراف";
@@ -1258,6 +1327,7 @@
 "Most Wanted Files" = "الملفات الأكثر طلبًا";
 "Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships." = "معظم الملفات الدراسية هنا مصدرها الجامعة نفسها أو شاركها طلاب عبر روابط كانت متاحة للعموم. وقد راجعت المجموعة ووافقت عليها إحدى عمادات الجامعة.";
 "Most test banks are available in PDF format, but other formats may also be available depending on the resource." = "معظمها بصيغة PDF، وقد تتوفر صيغ أخرى حسب المصدر.";
+"Most universities in Jordan allow about 15% of a subject's lectures. Check your own university's rule and set the limit to match." = "معظم جامعات الأردن تسمح بنحو 15% من محاضرات المادة. تأكد من نظام جامعتك واضبط الحد بناءً عليه.";
 "Most votes" = "الأكثر أصواتًا";
 "Most wanted files" = "الملفات الأكثر طلباً";
 "Most wanted games" = "الألعاب الأكثر طلباً";
@@ -1298,6 +1368,7 @@
 "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan)." = "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan).";
 "New chat messages" = "رسائل الدردشة الجديدة";
 "New cumulative" = "التراكمي الجديد";
+"New deck" = "مجموعة جديدة";
 "New files" = "ملفات جديدة";
 "New files show up in Latest uploads on the Home tab." = "تظهر الملفات الجديدة في أحدث الملفات في الصفحة الرئيسية.";
 "New friend request" = "طلب صداقة جديد";
@@ -1334,6 +1405,7 @@
 "No app can open this link" = "لا يوجد تطبيق يفتح هذا الرابط";
 "No bus line matches." = "لا يوجد خط حافلة مطابق.";
 "No buses at this time" = "لا توجد حافلات في هذا الوقت";
+"No cards yet" = "لا توجد بطاقات بعد";
 "No comments yet" = "لا توجد تعليقات بعد";
 "No events" = "لا توجد أحداث";
 "No files" = "لا توجد ملفات";
@@ -1378,6 +1450,7 @@
 "Normal Distribution (Continued 3)" = "التوزيع الطبيعي (تكملة 3)";
 "Not from the university" = "ليس تابعًا للجامعة";
 "Not in the list of buildings" = "ليس في قائمة المباني";
+"Not possible" = "غير ممكن";
 "Not set" = "غير محدد";
 "Not signed in" = "لم تسجّل الدخول";
 "Not sure of the name? Browse by college" = "لست متأكدًا من الاسم؟ تصفح حسب الكلية";
@@ -1486,6 +1559,7 @@
 "Other faculties" = "كليات أخرى";
 "Other ways to share" = "طرق أخرى للمشاركة";
 "Our support hours are Sun-Thu" = "ساعات الدعم من الأحد إلى الخميس";
+"Out of" = "من أصل";
 "Outline" = "Outline";
 "Outside ASU" = "خارج الجامعة";
 "Outside ASU adds a 5 JD travel fee." = "خارج الجامعة تضاف رسوم انتقال 5 دنانير.";
@@ -1633,6 +1707,7 @@
 "Properties of Density Function" = "خصائص دالة الكثافة";
 "Publishing your post…" = "جارٍ نشر منشورك…";
 "Pulse" = "Pulse";
+"Question" = "السؤال";
 "Questions & Answers" = "أسئلة وأجوبة";
 "Questions Without Answers" = "أسئلة دون إجابات";
 "Questions about donating" = "أسئلة حول التبرع";
@@ -1692,11 +1767,13 @@
 "Remove from Saved" = "إزالة من المحفوظات";
 "Remove from UniHub" = "إزالة من UniHub";
 "Remove from UniHub?" = "إزالة من UniHub؟";
+"Remove one" = "أزل واحدًا";
 "Remove photo" = "إزالة الصورة";
 "Remove this friend?" = "إزالة هذا الصديق؟";
 "Remove video" = "إزالة الفيديو";
 "Remove voice message" = "Remove voice message";
 "Removed from the chat by an admin" = "أزاله مشرف من الدردشة";
+"Rename" = "إعادة التسمية";
 "Repeat new password" = "كرر كلمة المرور الجديدة";
 "Repeat password" = "كرر كلمة المرور";
 "Replies to me" = "الردود عليّ";
@@ -1747,6 +1824,8 @@
 "Rooms" = "الغرف";
 "Rose" = "وردي";
 "Round" = "Round";
+"Round %d · %d left · %d known" = "الجولة %d · باقي %d · عرفت %d";
+"Round %lld · %lld left · %lld known" = "الجولة %lld · باقي %lld · عرفت %lld";
 "Royal blue" = "أزرق ملكي";
 "Rules and your rights" = "القواعد وحقوقك";
 "Russian" = "Russian";
@@ -1958,6 +2037,8 @@
 "Sponsored" = "إعلان ممول";
 "Standard" = "عادي";
 "Start" = "ابدأ";
+"Start a new streak today" = "ابدأ سلسلة جديدة اليوم";
+"Start a session" = "ابدأ جلسة";
 "Start the conversation!" = "ابدأ المحادثة!";
 "Starts at" = "تبدأ الساعة";
 "Starts at %@" = "Starts at %@";
@@ -1972,6 +2053,8 @@
 "Stories: share a photo or text for 24 hours" = "القصص: شارك صورة أو نصاً لمدة 24 ساعة";
 "Story videos can be up to 30 seconds and now play to the very end" = "فيديوهات القصص حتى 30 ثانية وتعمل الآن حتى النهاية";
 "Strangers" = "الغرباء";
+"Streak" = "السلسلة";
+"Streak, daily goal and minutes per subject" = "السلسلة والهدف اليومي والدقائق لكل مادة";
 "Strong and steady" = "قوي وثابت";
 "Structured submission" = "إرسال منظّم";
 "Structured submissions take PDF, Word, PowerPoint and photos only." = "الإرسال المنظم يقبل ملفات PDF وWord وPowerPoint والصور فقط.";
@@ -1992,8 +2075,10 @@
 "Students offering" = "عروض الطلاب";
 "Students often share what you need" = "غالباً ما يشارك الطلاب ما تحتاجه";
 "Studies" = "الدراسة";
+"Study" = "ادرس";
 "Study Hall" = "قاعة الدراسة";
 "Study Plans" = "الخطط الدراسية";
+"Study again" = "ادرس مرة أخرى";
 "Study cards" = "بطاقات دراسية";
 "Study guides or cheat sheets" = "ملخصات أو أوراق مراجعة";
 "Study help" = "مساعدة دراسية";
@@ -2002,8 +2087,10 @@
 "Study place" = "مكان الدراسة";
 "Study plans" = "الخطط الدراسية";
 "Study resources" = "مصادر الدراسة";
+"Study stats" = "إحصائيات الدراسة";
 "Study together" = "الدراسة معاً";
 "Study topics" = "مواضيع الدراسة";
+"Studying" = "تدرس";
 "Subject" = "مادة";
 "Subject (optional)" = "المادة (اختياري)";
 "Subject / course, e.g. Calculus 1" = "المادة، مثل تفاضل 1";
@@ -2061,6 +2148,7 @@
 "Tap the bin next to an upload to delete it" = "اضغط على سلة المهملات بجانب الملف لحذفه";
 "Tap the bin, or hold any file, to delete it" = "اضغط سلة المهملات أو اضغط مطولاً على أي ملف لحذفه";
 "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline." = "اضغط علامة الحفظ على أي ملف أو مادة ليظهر في تبويب المحفوظات، حتى دون إنترنت.";
+"Tap the card to see the answer" = "اضغط على البطاقة لترى الجواب";
 "Tap the star on any material to keep it here, even offline." = "اضغط النجمة على أي مادة للاحتفاظ بها هنا، حتى دون إنترنت.";
 "Tap to turn them on in Android settings" = "اضغط لتفعيلها من إعدادات أندرويد";
 "Tap ☆ on any file, or swipe right on it, to keep it here." = "اضغط ☆ على أي ملف أو اسحبه يمينًا للاحتفاظ به هنا.";
@@ -2119,6 +2207,7 @@
 "The file changed while uploading. Please add it again." = "تغيّر الملف أثناء الرفع. يرجى إضافته مرة أخرى.";
 "The file is empty." = "الملف فارغ.";
 "The file may already be on UniHub." = "قد يكون الملف موجودًا في UniHub.";
+"The final is out of" = "الفاينل من";
 "The hard parts, made simple" = "تبسيط الأجزاء الصعبة";
 "The key points of your PDF" = "أهم نقاط ملف PDF الخاص بك";
 "The minimum to pass" = "الحد الأدنى للنجاح";
@@ -2134,6 +2223,7 @@
 "The submissions server sent something unexpected." = "أرسل خادم المشاركات ردًا غير متوقع.";
 "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them" = "شريط التبويبات أصبح: الرئيسية، المنشورات، الدردشة، البحث، المزيد. إذا غيّرت تبويباتك سابقاً فستبقى كما اخترتها";
 "The team reviews it before it goes on the campus display screen." = "يراجعه الفريق قبل عرضه على شاشة الحرم الجامعي.";
+"The total is out of %@." = "المجموع من %@.";
 "The upload expired. Please try again." = "انتهت صلاحية الرفع. يرجى المحاولة مرة أخرى.";
 "The weather card shows the exact day and date, plus the day's high and low" = "The weather card shows the exact day and date, plus the day's high and low";
 "Theme" = "السمة";
@@ -2173,6 +2263,7 @@
 "This username, email or ID belongs to the admin. We'll email a code to confirm it's you." = "اسم المستخدم أو البريد أو الرقم يخص المشرف. سنرسل رمزًا بالبريد للتأكد من أنه أنت.";
 "This version of UniHub (%@) no longer works. Please install %@ to keep using the app." = "لم يعد هذا الإصدار من UniHub (%@) يعمل. يُرجى تثبيت %@ لمتابعة استخدام التطبيق.";
 "This week" = "هذا الأسبوع";
+"This week by subject" = "هذا الأسبوع حسب المادة";
 "This year's important dates." = "مواعيد هذا العام المهمة.";
 "Three ways to find any material" = "ثلاث طرق لإيجاد أي مادة";
 "Thunderstorms" = "عواصف رعدية";
@@ -2186,6 +2277,7 @@
 "Title, e.g. Calculus 1 Midterm 2025" = "العنوان، مثل: تفاضل 1 امتحان منتصف 2025";
 "To" = "إلى";
 "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information." = "للاستفادة من الخدمة يجب أن يكون لديك بريد إلكتروني يعمل. عند إيجاد تطابق (50% فأكثر) ستصلك أنت وزميلك رسالة بالتعليمات وبيانات الاتصال.";
+"To get %@" = "لتحصل على %@";
 "To remove a file or anything else, report it or email us." = "لإزالة ملف أو أي شيء آخر، أبلغ عنه أو راسلنا بالبريد.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "للإبلاغ عن ملف يخالف القواعد أو حقوقك، أرسل رابطه على واتساب وسيُزال.";
 "To report something, press and hold a message or open a profile." = "للإبلاغ عن شيء، اضغط مطولًا على رسالة أو افتح ملفًا شخصيًا.";
@@ -2203,6 +2295,7 @@
 "Topic" = "الموضوع";
 "Topics" = "المواضيع";
 "Total" = "الإجمالي";
+"Track your absences" = "تتبّع غياباتك";
 "Trade a registered subject" = "بدّل مادة مسجّلة";
 "Trade a registered subject with another student. Say what you have and what you want." = "بدّل مادة مسجّلة مع طالب آخر. اكتب المادة التي لديك والمادة التي تريدها.";
 "Training 2" = "التدريب 2";
@@ -2343,6 +2436,7 @@
 "Users' accounts live in the \"UniHub Accounts\" sheet in necro1442's Drive." = "حسابات المستخدمين محفوظة في جدول \"UniHub Accounts\" في Drive الخاص بـ necro1442.";
 "Uses the ADMIN_SECRET of the submissions script. It's kept in this phone's keychain." = "يستخدم ADMIN_SECRET الخاص بسكربت المشاركات، ويُحفظ في سلسلة مفاتيح هذا الهاتف.";
 "Uses the term above. The university's own calculation is final." = "يستخدم الفصل أعلاه. حساب الجامعة هو المعتمد.";
+"Usually 50 is the pass mark out of 100. Check your grading scale." = "عادةً علامة النجاح 50 من 100. تأكد من سلم التقديرات.";
 "VIP" = "مميّز";
 "Variance 1" = "التباين 1";
 "Variance 2" = "التباين 2";
@@ -2420,6 +2514,8 @@
 "What to share" = "ما الذي يمكن مشاركته";
 "What we collect when you make an account" = "ما نجمعه عند إنشاء حساب";
 "What you agree to" = "ما توافق عليه";
+"What you need on the final" = "ما تحتاجه في الفاينل";
+"What you need on the final to pass." = "ما تحتاجه في الفاينل لتنجح.";
 "What you send us without an account" = "ما ترسله دون حساب";
 "What's New" = "ما الجديد";
 "What's my grade?" = "ما تقديري؟";
@@ -2502,6 +2598,7 @@
 "You haven't added any friends yet." = "لم تضف أي أصدقاء بعد.";
 "You haven't blocked anyone." = "لم تحظر أحدًا.";
 "You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU." = "انضممت إلى UniHub في أيامه الأولى، لذا أصبحت شارة «داعم مبكر» على ملفك الشخصي. شكراً لمساعدتك طلاب الجامعة.";
+"You know every card!" = "عرفت كل البطاقات!";
 "You pay the second half only if your ad is accepted." = "تدفع النصف الثاني فقط إذا قُبل إعلانك.";
 "You read the terms" = "قرأت الشروط";
 "You won't see their messages or get notifications from them. You can undo this in your account." = "لن ترى رسائله ولن تصلك إشعارات منه. يمكنك التراجع عن ذلك من حسابك.";
@@ -2528,8 +2625,11 @@
 "Your group wasn't accepted" = "لم يتم قبول مجموعتك";
 "Your iPhone blocked this change (error -54). Restart the iPhone and try again. If it keeps happening, the way this copy of the app was installed is the likely reason." = "منع جهاز iPhone هذا التغيير (الخطأ 54-). أعد تشغيل الجهاز وحاول مرة أخرى. إذا تكرر الأمر فالسبب المرجّح هو طريقة تثبيت هذه النسخة من التطبيق.";
 "Your major" = "تخصصك";
+"Your marks so far" = "علاماتك حتى الآن";
+"Your marks so far can't be more than the total." = "لا يمكن أن تكون علاماتك أكثر من المجموع.";
 "Your name" = "اسمك";
 "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins." = "اسمك واسم المستخدم وصورتك ونبذتك وتخصصك وكليتك وشاراتك وآخر ظهور لك. يظهر رقم هاتفك فقط إذا فعّلت ذلك. أما بريدك ورقمك الجامعي فلا يراهما سواك والمشرفون.";
+"Your own goal" = "هدفك الخاص";
 "Your password" = "كلمة مرورك";
 "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email." = "تبقى معلوماتك الشخصية خاصة حتى إيجاد تطابق. وعند توافق طالبين بنسبة 50% على الأقل فقط، تُتبادل بيانات الاتصال عبر البريد الإلكتروني.";
 "Your privacy" = "خصوصيتك";
@@ -2543,6 +2643,7 @@
 "Your story" = "قصتك";
 "Your story disappears after 24 hours and is deleted from our database after 2 days." = "تختفي قصتك بعد 24 ساعة وتُحذف من قاعدة بياناتنا بعد يومين.";
 "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days." = "يرى طلاب UniHub قصتك لمدة 24 ساعة ثم تختفي، وتُحذف من قاعدة بياناتنا بعد يومين.";
+"Your streak and minutes studied." = "سلسلتك ودقائق دراستك.";
 "Your studies" = "دراستك";
 "Your swaps" = "طلبات التبديل الخاصة بك";
 "Your timetable, with reminders." = "جدولك مع التذكيرات.";

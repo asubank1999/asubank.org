@@ -158,6 +158,7 @@ struct FocusTimerScreen: View {
     @AppStorage("ab.focus.minutes") private var minutes = 25
     @AppStorage("ab.focus.count") private var doneCount = 0
     @AppStorage("ab.focus.day") private var doneDay = ""
+    @AppStorage("ab.focus.subject") private var subject = ""
     @State private var end: Date?
     @State private var left: TimeInterval = 0
     @State private var onBreak = false
@@ -195,6 +196,14 @@ struct FocusTimerScreen: View {
                 Stepper(String(format: L("Focus for %d minutes"), minutes), value: $minutes, in: 5...90, step: 5)
                     .disabled(end != nil)
                 LabeledRow(title: "Sessions today", value: "\(doneDay == today ? doneCount : 0)")
+                if !lectureSubjects().isEmpty {
+                    Picker("Studying", selection: $subject) {
+                        Text("General").tag("")
+                        ForEach(lectureSubjects(), id: \.self) { Text($0).tag($0) }
+                    }
+                    .disabled(end != nil)
+                }
+                NavigationLink { StudyStatsScreen() } label: { Label("Study stats", systemImage: "flame") }
             } footer: {
                 Text("Keep this screen open. A 5 minute break starts after each session.")
             }
@@ -233,6 +242,7 @@ struct FocusTimerScreen: View {
         if !onBreak {
             if doneDay != today { doneDay = today; doneCount = 0 }
             doneCount += 1
+            StudyLog.shared.add(minutes: minutes, subject: subject)
         }
         onBreak.toggle()
         left = 0

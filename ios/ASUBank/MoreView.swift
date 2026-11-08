@@ -61,6 +61,10 @@ struct MoreView: View {
                     NavigationLink { LecturesScreen() } label: { Label("My lectures", systemImage: "alarm") }
                     NavigationLink { PlannerScreen() } label: { Label("Exams & tasks", systemImage: "checklist") }
                     NavigationLink { FocusTimerScreen() } label: { Label("Focus timer", systemImage: "timer") }
+                    NavigationLink { StudyStatsScreen() } label: { Label("Study stats", systemImage: "flame") }
+                    NavigationLink { AbsenceScreen() } label: { Label("Absence tracker", systemImage: "calendar.badge.minus") }
+                    NavigationLink { FinalMarkScreen() } label: { Label("Final mark calculator", systemImage: "function") }
+                    NavigationLink { FlashcardsScreen() } label: { Label("Flashcards", systemImage: "rectangle.on.rectangle.angled") }
                     NavigationLink { LifeHacksScreen() } label: { Label("Life hacks", systemImage: "lightbulb") }
                     RouteLink(Route.page("/upload/student_submissions_board", "Submissions")) { Label("Student submissions", systemImage: "rectangle.stack") }
                 } header: { Text("You") }

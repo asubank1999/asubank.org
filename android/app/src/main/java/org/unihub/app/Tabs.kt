@@ -11,6 +11,10 @@ import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.DynamicFeed
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.EventBusy
+import androidx.compose.material.icons.filled.Calculate
+import androidx.compose.material.icons.filled.Style
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.BarChart
@@ -131,6 +135,10 @@ object Links {
         SiteLink("🆕", "Latest uploads", "Newest PDFs, midterms, finals and quizzes.", web = "/guides/latest"),
         SiteLink("⚡", "Google Drive materials", "Search every uploaded file.", badge = "FAST", tab = Routes.SEARCH),
         SiteLink("🎯", "Focus timer", "Study in short sessions with breaks.", web = "/app/focus"),
+        SiteLink("🙋", "Absence tracker", "Count missed lectures, stay under the limit.", added = "2026-11-08", web = "/app/absences"),
+        SiteLink("🧮", "Final mark calculator", "What you need on the final to pass.", added = "2026-11-08", web = "/app/finalmark"),
+        SiteLink("🃏", "Flashcards", "Make cards and test yourself.", added = "2026-11-08", web = "/app/flashcards"),
+        SiteLink("🔥", "Study stats", "Your streak and minutes studied.", added = "2026-11-08", web = "/app/stats"),
         SiteLink("📥", "Recent uploads", "Latest study materials and resources.", web = "/portal/confirm_device"),
         SiteLink("📬", "Request a material", "Can't find it? Ask for it.", web = "/requests/student_request_portal"),
         SiteLink("📤", "Upload files", "Share your study materials.", tab = Routes.UPLOAD),
@@ -267,6 +275,7 @@ fun HomeScreen() {
         if (on("calendar")) item { HomeCalendarCard() }
         if (on("lecture")) item { NextLectureCard() }
         if (on("due")) item { HomeDueCard() }
+        if (on("due")) item { HomeStudyCard() }
         if (on("hero")) item {
             Box(
                 Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp).clip(RoundedCornerShape(22.dp))
@@ -465,6 +474,10 @@ fun MoreScreen() {
                     Divider(); ListRow("My lectures", icon = Icons.Filled.Alarm) { nav.navigate(Routes.LECTURES) }
                     Divider(); ListRow("Exams & tasks", icon = Icons.Filled.Checklist) { nav.openPage("/app/planner", "") }
                     Divider(); ListRow("Focus timer", icon = Icons.Filled.Timer) { nav.openPage("/app/focus", "") }
+                    Divider(); ListRow("Study stats", icon = Icons.Filled.LocalFireDepartment) { nav.openPage("/app/stats", "") }
+                    Divider(); ListRow("Absence tracker", icon = Icons.Filled.EventBusy) { nav.openPage("/app/absences", "") }
+                    Divider(); ListRow("Final mark calculator", icon = Icons.Filled.Calculate) { nav.openPage("/app/finalmark", "") }
+                    Divider(); ListRow("Flashcards", icon = Icons.Filled.Style) { nav.openPage("/app/flashcards", "") }
                     Divider(); ListRow("Life hacks", icon = Icons.Filled.Lightbulb) { nav.navigate(Routes.HACKS) }
                     if (u != null) { Divider(); ListRow("My profile", icon = Icons.Filled.AccountCircle) { nav.navigate("profile/${u.id}") } }
                     Divider()

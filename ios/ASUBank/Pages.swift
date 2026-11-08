@@ -195,6 +195,14 @@ struct SitePageView: View {
             PlannerScreen()
         } else if path == "/app/focus" {
             FocusTimerScreen()
+        } else if path == "/app/absences" || path == "/guides/absences" {
+            AbsenceScreen()
+        } else if path == "/app/finalmark" || path == "/guides/final-mark" {
+            FinalMarkScreen()
+        } else if path == "/app/flashcards" || path == "/guides/flashcards" {
+            FlashcardsScreen()
+        } else if path == "/app/stats" {
+            StudyStatsScreen()
         } else if path == "/app/language" {
             LanguageScreen()
         } else if path == "/requests/service_rating" {

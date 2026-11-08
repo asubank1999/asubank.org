@@ -16,12 +16,26 @@
 "%d TEACHERS RATED" = "%d PROFESORES VALORADOS";
 "%lld TEACHERS RATED" = "%lld PROFESORES VALORADOS";
 "%@ TEACHERS RATED" = "%@ PROFESORES VALORADOS";
+"%d absences left" = "Te quedan %d faltas";
+"%lld absences left" = "Te quedan %lld faltas";
+"%@ absences left" = "Te quedan %@ faltas";
 "%d accounts" = "%d cuentas";
 "%lld accounts" = "%lld cuentas";
 "%@ accounts" = "%@ cuentas";
+"%d cards" = "%d tarjetas";
+"%lld cards" = "%lld tarjetas";
+"%@ cards" = "%@ tarjetas";
+"%d cards added" = "%d tarjetas añadidas";
+"%lld cards added" = "%lld tarjetas añadidas";
+"%@ cards added" = "%@ tarjetas añadidas";
+"%d cards in %d rounds" = "%d tarjetas en %d rondas";
+"%lld cards in %lld rounds" = "%lld tarjetas en %lld rondas";
 "%d d ago" = "hace %d d";
 "%lld d ago" = "hace %lld d";
 "%@ d ago" = "hace %@ d";
+"%d days" = "%d días";
+"%lld days" = "%lld días";
+"%@ days" = "%@ días";
 "%d days ago" = "hace %d días";
 "%lld days ago" = "hace %lld días";
 "%@ days ago" = "hace %@ días";
@@ -48,6 +62,9 @@
 "%@ materials" = "%@ materiales";
 "%d materials in %d subjects." = "%d materiales en %d materias.";
 "%lld materials in %lld subjects." = "%lld materiales en %lld materias.";
+"%d min" = "%d min";
+"%lld min" = "%lld min";
+"%@ min" = "%@ min";
 "%d min ago" = "hace %d min";
 "%lld min ago" = "hace %lld min";
 "%@ min ago" = "hace %@ min";
@@ -56,11 +73,16 @@
 "%@ muted" = "%@ silenciadas";
 "%d of %d answered" = "%d de %d respondidas";
 "%lld of %lld answered" = "%lld de %lld respondidas";
+"%d of %d minutes today" = "%d de %d minutos hoy";
+"%lld of %lld minutes today" = "%lld de %lld minutos hoy";
 "%d of %d · Long-press a file to save or share it." = "%d de %d · Mantén pulsado un archivo para guardarlo o compartirlo.";
 "%lld of %lld · Long-press a file to save or share it." = "%lld de %lld · Mantén pulsado un archivo para guardarlo o compartirlo.";
 "%d online now" = "%d en línea ahora";
 "%lld online now" = "%lld en línea ahora";
 "%@ online now" = "%@ en línea ahora";
+"%d over the limit" = "%d por encima del límite";
+"%lld over the limit" = "%lld por encima del límite";
+"%@ over the limit" = "%@ por encima del límite";
 "%d picked" = "%d elegidos";
 "%lld picked" = "%lld elegidos";
 "%@ picked" = "%@ elegidos";
@@ -88,9 +110,13 @@
 "%d%% off applied" = "%d%% de descuento aplicado";
 "%lld%% off applied" = "%lld%% de descuento aplicado";
 "%@%% off applied" = "%@%% de descuento aplicado";
+"%d-day study streak" = "Racha de estudio de %d días";
+"%lld-day study streak" = "Racha de estudio de %lld días";
+"%@-day study streak" = "Racha de estudio de %@ días";
 "06 = Hall Number (Hall 06)" = "06 = Número de pabellón (Pabellón 06)";
 "1 - College of IT" = "1 - Facultad de TI";
 "1 = College Number (College of IT)" = "1 = Número de universidad (Facultad de TI)";
+"1 absence left" = "Te queda 1 falta";
 "1 day" = "1 día";
 "1 minute" = "1 minuto";
 "1 week" = "1 semana";
@@ -171,6 +197,7 @@
 "About the group" = "Sobre el grupo";
 "About this app" = "Acerca de esta app";
 "About you" = "Sobre ti";
+"Absence tracker" = "Control de faltas";
 "Academic calendar" = "Calendario académico";
 "Academic calendar 2026" = "Calendario académico 2026";
 "Academic calendar 2026–2027" = "Calendario académico 2026-2027";
@@ -190,6 +217,7 @@
 "Active today" = "Activos hoy";
 "Add" = "Añadir";
 "Add a backup link" = "Añadir un enlace de respaldo";
+"Add a card" = "Añadir tarjeta";
 "Add a course" = "Añadir un curso";
 "Add a course, e.g. Calculus 1" = "Añade un curso, p. ej. Calculus 1";
 "Add a cover photo to your profile" = "Añade una foto de portada a tu perfil";
@@ -198,6 +226,8 @@
 "Add a photo or video" = "Add a photo or video";
 "Add a room" = "Añadir una sala";
 "Add a screenshot" = "Añadir una captura";
+"Add a subject" = "Añadir materia";
+"Add a subject, then tap + each time you miss a lecture. We warn you before you reach the limit." = "Añade una materia y toca + cada vez que faltes a una clase. Te avisamos antes de llegar al límite.";
 "Add a tab" = "Añadir una pestaña";
 "Add a topic, e.g. Integrals, Midterm review" = "Agregue un tema, p. Integrales, Revisión de mitad de período";
 "Add a video" = "Add a video";
@@ -208,9 +238,12 @@
 "Add friends first. Then you can message them here." = "Primero añade amigos. Luego podrás escribirles aquí.";
 "Add friends or write the first one." = "Añade amigos o escribe la primera.";
 "Add friends, or look at what other students share under Strangers." = "Añade amigos o mira lo que comparten otros estudiantes en Desconocidos.";
+"Add one" = "Sumar uno";
 "Add story" = "Añadir historia";
+"Add up everything before the final: midterm, quizzes, assignments, labs. Example: 22 out of 50." = "Suma todo antes del final: parcial, quizzes, tareas, laboratorios. Ejemplo: 22 de 50.";
 "Add your classmates as friends" = "Añade a tus compañeros como amigos";
 "Add your exams and assignments, and the next ones show on Home." = "Añade tus exámenes y tareas, y los próximos aparecerán en Inicio.";
+"Add your first card." = "Añade tu primera tarjeta.";
 "Add your group" = "Añade tu grupo";
 "Add your group's link" = "Añade el enlace de tu grupo";
 "Add your subject, hall and time. We'll remind you 10 minutes before it starts." = "Añade tu materia, aula y hora. Te avisaremos 10 minutos antes de empezar.";
@@ -243,6 +276,7 @@
 "After you submit, email us to confirm your payment." = "Después de enviar, escríbenos por correo para confirmar tu pago.";
 "After you submit, message us on WhatsApp to confirm your payment." = "Después de enviar, escríbenos por WhatsApp para confirmar tu pago.";
 "Afternoon" = "Tarde";
+"Again" = "Otra vez";
 "Agricultural technology" = "Tecnología agrícola";
 "Alan" = "Alan";
 "Alert" = "Alerta";
@@ -263,7 +297,12 @@
 "Allow UniHub to add photos in Settings to save stories." = "Permite que UniHub añada fotos en Ajustes para guardar historias.";
 "Allow exact reminders" = "Permitir recordatorios exactos";
 "Allow storage to save stories." = "Permite el almacenamiento para guardar historias.";
+"Allowed absences" = "Faltas permitidas";
+"Allowed absences: %d" = "Faltas permitidas: %d";
+"Allowed absences: %lld" = "Faltas permitidas: %lld";
+"Allowed absences: %@" = "Faltas permitidas: %@";
 "Almost there" = "Ya casi";
+"Already reached" = "Ya alcanzado";
 "Also searching for" = "También buscamos";
 "Alumni" = "Egresado";
 "Alumni Follow-up Platform | منصة متابعة الخريجين" = "Plataforma de seguimiento de egresados";
@@ -288,6 +327,7 @@
 "Announcements only" = "Solo anuncios";
 "Anonymous · takes 5 seconds" = "Anónimo · tarda 5 segundos";
 "Another game?" = "¿Otro juego?";
+"Answer" = "Respuesta";
 "Answers to common questions." = "Respuestas a preguntas comunes.";
 "Any" = "Cualquiera";
 "Any file size, as many files as you like." = "Cualquier tamaño de archivo y tantos archivos como quieras.";
@@ -329,10 +369,12 @@
 "Ask your college's WhatsApp group" = "Pregunta en el grupo de WhatsApp de tu facultad";
 "Assignment" = "Asignación";
 "At least 6 characters" = "Al menos 6 caracteres";
+"At the limit: don't miss another lecture" = "En el límite: no faltes a otra clase";
 "Attach a file" = "Adjuntar un archivo";
 "Attach the PDF you want it made from." = "Adjunte el PDF desde el que desea realizarlo.";
 "BANNED" = "BLOQUEADO";
 "Back" = "Atrás";
+"Back (answer)" = "Reverso (respuesta)";
 "Background" = "Fondo";
 "Backup" = "Copia de seguridad";
 "Backup %d (%@)" = "Copia de seguridad %d (%@)";
@@ -610,6 +652,7 @@
 "Couldn't send your booking. Check your connection and try again." = "No se pudo enviar tu reserva. Revisa tu conexión e inténtalo de nuevo.";
 "Couldn't start the recording." = "Couldn't start the recording.";
 "Couldn't take the photo. Try again." = "No se pudo hacer la foto. Inténtalo de nuevo.";
+"Count missed lectures, stay under the limit." = "Cuenta tus faltas y no pases el límite.";
 "Countdown Timer" = "Countdown Timer";
 "Course" = "Curso";
 "Course %d" = "Curso %d";
@@ -639,6 +682,9 @@
 "Customize" = "Personalizar";
 "Customize tab bar" = "Personalizar la barra de pestañas";
 "Cyber security 🫀" = "Cyber security 🫀";
+"Daily goal: %d minutes" = "Meta diaria: %d minutos";
+"Daily goal: %lld minutes" = "Meta diaria: %lld minutos";
+"Daily goal: %@ minutes" = "Meta diaria: %@ minutos";
 "Dark" = "Oscuro";
 "Dark green background" = "Fondo verde oscuro";
 "Dark navy background" = "Fondo azul marino oscuro";
@@ -649,6 +695,7 @@
 "Days" = "Días";
 "Dead or private links are hidden. If you open one from Saved, you can request it instead." = "Dead or private links are hidden. If you open one from Saved, you can request it instead.";
 "Deanship" = "Deanship";
+"Deck name, e.g. Biochemistry" = "Nombre del mazo, p. ej. Bioquímica";
 "Decline" = "Rechazar";
 "Delete" = "Eliminar";
 "Delete @%@?" = "Delete @%@?";
@@ -662,6 +709,7 @@
 "Delete post" = "Eliminar publicación";
 "Delete room" = "Eliminar sala";
 "Delete submission" = "Delete submission";
+"Delete this deck?" = "¿Eliminar este mazo?";
 "Delete this lecture" = "Eliminar esta clase";
 "Delete this post?" = "¿Eliminar esta publicación?";
 "Delete this room?" = "¿Eliminar esta sala?";
@@ -738,6 +786,7 @@
 "Early supporter badge for everyone who joins by the end of November 2026, with our thanks" = "Early supporter badge for everyone who joins by the end of November 2026, with our thanks";
 "Easy to navigate" = "Fácil de navegar";
 "Edit" = "Editar";
+"Edit card" = "Editar tarjeta";
 "Edit lecture" = "Editar clase";
 "Edit profile" = "Editar perfil";
 "Edit quality" = "Calidad de edición";
@@ -861,6 +910,7 @@
 "Fill out your profile with your academic interests, class schedule, and hobbies. Our system will match you with classmates who share at least 50% compatibility." = "Fill out your profile with your academic interests, class schedule, and hobbies. Our system will match you with classmates who share at least 50% compatibility.";
 "Final" = "Final";
 "Final Exam Timings with Countdown" = "Final Exam Timings with Countdown";
+"Final mark calculator" = "Calculadora de nota final";
 "Find" = "Buscar";
 "Find a hall" = "Buscar un aula";
 "Find a subject" = "Buscar una materia";
@@ -892,6 +942,7 @@
 "Fixed: settings under More sometimes wouldn't open or froze" = "Fixed: settings under More sometimes wouldn't open or froze";
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "Correcciones: fotos de perfil más nítidas y la fila de conectados solo muestra a quien está en línea";
 "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "Correcciones: fotos de perfil más nítidas, las fotos ya no salen de lado en Android y la fila de conectados solo muestra a quien está en línea";
+"Flashcards" = "Tarjetas de estudio";
 "Flexible" = "Flexible";
 "Float" = "Float";
 "Floor" = "Planta";
@@ -943,7 +994,9 @@
 "Friends, Users and the admin screens open much faster" = "Friends, Users and the admin screens open much faster";
 "Friends: add classmates, accept requests, poke them or ask to meet, study or grab coffee, and share posts in a new Friends tab" = "Friends: add classmates, accept requests, poke them or ask to meet, study or grab coffee, and share posts in a new Friends tab";
 "From" = "Desde";
+"From My lectures" = "De Mis clases";
 "From your phone, Drive or Downloads" = "Desde tu teléfono, Drive o Descargas";
+"Front (question)" = "Anverso (pregunta)";
 "Full Q&A from your PDF" = "Full Q&A from your PDF";
 "Full name" = "Nombre completo";
 "G/B - Clinics Building" = "G/B - Clinics Building";
@@ -956,6 +1009,7 @@
 "Give it a title." = "Ponle un título.";
 "Gives them a temporary password" = "Le da una contraseña temporal";
 "Glow" = "Glow";
+"Goal total" = "Total objetivo";
 "Going home (PM)" = "De regreso (PM)";
 "Gold" = "Dorado";
 "Good" = "Bien";
@@ -1125,6 +1179,7 @@
 "Keep the app open until your files finish. You can leave this screen." = "Mantén la app abierta hasta que terminen tus archivos. Puedes salir de esta pantalla.";
 "Keep this screen open. A 5 minute break starts after each session." = "Mantén esta pantalla abierta. Tras cada sesión empieza un descanso de 5 minutos.";
 "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21)." = "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21).";
+"Knew it" = "La sabía";
 "Lab Materials" = "Lab Materials";
 "Lab materials" = "Material de laboratorio";
 "Label" = "Label";
@@ -1133,6 +1188,7 @@
 "Language: English, Arabic, Spanish or your phone's language, in More > Language." = "Language: English, Arabic, Spanish or your phone's language, in More > Language.";
 "Large" = "Grande";
 "Large files with no size limit." = "Large files with no size limit.";
+"Last 7 days" = "Últimos 7 días";
 "Last name" = "Apellido";
 "Last seen" = "Última vez";
 "Last seen %@" = "Última vez %@";
@@ -1160,6 +1216,9 @@
 "Life hacks: first aid, safety, studying, exams and saving money, plus 911 one tap away" = "Life hacks: first aid, safety, studying, exams and saving money, plus 911 one tap away";
 "Light" = "Claro";
 "Light and dark mode" = "Light and dark mode";
+"Limit %d absences" = "Límite: %d faltas";
+"Limit %lld absences" = "Límite: %lld faltas";
+"Limit %@ absences" = "Límite: %@ faltas";
 "Linear Properties for Expected Value and Variance" = "Linear Properties for Expected Value and Variance";
 "Linear Regression Equation" = "Linear Regression Equation";
 "Link" = "Link";
@@ -1195,8 +1254,11 @@
 "Major, e.g. Pharmacy" = "Carrera, p. ej. Farmacia";
 "Make a PowerPoint" = "Make a PowerPoint";
 "Make a WORD Document" = "Make a WORD Document";
+"Make a deck for a subject, write a question on the front and the answer on the back, then test yourself." = "Crea un mazo para una materia, escribe la pregunta delante y la respuesta detrás, y ponte a prueba.";
 "Make admin" = "Make admin";
+"Make cards and test yourself." = "Crea tarjetas y ponte a prueba.";
 "Make sure to hide your university number/name" = "Make sure to hide your university number/name";
+"Make your own flashcards" = "Crea tus propias tarjetas";
 "Makes a temporary password for you to send them. They're asked to change it." = "Makes a temporary password for you to send them. They're asked to change it.";
 "Male" = "Hombre";
 "Manage" = "Gestionar";
@@ -1206,6 +1268,7 @@
 "Mark" = "Nota";
 "Mark as done" = "Marcar como hecho";
 "Mark as not done" = "Marcar como no hecho";
+"Marks so far" = "Notas hasta ahora";
 "Match my phone" = "Como el teléfono";
 "Matcher" = "Coincidir";
 "Matches found: %d" = "Matches found: %d";
@@ -1243,6 +1306,12 @@
 "Midnight book" = "Libro nocturno";
 "Midterm" = "Parcial";
 "Mint" = "Menta";
+"Minutes count when a focus timer session ends. Green days reached your goal." = "Los minutos cuentan al terminar una sesión del temporizador. Los días verdes alcanzaron tu meta.";
+"Minutes today" = "Minutos hoy";
+"Missed so far" = "Faltas hasta ahora";
+"Missed so far: %d" = "Faltas hasta ahora: %d";
+"Missed so far: %lld" = "Faltas hasta ahora: %lld";
+"Missed so far: %@" = "Faltas hasta ahora: %@";
 "Mobile-friendly design" = "Diseño adaptado al móvil";
 "Mode" = "Mode";
 "Moderation" = "Moderación";
@@ -1258,6 +1327,7 @@
 "Most Wanted Files" = "Most Wanted Files";
 "Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships." = "La mayoría de los archivos de estudio vienen de la propia universidad o los compartieron estudiantes, mediante enlaces que ya eran públicos. Una de las facultades de la universidad revisó y aprobó la colección.";
 "Most test banks are available in PDF format, but other formats may also be available depending on the resource." = "Most test banks are available in PDF format, but other formats may also be available depending on the resource.";
+"Most universities in Jordan allow about 15% of a subject's lectures. Check your own university's rule and set the limit to match." = "La mayoría de las universidades de Jordania permiten un 15% de las clases de una materia. Revisa la norma de tu universidad y ajusta el límite.";
 "Most votes" = "Más votos";
 "Most wanted files" = "Archivos más buscados";
 "Most wanted games" = "Juegos más pedidos";
@@ -1298,6 +1368,7 @@
 "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan)." = "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan).";
 "New chat messages" = "Mensajes nuevos del chat";
 "New cumulative" = "Nuevo acumulado";
+"New deck" = "Nuevo mazo";
 "New files" = "Archivos nuevos";
 "New files show up in Latest uploads on the Home tab." = "Los archivos nuevos aparecen en Últimas subidas en Inicio.";
 "New friend request" = "Nueva solicitud de amistad";
@@ -1334,6 +1405,7 @@
 "No app can open this link" = "No app can open this link";
 "No bus line matches." = "Ninguna línea coincide.";
 "No buses at this time" = "No hay autobuses a esta hora";
+"No cards yet" = "Aún no hay tarjetas";
 "No comments yet" = "Aún no hay comentarios";
 "No events" = "Sin eventos";
 "No files" = "Sin archivos";
@@ -1378,6 +1450,7 @@
 "Normal Distribution (Continued 3)" = "Normal Distribution (Continued 3)";
 "Not from the university" = "Not from the university";
 "Not in the list of buildings" = "Not in the list of buildings";
+"Not possible" = "No es posible";
 "Not set" = "Sin definir";
 "Not signed in" = "Sin iniciar sesión";
 "Not sure of the name? Browse by college" = "¿No sabes el nombre? Explora por facultad";
@@ -1486,6 +1559,7 @@
 "Other faculties" = "Otras facultades";
 "Other ways to share" = "Otras formas de compartir";
 "Our support hours are Sun-Thu" = "Our support hours are Sun-Thu";
+"Out of" = "Sobre";
 "Outline" = "Outline";
 "Outside ASU" = "Fuera de ASU";
 "Outside ASU adds a 5 JD travel fee." = "Fuera de ASU se añade un cargo de 5 JD por traslado.";
@@ -1633,6 +1707,7 @@
 "Properties of Density Function" = "Properties of Density Function";
 "Publishing your post…" = "Publicando tu publicación…";
 "Pulse" = "Pulse";
+"Question" = "Pregunta";
 "Questions & Answers" = "Questions & Answers";
 "Questions Without Answers" = "Questions Without Answers";
 "Questions about donating" = "Preguntas sobre donar";
@@ -1692,11 +1767,13 @@
 "Remove from Saved" = "Quitar de Guardados";
 "Remove from UniHub" = "Quitar de UniHub";
 "Remove from UniHub?" = "¿Quitar de UniHub?";
+"Remove one" = "Quitar uno";
 "Remove photo" = "Quitar foto";
 "Remove this friend?" = "¿Eliminar a este amigo?";
 "Remove video" = "Quitar vídeo";
 "Remove voice message" = "Remove voice message";
 "Removed from the chat by an admin" = "Expulsado del chat por un admin";
+"Rename" = "Renombrar";
 "Repeat new password" = "Repite la contraseña nueva";
 "Repeat password" = "Repite la contraseña";
 "Replies to me" = "Respuestas para mí";
@@ -1747,6 +1824,8 @@
 "Rooms" = "Salas";
 "Rose" = "Rosa";
 "Round" = "Round";
+"Round %d · %d left · %d known" = "Ronda %d · quedan %d · sabidas %d";
+"Round %lld · %lld left · %lld known" = "Ronda %lld · quedan %lld · sabidas %lld";
 "Royal blue" = "Azul real";
 "Rules and your rights" = "Normas y tus derechos";
 "Russian" = "Russian";
@@ -1958,6 +2037,8 @@
 "Sponsored" = "Patrocinado";
 "Standard" = "Estándar";
 "Start" = "Empezar";
+"Start a new streak today" = "Empieza una nueva racha hoy";
+"Start a session" = "Empezar una sesión";
 "Start the conversation!" = "Start the conversation!";
 "Starts at" = "Empieza a las";
 "Starts at %@" = "Starts at %@";
@@ -1972,6 +2053,8 @@
 "Stories: share a photo or text for 24 hours" = "Historias: comparte una foto o un texto durante 24 horas";
 "Story videos can be up to 30 seconds and now play to the very end" = "Los vídeos de las historias duran hasta 30 segundos y ahora se reproducen hasta el final";
 "Strangers" = "Desconocidos";
+"Streak" = "Racha";
+"Streak, daily goal and minutes per subject" = "Racha, meta diaria y minutos por materia";
 "Strong and steady" = "Strong and steady";
 "Structured submission" = "Envío estructurado";
 "Structured submissions take PDF, Word, PowerPoint and photos only." = "Los envíos estructurados solo aceptan PDF, Word, PowerPoint y fotos.";
@@ -1992,8 +2075,10 @@
 "Students offering" = "Ofertas de estudiantes";
 "Students often share what you need" = "Los estudiantes suelen compartir lo que necesitas";
 "Studies" = "Estudios";
+"Study" = "Estudiar";
 "Study Hall" = "Sala de estudio";
 "Study Plans" = "Study Plans";
+"Study again" = "Estudiar otra vez";
 "Study cards" = "Tarjetas de estudio";
 "Study guides or cheat sheets" = "Guías de estudio o resúmenes";
 "Study help" = "Ayuda de estudio";
@@ -2002,8 +2087,10 @@
 "Study place" = "Lugar de estudio";
 "Study plans" = "Study plans";
 "Study resources" = "Recursos de estudio";
+"Study stats" = "Estadísticas de estudio";
 "Study together" = "Estudiar juntos";
 "Study topics" = "Temas de estudio";
+"Studying" = "Estudiando";
 "Subject" = "Materia";
 "Subject (optional)" = "Materia (opcional)";
 "Subject / course, e.g. Calculus 1" = "Materia / curso, p. ej. Cálculo 1";
@@ -2061,6 +2148,7 @@
 "Tap the bin next to an upload to delete it" = "Toca la papelera junto a un archivo para borrarlo";
 "Tap the bin, or hold any file, to delete it" = "Toca la papelera o mantén pulsado un archivo para eliminarlo";
 "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline." = "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline.";
+"Tap the card to see the answer" = "Toca la tarjeta para ver la respuesta";
 "Tap the star on any material to keep it here, even offline." = "Tap the star on any material to keep it here, even offline.";
 "Tap to turn them on in Android settings" = "Toca para activarlas en los ajustes de Android";
 "Tap ☆ on any file, or swipe right on it, to keep it here." = "Tap ☆ on any file, or swipe right on it, to keep it here.";
@@ -2119,6 +2207,7 @@
 "The file changed while uploading. Please add it again." = "El archivo cambió durante la subida. Vuelve a añadirlo.";
 "The file is empty." = "El archivo está vacío.";
 "The file may already be on UniHub." = "The file may already be on UniHub.";
+"The final is out of" = "El final es sobre";
 "The hard parts, made simple" = "The hard parts, made simple";
 "The key points of your PDF" = "The key points of your PDF";
 "The minimum to pass" = "The minimum to pass";
@@ -2134,6 +2223,7 @@
 "The submissions server sent something unexpected." = "The submissions server sent something unexpected.";
 "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them" = "La barra de pestañas ahora es Inicio, Publicaciones, Chat, Buscar y Más. Si ya cambiaste tus pestañas, se quedan como las pusiste";
 "The team reviews it before it goes on the campus display screen." = "El equipo lo revisa antes de mostrarlo en la pantalla del campus.";
+"The total is out of %@." = "El total es sobre %@.";
 "The upload expired. Please try again." = "La subida caducó. Inténtalo de nuevo.";
 "The weather card shows the exact day and date, plus the day's high and low" = "The weather card shows the exact day and date, plus the day's high and low";
 "Theme" = "Tema";
@@ -2173,6 +2263,7 @@
 "This username, email or ID belongs to the admin. We'll email a code to confirm it's you." = "This username, email or ID belongs to the admin. We'll email a code to confirm it's you.";
 "This version of UniHub (%@) no longer works. Please install %@ to keep using the app." = "This version of UniHub (%@) no longer works. Please install %@ to keep using the app.";
 "This week" = "Esta semana";
+"This week by subject" = "Esta semana por materia";
 "This year's important dates." = "This year's important dates.";
 "Three ways to find any material" = "Three ways to find any material";
 "Thunderstorms" = "Tormentas";
@@ -2186,6 +2277,7 @@
 "Title, e.g. Calculus 1 Midterm 2025" = "Título, p. ej. Cálculo 1 parcial 2025";
 "To" = "Hasta";
 "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information." = "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.";
+"To get %@" = "Para llegar a %@";
 "To remove a file or anything else, report it or email us." = "To remove a file or anything else, report it or email us.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed.";
 "To report something, press and hold a message or open a profile." = "To report something, press and hold a message or open a profile.";
@@ -2203,6 +2295,7 @@
 "Topic" = "Tema";
 "Topics" = "Temas";
 "Total" = "Total";
+"Track your absences" = "Controla tus faltas";
 "Trade a registered subject" = "Intercambia una materia inscrita";
 "Trade a registered subject with another student. Say what you have and what you want." = "Cambia una materia registrada con otro estudiante. Di cuál tienes y cuál quieres.";
 "Training 2" = "Training 2";
@@ -2343,6 +2436,7 @@
 "Users' accounts live in the \"UniHub Accounts\" sheet in necro1442's Drive." = "Users' accounts live in the \"UniHub Accounts\" sheet in necro1442's Drive.";
 "Uses the ADMIN_SECRET of the submissions script. It's kept in this phone's keychain." = "Uses the ADMIN_SECRET of the submissions script. It's kept in this phone's keychain.";
 "Uses the term above. The university's own calculation is final." = "Usa el semestre de arriba. El cálculo oficial de la universidad es el definitivo.";
+"Usually 50 is the pass mark out of 100. Check your grading scale." = "Normalmente se aprueba con 50 de 100. Revisa tu escala de notas.";
 "VIP" = "VIP";
 "Variance 1" = "Variance 1";
 "Variance 2" = "Variance 2";
@@ -2420,6 +2514,8 @@
 "What to share" = "Qué compartir";
 "What we collect when you make an account" = "What we collect when you make an account";
 "What you agree to" = "A qué aceptas";
+"What you need on the final" = "Lo que necesitas en el final";
+"What you need on the final to pass." = "Lo que necesitas en el final para aprobar.";
 "What you send us without an account" = "What you send us without an account";
 "What's New" = "Novedades";
 "What's my grade?" = "¿Cuál es mi nota?";
@@ -2502,6 +2598,7 @@
 "You haven't added any friends yet." = "Aún no has añadido amigos.";
 "You haven't blocked anyone." = "You haven't blocked anyone.";
 "You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU." = "Te uniste a UniHub en sus primeros días, así que tu perfil ya tiene la insignia de Early supporter. Gracias por ayudar a los estudiantes de ASU.";
+"You know every card!" = "¡Te sabes todas las tarjetas!";
 "You pay the second half only if your ad is accepted." = "Pagas la segunda mitad solo si se acepta tu anuncio.";
 "You read the terms" = "Leíste los términos";
 "You won't see their messages or get notifications from them. You can undo this in your account." = "You won't see their messages or get notifications from them. You can undo this in your account.";
@@ -2528,8 +2625,11 @@
 "Your group wasn't accepted" = "Tu grupo no fue aceptado";
 "Your iPhone blocked this change (error -54). Restart the iPhone and try again. If it keeps happening, the way this copy of the app was installed is the likely reason." = "Tu iPhone bloqueó este cambio (error -54). Reinícialo e inténtalo de nuevo. Si sigue pasando, la causa probable es cómo se instaló esta copia de la app.";
 "Your major" = "Tu carrera";
+"Your marks so far" = "Tus notas hasta ahora";
+"Your marks so far can't be more than the total." = "Tus notas no pueden superar el total.";
 "Your name" = "Tu nombre";
 "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins." = "Your name, username, photo, bio, major, college, badges and when you were last online. Your phone number shows only if you turn that on. Your email and university ID are visible only to you and the admins.";
+"Your own goal" = "Tu propia meta";
 "Your password" = "Tu contraseña";
 "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email." = "Your personal information stays private until a match is found. Only when two students have at least 50% compatibility will contact information be exchanged via email.";
 "Your privacy" = "Tu privacidad";
@@ -2543,6 +2643,7 @@
 "Your story" = "Tu historia";
 "Your story disappears after 24 hours and is deleted from our database after 2 days." = "Tu historia desaparece tras 24 horas y se borra de nuestra base de datos tras 2 días.";
 "Your story is seen by UniHub students for 24 hours, then it disappears. It's deleted from our database after 2 days." = "Los estudiantes de UniHub ven tu historia durante 24 horas y luego desaparece. Se borra de nuestra base de datos a los 2 días.";
+"Your streak and minutes studied." = "Tu racha y minutos de estudio.";
 "Your studies" = "Tus estudios";
 "Your swaps" = "Tus intercambios";
 "Your timetable, with reminders." = "Tu horario, con recordatorios.";
