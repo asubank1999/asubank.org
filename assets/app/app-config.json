@@ -1,15 +1,15 @@
 {
   "share": "https://asubank.org/",
   "ios": {
-    "latest": "1.19.0",
+    "latest": "1.19.1",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.19.0",
-    "notes": "New: save stories with a UniHub watermark, 30-second story videos that play to the end, react to or reply to stories, news and fun facts in the Feed, copy usernames, and a tidier profile."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.19.1",
+    "notes": "New: choose Quick upload or Structured submission on the Upload screen, every notification your phone showed in the Notifications tab, and an easier Share a video. Fixed sharing a video, and a crash when adding a lecture on Android."
   },
   "android": {
-    "latest": "1.19.0",
+    "latest": "1.19.1",
     "minimum": "1.0.0",
-    "notes": "New: save stories with a UniHub watermark, 30-second story videos that play to the end, react to or reply to stories, news and fun facts in the Feed, copy usernames, and a tidier profile."
+    "notes": "New: choose Quick upload or Structured submission on the Upload screen, every notification your phone showed in the Notifications tab, and an easier Share a video. Fixed sharing a video, and a crash when adding a lecture on Android."
   },
   "donate": true
 }
