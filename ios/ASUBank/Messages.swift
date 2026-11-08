@@ -67,13 +67,13 @@ struct DMConversationRows: View {
     @ObservedObject var model: DMListModel
 
     var body: some View {
-        Section {
+        Section14 {
             NavigationLink { NewMessageScreen() } label: {
-                Label("New message", systemImage: "square.and.pencil").foregroundStyle(Color.abAccent)
+                Label("New message", systemImage: "square.and.pencil").fg14(Color.abAccent)
             }
         }
         if model.conversations.isEmpty {
-            Section {
+            Section14 {
                 if model.loaded {
                     EmptyState(symbol: "paperplane", title: "No private messages yet", text: "You can message your friends. Only the two of you see the chat.")
                         .listRowBackground(Color.clear)
@@ -82,7 +82,7 @@ struct DMConversationRows: View {
                 }
             }
         } else {
-            Section {
+            Section14 {
                 ForEach(model.conversations) { c in
                     NavigationLink { DMThreadScreen(userId: c.user.id, name: c.user.displayName, color: c.user.color, photo: c.user.avatar) } label: {
                         HStack(spacing: 12) {
@@ -91,14 +91,14 @@ struct DMConversationRows: View {
                                 HStack {
                                     Text(c.user.displayName).font(.body.weight(c.unread > 0 ? .bold : .semibold)).lineLimit(1)
                                     Spacer()
-                                    Text(Social.ago(c.last.created)).font(.caption).foregroundStyle(c.unread > 0 ? Color.abAccent : .secondary)
+                                    Text(Social.ago(c.last.created)).font(.caption).fg14(c.unread > 0 ? Color.abAccent : .secondary)
                                 }
                                 HStack {
-                                    Text(c.last.preview).font(.subheadline).foregroundStyle(c.unread > 0 ? .primary : .secondary).lineLimit(1)
+                                    Text(c.last.preview).font(.subheadline).fg14(c.unread > 0 ? .primary : .secondary).lineLimit(1)
                                     Spacer()
                                     if c.unread > 0 {
-                                        Text("\(c.unread)").font(.caption2.weight(.bold)).foregroundStyle(.white)
-                                            .padding(.horizontal, 7).padding(.vertical, 3).background(Color.abFill, in: Capsule())
+                                        Text("\(c.unread)").font(.caption2.weight(.bold)).fg14(.white)
+                                            .padding(.horizontal, 7).padding(.vertical, 3).bgIn14(Color.abFill, in: Capsule())
                                     }
                                 }
                             }
@@ -129,18 +129,18 @@ struct NewMessageScreen: View {
             if shown.isEmpty && found.isEmpty && loaded {
                 EmptyState(symbol: "person.2", title: "No friends yet", text: "Add friends first. Then you can message them here.").listRowBackground(Color.clear)
             }
-            if !shown.isEmpty { Section("Friends") { ForEach(shown) { row($0) } } }
-            if !found.isEmpty { Section("Everyone") { ForEach(found) { row($0) } } }
+            if !shown.isEmpty { Section14("Friends") { ForEach(shown) { row($0) } } }
+            if !found.isEmpty { Section14("Everyone") { ForEach(found) { row($0) } } }
         }
-        .listStyle(.insetGrouped)
-        .searchable(text: $query, prompt: "Search people")
+        .listStyle(InsetGroupedListStyle())
+        .searchable14(text: $query, prompt: "Search people")
         .navigationTitle("New message")
         .navigationBarTitleDisplayMode(.inline)
-        .task {
+        .task14 {
             if let r = try? await account.call("friends") { friends = decode([ABUser].self, r["friends"]) ?? [] }
             loaded = true
         }
-        .task(id: query) {
+        .task14(id: query) {
             guard account.isAdmin, query.count >= 2 else { found = []; return }
             try? await Task.sleep(nanoseconds: 400_000_000)
             if Task.isCancelled { return }
@@ -351,7 +351,7 @@ struct DMThreadScreen: View {
     @State private var reporting: ReportTarget?
     @State private var blocking: BlockTarget?
     @State private var opening: String?
-    @FocusState private var focused: Bool
+    @State private var focused: Bool = false
 
     init(userId: String, name: String, color: String, photo: String? = nil) {
         self.userId = userId
@@ -376,7 +376,7 @@ struct DMThreadScreen: View {
                         VStack(spacing: 8) {
                             Avatar(name: name, color: color, size: 72, photo: photo, peek: false)
                             Text(name).font(.headline)
-                            Text("Say hello. Only the two of you see this chat.").font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                            Text("Say hello. Only the two of you see this chat.").font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
                         }
                         .padding(.top, 60)
                     }
@@ -388,7 +388,7 @@ struct DMThreadScreen: View {
                         }
                         bubble(m, joinedAbove: prev?.from == m.from, joinedBelow: next?.from == m.from).id(m.id)
                         if m.id == lastSeenMine {
-                            Text("Seen").font(.caption2).foregroundStyle(.secondary).frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 6)
+                            Text("Seen").font(.caption2).fg14(.secondary).frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 6)
                         }
                     }
                     Color.clear.frame(height: 4).id("bottom")
@@ -400,7 +400,7 @@ struct DMThreadScreen: View {
             .onChange(of: model.messages.count) { _ in withAnimation { proxy.scrollTo("bottom", anchor: .bottom) } }
             .onAppear { DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { proxy.scrollTo("bottom", anchor: .bottom) } }
         }
-        .safeAreaInset(edge: .bottom) { composer }
+        .safeAreaInset14(edge: .bottom) { composer }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -408,15 +408,15 @@ struct DMThreadScreen: View {
                     HStack(spacing: 8) {
                         Avatar(name: name, color: color, size: 32, photo: model.user?.avatar ?? photo, online: model.user?.online, peek: false)
                         VStack(alignment: .leading, spacing: 0) {
-                            Text(name).font(.subheadline.weight(.semibold)).foregroundStyle(.primary).lineLimit(1)
+                            Text(name).font(.subheadline.weight(.semibold)).fg14(.primary).lineLimit(1)
                             if let u = model.user {
                                 Text(u.online == true ? L("Online now") : lastSeenText(u.lastSeen))
-                                    .font(.caption2).foregroundStyle(u.online == true ? Color.green : .secondary).lineLimit(1)
+                                    .font(.caption2).fg14(u.online == true ? Color.green : .secondary).lineLimit(1)
                             }
                         }
                     }
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PlainButtonStyle())
             }
         }
         .onAppear { model.start() }
@@ -432,13 +432,13 @@ struct DMThreadScreen: View {
             VStack(alignment: .trailing, spacing: 4) {
                 if m.hasFile == true { attachment(m, mine: mine) }
                 if !m.text.isEmpty {
-                    Text(m.text).font(.body).foregroundStyle(mine ? .white : .primary).textSelection(.enabled)
+                    Text(m.text).font(.body).fg14(mine ? .white : .primary)
                         .multilineTextAlignment(.leading)
                 }
                 HStack(spacing: 4) {
                     ExpiryTag(expires: m.expires, tint: mine ? .white.opacity(0.8) : .secondary)
-                    if m.pending == true { Image(systemName: "clock").font(.caption2).foregroundStyle(mine ? .white.opacity(0.8) : .secondary) }
-                    Text(m.date, style: .time).font(.caption2).foregroundStyle(mine ? .white.opacity(0.75) : .secondary)
+                    if m.pending == true { Image(systemName: "clock").font(.caption2).fg14(mine ? .white.opacity(0.8) : .secondary) }
+                    Text(m.date, style: .time).font(.caption2).fg14(mine ? .white.opacity(0.75) : .secondary)
                 }
             }
             .padding(.horizontal, 12).padding(.vertical, 8)
@@ -448,12 +448,12 @@ struct DMThreadScreen: View {
                 if !m.text.isEmpty { Button { UIPasteboard.general.string = m.text } label: { Label("Copy", systemImage: "doc.on.doc") } }
                 if mine {
                     if m.pending != true {
-                        Button(role: .destructive) { Task { await model.delete(m) } } label: { Label("Delete for everyone", systemImage: "trash") }
+                        Button() { Task { await model.delete(m) } } label: { Label("Delete for everyone", systemImage: "trash") }
                     }
                 } else {
                     Button { reporting = ReportTarget(kind: "dm", targetId: m.id, name: String(m.preview.prefix(120))) } label: { Label("Report message", systemImage: "flag") }
                     if model.user?.isAdmin != true {
-                        Button(role: .destructive) { blocking = BlockTarget(userId: userId, name: name) } label: { Label("Block", systemImage: "hand.raised") }
+                        Button() { blocking = BlockTarget(userId: userId, name: name) } label: { Label("Block", systemImage: "hand.raised") }
                     }
                 }
             }
@@ -470,17 +470,17 @@ struct DMThreadScreen: View {
             Button { Task { await open(m) } } label: {
                 HStack(spacing: 10) {
                     Image(systemName: m.fileType == "pdf" ? "doc.richtext.fill" : "doc.text.fill").font(.title2)
-                        .foregroundStyle(mine ? Color.white : (m.fileType == "pdf" ? Color.red : Color.blue))
+                        .fg14(mine ? Color.white : (m.fileType == "pdf" ? Color.red : Color.blue))
                     VStack(alignment: .leading, spacing: 1) {
                         Text(m.fileName ?? "").font(.subheadline.weight(.semibold)).lineLimit(2).multilineTextAlignment(.leading)
                         Text(DMFiles.sizeText(m.fileSize ?? 0)).font(.caption2).opacity(0.75)
                     }
-                    if opening == m.id { ABDots().tint(mine ? .white : nil) }
+                    if opening == m.id { ABDots().tint14(mine ? .white : nil) }
                 }
-                .foregroundStyle(mine ? .white : .primary)
+                .fg14(mine ? .white : .primary)
                 .frame(width: 220, alignment: .leading)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PlainButtonStyle())
         }
     }
 
@@ -494,17 +494,17 @@ struct DMThreadScreen: View {
     private var composer: some View {
         VStack(spacing: 0) {
             if let e = model.error {
-                Text(e).font(.caption).foregroundStyle(.white).padding(6).frame(maxWidth: .infinity).background(Color.red.opacity(0.85))
+                Text(e).font(.caption).fg14(.white).padding(6).frame(maxWidth: .infinity).background(Color.red.opacity(0.85))
             }
             if model.canSend {
                 ChatInputBar(text: $text, focused: $focused, allowDocs: true, disappear: $disappear, send: sendText,
                              sendMedia: { o in let e = disappear; Task { _ = await model.send(text: "", outgoing: o, expiresIn: e) } },
                              fail: { model.error = $0 })
             } else {
-                Label("You can only send private messages to friends.", systemImage: "lock.fill").font(.footnote).foregroundStyle(.secondary).padding(12)
+                Label("You can only send private messages to friends.", systemImage: "lock.fill").font(.footnote).fg14(.secondary).padding(12)
             }
         }
-        .background(.bar)
+        .background(Color.mat14)
     }
 
     private func sendText() {
@@ -552,7 +552,7 @@ extension View {
             br: mine && joinedBelow ? small : big
         )
         return self
-            .background(mine ? AnyShapeStyle(Color.abFill.abGradient) : AnyShapeStyle(Color.abSurface), in: shape)
+            .bgIn14(mine ? AnyStyle14(Color.abFill.abGradient) : AnyStyle14(Color.abSurface), in: shape)
             .shadow(color: .black.opacity(mine ? 0 : 0.06), radius: 3, y: 1)
     }
 }
@@ -567,9 +567,9 @@ struct ChatDayLabel: View {
         return f.string(from: date)
     }
     var body: some View {
-        Text(text).font(.caption2.weight(.semibold)).foregroundStyle(.secondary)
+        Text(text).font(.caption2.weight(.semibold)).fg14(.secondary)
             .padding(.horizontal, 12).padding(.vertical, 5)
-            .background(.thinMaterial, in: Capsule())
+            .bgIn14(Color.mat14, in: Capsule())
             .padding(.vertical, 10)
     }
 }
@@ -577,7 +577,7 @@ struct ChatDayLabel: View {
 /// The message box at the bottom of a chat
 struct ChatComposerBar: View {
     @Binding var text: String
-    var focused: FocusState<Bool>.Binding
+    var focused: Binding<Bool>
     var busy: Bool
     var placeholder: LocalizedStringKey
     var sendSymbol = "arrow.up"
@@ -590,18 +590,18 @@ struct ChatComposerBar: View {
         HStack(spacing: 8) {
             if let leading { leading }
             TextField(placeholder, text: $text)
-                .focused(focused)
+                .focused14(focused)
                 .padding(.horizontal, 16).padding(.vertical, 10)
-                .background(Color.abSurface, in: Capsule())
+                .bgIn14(Color.abSurface, in: Capsule())
                 .overlay(Capsule().stroke(Color.secondary.opacity(0.2), lineWidth: 1))
-                .submitLabel(.send)
-                .onSubmit(send)
+                
+                .onSubmit14(send)
             Button(action: send) {
                 Group {
-                    if busy { ABDots().tint(.white) } else { Image(systemName: sendSymbol).font(.headline.weight(.bold)).foregroundStyle(.white) }
+                    if busy { ABDots().tint14(.white) } else { Image(systemName: sendSymbol).font(.headline.weight(.bold)).fg14(.white) }
                 }
                 .frame(width: 38, height: 38)
-                .background(Color.abFill.abGradient, in: Circle())
+                .bgIn14(Color.abFill.abGradient, in: Circle())
                 .opacity(empty && !busy ? 0.4 : 1)
             }
             .disabled(empty || busy)

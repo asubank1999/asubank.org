@@ -71,7 +71,7 @@ struct LanguageScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 ForEach(AppLanguage.choices, id: \.code) { c in
                     Button {
                         guard c.code != choice else { return }
@@ -82,22 +82,22 @@ struct LanguageScreen: View {
                     } label: {
                         HStack {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(LocalizedStringKey(c.name)).foregroundStyle(.primary)
-                                if !c.native.isEmpty { Text(c.native).font(.caption).foregroundStyle(.secondary) }
+                                Text(LocalizedStringKey(c.name)).fg14(.primary)
+                                if !c.native.isEmpty { Text(c.native).font(.caption).fg14(.secondary) }
                             }
                             Spacer()
-                            if choice == c.code { Image(systemName: "checkmark").foregroundStyle(Color.abAccent).font(.body.weight(.semibold)) }
+                            if choice == c.code { Image(systemName: "checkmark").fg14(Color.abAccent).font(.body.weight(.semibold)) }
                         }
                     }
                 }
             } footer: { Text("System language follows your iPhone's settings. Material names and files stay as they were uploaded.") }
             if changed {
-                Section {
+                Section14 {
                     Label("Close and reopen UniHub to finish switching the language.", systemImage: "arrow.clockwise")
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Language")
         .onDisappear { if changed { themeRev += 1 } }
     }

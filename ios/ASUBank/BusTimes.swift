@@ -38,7 +38,7 @@ enum BusTimes {
 
     static func load() async -> [BusRoute]? {
         guard let url = URL(string: AB.site.absoluteString + path + ".html"),
-              let (data, _) = try? await URLSession.shared.data(from: url),
+              let (data, _) = try? await URLSession.shared.data14(from: url),
               let html = String(data: data, encoding: .utf8) else { return nil }
         let routes = parse(html)
         guard !routes.isEmpty else { return nil }
@@ -62,31 +62,31 @@ struct BusTimesScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 Picker("", selection: $evening) {
                     Text("To the university (AM)").tag(false)
                     Text("Going home (PM)").tag(true)
                 }
-                .pickerStyle(.segmented)
+                .pickerStyle(SegmentedPickerStyle())
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             }
             if routes.isEmpty && loading {
-                Section { ForEach(0..<4, id: \.self) { _ in SkeletonRow() } }
+                Section14 { ForEach(0..<4, id: \.self) { _ in SkeletonRow() } }
             } else if routes.isEmpty && failed {
-                Section { Text("Couldn't load the bus times. Check your connection.").foregroundStyle(.red) }
+                Section14 { Text("Couldn't load the bus times. Check your connection.").fg14(.red) }
             } else if shown.isEmpty {
-                Section { Text("No bus line matches.").foregroundStyle(.secondary) }
+                Section14 { Text("No bus line matches.").fg14(.secondary) }
             } else {
-                ForEach(shown) { r in Section { row(r) } }
+                ForEach(shown) { r in Section14 { row(r) } }
             }
-            Section {} footer: { Text("Times can change. The transport office has the final word.") }
+            Section14 {} footer: { Text("Times can change. The transport office has the final word.") }
         }
-        .listStyle(.insetGrouped)
-        .searchable(text: $query, prompt: Text("Area or pickup point"))
+        .listStyle(InsetGroupedListStyle())
+        .searchable14(text: $query, prompt: Text("Area or pickup point"))
         .navigationTitle("Bus times")
-        .task { await refresh() }
-        .refreshable { await refresh() }
+        .task14 { await refresh() }
+        .refreshable14 { await refresh() }
     }
 
     private func refresh() async {
@@ -97,17 +97,17 @@ struct BusTimesScreen: View {
     private func row(_ r: BusRoute) -> some View {
         let times = evening ? r.evening : r.morning
         return VStack(alignment: .leading, spacing: 8) {
-            Label(r.name, systemImage: "bus.fill").font(.headline).foregroundStyle(.primary)
-            if !r.pickup.isEmpty { Text(r.pickup).font(.footnote).foregroundStyle(.secondary) }
+            Label(r.name, systemImage: "bus.fill").font(.headline).fg14(.primary)
+            if !r.pickup.isEmpty { Text(r.pickup).font(.footnote).fg14(.secondary) }
             if times.isEmpty {
                 Text("No buses at this time").font(.footnote)
             } else {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 64), spacing: 6)], alignment: .leading, spacing: 6) {
                     ForEach(times, id: \.self) { t in
-                        Text(t).font(.subheadline.weight(.semibold)).monospacedDigit()
-                            .foregroundStyle(Color.abAccent)
+                        Text(t).font(.subheadline.weight(.semibold)).monoDigit14()
+                            .fg14(Color.abAccent)
                             .padding(.horizontal, 12).padding(.vertical, 5)
-                            .background(Color.abAccent.opacity(0.12), in: Capsule())
+                            .bgIn14(Color.abAccent.opacity(0.12), in: Capsule())
                     }
                 }
             }

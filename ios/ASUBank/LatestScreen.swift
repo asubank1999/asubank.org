@@ -51,7 +51,7 @@ enum UploadFolder {
 
     static func load() async -> [DriveSearch.Result] {
         guard let url = URL(string: "https://drive.google.com/embeddedfolderview?id=\(id)"),
-              let (data, _) = try? await URLSession.shared.data(from: url),
+              let (data, _) = try? await URLSession.shared.data14(from: url),
               let html = String(data: data, encoding: .utf8) else { return [] }
         return DriveFolderList.parse(html).compactMap { e in
             if e.name.hasPrefix("[TEST]") || e.name.localizedCaseInsensitiveContains("upload-test") { return nil }
@@ -104,7 +104,7 @@ final class LatestStore: ObservableObject {
         }
         let api = Task { () -> [DriveSearch.Result]? in
             let url = URL(string: "\(Self.api)?t=\(Int(Date().timeIntervalSince1970))&sort=date&order=desc")!
-            guard let (data, _) = try? await URLSession.shared.data(from: url),
+            guard let (data, _) = try? await URLSession.shared.data14(from: url),
                   let r = try? JSONDecoder().decode(Reply.self, from: data), r.success == true, let list = r.files else { return nil }
             return list.filter { DriveLinks.shared.isBroken($0.url) == nil }.map { f in
                 let k = DriveSearch.kind(mime: f.mimeType, url: f.url, name: f.name)
@@ -159,7 +159,7 @@ struct LatestScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 ChipBar(options: types, selection: $type)
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             }
@@ -169,17 +169,17 @@ struct LatestScreen: View {
             case 3:
                 VStack(spacing: 10) {
                     Text("Couldn't load the latest files.").font(.headline)
-                    Button("Try again") { Task { await store.load(force: true) } }.buttonStyle(.borderedProminent).tint(.abFill)
+                    Button("Try again") { Task { await store.load(force: true) } }.prominentButton14().tint14(.abFill)
                 }
                 .frame(maxWidth: .infinity).padding(20).listRowBackground(Color.clear)
             default:
                 ForEach(groups, id: \.0) { g in
-                    Section("\(g.0) · \(g.1.count)") {
+                    Section14("\(g.0) · \(g.1.count)") {
                         ForEach(g.1) { r in
                             MaterialRow(m: r.m, kind: r.kind, meta: meta(r))
-                                .swipeActions(edge: .trailing) {
+                                .swipeActions14(edge: .trailing) {
                                     if account.isAdmin {
-                                        Button { confirming = r } label: { Label("Delete", systemImage: "trash") }.tint(.red)
+                                        Button { confirming = r } label: { Label("Delete", systemImage: "trash") }.tint14(.red)
                                     }
                                 }
                         }
@@ -190,25 +190,25 @@ struct LatestScreen: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
-        .searchable(text: $query, prompt: "Search latest uploads")
+        .listStyle(InsetGroupedListStyle())
+        .searchable14(text: $query, prompt: "Search latest uploads")
         .navigationTitle("Latest uploads")
-        .confirmationDialog(L("Delete from Drive?"), isPresented: Binding(get: { confirming != nil }, set: { if !$0 { confirming = nil } }), titleVisibility: .visible, presenting: confirming) { r in
-            Button(L("Delete from Drive"), role: .destructive) { Task { await deleteUpload(r) } }
+        .confirmationDialog14(L("Delete from Drive?"), isPresented: Binding(get: { confirming != nil }, set: { if !$0 { confirming = nil } }), titleVisibility: .visible, presenting: confirming) { r in
+            Button(L("Delete from Drive")) { Task { await deleteUpload(r) } }
         } message: { _ in
             Text(L("It moves to the Drive trash and disappears from UniHub for everyone. A file owned by another Drive account is only removed from UniHub."))
         }
-        .alert("Couldn't delete", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
-            Button("OK", role: .cancel) {}
+        .alert14("Couldn't delete", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
+            Button("OK") {}
         } message: { Text(deleteError ?? "") }
-        .refreshable { await store.load(force: true) }
-        .task { await store.load() }
+        .refreshable14 { await store.load(force: true) }
+        .task14 { await store.load() }
     }
 
     private func meta(_ r: DriveSearch.Result) -> String {
         var parts: [String] = []
         if r.size > 0 { parts.append(ByteCountFormatter.string(fromByteCount: Int64(r.size), countStyle: .file)) }
-        if let d = AB.date(r.date) { parts.append(d.formatted(.relative(presentation: .named))) }
+        if let d = AB.date(r.date) { parts.append(d.rel14()) }
         return parts.joined(separator: " · ")
     }
 }

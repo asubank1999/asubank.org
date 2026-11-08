@@ -43,7 +43,7 @@ final class SearchHelp: ObservableObject {
         if terms.isEmpty, let data = try? Data(contentsOf: cacheFile) { apply(data) }
         var req = URLRequest(url: url)
         req.cachePolicy = .reloadIgnoringLocalCacheData
-        if let (data, resp) = try? await URLSession.shared.data(for: req),
+        if let (data, resp) = try? await URLSession.shared.data14(for: req),
            (resp as? HTTPURLResponse)?.statusCode == 200, apply(data) {
             try? data.write(to: cacheFile, options: .atomic)
         }
@@ -181,7 +181,7 @@ final class SearchHelp: ObservableObject {
         req.httpMethod = "POST"
         req.setValue("text/plain;charset=utf-8", forHTTPHeaderField: "Content-Type")
         req.httpBody = try? JSONSerialization.data(withJSONObject: ["action": "translate", "text": text])
-        guard let (data, _) = try? await URLSession.shared.data(for: req),
+        guard let (data, _) = try? await URLSession.shared.data14(for: req),
               let o = try? JSONSerialization.jsonObject(with: data) as? [String: Any], o["ok"] as? Bool == true else { return nil }
         let t = (o["text"] as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         online[key] = t
@@ -196,17 +196,17 @@ struct HelpChips: View {
     let pick: (String) -> Void
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(title).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+            Text(title).font(.caption.weight(.semibold)).fg14(.secondary)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(options, id: \.self) { o in
                         Button { pick(o) } label: {
                             Text(o).font(.subheadline.weight(.medium))
                                 .padding(.horizontal, 12).padding(.vertical, 7)
-                                .background(Color.abAccentSoft, in: Capsule())
-                                .foregroundStyle(Color.abAccent)
+                                .bgIn14(Color.abAccentSoft, in: Capsule())
+                                .fg14(Color.abAccent)
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             }

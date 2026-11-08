@@ -19,26 +19,26 @@ struct AdminTab: View {
         ABStack {
             List {
                 if !account.isAdmin {
-                    Text("Only admins can see this.").foregroundStyle(.secondary)
+                    Text("Only admins can see this.").fg14(.secondary)
                 } else {
-                    Section {
+                    Section14 {
                         LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10), GridItem(.flexible())], spacing: 10) {
                             ForEach(tiles, id: \.0) { t in
                                 VStack(alignment: .leading, spacing: 6) {
-                                    Image(systemName: t.2).foregroundStyle(.white).frame(width: 28, height: 28)
-                                        .background(Color(UIColor(hex: t.3)).abGradient, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-                                    Text(stats[t.0].map(String.init) ?? "–").font(.title2.weight(.bold)).monospacedDigit()
-                                    Text(LocalizedStringKey(t.1)).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                                    Image(systemName: t.2).fg14(.white).frame(width: 28, height: 28)
+                                        .bgIn14(Color(UIColor(hex: t.3)).abGradient, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                    Text(stats[t.0].map(String.init) ?? "–").font(.title2.weight(.bold)).monoDigit14()
+                                    Text(LocalizedStringKey(t.1)).font(.caption).fg14(.secondary).lineLimit(1)
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(10)
-                                .background(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                .bgIn14(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                             }
                         }
                         .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                     } header: { Text("Overview") }
 
-                    Section("Manage") {
+                    Section14("Manage") {
                         NavigationLink { AdminGroupRequestsScreen() } label: {
                             HStack {
                                 Label("Group requests", systemImage: "plus.bubble")
@@ -62,18 +62,18 @@ struct AdminTab: View {
                         NavigationLink { SubmissionsScreen(admin: true) } label: { Label("Student submissions", systemImage: "rectangle.stack") }
                         NavigationLink { AdminLogScreen() } label: { Label("Admin activity", systemImage: "clock.arrow.circlepath") }
                     }
-                    Section {
+                    Section14 {
                         Label("Long-press a chat message to pin or delete it, or ban its sender.", systemImage: "hand.tap")
                         Label("Open a user to give them badges like Helper, Support or Donor.", systemImage: "rosette")
                         Label("Users' accounts live in the \"UniHub Accounts\" sheet in necro1442's Drive.", systemImage: "tablecells")
                     } header: { Text("Tips") }.font(.subheadline)
-                    if let error { Section { Text(error).foregroundStyle(.red) } }
+                    if let error { Section14 { Text(error).fg14(.red) } }
                 }
             }
-            .listStyle(.insetGrouped)
+            .listStyle(InsetGroupedListStyle())
             .navigationTitle("Admin")
-            .refreshable { await load() }
-            .task { await load() }
+            .refreshable14 { await load() }
+            .task14 { await load() }
             .sheet(isPresented: $announcing) { AnnounceSheet() }
         }
     }
@@ -98,7 +98,8 @@ struct AdminTab: View {
 }
 
 private struct AnnounceSheet: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var text = ""
     @State private var busy = false
     @State private var error: String?
@@ -106,10 +107,10 @@ private struct AnnounceSheet: View {
     var body: some View {
         ABStack {
             Form {
-                Section {
+                Section14 {
                     TextEditor(text: $text).frame(minHeight: 140)
                 } header: { Text("Message") } footer: { Text("Posted in 📣 Announcements. Everyone with notifications on gets it, even if they only want announcements.") }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
+                if let error { Section14 { Text(error).fg14(.red) } }
             }
             .navigationTitle("Announcement").navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -149,11 +150,11 @@ struct AdminUsersScreen: View {
             Picker("Show", selection: $filter) {
                 Text("All").tag(0); Text("Admins").tag(1); Text("Banned").tag(2)
             }
-            .pickerStyle(.segmented)
+            .pickerStyle(SegmentedPickerStyle())
             .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             if loading && users.isEmpty { HStack { Spacer(); ABDots(); Spacer() } }
-            if let error { Text(error).foregroundStyle(.red) }
-            if !(loading && users.isEmpty) { Section("\(shown.count) users") {
+            if let error { Text(error).fg14(.red) }
+            if !(loading && users.isEmpty) { Section14("\(shown.count) users") {
                 ForEach(shown) { u in
                     NavigationLink { AdminUserScreen(user: u) { await load() } } label: {
                         HStack(spacing: 12) {
@@ -164,20 +165,20 @@ struct AdminUsersScreen: View {
                                     BadgeRow(badges: u.badges ?? [], compact: true)
                                     if u.banned == true { Badge(text: L("BANNED"), color: .red) }
                                 }
-                                Text("@\(u.username)" + (u.uniId?.isEmpty == false ? " · \(u.uniId!)" : "")).font(.caption).foregroundStyle(.secondary)
+                                Text("@\(u.username)" + (u.uniId?.isEmpty == false ? " · \(u.uniId!)" : "")).font(.caption).fg14(.secondary)
                             }
                         }
                     }
                 }
             } }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Users")
-        .searchable(text: $query, prompt: "Username, email or ID")
-        .onSubmit(of: .search) { Task { await load() } }
+        .searchable14(text: $query, prompt: "Username, email or ID")
+        .onSubmitSearch14 { Task { await load() } }
         .onChange(of: query) { q in if q.isEmpty { Task { await load() } } }
-        .refreshable { await load() }
-        .task { await load() }
+        .refreshable14 { await load() }
+        .task14 { await load() }
     }
 
     private func load() async {
@@ -198,7 +199,8 @@ struct AdminUserScreen: View {
     let user: ABUser
     var changed: () async -> Void
     @ObservedObject private var account = AccountStore.shared
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var busy = false
     @State private var error: String?
     @State private var tempPassword: String?
@@ -218,17 +220,17 @@ struct AdminUserScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 HStack(spacing: 14) {
                     Avatar(name: user.displayName, color: user.color, size: 56, admin: isAdmin, photo: user.avatar, online: user.online)
                     VStack(alignment: .leading, spacing: 3) {
                         Text(user.displayName).font(.title3.weight(.semibold))
-                        Text("@\(user.username)").foregroundStyle(.secondary)
+                        Text("@\(user.username)").fg14(.secondary)
                         BadgeRow(badges: badges, compact: true)
                     }
                 }
             }
-            Section("Details") {
+            Section14("Details") {
                 info("Email", user.email)
                 info("University ID", user.uniId)
                 info("Phone", user.phone)
@@ -239,7 +241,7 @@ struct AdminUserScreen: View {
                 info("Last seen", user.online == true ? Optional(L("Online now")) : user.lastSeen.map(short))
                 if banned, let r = user.banReason, !r.isEmpty { info("Ban reason", r) }
             }
-            Section {
+            Section14 {
                 ForEach(ABBadges.all, id: \.id) { b in
                     Button {
                         var next = badges
@@ -247,60 +249,60 @@ struct AdminUserScreen: View {
                         Task { await act("adminSetBadges", ["badges": next]) { badges = next } }
                     } label: {
                         HStack {
-                            Text("\(b.emoji)  \(L(b.name))").foregroundStyle(.primary)
+                            Text("\(b.emoji)  \(L(b.name))").fg14(.primary)
                             Spacer()
-                            if badges.contains(b.id) { Image(systemName: "checkmark").foregroundStyle(Color.abAccent) }
+                            if badges.contains(b.id) { Image(systemName: "checkmark").fg14(Color.abAccent) }
                         }
                     }
                 }
             } header: { Text("Badges") } footer: { Text("Badges show on their profile and next to their name in the chat.") }
             if user.id != account.user?.id {
-                Section {
+                Section14 {
                     if banned {
                         Button { Task { await act("adminBan", ["banned": false]) { banned = false } } } label: { Label("Unban", systemImage: "checkmark.circle") }
                     } else {
                         TextField("Reason (optional)", text: $reason)
-                        Button(role: .destructive) { Task { await act("adminBan", ["banned": true, "reason": reason]) { banned = true } } } label: {
+                        Button() { Task { await act("adminBan", ["banned": true, "reason": reason]) { banned = true } } } label: {
                             Label("Ban this user", systemImage: "hand.raised.fill")
                         }
                     }
                 } header: { Text("Moderation") }
-                Section {
+                Section14 {
                     Button { Task { await reset() } } label: { Label("Reset password", systemImage: "key.fill") }
                     if let p = tempPassword {
                         HStack {
-                            Text(p).font(.body.monospaced().weight(.semibold)).textSelection(.enabled)
+                            Text(p).font(.body.monospaced().weight(.semibold))
                             Spacer()
                             Button("Copy") { UIPasteboard.general.string = p; Haptics.success() }
                         }
                     }
                 } footer: { Text(tempPassword == nil ? "Makes a temporary password for you to send them. They're asked to change it." : "Send this to the student. It's shown only once.") }
-                Section {
+                Section14 {
                     Button { Task { await act("adminSetRole", ["role": isAdmin ? "user" : "admin"]) { isAdmin.toggle() } } } label: {
                         Label(isAdmin ? "Remove admin" : "Make admin", systemImage: "checkmark.seal")
                     }
-                    Button(role: .destructive) { confirmDelete = true } label: { Label("Delete account", systemImage: "trash") }
+                    Button() { confirmDelete = true } label: { Label("Delete account", systemImage: "trash") }
                 }
             }
-            if let error { Section { Text(error).foregroundStyle(.red) } }
+            if let error { Section14 { Text(error).fg14(.red) } }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle(user.username)
         .navigationBarTitleDisplayMode(.inline)
         .disabled(busy)
-        .overlay { if busy { ABDots() } }
-        .confirmationDialog("Delete @\(user.username)?", isPresented: $confirmDelete, titleVisibility: .visible) {
-            Button("Delete account", role: .destructive) { Task { await act("adminDeleteUser", [:]) { dismiss() } } }
+        .overlay14 { if busy { ABDots() } }
+        .confirmationDialog14("Delete @\(user.username)?", isPresented: $confirmDelete, titleVisibility: .visible) {
+            Button("Delete account") { Task { await act("adminDeleteUser", [:]) { dismiss() } } }
         } message: { Text("This can't be undone.") }
     }
 
     private func info(_ k: LocalizedStringKey, _ v: String?) -> some View {
-        HStack { Text(k); Spacer(); Text(v?.isEmpty == false ? v! : "–").foregroundStyle(.secondary).textSelection(.enabled) }
+        HStack { Text(k); Spacer(); Text(v?.isEmpty == false ? v! : "–").fg14(.secondary) }
     }
 
     private func short(_ iso: String) -> String {
         guard let d = ISO8601DateFormatter.ab.date(from: iso) ?? ISO8601DateFormatter().date(from: iso) else { return iso }
-        return d.formatted(date: .abbreviated, time: .shortened)
+        return d.fmt14(.medium, .short)
     }
 
     private func act(_ action: String, _ fields: [String: Any], done: () -> Void) async {
@@ -329,18 +331,18 @@ struct AdminLogScreen: View {
 
     var body: some View {
         List {
-            if let error { Text(error).foregroundStyle(.red) }
-            if log.isEmpty && error == nil { Text("Nothing yet.").foregroundStyle(.secondary) }
+            if let error { Text(error).fg14(.red) }
+            if log.isEmpty && error == nil { Text("Nothing yet.").fg14(.secondary) }
             ForEach(Array(log.enumerated()), id: \.offset) { _, r in
                 VStack(alignment: .leading, spacing: 3) {
                     Text("\(r["action"] as? String ?? "") · \(r["target"] as? String ?? "")").font(.body.weight(.semibold))
-                    if let d = r["detail"] as? String, !d.isEmpty { Text(d).font(.caption).foregroundStyle(.secondary) }
-                    Text(r["time"] as? String ?? "").font(.caption2).foregroundStyle(.tertiary)
+                    if let d = r["detail"] as? String, !d.isEmpty { Text(d).font(.caption).fg14(.secondary) }
+                    Text(r["time"] as? String ?? "").font(.caption2).fg14(Color.tertiary14)
                 }
             }
         }
         .navigationTitle("Admin activity")
-        .task {
+        .task14 {
             do { log = (try await AccountStore.shared.call("adminLog")["log"] as? [[String: Any]]) ?? [] } catch { self.error = error.localizedDescription }
         }
     }
@@ -364,30 +366,30 @@ struct AdminRoomsScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 ForEach(account.rooms) { r in
                     Button { editing = r } label: {
                         HStack(spacing: 12) {
                             Text(r.emoji).font(.title3)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(r.name).font(.body.weight(.semibold)).foregroundStyle(.primary)
-                                Text(r.about).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                                Text(r.name).font(.body.weight(.semibold)).fg14(.primary)
+                                Text(r.about).font(.caption).fg14(.secondary).lineLimit(1)
                             }
                             Spacer()
-                            if r.adminOnly == true { Image(systemName: "megaphone.fill").foregroundStyle(.orange) }
-                            if r.locked == true { Image(systemName: "lock.fill").foregroundStyle(.secondary) }
-                            if r.archived == true { Image(systemName: "archivebox.fill").foregroundStyle(.secondary) }
+                            if r.adminOnly == true { Image(systemName: "megaphone.fill").fg14(.orange) }
+                            if r.locked == true { Image(systemName: "lock.fill").fg14(.secondary) }
+                            if r.archived == true { Image(systemName: "archivebox.fill").fg14(.secondary) }
                         }
                     }
                 }
             } footer: { Text("Locked rooms are read-only. Archived rooms are hidden from students but kept.") }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Chat rooms")
         .toolbar { ToolbarItem(placement: .primaryAction) { Button { adding = true } label: { Image(systemName: "plus") } } }
         .sheet(isPresented: $adding) { RoomEditor(room: nil) }
         .sheet(item: $editing) { RoomEditor(room: $0) }
-        .task { await account.reloadRooms() }
-        .refreshable { await account.reloadRooms() }
+        .task14 { await account.reloadRooms() }
+        .refreshable14 { await account.reloadRooms() }
     }
 }

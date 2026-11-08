@@ -62,31 +62,31 @@ struct SwapsScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 Text("Trade a registered subject with another student. Say what you have and what you want.")
-                    .font(.subheadline).foregroundStyle(.secondary)
+                    .font(.subheadline).fg14(.secondary)
                 Button {
                     if account.signedIn { adding = true } else { account.signInShown = true }
                     Haptics.tap()
                 } label: { Label("Post a swap", systemImage: "plus.circle.fill") }
             }
-            if let error { Text(error).foregroundStyle(.red) }
+            if let error { Text(error).fg14(.red) }
             if loading && swaps.isEmpty { ForEach(0..<4, id: \.self) { _ in SkeletonRow() } }
             if !mine.isEmpty {
-                Section("Your swaps") { ForEach(mine) { row($0) } }
+                Section14("Your swaps") { ForEach(mine) { row($0) } }
             }
-            Section("Students offering") {
+            Section14("Students offering") {
                 if !loading && others.isEmpty {
-                    Text("No swaps here yet.").foregroundStyle(.secondary)
+                    Text("No swaps here yet.").fg14(.secondary)
                 }
                 ForEach(others) { row($0) }
             }
         }
-        .listStyle(.insetGrouped)
-        .searchable(text: $query, prompt: Text("Search subjects"))
+        .listStyle(InsetGroupedListStyle())
+        .searchable14(text: $query, prompt: Text("Search subjects"))
         .navigationTitle(Text("Subject swap"))
-        .refreshable { await load() }
-        .task { await load() }
+        .refreshable14 { await load() }
+        .task14 { await load() }
         .sheet(isPresented: $adding) {
             AddSwapSheet { new in swaps.insert(new, at: 0) }
         }
@@ -102,17 +102,17 @@ struct SwapsScreen: View {
         Button { opened = s; Haptics.tap() } label: {
             VStack(alignment: .leading, spacing: 5) {
                 if isMatch(s) {
-                    Label("Matches your swap", systemImage: "checkmark.seal.fill").font(.caption.weight(.semibold)).foregroundStyle(.green)
+                    Label("Matches your swap", systemImage: "checkmark.seal.fill").font(.caption.weight(.semibold)).fg14(.green)
                 }
-                if s.status == "done" { Text("Done").font(.caption.weight(.semibold)).foregroundStyle(.secondary) }
+                if s.status == "done" { Text("Done").font(.caption.weight(.semibold)).fg14(.secondary) }
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(s.have).font(.body.weight(.semibold))
-                    Image(systemName: "arrow.left.arrow.right").font(.caption).foregroundStyle(.secondary)
+                    Image(systemName: "arrow.left.arrow.right").font(.caption).fg14(.secondary)
                     Text(s.want).font(.body.weight(.semibold))
                 }
-                .foregroundStyle(.primary)
+                .fg14(.primary)
                 Text([s.name, s.major, s.section].filter { !$0.isEmpty }.joined(separator: " · "))
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.caption).fg14(.secondary)
             }
         }
     }
@@ -128,7 +128,8 @@ struct SwapsScreen: View {
 }
 
 private struct AddSwapSheet: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var account = AccountStore.shared
     var added: (SwapListing) -> Void
     @State private var have = ""
@@ -151,23 +152,23 @@ private struct AddSwapSheet: View {
     var body: some View {
         NavigationView {
             Form {
-                Section("The swap") {
+                Section14("The swap") {
                     TextField("Subject you have", text: $have)
                     TextField("Subject you want", text: $want)
                     TextField("Section or time (optional)", text: $section)
                     TextField("Note (optional)", text: $note)
                 }
-                Section {
+                Section14 {
                     TextField("Full name", text: $fullName).textContentType(.name)
                     TextField("University ID", text: $studentId).keyboardType(.numberPad)
                     TextField("Major (optional)", text: $major)
                     TextField("Phone number", text: $phone).keyboardType(.phonePad).textContentType(.telephoneNumber)
                     TextField("University or personal email", text: $email)
-                        .keyboardType(.emailAddress).textContentType(.emailAddress).textInputAutocapitalization(.never).disableAutocorrection(true)
+                        .keyboardType(.emailAddress).textContentType(.emailAddress).autocapitalization(.none).disableAutocorrection(true)
                 } header: { Text("Your details") } footer: {
                     Text("Signed-in students can see these when they open your swap. Add a phone number or an email.")
                 }
-                if let error { Text(error).foregroundStyle(.red) }
+                if let error { Text(error).fg14(.red) }
             }
             .navigationTitle(Text("Post a swap"))
             .navigationBarTitleDisplayMode(.inline)
@@ -194,7 +195,8 @@ private struct AddSwapSheet: View {
 }
 
 private struct SwapDetailSheet: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @Environment(\.openURL) private var openURL
     @ObservedObject private var account = AccountStore.shared
     let swap: SwapListing
@@ -206,19 +208,19 @@ private struct SwapDetailSheet: View {
     var body: some View {
         NavigationView {
             List {
-                Section {
+                Section14 {
                     LabeledRow(title: "Has", value: swap.have)
                     LabeledRow(title: "Wants", value: swap.want)
                     if !swap.section.isEmpty { LabeledRow(title: "Section or time", value: swap.section) }
                     if !swap.note.isEmpty { Text(swap.note) }
                 }
                 if !account.signedIn {
-                    Section {
-                        Text("Sign in to see this student's contact details.").foregroundStyle(.secondary)
+                    Section14 {
+                        Text("Sign in to see this student's contact details.").fg14(.secondary)
                         Button("Sign in or create account") { dismiss(); account.signInShown = true }
                     }
                 } else if let c = contact {
-                    Section("Contact") {
+                    Section14("Contact") {
                         LabeledRow(title: "Name", value: c.fullName)
                         if !c.studentId.isEmpty { LabeledRow(title: "University ID", value: c.studentId) }
                         if !c.major.isEmpty { LabeledRow(title: "Major", value: c.major) }
@@ -232,23 +234,23 @@ private struct SwapDetailSheet: View {
                 } else if loading {
                     SkeletonRow()
                 }
-                if let error { Text(error).foregroundStyle(.red) }
+                if let error { Text(error).fg14(.red) }
                 if swap.mine || account.user?.role == "admin" {
-                    Section {
+                    Section14 {
                         if swap.status == "open" {
                             Button { set("done") } label: { Label("Mark as done", systemImage: "checkmark.circle") }
                         } else {
                             Button { set("open") } label: { Label("Open again", systemImage: "arrow.uturn.backward") }
                         }
-                        Button(role: .destructive) { set("deleted") } label: { Label("Delete", systemImage: "trash") }
+                        Button() { set("deleted") } label: { Label("Delete", systemImage: "trash") }
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            .listStyle(InsetGroupedListStyle())
             .navigationTitle(Text("Subject swap"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Close") { dismiss() } } }
-            .task { await loadContact() }
+            .task14 { await loadContact() }
         }
     }
 
@@ -279,7 +281,7 @@ private struct LabeledRow: View {
     let value: String
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(title).foregroundStyle(.secondary)
+            Text(title).fg14(.secondary)
             Spacer(minLength: 12)
             Text(value).multilineTextAlignment(.trailing)
         }

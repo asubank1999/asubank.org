@@ -43,7 +43,7 @@ enum Uploader {
         req.httpMethod = "POST"
         req.setValue("text/plain;charset=utf-8", forHTTPHeaderField: "Content-Type")
         req.httpBody = try JSONSerialization.data(withJSONObject: body)
-        let (data, _) = try await URLSession.shared.data(for: req)
+        let (data, _) = try await URLSession.shared.data14(for: req)
         let r = try? JSONDecoder().decode(Start.self, from: data)
         guard r?.success == true, let s = r?.uploadUrl, let url = URL(string: s) else {
             throw fail(r?.error ?? "Upload failed. Please try again.")
@@ -56,7 +56,7 @@ enum Uploader {
         var req = URLRequest(url: session, timeoutInterval: 60)
         req.httpMethod = "PUT"
         req.setValue("bytes */\(size)", forHTTPHeaderField: "Content-Range")
-        guard let (data, resp) = try? await URLSession.shared.upload(for: req, from: Data()),
+        guard let (data, resp) = try? await URLSession.shared.upload14(for: req, from: Data()),
               let http = resp as? HTTPURLResponse else { return nil }
         if http.statusCode == 200 || http.statusCode == 201 { return (size, link(data)) }
         if http.statusCode == 308 { return (nextOffset(http), nil) }
@@ -91,7 +91,7 @@ enum Uploader {
             let watcher = Progress { sent in progress(Double(base + sent) / total) }
             var retry = false
             do {
-                let (data, resp) = try await URLSession.shared.upload(for: req, from: chunk, delegate: watcher)
+                let (data, resp) = try await URLSession.shared.upload14(for: req, from: chunk, delegate: watcher)
                 let code = (resp as? HTTPURLResponse)?.statusCode ?? 0
                 if code == 200 || code == 201 { return link(data) }
                 if code == 308, let http = resp as? HTTPURLResponse {
@@ -309,16 +309,16 @@ struct UploadView: View {
     var body: some View {
         ABStack {
             List {
-                Section { hero }
+                Section14 { hero }
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
 
-                Section {
+                Section14 {
                     Picker("Upload type", selection: $q.structured) {
                         Text("Quick upload").tag(false)
                         Text("Structured submission").tag(true)
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(SegmentedPickerStyle())
                     .disabled(q.busy)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
@@ -326,7 +326,7 @@ struct UploadView: View {
                     Text(LocalizedStringKey(q.structured ? "For formal files: a subject, type, year and title are needed, and only PDF, Word, PowerPoint and photos are taken." : "Any file, details optional. It shows in Latest uploads at once."))
                 }
 
-                Section {
+                Section14 {
                     HStack(spacing: 10) {
                         sourceButton("Files", "folder") { showImporter = true }
                         sourceButton("Photos", "photo.on.rectangle") { showPhotos = true }
@@ -339,16 +339,16 @@ struct UploadView: View {
                     .listRowBackground(Color.clear)
                 }
 
-                Section {
+                Section14 {
                     NavigationLink { ShareVideoScreen() } label: { Label("Share a YouTube video", systemImage: "play.rectangle.fill") }
                 }
 
                 if !q.files.isEmpty || q.adding > 0 {
-                    Section {
+                    Section14 {
                         ForEach(q.files) { f in fileRow(f) }
                             .onDelete { q.remove(at: $0) }
                         if q.adding > 0 {
-                            HStack(spacing: 12) { ABDots(); Text("Preparing files…").foregroundStyle(.secondary) }
+                            HStack(spacing: 12) { ABDots(); Text("Preparing files…").fg14(.secondary) }
                         }
                     } header: {
                         HStack {
@@ -361,7 +361,7 @@ struct UploadView: View {
                     }
                 }
 
-                Section {
+                Section14 {
                     Picker(selection: $q.subject) {
                         Text(LocalizedStringKey(q.structured ? "Choose" : "Choose (optional)")).tag("")
                         ForEach(library.subjects.filter { $0.c != "Archive" }) { Text($0.t).tag($0.t) }
@@ -376,21 +376,21 @@ struct UploadView: View {
                     } label: { Label("Year", systemImage: "calendar") }
                     if q.structured {
                         HStack(spacing: 12) {
-                            Image(systemName: "textformat").foregroundStyle(Color.abAccent).frame(width: 28)
+                            Image(systemName: "textformat").fg14(Color.abAccent).frame(width: 28)
                             TextField("Title, e.g. Calculus 1 Midterm 2025", text: $q.title)
                         }
                     }
                     HStack(spacing: 12) {
-                        Image(systemName: "text.bubble").foregroundStyle(Color.abAccent).frame(width: 28)
+                        Image(systemName: "text.bubble").fg14(Color.abAccent).frame(width: 28)
                         TextField("Doctor / note (optional)", text: $q.note)
                     }
                 } header: { Text("Details") } footer: {
                     Text("Files are named like “[Subject] [Final 2025] name.pdf” so other students can find them.")
                 }
 
-                Section {
+                Section14 {
                     Toggle(isOn: $agreed) { Text("I agree to the upload rules") }
-                        .tint(.abAccent)
+                        .tint14(.abAccent)
                     DisclosureGroup("Upload rules", isExpanded: $rulesOpen) {
                         VStack(alignment: .leading, spacing: 8) {
                             Label("Hide your university number and name on scans.", systemImage: "eye.slash")
@@ -406,31 +406,31 @@ struct UploadView: View {
                     if q.busy { Text("Keep the app open until your files finish. You can close this screen.") }
                 }
 
-                Section {
+                Section14 {
                     Button { q.start() } label: {
                         HStack(spacing: 8) {
                             Spacer()
-                            if q.busy { ABDots().tint(.white) } else { Image(systemName: "arrow.up.circle.fill") }
+                            if q.busy { ABDots().tint14(.white) } else { Image(systemName: "arrow.up.circle.fill") }
                             Text(uploadTitle).font(.headline)
                             Spacer()
                         }
                         .padding(.vertical, 8)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.abFill)
+                    .prominentButton14()
+                    .tint14(.abFill)
                     .disabled(!agreed || q.readyCount == 0 || q.busy || q.structuredProblem != nil)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
                 } footer: {
-                    if let problem = q.structuredProblem, !q.busy { Text(verbatim: problem).foregroundStyle(.orange) }
+                    if let problem = q.structuredProblem, !q.busy { Text(verbatim: problem).fg14(.orange) }
                 }
 
-                Section("Other ways to share") {
+                Section14("Other ways to share") {
                     RouteLink(Route.page("/upload/submit_file", "Campus display")) { Label("Campus display presentations", systemImage: "display") }
                     RouteLink(Route.page("/upload/student_submissions_board", "Submitted files")) { Label("Submitted files board", systemImage: "list.clipboard") }
                 }
             }
-            .listStyle(.insetGrouped)
+            .listStyle(InsetGroupedListStyle())
             .navigationTitle("Upload")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Close") { app.uploadShown = false } }
@@ -440,7 +440,7 @@ struct UploadView: View {
             }
             .sheet(isPresented: $showScanner) {
                 ScannerView { pdf in
-                    if let pdf { q.add(data: pdf, name: "Scan \(Date().formatted(.dateTime.year().month().day().hour().minute())).pdf") }
+                    if let pdf { q.add(data: pdf, name: "Scan \(Date().fmtT14("yMdjm")).pdf") }
                     showScanner = false
                 }
                 .ignoresSafeArea()
@@ -477,22 +477,22 @@ struct UploadView: View {
                 Spacer(minLength: 0)
             }
             if q.busy {
-                ProgressView(value: q.overall).tint(.white)
-                Text(verbatim: "\(Int(q.overall * 100))%").font(.caption.weight(.semibold)).monospacedDigit()
+                ProgressView(value: q.overall).tint14(.white)
+                Text(verbatim: "\(Int(q.overall * 100))%").font(.caption.weight(.semibold)).monoDigit14()
             }
             if q.finished != nil {
                 Button { withAnimation { q.reset() } } label: {
                     Text("Upload more").font(.subheadline.weight(.semibold))
                         .padding(.horizontal, 14).padding(.vertical, 7)
-                        .background(.white.opacity(0.22), in: Capsule())
+                        .bgIn14(.white.opacity(0.22), in: Capsule())
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PlainButtonStyle())
             }
         }
-        .foregroundStyle(.white)
+        .fg14(.white)
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.abFill.abGradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .bgIn14(Color.abFill.abGradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
     private func sourceButton(_ title: String, _ symbol: String, action: @escaping () -> Void) -> some View {
@@ -501,9 +501,9 @@ struct UploadView: View {
                 Image(systemName: symbol).font(.title2)
                 Text(LocalizedStringKey(title)).font(.footnote.weight(.semibold))
             }
-            .foregroundStyle(Color.abAccent)
+            .fg14(Color.abAccent)
             .frame(maxWidth: .infinity, minHeight: 76)
-            .background(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .bgIn14(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
         .buttonStyle(PressStyle())
     }
@@ -515,24 +515,24 @@ struct UploadView: View {
                 Text(verbatim: f.name).lineLimit(1)
                 switch f.state {
                 case .ready:
-                    Text(verbatim: ByteCountFormatter.string(fromByteCount: f.size, countStyle: .file)).font(.caption).foregroundStyle(.secondary)
+                    Text(verbatim: ByteCountFormatter.string(fromByteCount: f.size, countStyle: .file)).font(.caption).fg14(.secondary)
                 case .uploading(let p):
-                    ProgressView(value: p).tint(.abAccent)
-                    Text(verbatim: "\(Int(p * 100))% · " + ByteCountFormatter.string(fromByteCount: f.size, countStyle: .file)).font(.caption).foregroundStyle(.secondary).monospacedDigit()
+                    ProgressView(value: p).tint14(.abAccent)
+                    Text(verbatim: "\(Int(p * 100))% · " + ByteCountFormatter.string(fromByteCount: f.size, countStyle: .file)).font(.caption).fg14(.secondary).monoDigit14()
                 case .done:
-                    Label("Uploaded", systemImage: "checkmark.circle.fill").font(.caption).foregroundStyle(.green)
+                    Label("Uploaded", systemImage: "checkmark.circle.fill").font(.caption).fg14(.green)
                 case .failed(let e):
-                    Text(e).font(.caption).foregroundStyle(.red)
+                    Text(e).font(.caption).fg14(.red)
                 case .rejected(let e):
-                    Text(e).font(.caption).foregroundStyle(.red)
+                    Text(e).font(.caption).fg14(.red)
                 }
             }
             Spacer(minLength: 0)
             if case .failed = f.state {
                 Button { q.retry(f.id) } label: {
-                    Image(systemName: "arrow.clockwise.circle.fill").font(.title2).foregroundStyle(Color.abAccent)
+                    Image(systemName: "arrow.clockwise.circle.fill").font(.title2).fg14(Color.abAccent)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PlainButtonStyle())
                 .accessibilityLabel("Try again")
             }
         }
@@ -542,7 +542,7 @@ struct UploadView: View {
 private struct TightLabel: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            configuration.icon.foregroundStyle(Color.abAccent).frame(width: 20)
+            configuration.icon.fg14(Color.abAccent).frame(width: 20)
             configuration.title
         }
     }

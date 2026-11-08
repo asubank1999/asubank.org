@@ -36,33 +36,33 @@ struct ASUBankApp: App {
                 .environmentObject(library)
                 .environmentObject(saved)
                 .environmentObject(pages)
-                .overlay(alignment: .top) { JobsBanner().padding(.top, 4) }
+                .overlay14(alignment: .top) { JobsBanner().padding(.top, 4) }
                 .environmentObject(config)
-                .tint(.abAccent)
+                .tint14(.abAccent)
                 // Sand, Sky and Blush are light themes. Forcing them dark put pale text on pale backgrounds after a restart.
                 .preferredColorScheme(appearance >= 0 ? AppTheme.scheme : nil)
-                .dynamicTypeSize(HomePrefs.typeRange(textSize))
+                
                 .onAppear { AppTheme.applyWindow() }
                 .onChange(of: appearance) { _ in AppTheme.applyWindow() }
-                .task {
+                .task14 {
                     try? await Task.sleep(nanoseconds: 600_000_000)
                     withAnimation(.easeOut(duration: 0.35)) { splash = false }
                 }
-                .task {
+                .task14 {
                     await AccountStore.shared.refresh()
                     if AccountStore.shared.signedIn {
                         ChatNotifier.shared.start()
                         await NoticeStore.shared.load()
                     }
                 }
-                .task {
+                .task14 {
                     await library.load()
                     let links = await DriveLinks.shared.refresh()
                     let removed = await RemovedFiles.shared.refresh()
                     if links || removed { await library.reindex() }
                 }
-                .task { await pages.load() }
-                .task { await SearchHelp.shared.load() }
+                .task14 { await pages.load() }
+                .task14 { await SearchHelp.shared.load() }
                 .onOpenURL { url in app.open(url) }
         }
     }
@@ -123,7 +123,7 @@ struct RootView: View {
                 screen(t).id(resets[t, default: 0])
                     .tabItem { Label(LocalizedStringKey(o?.name ?? ""), systemImage: o?.icon ?? "circle") }
                     .tag(t)
-                    .badge(t == .friends ? notifier.socialUnread : t == .notifications ? notices.unread : 0)
+                    .badge14(t == .friends ? notifier.socialUnread : t == .notifications ? notices.unread : 0)
             }
             MoreView().id(resets[.more, default: 0])
                 .tabItem { Label("More", systemImage: "ellipsis.circle.fill") }
@@ -153,14 +153,14 @@ struct RootView: View {
         .sheet(isPresented: $app.uploadShown) { UploadView() }
         .sheet(item: $app.overlayTab) { screen($0) }
         .sheet(item: $whatsNew) { WhatsNewSheet(entry: $0) }
-        .task { whatsNew = WhatsNew.pending(accepted: accepted) }
-        .task { LectureStore.shared.reschedule() }
-        .task(id: account.user?.id) { await TermsProof.sync() }
+        .task14 { whatsNew = WhatsNew.pending(accepted: accepted) }
+        .task14 { LectureStore.shared.reschedule() }
+        .task14(id: account.user?.id) { await TermsProof.sync() }
         .sheet(isPresented: $account.signInShown) { SignInScreen() }
         .sheet(isPresented: Binding(get: { accepted && !config.mustUpdate && !account.signInShown && whatsNew == nil && app.overlayTab == nil && !app.uploadShown && account.user != nil && (account.user?.gender ?? "").isEmpty },
                                     set: { _ in })) { GenderAskView() }
-        .alert("Thank you for joining early! 🌱", isPresented: $account.earlyThanksShown) {
-            Button("You're welcome", role: .cancel) {}
+        .alert14("Thank you for joining early! 🌱", isPresented: $account.earlyThanksShown) {
+            Button("You're welcome") {}
         } message: {
             Text("You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.")
         }
@@ -170,13 +170,13 @@ struct RootView: View {
         .fullScreenCover(isPresented: Binding(get: { config.mustUpdate }, set: { _ in })) {
             UpdateRequiredView().environmentObject(config)
         }
-        .alert("Update available", isPresented: Binding(get: { config.offerUpdate && whatsNew == nil }, set: { config.offerUpdate = $0 })) {
+        .alert14("Update available", isPresented: Binding(get: { config.offerUpdate && whatsNew == nil }, set: { config.offerUpdate = $0 })) {
             Button("Update") { if let u = config.storeURL { openURL(u) } }
-            Button("Later", role: .cancel) {}
+            Button("Later") {}
         } message: {
             Text(updateMessage)
         }
-        .task { await config.check() }
+        .task14 { await config.check() }
         .onChange(of: phase) { p in
             if p == .active { Task { await config.check() } }
         }

@@ -55,7 +55,7 @@ final class DriveLinks {
             guard let url = URL(string: "https://asubank.org/assets/app/\(name)") else { continue }
             var req = URLRequest(url: url)
             req.cachePolicy = .reloadIgnoringLocalCacheData
-            guard let (data, resp) = try? await URLSession.shared.data(for: req), (resp as? HTTPURLResponse)?.statusCode == 200 else { continue }
+            guard let (data, resp) = try? await URLSession.shared.data14(for: req), (resp as? HTTPURLResponse)?.statusCode == 200 else { continue }
             if store(data, isMap: isMap) { changed = true }
             try? data.write(to: dir.appendingPathComponent(name), options: .atomic)
         }
@@ -123,7 +123,7 @@ struct MaterialScreen: View {
                     KindTile(kind: AB.kind(material.u, material.t)).scaleEffect(1.4).padding(.bottom, 6)
                     Text(material.t).font(.headline).multilineTextAlignment(.center).lineLimit(3)
                     if p > 0 { ProgressView(value: p).frame(width: 200) } else { ABDots() }
-                    Text(p > 0 ? "Downloading \(Int(p * 100))%" : "Downloading…").font(.footnote).foregroundStyle(.secondary)
+                    Text(p > 0 ? "Downloading \(Int(p * 100))%" : "Downloading…").font(.footnote).fg14(.secondary)
                 }
                 .padding(30).frame(maxWidth: .infinity, maxHeight: .infinity)
             case .folder(let id):
@@ -158,11 +158,11 @@ struct MaterialScreen: View {
                         Button { openURL(url) } label: { Label("Open in Drive / Safari", systemImage: "safari") }
                         Button { UIPasteboard.general.url = url; Haptics.success() } label: { Label("Copy link", systemImage: "link") }
                     }
-                    Button(role: .destructive) { reporting = ReportTarget(kind: "file", targetId: material.u, name: material.t) } label: { Label("Report this file", systemImage: "flag") }
+                    Button() { reporting = ReportTarget(kind: "file", targetId: material.u, name: material.t) } label: { Label("Report this file", systemImage: "flag") }
                 } label: { Image(systemName: "ellipsis.circle") }
             }
         }
-        .task { await loader.open(material) }
+        .task14 { await loader.open(material) }
         .onAppear { saved.opened(material) }
     }
 }
@@ -235,7 +235,7 @@ final class MaterialLoader: ObservableObject {
 
     /// Opening a shortcut's /view page redirects to the real file
     static func resolveShortcut(_ id: String) async -> (id: String, folder: Bool)? {
-        guard let (data, resp) = try? await URLSession.shared.data(from: URL(string: "https://drive.google.com/file/d/\(id)/view")!),
+        guard let (data, resp) = try? await URLSession.shared.data14(from: URL(string: "https://drive.google.com/file/d/\(id)/view")!),
               let final = resp.url?.absoluteString, (resp as? HTTPURLResponse)?.statusCode == 200 else { return nil }
         let body = String(decoding: data.prefix(600_000), as: UTF8.self)
         let target = AB.driveId(final) ?? id
@@ -355,18 +355,18 @@ private struct FileCard: View {
             KindTile(kind: AB.kind(material.u, material.t)).scaleEffect(1.6).padding(.bottom, 10)
             Text(material.t).font(.title3.weight(.semibold)).multilineTextAlignment(.center)
             if let file, let size = try? file.resourceValues(forKeys: [.fileSizeKey]).fileSize {
-                Text(ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file)).foregroundStyle(.secondary)
+                Text(ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file)).fg14(.secondary)
             }
-            Text(why).font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+            Text(why).font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
             if let file {
                 ShareButton(item: file) {
                     Label("Save to Files", systemImage: "square.and.arrow.down").frame(maxWidth: 260).padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abFill)
+                .prominentButton14().tint14(.abFill)
             }
             if let u = AB.absolute(material.u) {
                 Button { openURL(u) } label: { Label("Open in Drive", systemImage: "arrow.up.right.square").frame(maxWidth: 260).padding(.vertical, 6) }
-                    .buttonStyle(.bordered)
+                    .borderedButton14()
             }
         }
         .padding(30).frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -378,14 +378,14 @@ private struct BrokenCard: View {
     let why: String
     var body: some View {
         VStack(spacing: 14) {
-            Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 48)).foregroundStyle(.orange)
+            Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 48)).fg14(.orange)
             Text("This material isn't available").font(.title3.weight(.semibold))
             Text("The owner removed it or made it private (\(why)). Ask for it and we'll upload it again.")
-                .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                .font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
             RouteLink(Route.page("/requests/student_request_portal", "Request a material")) {
                 Label("Request this material", systemImage: "tray.and.arrow.down").frame(maxWidth: 260).padding(.vertical, 6)
             }
-            .buttonStyle(.borderedProminent).tint(.abFill)
+            .prominentButton14().tint14(.abFill)
         }
         .padding(30).frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -437,17 +437,17 @@ struct DriveFolderList: View {
                 HStack { Spacer(); ABDots("Loading folder…"); Spacer() }.padding(30).listRowBackground(Color.clear)
             case 2:
                 VStack(spacing: 10) {
-                    Image(systemName: "folder.badge.questionmark").font(.system(size: 40)).foregroundStyle(.secondary)
+                    Image(systemName: "folder.badge.questionmark").font(.system(size: 40)).fg14(.secondary)
                     Text("Couldn't open this folder").font(.headline)
-                    Text("Check your connection, or the folder may be private.").font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
-                    Button("Try again") { Task { await load() } }.buttonStyle(.borderedProminent).tint(.abFill)
+                    Text("Check your connection, or the folder may be private.").font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
+                    Button("Try again") { Task { await load() } }.prominentButton14().tint14(.abFill)
                 }
                 .frame(maxWidth: .infinity).padding(20).listRowBackground(Color.clear)
             default:
                 if entries.isEmpty {
                     EmptyState(symbol: "folder", title: "Empty folder", text: "Nothing has been uploaded here yet.").listRowBackground(Color.clear)
                 } else {
-                    Section("\(entries.count) item\(entries.count == 1 ? "" : "s")") {
+                    Section14("\(entries.count) item\(entries.count == 1 ? "" : "s")") {
                         ForEach(shown) { e in
                             MaterialRow(m: Material(u: e.url, t: e.name, s: title, d: nil), kind: e.kind, meta: e.modified.isEmpty ? nil : e.modified, showSource: false)
                         }
@@ -455,16 +455,16 @@ struct DriveFolderList: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
-        .searchable(text: $query, prompt: "Search in this folder")
-        .refreshable { await load() }
-        .task { if entries.isEmpty { await load() } }
+        .listStyle(InsetGroupedListStyle())
+        .searchable14(text: $query, prompt: "Search in this folder")
+        .refreshable14 { await load() }
+        .task14 { if entries.isEmpty { await load() } }
     }
 
     private func load() async {
         if entries.isEmpty { state = 0 }
         guard let url = URL(string: "https://drive.google.com/embeddedfolderview?id=\(id)"),
-              let (data, resp) = try? await URLSession.shared.data(from: url),
+              let (data, resp) = try? await URLSession.shared.data14(from: url),
               (resp as? HTTPURLResponse)?.statusCode == 200, resp.url?.host?.contains("accounts") != true else { state = 2; return }
         let html = String(decoding: data, as: UTF8.self)
         entries = Self.parse(html).sorted { a, b in

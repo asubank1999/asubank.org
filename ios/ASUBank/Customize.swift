@@ -45,6 +45,7 @@ enum HomePrefs {
     static let textSizes: [(id: Int, name: String)] = [(0, "Match my phone"), (1, "Small"), (2, "Normal"), (3, "Large"), (4, "Extra large")]
 
     /// 0 follows the phone
+    @available(iOS 15, *)
     static func typeRange(_ choice: Int) -> ClosedRange<DynamicTypeSize> {
         switch choice {
         case 1: return DynamicTypeSize.small...DynamicTypeSize.small
@@ -68,7 +69,7 @@ struct CustomizeScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 NavigationLink { ThemeScreen() } label: { Label("Theme", systemImage: "paintpalette") }
                 NavigationLink { TabBarScreen() } label: { Label("Customize tab bar", systemImage: "rectangle.3.group") }
                 if UIApplication.shared.supportsAlternateIcons {
@@ -78,14 +79,14 @@ struct CustomizeScreen: View {
                 NavigationLink { LanguageScreen() } label: { Label("Language", systemImage: "globe") }
             } header: { Text("Look and feel") }
 
-            Section {
+            Section14 {
                 Toggle(isOn: $remember.animation()) { Label("Remember what I open", systemImage: "clock.arrow.circlepath") }
-                    .tint(.abAccent)
+                    .tint14(.abAccent)
                     .onChange(of: remember) { on in if !on { saved.clearRecent() } }
                 Toggle(isOn: homeBinding("continue")) { Label("Show Continue on Home", systemImage: "rectangle.stack") }
-                    .tint(.abAccent)
+                    .tint14(.abAccent)
                     .disabled(!remember)
-                Button(role: .destructive) {
+                Button() {
                     saved.clearRecent()
                     Haptics.success()
                 } label: { Label("Clear the Continue list", systemImage: "trash") }
@@ -94,16 +95,16 @@ struct CustomizeScreen: View {
                 Text("Continue lists the files you opened lately. It stays on this phone. Turn off Remember and the app stops keeping this list.")
             }
 
-            Section {
+            Section14 {
                 ForEach(HomePrefs.sections.filter { $0.id != "continue" }, id: \.id) { s in
-                    Toggle(isOn: homeBinding(s.id)) { Label(L(s.name), systemImage: s.icon) }.tint(.abAccent)
+                    Toggle(isOn: homeBinding(s.id)) { Label(L(s.name), systemImage: s.icon) }.tint14(.abAccent)
                 }
-                Toggle(isOn: $compact.animation()) { Label("Smaller Quick links", systemImage: "square.grid.3x3") }.tint(.abAccent)
+                Toggle(isOn: $compact.animation()) { Label("Smaller Quick links", systemImage: "square.grid.3x3") }.tint14(.abAccent)
             } header: { Text("What Home shows") } footer: {
                 Text("Good for small screens: turn off what you don't use, so more fits on one screen.")
             }
 
-            Section {
+            Section14 {
                 Picker(selection: $start) {
                     Text("Home").tag("home")
                     Text("Feed").tag("feed")
@@ -113,17 +114,17 @@ struct CustomizeScreen: View {
                 Picker(selection: $textSize) {
                     ForEach(HomePrefs.textSizes, id: \.id) { Text(L($0.name)).tag($0.id) }
                 } label: { Label("Text size", systemImage: "textformat.size") }
-                Toggle(isOn: $haptics) { Label("Vibration", systemImage: "iphone.radiowaves.left.and.right") }.tint(.abAccent)
+                Toggle(isOn: $haptics) { Label("Vibration", systemImage: "iphone.radiowaves.left.and.right") }.tint14(.abAccent)
             } header: { Text("General") }
 
-            Section {
-                Button("Reset to the default", role: .destructive) { confirmReset = true }
+            Section14 {
+                Button("Reset to the default") { confirmReset = true }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Customize")
-        .confirmationDialog("Reset to the default", isPresented: $confirmReset, titleVisibility: .visible) {
-            Button("Reset", role: .destructive) {
+        .confirmationDialog14("Reset to the default", isPresented: $confirmReset, titleVisibility: .visible) {
+            Button("Reset") {
                 hidden = ""
                 compact = false
                 remember = true
@@ -131,7 +132,7 @@ struct CustomizeScreen: View {
                 textSize = 0
                 haptics = true
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel") {}
         }
     }
 
@@ -175,9 +176,9 @@ struct ShareVideoScreen: View {
     var body: some View {
         List {
             if account.signedIn {
-                Section {
+                Section14 {
                     TextField("YouTube link", text: $url)
-                        .keyboardType(.URL).textInputAutocapitalization(.never).autocorrectionDisabled()
+                        .keyboardType(.URL).autocapitalization(.none).disableAutocorrection(true)
                     TextField("Title", text: $title)
                     Button {
                         if let s = UIPasteboard.general.string { url = s.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -186,8 +187,8 @@ struct ShareVideoScreen: View {
                         Text("Choose a subject").tag("")
                         ForEach(choices) { s in Text(s.t).tag(s.p) }
                     }
-                    if let error { Text(error).foregroundStyle(.red) }
-                    if sent { Label("Shared. Thank you!", systemImage: "checkmark.seal.fill").foregroundStyle(.green) }
+                    if let error { Text(error).fg14(.red) }
+                    if sent { Label("Shared. Thank you!", systemImage: "checkmark.seal.fill").fg14(.green) }
                     Button { Task { await send() } } label: {
                         HStack { Text("Share video"); if busy { Spacer(); ABDots() } }
                     }
@@ -196,25 +197,25 @@ struct ShareVideoScreen: View {
                     Text("It's published at once, for every student. Share only videos that are public on YouTube.")
                 }
             } else {
-                Section {
+                Section14 {
                     Button("Sign in or create account") { account.signInShown = true }
                 } footer: { Text("Sharing a video needs an account.") }
             }
             if !links.isEmpty {
-                Section("Videos students shared") {
+                Section14("Videos students shared") {
                     ForEach(links) { l in
                         Button { if let u = URL(string: l.u) { openURL(u) } } label: {
                             HStack(spacing: 12) {
-                                Image(systemName: "play.rectangle.fill").font(.title3).foregroundStyle(.red)
+                                Image(systemName: "play.rectangle.fill").font(.title3).fg14(.red)
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(l.t).foregroundStyle(.primary).lineLimit(2)
-                                    if let s = l.s, !s.isEmpty { Text(s).font(.caption).foregroundStyle(.secondary) }
+                                    Text(l.t).fg14(.primary).lineLimit(2)
+                                    if let s = l.s, !s.isEmpty { Text(s).font(.caption).fg14(.secondary) }
                                 }
                             }
                         }
                         .contextMenu {
                             if l.canDelete == true {
-                                Button(role: .destructive) { Task { await remove(l) } } label: { Label("Delete", systemImage: "trash") }
+                                Button() { Task { await remove(l) } } label: { Label("Delete", systemImage: "trash") }
                             }
                             Button {
                                 Task { @MainActor in
@@ -224,20 +225,20 @@ struct ShareVideoScreen: View {
                                 }
                             } label: { Label("Report", systemImage: "flag") }
                         }
-                        .swipeActions {
+                        .swipeActions14 {
                             if l.canDelete == true {
-                                Button(role: .destructive) { Task { await remove(l) } } label: { Label("Delete", systemImage: "trash") }
+                                Button() { Task { await remove(l) } } label: { Label("Delete", systemImage: "trash") }
                             }
                         }
                     }
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Share a video")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await load() }
-        .refreshable { await load() }
+        .task14 { await load() }
+        .refreshable14 { await load() }
     }
 
     private func load() async {

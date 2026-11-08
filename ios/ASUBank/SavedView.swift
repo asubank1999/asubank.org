@@ -12,12 +12,12 @@ struct SavedView: View {
 
     private var list: some View {
             List {
-                Section {
+                Section14 {
                     Picker("Show", selection: $mode) {
                         Text("Saved \(saved.saved.count)").tag(0)
                         Text("Recent \(saved.recent.count)").tag(1)
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(SegmentedPickerStyle())
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
                 if mode == 0 {
@@ -25,7 +25,7 @@ struct SavedView: View {
                         EmptyState(symbol: "star", title: "No saved files yet", text: "Tap ☆ on any file, or swipe right on it, to keep it here.")
                             .listRowBackground(Color.clear)
                     } else {
-                        Section {
+                        Section14 {
                             ForEach(saved.saved) { MaterialRow(m: $0.material) }
                                 .onDelete(perform: saved.removeSaved)
                         } footer: { Text("Saved files stay on this device.") }
@@ -35,14 +35,14 @@ struct SavedView: View {
                         EmptyState(symbol: "clock", title: "Nothing opened yet", text: "Files you open show up here so you can get back to them.")
                             .listRowBackground(Color.clear)
                     } else {
-                        Section {
-                            ForEach(saved.recent) { MaterialRow(m: $0.material, meta: $0.date.formatted(.relative(presentation: .named))) }
+                        Section14 {
+                            ForEach(saved.recent) { MaterialRow(m: $0.material, meta: $0.date.rel14()) }
                                 .onDelete(perform: saved.removeRecent)
                         }
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            .listStyle(InsetGroupedListStyle())
             .navigationTitle(mode == 0 ? "Saved" : "Recent")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

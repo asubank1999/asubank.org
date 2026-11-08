@@ -19,14 +19,14 @@ private struct GuideHero: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(emoji).font(.system(size: 34))
                 .frame(width: 60, height: 60)
-                .background(.white.opacity(0.18), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-            Text(title).font(.title2.weight(.bold)).foregroundStyle(.white)
-            Text(text).font(.subheadline).foregroundStyle(.white.opacity(0.88))
+                .bgIn14(.white.opacity(0.18), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            Text(title).font(.title2.weight(.bold)).fg14(.white)
+            Text(text).font(.subheadline).fg14(.white.opacity(0.88))
             if let ar { BiText(text: ar, font: .footnote, color: .white.opacity(0.8)) }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
-        .background(Color.abFill.abGradient, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .bgIn14(Color.abFill.abGradient, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
     }
 }
@@ -37,11 +37,11 @@ private struct StepRow: View {
     let text: String
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            Text("\(n)").font(.subheadline.weight(.bold)).foregroundStyle(.white)
-                .frame(width: 28, height: 28).background(Color.abFill, in: Circle())
+            Text("\(n)").font(.subheadline.weight(.bold)).fg14(.white)
+                .frame(width: 28, height: 28).bgIn14(Color.abFill, in: Circle())
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.body.weight(.semibold))
-                Text(text).font(.subheadline).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                Text(text).font(.subheadline).fg14(.secondary).fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(.vertical, 4)
@@ -61,12 +61,12 @@ struct SearchGuideScreen: View {
                       text: "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive.",
                       ar: "اكتب اسم المادة أو رمزها، وستجد الملفات فوراً")
 
-            Section {
+            Section14 {
                 HStack {
-                    Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
+                    Image(systemName: "magnifyingglass").fg14(.secondary)
                     TextField("Try it: type a subject", text: $tryQuery)
-                        .submitLabel(.search)
-                        .onSubmit(go)
+                        
+                        .onSubmit14(go)
                     if !tryQuery.isEmpty { Button("Search", action: go).font(.subheadline.weight(.semibold)) }
                 }
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -74,14 +74,14 @@ struct SearchGuideScreen: View {
                         ForEach(examples, id: \.self) { e in
                             Button { app.search(e); Haptics.tap() } label: {
                                 Text(e).font(.subheadline).padding(.horizontal, 12).padding(.vertical, 6)
-                                    .background(Color.abAccentSoft, in: Capsule()).foregroundStyle(Color.abAccent)
-                            }.buttonStyle(.plain)
+                                    .bgIn14(Color.abAccentSoft, in: Capsule()).fg14(Color.abAccent)
+                            }.buttonStyle(PlainButtonStyle())
                         }
                     }.padding(.vertical, 2)
                 }
             } header: { Text("Try it now") }
 
-            Section {
+            Section14 {
                 StepRow(n: 1, title: "Open Search", text: "Tap the Search tab at the bottom. The box is always at the top.")
                 StepRow(n: 2, title: "Type the subject or its code", text: "A few letters are enough: \"calc\", \"MATH101\" or a doctor's name. Arabic names work too.")
                 StepRow(n: 3, title: "Pick a result", text: "Subject pages come first, then files found in the Google Drive. Folders open right in the app.")
@@ -89,7 +89,7 @@ struct SearchGuideScreen: View {
                 StepRow(n: 5, title: "Save it for later", text: "Tap the bookmark on any file or subject. It appears in the Saved tab, even offline.")
             } header: { Text("In the app") }
 
-            Section {
+            Section14 {
                 Label("Search the course name, not the file name. Files are named by the students who uploaded them.", systemImage: "lightbulb")
                 Label("Try the English and the Arabic name if the first gives nothing.", systemImage: "character.book.closed")
                 Label("Open the subject page to see every year and doctor in one place.", systemImage: "books.vertical")
@@ -97,7 +97,7 @@ struct SearchGuideScreen: View {
             } header: { Text("Tips") }
             .font(.subheadline)
 
-            Section {
+            Section14 {
                 RouteLink(.page("/requests/student_request_portal", "Request a material")) {
                     Label("Request it from us", systemImage: "tray.and.arrow.down")
                 }
@@ -107,12 +107,12 @@ struct SearchGuideScreen: View {
                 }
             } header: { Text("Can't find it?") }
 
-            Section {
+            Section14 {
                 Text("On asubank.org the search box is at the top of every page. Type the subject, press Enter, and the results load from the subject pages and the Drive together. Add the site to your home screen from Safari's Share menu to open it like an app.")
-                    .font(.subheadline).foregroundStyle(.secondary)
+                    .font(.subheadline).fg14(.secondary)
             } header: { Text("On the website") }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("How to search")
         .navigationBarTitleDisplayMode(.inline)
         .dismissKeyboardOnScroll()
@@ -186,19 +186,19 @@ struct GradingScaleScreen: View {
             GuideHero(emoji: "🎓", title: "Grading scale", text: "How your term and cumulative average turn into a grade at ASU.",
                       ar: "سُلّم التقديرات للمعدل الفصلي والتراكمي")
 
-            Section {
+            Section14 {
                 ForEach(Grading.bands) { b in
                     let on = number.map { Grading.band($0)?.min == b.min } ?? false
                     HStack(spacing: 12) {
                         RoundedRectangle(cornerRadius: 3).fill(b.color).frame(width: 6, height: 40)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(b.en).font(.body.weight(.semibold))
-                            Text(b.note).font(.caption).foregroundStyle(.secondary)
+                            Text(b.note).font(.caption).fg14(.secondary)
                         }
                         Spacer()
                         VStack(alignment: .trailing, spacing: 2) {
                             Text(b.ar).font(.subheadline.weight(.semibold))
-                            Text(Grading.range(b)).font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                            Text(Grading.range(b)).font(.caption.monoDigit14()).fg14(.secondary)
                         }
                     }
                     .padding(.vertical, 2)
@@ -206,47 +206,47 @@ struct GradingScaleScreen: View {
                 }
             } header: { Text("The scale") } footer: { Text("Below 60 the average is under the passing limit.") }
 
-            Section {
+            Section14 {
                 HStack {
                     TextField("Your average, 0 to 100", text: $value).keyboardType(.decimalPad)
-                    if let n = number { Text(String(format: "%.1f", n)).monospacedDigit().foregroundStyle(.secondary) }
+                    if let n = number { Text(String(format: "%.1f", n)).monoDigit14().fg14(.secondary) }
                 }
                 if let n = number { resultRow(n) }
             } header: { Text("What's my grade?") }
 
-            Section {
-                ForEach($courses) { $c in
+            Section14 {
+                ForEach(Array(courses.indices), id: \.self) { i14 in
                     HStack(spacing: 8) {
-                        TextField("Course", text: $c.name).frame(maxWidth: .infinity)
-                        Picker("", selection: $c.hours) { ForEach(1...6, id: \.self) { Text("\($0) h").tag($0) } }
-                            .labelsHidden().pickerStyle(.menu).fixedSize()
-                        TextField("Mark", text: $c.mark).keyboardType(.decimalPad).multilineTextAlignment(.trailing).frame(width: 56)
+                        TextField("Course", text: $courses[i14].name).frame(maxWidth: .infinity)
+                        Picker("", selection: $courses[i14].hours) { ForEach(1...6, id: \.self) { Text("\($0) h").tag($0) } }
+                            .labelsHidden().pickerStyle(MenuPickerStyle()).fixedSize()
+                        TextField("Mark", text: $courses[i14].mark).keyboardType(.decimalPad).multilineTextAlignment(.trailing).frame(width: 56)
                     }
                 }
                 .onDelete { courses.remove(atOffsets: $0) }
                 Button { withAnimation { courses.append(CourseRow()) } } label: { Label("Add a course", systemImage: "plus.circle.fill") }
                 if let t = term {
-                    HStack { Text("Term average"); Spacer(); Text(String(format: "%.2f", t.avg)).font(.headline.monospacedDigit()) }
+                    HStack { Text("Term average"); Spacer(); Text(String(format: "%.2f", t.avg)).font(.headline.monoDigit14()) }
                     resultRow(t.avg)
                 }
             } header: { Text("Term average calculator") } footer: { Text("Enter each course's credit hours and mark out of 100. Swipe a row to remove it.") }
 
-            Section {
+            Section14 {
                 TextField("Previous cumulative average", text: $prevAvg).keyboardType(.decimalPad)
                 TextField("Hours passed before this term", text: $prevHours).keyboardType(.numberPad)
                 if let c = cumulative {
-                    HStack { Text("New cumulative"); Spacer(); Text(String(format: "%.2f", c)).font(.headline.monospacedDigit()) }
+                    HStack { Text("New cumulative"); Spacer(); Text(String(format: "%.2f", c)).font(.headline.monoDigit14()) }
                     resultRow(c)
                 }
             } header: { Text("Cumulative average") } footer: { Text("Uses the term above. The university's own calculation is final.") }
 
-            Section {
+            Section14 {
                 RouteLink(.web("Calculate your average", "https://web.asu.edu.jo/CalculateAvg/")) {
                     Label("Official ASU average calculator", systemImage: "function")
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Grading scale")
         .navigationBarTitleDisplayMode(.inline)
         .dismissKeyboardOnScroll()
@@ -264,13 +264,13 @@ struct GradingScaleScreen: View {
     @ViewBuilder private func resultRow(_ v: Double) -> some View {
         if let b = Grading.band(v) {
             HStack {
-                Image(systemName: "checkmark.seal.fill").foregroundStyle(b.color)
-                Text(b.en).font(.body.weight(.semibold)).foregroundStyle(b.color)
+                Image(systemName: "checkmark.seal.fill").fg14(b.color)
+                Text(b.en).font(.body.weight(.semibold)).fg14(b.color)
                 Spacer()
-                Text(b.ar).font(.body.weight(.semibold)).foregroundStyle(b.color)
+                Text(b.ar).font(.body.weight(.semibold)).fg14(b.color)
             }
         } else {
-            Label("Under the passing limit (60)", systemImage: "exclamationmark.triangle.fill").foregroundStyle(.red)
+            Label("Under the passing limit (60)", systemImage: "exclamationmark.triangle.fill").fg14(.red)
         }
     }
 }
@@ -337,36 +337,36 @@ struct GroupsScreen: View {
                 Text("WhatsApp groups").tag(0)
                 Text("Study resources").tag(1)
             }
-            .pickerStyle(.segmented)
+            .pickerStyle(SegmentedPickerStyle())
             .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
 
             if kind == 0 && !approvedShown.isEmpty {
-                Section("Added by students") {
+                Section14("Added by students") {
                     ForEach(approvedShown) { g in
                         row(PageLink(t: g.title, u: g.url, s: g.category?.isEmpty == false ? g.category : nil))
                     }
                 }
             }
             ForEach(shown) { s in
-                Section {
+                Section14 {
                     ForEach(Array(s.links.enumerated()), id: \.offset) { _, l in row(l) }
                 } header: { Text(s.title) }
             }
             if shown.isEmpty {
-                Text(query.isEmpty ? "Nothing here yet." : "No group matches \"\(query)\".").foregroundStyle(.secondary)
+                Text(query.isEmpty ? "Nothing here yet." : "No group matches \"\(query)\".").fg14(.secondary)
             }
-            Section {
+            Section14 {
                 Button { requesting = true } label: {
                     Label("Add your group's link", systemImage: "plus.bubble")
                 }
             } footer: { Text("Groups are run by students, not by UniHub. Be kind and follow each group's rules.") }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Groups & resources")
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $query, prompt: "Search groups")
+        .searchable14(text: $query, prompt: "Search groups")
         .sheet(isPresented: $requesting) { GroupRequestSheet() }
-        .task {
+        .task14 {
             approved = decode([ApprovedGroup].self, (try? await AccountsAPI.call("groupsApproved"))?["groups"]) ?? []
         }
     }
@@ -375,8 +375,8 @@ struct GroupsScreen: View {
         let isWA = l.u?.contains("whatsapp.com") == true || l.u?.contains("wa.me") == true
         let label = HStack(spacing: 12) {
             if isWA {
-                Image(systemName: "bubble.left.and.bubble.right.fill").font(.system(size: 14, weight: .semibold)).foregroundStyle(.white)
-                    .frame(width: 32, height: 32).background(Color(UIColor(hex: 0x25d366)), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                Image(systemName: "bubble.left.and.bubble.right.fill").font(.system(size: 14, weight: .semibold)).fg14(.white)
+                    .frame(width: 32, height: 32).bgIn14(Color(UIColor(hex: 0x25d366)), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
             } else if let u = l.u {
                 KindTile(kind: AB.sitePath(u) != nil ? .page : AB.kind(u, l.t), size: 32)
             }
@@ -385,8 +385,8 @@ struct GroupsScreen: View {
                 if let s = l.s { BiText(text: s, font: .caption, color: .secondary) }
             }
             if isWA {
-                Text("Join").font(.caption.weight(.bold)).foregroundStyle(Color(UIColor(hex: 0x1f8a3e)))
-                    .padding(.horizontal, 10).padding(.vertical, 4).background(Color(UIColor(hex: 0x25d366)).opacity(0.15), in: Capsule())
+                Text("Join").font(.caption.weight(.bold)).fg14(Color(UIColor(hex: 0x1f8a3e)))
+                    .padding(.horizontal, 10).padding(.vertical, 4).bgIn14(Color(UIColor(hex: 0x25d366)).opacity(0.15), in: Capsule())
             }
         }
         if let u = l.u {
@@ -430,51 +430,51 @@ struct ThanksScreen: View {
                     Text("💛").font(.system(size: 54))
                     Text("Thank you!").font(.largeTitle.weight(.bold))
                     Text("UniHub is built by students, for students. These people uploaded, sorted and shared the materials you use every day.")
-                        .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
-                    Text("شكراً لكل من ساهم في بناء المنصة").font(.footnote).foregroundStyle(.secondary)
+                        .font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
+                    Text("شكراً لكل من ساهم في بناء المنصة").font(.footnote).fg14(.secondary)
                 }
                 .padding(.top, 8)
 
                 HStack(spacing: 10) {
                     ForEach([("\(library.items.count)", "Materials"), ("\(library.subjects.count)", "Subjects"), ("\(names.count + 1)", "Helpers")], id: \.1) { s in
                         VStack(spacing: 2) {
-                            Text(s.0).font(.title2.weight(.bold)).foregroundStyle(Color.abAccent).monospacedDigit()
-                            Text(s.1).font(.caption).foregroundStyle(.secondary)
+                            Text(s.0).font(.title2.weight(.bold)).fg14(Color.abAccent).monoDigit14()
+                            Text(s.1).font(.caption).fg14(.secondary)
                         }
                         .frame(maxWidth: .infinity).padding(.vertical, 12)
-                        .background(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .bgIn14(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                     }
                 }
 
                 // the founder, above everyone else
                 HStack(spacing: 14) {
-                    Text("👑").font(.system(size: 28)).frame(width: 60, height: 60).background(Color(UIColor(hex: 0xFFC627)), in: Circle())
+                    Text("👑").font(.system(size: 28)).frame(width: 60, height: 60).bgIn14(Color(UIColor(hex: 0xFFC627)), in: Circle())
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Alan").font(.title2.weight(.bold))
                         Text("Founder · builds and runs UniHub").font(.subheadline).opacity(0.85)
                     }
                     Spacer()
                 }
-                .foregroundStyle(.white)
+                .fg14(.white)
                 .padding(18)
-                .background(LinearGradient(colors: [Color(UIColor(hex: 0x8C1D40)), Color(UIColor(hex: 0xB8336A))], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .bgIn14(LinearGradient(gradient: Gradient(colors: [Color(UIColor(hex: 0x8C1D40)), Color(UIColor(hex: 0xB8336A))]), startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
 
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 12)], spacing: 12) {
                     ForEach(Array(names.enumerated()), id: \.offset) { i, n in
                         let c = Color(UIColor(hex: palette[i % palette.count]))
                         VStack(spacing: 10) {
                             Text(String(n.prefix(1)).uppercased())
-                                .font(.title.weight(.bold)).foregroundStyle(.white)
+                                .font(.title.weight(.bold)).fg14(.white)
                                 .frame(width: 64, height: 64)
-                                .background(c.abGradient, in: Circle())
+                                .bgIn14(c.abGradient, in: Circle())
                                 .overlay(Circle().stroke(.white.opacity(0.6), lineWidth: 2))
                                 .shadow(color: c.opacity(0.35), radius: 8, y: 4)
                             Text(n).font(.headline).lineLimit(1).minimumScaleFactor(0.7)
-                            Text(i == 0 ? "⭐ First contributor" : "Contributor").font(.caption).foregroundStyle(.secondary)
+                            Text(i == 0 ? "⭐ First contributor" : "Contributor").font(.caption).fg14(.secondary)
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
-                        .background(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .bgIn14(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                         .opacity(shown ? 1 : 0)
                         .scaleEffect(shown ? 1 : 0.85)
                         .animation(.spring(response: 0.45, dampingFraction: 0.75).delay(0.06 * Double(i % 12)), value: shown)
@@ -484,14 +484,14 @@ struct ThanksScreen: View {
                 VStack(spacing: 10) {
                     Text("Want your name here?").font(.headline)
                     Text("Upload materials, help sort them, or report broken links. Email us and join the team.")
-                        .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                        .font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
                     Button { openURL(waMessage("Hi UniHub, I'd like to help the team")) } label: {
                         Label("Join the team by email", systemImage: "hand.raised.fill").frame(maxWidth: .infinity).padding(.vertical, 4)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abFill)
+                    .prominentButton14().tint14(.abFill)
                 }
                 .padding(18)
-                .background(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .bgIn14(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
             }
             .padding(16)
         }
@@ -513,13 +513,13 @@ struct StudentAdsScreen: View {
             GuideHero(emoji: "📣", title: "Student ads", text: "Advertise your services, products and talents to the whole university. Coming soon.",
                       ar: "أعلن عن خدماتك ومنتجاتك لطلاب الجامعة — قريباً")
 
-            Section {
+            Section14 {
                 feature("tag.fill", 0xe8590c, "Affordable", "Student-friendly price: 10 JD in total.")
                 feature("scope", 0x0a84ff, "Targeted", "Shown to ASU students in the app and on asubank.org.")
                 feature("lock.shield.fill", 0x1f8a3e, "Fair and safe", "You pay the second half only if your ad is accepted.")
             } header: { Text("Why advertise here") }
 
-            Section {
+            Section14 {
                 HStack(spacing: 0) {
                     price("5 JD", "When you send your ad")
                     Divider().frame(height: 44)
@@ -531,12 +531,12 @@ struct StudentAdsScreen: View {
                     HStack {
                         Label("CliQ alias: ALANQ99", systemImage: "banknote.fill")
                         Spacer()
-                        Text(copied ? "Copied" : "Bank of Jordan · copy").font(.caption).foregroundStyle(.secondary)
+                        Text(copied ? "Copied" : "Bank of Jordan · copy").font(.caption).fg14(.secondary)
                     }
                 }
             } header: { Text("Pricing · 10 JD total") }
 
-            Section {
+            Section14 {
                 Button { openURL(waMessage("Hi UniHub, tell me when student ads open. I'd like to advertise: ")) } label: {
                     Label("Tell me when it opens", systemImage: "bell.badge.fill")
                 }
@@ -545,26 +545,26 @@ struct StudentAdsScreen: View {
                 }
             } footer: { Text("Ads are reviewed by the UniHub team before they go live.") }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Student ads")
         .navigationBarTitleDisplayMode(.inline)
     }
 
     private func feature(_ symbol: String, _ hex: UInt32, _ title: String, _ text: String) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: symbol).foregroundStyle(.white).frame(width: 32, height: 32)
-                .background(Color(UIColor(hex: hex)).abGradient, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            Image(systemName: symbol).fg14(.white).frame(width: 32, height: 32)
+                .bgIn14(Color(UIColor(hex: hex)).abGradient, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.body.weight(.semibold))
-                Text(text).font(.caption).foregroundStyle(.secondary)
+                Text(text).font(.caption).fg14(.secondary)
             }
         }
     }
 
     private func price(_ v: String, _ t: String) -> some View {
         VStack(spacing: 2) {
-            Text(v).font(.title2.weight(.bold)).foregroundStyle(Color.abAccent)
-            Text(t).font(.caption).foregroundStyle(.secondary).multilineTextAlignment(.center)
+            Text(v).font(.title2.weight(.bold)).fg14(Color.abAccent)
+            Text(t).font(.caption).fg14(.secondary).multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
     }
@@ -580,40 +580,40 @@ struct DonateScreen: View {
         List {
             GuideHero(emoji: "🤍", title: "Support UniHub", text: "UniHub is free and run by a volunteer student. Donations keep it online and growing.",
                       ar: "المنصة مجانية وتطوعية — تبرعك يساعدنا على الاستمرار")
-            Section {
+            Section14 {
                 Button {
                     UIPasteboard.general.string = "ALANQ99"; Haptics.success(); withAnimation { copied = true }
                 } label: {
                     HStack(spacing: 12) {
                         Text("🏦").font(.title3).frame(width: 30)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("CliQ alias: ALANQ99").foregroundStyle(.primary)
-                            Text("Bank of Jordan · tap to copy").font(.footnote).foregroundStyle(.secondary)
+                            Text("CliQ alias: ALANQ99").fg14(.primary)
+                            Text("Bank of Jordan · tap to copy").font(.footnote).fg14(.secondary)
                         }
                         Spacer()
-                        Image(systemName: copied ? "checkmark.circle.fill" : "doc.on.doc").foregroundStyle(copied ? .green : .secondary)
+                        Image(systemName: copied ? "checkmark.circle.fill" : "doc.on.doc").fg14(copied ? .green : .secondary)
                     }
                 }
                 Button { openURL(URL(string: "https://www.paypal.com/paypalme/necro144")!) } label: {
                     HStack(spacing: 12) {
                         Text("💙").font(.title3).frame(width: 30)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("PayPal").foregroundStyle(.primary)
-                            Text("paypal.me/necro144 · cards and PayPal balance").font(.footnote).foregroundStyle(.secondary)
+                            Text("PayPal").fg14(.primary)
+                            Text("paypal.me/necro144 · cards and PayPal balance").font(.footnote).fg14(.secondary)
                         }
                         Spacer()
-                        Image(systemName: "arrow.up.right").font(.footnote).foregroundStyle(.tertiary)
+                        Image(systemName: "arrow.up.right").font(.footnote).fg14(Color.tertiary14)
                     }
                 }
             } header: { Text("Donate") } footer: {
                 Text("Donations are optional and never unlock content. Everything on UniHub stays free. UniHub never asks for money from anyone else.")
             }
-            Section {
+            Section14 {
                 RouteLink(.page("/guides/thankslist", "Thanks list")) { Label("People who helped UniHub", systemImage: "heart") }
                 RouteLink(.page("/guides/contact", "Contact us")) { Label("Questions about donating", systemImage: "envelope") }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Support UniHub")
         .navigationBarTitleDisplayMode(.inline)
     }

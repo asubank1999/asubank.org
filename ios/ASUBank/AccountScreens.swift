@@ -16,20 +16,20 @@ struct Avatar: View {
     var body: some View {
         let c = Color(hexString: color)
         let letter = Text(String(name.prefix(1)).uppercased())
-            .font(.system(size: size * 0.44, weight: .bold)).foregroundStyle(.white)
+            .font(.system(size: size * 0.44, weight: .bold)).fg14(.white)
             .frame(width: size, height: size)
-            .background(c.abGradient, in: Circle())
+            .bgIn14(c.abGradient, in: Circle())
         Group {
             if let photo, let url = URL(string: photo), !photo.isEmpty {
                 CachedPhoto(url: url, pixelSize: size) { letter }
                     .frame(width: size, height: size).clipShape(Circle())
             } else { letter }
         }
-        .overlay(alignment: .bottomTrailing) {
+        .overlay14(alignment: .bottomTrailing) {
             // Sits exactly on the circle's edge at any avatar size: at 30% wide, a badge in the corner of the frame is centered on the rim
             if admin { OwnerStar(size: max(13, size * 0.30)) }
         }
-        .overlay(alignment: .topTrailing) {
+        .overlay14(alignment: .topTrailing) {
             if let online {
                 Circle().fill(online ? Color.green : Color.gray)
                     .frame(width: max(9, size * 0.26), height: max(9, size * 0.26))
@@ -48,9 +48,9 @@ struct OwnerStar: View {
     var body: some View {
         Image(systemName: "star.fill")
             .font(.system(size: size * 0.58, weight: .bold))
-            .foregroundStyle(.black.opacity(0.82))
+            .fg14(.black.opacity(0.82))
             .frame(width: size, height: size)
-            .background(Color.abGold, in: Circle())
+            .bgIn14(Color.abGold, in: Circle())
             .overlay(Circle().stroke(.white, lineWidth: max(1, size * 0.07)))
     }
 }
@@ -72,7 +72,7 @@ final class PhotoCache {
         if let t = running[key] { return await t.value }
         let side = pixelSize * UIScreen.main.scale
         let t = Task.detached(priority: .utility) { () -> UIImage? in
-            guard let (data, _) = try? await URLSession.shared.data(from: url) else { return nil }
+            guard let (data, _) = try? await URLSession.shared.data14(from: url) else { return nil }
             let opts: [CFString: Any] = [kCGImageSourceCreateThumbnailFromImageAlways: true, kCGImageSourceCreateThumbnailWithTransform: true,
                                          kCGImageSourceShouldCacheImmediately: true, kCGImageSourceThumbnailMaxPixelSize: max(side, 180)]
             guard let src = CGImageSourceCreateWithData(data as CFData, nil),
@@ -101,7 +101,7 @@ struct CachedPhoto<Placeholder: View>: View {
                 placeholder()
             }
         }
-        .task(id: url) {
+        .task14(id: url) {
             if PhotoCache.shared.cached(url) == nil { image = await PhotoCache.shared.load(url, pixelSize: pixelSize) }
         }
     }
@@ -119,7 +119,7 @@ struct BadgeRow: View {
                     else {
                         Text("\(ABBadges.emoji(b)) \(ABBadges.name(b))").font(.caption2.weight(.semibold))
                             .padding(.horizontal, 7).padding(.vertical, 3)
-                            .background(Color.abAccentSoft, in: Capsule())
+                            .bgIn14(Color.abAccentSoft, in: Capsule())
                     }
                 }
             }
@@ -130,8 +130,8 @@ struct BadgeRow: View {
 /// Picks a photo from the library (PHPicker works on iOS 15, PhotosPicker needs 16)
 struct AvatarPicker: UIViewControllerRepresentable {
     var picked: (UIImage) -> Void
-    @Environment(\.dismiss) private var dismiss
-
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var c = PHPickerConfiguration()
         c.filter = .images
@@ -169,7 +169,8 @@ func lastSeenText(_ iso: String?) -> String {
 
 struct SignInScreen: View {
     @ObservedObject private var account = AccountStore.shared
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var creating = false
     @State private var login = ""
     @State private var username = ""
@@ -197,13 +198,13 @@ struct SignInScreen: View {
     var body: some View {
         ABStack {
             Form {
-                Section {
+                Section14 {
                     VStack(spacing: 10) {
                         Image("Logo").resizable().scaledToFit().frame(width: 74, height: 74)
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                         Text(creating ? "Create your account" : "Welcome back").font(.title2.weight(.bold))
                         Text(creating ? "Join the student chat and keep your stuff in sync." : "Sign in to chat with other students.")
-                            .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                            .font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 6)
                     .listRowBackground(Color.clear)
@@ -211,31 +212,31 @@ struct SignInScreen: View {
                         Text("Sign in").tag(false)
                         Text("Create account").tag(true)
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(SegmentedPickerStyle())
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
                 }
 
                 if creating {
-                    Section {
+                    Section14 {
                         TextField("Username", text: $username).textContentType(.username).autocapitalization(.none).disableAutocorrection(true)
                         TextField("Display name (optional)", text: $displayName).textContentType(.name)
                         passwordField("Password (6+ characters)", $password, new: true)
                         passwordField("Repeat password", $password2, new: true)
                     } header: { Text("Your account") } footer: {
-                        if !password2.isEmpty && password != password2 { Text("The passwords don't match.").foregroundStyle(.red) }
+                        if !password2.isEmpty && password != password2 { Text("The passwords don't match.").fg14(.red) }
                         else { Text("Usernames are 3 to 20 letters, numbers, dots or underscores.") }
                     }
-                    Section {
+                    Section14 {
                         GenderChoice(gender: $gender)
                         Toggle("Show it on my profile", isOn: $showGender)
                     } header: { Text("Sex") } footer: { Text("Required. Hidden from others unless you choose to show it.") }
-                    Section {
+                    Section14 {
                         TextField("University email (optional)", text: $email).textContentType(.emailAddress).keyboardType(.emailAddress).autocapitalization(.none)
                         TextField("University ID (optional)", text: $uniId).keyboardType(.numberPad)
                     } header: { Text("Optional") } footer: { Text("Lets you sign in with your email or ID too. Nobody else can see them.") }
                     if needCode {
-                        Section {
+                        Section14 {
                             TextField("6-digit code", text: $code).keyboardType(.numberPad).textContentType(.oneTimeCode)
                             Button(codeSentTo == nil ? "Send code" : "Send again") { Task { await sendCode() } }.disabled(busy)
                         } header: { Text("Admin account") } footer: {
@@ -243,27 +244,27 @@ struct SignInScreen: View {
                         }
                     }
                 } else {
-                    Section {
+                    Section14 {
                         TextField("Username, email or university ID", text: $login).textContentType(.username).autocapitalization(.none).disableAutocorrection(true)
                         passwordField("Password", $password, new: false)
                     } footer: { Text("Forgot your password? Ask an admin in the WhatsApp community to reset it.") }
                 }
 
                 if let error {
-                    Section { Label(error, systemImage: "exclamationmark.triangle.fill").foregroundStyle(.red) }
+                    Section14 { Label(error, systemImage: "exclamationmark.triangle.fill").fg14(.red) }
                 }
 
-                Section {
+                Section14 {
                     Button(action: { Task { await submit() } }) {
                         HStack {
                             Spacer()
-                            if busy { ABDots().tint(.white) }
+                            if busy { ABDots().tint14(.white) }
                             Text(creating ? "Create account" : "Sign in").font(.headline)
                             Spacer()
                         }
                         .padding(.vertical, 6)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abFill)
+                    .prominentButton14().tint14(.abFill)
                     .disabled(!canSubmit || busy)
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 } footer: {
@@ -283,8 +284,8 @@ struct SignInScreen: View {
                 if showPassword { TextField(title, text: text) } else { SecureField(title, text: text) }
             }
             .textContentType(new ? .newPassword : .password).autocapitalization(.none).disableAutocorrection(true)
-            Button { showPassword.toggle() } label: { Image(systemName: showPassword ? "eye.slash" : "eye").foregroundStyle(.secondary) }
-                .buttonStyle(.plain)
+            Button { showPassword.toggle() } label: { Image(systemName: showPassword ? "eye.slash" : "eye").fg14(.secondary) }
+                .buttonStyle(PlainButtonStyle())
         }
     }
 
@@ -332,23 +333,23 @@ struct AccountScreen: View {
     var body: some View {
         List {
             if let u = account.user {
-                Section {
+                Section14 {
                     HStack(spacing: 14) {
                         Menu {
                             Button { picking = true } label: { Label("Choose a photo", systemImage: "photo") }
                             if u.avatar?.isEmpty == false {
-                                Button(role: .destructive) { setPhoto(nil) } label: { Label("Remove photo", systemImage: "trash") }
+                                Button() { setPhoto(nil) } label: { Label("Remove photo", systemImage: "trash") }
                             }
                         } label: {
                             Avatar(name: u.displayName, color: u.color, size: 64, admin: u.isAdmin, photo: u.avatar, peek: false)
-                                .overlay(alignment: .bottomLeading) {
+                                .overlay14(alignment: .bottomLeading) {
                                     Image(systemName: photoBusy ? "hourglass.circle.fill" : "camera.circle.fill").font(.system(size: 22))
-                                        .foregroundStyle(.white, Color.abAccent).offset(x: -2, y: 2)
+                                        .fg14(.white, Color.abAccent).offset(x: -2, y: 2)
                                 }
                         }
                         VStack(alignment: .leading, spacing: 3) {
                             Text(u.displayName).font(.title3.weight(.semibold))
-                            Text("@\(u.username)").foregroundStyle(.secondary)
+                            Text("@\(u.username)").fg14(.secondary)
                             HStack(spacing: 4) {
                                 if u.isAdmin { Badge(text: L("ADMIN"), color: .orange) }
                                 BadgeRow(badges: u.badges ?? [], compact: true)
@@ -356,17 +357,17 @@ struct AccountScreen: View {
                         }
                     }
                     .padding(.vertical, 6)
-                    if let b = u.bio, !b.isEmpty { Text(b).font(.subheadline).foregroundStyle(.secondary) }
-                    if let c = u.college, !c.isEmpty { Label(c, systemImage: "building.columns").font(.subheadline).foregroundStyle(.secondary) }
-                    if let m = u.major, !m.isEmpty { Label(m, systemImage: "graduationcap").font(.subheadline).foregroundStyle(.secondary) }
-                    if let photoError { Text(photoError).font(.caption).foregroundStyle(.red) }
+                    if let b = u.bio, !b.isEmpty { Text(b).font(.subheadline).fg14(.secondary) }
+                    if let c = u.college, !c.isEmpty { Label(c, systemImage: "building.columns").font(.subheadline).fg14(.secondary) }
+                    if let m = u.major, !m.isEmpty { Label(m, systemImage: "graduationcap").font(.subheadline).fg14(.secondary) }
+                    if let photoError { Text(photoError).font(.caption).fg14(.red) }
                 }
                 if u.mustReset == true {
-                    Section {
+                    Section14 {
                         Button { changing = true } label: { Label("An admin reset your password. Choose a new one now.", systemImage: "key.fill") }
                     }
                 }
-                Section("Profile") {
+                Section14("Profile") {
                     row("Email", u.email?.isEmpty == false ? u.email! : "Not set")
                     row("University ID", u.uniId?.isEmpty == false ? u.uniId! : "Not set")
                     row("Phone", u.phone?.isEmpty == false ? u.phone! + (u.showPhone == true ? "" : " 🔒") : "Not set")
@@ -374,7 +375,7 @@ struct AccountScreen: View {
                     Button { changing = true } label: { Label("Change password", systemImage: "key") }
                     NavigationLink { BlockedScreen() } label: { Label("Blocked people", systemImage: "nosign") }
                 }
-                Section {
+                Section14 {
                     Toggle(isOn: $notifier.messages) { Label("New chat messages", systemImage: "bubble.left.and.bubble.right") }
                     Toggle(isOn: $notifier.replies) { Label("Replies to me", systemImage: "arrowshape.turn.up.left") }
                     Toggle(isOn: $notifier.announcements) { Label("Announcements", systemImage: "megaphone") }
@@ -386,32 +387,32 @@ struct AccountScreen: View {
                             HStack {
                                 Label("Rooms", systemImage: "number")
                                 Spacer()
-                                Text(notifier.muted.isEmpty ? L("All") : String(format: L("%d muted"), notifier.muted.count)).foregroundStyle(.secondary)
+                                Text(notifier.muted.isEmpty ? L("All") : String(format: L("%d muted"), notifier.muted.count)).fg14(.secondary)
                             }
                         }
                     }
                 } header: { Text("Notifications") } footer: { Text("UniHub checks for new activity while it's open, and in the background when iOS allows it.") }
-                Section {
+                Section14 {
                     Button { confirmSignOut = true } label: { Label("Sign out", systemImage: "rectangle.portrait.and.arrow.right") }
-                    Button(role: .destructive) { deleting = true } label: { Label("Delete my account", systemImage: "trash") }
+                    Button() { deleting = true } label: { Label("Delete my account", systemImage: "trash") }
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Account")
-        .refreshable { await account.refresh() }
+        .refreshable14 { await account.refresh() }
         .sheet(isPresented: $editing) { EditProfileSheet() }
         .sheet(isPresented: $changing) { ChangePasswordSheet() }
         .sheet(isPresented: $deleting) { DeleteAccountSheet() }
         .sheet(isPresented: $picking) { AvatarPicker { setPhoto($0) }.ignoresSafeArea() }
-        .confirmationDialog("Sign out of UniHub?", isPresented: $confirmSignOut, titleVisibility: .visible) {
-            Button("Sign out", role: .destructive) { Task { await account.signOut(); ChatNotifier.shared.stop() } }
+        .confirmationDialog14("Sign out of UniHub?", isPresented: $confirmSignOut, titleVisibility: .visible) {
+            Button("Sign out") { Task { await account.signOut(); ChatNotifier.shared.stop() } }
         }
-        .task { await account.refresh() }
+        .task14 { await account.refresh() }
     }
 
     private func row(_ k: LocalizedStringKey, _ v: String) -> some View {
-        HStack { Text(k); Spacer(); Text(v == "Not set" ? L(v) : v).foregroundStyle(.secondary).lineLimit(1) }
+        HStack { Text(k); Spacer(); Text(v == "Not set" ? L(v) : v).fg14(.secondary).lineLimit(1) }
     }
 
     private func setPhoto(_ img: UIImage?) {
@@ -429,7 +430,7 @@ private struct MutedRoomsScreen: View {
     @ObservedObject private var notifier = ChatNotifier.shared
     var body: some View {
         List {
-            Section {
+            Section14 {
                 ForEach(account.rooms.filter { $0.archived != true && $0.adminOnly != true }) { r in
                     Toggle(isOn: Binding(get: { !notifier.muted.contains(r.id) },
                                          set: { on in if on { notifier.muted.remove(r.id) } else { notifier.muted.insert(r.id) } })) {
@@ -438,14 +439,15 @@ private struct MutedRoomsScreen: View {
                 }
             } footer: { Text("Turn a room off to stop its message notifications. Replies to you still notify if that's on.") }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Rooms")
     }
 }
 
 struct EditProfileSheet: View {
     @ObservedObject private var account = AccountStore.shared
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var name = ""
     @State private var email = ""
     @State private var uniId = ""
@@ -464,11 +466,11 @@ struct EditProfileSheet: View {
     var body: some View {
         ABStack {
             Form {
-                Section("Display name") { TextField("Your name", text: $name) }
-                Section {
+                Section14("Display name") { TextField("Your name", text: $name) }
+                Section14 {
                     TextField("A line about you (optional)", text: $bio)
                 } header: { Text("About") } footer: { Text("\(bio.count)/160") }
-                Section("Studies") {
+                Section14("Studies") {
                     Picker("College", selection: $college) {
                         Text("Not set").tag("")
                         ForEach(ABColleges.all, id: \.self) { Text($0).tag($0) }
@@ -479,20 +481,20 @@ struct EditProfileSheet: View {
                         ForEach(ABColleges.years, id: \.self) { Text(L($0)).tag($0) }
                     }
                 }
-                Section("Interests") { TextField("Football, coding, photography…", text: $interests) }
-                Section {
+                Section14("Interests") { TextField("Football, coding, photography…", text: $interests) }
+                Section14 {
                     GenderChoice(gender: $gender)
                     Toggle("Show it on my profile", isOn: $showGender)
                 } header: { Text("Sex") } footer: { Text("Hidden from others unless you choose to show it.") }
-                Section {
+                Section14 {
                     TextField("Phone number", text: $phone).keyboardType(.phonePad).textContentType(.telephoneNumber)
                     Toggle("Show my number on my profile", isOn: $showPhone)
                 } header: { Text("Phone") } footer: { Text("Only admins see it unless you choose to show it.") }
-                Section {
+                Section14 {
                     TextField("University email", text: $email).keyboardType(.emailAddress).autocapitalization(.none)
                     TextField("University ID", text: $uniId).keyboardType(.numberPad)
                 } header: { Text("Optional") } footer: { Text("You can sign in with these too. Only you and admins see them.") }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
+                if let error { Section14 { Text(error).fg14(.red) } }
             }
             .navigationTitle("Edit profile").navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -532,7 +534,7 @@ struct GenderChoice: View {
             Text("Male").tag("male")
             Text("Female").tag("female")
         }
-        .pickerStyle(.segmented)
+        .pickerStyle(SegmentedPickerStyle())
     }
 }
 
@@ -547,25 +549,25 @@ struct GenderAskView: View {
     var body: some View {
         ABStack {
             Form {
-                Section {
+                Section14 {
                     VStack(spacing: 8) {
                         Image(systemName: "person.crop.circle.badge.questionmark")
-                            .font(.system(size: 34)).foregroundStyle(.white)
+                            .font(.system(size: 34)).fg14(.white)
                             .frame(width: 70, height: 70)
-                            .background(Color.abFill, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .bgIn14(Color.abFill, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                         Text("One quick thing").font(.title3.weight(.bold))
                         Text("UniHub now asks every account for its sex. Choose yours to keep going.")
-                            .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                            .font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 6)
                     .listRowBackground(Color.clear)
                 }
-                Section {
+                Section14 {
                     GenderChoice(gender: $gender)
                     Toggle("Show it on my profile", isOn: $show)
                 } header: { Text("Sex") } footer: { Text("Hidden from others unless you choose to show it. You can change this later in Edit profile.") }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
-                Section {
+                if let error { Section14 { Text(error).fg14(.red) } }
+                Section14 {
                     Button {
                         Task {
                             busy = true; error = nil
@@ -573,22 +575,23 @@ struct GenderAskView: View {
                             busy = false
                         }
                     } label: {
-                        HStack { Spacer(); if busy { ABDots().tint(.white) }; Text("Save").font(.headline); Spacer() }.padding(.vertical, 6)
+                        HStack { Spacer(); if busy { ABDots().tint14(.white) }; Text("Save").font(.headline); Spacer() }.padding(.vertical, 6)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abFill)
+                    .prominentButton14().tint14(.abFill)
                     .disabled(gender.isEmpty || busy)
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
             }
             .navigationTitle("Your profile").navigationBarTitleDisplayMode(.inline)
         }
-        .interactiveDismissDisabled()
+        .noDismiss14()
     }
 }
 
 private struct ChangePasswordSheet: View {
     @ObservedObject private var account = AccountStore.shared
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var old = ""
     @State private var new = ""
     @State private var again = ""
@@ -598,12 +601,12 @@ private struct ChangePasswordSheet: View {
     var body: some View {
         ABStack {
             Form {
-                Section { SecureField("Current password", text: $old).textContentType(.password) }
-                Section {
+                Section14 { SecureField("Current password", text: $old).textContentType(.password) }
+                Section14 {
                     SecureField("New password (6+ characters)", text: $new).textContentType(.newPassword)
                     SecureField("Repeat new password", text: $again).textContentType(.newPassword)
                 } footer: { Text("You'll stay signed in here; other devices are signed out.") }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
+                if let error { Section14 { Text(error).fg14(.red) } }
             }
             .navigationTitle("Change password").navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -624,7 +627,8 @@ private struct ChangePasswordSheet: View {
 
 private struct DeleteAccountSheet: View {
     @ObservedObject private var account = AccountStore.shared
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var password = ""
     @State private var busy = false
     @State private var error: String?
@@ -632,13 +636,13 @@ private struct DeleteAccountSheet: View {
     var body: some View {
         ABStack {
             Form {
-                Section {
-                    Text("This deletes your account for good. Your messages stay in the chat without your account.").foregroundStyle(.secondary)
+                Section14 {
+                    Text("This deletes your account for good. Your messages stay in the chat without your account.").fg14(.secondary)
                     SecureField("Your password", text: $password).textContentType(.password)
                 }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
-                Section {
-                    Button(role: .destructive) {
+                if let error { Section14 { Text(error).fg14(.red) } }
+                Section14 {
+                    Button() {
                         Task {
                             busy = true
                             do { try await account.deleteAccount(password: password); dismiss() } catch { self.error = error.localizedDescription }
@@ -661,25 +665,25 @@ struct SignInPrompt: View {
     var body: some View {
         VStack(spacing: 14) {
             Spacer()
-            Image(systemName: forFeed ? "newspaper.fill" : forNotifications ? "bell.fill" : "bubble.left.and.bubble.right.fill").font(.system(size: 54)).foregroundStyle(Color.abAccent)
+            Image(systemName: forFeed ? "newspaper.fill" : forNotifications ? "bell.fill" : "bubble.left.and.bubble.right.fill").font(.system(size: 54)).fg14(Color.abAccent)
             if forFeed {
                 Text("Sign in to see the feed").font(.title3.weight(.bold)).multilineTextAlignment(.center).padding(.horizontal, 30)
                 Text("Post, comment and share stories with other ASU students.")
-                    .multilineTextAlignment(.center).foregroundStyle(.secondary).padding(.horizontal, 30)
+                    .multilineTextAlignment(.center).fg14(.secondary).padding(.horizontal, 30)
             } else if forNotifications {
                 Text("Sign in to see your notifications").font(.title3.weight(.bold)).multilineTextAlignment(.center).padding(.horizontal, 30)
                 Text("Friend requests, pokes, new uploads and announcements will show up here.")
-                    .multilineTextAlignment(.center).foregroundStyle(.secondary).padding(.horizontal, 30)
+                    .multilineTextAlignment(.center).fg14(.secondary).padding(.horizontal, 30)
             } else {
                 Text("Student chat").font(.title.weight(.bold))
                 Text("Ask other ASU students for help, share materials and get news from the team. Sign in or create a free account to join.")
-                    .multilineTextAlignment(.center).foregroundStyle(.secondary).padding(.horizontal, 30)
-                Text("اسأل زملاءك وشارك المواد — سجّل الدخول للانضمام").font(.footnote).foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center).fg14(.secondary).padding(.horizontal, 30)
+                Text("اسأل زملاءك وشارك المواد — سجّل الدخول للانضمام").font(.footnote).fg14(.secondary)
             }
             Button { account.signInShown = true } label: {
                 Text("Sign in or create account").font(.headline).frame(maxWidth: 280).padding(.vertical, 6)
             }
-            .buttonStyle(.borderedProminent).tint(.abFill)
+            .prominentButton14().tint14(.abFill)
             Spacer()
         }
         .frame(maxWidth: .infinity)

@@ -131,21 +131,21 @@ struct NotificationsScreen: View {
                     if !account.signedIn {
                         Button("Sign in to see friend requests, pokes and uploads too") { account.signInShown = true }
                     }
-                    if let e = store.failed, store.items.isEmpty { Text(e).foregroundStyle(.red) }
+                    if let e = store.failed, store.items.isEmpty { Text(e).fg14(.red) }
                     if !store.loaded { HStack { Spacer(); ABDots(); Spacer() } }
                     else if store.items.isEmpty && store.failed == nil {
                         EmptyState(symbol: "bell", title: "Nothing yet", text: "Friend requests, pokes, new uploads and announcements will show up here.").listRowBackground(Color.clear)
                     }
                     ForEach(store.items) { n in row(n) }
                 }
-                .listStyle(.insetGrouped)
-                .refreshable { await store.load() }
+                .listStyle(InsetGroupedListStyle())
+                .refreshable14 { await store.load() }
             } else {
                 SignInPrompt(forNotifications: true)
             }
         }
         .navigationTitle("Notifications")
-        .task {
+        .task14 {
             await store.load()
             if readBefore == nil { readBefore = store.lastRead }
             store.markRead()
@@ -167,7 +167,7 @@ struct NotificationsScreen: View {
                 NavigationLink { MaterialScreen(material: Material(u: u, t: n.text ?? "")) } label: { content(n) }
             } else { content(n) }
         case "announcement":
-            Button { app.pendingRoom = "announcements"; app.tab = .chat } label: { content(n) }.buttonStyle(.plain)
+            Button { app.pendingRoom = "announcements"; app.tab = .chat } label: { content(n) }.buttonStyle(PlainButtonStyle())
         case "group_request":
             NavigationLink { AdminGroupRequestsScreen() } label: { content(n) }
         case "report":
@@ -175,9 +175,9 @@ struct NotificationsScreen: View {
         case "suggestion":
             NavigationLink { AdminSuggestionsScreen() } label: { content(n) }
         case "lecture":
-            Button { app.tab = .lectures } label: { content(n) }.buttonStyle(.plain)
+            Button { app.tab = .lectures } label: { content(n) }.buttonStyle(PlainButtonStyle())
         case "chat", "dm":
-            Button { app.pendingRoom = n.type == "dm" ? "__dm" : (n.kind ?? ""); app.tab = .chat } label: { content(n) }.buttonStyle(.plain)
+            Button { app.pendingRoom = n.type == "dm" ? "__dm" : (n.kind ?? ""); app.tab = .chat } label: { content(n) }.buttonStyle(PlainButtonStyle())
         default:
             content(n)
         }
@@ -190,13 +190,13 @@ struct NotificationsScreen: View {
             } else {
                 Text(emoji(n.type)).font(.title3)
                     .frame(width: 40, height: 40)
-                    .background(Color.primary.opacity(0.08), in: Circle())
+                    .bgIn14(Color.primary.opacity(0.08), in: Circle())
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(title(n)).font(.subheadline.weight(.semibold)).lineLimit(2)
                 let b = detail(n)
-                if !b.isEmpty { Text(b).font(.subheadline).foregroundStyle(.secondary).lineLimit(3) }
-                if let d = date(n.created) { Text(d.formatted(.relative(presentation: .named))).font(.caption).foregroundStyle(.secondary) }
+                if !b.isEmpty { Text(b).font(.subheadline).fg14(.secondary).lineLimit(3) }
+                if let d = date(n.created) { Text(d.rel14()).font(.caption).fg14(.secondary) }
             }
             Spacer(minLength: 0)
             if let before = readBefore, n.created > before {

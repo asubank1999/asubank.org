@@ -36,7 +36,7 @@ struct DisappearMenu: View {
     @Binding var seconds: Int
     var body: some View {
         Menu {
-            Section("Disappears after") {
+            Section14("Disappears after") {
                 ForEach(Disappear.choices, id: \.seconds) { c in
                     Button {
                         seconds = c.seconds
@@ -49,9 +49,9 @@ struct DisappearMenu: View {
         } label: {
             Image(systemName: seconds > 0 ? "timer.circle.fill" : "timer")
                 .font(.headline)
-                .foregroundStyle(Color.abAccent)
+                .fg14(Color.abAccent)
                 .frame(width: 38, height: 38)
-                .background(seconds > 0 ? Color.abAccentSoft : Color.clear, in: Circle())
+                .bgIn14(seconds > 0 ? Color.abAccentSoft : Color.clear, in: Circle())
         }
         .accessibilityLabel(Text("Disappears after"))
     }
@@ -67,7 +67,7 @@ struct ExpiryTag: View {
                 Text(left)
             }
             .font(.caption2)
-            .foregroundStyle(tint)
+            .fg14(tint)
         }
     }
 }
@@ -259,13 +259,13 @@ struct VoiceBubble: View {
             Button { Task { await tap() } } label: {
                 ZStack {
                     Circle().fill(mine ? Color.white.opacity(0.22) : Color.abAccentSoft)
-                    if loading { ABDots().tint(fg).scaleEffect(0.6) } else {
-                        Image(systemName: player.playing ? "pause.fill" : "play.fill").font(.subheadline.weight(.bold)).foregroundStyle(fg)
+                    if loading { ABDots().tint14(fg).scaleEffect(0.6) } else {
+                        Image(systemName: player.playing ? "pause.fill" : "play.fill").font(.subheadline.weight(.bold)).fg14(fg)
                     }
                 }
                 .frame(width: 38, height: 38)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PlainButtonStyle())
             .accessibilityLabel(Text(player.playing ? "Pause" : "Play voice message"))
             HStack(spacing: 2) {
                 ForEach(bars.indices, id: \.self) { i in
@@ -275,7 +275,7 @@ struct VoiceBubble: View {
                 }
             }
             .frame(height: 24)
-            Text(failed ? "!" : VoiceBubble.time(duration)).font(.caption2.monospacedDigit()).foregroundStyle(mine ? .white.opacity(0.85) : .secondary)
+            Text(failed ? "!" : VoiceBubble.time(duration)).font(.caption2.monoDigit14()).fg14(mine ? .white.opacity(0.85) : .secondary)
         }
         .frame(minWidth: 190, alignment: .leading)
     }
@@ -325,19 +325,19 @@ struct ChatMediaTile: View {
             ZStack {
                 Color.black.opacity(type == "video" ? 0.75 : 0.08)
                 if let image { Image(uiImage: image).resizable().scaledToFill() }
-                else if failed { Image(systemName: "exclamationmark.triangle").foregroundStyle(.secondary) }
-                else if type != "video" && file == nil { ABDots().tint(Color.abAccent) }
-                if type == "video" && loading { ABDots().tint(.white) }
+                else if failed { Image(systemName: "exclamationmark.triangle").fg14(.secondary) }
+                else if type != "video" && file == nil { ABDots().tint14(Color.abAccent) }
+                if type == "video" && loading { ABDots().tint14(.white) }
                 else if type == "video" {
-                    Image(systemName: "play.circle.fill").font(.system(size: 44)).foregroundStyle(.white.opacity(0.92)).shadow(radius: 4)
+                    Image(systemName: "play.circle.fill").font(.system(size: 44)).fg14(.white.opacity(0.92)).shadow(radius: 4)
                 }
             }
             .frame(width: 220, height: type == "video" ? 280 : 220)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PlainButtonStyle())
         .accessibilityLabel(Text(type == "video" ? "Play video" : "View photo"))
-        .task {
+        .task14 {
             if let localFile {
                 file = localFile
                 if type == "video" {
@@ -358,7 +358,7 @@ struct ChatMediaTile: View {
 
 struct ChatInputBar: View {
     @Binding var text: String
-    var focused: FocusState<Bool>.Binding
+    var focused: Binding<Bool>
     var placeholder: LocalizedStringKey = "Message"
     var sendSymbol = "arrow.up"
     var allowDocs = false
@@ -396,32 +396,32 @@ struct ChatInputBar: View {
                     Button { pickingVideo = true } label: { Label("Video", systemImage: "video") }
                     if allowDocs { Button { pickingDoc = true } label: { Label("PDF or Word file", systemImage: "doc") } }
                 } label: {
-                    Image(systemName: "plus").font(.headline).foregroundStyle(Color.abAccent).frame(width: 38, height: 38)
-                        .background(Color.abAccentSoft, in: Circle())
+                    Image(systemName: "plus").font(.headline).fg14(Color.abAccent).frame(width: 38, height: 38)
+                        .bgIn14(Color.abAccentSoft, in: Circle())
                 }
                 .accessibilityLabel(Text("Attach a file"))
                 DisappearMenu(seconds: $disappear)
             }
             TextField(placeholder, text: $text)
-                .focused(focused)
+                .focused14(focused)
                 .padding(.horizontal, 14).padding(.vertical, 10)
-                .background(Color.abSurface, in: Capsule())
+                .bgIn14(Color.abSurface, in: Capsule())
                 .overlay(Capsule().stroke(Color.secondary.opacity(0.2), lineWidth: 1))
-                .submitLabel(.send)
-                .onSubmit(send)
+                
+                .onSubmit14(send)
             if empty && !editing {
                 Button { Task { await startRecording() } } label: {
-                    Image(systemName: "mic.fill").font(.headline).foregroundStyle(.white)
+                    Image(systemName: "mic.fill").font(.headline).fg14(.white)
                         .frame(width: 38, height: 38)
-                        .background(Color.abFill.abGradient, in: Circle())
+                        .bgIn14(Color.abFill.abGradient, in: Circle())
                 }
                 .accessibilityLabel(Text("Record a voice message"))
                 .transition(.scale.combined(with: .opacity))
             } else {
                 Button(action: send) {
-                    Image(systemName: sendSymbol).font(.headline.weight(.bold)).foregroundStyle(.white)
+                    Image(systemName: sendSymbol).font(.headline.weight(.bold)).fg14(.white)
                         .frame(width: 38, height: 38)
-                        .background(Color.abFill.abGradient, in: Circle())
+                        .bgIn14(Color.abFill.abGradient, in: Circle())
                         .opacity(empty ? 0.4 : 1)
                 }
                 .disabled(empty)
@@ -436,11 +436,11 @@ struct ChatInputBar: View {
     private var recordingBar: some View {
         HStack(spacing: 12) {
             Button { rec.cancel(); Haptics.tap() } label: {
-                Image(systemName: "trash").font(.headline).foregroundStyle(.red).frame(width: 38, height: 38)
+                Image(systemName: "trash").font(.headline).fg14(.red).frame(width: 38, height: 38)
             }
             .accessibilityLabel(Text("Cancel"))
             Circle().fill(.red).frame(width: 10, height: 10).scaleEffect(0.8 + rec.level * 0.8)
-            Text(VoiceBubble.time(rec.seconds)).font(.body.monospacedDigit().weight(.semibold))
+            Text(VoiceBubble.time(rec.seconds)).font(.body.monoDigit14().weight(.semibold))
             HStack(spacing: 2) {
                 ForEach(0..<18, id: \.self) { i in
                     Capsule().fill(Color.abAccent.opacity(0.75))
@@ -453,8 +453,8 @@ struct ChatInputBar: View {
                 if let f = rec.stop() { deliver(f.0, f.1) }
                 Haptics.success()
             } label: {
-                Image(systemName: "arrow.up").font(.headline.weight(.bold)).foregroundStyle(.white)
-                    .frame(width: 38, height: 38).background(Color.abFill.abGradient, in: Circle())
+                Image(systemName: "arrow.up").font(.headline.weight(.bold)).fg14(.white)
+                    .frame(width: 38, height: 38).bgIn14(Color.abFill.abGradient, in: Circle())
             }
             .accessibilityLabel(Text("Send"))
         }
@@ -571,12 +571,12 @@ struct JobsBanner: View {
         VStack(spacing: 6) {
             ForEach(jobs.jobs) { j in
                 HStack(spacing: 10) {
-                    if j.success { Image(systemName: "checkmark.circle.fill").foregroundStyle(.green) }
-                    else if j.failed != nil { Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange) }
-                    else { ABDots().tint(Color.abAccent).scaleEffect(0.7).frame(width: 34) }
+                    if j.success { Image(systemName: "checkmark.circle.fill").fg14(.green) }
+                    else if j.failed != nil { Image(systemName: "exclamationmark.triangle.fill").fg14(.orange) }
+                    else { ABDots().tint14(Color.abAccent).scaleEffect(0.7).frame(width: 34) }
                     VStack(alignment: .leading, spacing: 1) {
                         Text(j.success ? L("Done") : j.title).font(.footnote.weight(.semibold)).lineLimit(1)
-                        if let f = j.failed { Text(f).font(.caption2).foregroundStyle(.secondary).lineLimit(2) }
+                        if let f = j.failed { Text(f).font(.caption2).fg14(.secondary).lineLimit(2) }
                     }
                     Spacer(minLength: 0)
                     if j.failed != nil {
@@ -585,7 +585,7 @@ struct JobsBanner: View {
                     }
                 }
                 .padding(.horizontal, 14).padding(.vertical, 9)
-                .background(.regularMaterial, in: Capsule())
+                .bgIn14(Color.mat14, in: Capsule())
                 .shadow(color: .black.opacity(0.15), radius: 8, y: 3)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
@@ -604,17 +604,17 @@ struct ABDots: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            TimelineView(.animation) { t in
+            TimelineView14 { t in
                 HStack(spacing: 5) {
                     ForEach(0..<3, id: \.self) { i in
                         let wave = (sin((t.date.timeIntervalSinceReferenceDate - Double(i) * 0.16) * .pi * 2) + 1) / 2
-                        Circle().fill(.tint).frame(width: 8, height: 8)
+                        Circle().fill(Color.accentColor).frame(width: 8, height: 8)
                             .scaleEffect(0.45 + 0.55 * wave)
                             .opacity(0.35 + 0.65 * wave)
                     }
                 }
             }
-            if let title { Text(title).font(.footnote).foregroundStyle(.secondary) }
+            if let title { Text(title).font(.footnote).fg14(.secondary) }
         }
         .accessibilityLabel(Text("Loading"))
     }
@@ -626,10 +626,10 @@ struct Shimmer: ViewModifier {
     func body(content: Content) -> some View {
         content
             .overlay(
-                TimelineView(.animation) { t in
+                TimelineView14 { t in
                     GeometryReader { g in
                         let p = t.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 1.15) / 1.15
-                        LinearGradient(colors: [.clear, .white.opacity(0.28), .clear], startPoint: .leading, endPoint: .trailing)
+                        LinearGradient(gradient: Gradient(colors: [.clear, .white.opacity(0.28), .clear]), startPoint: .leading, endPoint: .trailing)
                             .frame(width: g.size.width * 0.7)
                             .offset(x: (CGFloat(p) * 2.3 - 1) * g.size.width)
                     }

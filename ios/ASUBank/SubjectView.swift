@@ -42,14 +42,14 @@ struct SubjectView: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 ChipBar(options: options, selection: $filter)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
             } header: {
                 if let ar = subject.ar { Text(ar).font(.subheadline).textCase(nil) }
             }
-            Section {
+            Section14 {
                 ForEach(shown) { it in
                     MaterialRow(m: it.m, kind: it.kind, showSource: false)
                 }
@@ -61,8 +61,8 @@ struct SubjectView: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
-        .searchable(text: $query, prompt: "Search in \(subject.t)")
+        .listStyle(InsetGroupedListStyle())
+        .searchable14(text: $query, prompt: "Search in \(subject.t)")
         .navigationTitle("\(subject.e ?? "") \(subject.t)")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
@@ -72,6 +72,6 @@ struct SubjectView: View {
                 }
             }
         }
-        .refreshable { await library.load() }
+        .refreshable14 { await library.load() }
     }
 }

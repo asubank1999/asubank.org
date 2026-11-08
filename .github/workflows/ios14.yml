@@ -1,0 +1,70 @@
+# iOS 14 test build of UniHub. Lives only on the ios14 branch (made by MyApps/tools/ios14/make_ios14.py).
+# Builds an unsigned IPA that runs on iOS 14+ and publishes it as a separate pre-release, so the normal
+# releases, README links and the apps' update check are not touched.
+name: iOS 14 app
+
+on:
+  push:
+    branches: [ios14]
+  workflow_dispatch:
+
+concurrency:
+  group: ios14
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15-intel
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: ios
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install XcodeGen
+        run: brew install xcodegen xcbeautify
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Unsigned IPA for iOS 14
+        run: |
+          set -o pipefail
+          xcodebuild -project ASUBank.xcodeproj -scheme ASUBank -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build-device \
+            IPHONEOS_DEPLOYMENT_TARGET=14.0 CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build | xcbeautify --renderer github-actions
+          rm -rf Payload && mkdir Payload
+          cp -R build-device/Build/Products/Release-iphoneos/ASUBank.app Payload/
+          /usr/libexec/PlistBuddy -c "Print :MinimumOSVersion" Payload/ASUBank.app/Info.plist
+          if brew install ldid; then
+            cat > ipa.entitlements <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+          <key>application-identifier</key><string>UNIHUB0001.org.unihub.app</string>
+          <key>com.apple.developer.team-identifier</key><string>UNIHUB0001</string>
+          </dict></plist>
+          PLIST
+            sed -i '' 's/^ *//' ipa.entitlements
+            ldid -Sipa.entitlements Payload/ASUBank.app/ASUBank
+          fi
+          zip -qry UniHub-unsigned.ipa Payload
+          ls -la UniHub-unsigned.ipa
+      - name: Keep the IPA as a download
+        uses: actions/upload-artifact@v4
+        with:
+          name: UniHub-iOS14-ipa-${{ github.run_number }}
+          path: ios/UniHub-unsigned.ipa
+          retention-days: 30
+      - name: Publish the iOS 14 pre-release
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V=$(sed -n 's/.*MARKETING_VERSION: "\(.*\)"/\1/p' ios/project.yml)
+          TAG="ios14-v$V"
+          F="UniHub-$V-iOS14-unsigned.ipa"
+          cp ios/UniHub-unsigned.ipa "$F"
+          printf 'Test build of UniHub %s for **iOS 14** (iOS 14.0 and newer).\n\nInstall it with Sideloadly, AltStore or TrollStore. Some small iOS 15 extras are missing on iOS 14: pull to refresh, swipe actions (long-press a row instead), and the keyboard Return key does not send.\n\nThe normal iPhone app (iOS 15+) is in the regular releases.\n' "$V" > "$RUNNER_TEMP/notes.md"
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --target ios14 --prerelease --latest=false --title "UniHub $V for iOS 14 (test build)" --notes-file "$RUNNER_TEMP/notes.md"
+          gh release upload "$TAG" "$F" --clobber

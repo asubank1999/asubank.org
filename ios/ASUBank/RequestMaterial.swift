@@ -53,32 +53,32 @@ struct RequestMaterialScreen: View {
 
     var body: some View {
         Form {
-            Section {
+            Section14 {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 12) {
                         Text("✨").font(.system(size: 30))
                             .frame(width: 52, height: 52)
-                            .background(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .bgIn14(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Made for you from your PDF").font(.headline)
-                            Text("3 JD · reviewed by our team").font(.subheadline).foregroundStyle(.secondary)
+                            Text("3 JD · reviewed by our team").font(.subheadline).fg14(.secondary)
                         }
                     }
                     Text("Send us a PDF and we'll turn it into a summary, questions, a test bank and more. We use AI to draft it, then review and edit it ourselves.")
-                        .font(.subheadline).foregroundStyle(.secondary)
+                        .font(.subheadline).fg14(.secondary)
                     Text("اطلب ملخصاً أو بنك أسئلة مخصصاً لك من ملفك")
-                        .font(.footnote).foregroundStyle(.secondary)
+                        .font(.footnote).fg14(.secondary)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 .padding(.vertical, 4)
             }
 
-            Section {
+            Section14 {
                 Button { app.tab = .search } label: { Label("Search UniHub first, it may already be there", systemImage: "magnifyingglass") }
                 Button { openURL(URL(string: Requests.community)!) } label: { Label("Ask the WhatsApp community for free", systemImage: "person.3") }
             } header: { Text("Before you pay") }
 
-            Section {
+            Section14 {
                 LazyVGrid(columns: grid, spacing: 10) {
                     ForEach(Requests.services) { s in
                         Button {
@@ -87,31 +87,31 @@ struct RequestMaterialScreen: View {
                         } label: {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(s.emoji).font(.title2)
-                                Text(s.name).font(.subheadline.weight(.semibold)).foregroundStyle(.primary).lineLimit(2).multilineTextAlignment(.leading)
-                                Text(s.text).font(.caption).foregroundStyle(.secondary).lineLimit(2).multilineTextAlignment(.leading)
+                                Text(s.name).font(.subheadline.weight(.semibold)).fg14(.primary).lineLimit(2).multilineTextAlignment(.leading)
+                                Text(s.text).font(.caption).fg14(.secondary).lineLimit(2).multilineTextAlignment(.leading)
                             }
                             .frame(maxWidth: .infinity, minHeight: 92, alignment: .topLeading)
                             .padding(10)
-                            .background(service == s.name ? Color.abAccentSoft : Color.abBackground, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .bgIn14(service == s.name ? Color.abAccentSoft : Color.abBackground, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                             .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(service == s.name ? Color.abAccent : .clear, lineWidth: 2))
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
                 .padding(.vertical, 6)
             } header: { Text("1. What do you need?") }
 
-            Section {
+            Section14 {
                 Button { picking = true } label: {
                     HStack(spacing: 12) {
                         KindTile(kind: .pdf)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(file?.name ?? "Choose a PDF").foregroundStyle(.primary).lineLimit(1)
+                            Text(file?.name ?? "Choose a PDF").fg14(.primary).lineLimit(1)
                             Text(file.map { ByteCountFormatter.string(fromByteCount: Int64($0.data.count), countStyle: .file) } ?? "Up to 15 MB")
-                                .font(.caption).foregroundStyle(.secondary)
+                                .font(.caption).fg14(.secondary)
                         }
                         Spacer()
-                        Text(file == nil ? "Choose" : "Change").font(.subheadline.weight(.semibold)).foregroundStyle(Color.abAccent)
+                        Text(file == nil ? "Choose" : "Change").font(.subheadline.weight(.semibold)).fg14(Color.abAccent)
                     }
                 }
                 TextField("Subject / course, e.g. Calculus 1", text: $course)
@@ -119,7 +119,7 @@ struct RequestMaterialScreen: View {
                 TextField("Anything special? (optional)", text: $notes)
             } header: { Text("2. Your file and details") } footer: { Text("We send the finished file to your WhatsApp.") }
 
-            Section {
+            Section14 {
                 PaymentRow(title: "CliQ", detail: "Alias ALANQ99 · Bank of Jordan", symbol: "banknote.fill", on: payment == "CliQ") { payment = "CliQ" }
                 PaymentRow(title: "In person", detail: "Pay on campus", symbol: "person.2.fill", on: payment == "In-Person") { payment = "In-Person" }
                 if payment == "CliQ" {
@@ -131,17 +131,17 @@ struct RequestMaterialScreen: View {
                 }
             } header: { Text("3. Payment · 3 JD") } footer: { Text("After you submit, email us to confirm your payment.") }
 
-            Section {
+            Section14 {
                 Button(action: submit) {
                     HStack {
                         Spacer()
-                        if sending { ABDots().tint(.white) }
+                        if sending { ABDots().tint14(.white) }
                         Text(sending ? "Sending…" : "Send request").font(.headline)
                         Spacer()
                     }
                     .padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abFill)
+                .prominentButton14().tint14(.abFill)
                 .disabled(sending)
                 .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             } footer: {
@@ -161,12 +161,12 @@ struct RequestMaterialScreen: View {
             if d.count > Requests.maxBytes { result = ("File too big", "Please choose a PDF up to 15 MB.", false); return }
             file = (u.lastPathComponent, d)
         }
-        .alert(result?.title ?? "", isPresented: Binding(get: { result != nil }, set: { if !$0 { result = nil } })) {
+        .alert14(result?.title ?? "", isPresented: Binding(get: { result != nil }, set: { if !$0 { result = nil } })) {
             if result?.ok == true {
                 Button("Email us") { openURL(URL(string: Requests.whatsapp)!) }
-                Button("Done", role: .cancel) {}
+                Button("Done") {}
             } else {
-                Button("OK", role: .cancel) {}
+                Button("OK") {}
             }
         } message: { Text(result?.text ?? "") }
     }
@@ -205,15 +205,15 @@ private struct PaymentRow: View {
     var body: some View {
         Button(action: { action(); UISelectionFeedbackGenerator().selectionChanged() }) {
             HStack(spacing: 12) {
-                Image(systemName: symbol).foregroundStyle(.white)
+                Image(systemName: symbol).fg14(.white)
                     .frame(width: 32, height: 32)
-                    .background(Color(UIColor(hex: 0x1f8a3e)), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .bgIn14(Color(UIColor(hex: 0x1f8a3e)), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(title).foregroundStyle(.primary)
-                    Text(detail).font(.caption).foregroundStyle(.secondary)
+                    Text(title).fg14(.primary)
+                    Text(detail).font(.caption).fg14(.secondary)
                 }
                 Spacer()
-                Image(systemName: on ? "checkmark.circle.fill" : "circle").font(.title3).foregroundStyle(on ? Color.abAccent : Color.secondary)
+                Image(systemName: on ? "checkmark.circle.fill" : "circle").font(.title3).fg14(on ? Color.abAccent : Color.secondary)
             }
         }
     }

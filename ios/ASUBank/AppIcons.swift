@@ -22,7 +22,7 @@ struct AppIconScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), spacing: 14)], spacing: 18) {
                     ForEach(choices) { c in
                         Button { pick(c.icon) } label: {
@@ -35,19 +35,19 @@ struct AppIconScreen: View {
                                     .overlay(RoundedRectangle(cornerRadius: 17, style: .continuous).stroke(Color.secondary.opacity(0.25), lineWidth: 0.5))
                                     .overlay(RoundedRectangle(cornerRadius: 21, style: .continuous)
                                         .stroke(Color.abAccent, lineWidth: current == c.icon ? 3 : 0).padding(-4))
-                                Text(LocalizedStringKey(c.name)).font(.caption).foregroundStyle(.primary).lineLimit(2).multilineTextAlignment(.center)
+                                Text(LocalizedStringKey(c.name)).font(.caption).fg14(.primary).lineLimit(2).multilineTextAlignment(.center)
                             }
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
                 .padding(.vertical, 8)
             } footer: { Text("Pick the icon you want on your Home Screen. Your iPhone shows a short message when it changes.") }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("App icon")
-        .alert("Couldn't change the icon", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) {
-            Button("OK", role: .cancel) {}
+        .alert14("Couldn't change the icon", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) {
+            Button("OK") {}
         } message: { Text(failure ?? "") }
     }
 

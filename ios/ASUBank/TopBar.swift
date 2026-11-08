@@ -33,7 +33,8 @@ import SwiftUI
 
 /// The online list in its own sheet, reachable from any top bar
 struct OnlineSheet: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var store = OnlineStore.shared
     var body: some View {
         ABStack {
@@ -41,7 +42,7 @@ struct OnlineSheet: View {
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
                 .abDestinations()
         }
-        .task { await store.load(force: true) }
+        .task14 { await store.load(force: true) }
     }
 }
 
@@ -57,13 +58,13 @@ struct OnlineButton: View {
         } label: {
             HStack(spacing: 4) {
                 Circle().fill(Color.green).frame(width: 8, height: 8)
-                Text("\(store.count)").font(.footnote.weight(.semibold)).monospacedDigit().foregroundStyle(.primary)
+                Text("\(store.count)").font(.footnote.weight(.semibold)).monoDigit14().fg14(.primary)
             }
             .padding(.horizontal, 8).padding(.vertical, 4)
-            .background(Color.green.opacity(0.16), in: Capsule())
+            .bgIn14(Color.green.opacity(0.16), in: Capsule())
         }
         .accessibilityLabel(Text(String(format: L("%d online now"), store.count)))
-        .task(id: account.signedIn) { await store.load(force: true); await store.keepFresh() }
+        .task14(id: account.signedIn) { await store.load(force: true); await store.keepFresh() }
         .sheet(isPresented: $shown) { OnlineSheet() }
     }
 }
@@ -83,8 +84,8 @@ struct OnlineBox: View {
         } label: {
             HStack(spacing: 10) {
                 if faces.isEmpty {
-                    Image(systemName: "person.2.fill").font(.subheadline).foregroundStyle(Color.green)
-                        .frame(width: 32, height: 32).background(Color.green.opacity(0.16), in: Circle())
+                    Image(systemName: "person.2.fill").font(.subheadline).fg14(Color.green)
+                        .frame(width: 32, height: 32).bgIn14(Color.green.opacity(0.16), in: Circle())
                 } else {
                     HStack(spacing: -9) {
                         ForEach(faces) { u in
@@ -97,19 +98,19 @@ struct OnlineBox: View {
                 VStack(alignment: .leading, spacing: 1) {
                     HStack(spacing: 5) {
                         Circle().fill(Color.green).frame(width: 8, height: 8)
-                        Text(String(format: L("%d online now"), store.count)).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
+                        Text(String(format: L("%d online now"), store.count)).font(.subheadline.weight(.semibold)).fg14(.primary)
                     }
-                    Text(L("See everyone")).font(.caption).foregroundStyle(.secondary)
+                    Text(L("See everyone")).font(.caption).fg14(.secondary)
                 }
                 Spacer(minLength: 0)
-                Image(systemName: "chevron.forward").font(.caption.weight(.semibold)).foregroundStyle(.tertiary)
+                Image(systemName: "chevron.forward").font(.caption.weight(.semibold)).fg14(Color.tertiary14)
             }
             .padding(10)
-            .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             .contentShape(Rectangle())
         }
         .buttonStyle(PressStyle())
-        .task(id: account.signedIn) { await store.load(force: true); await store.keepFresh() }
+        .task14(id: account.signedIn) { await store.load(force: true); await store.keepFresh() }
         .sheet(isPresented: $shown) { OnlineSheet() }
     }
 }
@@ -126,7 +127,7 @@ struct MeButton: View {
             if let u = account.user {
                 Avatar(name: u.displayName, color: u.color, size: 32, admin: u.isAdmin, photo: u.avatar)
             } else {
-                Image(systemName: "person.crop.circle.fill").font(.title2).foregroundStyle(Color.abAccent)
+                Image(systemName: "person.crop.circle.fill").font(.title2).fg14(Color.abAccent)
             }
         }
         .accessibilityLabel(Text("My profile"))
@@ -136,7 +137,8 @@ struct MeButton: View {
 
 /// Your own profile in a sheet
 private struct MeSheet: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var account = AccountStore.shared
     var body: some View {
         ABStack {
@@ -165,7 +167,8 @@ struct PickedPhoto: Identifiable {
 struct CoverCropSheet: View {
     let image: UIImage
     var done: (UIImage) -> Void
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var scale: CGFloat = 1
     @State private var lastScale: CGFloat = 1
     @State private var offset: CGSize = .zero
@@ -228,16 +231,16 @@ struct CoverCropSheet: View {
                 .padding(.horizontal, 16)
                 // a photo doesn't flip in Arabic, and neither should dragging it
                 .environment(\.layoutDirection, .leftToRight)
-                Text("Drag to move, pinch to zoom").font(.subheadline).foregroundStyle(.secondary)
+                Text("Drag to move, pinch to zoom").font(.subheadline).fg14(.secondary)
                 HStack(spacing: 12) {
-                    Image(systemName: "minus.magnifyingglass").foregroundStyle(.secondary)
+                    Image(systemName: "minus.magnifyingglass").fg14(.secondary)
                     Slider(value: Binding(get: { scale }, set: { v in
                         scale = v
                         lastScale = v
                         offset = clamp(offset, v)
                         lastOffset = offset
-                    }), in: 1...5).tint(.abAccent)
-                    Image(systemName: "plus.magnifyingglass").foregroundStyle(.secondary)
+                    }), in: 1...5).tint14(.abAccent)
+                    Image(systemName: "plus.magnifyingglass").fg14(.secondary)
                 }
                 .padding(.horizontal, 24)
                 Spacer(minLength: 0)

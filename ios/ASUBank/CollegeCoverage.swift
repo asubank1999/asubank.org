@@ -27,28 +27,28 @@ struct CollegeCoverageScreen: View {
     var body: some View {
         let shares = CollegeShares.from(library.subjects)
         List {
-            Section {
+            Section14 {
                 if shares.isEmpty { HStack { Spacer(); ABDots(); Spacer() } }
                 ForEach(shares) { s in
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Text(L(s.name)).font(.body.weight(.semibold))
                             Spacer()
-                            Text("\(s.percent)%").font(.body.weight(.bold)).monospacedDigit().foregroundStyle(Color.abAccent)
+                            Text("\(s.percent)%").font(.body.weight(.bold)).monoDigit14().fg14(Color.abAccent)
                         }
-                        ProgressView(value: Double(s.percent), total: 100).tint(Color.abAccent)
-                        Text(String(format: L("%d files"), s.files)).font(.caption).foregroundStyle(.secondary)
+                        ProgressView(value: Double(s.percent), total: 100).tint14(Color.abAccent)
+                        Text(String(format: L("%d files"), s.files)).font(.caption).fg14(.secondary)
                     }
                     .padding(.vertical, 4)
                 }
             } footer: {
                 Text("Each college's share of the files sorted by college. It shows where we have the most, not how much of a college's courses is covered. General files and the archive aren't counted, and search covers them too.")
             }
-            Section {
+            Section14 {
                 RouteLink(Route.page("/banks/subjects", "All subjects")) { Label("Subjects directory", systemImage: "square.grid.2x2") }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Materials by college")
     }
 }

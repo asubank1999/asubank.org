@@ -115,20 +115,20 @@ struct TeacherRatingsScreen: View {
 
     @ViewBuilder private var list: some View {
         List {
-            Section {
+            Section14 {
                 Button { rating = RateTarget(name: "") } label: {
                     HStack(spacing: 12) {
                         Image(systemName: "star.bubble.fill")
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(.white)
+                            .fg14(.white)
                             .frame(width: 38, height: 38)
-                            .background(Color.abFill, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            .bgIn14(Color.abFill, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Rate a teacher").font(.headline).foregroundStyle(.primary)
-                            Text("Anonymous · takes 5 seconds").font(.footnote).foregroundStyle(.secondary)
+                            Text("Rate a teacher").font(.headline).fg14(.primary)
+                            Text("Anonymous · takes 5 seconds").font(.footnote).fg14(.secondary)
                         }
                         Spacer()
-                        Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+                        Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).fg14(Color.tertiary14)
                     }
                 }
                 .disabled(bridge.status != .ready)
@@ -136,40 +136,40 @@ struct TeacherRatingsScreen: View {
 
             switch bridge.status {
             case .connecting:
-                Section { HStack { Spacer(); ABDots("Loading ratings…"); Spacer() }.padding(.vertical, 24) }
+                Section14 { HStack { Spacer(); ABDots("Loading ratings…"); Spacer() }.padding(.vertical, 24) }
             case .failed:
-                Section {
+                Section14 {
                     VStack(spacing: 10) {
-                        Image(systemName: "wifi.exclamationmark").font(.largeTitle).foregroundStyle(.secondary)
+                        Image(systemName: "wifi.exclamationmark").font(.largeTitle).fg14(.secondary)
                         Text("Couldn't load the ratings").font(.headline)
-                        Text("Check your connection and try again.").font(.footnote).foregroundStyle(.secondary)
-                        Button("Try again") { bridge.connect(force: true) }.buttonStyle(.borderedProminent).tint(.abFill)
+                        Text("Check your connection and try again.").font(.footnote).fg14(.secondary)
+                        Button("Try again") { bridge.connect(force: true) }.prominentButton14().tint14(.abFill)
                         RouteLink(Route.web("Rate your teachers", Ratings.script)) { Text("Open the web version").font(.footnote) }
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
                 }
             case .ready:
-                Section {
+                Section14 {
                     Picker("Sort", selection: $sort) {
                         ForEach(RatingSort.allCases, id: \.self) { Text($0.rawValue).tag($0) }
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(SegmentedPickerStyle())
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
                 }
-                Section {
+                Section14 {
                     if shown.isEmpty {
                         VStack(spacing: 8) {
                             Text(query.isEmpty ? "No ratings yet" : "No teacher named “\(query)” yet").font(.headline)
-                            Text("Be the first to rate them.").font(.footnote).foregroundStyle(.secondary)
+                            Text("Be the first to rate them.").font(.footnote).fg14(.secondary)
                             Button("Rate \(query.isEmpty ? "a teacher" : query)") { rating = RateTarget(name: query) }
-                                .buttonStyle(.borderedProminent).tint(.abFill)
+                                .prominentButton14().tint14(.abFill)
                         }
                         .frame(maxWidth: .infinity).padding(.vertical, 12)
                     }
                     ForEach(shown) { t in
                         Button { rating = RateTarget(name: t.name) } label: { TeacherRow(t: t) }
-                            .buttonStyle(.plain)
+                            .buttonStyle(PlainButtonStyle())
                     }
                 } header: {
                     Text("\(bridge.teachers.count) teachers rated")
@@ -178,8 +178,8 @@ struct TeacherRatingsScreen: View {
                 }
             }
         }
-        .searchable(text: $query, prompt: "Search teachers")
-        .refreshable { await bridge.refresh() }
+        .searchable14(text: $query, prompt: "Search teachers")
+        .refreshable14 { await bridge.refresh() }
         .animation(.easeInOut(duration: 0.25), value: bridge.status)
     }
 }
@@ -191,10 +191,10 @@ private struct TeacherRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Text(String(format: "%.1f", t.average))
-                .font(.system(size: 16, weight: .bold, design: .rounded).monospacedDigit())
-                .foregroundStyle(.white)
+                .font(.system(size: 16, weight: .bold, design: .rounded).monoDigit14())
+                .fg14(.white)
                 .frame(width: 46, height: 38)
-                .background(Ratings.color(t.average), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .bgIn14(Ratings.color(t.average), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             VStack(alignment: .leading, spacing: 5) {
                 Text(t.name).font(.body.weight(.medium)).lineLimit(2)
                 GeometryReader { g in
@@ -204,9 +204,9 @@ private struct TeacherRow: View {
                     }
                 }
                 .frame(height: 5)
-                Text(String(format: L("%d votes"), t.count)).font(.caption).foregroundStyle(.secondary)
+                Text(String(format: L("%d votes"), t.count)).font(.caption).fg14(.secondary)
             }
-            Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+            Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).fg14(Color.tertiary14)
         }
         .contentShape(Rectangle())
         .padding(.vertical, 3)
@@ -220,13 +220,13 @@ private struct RatingIntro: View {
             VStack(spacing: 18) {
                 Image(systemName: "star.bubble.fill")
                     .font(.system(size: 40, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .fg14(.white)
                     .frame(width: 84, height: 84)
-                    .background(Color.abFill, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .bgIn14(Color.abFill, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                     .padding(.top, 20)
                 Text("Rate your teachers").font(.largeTitle.weight(.bold))
                 Text("Share your experience and help other students choose their sections.")
-                    .multilineTextAlignment(.center).foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center).fg14(.secondary)
                 VStack(alignment: .leading, spacing: 16) {
                     IntroPoint(symbol: "eye.slash.fill", title: "100% anonymous", text: "Nobody, not even the admins, can see who rated.")
                     IntroPoint(symbol: "chart.bar.fill", title: "Real averages", text: "Every teacher shows an average out of 10 and how many students voted.")
@@ -234,14 +234,14 @@ private struct RatingIntro: View {
                     IntroPoint(symbol: "heart.text.square.fill", title: "Be fair", text: "Rate the teaching, not the person. Rude names are blocked.")
                 }
                 .padding(18)
-                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 Button(action: onContinue) {
                     Text("Continue").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abFill)
+                .prominentButton14().tint14(.abFill)
                 NavigationLink("Terms of Service") { SitePageView(path: "/legal/uni_tos", title: "Terms of Service") }
                     .font(.footnote)
-                Text("By continuing you agree to the Terms of Service.").font(.caption).foregroundStyle(.secondary)
+                Text("By continuing you agree to the Terms of Service.").font(.caption).fg14(.secondary)
             }
             .padding(20)
         }
@@ -255,10 +255,10 @@ private struct IntroPoint: View {
     let text: String
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
-            Image(systemName: symbol).font(.title3).foregroundStyle(Color.abAccent).frame(width: 28)
+            Image(systemName: symbol).font(.title3).fg14(Color.abAccent).frame(width: 28)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.headline)
-                Text(text).font(.subheadline).foregroundStyle(.secondary)
+                Text(text).font(.subheadline).fg14(.secondary)
             }
         }
     }
@@ -286,18 +286,18 @@ private struct RateSheet: View {
     var body: some View {
         NavigationView {
             Form {
-                Section {
+                Section14 {
                     TextField("Teacher's full name, e.g. Dr. Ahmad Malik", text: $name)
-                        .textInputAutocapitalization(.words)
+                        .autocapitalization(.words)
                         .disableAutocorrection(true)
                         .disabled(done)
                     ForEach(suggestions) { t in
                         Button { name = t.name } label: {
                             HStack {
-                                Image(systemName: "arrow.turn.down.right").foregroundStyle(.secondary)
-                                Text(t.name).foregroundStyle(.primary)
+                                Image(systemName: "arrow.turn.down.right").fg14(.secondary)
+                                Text(t.name).fg14(.primary)
                                 Spacer()
-                                Text(String(format: "%.1f", t.average)).foregroundStyle(Ratings.color(t.average))
+                                Text(String(format: "%.1f", t.average)).fg14(Ratings.color(t.average))
                             }
                         }
                     }
@@ -308,20 +308,20 @@ private struct RateSheet: View {
                 }
 
                 if let c = current, c.count > 0 {
-                    Section("Current rating") {
+                    Section14("Current rating") {
                         HStack {
-                            Text(String(format: "%.1f / 10", c.average)).font(.title3.weight(.bold)).foregroundStyle(Ratings.color(c.average))
+                            Text(String(format: "%.1f / 10", c.average)).font(.title3.weight(.bold)).fg14(Ratings.color(c.average))
                             Spacer()
-                            Text(String(format: L("%d votes"), c.count)).foregroundStyle(.secondary)
+                            Text(String(format: L("%d votes"), c.count)).fg14(.secondary)
                         }
                     }
                 }
 
-                Section {
+                Section14 {
                     VStack(spacing: 14) {
                         Text(score == 0 ? "Tap a score" : "\(score) / 10 · \(label(score))")
                             .font(.headline)
-                            .foregroundStyle(score == 0 ? Color.secondary : Ratings.color(Double(score)))
+                            .fg14(score == 0 ? Color.secondary : Ratings.color(Double(score)))
                         ForEach([1, 6], id: \.self) { start in
                             HStack(spacing: 8) {
                                 ForEach(start..<(start + 5), id: \.self) { n in
@@ -332,12 +332,12 @@ private struct RateSheet: View {
                                         Text("\(n)")
                                             .font(.system(size: 18, weight: .bold, design: .rounded))
                                             .frame(maxWidth: .infinity, minHeight: 46)
-                                            .foregroundStyle(n <= score ? Color.white : Color.primary)
+                                            .fg14(n <= score ? Color.white : Color.primary)
                                             .background(n <= score ? Ratings.color(Double(score)) : Color.secondary.opacity(0.12),
                                                         in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                                             .scaleEffect(n == score ? 1.08 : 1)
                                     }
-                                    .buttonStyle(.plain)
+                                    .buttonStyle(PlainButtonStyle())
                                     .disabled(done)
                                 }
                             }
@@ -349,13 +349,13 @@ private struct RateSheet: View {
                 }
 
                 if let message {
-                    Section {
+                    Section14 {
                         Label(message, systemImage: done ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-                            .foregroundStyle(done ? Color.green : Color.orange)
+                            .fg14(done ? Color.green : Color.orange)
                     }
                 }
 
-                Section {
+                Section14 {
                     Button {
                         if done { presentation.wrappedValue.dismiss() } else { save() }
                     } label: {

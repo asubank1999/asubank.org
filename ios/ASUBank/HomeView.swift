@@ -88,13 +88,13 @@ struct TopPickTile: View {
             Text(link.emoji).font(.system(size: 22))
                 .frame(width: 42, height: 42)
                 .background(Circle().fill(Color.accentColor.opacity(0.14)))
-            Text(link.title).font(.caption.weight(.semibold)).foregroundStyle(.primary)
+            Text(link.title).font(.caption.weight(.semibold)).fg14(.primary)
                 .lineLimit(2).multilineTextAlignment(.center).minimumScaleFactor(0.85)
         }
         .frame(maxWidth: .infinity, minHeight: 86)
         .padding(.vertical, 8).padding(.horizontal, 4)
-        .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(alignment: .topTrailing) {
+        .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay14(alignment: .topTrailing) {
             if link.shownBadge != nil { Circle().fill(Color.orange).frame(width: 8, height: 8).padding(8) }
         }
         .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -113,9 +113,9 @@ struct SiteLinkButton<Label: View>: View {
         case .web(let path):
             RouteLink(Route.web(link.title, path)) { label() }
         case .tab(let t):
-            Button { app.tab = t; Haptics.tap() } label: { label() }.tint(.primary)
+            Button { app.tab = t; Haptics.tap() } label: { label() }.tint14(.primary)
         case .external(let url):
-            Button { openURL(url) } label: { label() }.tint(.primary)
+            Button { openURL(url) } label: { label() }.tint14(.primary)
         }
     }
 }
@@ -132,14 +132,14 @@ struct SiteLinkRow: View {
                 Text(link.emoji).font(.title3).frame(width: 30)
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
-                        Text(link.title).foregroundStyle(.primary)
+                        Text(link.title).fg14(.primary)
                         if let b = link.shownBadge { Badge(text: b, color: b == "NEW" ? .green : .orange) }
                     }
-                    if let s = link.subtitle { Text(s).font(.footnote).foregroundStyle(.secondary) }
+                    if let s = link.subtitle { Text(s).font(.footnote).fg14(.secondary) }
                 }
                 if case .external = link.target {
                     Spacer()
-                    Image(systemName: "arrow.up.right").font(.footnote).foregroundStyle(.tertiary)
+                    Image(systemName: "arrow.up.right").font(.footnote).fg14(Color.tertiary14)
                 }
             }
         } }
@@ -187,9 +187,9 @@ struct HomeView: View {
                     SponsorCard()
                     if on("continue"), remember, !saved.recent.isEmpty {
                         SectionHeader(title: "Continue")
-                            .overlay(alignment: .bottomTrailing) {
+                            .overlay14(alignment: .bottomTrailing) {
                                 Menu {
-                                    Button(role: .destructive) { saved.clearRecent(); Haptics.tap() } label: { Label("Clear the Continue list", systemImage: "trash") }
+                                    Button() { saved.clearRecent(); Haptics.tap() } label: { Label("Clear the Continue list", systemImage: "trash") }
                                     Button { hidden = HomePrefs.setting("continue", false, in: hidden); Haptics.tap() } label: { Label("Hide Continue", systemImage: "eye.slash") }
                                     Button { customizing = true } label: { Label("Customize", systemImage: "slider.horizontal.3") }
                                 } label: {
@@ -232,7 +232,7 @@ struct HomeView: View {
                     }
 
                     Text("Peer-verified study materials curated by Applied Science University students, for ASU students.")
-                        .font(.footnote).foregroundStyle(.secondary)
+                        .font(.footnote).fg14(.secondary)
                         .padding(20)
                 }
                 .padding(.bottom, 20)
@@ -263,7 +263,7 @@ struct HomeView: View {
                 }
                 .environmentObject(saved)
             }
-            .refreshable { await library.load() }
+            .refreshable14 { await library.load() }
             .abDestinations()
             // asubank.org links opened from outside the app show their native screen here
             .push(isPresented: Binding(get: { linked != nil }, set: { if !$0 { linked = nil } })) {
@@ -293,7 +293,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 9) {
             Text("Summaries, past papers and test banks for ASU students")
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.white)
+                .fg14(.white)
             Button { app.tab = .search; Haptics.tap() } label: {
                 HStack {
                     Image(systemName: "magnifyingglass")
@@ -301,9 +301,9 @@ struct HomeView: View {
                     Spacer()
                 }
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .fg14(.secondary)
                 .padding(.horizontal, 12).padding(.vertical, 8)
-                .background(Color.abSurface, in: Capsule())
+                .bgIn14(Color.abSurface, in: Capsule())
             }
             .buttonStyle(PressStyle())
             HStack(spacing: 8) {
@@ -314,10 +314,10 @@ struct HomeView: View {
         }
         .padding(14)
         .background(
-            LinearGradient(colors: AppTheme.heroColors, startPoint: .topLeading, endPoint: .bottomTrailing),
+            LinearGradient(gradient: Gradient(colors: AppTheme.heroColors), startPoint: .topLeading, endPoint: .bottomTrailing),
             in: RoundedRectangle(cornerRadius: 22, style: .continuous)
         )
-        .overlay(alignment: .topTrailing) {
+        .overlay14(alignment: .topTrailing) {
             Circle().fill(Color.abGold.opacity(0.25)).frame(width: 120).blur(radius: 30).offset(x: 20, y: -30).allowsHitTesting(false)
         }
         .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
@@ -327,9 +327,9 @@ struct HomeView: View {
 
     private func heroButton(_ title: String, action: @escaping () -> Void) -> some View {
         Button { action(); Haptics.tap() } label: {
-            Text(title).font(.caption.weight(.semibold)).foregroundStyle(.white)
+            Text(title).font(.caption.weight(.semibold)).fg14(.white)
                 .padding(.horizontal, 10).padding(.vertical, 6)
-                .background(.white.opacity(0.16), in: Capsule())
+                .bgIn14(.white.opacity(0.16), in: Capsule())
         }
         .buttonStyle(PressStyle())
     }
@@ -337,12 +337,12 @@ struct HomeView: View {
     @ViewBuilder private var subjects: some View {
         SectionHeader(title: "Browse by subject", arabic: "تصفح حسب المادة")
         if library.subjects.isEmpty {
-            HStack { Spacer(); if library.failed { Text("Connect to the internet to load subjects.").foregroundStyle(.secondary) } else { ABDots() }; Spacer() }
+            HStack { Spacer(); if library.failed { Text("Connect to the internet to load subjects.").fg14(.secondary) } else { ABDots() }; Spacer() }
                 .padding(30)
         }
         ForEach(library.categories, id: \.name) { cat in
             Text(cat.name.uppercased())
-                .font(.footnote.weight(.semibold)).foregroundStyle(.secondary)
+                .font(.footnote.weight(.semibold)).fg14(.secondary)
                 .padding(.horizontal, 20).padding(.top, 14).padding(.bottom, 6)
             LazyVGrid(columns: grid, spacing: 12) {
                 ForEach(cat.subjects) { s in
@@ -361,12 +361,12 @@ struct HomeView: View {
             ForEach(items) { m in
                 MaterialRow(m: m)
                     .padding(.horizontal, 16).padding(.vertical, 8)
-                    .foregroundStyle(.primary)
+                    .fg14(.primary)
                 if m.id != items.last?.id { Divider().padding(.leading, 62) }
             }
         }
-        .buttonStyle(.plain)
-        .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .buttonStyle(PlainButtonStyle())
+        .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .padding(.horizontal, 16)
     }
 
@@ -380,8 +380,8 @@ struct HomeView: View {
                 if l.id != links.last?.id { Divider().padding(.leading, 58) }
             }
         }
-        .buttonStyle(.plain)
-        .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .buttonStyle(PlainButtonStyle())
+        .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .padding(.horizontal, 16)
     }
 }

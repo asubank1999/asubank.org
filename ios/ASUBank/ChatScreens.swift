@@ -31,7 +31,7 @@ struct ChatTab: View {
         }
         .onAppear(perform: takeRoom)
         .onChange(of: app.pendingRoom) { _ in takeRoom() }
-        .task(id: account.signedIn) {
+        .task14(id: account.signedIn) {
             while !Task.isCancelled {
                 await dms.load()
                 try? await Task.sleep(nanoseconds: 20_000_000_000)
@@ -48,12 +48,12 @@ struct ChatTab: View {
 
     private var rooms: some View {
         List {
-            Section {
+            Section14 {
                 HStack(spacing: 12) {
                     if let u = account.user { Avatar(name: u.displayName, color: u.color, size: 44, admin: u.isAdmin, photo: u.avatar, online: true) }
                     VStack(alignment: .leading, spacing: 2) {
                         Text(String(format: L("Hi, %@"), account.user?.displayName ?? "")).font(.headline)
-                        Text("Be kind and help each other. Don't share personal info.").font(.caption).foregroundStyle(.secondary)
+                        Text("Be kind and help each other. Don't share personal info.").font(.caption).fg14(.secondary)
                     }
                     Spacer()
                     RouteLinkAccount()
@@ -64,18 +64,18 @@ struct ChatTab: View {
                 Text(dms.unread > 0 ? "\(L("Messages")) (\(dms.unread))" : L("Messages")).tag("messages")
                 Text("Rooms").tag("rooms")
             }
-            .pickerStyle(.segmented)
+            .pickerStyle(SegmentedPickerStyle())
             .listRowInsets(EdgeInsets())
             .listRowBackground(Color.clear)
             if section == "messages" {
                 DMConversationRows(model: dms)
             } else {
-            Section {
+            Section14 {
                 OnlineBox()
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
             }
-            Section("Rooms") {
+            Section14("Rooms") {
                 ForEach(account.rooms) { r in
                     Button { openRoom = r } label: { roomLabel(r) }
                     .contextMenu {
@@ -93,26 +93,26 @@ struct ChatTab: View {
             }
             }
         }
-        .listStyle(.insetGrouped)
-        .refreshable { await account.refresh(); await OnlineStore.shared.load(force: true); await dms.load() }
+        .listStyle(InsetGroupedListStyle())
+        .refreshable14 { await account.refresh(); await OnlineStore.shared.load(force: true); await dms.load() }
     }
 
     private func roomLabel(_ r: ChatRoom) -> some View {
         HStack(spacing: 12) {
             Text(r.emoji).font(.title2).frame(width: 48, height: 48)
-                .background(Color.abAccentSoft, in: Circle())
+                .bgIn14(Color.abAccentSoft, in: Circle())
                 .opacity(r.archived == true ? 0.5 : 1)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
-                    Text(r.name).font(.body.weight(.semibold)).foregroundStyle(.primary)
+                    Text(r.name).font(.body.weight(.semibold)).fg14(.primary)
                     if r.adminOnly == true { Badge(text: L("TEAM"), color: .orange) }
-                    if r.locked == true { Image(systemName: "lock.fill").font(.caption).foregroundStyle(.secondary) }
+                    if r.locked == true { Image(systemName: "lock.fill").font(.caption).fg14(.secondary) }
                     if r.archived == true { Badge(text: L("ARCHIVED"), color: .gray) }
                 }
-                Text(r.about).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                Text(r.about).font(.caption).fg14(.secondary).lineLimit(1)
             }
             Spacer()
-            Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+            Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).fg14(Color.tertiary14)
         }
     }
 }
@@ -133,7 +133,7 @@ struct OnlineScreenHost: View {
         Group {
             OnlineScreen(users: store.users)
         }
-        .task { await store.load(force: true) }
+        .task14 { await store.load(force: true) }
     }
 }
 
@@ -159,11 +159,11 @@ struct OnlineScreen: View {
     var body: some View {
         List {
             let on = shown.filter(\.online), off = shown.filter { !$0.online }
-            if !on.isEmpty { Section(String(format: L("Online · %d"), on.count)) { ForEach(on) { row($0) } } }
-            if !off.isEmpty { Section(String(format: L("Offline · %d"), off.count)) { ForEach(off) { row($0) } } }
+            if !on.isEmpty { Section14(String(format: L("Online · %d"), on.count)) { ForEach(on) { row($0) } } }
+            if !off.isEmpty { Section14(String(format: L("Offline · %d"), off.count)) { ForEach(off) { row($0) } } }
         }
-        .listStyle(.insetGrouped)
-        .searchable(text: $query, prompt: "Search people")
+        .listStyle(InsetGroupedListStyle())
+        .searchable14(text: $query, prompt: "Search people")
         .navigationTitle("Who's online")
     }
 
@@ -173,7 +173,7 @@ struct OnlineScreen: View {
                 Avatar(name: u.displayName, color: u.color ?? "#8C1D40", size: 40, admin: u.role == "admin", photo: u.avatar, online: u.online)
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 4) { Text(u.displayName).font(.body.weight(.semibold)); BadgeRow(badges: u.badges ?? [], compact: true) }
-                    Text(u.online ? L("Online now") : lastSeenText(u.lastSeen)).font(.caption).foregroundStyle(u.online ? Color.green : .secondary)
+                    Text(u.online ? L("Online now") : lastSeenText(u.lastSeen)).font(.caption).fg14(u.online ? Color.green : .secondary)
                 }
             }
         }
@@ -184,7 +184,8 @@ struct OnlineScreen: View {
 
 struct RoomEditor: View {
     let room: ChatRoom?
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var account = AccountStore.shared
     @State private var name = ""
     @State private var emoji = "💬"
@@ -203,37 +204,37 @@ struct RoomEditor: View {
     var body: some View {
         ABStack {
             Form {
-                Section("Room") {
+                Section14("Room") {
                     TextField("Name", text: $name)
                     TextField("What it's for", text: $about)
                 }
-                Section("Icon") {
+                Section14("Icon") {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(emojis, id: \.self) { e in
                                 Button { emoji = e } label: {
                                     Text(e).font(.title2).frame(width: 42, height: 42)
-                                        .background(emoji == e ? Color.abAccentSoft : .clear, in: RoundedRectangle(cornerRadius: 10))
-                                }.buttonStyle(.plain)
+                                        .bgIn14(emoji == e ? Color.abAccentSoft : .clear, in: RoundedRectangle(cornerRadius: 10))
+                                }.buttonStyle(PlainButtonStyle())
                             }
                         }
                     }
                 }
-                Section {
+                Section14 {
                     Toggle("Only admins can post", isOn: $adminOnly)
                     Toggle("Locked (read-only for now)", isOn: $locked)
                     Toggle("Archived (hidden from students)", isOn: $archived)
                     Stepper(String(format: L("Position %d"), order + 1), value: $order, in: 0...50)
                 } header: { Text("Settings") }
                 if let room {
-                    Section {
-                        Button(role: .destructive) { confirmClear = true } label: { Label("Clear all messages", systemImage: "eraser") }
+                    Section14 {
+                        Button() { confirmClear = true } label: { Label("Clear all messages", systemImage: "eraser") }
                         if room.id != "announcements" {
-                            Button(role: .destructive) { confirmDelete = true } label: { Label("Delete room", systemImage: "trash") }
+                            Button() { confirmDelete = true } label: { Label("Delete room", systemImage: "trash") }
                         }
                     }
                 }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
+                if let error { Section14 { Text(error).fg14(.red) } }
             }
             .navigationTitle(room == nil ? "New room" : "Edit room").navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -242,11 +243,11 @@ struct RoomEditor: View {
                     Button(busy ? "Saving…" : "Save") { Task { await save() } }.disabled(busy || name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
-            .confirmationDialog("Delete this room?", isPresented: $confirmDelete, titleVisibility: .visible) {
-                Button("Delete room", role: .destructive) { Task { await run("adminRoomDelete", ["id": room?.id ?? ""]) } }
+            .confirmationDialog14("Delete this room?", isPresented: $confirmDelete, titleVisibility: .visible) {
+                Button("Delete room") { Task { await run("adminRoomDelete", ["id": room?.id ?? ""]) } }
             } message: { Text("Its messages disappear from the apps. This can't be undone.") }
-            .confirmationDialog("Clear every message in this room?", isPresented: $confirmClear, titleVisibility: .visible) {
-                Button("Clear messages", role: .destructive) { Task { await run("adminClearRoom", ["room": room?.id ?? ""]) } }
+            .confirmationDialog14("Clear every message in this room?", isPresented: $confirmClear, titleVisibility: .visible) {
+                Button("Clear messages") { Task { await run("adminClearRoom", ["room": room?.id ?? ""]) } }
             }
             .onAppear {
                 guard let r = room else { order = account.rooms.count; return }
@@ -440,7 +441,7 @@ struct ChatRoomView: View {
     @State private var blocking: BlockTarget?
     @State private var profile: ChatMessage?
     @State private var roomSettings = false
-    @FocusState private var focused: Bool
+    @State private var focused: Bool = false
 
     init(room: ChatRoom) { _model = StateObject(wrappedValue: RoomModel(room: room)) }
 
@@ -458,7 +459,7 @@ struct ChatRoomView: View {
                         VStack(spacing: 8) {
                             Text(model.room.emoji).font(.system(size: 44))
                             Text("No messages yet").font(.headline)
-                            Text(canPost ? "Start the conversation!" : "News from the team will show up here.").foregroundStyle(.secondary)
+                            Text(canPost ? "Start the conversation!" : "News from the team will show up here.").fg14(.secondary)
                         }
                         .padding(.top, 60)
                     }
@@ -478,39 +479,39 @@ struct ChatRoomView: View {
             }
             .background(Color.abBackground)
             .dismissKeyboardOnScroll()
-            .safeAreaInset(edge: .top) {
+            .safeAreaInset14(edge: .top) {
                 if let p = model.pinned {
                     Button { withAnimation { proxy.scrollTo(p.id, anchor: .center) } } label: {
                         HStack(spacing: 8) {
-                            Image(systemName: "pin.fill").foregroundStyle(Color.abAccent)
+                            Image(systemName: "pin.fill").fg14(Color.abAccent)
                             VStack(alignment: .leading, spacing: 1) {
-                                Text("Pinned message").font(.caption2.weight(.bold)).foregroundStyle(Color.abAccent)
-                                Text(p.text).font(.caption).lineLimit(1).foregroundStyle(.primary)
+                                Text("Pinned message").font(.caption2.weight(.bold)).fg14(Color.abAccent)
+                                Text(p.text).font(.caption).lineLimit(1).fg14(.primary)
                             }
                             Spacer()
                             if account.isAdmin {
-                                Button { Task { await model.pin(nil) } } label: { Image(systemName: "xmark").foregroundStyle(.secondary) }
+                                Button { Task { await model.pin(nil) } } label: { Image(systemName: "xmark").fg14(.secondary) }
                             }
                         }
                         .padding(.horizontal, 14).padding(.vertical, 8)
-                        .background(.bar)
+                        .background(Color.mat14)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .onChange(of: model.messages.count) { _ in withAnimation { proxy.scrollTo("bottom", anchor: .bottom) } }
             .onAppear { DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { proxy.scrollTo("bottom", anchor: .bottom) } }
         }
-        .safeAreaInset(edge: .bottom) { composer }
+        .safeAreaInset14(edge: .bottom) { composer }
         .navigationTitle("\(model.room.emoji) \(model.room.name)")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 HStack(spacing: 8) {
-                    Text(model.room.emoji).font(.subheadline).frame(width: 32, height: 32).background(Color.abAccentSoft, in: Circle())
+                    Text(model.room.emoji).font(.subheadline).frame(width: 32, height: 32).bgIn14(Color.abAccentSoft, in: Circle())
                     VStack(alignment: .leading, spacing: 0) {
                         Text(model.room.name).font(.subheadline.weight(.semibold)).lineLimit(1)
-                        if !model.room.about.isEmpty { Text(model.room.about).font(.caption2).foregroundStyle(.secondary).lineLimit(1) }
+                        if !model.room.about.isEmpty { Text(model.room.about).font(.caption2).fg14(.secondary).lineLimit(1) }
                     }
                 }
             }
@@ -529,8 +530,8 @@ struct ChatRoomView: View {
         .onDisappear { model.stop() }
         .onChange(of: account.rooms) { rs in if let r = rs.first(where: { $0.id == model.room.id }) { model.room = r } }
         .modifier(ModerationDialogs(report: $reporting, block: $blocking, blocked: { model.hideMessages(from: $0) }))
-        .confirmationDialog("Ban @\(banTarget?.username ?? "")?", isPresented: Binding(get: { banTarget != nil }, set: { if !$0 { banTarget = nil } }), titleVisibility: .visible) {
-            Button("Ban from UniHub", role: .destructive) { if let m = banTarget { Task { await model.ban(m) } } }
+        .confirmationDialog14("Ban @\(banTarget?.username ?? "")?", isPresented: Binding(get: { banTarget != nil }, set: { if !$0 { banTarget = nil } }), titleVisibility: .visible) {
+            Button("Ban from UniHub") { if let m = banTarget { Task { await model.ban(m) } } }
         } message: { Text("They're signed out and can't sign in again until an admin unbans them.") }
     }
 
@@ -550,14 +551,14 @@ struct ChatRoomView: View {
                 if grouped { Color.clear.frame(width: 30, height: 1) } else {
                     Button { profile = m } label: {
                         Avatar(name: m.displayName, color: m.color, size: 30, admin: m.role == "admin", photo: person?.avatar, online: person?.online)
-                    }.buttonStyle(.plain)
+                    }.buttonStyle(PlainButtonStyle())
                 }
             }
             VStack(alignment: mine ? .trailing : .leading, spacing: 3) {
                 if !mine && !grouped {
                     HStack(spacing: 4) {
-                        Text(m.displayName).font(.caption.weight(.semibold)).foregroundStyle(Color(hexString: m.color))
-                        if m.role == "admin" { Image(systemName: "checkmark.seal.fill").font(.caption2).foregroundStyle(Color.abGold) }
+                        Text(m.displayName).font(.caption.weight(.semibold)).fg14(Color(hexString: m.color))
+                        if m.role == "admin" { Image(systemName: "checkmark.seal.fill").font(.caption2).fg14(Color.abGold) }
                         BadgeRow(badges: person?.badges ?? [], compact: true)
                     }
                 }
@@ -569,7 +570,7 @@ struct ChatRoomView: View {
                         }
                         .padding(6)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background((mine ? Color.white : Color.abAccent).opacity(0.15), in: RoundedRectangle(cornerRadius: 8))
+                        .bgIn14((mine ? Color.white : Color.abAccent).opacity(0.15), in: RoundedRectangle(cornerRadius: 8))
                     }
                     if m.hasFile == true, let type = m.fileType {
                         ChatAttachment(id: m.id, type: type, duration: m.duration ?? 0, mine: mine, localFile: m.localFile,
@@ -577,7 +578,7 @@ struct ChatRoomView: View {
                                        open: { preview = PreviewFile(url: $0) })
                     }
                     if !m.text.isEmpty {
-                        Text(m.text).font(.body).foregroundStyle(mine ? .white : .primary).textSelection(.enabled)
+                        Text(m.text).font(.body).fg14(mine ? .white : .primary)
                     }
                     HStack(spacing: 4) {
                         ExpiryTag(expires: m.expires, tint: mine ? .white.opacity(0.8) : .secondary)
@@ -586,7 +587,7 @@ struct ChatRoomView: View {
                         if m.edited?.isEmpty == false { Text("edited") }
                         Text(m.date, style: .time)
                     }
-                    .font(.caption2).foregroundStyle(mine ? .white.opacity(0.7) : .secondary)
+                    .font(.caption2).fg14(mine ? .white.opacity(0.7) : .secondary)
                 }
                 .padding(.horizontal, 12).padding(.vertical, 8)
                 .chatBubble(mine: mine, joinedAbove: grouped, joinedBelow: joinedBelow)
@@ -600,7 +601,7 @@ struct ChatRoomView: View {
                     if !mine { Button { profile = m } label: { Label("View profile", systemImage: "person.crop.circle") } }
                     if !mine {
                         Button { reporting = ReportTarget(kind: "message", targetId: m.id, name: String(m.text.prefix(120))) } label: { Label("Report message", systemImage: "flag") }
-                        if m.role != "admin" { Button(role: .destructive) { blocking = BlockTarget(userId: m.userId, name: m.displayName) } label: { Label("Block", systemImage: "nosign") } }
+                        if m.role != "admin" { Button() { blocking = BlockTarget(userId: m.userId, name: m.displayName) } label: { Label("Block", systemImage: "nosign") } }
                     }
                     if account.isAdmin {
                         Button { Task { await model.pin(model.pinned?.id == m.id ? nil : m) } } label: {
@@ -608,10 +609,10 @@ struct ChatRoomView: View {
                         }
                     }
                     if (mine || account.isAdmin) && m.pending != true {
-                        Button(role: .destructive) { Task { await model.delete(m) } } label: { Label("Delete for everyone", systemImage: "trash") }
+                        Button() { Task { await model.delete(m) } } label: { Label("Delete for everyone", systemImage: "trash") }
                     }
                     if account.isAdmin && !mine && m.role != "admin" {
-                        Button(role: .destructive) { banTarget = m } label: { Label("Ban @\(m.username)", systemImage: "hand.raised.fill") }
+                        Button() { banTarget = m } label: { Label("Ban @\(m.username)", systemImage: "hand.raised.fill") }
                     }
                 }
             }
@@ -623,18 +624,18 @@ struct ChatRoomView: View {
     @ViewBuilder private var composer: some View {
         VStack(spacing: 0) {
             if let e = model.error {
-                Text(e).font(.caption).foregroundStyle(.white).padding(6).frame(maxWidth: .infinity).background(Color.red.opacity(0.85))
+                Text(e).font(.caption).fg14(.white).padding(6).frame(maxWidth: .infinity).background(Color.red.opacity(0.85))
             }
             if canPost {
                 if let r = replyTo ?? editing {
                     HStack {
-                        Image(systemName: editing != nil ? "pencil" : "arrowshape.turn.up.left.fill").foregroundStyle(Color.abAccent)
+                        Image(systemName: editing != nil ? "pencil" : "arrowshape.turn.up.left.fill").fg14(Color.abAccent)
                         VStack(alignment: .leading) {
                             Text(editing != nil ? L("Editing your message") : String(format: L("Replying to %@"), r.displayName)).font(.caption.weight(.semibold))
-                            Text(r.text).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                            Text(r.text).font(.caption).fg14(.secondary).lineLimit(1)
                         }
                         Spacer()
-                        Button { if editing != nil { text = "" }; replyTo = nil; editing = nil } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary) }
+                        Button { if editing != nil { text = "" }; replyTo = nil; editing = nil } label: { Image(systemName: "xmark.circle.fill").fg14(.secondary) }
                     }
                     .padding(.horizontal, 14).padding(.top, 8)
                 }
@@ -644,10 +645,10 @@ struct ChatRoomView: View {
             } else {
                 Label(model.room.archived == true ? L("This room is archived.") : model.room.locked == true ? L("This room is locked. Only admins can post.") : L("Only the UniHub team posts here."),
                       systemImage: model.room.locked == true || model.room.archived == true ? "lock.fill" : "megaphone")
-                    .font(.footnote).foregroundStyle(.secondary).padding(12)
+                    .font(.footnote).fg14(.secondary).padding(12)
             }
         }
-        .background(.bar)
+        .background(Color.mat14)
     }
 
     private func send() {

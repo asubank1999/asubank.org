@@ -99,21 +99,21 @@ struct PhotoViewer: View {
                             }
                         }
                 } else if failed {
-                    Text("Couldn't load this photo").foregroundStyle(.white)
+                    Text("Couldn't load this photo").fg14(.white)
                 } else {
-                    ABDots().tint(.white)
+                    ABDots().tint14(.white)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             Button { close() } label: {
-                Image(systemName: "xmark").font(.headline).foregroundStyle(.white)
-                    .frame(width: 40, height: 40).background(.white.opacity(0.18), in: Circle())
+                Image(systemName: "xmark").font(.headline).fg14(.white)
+                    .frame(width: 40, height: 40).bgIn14(.white.opacity(0.18), in: Circle())
             }
             .padding(16)
             .accessibilityLabel(Text("Close"))
         }
         .statusBar(hidden: true)
-        .task {
+        .task14 {
             image = await PhotoCache.shared.load(url, pixelSize: 800)
             failed = image == nil
         }
@@ -302,7 +302,7 @@ struct FeedExtra: Decodable, Identifiable, Equatable {
         guard !fetched else { return }
         fetched = true
         if let u = URL(string: "https://asubank.org/assets/app/feed-extras.json"),
-           let (data, _) = try? await URLSession.shared.data(from: u), apply(data) {
+           let (data, _) = try? await URLSession.shared.data14(from: u), apply(data) {
             UserDefaults.standard.set(data, forKey: cacheKey)
         }
     }
@@ -317,14 +317,14 @@ struct FeedExtraCard: View {
         HStack(alignment: .top, spacing: 12) {
             Text(item.emoji).font(.system(size: 26))
                 .frame(width: 46, height: 46)
-                .background(Color.abAccentSoft, in: Circle())
+                .bgIn14(Color.abAccentSoft, in: Circle())
             VStack(alignment: .leading, spacing: 4) {
                 if item.kind == "news" {
                     Text("UniHub news")
-                        .font(.caption.weight(.semibold)).textCase(.uppercase).foregroundStyle(Color.abAccent)
+                        .font(.caption.weight(.semibold)).textCase(.uppercase).fg14(Color.abAccent)
                 }
                 Text(item.title).font(.headline)
-                Text(item.text).font(.subheadline).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                Text(item.text).font(.subheadline).fg14(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
         }
@@ -360,7 +360,7 @@ struct FeedScreen: View {
     var body: some View {
         List {
             if !groups.isEmpty || account.signedIn {
-                Section {
+                Section14 {
                     StoriesRow(groups: groups, add: { camera = true }, open: { viewing = StoryStart(index: $0) })
                 }
                 .listRowInsets(EdgeInsets())
@@ -368,19 +368,19 @@ struct FeedScreen: View {
             }
 
             if account.signedIn {
-                Section {
+                Section14 {
                     Button { composing = true } label: {
                         HStack(spacing: 10) {
                             if let u = account.user {
                                 Avatar(name: u.displayName, color: u.color, size: 38, admin: u.isAdmin, photo: u.avatar, peek: false)
                             }
-                            Text("What's on your mind?").foregroundStyle(.secondary)
+                            Text("What's on your mind?").fg14(.secondary)
                             Spacer()
-                            Image(systemName: "photo.fill").foregroundStyle(Color.abAccent)
+                            Image(systemName: "photo.fill").fg14(Color.abAccent)
                         }
                         .padding(.vertical, 2)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(PlainButtonStyle())
                 }
 
                 Picker("Show", selection: $savedScope) {
@@ -388,28 +388,28 @@ struct FeedScreen: View {
                     Text("Strangers").tag("strangers")
                     Text("Guest").tag("guest")
                 }
-                .pickerStyle(.segmented)
+                .pickerStyle(SegmentedPickerStyle())
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
             } else {
-                Section {
+                Section14 {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("You're browsing as a guest").font(.headline)
-                        Text("Sign in to post, comment, like and add stories.").font(.subheadline).foregroundStyle(.secondary)
+                        Text("Sign in to post, comment, like and add stories.").font(.subheadline).fg14(.secondary)
                         Button("Sign in or create account") { account.signInShown = true }
-                            .buttonStyle(.borderedProminent).tint(.abFill)
+                            .prominentButton14().tint14(.abFill)
                     }
                     .padding(.vertical, 4)
                 }
             }
 
             if let error, posts.isEmpty {
-                Section {
-                    Text(error).foregroundStyle(.red)
+                Section14 {
+                    Text(error).fg14(.red)
                     Button("Try again") { Task { await load() } }
                 }
             } else if posts.isEmpty {
-                Section {
+                Section14 {
                     if loaded {
                         EmptyState(symbol: "text.bubble", title: emptyTitle, text: emptyText).listRowBackground(Color.clear)
                     } else {
@@ -419,26 +419,26 @@ struct FeedScreen: View {
                 // an empty feed still has something to read
                 if loaded {
                     ForEach(0..<min(3, extras.items.count), id: \.self) { n in
-                        if let x = extras.pick(n) { Section { FeedExtraCard(item: x) } }
+                        if let x = extras.pick(n) { Section14 { FeedExtraCard(item: x) } }
                     }
                 }
             }
             ForEach(Array(posts.enumerated()), id: \.element.id) { i, p in
-                Section { PostRow(post: p) { await load() } }
+                Section14 { PostRow(post: p) { await load() } }
                 // a news card or a fact after every fourth post
                 if (i + 1) % 4 == 0, let x = extras.pick(i / 4) {
-                    Section { FeedExtraCard(item: x) }
+                    Section14 { FeedExtraCard(item: x) }
                 }
             }
             if more && !posts.isEmpty {
-                Section {
+                Section14 {
                     Button { Task { await loadMore() } } label: {
                         HStack { Spacer(); if loadingMore { ABDots() } else { Text("Load more") }; Spacer() }
                     }
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .background(swipeCamera && account.signedIn ? AnyView(SwipeCatcher(moved: { x in
             let w = UIScreen.main.bounds.width
             slide.wrappedValue = max(-w, min(w, x))
@@ -456,9 +456,9 @@ struct FeedScreen: View {
                 }
             }
         }
-        .refreshable { await load() }
-        .task { await extras.load() }
-        .task(id: scope) {
+        .refreshable14 { await load() }
+        .task14 { await extras.load() }
+        .task14(id: scope) {
             posts = []
             loaded = false
             await load()
@@ -550,26 +550,26 @@ struct StoriesRow: View {
                         ZStack(alignment: .bottomTrailing) {
                             Avatar(name: account.user?.displayName ?? "", color: account.user?.color ?? "#8C1D40", size: 60, photo: account.user?.avatar, peek: false)
                             Image(systemName: "plus.circle.fill").font(.system(size: 22))
-                                .foregroundStyle(.white, Color.abAccent)
+                                .fg14(.white, Color.abAccent)
                                 .background(Circle().fill(Color.abBackground))
                         }
-                        Text("Add story").font(.caption2).foregroundStyle(.primary).lineLimit(1)
+                        Text("Add story").font(.caption2).fg14(.primary).lineLimit(1)
                     }
                     .frame(width: 72)
                 }
-                .buttonStyle(.plain) }
+                .buttonStyle(PlainButtonStyle()) }
                 ForEach(Array(groups.enumerated()), id: \.element.id) { i, g in
                     Button { open(i) } label: {
                         VStack(spacing: 5) {
                             Avatar(name: g.user.displayName, color: g.user.color, size: 60, photo: g.user.avatar, peek: false)
                                 .padding(3)
-                                .overlay(Circle().stroke(g.seen == true ? AnyShapeStyle(Color.secondary.opacity(0.4)) : AnyShapeStyle(Color.abFill.abGradient), lineWidth: 2.5))
+                                .overlay(Circle().stroke(g.seen == true ? AnyStyle14(Color.secondary.opacity(0.4)) : AnyStyle14(Color.abFill.abGradient), lineWidth: 2.5))
                             Text(g.user.id == account.user?.id ? L("Your story") : g.user.displayName)
-                                .font(.caption2).foregroundStyle(.primary).lineLimit(1)
+                                .font(.caption2).fg14(.primary).lineLimit(1)
                         }
                         .frame(width: 72)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .padding(.horizontal, 16).padding(.vertical, 6)
@@ -580,7 +580,8 @@ struct StoriesRow: View {
 struct StoryViewer: View {
     let groups: [StoryGroup]
     let startGroup: Int
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var account = AccountStore.shared
     @State private var g = 0
     @State private var s = 0
@@ -594,7 +595,7 @@ struct StoryViewer: View {
     @State private var viewersOf: ViewersTarget?
     @State private var reply = ""
     @State private var sentNote: String?
-    @FocusState private var typing: Bool
+    @State private var typing: Bool = false
     private static let reactions = ["❤️", "😂", "😮", "😢", "👏", "🔥"]
 
     struct ViewersTarget: Identifiable { let id: String }
@@ -631,7 +632,7 @@ struct StoryViewer: View {
                     ForEach(stories.indices, id: \.self) { i in
                         GeometryReader { geo in
                             Capsule().fill(.white.opacity(0.3))
-                                .overlay(alignment: .leading) {
+                                .overlay14(alignment: .leading) {
                                     Capsule().fill(.white).frame(width: geo.size.width * (i < s ? 1 : i == s ? progress : 0))
                                 }
                         }
@@ -642,20 +643,20 @@ struct StoryViewer: View {
                     HStack(spacing: 10) {
                         Avatar(name: u.displayName, color: u.color, size: 36, photo: u.avatar, peek: false)
                         VStack(alignment: .leading, spacing: 1) {
-                            Text(u.displayName).font(.subheadline.weight(.semibold)).foregroundStyle(.white)
-                            Text(Social.ago(story?.created)).font(.caption).foregroundStyle(.white.opacity(0.8))
+                            Text(u.displayName).font(.subheadline.weight(.semibold)).fg14(.white)
+                            Text(Social.ago(story?.created)).font(.caption).fg14(.white.opacity(0.8))
                         }
                         Spacer()
                         menu(u)
                         Button { dismiss() } label: {
-                            Image(systemName: "xmark").font(.headline).foregroundStyle(.white).frame(width: 36, height: 36)
+                            Image(systemName: "xmark").font(.headline).fg14(.white).frame(width: 36, height: 36)
                         }
                     }
                 }
                 Spacer()
                 if let note = sentNote {
-                    Text(note).font(.footnote.weight(.semibold)).foregroundStyle(.white)
-                        .padding(.horizontal, 14).padding(.vertical, 8).background(.black.opacity(0.55), in: Capsule())
+                    Text(note).font(.footnote.weight(.semibold)).fg14(.white)
+                        .padding(.horizontal, 14).padding(.vertical, 8).bgIn14(.black.opacity(0.55), in: Capsule())
                         .transition(.opacity)
                 }
                 if account.signedIn, let u = group?.user, u.id != account.user?.id {
@@ -667,8 +668,8 @@ struct StoryViewer: View {
                         if let id = story?.id { viewersOf = ViewersTarget(id: id) }
                     } label: {
                         Label(String(format: L("%d views"), v), systemImage: "eye.fill")
-                            .font(.footnote.weight(.semibold)).foregroundStyle(.white)
-                            .padding(.horizontal, 14).padding(.vertical, 8).background(.black.opacity(0.45), in: Capsule())
+                            .font(.footnote.weight(.semibold)).fg14(.white)
+                            .padding(.horizontal, 14).padding(.vertical, 8).bgIn14(.black.opacity(0.45), in: Capsule())
                     }
                 }
             }
@@ -680,7 +681,7 @@ struct StoryViewer: View {
         .animation(.easeInOut(duration: 0.2), value: sentNote)
         .sheet(item: $reporting, onDismiss: { paused = false }) { ReportSheet(target: $0) }
         .sheet(item: $viewersOf, onDismiss: { paused = false }) { StoryViewersSheet(storyId: $0.id) }
-        .task(id: "\(g)-\(s)-\(story?.id ?? "")") { await run() }
+        .task14(id: "\(g)-\(s)-\(story?.id ?? "")") { await run() }
     }
 
     @ViewBuilder private func page(_ item: StoryItem) -> some View {
@@ -708,22 +709,22 @@ struct StoryViewer: View {
                             Haptics.tap()
                             send(to: u, "\(e) Reacted to your story", note: L("Sent") + " " + e)
                         } label: {
-                            Text(e).font(.system(size: 24)).frame(width: 42, height: 42).background(.white.opacity(0.14), in: Circle())
+                            Text(e).font(.system(size: 24)).frame(width: 42, height: 42).bgIn14(.white.opacity(0.14), in: Circle())
                         }
                     }
                 }
             }
             HStack(spacing: 8) {
                 TextField("", text: $reply, prompt: Text("Send a reply…").foregroundColor(.white.opacity(0.75)))
-                    .focused($typing)
-                    .foregroundStyle(.white)
-                    .submitLabel(.send)
-                    .onSubmit { sendReply(u) }
+                    .focused14($typing)
+                    .fg14(.white)
+                    
+                    .onSubmit14 { sendReply(u) }
                     .padding(.horizontal, 16).padding(.vertical, 10)
                     .overlay(Capsule().stroke(.white.opacity(0.6), lineWidth: 1))
                 if !reply.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     Button { sendReply(u) } label: {
-                        Image(systemName: "paperplane.fill").font(.headline).foregroundStyle(.white).frame(width: 42, height: 42)
+                        Image(systemName: "paperplane.fill").font(.headline).fg14(.white).frame(width: 42, height: 42)
                     }
                     .accessibilityLabel(Text("Send"))
                 }
@@ -780,7 +781,7 @@ struct StoryViewer: View {
                 Button { save(story, u) } label: { Label("Save to Photos", systemImage: "square.and.arrow.down") }
             }
             if u.id == account.user?.id || account.isAdmin {
-                Button(role: .destructive) { Task { await delete() } } label: { Label("Delete", systemImage: "trash") }
+                Button() { Task { await delete() } } label: { Label("Delete", systemImage: "trash") }
             }
             if u.id != account.user?.id, let story {
                 Button {
@@ -789,7 +790,7 @@ struct StoryViewer: View {
                 } label: { Label("Report", systemImage: "flag") }
             }
         } label: {
-            Image(systemName: "ellipsis").font(.headline).foregroundStyle(.white).frame(width: 36, height: 36)
+            Image(systemName: "ellipsis").font(.headline).fg14(.white).frame(width: 36, height: 36)
         }
     }
 
@@ -857,10 +858,10 @@ private struct StoryPhoto: View {
     @State private var image: UIImage?
     var body: some View {
         Group {
-            if let image { Image(uiImage: image).resizable().scaledToFit() } else { ABDots().tint(.white) }
+            if let image { Image(uiImage: image).resizable().scaledToFit() } else { ABDots().tint14(.white) }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .task { image = await PhotoCache.shared.load(url, pixelSize: 800) }
+        .task14 { image = await PhotoCache.shared.load(url, pixelSize: 800) }
     }
 }
 
@@ -869,7 +870,8 @@ private struct StoryPhoto: View {
 struct CommentsSheet: View {
     let post: FeedPost
     var changed: (Int) -> Void
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var account = AccountStore.shared
     @State private var comments: [PostComment] = []
     @State private var loaded = false
@@ -884,7 +886,7 @@ struct CommentsSheet: View {
                     if loaded {
                         EmptyState(symbol: "bubble.left", title: "No comments yet", text: "Be the first to comment.").listRowBackground(Color.clear)
                     } else {
-                        ForEach(0..<4, id: \.self) { _ in SkeletonRow().listRowSeparator(.hidden) }
+                        ForEach(0..<4, id: \.self) { _ in SkeletonRow().listRowSepHidden14() }
                     }
                 }
                 ForEach(comments) { c in
@@ -893,7 +895,7 @@ struct CommentsSheet: View {
                         VStack(alignment: .leading, spacing: 3) {
                             HStack(spacing: 6) {
                                 Text(c.user.displayName).font(.subheadline.weight(.semibold))
-                                Text(Social.ago(c.created)).font(.caption).foregroundStyle(.secondary)
+                                Text(Social.ago(c.created)).font(.caption).fg14(.secondary)
                             }
                             Text(c.text).font(.subheadline).fixedSize(horizontal: false, vertical: true)
                         }
@@ -903,44 +905,44 @@ struct CommentsSheet: View {
                     .contextMenu {
                         Button { UIPasteboard.general.string = c.text } label: { Label("Copy", systemImage: "doc.on.doc") }
                         if canDelete(c) {
-                            Button(role: .destructive) { Task { await remove(c) } } label: { Label("Delete", systemImage: "trash") }
+                            Button() { Task { await remove(c) } } label: { Label("Delete", systemImage: "trash") }
                         }
                         if c.user.id != account.user?.id {
                             Button { reporting = ReportTarget(kind: "comment", targetId: c.id, name: c.text) } label: { Label("Report", systemImage: "flag") }
                         }
                     }
-                    .swipeActions {
+                    .swipeActions14 {
                         if canDelete(c) {
-                            Button(role: .destructive) { Task { await remove(c) } } label: { Label("Delete", systemImage: "trash") }
+                            Button() { Task { await remove(c) } } label: { Label("Delete", systemImage: "trash") }
                         }
                         if c.user.id != account.user?.id {
                             Button { reporting = ReportTarget(kind: "comment", targetId: c.id, name: c.text) } label: { Label("Report", systemImage: "flag") }
-                                .tint(.orange)
+                                .tint14(.orange)
                         }
                     }
                 }
-                if let error { Text(error).foregroundStyle(.red) }
+                if let error { Text(error).fg14(.red) }
             }
-            .listStyle(.plain)
-            .safeAreaInset(edge: .bottom) {
+            .listStyle(PlainListStyle())
+            .safeAreaInset14(edge: .bottom) {
                 HStack(spacing: 8) {
                     TextField("Write a comment", text: $draft)
                         .padding(.horizontal, 12).padding(.vertical, 9)
-                        .background(Color.abSurface, in: Capsule())
+                        .bgIn14(Color.abSurface, in: Capsule())
                     Button { Task { await send() } } label: {
-                        Image(systemName: "paperplane.fill").foregroundStyle(.white)
-                            .frame(width: 38, height: 38).background(Color.abFill, in: Circle())
+                        Image(systemName: "paperplane.fill").fg14(.white)
+                            .frame(width: 38, height: 38).bgIn14(Color.abFill, in: Circle())
                     }
                     .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
                     .accessibilityLabel(Text("Send"))
                 }
                 .padding(10)
-                .background(.bar)
+                .background(Color.mat14)
             }
             .navigationTitle("Comments")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
-            .task { await load() }
+            .task14 { await load() }
             .sheet(item: $reporting) { ReportSheet(target: $0) }
         }
     }

@@ -19,36 +19,36 @@ struct SuggestMaterialScreen: View {
     var body: some View {
         Form {
             if sent {
-                Section {
+                Section14 {
                     VStack(spacing: 10) {
-                        Image(systemName: "checkmark.circle.fill").font(.system(size: 44)).foregroundStyle(.green)
+                        Image(systemName: "checkmark.circle.fill").font(.system(size: 44)).fg14(.green)
                         Text("Thank you!").font(.headline)
                         Text("We got your suggestion. The UniHub team will look at it soon.")
-                            .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
-                        Button("Send another") { sent = false }.buttonStyle(.borderless).padding(.top, 4)
+                            .font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
+                        Button("Send another") { sent = false }.buttonStyle(BorderlessButtonStyle()).padding(.top, 4)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 12)
                 }
             } else {
-                Section {
+                Section14 {
                     ZStack(alignment: .topLeading) {
                         if note.isEmpty {
                             Text("Example: [PHY 202] Dr. Smith, Fall 2023 midterm with solutions.")
-                                .foregroundStyle(.secondary).padding(.top, 8).padding(.leading, 4).allowsHitTesting(false)
+                                .fg14(.secondary).padding(.top, 8).padding(.leading, 4).allowsHitTesting(false)
                         }
                         TextEditor(text: $note).frame(minHeight: 120)
                     }
                 } header: { Text("Describe what you're suggesting") } footer: {
                     Text("Include the course code, professor name and semester if you know them. At least 20 characters.")
                 }
-                Section {
+                Section14 {
                     TextField("Email, WhatsApp or ASU ID", text: $contact)
-                        .textInputAutocapitalization(.never).autocorrectionDisabled()
+                        .autocapitalization(.none).disableAutocorrection(true)
                 } header: { Text("How can we contact you? (optional)") } footer: {
                     if let u = account.user { Text("You're sending this as @\(u.username).") }
                 }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
-                Section {
+                if let error { Section14 { Text(error).fg14(.red) } }
+                Section14 {
                     Button { Task { await send() } } label: {
                         HStack {
                             Spacer()
@@ -58,13 +58,13 @@ struct SuggestMaterialScreen: View {
                     }
                     .disabled(busy || text.count < 20)
                 }
-                Section("What to share") {
+                Section14("What to share") {
                     ForEach(share, id: \.self) { Label(LocalizedStringKey($0), systemImage: "checkmark") }
                 }
-                Section("Guidelines") {
+                Section14("Guidelines") {
                     ForEach(rules, id: \.self) { Label(LocalizedStringKey($0), systemImage: "exclamationmark.circle") }
                 }
-                Section {
+                Section14 {
                     RouteLink(Route.page("/requests/request", "Request a material")) {
                         Label("Looking for something specific? Request it", systemImage: "doc.text.magnifyingglass")
                     }
@@ -105,32 +105,32 @@ struct AdminSuggestionsScreen: View {
                 Text("Open").tag(false)
                 Text("All").tag(true)
             }
-            .pickerStyle(.segmented)
-            if let error { Text(error).foregroundStyle(.red) }
+            .pickerStyle(SegmentedPickerStyle())
+            if let error { Text(error).fg14(.red) }
             if loading { HStack { Spacer(); ABDots(); Spacer() } }
-            else if list.isEmpty && error == nil { Text("Nothing to review.").foregroundStyle(.secondary) }
+            else if list.isEmpty && error == nil { Text("Nothing to review.").fg14(.secondary) }
             ForEach(Array(list.enumerated()), id: \.offset) { _, r in row(r) }
         }
         .navigationTitle("Suggestions")
-        .task(id: showAll) { await load() }
-        .refreshable { await load() }
+        .task14(id: showAll) { await load() }
+        .refreshable14 { await load() }
     }
 
     private func row(_ r: [String: Any]) -> some View {
         let status = r["status"] as? String ?? "open"
         let who = [r["username"] as? String, r["contact"] as? String, r["created"] as? String].compactMap { $0 }.filter { !$0.isEmpty }
         return VStack(alignment: .leading, spacing: 5) {
-            Text(r["note"] as? String ?? "").font(.body).textSelection(.enabled)
-            Text(who.joined(separator: " · ")).font(.caption2).foregroundStyle(.tertiary)
+            Text(r["note"] as? String ?? "").font(.body)
+            Text(who.joined(separator: " · ")).font(.caption2).fg14(Color.tertiary14)
             HStack(spacing: 14) {
                 if status == "open" {
                     Button("Done") { Task { await set(r, "done") } }
                     Button("Dismiss") { Task { await set(r, "dismissed") } }
                 } else {
-                    Text(L(status == "done" ? "Handled" : "Dismissed")).font(.caption).foregroundStyle(.secondary)
+                    Text(L(status == "done" ? "Handled" : "Dismissed")).font(.caption).fg14(.secondary)
                 }
             }
-            .buttonStyle(.borderless).font(.subheadline)
+            .buttonStyle(BorderlessButtonStyle()).font(.subheadline)
         }
         .padding(.vertical, 2)
     }

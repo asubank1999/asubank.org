@@ -52,9 +52,9 @@ struct KindTile: View {
     var body: some View {
         Image(systemName: kind.symbol)
             .font(.system(size: size * 0.45, weight: .semibold))
-            .foregroundStyle(.white)
+            .fg14(.white)
             .frame(width: size, height: size)
-            .background(kind.color.abGradient, in: RoundedRectangle(cornerRadius: size * 0.26, style: .continuous))
+            .bgIn14(kind.color.abGradient, in: RoundedRectangle(cornerRadius: size * 0.26, style: .continuous))
     }
 }
 
@@ -65,8 +65,8 @@ struct Badge: View {
         Text(text)
             .font(.system(size: 10, weight: .bold))
             .padding(.horizontal, 6).padding(.vertical, 2)
-            .foregroundStyle(color)
-            .background(color.opacity(0.14), in: Capsule())
+            .fg14(color)
+            .bgIn14(color.opacity(0.14), in: Capsule())
     }
 }
 
@@ -79,10 +79,10 @@ struct Chip: View {
             Text(title)
                 .font(.subheadline.weight(.medium))
                 .padding(.horizontal, 14).padding(.vertical, 7)
-                .foregroundStyle(on ? Color.white : Color.primary)
-                .background(on ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.abSurface), in: Capsule())
+                .fg14(on ? Color.white : Color.primary)
+                .bgIn14(on ? AnyStyle14(Color.abFill) : AnyStyle14(Color.abSurface), in: Capsule())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PlainButtonStyle())
     }
 }
 

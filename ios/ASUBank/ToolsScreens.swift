@@ -14,7 +14,8 @@ struct ApprovedGroup: Decodable, Identifiable {
 
 /// Asks for a group to be listed. The owner accepts or rejects it in the Admin tab.
 struct GroupRequestSheet: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var account = AccountStore.shared
     @State private var title = ""
     @State private var category = ""
@@ -32,22 +33,22 @@ struct GroupRequestSheet: View {
         ABStack {
             Form {
                 if sent {
-                    Section {
+                    Section14 {
                         VStack(spacing: 10) {
-                            Image(systemName: "checkmark.circle.fill").font(.system(size: 56)).foregroundStyle(.green)
+                            Image(systemName: "checkmark.circle.fill").font(.system(size: 56)).fg14(.green)
                             Text("Request sent").font(.title2.weight(.bold))
                             Text("The owner will review your group. We'll notify you when it's accepted or rejected.")
-                                .multilineTextAlignment(.center).foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center).fg14(.secondary)
                         }
                         .frame(maxWidth: .infinity).padding(.vertical, 20)
                     }
                 } else if !account.signedIn {
-                    Section {
+                    Section14 {
                         Text("Sign in so we can tell you when your group is accepted.")
                         Button("Sign in") { account.signInShown = true }
                     }
                 } else {
-                    Section {
+                    Section14 {
                         TextField("Group name", text: $title)
                         Picker("Category", selection: $category) {
                             Text("Not set").tag("")
@@ -55,14 +56,14 @@ struct GroupRequestSheet: View {
                             ForEach(extra, id: \.self) { Text(L($0)).tag($0) }
                         }
                     } header: { Text("About the group") }
-                    Section {
+                    Section14 {
                         TextField("https://chat.whatsapp.com/…", text: $url)
                             .keyboardType(.URL).autocapitalization(.none).disableAutocorrection(true)
                     } header: { Text("Invite link") } footer: { Text("Paste the group's invite link, starting with https://") }
-                    Section("Notes (optional)") { TextField("Anything the owner should know", text: $notes) }
-                    if let error { Section { Text(error).foregroundStyle(.red) } }
+                    Section14("Notes (optional)") { TextField("Anything the owner should know", text: $notes) }
+                    if let error { Section14 { Text(error).fg14(.red) } }
                     if !mine.isEmpty {
-                        Section("Your requests") {
+                        Section14("Your requests") {
                             ForEach(Array(mine.enumerated()), id: \.offset) { _, r in
                                 HStack {
                                     Text(r["title"] as? String ?? "").lineLimit(1)
@@ -82,7 +83,7 @@ struct GroupRequestSheet: View {
                     if !sent && account.signedIn { Button(busy ? "Sending…" : "Send") { Task { await send() } }.disabled(!valid || busy) }
                 }
             }
-            .task {
+            .task14 {
                 guard account.signedIn else { return }
                 mine = ((try? await account.call("myGroupRequests"))?["requests"] as? [[String: Any]]) ?? []
             }
@@ -123,15 +124,15 @@ struct AdminGroupRequestsScreen: View {
                 Text("Waiting").tag(false)
                 Text("All").tag(true)
             }
-            .pickerStyle(.segmented)
-            if let error { Text(error).foregroundStyle(.red) }
+            .pickerStyle(SegmentedPickerStyle())
+            if let error { Text(error).fg14(.red) }
             if loading { ABDots() }
-            else if requests.isEmpty && error == nil { Text("Nothing to review.").foregroundStyle(.secondary) }
+            else if requests.isEmpty && error == nil { Text("Nothing to review.").fg14(.secondary) }
             ForEach(Array(requests.enumerated()), id: \.offset) { _, r in row(r) }
         }
         .navigationTitle("Group requests")
-        .task(id: showAll) { await load() }
-        .refreshable { await load() }
+        .task14(id: showAll) { await load() }
+        .refreshable14 { await load() }
     }
 
     private func row(_ r: [String: Any]) -> some View {
@@ -143,17 +144,17 @@ struct AdminGroupRequestsScreen: View {
                 Spacer()
                 statusBadge(status)
             }
-            if let c = r["category"] as? String, !c.isEmpty { Text(L(c)).font(.caption).foregroundStyle(.secondary) }
+            if let c = r["category"] as? String, !c.isEmpty { Text(L(c)).font(.caption).fg14(.secondary) }
             Button(url) { if let u = URL(string: url) { openURL(u) } }.font(.caption).lineLimit(1)
             if let n = r["notes"] as? String, !n.isEmpty { Text(n).font(.caption) }
-            Text("@\(r["username"] as? String ?? "") · \(Social.ago(r["created"] as? String))").font(.caption2).foregroundStyle(.tertiary)
+            Text("@\(r["username"] as? String ?? "") · \(Social.ago(r["created"] as? String))").font(.caption2).fg14(Color.tertiary14)
             HStack(spacing: 14) {
-                if status != "approved" { Button("Accept") { Task { await set(r, "approved") } }.tint(.green) }
-                if status != "rejected" { Button("Reject", role: .destructive) { Task { await set(r, "rejected") } } }
+                if status != "approved" { Button("Accept") { Task { await set(r, "approved") } }.tint14(.green) }
+                if status != "rejected" { Button("Reject") { Task { await set(r, "rejected") } } }
             }
             .font(.subheadline)
         }
-        .buttonStyle(.borderless)
+        .buttonStyle(BorderlessButtonStyle())
         .padding(.vertical, 2)
     }
 
@@ -254,73 +255,73 @@ struct PhotoshootScreen: View {
     var body: some View {
         Form {
             if sent {
-                Section {
+                Section14 {
                     VStack(spacing: 10) {
-                        Image(systemName: "checkmark.circle.fill").font(.system(size: 56)).foregroundStyle(.green)
+                        Image(systemName: "checkmark.circle.fill").font(.system(size: 56)).fg14(.green)
                         Text("Booking submitted!").font(.title2.weight(.bold))
                         Text("The photographer will review your request and contact you on \(phone) with the final invoice and payment details.")
-                            .multilineTextAlignment(.center).foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center).fg14(.secondary)
                         Button("Book another session") { reset() }.padding(.top, 6)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 18)
                 }
             } else {
-                Section {
+                Section14 {
                     VStack(alignment: .leading, spacing: 5) {
                         Text("📸").font(.largeTitle)
                         Text("ASU Lens & Light Studio").font(.title3.weight(.bold))
                         Text("Every frame, a story. Fill in your details and see the price as you go. The photographer reviews your request and sends the final invoice.")
-                            .font(.subheadline).foregroundStyle(.secondary)
+                            .font(.subheadline).fg14(.secondary)
                     }
                     .padding(.vertical, 4)
                 }
-                Section("Your details") {
+                Section14("Your details") {
                     TextField("First name", text: $first).textContentType(.givenName)
                     TextField("Middle name (optional)", text: $middle).textContentType(.middleName)
                     TextField("Last name", text: $last).textContentType(.familyName)
                     TextField("WhatsApp or phone", text: $phone).keyboardType(.phonePad).textContentType(.telephoneNumber)
                     TextField("Email (optional)", text: $email).keyboardType(.emailAddress).autocapitalization(.none)
                 }
-                Section("Session") {
+                Section14("Session") {
                     DatePicker("Date", selection: $date, in: Date()..., displayedComponents: .date)
                     Picker("Session type", selection: $session) { ForEach(sessions, id: \.0) { Text(L($0.1)).tag($0.0) } }
                     DatePicker("From", selection: $from, displayedComponents: .hourAndMinute)
                     DatePicker("To", selection: $to, displayedComponents: .hourAndMinute)
-                    if hours <= 0 { Text("The end time must be after the start time.").font(.caption).foregroundStyle(.red) }
+                    if hours <= 0 { Text("The end time must be after the start time.").font(.caption).fg14(.red) }
                 }
-                Section {
+                Section14 {
                     Picker("Location", selection: $outside) {
                         Text("ASU campus").tag(false)
                         Text("Outside ASU").tag(true)
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(SegmentedPickerStyle())
                     TextField(outside ? "Address" : "Where on campus? (optional)", text: $address)
                 } header: { Text("Location") } footer: {
                     Text(outside ? "Outside ASU adds a 5 JD travel fee." : "No travel fee on campus.")
                 }
-                Section {
+                Section14 {
                     Stepper(value: $edits, in: 0...500) {
-                        HStack { Text("Photos to edit"); Spacer(); Text("\(edits)").foregroundStyle(.secondary).monospacedDigit() }
+                        HStack { Text("Photos to edit"); Spacer(); Text("\(edits)").fg14(.secondary).monoDigit14() }
                     }
                     Picker("Edit quality", selection: $premium) {
                         Text("Standard").tag(false)
                         Text("Premium").tag(true)
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(SegmentedPickerStyle())
                 } header: { Text("Photos and editing") } footer: {
                     Text(premium ? "Photoshop and paid tools: skin retouching, compositing and advanced grading. 3 JD a photo as a base price; complex edits may cost more."
                                  : "Basic retouching, color grading, crop and export. 3 JD a photo.")
                 }
-                Section("Notes (optional)") { TextEditor(text: $notes).frame(minHeight: 70) }
-                Section {
+                Section14("Notes (optional)") { TextEditor(text: $notes).frame(minHeight: 70) }
+                Section14 {
                     TextField("Promo code", text: $promo).autocapitalization(.allCharacters).disableAutocorrection(true)
                     if let p = activePromo {
-                        Text(String(format: L("%d%% off applied"), Int(p.percent))).font(.caption).foregroundStyle(.green)
+                        Text(String(format: L("%d%% off applied"), Int(p.percent))).font(.caption).fg14(.green)
                     } else if !promo.trimmingCharacters(in: .whitespaces).isEmpty {
-                        Text("This promo code isn't valid.").font(.caption).foregroundStyle(.red)
+                        Text("This promo code isn't valid.").font(.caption).fg14(.red)
                     }
                 }
-                Section {
+                Section14 {
                     line(String(format: L("Session (%@ h × 5 JD)"), String(format: "%.1f", hours)), jd(hourFee))
                     line(String(format: L("Editing (%d × 3 JD)"), edits), jd(editFee))
                     line(L("Travel"), outside ? jd(travelFee) : L("Free"))
@@ -328,13 +329,13 @@ struct PhotoshootScreen: View {
                     HStack {
                         Text("Estimated total").font(.headline)
                         Spacer()
-                        Text(jd(total)).font(.title3.weight(.bold)).foregroundStyle(Color.abAccent)
+                        Text(jd(total)).font(.title3.weight(.bold)).fg14(Color.abAccent)
                     }
                 } header: { Text("Your estimate") } footer: {
                     Text("This is an estimate; the photographer confirms the final amount. You can pay by PayPal, CliQ or cash.")
                 }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
-                Section {
+                if let error { Section14 { Text(error).fg14(.red) } }
+                Section14 {
                     Button { Task { await submit() } } label: {
                         HStack { Spacer(); Text(busy ? "Sending…" : "Send booking request").fontWeight(.semibold); Spacer() }
                     }
@@ -356,7 +357,7 @@ struct PhotoshootScreen: View {
     }
 
     private func line(_ a: String, _ b: String) -> some View {
-        HStack { Text(a); Spacer(); Text(b).foregroundStyle(.secondary).monospacedDigit() }
+        HStack { Text(a); Spacer(); Text(b).fg14(.secondary).monoDigit14() }
     }
 
     private func reset() {
@@ -387,7 +388,7 @@ struct PhotoshootScreen: View {
             req.httpMethod = "POST"
             req.setValue("text/plain;charset=utf-8", forHTTPHeaderField: "Content-Type")
             req.httpBody = try JSONSerialization.data(withJSONObject: body)
-            let (_, response) = try await URLSession.shared.data(for: req)
+            let (_, response) = try await URLSession.shared.data14(for: req)
             guard ((response as? HTTPURLResponse)?.statusCode ?? 500) < 400 else { throw URLError(.badServerResponse) }
             withAnimation { sent = true }
             error = nil
@@ -418,7 +419,7 @@ enum WeatherText {
         case 0: return (.orange, .orange)
         case 1, 2: return (.gray, .orange)
         case 51...57, 61...67, 80...82: return (.gray, .blue)
-        case 71...77, 85, 86: return (.gray, .cyan)
+        case 71...77, 85, 86: return (.gray, Color(UIColor.systemTeal))
         case 95...99: return (.gray, .yellow)
         default: return (.gray, .gray)
         }
@@ -497,7 +498,7 @@ final class WeatherStore: ObservableObject {
         if let loaded, Date().timeIntervalSince(loaded) < 1800, !hours.isEmpty { return }
         let key = "ab.weather.cache"
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, _) = try await URLSession.shared.data14(from: url)
             guard apply(data) else { throw URLError(.cannotParseResponse) }
             UserDefaults.standard.set(data, forKey: key)
             loaded = Date()
@@ -548,44 +549,44 @@ struct WeatherCard: View {
     var body: some View {
         // Not a Group: .task on an empty Group never runs, so nothing would ever load.
         VStack(spacing: 0) {
-            Color.clear.frame(height: 0).task { await store.load() }
+            Color.clear.frame(height: 0).task14 { await store.load() }
             if !store.hours.isEmpty {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(alignment: .firstTextBaseline) {
                         VStack(alignment: .leading, spacing: 3) {
                             Label(store.tomorrow ? L("Tomorrow on campus") : L("Today on campus"), systemImage: "thermometer.sun.fill")
                                 .font(.subheadline.weight(.semibold))
-                            Text(store.dateText).font(.caption).foregroundStyle(.secondary)
+                            Text(store.dateText).font(.caption).fg14(.secondary)
                         }
                         Spacer()
                         VStack(alignment: .trailing, spacing: 3) {
-                            Text("7 AM – 4 PM").font(.caption).foregroundStyle(.secondary)
+                            Text("7 AM – 4 PM").font(.caption).fg14(.secondary)
                             Text(String(format: L("High %d° · Low %d°"), store.hours.map(\.temp).max() ?? 0, store.hours.map(\.temp).min() ?? 0))
-                                .font(.caption.weight(.semibold)).monospacedDigit()
+                                .font(.caption.weight(.semibold)).monoDigit14()
                         }
                     }
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 14) {
                             ForEach(store.hours) { h in
                                 VStack(spacing: 5) {
-                                    Text(WeatherText.hourText(h.hour)).font(.caption2).foregroundStyle(.secondary)
-                                    Image(systemName: h.symbol).symbolRenderingMode(.palette)
-                                        .foregroundStyle(WeatherText.colors(h.code).0, WeatherText.colors(h.code).1)
+                                    Text(WeatherText.hourText(h.hour)).font(.caption2).fg14(.secondary)
+                                    Image(systemName: h.symbol).palette14()
+                                        .fg14(WeatherText.colors(h.code).0, WeatherText.colors(h.code).1)
                                         .font(.title3).frame(height: 26)
                                         .accessibilityLabel(L(WeatherText.label(h.code)))
-                                    Text("\(h.temp)°").font(.subheadline.weight(.semibold)).monospacedDigit()
-                                    Text("\(h.rain)%").font(.caption2).foregroundStyle(h.rain >= 40 ? Color.blue : Color.secondary)
+                                    Text("\(h.temp)°").font(.subheadline.weight(.semibold)).monoDigit14()
+                                    Text("\(h.rain)%").font(.caption2).fg14(h.rain >= 40 ? Color.blue : Color.secondary)
                                 }
                                 .frame(minWidth: 38)
                             }
                         }
                     }
                     if let a = WeatherText.advice(hours: store.hours) {
-                        Text(L(a)).font(.caption).foregroundStyle(.secondary)
+                        Text(L(a)).font(.caption).fg14(.secondary)
                     }
                 }
                 .padding(14)
-                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .padding(.horizontal, 16)
                 .padding(.top, 14)
             }
@@ -605,19 +606,19 @@ struct SponsorCard: View {
             Button { openURL(s.url) } label: {
                 HStack(spacing: 10) {
                     VStack(alignment: .leading, spacing: 3) {
-                        Text("Sponsored").font(.caption2.weight(.semibold)).foregroundStyle(.secondary)
-                        Text(verbatim: s.title).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
+                        Text("Sponsored").font(.caption2.weight(.semibold)).fg14(.secondary)
+                        Text(verbatim: s.title).font(.subheadline.weight(.semibold)).fg14(.primary)
                         if let t = s.text, !t.isEmpty {
-                            Text(verbatim: t).font(.caption).foregroundStyle(.secondary)
+                            Text(verbatim: t).font(.caption).fg14(.secondary)
                         }
                     }
                     .multilineTextAlignment(.leading)
                     Spacer(minLength: 0)
-                    Image(systemName: "arrow.up.right").font(.footnote).foregroundStyle(.tertiary)
+                    Image(systemName: "arrow.up.right").font(.footnote).fg14(Color.tertiary14)
                 }
                 .padding(14)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
             .buttonStyle(PressStyle())
             .padding(.horizontal, 16)
@@ -652,38 +653,38 @@ struct LifeHacksScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 Button { if let u = URL(string: "tel:911") { UIApplication.shared.open(u) } } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "phone.fill").foregroundStyle(.white).frame(width: 36, height: 36).background(Color.red, in: Circle())
+                        Image(systemName: "phone.fill").fg14(.white).frame(width: 36, height: 36).bgIn14(Color.red, in: Circle())
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Call 911").font(.body.weight(.semibold)).foregroundStyle(.primary)
-                            Text("Jordan's emergency number: ambulance, fire and police").font(.caption).foregroundStyle(.secondary)
+                            Text("Call 911").font(.body.weight(.semibold)).fg14(.primary)
+                            Text("Jordan's emergency number: ambulance, fire and police").font(.caption).fg14(.secondary)
                         }
                     }
                 }
             } header: { Text("In an emergency") }
             ForEach(sections) { s in
-                Section {
+                Section14 {
                     ForEach(s.items) { i in
                         VStack(alignment: .leading, spacing: 3) {
                             Text(i.t).font(.subheadline.weight(.semibold))
-                            Text(i.d).font(.subheadline).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                            Text(i.d).font(.subheadline).fg14(.secondary).fixedSize(horizontal: false, vertical: true)
                         }
                         .padding(.vertical, 2)
                     }
                 } header: { Text("\(s.emoji) \(s.title)") }
             }
             if loading { ABDots() }
-            else if sections.isEmpty { Text("Couldn't load the tips. Check your connection and try again.").foregroundStyle(.secondary) }
-            Section {
-                Text("These are general tips, not medical or professional advice. In an emergency, call for help first.").font(.caption).foregroundStyle(.secondary)
+            else if sections.isEmpty { Text("Couldn't load the tips. Check your connection and try again.").fg14(.secondary) }
+            Section14 {
+                Text("These are general tips, not medical or professional advice. In an emergency, call for help first.").font(.caption).fg14(.secondary)
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Life hacks")
-        .task { await load() }
-        .refreshable { await load() }
+        .task14 { await load() }
+        .refreshable14 { await load() }
     }
 
     private func apply(_ data: Data) -> Bool {
@@ -695,7 +696,7 @@ struct LifeHacksScreen: View {
     private func load() async {
         if sections.isEmpty, let d = UserDefaults.standard.data(forKey: cacheKey) { _ = apply(d) }
         if let u = URL(string: "https://asubank.org/assets/app/life-hacks.json"),
-           let (data, _) = try? await URLSession.shared.data(from: u), apply(data) {
+           let (data, _) = try? await URLSession.shared.data14(from: u), apply(data) {
             UserDefaults.standard.set(data, forKey: cacheKey)
         }
         loading = false
@@ -740,17 +741,17 @@ struct SoundsScreen: View {
         List {
             picker("Notifications", $messages)
             picker("Lecture reminders", $lectures)
-            Section {
-                Text("iPhones don't let apps use your own ringtones, so these sounds come with UniHub.").font(.caption).foregroundStyle(.secondary)
+            Section14 {
+                Text("iPhones don't let apps use your own ringtones, so these sounds come with UniHub.").font(.caption).fg14(.secondary)
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Notification sounds")
         .onChange(of: lectures) { _ in LectureStore.shared.reschedule() }
     }
 
     private func picker(_ title: String, _ value: Binding<String>) -> some View {
-        Section(L(title)) {
+        Section14(L(title)) {
             ForEach(NotificationSounds.all, id: \.id) { s in
                 Button {
                     value.wrappedValue = s.id
@@ -759,7 +760,7 @@ struct SoundsScreen: View {
                     HStack {
                         Text(L(s.name)).foregroundColor(.primary)
                         Spacer()
-                        if value.wrappedValue == s.id { Image(systemName: "checkmark").foregroundStyle(Color.abAccent) }
+                        if value.wrappedValue == s.id { Image(systemName: "checkmark").fg14(Color.abAccent) }
                     }
                 }
             }
@@ -893,18 +894,18 @@ struct LecturesScreen: View {
     var body: some View {
         List {
             if denied {
-                Section {
-                    Text("Notifications are off for UniHub, so reminders can't ring.").foregroundStyle(.red)
+                Section14 {
+                    Text("Notifications are off for UniHub, so reminders can't ring.").fg14(.red)
                     Button("Open Settings") { if let u = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(u) } }
                 }
             }
             if store.lectures.isEmpty {
-                Section {
+                Section14 {
                     VStack(spacing: 8) {
-                        Image(systemName: "alarm.fill").font(.system(size: 40)).foregroundStyle(Color.abAccent)
+                        Image(systemName: "alarm.fill").font(.system(size: 40)).fg14(Color.abAccent)
                         Text("Never miss a lecture").font(.headline)
                         Text("Add your subject, hall and time. We'll remind you 10 minutes before it starts.")
-                            .multilineTextAlignment(.center).font(.subheadline).foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center).font(.subheadline).fg14(.secondary)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 12)
                 }
@@ -912,16 +913,16 @@ struct LecturesScreen: View {
             ForEach(1...7, id: \.self) { d in
                 let list = store.lectures.filter { $0.days.contains(d) }
                 if !list.isEmpty {
-                    Section(Self.dayName(d)) {
+                    Section14(Self.dayName(d)) {
                         ForEach(list) { l in row(l) }
                     }
                 }
             }
-            Section {
+            Section14 {
                 NavigationLink { SoundsScreen() } label: { Label("Notification sounds", systemImage: "speaker.wave.2") }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("My lectures")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -930,7 +931,7 @@ struct LecturesScreen: View {
             }
         }
         .sheet(item: $editing) { LectureEditor(lecture: $0) }
-        .task {
+        .task14 {
             let s = await UNUserNotificationCenter.current().notificationSettings()
             denied = s.authorizationStatus == .denied
         }
@@ -947,8 +948,8 @@ struct LecturesScreen: View {
         Button { editing = l } label: {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(l.subject).font(.body.weight(.semibold)).foregroundStyle(.primary)
-                    Text(l.hall.isEmpty ? l.timeText : "\(l.timeText) · \(L("Hall")) \(l.hall)").font(.caption).foregroundStyle(.secondary)
+                    Text(l.subject).font(.body.weight(.semibold)).fg14(.primary)
+                    Text(l.hall.isEmpty ? l.timeText : "\(l.timeText) · \(L("Hall")) \(l.hall)").font(.caption).fg14(.secondary)
                 }
                 Spacer()
                 Toggle("", isOn: Binding(get: { l.enabled }, set: { store.setEnabled(l.id, $0) })).labelsHidden()
@@ -959,7 +960,8 @@ struct LecturesScreen: View {
 
 struct LectureEditor: View {
     @State var lecture: Lecture
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var store = LectureStore.shared
     @State private var time = Date()
 
@@ -969,12 +971,12 @@ struct LectureEditor: View {
     var body: some View {
         ABStack {
             Form {
-                Section("Lecture") {
+                Section14("Lecture") {
                     TextField("Subject", text: $lecture.subject)
                     TextField("Hall", text: $lecture.hall)
                     DatePicker("Starts at", selection: $time, displayedComponents: .hourAndMinute)
                 }
-                Section {
+                Section14 {
                     let f = DateFormatter()
                     HStack(spacing: 6) {
                         ForEach(1...7, id: \.self) { d in
@@ -986,16 +988,16 @@ struct LectureEditor: View {
                                 Text(String((dayLetters(f)[d - 1])))
                                     .font(.caption.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.6)
                                     .frame(maxWidth: .infinity, minHeight: 38)
-                                    .foregroundStyle(on ? Color.white : Color.primary)
-                                    .background(on ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.primary.opacity(0.08)), in: RoundedRectangle(cornerRadius: 9))
+                                    .fg14(on ? Color.white : Color.primary)
+                                    .bgIn14(on ? AnyStyle14(Color.abFill) : AnyStyle14(Color.primary.opacity(0.08)), in: RoundedRectangle(cornerRadius: 9))
                             }
-                            .buttonStyle(.borderless)
+                            .buttonStyle(BorderlessButtonStyle())
                         }
                     }
                 } header: { Text("Days") } footer: { Text("We'll remind you 10 minutes before, every week on these days.") }
                 if !isNew {
-                    Section {
-                        Button("Delete this lecture", role: .destructive) {
+                    Section14 {
+                        Button("Delete this lecture") {
                             store.remove(lecture.id)
                             dismiss()
                         }
@@ -1041,20 +1043,20 @@ struct NextLectureCard: View {
         if let n = store.next, n.today {
             Button { app.tab = .lectures; Haptics.tap() } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: "alarm.fill").foregroundStyle(.white).frame(width: 36, height: 36).background(Color.abFill, in: RoundedRectangle(cornerRadius: 10))
+                    Image(systemName: "alarm.fill").fg14(.white).frame(width: 36, height: 36).bgIn14(Color.abFill, in: RoundedRectangle(cornerRadius: 10))
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Next lecture").font(.caption).foregroundStyle(.secondary)
-                        Text(n.lecture.subject).font(.subheadline.weight(.semibold)).foregroundStyle(.primary).lineLimit(1)
+                        Text("Next lecture").font(.caption).fg14(.secondary)
+                        Text(n.lecture.subject).font(.subheadline.weight(.semibold)).fg14(.primary).lineLimit(1)
                         Text(n.lecture.hall.isEmpty ? n.lecture.timeText : "\(n.lecture.timeText) · \(L("Hall")) \(n.lecture.hall)")
-                            .font(.caption).foregroundStyle(.secondary)
+                            .font(.caption).fg14(.secondary)
                     }
                     Spacer()
-                    Image(systemName: "chevron.right").font(.caption).foregroundStyle(.tertiary)
+                    Image(systemName: "chevron.right").font(.caption).fg14(Color.tertiary14)
                 }
                 .padding(14)
-                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PlainButtonStyle())
             .padding(.horizontal, 16)
             .padding(.top, 12)
         }
@@ -1098,17 +1100,17 @@ struct TabBarScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 row("house.fill", "Home", locked: true)
                 ForEach(ids, id: \.self) { id in
                     if let o = TabBarPrefs.options.first(where: { $0.id == id }) {
                         HStack {
                             Button { set(ids.filter { $0 != id }) } label: {
-                                Image(systemName: "minus.circle.fill").foregroundStyle(ids.count > 1 ? Color.red : Color.secondary)
+                                Image(systemName: "minus.circle.fill").fg14(ids.count > 1 ? Color.red : Color.secondary)
                             }
-                            .buttonStyle(.borderless)
+                            .buttonStyle(BorderlessButtonStyle())
                             .disabled(ids.count <= 1)
-                            Image(systemName: o.icon).foregroundStyle(Color.abAccent).frame(width: 28)
+                            Image(systemName: o.icon).fg14(Color.abAccent).frame(width: 28)
                             Text(L(o.name))
                         }
                     }
@@ -1122,25 +1124,25 @@ struct TabBarScreen: View {
             } header: { Text("In your tab bar") } footer: {
                 Text(String(format: L("Drag to reorder. Home and More always stay, and you can add up to %d more."), limit))
             }
-            Section("Add a tab") {
+            Section14("Add a tab") {
                 ForEach(TabBarPrefs.options.filter { !ids.contains($0.id) }, id: \.id) { o in
                     Button {
                         if ids.count < limit { set(ids + [o.id]); Haptics.tap() }
                     } label: {
                         HStack {
-                            Image(systemName: "plus.circle.fill").foregroundStyle(ids.count < limit ? Color.green : Color.secondary)
-                            Image(systemName: o.icon).foregroundStyle(Color.abAccent).frame(width: 28)
+                            Image(systemName: "plus.circle.fill").fg14(ids.count < limit ? Color.green : Color.secondary)
+                            Image(systemName: o.icon).fg14(Color.abAccent).frame(width: 28)
                             Text(L(o.name)).foregroundColor(.primary)
                         }
                     }
                     .disabled(ids.count >= limit)
                 }
             }
-            Section {
+            Section14 {
                 Button("Reset to the default") { stored = TabBarPrefs.standard }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .environment(\.editMode, .constant(.active))
         .navigationTitle("Customize tab bar")
     }
@@ -1149,9 +1151,9 @@ struct TabBarScreen: View {
 
     private func row(_ icon: String, _ name: String, locked: Bool) -> some View {
         HStack {
-            Image(systemName: "lock.fill").font(.caption).foregroundStyle(.tertiary).frame(width: 22)
-            Image(systemName: icon).foregroundStyle(.secondary).frame(width: 28)
-            Text(L(name)).foregroundStyle(.secondary)
+            Image(systemName: "lock.fill").font(.caption).fg14(Color.tertiary14).frame(width: 22)
+            Image(systemName: icon).fg14(.secondary).frame(width: 28)
+            Text(L(name)).fg14(.secondary)
         }
         .moveDisabled(true)
     }

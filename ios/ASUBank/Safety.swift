@@ -55,7 +55,7 @@ struct SafetyScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 NavigationLink { ReportCenterScreen() } label: { Label("Report something", systemImage: "exclamationmark.bubble.fill") }
                 if account.signedIn {
                     NavigationLink { MyReportsScreen() } label: { Label("My reports", systemImage: "tray.full") }
@@ -65,17 +65,17 @@ struct SafetyScreen: View {
                 Text("Report anything, inside or outside the app. You can report without an account, and only the UniHub team reads your report.")
             }
 
-            Section {
+            Section14 {
                 Label("If someone is in danger right now, call 911. UniHub can't reach emergency services.", systemImage: "phone.fill")
                     .font(.subheadline)
                 Button { if let u = URL(string: "tel:911") { UIApplication.shared.open(u) } } label: { Label("Call 911", systemImage: "phone.arrow.up.right") }
             } header: { Text("Emergency") }
 
-            Section {
+            Section14 {
                 if let date = TermsProof.acceptedAt {
                     Label(TermsProof.text(date), systemImage: "checkmark.seal.fill").font(.subheadline)
                 }
-                if let serverDate { Text(serverDate).font(.caption).foregroundStyle(.secondary) }
+                if let serverDate { Text(serverDate).font(.caption).fg14(.secondary) }
                 Button { showTerms = true } label: { Label("About & terms", systemImage: "heart.text.square") }
                 RouteLink(Route.page("/legal/uni_tos", "Terms of Service")) { Label("Terms of Service", systemImage: "doc.text") }
                 RouteLink(Route.page("/legal/privacy", "Privacy policy")) { Label("Privacy policy", systemImage: "hand.raised") }
@@ -86,10 +86,10 @@ struct SafetyScreen: View {
                 }
             } header: { Text("Rules and your rights") }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Safety & legal")
         .sheet(isPresented: $showTerms) { WelcomeTermsView { showTerms = false } }
-        .task {
+        .task14 {
             await TermsProof.sync()
             guard account.signedIn, let r = try? await account.call("termsStatus"),
                   let list = r["accepted"] as? [[String: Any]], let at = list.first?["at"] as? String,
@@ -149,11 +149,11 @@ struct ReportCenterScreen: View {
     var body: some View {
         Form {
             if let reference {
-                Section {
+                Section14 {
                     VStack(alignment: .leading, spacing: 8) {
-                        Label("We got your report", systemImage: "checkmark.seal.fill").font(.headline).foregroundStyle(.green)
+                        Label("We got your report", systemImage: "checkmark.seal.fill").font(.headline).fg14(.green)
                         Text("Only the UniHub team reads it. Urgent reports are looked at first.").font(.subheadline)
-                        Text(String(format: L("Reference: %@"), reference)).font(.body.monospaced()).textSelection(.enabled)
+                        Text(String(format: L("Reference: %@"), reference)).font(.body.monospaced())
                     }
                     .padding(.vertical, 4)
                     Button { UIPasteboard.general.string = reference; Haptics.success() } label: { Label("Copy link", systemImage: "doc.on.doc") }
@@ -162,11 +162,11 @@ struct ReportCenterScreen: View {
                     }
                 }
             } else {
-                Section {
+                Section14 {
                     Label("If someone is in danger right now, call 911. UniHub can't reach emergency services.", systemImage: "exclamationmark.triangle.fill")
                         .font(.subheadline)
                 }
-                Section {
+                Section14 {
                     Picker("What is it about?", selection: $reason) {
                         Text("Choose").tag("")
                         ForEach(Self.reasons, id: \.id) { Text(L($0.label)).tag($0.id) }
@@ -175,38 +175,38 @@ struct ReportCenterScreen: View {
                         ForEach(Self.places, id: \.id) { Text(L($0.label)).tag($0.id) }
                     }
                 }
-                Section("What happened?") {
+                Section14("What happened?") {
                     TextEditor(text: $details).frame(minHeight: 120)
                 }
-                Section {
+                Section14 {
                     TextField("Who or what: a name, username, file or link", text: $what)
                     TextField("When did it happen?", text: $when)
                 } header: { Text("Details (optional)") }
-                Section {
+                Section14 {
                     if let photo {
                         Image(uiImage: photo).resizable().scaledToFit().frame(maxHeight: 180)
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                        Button("Remove", role: .destructive) { self.photo = nil }
+                        Button("Remove") { self.photo = nil }
                     } else {
                         Button { picking = true } label: { Label("Add a screenshot", systemImage: "photo") }
                     }
                 } footer: { Text("Screenshots stay private. Only the UniHub team can open them.") }
-                Section {
+                Section14 {
                     if account.signedIn {
-                        Toggle("Hide my name from the team", isOn: $anonymous).tint(.abAccent)
+                        Toggle("Hide my name from the team", isOn: $anonymous).tint14(.abAccent)
                     }
                     if !account.signedIn || anonymous {
                         TextField("Your email or phone (optional)", text: $contact)
-                            .textInputAutocapitalization(.never).autocorrectionDisabled()
+                            .autocapitalization(.none).disableAutocorrection(true)
                     }
                 } footer: {
                     Text(L(account.signedIn
                            ? "With your name hidden, you can still follow the report under My reports."
                            : "Leave a way to reach you if you want a reply. Without one, we can't answer you."))
                 }
-                Section {
-                    Toggle("What I wrote is true, to the best of my knowledge", isOn: $truthful).tint(.abAccent)
-                    if let error { Text(error).foregroundStyle(.red) }
+                Section14 {
+                    Toggle("What I wrote is true, to the best of my knowledge", isOn: $truthful).tint14(.abAccent)
+                    if let error { Text(error).fg14(.red) }
                     Button { Task { await send() } } label: {
                         HStack { Text("Send report").fontWeight(.semibold); if busy { Spacer(); ABDots() } }
                     }
@@ -264,7 +264,7 @@ struct MyReportsScreen: View {
 
     var body: some View {
         List {
-            if let error { Text(error).foregroundStyle(.red) }
+            if let error { Text(error).fg14(.red) }
             if loading && items.isEmpty { HStack { Spacer(); ABDots(); Spacer() } }
             else if items.isEmpty && error == nil {
                 EmptyState(symbol: "tray", title: L("No reports yet"), text: L("Reports you send show here."))
@@ -282,15 +282,15 @@ struct MyReportsScreen: View {
                         Label(t, systemImage: "bubble.left.fill").font(.subheadline)
                     }
                     Text(String(format: L("Reference: %@"), r.ref) + " · " + String((r.created ?? "").prefix(10)))
-                        .font(.caption).foregroundStyle(.secondary)
+                        .font(.caption).fg14(.secondary)
                 }
                 .padding(.vertical, 2)
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("My reports")
-        .task { await load() }
-        .refreshable { await load() }
+        .task14 { await load() }
+        .refreshable14 { await load() }
     }
 
     private func statusName(_ s: String?) -> String {
@@ -342,25 +342,25 @@ struct AdminTermsScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 TextField("Username, email or university ID", text: $query)
-                    .textInputAutocapitalization(.never).autocorrectionDisabled()
-                    .onSubmit { if shown.isEmpty { Task { await find(query) } } }
+                    .autocapitalization(.none).disableAutocorrection(true)
+                    .onSubmit14 { if shown.isEmpty { Task { await find(query) } } }
                 if busy { ABDots() }
-                if let error { Text(error).foregroundStyle(.red) }
+                if let error { Text(error).fg14(.red) }
             }
             if let who {
-                Section("@\(who)") {
-                    if rows.isEmpty { Text("No record for this account yet.").foregroundStyle(.secondary) }
+                Section14("@\(who)") {
+                    if rows.isEmpty { Text("No record for this account yet.").fg14(.secondary) }
                     ForEach(rows) { r in
                         VStack(alignment: .leading, spacing: 3) {
                             Text(r.at).font(.subheadline.monospaced())
-                            Text("\(r.version ?? "") · \(r.source ?? "") \(r.appVersion ?? "")").font(.caption).foregroundStyle(.secondary)
+                            Text("\(r.version ?? "") · \(r.source ?? "") \(r.appVersion ?? "")").font(.caption).fg14(.secondary)
                         }
                     }
                 }
             }
-            Section(people.isEmpty ? "" : String(format: L("Everyone (%d)"), shown.count)) {
+            Section14(people.isEmpty ? "" : String(format: L("Everyone (%d)"), shown.count)) {
                 if !peopleLoaded {
                     ForEach(0..<5, id: \.self) { _ in SkeletonRow() }
                 } else if shown.isEmpty {
@@ -372,20 +372,20 @@ struct AdminTermsScreen: View {
                         HStack(spacing: 10) {
                             Avatar(name: u.displayName, color: u.color, size: 34, admin: u.isAdmin, photo: u.avatar)
                             VStack(alignment: .leading, spacing: 1) {
-                                Text(u.displayName).foregroundStyle(.primary)
-                                Text("@" + u.username).font(.caption).foregroundStyle(.secondary)
+                                Text(u.displayName).fg14(.primary)
+                                Text("@" + u.username).font(.caption).fg14(.secondary)
                             }
                             Spacer()
-                            if who == u.username { Image(systemName: "checkmark").foregroundStyle(Color.abAccent) }
+                            if who == u.username { Image(systemName: "checkmark").fg14(Color.abAccent) }
                         }
                     }
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Terms records")
-        .task { await loadPeople() }
-        .refreshable { await loadPeople() }
+        .task14 { await loadPeople() }
+        .refreshable14 { await loadPeople() }
     }
 
     private func loadPeople() async {

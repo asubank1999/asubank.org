@@ -92,12 +92,12 @@ struct FriendButton: View {
             }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.6), value: state)
-        .confirmationDialog("Remove this friend?", isPresented: $confirmRemove, titleVisibility: .visible) {
-            Button("Remove friend", role: .destructive) { run("friendRemove", [:]) }
-            Button("Cancel", role: .cancel) {}
+        .confirmationDialog14("Remove this friend?", isPresented: $confirmRemove, titleVisibility: .visible) {
+            Button("Remove friend") { run("friendRemove", [:]) }
+            Button("Cancel") {}
         }
-        .alert("Couldn't do that", isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
-            Button("OK", role: .cancel) {}
+        .alert14("Couldn't do that", isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
+            Button("OK") {}
         } message: { Text(error ?? "") }
     }
 
@@ -106,11 +106,11 @@ struct FriendButton: View {
             Label(L(title), systemImage: icon)
                 .font(.subheadline.weight(.semibold))
                 .padding(.horizontal, 12).padding(.vertical, 8)
-                .foregroundStyle(filled ? Color.white : Color.primary)
-                .background(filled ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.primary.opacity(0.09)), in: Capsule())
+                .fg14(filled ? Color.white : Color.primary)
+                .bgIn14(filled ? AnyStyle14(Color.abFill) : AnyStyle14(Color.primary.opacity(0.09)), in: Capsule())
                 .scaleEffect(pop ? 1.12 : 1)
         }
-        .buttonStyle(.borderless)
+        .buttonStyle(BorderlessButtonStyle())
         .transition(.scale(scale: 0.7).combined(with: .opacity))
     }
 
@@ -144,7 +144,8 @@ struct FriendButton: View {
 /// "Poke" and the other short messages friends can send each other
 struct PokeSheet: View {
     let user: ABUser
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var account = AccountStore.shared
     @State private var kind = "poke"
     @State private var place = ""
@@ -154,27 +155,27 @@ struct PokeSheet: View {
     var body: some View {
         ABStack {
             Form {
-                Section {
+                Section14 {
                     ForEach(Social.pokeKinds, id: \.id) { k in
                         Button { kind = k.id } label: {
                             HStack {
                                 Text(k.emoji)
                                 Text(L(k.label)).foregroundColor(.primary)
                                 Spacer()
-                                if kind == k.id { Image(systemName: "checkmark").foregroundStyle(Color.abAccent) }
+                                if kind == k.id { Image(systemName: "checkmark").fg14(Color.abAccent) }
                             }
                         }
                     }
                 } header: { Text("What do you want to say?") }
                 if kind == "meet" {
-                    Section {
+                    Section14 {
                         TextField("Where and when? Like: the library at 2:00", text: $place)
                     } header: { Text("Where") }
                 }
-                Section {
-                    Text(Social.pokeText(kind: kind, name: account.user?.displayName ?? "", place: place)).foregroundStyle(.secondary)
+                Section14 {
+                    Text(Social.pokeText(kind: kind, name: account.user?.displayName ?? "", place: place)).fg14(.secondary)
                 } header: { Text("They will see") }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
+                if let error { Section14 { Text(error).fg14(.red) } }
             }
             .navigationTitle(user.displayName)
             .navigationBarTitleDisplayMode(.inline)
@@ -200,7 +201,8 @@ struct PokeSheet: View {
 
 struct ComposePostSheet: View {
     var posted: () async -> Void
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var text = ""
     @State private var photo: UIImage?
     @State private var video: URL?
@@ -218,43 +220,43 @@ struct ComposePostSheet: View {
     var body: some View {
         ABStack {
             Form {
-                Section {
+                Section14 {
                     TextEditor(text: $text).frame(minHeight: 120)
                 } header: { Text("What's on your mind?") } footer: { Text("\(text.count)/1000") }
-                Section {
+                Section14 {
                     if let shown = photo ?? poster {
                         Color.clear.frame(height: 220)
                             .overlay(Image(uiImage: shown).resizable().scaledToFill())
-                            .overlay { if video != nil { Image(systemName: "play.circle.fill").font(.system(size: 48)).foregroundStyle(.white) } }
+                            .overlay14 { if video != nil { Image(systemName: "play.circle.fill").font(.system(size: 48)).fg14(.white) } }
                             .clipped()
                             .listRowInsets(EdgeInsets())
-                        Button(role: .destructive) { photo = nil; video = nil; poster = nil } label: { Label(video != nil ? "Remove video" : "Remove photo", systemImage: "trash") }
+                        Button() { photo = nil; video = nil; poster = nil } label: { Label(video != nil ? "Remove video" : "Remove photo", systemImage: "trash") }
                     }
                     Button { picking = true } label: { Label(photo == nil && video == nil ? "Add a photo or video" : "Change", systemImage: "photo.on.rectangle") }
                     if rec.recording {
                         HStack {
                             Circle().fill(.red).frame(width: 10, height: 10)
-                            Text(VoiceBubble.time(rec.seconds)).monospacedDigit()
+                            Text(VoiceBubble.time(rec.seconds)).monoDigit14()
                             Spacer()
-                            Button("Cancel", role: .destructive) { rec.cancel() }.buttonStyle(.borderless)
-                            Button("Done") { if let f = rec.stop() { voice = (f.0, f.1) } }.buttonStyle(.borderless)
+                            Button("Cancel") { rec.cancel() }.buttonStyle(BorderlessButtonStyle())
+                            Button("Done") { if let f = rec.stop() { voice = (f.0, f.1) } }.buttonStyle(BorderlessButtonStyle())
                         }
                     } else if let voice {
                         VoiceBubble(id: voice.url.lastPathComponent, duration: voice.seconds, localFile: voice.url) { voice.url }
-                        Button(role: .destructive) { self.voice = nil } label: { Label("Remove voice message", systemImage: "trash") }
+                        Button() { self.voice = nil } label: { Label("Remove voice message", systemImage: "trash") }
                     } else {
                         Button {
                             Task { if !(await rec.start()) { error = L("UniHub can't use the microphone. You can allow it in Settings.") } }
                         } label: { Label("Record a voice message", systemImage: "mic") }
                     }
                 }
-                Section {
+                Section14 {
                     AudiencePicker(audience: $audience)
                     Picker(selection: $disappear) {
                         ForEach(Disappear.choices, id: \.seconds) { Text(LocalizedStringKey($0.label)).tag($0.seconds) }
                     } label: { Label("Disappears after", systemImage: "timer") }
                 }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
+                if let error { Section14 { Text(error).fg14(.red) } }
             }
             .navigationTitle("New post")
             .navigationBarTitleDisplayMode(.inline)
@@ -331,13 +333,13 @@ struct PostRow: View {
                     HStack(spacing: 10) {
                         Avatar(name: post.user.displayName, color: post.user.color, size: 38, admin: post.user.isAdmin, photo: post.user.avatar, online: post.user.online)
                         VStack(alignment: .leading, spacing: 1) {
-                            Text(post.user.displayName).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
+                            Text(post.user.displayName).font(.subheadline.weight(.semibold)).fg14(.primary)
                             HStack(spacing: 4) {
                                 Text(Social.ago(post.created))
                                 Image(systemName: Social.audienceSymbol(post.audience))
                                 ExpiryTag(expires: post.expires)
                             }
-                            .font(.caption).foregroundStyle(.secondary)
+                            .font(.caption).fg14(.secondary)
                         }
                     }
                 }
@@ -345,9 +347,9 @@ struct PostRow: View {
                 Menu {
                     actions
                 } label: {
-                    Image(systemName: "ellipsis").foregroundStyle(.secondary).frame(width: 32, height: 32)
+                    Image(systemName: "ellipsis").fg14(.secondary).frame(width: 32, height: 32)
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(BorderlessButtonStyle())
             }
             if !post.text.isEmpty { Text(post.text).fixedSize(horizontal: false, vertical: true) }
             if let image = post.image, !image.isEmpty, let url = URL(string: image) {
@@ -357,7 +359,7 @@ struct PostRow: View {
                         .clipped()
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(BorderlessButtonStyle())
                 .accessibilityLabel(Text("View photo"))
             }
             if let video = post.video, !video.isEmpty, let url = URL(string: video) {
@@ -375,14 +377,14 @@ struct PostRow: View {
                 Button { Task { await like() } } label: {
                     Label("\(likes ?? post.likes)", systemImage: (liked ?? post.liked) ? "heart.fill" : "heart")
                         .font(.subheadline)
-                        .foregroundStyle((liked ?? post.liked) ? Color.red : Color.secondary)
+                        .fg14((liked ?? post.liked) ? Color.red : Color.secondary)
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(BorderlessButtonStyle())
                 Button { if account.signedIn { showComments = true } else { account.signInShown = true } } label: {
                     Label("\(commentCount ?? post.comments ?? 0)", systemImage: "bubble.left")
-                        .font(.subheadline).foregroundStyle(.secondary)
+                        .font(.subheadline).fg14(.secondary)
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(BorderlessButtonStyle())
                 .accessibilityLabel(Text("Comments"))
             }
         }
@@ -390,9 +392,9 @@ struct PostRow: View {
         .opacity(gone ? 0.25 : 1)
         // hold a post for the same options as the ... button
         .contextMenu { actions }
-        .confirmationDialog("Delete this post?", isPresented: $confirmDelete, titleVisibility: .visible) {
-            Button("Delete", role: .destructive) { remove() }
-            Button("Cancel", role: .cancel) {}
+        .confirmationDialog14("Delete this post?", isPresented: $confirmDelete, titleVisibility: .visible) {
+            Button("Delete") { remove() }
+            Button("Cancel") {}
         } message: { Text("This can't be undone.") }
         .sheet(item: $preview) { FilePreview(url: $0.url).ignoresSafeArea() }
         .onChange(of: post.likes) { _ in likes = nil; liked = nil }
@@ -406,12 +408,12 @@ struct PostRow: View {
             Button { UIPasteboard.general.string = post.text; Haptics.tap() } label: { Label("Copy", systemImage: "doc.on.doc") }
         }
         if post.user.id == account.user?.id || account.isAdmin {
-            Button(role: .destructive) { later { confirmDelete = true } } label: { Label("Delete", systemImage: "trash") }
+            Button() { later { confirmDelete = true } } label: { Label("Delete", systemImage: "trash") }
         }
         if post.user.id != account.user?.id {
             Button { later { reporting = ReportTarget(kind: "post", targetId: post.id, name: post.text) } } label: { Label("Report", systemImage: "flag") }
             if account.signedIn, !post.user.isAdmin {
-                Button(role: .destructive) { later { blocking = BlockTarget(userId: post.user.id, name: post.user.displayName) } } label: { Label("Block", systemImage: "hand.raised") }
+                Button() { later { blocking = BlockTarget(userId: post.user.id, name: post.user.displayName) } } label: { Label("Block", systemImage: "hand.raised") }
             }
         }
     }
@@ -454,7 +456,7 @@ private struct ProfileEntry<Content: View>: View {
                 Button { account.signInShown = true } label: { content() }
             }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
@@ -491,9 +493,9 @@ struct FriendsScreen: View {
                         Text(alerts > 0 ? "\(L("Alerts")) (\(alerts))" : L("Alerts")).tag(2)
                         Text("Find").tag(3)
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(SegmentedPickerStyle())
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
-                    if let error { Text(error).foregroundStyle(.red) }
+                    if let error { Text(error).fg14(.red) }
                     switch segment {
                     case 0: feedSection
                     case 1: friendsSection
@@ -501,9 +503,9 @@ struct FriendsScreen: View {
                     default: findSection
                     }
                 }
-                .listStyle(.insetGrouped)
-                .refreshable { await load() }
-                .task { await load() }
+                .listStyle(InsetGroupedListStyle())
+                .refreshable14 { await load() }
+                .task14 { await load() }
                 .onChange(of: segment) { s in
                     if s == 2 { Task { await markRead() } }
                     if s == 3 && people.isEmpty { Task { await search() } }
@@ -511,10 +513,10 @@ struct FriendsScreen: View {
                 .modifier(CommunityRulesGate())
             } else {
                 VStack(spacing: 14) {
-                    Image(systemName: "person.2.fill").font(.system(size: 46)).foregroundStyle(Color.abAccent)
+                    Image(systemName: "person.2.fill").font(.system(size: 46)).fg14(Color.abAccent)
                     Text("Add your classmates as friends").font(.headline)
-                    Text("Sign in to add friends, poke them and share posts.").multilineTextAlignment(.center).foregroundStyle(.secondary)
-                    Button("Sign in") { account.signInShown = true }.buttonStyle(.borderedProminent).tint(.abFill)
+                    Text("Sign in to add friends, poke them and share posts.").multilineTextAlignment(.center).fg14(.secondary)
+                    Button("Sign in") { account.signInShown = true }.prominentButton14().tint14(.abFill)
                 }
                 .padding(32)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -531,14 +533,14 @@ struct FriendsScreen: View {
     // MARK: feed
 
     @ViewBuilder private var feedSection: some View {
-        Section {
+        Section14 {
             Button { composing = true } label: { Label("Write a post", systemImage: "square.and.pencil") }
         }
         if feed.isEmpty && !loading {
-            Section { Text("No posts yet. Add friends or write the first one.").foregroundStyle(.secondary) }
+            Section14 { Text("No posts yet. Add friends or write the first one.").fg14(.secondary) }
         }
         ForEach(feed) { p in
-            Section { PostRow(post: p) { await loadFeed() } }
+            Section14 { PostRow(post: p) { await loadFeed() } }
         }
     }
 
@@ -547,18 +549,18 @@ struct FriendsScreen: View {
     @ViewBuilder private var friendsSection: some View {
         if loading { ABDots() }
         else if friends.isEmpty {
-            Section {
-                Text("You haven't added any friends yet.").foregroundStyle(.secondary)
+            Section14 {
+                Text("You haven't added any friends yet.").fg14(.secondary)
                 Button("Find people") { segment = 3 }
             }
         } else {
-            Section {
+            Section14 {
                 ForEach(friends) { u in
                     person(u) {
                         Button { poking = u } label: {
-                            Text("👉").font(.title3).frame(width: 38, height: 38).background(Color.abAccentSoft, in: Circle())
+                            Text("👉").font(.title3).frame(width: 38, height: 38).bgIn14(Color.abAccentSoft, in: Circle())
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(BorderlessButtonStyle())
                         .accessibilityLabel(L("Poke"))
                     }
                 }
@@ -570,45 +572,45 @@ struct FriendsScreen: View {
 
     @ViewBuilder private var alertsSection: some View {
         if incoming.isEmpty && pokes.isEmpty && outgoing.isEmpty && !loading {
-            Section { Text("Nothing new.").foregroundStyle(.secondary) }
+            Section14 { Text("Nothing new.").fg14(.secondary) }
         }
         if !incoming.isEmpty {
-            Section("Friend requests") {
+            Section14("Friend requests") {
                 ForEach(incoming) { u in
                     person(u) {
                         HStack(spacing: 8) {
                             Button { Task { await respond(u, true) } } label: {
-                                Image(systemName: "checkmark").foregroundStyle(.white).frame(width: 34, height: 34).background(Color.abFill, in: Circle())
+                                Image(systemName: "checkmark").fg14(.white).frame(width: 34, height: 34).bgIn14(Color.abFill, in: Circle())
                             }
                             .accessibilityLabel(L("Accept"))
                             Button { Task { await respond(u, false) } } label: {
-                                Image(systemName: "xmark").foregroundStyle(.primary).frame(width: 34, height: 34).background(Color.primary.opacity(0.09), in: Circle())
+                                Image(systemName: "xmark").fg14(.primary).frame(width: 34, height: 34).bgIn14(Color.primary.opacity(0.09), in: Circle())
                             }
                             .accessibilityLabel(L("Decline"))
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(BorderlessButtonStyle())
                     }
                 }
             }
         }
         if !pokes.isEmpty {
-            Section("Pokes and messages") {
+            Section14("Pokes and messages") {
                 ForEach(pokes) { p in
                     HStack(spacing: 10) {
                         Avatar(name: p.user.displayName, color: p.user.color, size: 38, photo: p.user.avatar)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(Social.pokeText(kind: p.kind, name: p.user.displayName, place: p.place))
                                 .font(.subheadline.weight(p.read == true ? .regular : .semibold))
-                            Text(Social.ago(p.created)).font(.caption).foregroundStyle(.secondary)
+                            Text(Social.ago(p.created)).font(.caption).fg14(.secondary)
                         }
                         Spacer()
-                        Button(L("Reply")) { poking = p.user }.buttonStyle(.borderless).font(.subheadline)
+                        Button(L("Reply")) { poking = p.user }.buttonStyle(BorderlessButtonStyle()).font(.subheadline)
                     }
                 }
             }
         }
         if !outgoing.isEmpty {
-            Section("Requests you sent") {
+            Section14("Requests you sent") {
                 ForEach(outgoing) { u in
                     person(u) { FriendButton(userId: u.id, state: .constant("outgoing")) { await load() } }
                 }
@@ -619,19 +621,19 @@ struct FriendsScreen: View {
     // MARK: finding people
 
     @ViewBuilder private var findSection: some View {
-        Section {
+        Section14 {
             HStack {
-                Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
+                Image(systemName: "magnifyingglass").fg14(.secondary)
                 TextField("Name, username, major or college", text: $query)
                     .autocapitalization(.none).disableAutocorrection(true)
-                    .submitLabel(.search)
-                    .onSubmit { Task { await search() } }
+                    
+                    .onSubmit14 { Task { await search() } }
             }
         } footer: {
             if query.isEmpty { Text("People from your college and major show up here. Add them to your profile to see more.") }
         }
         if people.isEmpty && !loading {
-            Section { Text("No people found.").foregroundStyle(.secondary) }
+            Section14 { Text("No people found.").fg14(.secondary) }
         }
         ForEach(people.indices, id: \.self) { i in
             person(people[i]) {
@@ -648,7 +650,7 @@ struct FriendsScreen: View {
                     Avatar(name: u.displayName, color: u.color, size: 42, admin: u.isAdmin, photo: u.avatar, online: u.online)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(u.displayName).font(.body.weight(.medium)).lineLimit(1)
-                        Text(subtitle(u)).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                        Text(subtitle(u)).font(.caption).fg14(.secondary).lineLimit(1)
                     }
                 }
             }
@@ -758,12 +760,12 @@ struct ProfileScreen: View {
 
     var body: some View {
         List {
-            Section { header }
+            Section14 { header }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
             if let u = user {
                 if let p = u.phone, !p.isEmpty {
-                    Section("Phone") {
+                    Section14("Phone") {
                         Button { if let url = URL(string: "tel:" + p.filter { $0.isNumber || $0 == "+" }) { UIApplication.shared.open(url) } } label: {
                             Label(p, systemImage: "phone.fill")
                         }
@@ -773,36 +775,36 @@ struct ProfileScreen: View {
                     }
                 }
                 ForEach(posts) { p in
-                    Section { PostRow(post: p) { await load() } }
+                    Section14 { PostRow(post: p) { await load() } }
                 }
                 if account.signedIn, !isMe {
-                    Section {
+                    Section14 {
                         Button { reporting = ReportTarget(kind: "user", targetId: u.id, name: u.displayName) } label: { Label("Report this person", systemImage: "flag") }
                         if !u.isAdmin {
                             if account.user?.blocked?.contains(u.id) == true {
                                 Button { Task { try? await Moderation.setBlocked(u.id, false) } } label: { Label("Unblock", systemImage: "checkmark.circle") }
                             } else {
-                                Button(role: .destructive) { blocking = BlockTarget(userId: u.id, name: u.displayName) } label: { Label("Block", systemImage: "nosign") }
+                                Button() { blocking = BlockTarget(userId: u.id, name: u.displayName) } label: { Label("Block", systemImage: "nosign") }
                             }
                         }
                     }
                 }
                 if account.isAdmin, !isMe {
-                    Section { NavigationLink { AdminUserScreen(user: u) { await load() } } label: { Label("Manage this user", systemImage: "checkmark.shield") } }
+                    Section14 { NavigationLink { AdminUserScreen(user: u) { await load() } } label: { Label("Manage this user", systemImage: "checkmark.shield") } }
                 }
             }
             if user == nil && error == nil {
-                Section { ForEach(0..<2, id: \.self) { _ in SkeletonPost() } }
+                Section14 { ForEach(0..<2, id: \.self) { _ in SkeletonPost() } }
             }
-            if let error { Section { Text(error).foregroundStyle(.red) } }
+            if let error { Section14 { Text(error).fg14(.red) } }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .animation(.easeOut(duration: 0.25), value: user == nil)
         .modifier(ModerationDialogs(report: $reporting, block: $blocking, blocked: { _ in Task { await load() } }))
         .navigationTitle(user?.displayName ?? fallbackName)
         .navigationBarTitleDisplayMode(.inline)
-        .task { await load() }
-        .refreshable { await load() }
+        .task14 { await load() }
+        .refreshable14 { await load() }
         .sheet(item: $poking) { PokeSheet(user: $0) }
         .sheet(isPresented: $composing) { ComposePostSheet { await load() } }
         .sheet(isPresented: $editing, onDismiss: { Task { await load() } }) { EditProfileSheet() }
@@ -836,27 +838,27 @@ struct ProfileScreen: View {
     private var header: some View {
         let color = Color(hexString: user?.color ?? fallbackColor)
         return VStack(alignment: .leading, spacing: 8) {
-            LinearGradient(colors: [color, Color.abFill.opacity(0.75)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            LinearGradient(gradient: Gradient(colors: [color, Color.abFill.opacity(0.75)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                 .frame(height: 112)
-                .overlay {
+                .overlay14 {
                     if let cover = user?.cover, !cover.isEmpty, let url = URL(string: cover) {
                         Button { PhotoTools.show(cover) } label: {
-                            Color.clear.overlay(alignment: .top) { CachedPhoto(url: url, pixelSize: 1000) { Color.clear } }.clipped().contentShape(Rectangle())
+                            Color.clear.overlay14(alignment: .top) { CachedPhoto(url: url, pixelSize: 1000) { Color.clear } }.clipped().contentShape(Rectangle())
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(BorderlessButtonStyle())
                         .accessibilityLabel(Text("View cover photo"))
                     }
                 }
-                .overlay(alignment: .topTrailing) {
+                .overlay14(alignment: .topTrailing) {
                     if isMe {
                         Menu {
                             Button { pickingCover = true } label: { Label("Choose a cover photo", systemImage: "photo") }
                             if user?.cover?.isEmpty == false {
-                                Button(role: .destructive) { Task { await setCover(nil) } } label: { Label("Remove cover photo", systemImage: "trash") }
+                                Button() { Task { await setCover(nil) } } label: { Label("Remove cover photo", systemImage: "trash") }
                             }
                         } label: {
-                            Image(systemName: coverBusy ? "hourglass" : "camera.fill").font(.subheadline).foregroundStyle(.white)
-                                .frame(width: 34, height: 34).background(.black.opacity(0.45), in: Circle())
+                            Image(systemName: coverBusy ? "hourglass" : "camera.fill").font(.subheadline).fg14(.white)
+                                .frame(width: 34, height: 34).bgIn14(.black.opacity(0.45), in: Circle())
                         }
                         .padding(8)
                         .accessibilityLabel(Text("Change cover photo"))
@@ -876,8 +878,8 @@ struct ProfileScreen: View {
                     }
                     if let u = user {
                         HStack(spacing: 4) {
-                            Text("@\(u.username)").font(.caption).foregroundStyle(.secondary).lineLimit(1)
-                                .textSelection(.enabled)
+                            Text("@\(u.username)").font(.caption).fg14(.secondary).lineLimit(1)
+                                
                             Button {
                                 UIPasteboard.general.string = u.username
                                 Haptics.success()
@@ -885,14 +887,14 @@ struct ProfileScreen: View {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
                             } label: {
                                 Image(systemName: copied ? "checkmark" : "doc.on.doc").font(.caption2.weight(.semibold))
-                                    .foregroundStyle(copied ? Color.green : Color.secondary)
+                                    .fg14(copied ? Color.green : Color.secondary)
                                     .frame(width: 24, height: 20).contentShape(Rectangle())
                             }
-                            .buttonStyle(.borderless)
+                            .buttonStyle(BorderlessButtonStyle())
                             .accessibilityLabel(Text("Copy username"))
                         }
                         Text(u.online == true ? L("Online now") : lastSeenText(u.lastSeen)).font(.caption)
-                            .foregroundStyle(u.online == true ? Color.green : .secondary).lineLimit(1)
+                            .fg14(u.online == true ? Color.green : .secondary).lineLimit(1)
                     }
                 }
                 Spacer(minLength: 0)
@@ -908,7 +910,7 @@ struct ProfileScreen: View {
                     stat(u.badges?.count ?? 0, "Badges")
                 }
                 .padding(.vertical, 8)
-                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
 
                 actionRow(u)
 
@@ -917,7 +919,7 @@ struct ProfileScreen: View {
                         .font(.footnote)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(10)
-                        .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
             } else if error == nil {
                 ProfileSkeleton()
@@ -955,10 +957,10 @@ struct ProfileScreen: View {
                 Text(L(title)).font(.footnote.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.7)
             }
                 .frame(maxWidth: .infinity, minHeight: 36).padding(.horizontal, 6)
-                .foregroundStyle(filled ? Color.white : Color.primary)
-                .background(filled ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.primary.opacity(0.09)), in: Capsule())
+                .fg14(filled ? Color.white : Color.primary)
+                .bgIn14(filled ? AnyStyle14(Color.abFill) : AnyStyle14(Color.primary.opacity(0.09)), in: Capsule())
         }
-        .buttonStyle(.borderless)
+        .buttonStyle(BorderlessButtonStyle())
     }
 
     /// Bio, studies and interests in one small card
@@ -969,7 +971,7 @@ struct ProfileScreen: View {
         if bio.isEmpty && studies.isEmpty && interests.isEmpty && sex.isEmpty && u.created == nil { return nil }
         let joined = Self.joinedText(u.created)
         return AnyView(Group {
-            if !bio.isEmpty { Text(bio).lineLimit(4).textSelection(.enabled) }
+            if !bio.isEmpty { Text(bio).lineLimit(4) }
             if !sex.isEmpty { aboutRow("person.fill", sex) }
             if !studies.isEmpty { aboutRow("graduationcap.fill", studies) }
             if !interests.isEmpty { aboutRow("sparkles", interests) }
@@ -982,7 +984,7 @@ struct ProfileScreen: View {
             Image(systemName: icon).frame(width: 18, alignment: .center)
             Text(text).frame(maxWidth: .infinity, alignment: .leading)
         }
-        .foregroundStyle(.secondary)
+        .fg14(.secondary)
     }
 
     /// "Joined March 2026"
@@ -1000,12 +1002,12 @@ struct ProfileScreen: View {
     private func stat(_ n: Int, _ title: String, tap: (() -> Void)? = nil) -> some View {
         Button { tap?() } label: {
             VStack(spacing: 1) {
-                Text("\(n)").font(.subheadline.weight(.bold)).monospacedDigit().foregroundStyle(.primary)
-                Text(L(title)).font(.caption2).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.8)
+                Text("\(n)").font(.subheadline.weight(.bold)).monoDigit14().fg14(.primary)
+                Text(L(title)).font(.caption2).fg14(.secondary).lineLimit(1).minimumScaleFactor(0.8)
             }
             .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.borderless)
+        .buttonStyle(BorderlessButtonStyle())
     }
 
     private func load() async {

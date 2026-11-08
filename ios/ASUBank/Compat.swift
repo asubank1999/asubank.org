@@ -20,10 +20,10 @@ struct ABStack<Content: View>: View {
             if ABNav.useStack {
                 NavigationStack { content() }
             } else {
-                NavigationView { content() }.navigationViewStyle(.stack)
+                NavigationView { content() }.navigationViewStyle(StackNavigationViewStyle())
             }
         } else {
-            NavigationView { content() }.navigationViewStyle(.stack)
+            NavigationView { content() }.navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }
@@ -107,7 +107,7 @@ extension View {
 extension Color {
     /// Like iOS 16's Color.gradient: a soft top-to-bottom gradient of this color
     var abGradient: LinearGradient {
-        LinearGradient(colors: [self.opacity(0.82), self], startPoint: .top, endPoint: .bottom)
+        LinearGradient(gradient: Gradient(colors: [self.opacity(0.82), self]), startPoint: .top, endPoint: .bottom)
     }
 }
 

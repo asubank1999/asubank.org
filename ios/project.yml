@@ -4,7 +4,7 @@ name: ASUBank
 options:
   bundleIdPrefix: org.unihub
   deploymentTarget:
-    iOS: "15.0"
+    iOS: "14.0"
   createIntermediateGroups: true
   developmentLanguage: en
 settings:

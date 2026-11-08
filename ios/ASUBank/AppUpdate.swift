@@ -73,7 +73,7 @@ final class AppConfig: ObservableObject {
         var remote: Remote?
         var req = URLRequest(url: Self.configURL)
         req.cachePolicy = .reloadIgnoringLocalCacheData
-        if let (data, _) = try? await URLSession.shared.data(for: req) { remote = try? JSONDecoder().decode(Remote.self, from: data) }
+        if let (data, _) = try? await URLSession.shared.data14(for: req) { remote = try? JSONDecoder().decode(Remote.self, from: data) }
         if let s = remote?.share, let u = URL(string: s) { shareURL = u }
         donate = !Self.isStore && (remote?.donate ?? true)
         // Offline keeps the last sponsor; only a config that really has none removes it
@@ -83,7 +83,7 @@ final class AppConfig: ObservableObject {
         var store: Lookup.R?
         for q in ["&country=jo", ""] {
             guard let u = URL(string: "https://itunes.apple.com/lookup?bundleId=\(Self.bundleID)\(q)&t=\(Int(Date().timeIntervalSince1970))"),
-                  let (data, _) = try? await URLSession.shared.data(from: u),
+                  let (data, _) = try? await URLSession.shared.data14(from: u),
                   let r = try? JSONDecoder().decode(Lookup.self, from: data).results.first else { continue }
             store = r
             break
@@ -127,12 +127,12 @@ struct UpdateRequiredView: View {
         VStack(spacing: 18) {
             Spacer()
             Image(systemName: "arrow.down.app.fill")
-                .font(.system(size: 64)).foregroundStyle(Color.abAccent)
+                .font(.system(size: 64)).fg14(Color.abAccent)
             Text("Update required").font(.largeTitle.weight(.bold))
             Text("This version of UniHub (\(AppConfig.current)) no longer works. Please update to \(config.latest ?? "the latest version") to keep using the app.")
-                .multilineTextAlignment(.center).foregroundStyle(.secondary)
+                .multilineTextAlignment(.center).fg14(.secondary)
             Text("يرجى تحديث التطبيق للاستمرار.")
-                .multilineTextAlignment(.center).foregroundStyle(.secondary)
+                .multilineTextAlignment(.center).fg14(.secondary)
                 .environment(\.layoutDirection, .rightToLeft)
             Spacer()
             Button {
@@ -140,10 +140,10 @@ struct UpdateRequiredView: View {
             } label: {
                 Text("Update now").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
             }
-            .buttonStyle(.borderedProminent).tint(.abFill)
+            .prominentButton14().tint14(.abFill)
         }
         .padding(28)
-        .interactiveDismissDisabled()
+        .noDismiss14()
     }
 }
 
@@ -159,47 +159,47 @@ struct WelcomeTermsView: View {
     var body: some View {
         ABStack {
             List {
-                Section {
+                Section14 {
                     VStack(spacing: 10) {
                         Image(systemName: "books.vertical.fill")
-                            .font(.system(size: 34)).foregroundStyle(.white)
+                            .font(.system(size: 34)).fg14(.white)
                             .frame(width: 76, height: 76)
-                            .background(Color.abFill, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .bgIn14(Color.abFill, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                         Text("Welcome to UniHub").font(.title2.weight(.bold))
-                        Text("Please read this before you start").font(.subheadline).foregroundStyle(.secondary)
+                        Text("Please read this before you start").font(.subheadline).fg14(.secondary)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 8)
                     .listRowBackground(Color.clear)
                 }
-                Section("What you agree to") {
+                Section14("What you agree to") {
                     term("doc.text.fill", "You read the terms", "We keep a dated record that you accepted the Terms of Service on this date. You can see it any time under More, Safety & legal.")
                     term("person.fill.checkmark", "You answer for what you post", "Share only what you have the right to share. Don't use UniHub to cheat, harass anyone or break the law.")
                     term("flag.fill", "We act on reports", "Admins can remove content and close accounts. Copyright owners can ask us to remove a file.")
                     term("exclamationmark.shield.fill", "No guarantees", "Materials come from students and may contain mistakes. UniHub is offered as it is. Check your official course sources.")
                 }
-                Section("About this app") {
+                Section14("About this app") {
                     term("heart.fill", "A free, student-run project", "UniHub is free for students and run by a student. Ads on the website, sponsors and donations support it.")
                     term("building.columns", "Not from the university", "This app is not made by, owned by, or affiliated with Applied Science Private University (ASPU).")
                     term("person.fill", "Made by a fellow student", "It's built by a college friend who studies English Language and Literature and wants to help all ASPU students search and find what they need.")
                     term("checkmark.shield", "Use materials responsibly", "Files are shared by students. Check them against your official course resources.")
                 }
-                Section("بالعربية") {
+                Section14("بالعربية") {
                     Text("UniHub مشروع طلابي مجاني، وليس تابعاً لجامعة العلوم التطبيقية الخاصة ولا صادراً عنها. أنشأه زميل جامعي يدرس اللغة الإنجليزية وآدابها، بهدف مساعدة جميع طلاب الجامعة في البحث عن احتياجاتهم والوصول إليها بسهولة.")
                         .multilineTextAlignment(.trailing)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .environment(\.layoutDirection, .rightToLeft)
                         .padding(.vertical, 4)
                 }
-                Section {
+                Section14 {
                     Button { openURL(URL(string: "https://asubank.org/legal/uni_tos")!) } label: {
                         Label("Read the full Terms of Service", systemImage: "doc.text")
                     }
                     if onClose == nil {
-                        Toggle("I have read and accept the Terms of Service / قرأت شروط الاستخدام وأوافق عليها", isOn: $agree.animation()).tint(.abAccent)
+                        Toggle("I have read and accept the Terms of Service / قرأت شروط الاستخدام وأوافق عليها", isOn: $agree.animation()).tint14(.abAccent)
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            .listStyle(InsetGroupedListStyle())
             .navigationTitle(onClose == nil ? "" : "About UniHub")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -208,7 +208,7 @@ struct WelcomeTermsView: View {
                     if let onClose { Button("Done", action: onClose) }
                 }
             }
-            .safeAreaInset(edge: .bottom) {
+            .safeAreaInset14(edge: .bottom) {
                 if onClose == nil {
                     Button {
                         accepted = true
@@ -217,22 +217,22 @@ struct WelcomeTermsView: View {
                     } label: {
                         Text("Accept and continue").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abFill)
+                    .prominentButton14().tint14(.abFill)
                     .disabled(!agree)
                     .padding(.horizontal, 20).padding(.vertical, 10)
-                    .background(.bar)
+                    .background(Color.mat14)
                 }
             }
         }
-        .interactiveDismissDisabled(onClose == nil)
+        .noDismiss14(onClose == nil)
     }
 
     private func term(_ symbol: String, _ title: String, _ text: String) -> some View {
         HStack(alignment: .top, spacing: 12) {
-            Image(systemName: symbol).foregroundStyle(Color.abAccent).frame(width: 26).padding(.top, 2)
+            Image(systemName: symbol).fg14(Color.abAccent).frame(width: 26).padding(.top, 2)
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.body.weight(.semibold))
-                Text(text).font(.subheadline).foregroundStyle(.secondary)
+                Text(text).font(.subheadline).fg14(.secondary)
             }
         }
         .padding(.vertical, 3)

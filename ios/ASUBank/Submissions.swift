@@ -23,7 +23,7 @@ enum Submissions {
         req.setValue("text/plain;charset=utf-8", forHTTPHeaderField: "Content-Type")
         req.timeoutInterval = 300
         let payload = try JSONSerialization.data(withJSONObject: body)
-        let (reply, _) = try await URLSession.shared.upload(for: req, from: payload, delegate: UploadProgress(progress))
+        let (reply, _) = try await URLSession.shared.upload14(for: req, from: payload, delegate: UploadProgress(progress))
         let o = (try? JSONSerialization.jsonObject(with: reply)) as? [String: Any]
         if o?["ok"] as? Bool == true, let url = o?["url"] as? String { return url }
         throw NSError(domain: "upload", code: 1, userInfo: [NSLocalizedDescriptionKey: o?["error"] as? String ?? L("Upload failed. Please try again.")])
@@ -65,7 +65,7 @@ enum Submissions {
     static func get(_ query: [URLQueryItem]) async throws -> [String: Any] {
         var c = URLComponents(string: api)!
         c.queryItems = query + [URLQueryItem(name: "callback", value: "cb")]
-        let (data, _) = try await URLSession.shared.data(from: c.url!)
+        let (data, _) = try await URLSession.shared.data14(from: c.url!)
         var s = String(data: data, encoding: .utf8) ?? ""
         if let a = s.firstIndex(of: "("), let b = s.lastIndex(of: ")") { s = String(s[s.index(after: a)..<b]) }
         guard let obj = (try? JSONSerialization.jsonObject(with: Data(s.utf8))) as? [String: Any] else {
@@ -98,7 +98,7 @@ struct SubmissionsScreen: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 HStack(spacing: 8) {
                     stat("\(items.count)", "Total", .abAccent)
                     stat("\(items.filter { $0.status == "approved" }.count)", "Approved", .green)
@@ -108,25 +108,25 @@ struct SubmissionsScreen: View {
                 Picker("Status", selection: $filter) {
                     Text("All").tag("all"); Text("Approved").tag("approved"); Text("Pending").tag("pending"); Text("Review").tag("review")
                 }
-                .pickerStyle(.segmented)
+                .pickerStyle(SegmentedPickerStyle())
                 .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             }
             if loading && items.isEmpty { HStack { Spacer(); ABDots("Loading submissions…"); Spacer() }.listRowBackground(Color.clear) }
-            if let error { Section { Text(error).foregroundStyle(.red); Button("Try again") { Task { await load() } } } }
+            if let error { Section14 { Text(error).fg14(.red); Button("Try again") { Task { await load() } } } }
             ForEach(shown) { i in
-                Section {
+                Section14 {
                     NavigationLink { SubmissionDetail(item: i, admin: admin) { await load() } } label: { row(i) }
                 }
             }
             if !loading && shown.isEmpty && error == nil {
-                Text("No submissions here yet.").foregroundStyle(.secondary).listRowBackground(Color.clear)
+                Text("No submissions here yet.").fg14(.secondary).listRowBackground(Color.clear)
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Submissions")
-        .searchable(text: $query, prompt: "Title or student")
-        .refreshable { await load() }
-        .task { await load() }
+        .searchable14(text: $query, prompt: "Title or student")
+        .refreshable14 { await load() }
+        .task14 { await load() }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button { submitting = true } label: { Label("Submit", systemImage: "plus.circle.fill") }
@@ -137,11 +137,11 @@ struct SubmissionsScreen: View {
 
     private func stat(_ v: String, _ t: String, _ c: Color) -> some View {
         VStack(spacing: 2) {
-            Text(v).font(.title2.weight(.bold)).foregroundStyle(c).monospacedDigit()
-            Text(t).font(.caption).foregroundStyle(.secondary)
+            Text(v).font(.title2.weight(.bold)).fg14(c).monoDigit14()
+            Text(t).font(.caption).fg14(.secondary)
         }
         .frame(maxWidth: .infinity).padding(.vertical, 10)
-        .background(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .bgIn14(Color(UIColor.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 
     private func row(_ i: Submissions.Item) -> some View {
@@ -149,7 +149,7 @@ struct SubmissionsScreen: View {
             KindTile(kind: i.kind, size: 40)
             VStack(alignment: .leading, spacing: 3) {
                 BiText(text: i.title, font: .body.weight(.semibold))
-                Text(i.name + (i.date.map { " · " + $0.formatted(date: .abbreviated, time: .omitted) } ?? "")).font(.caption).foregroundStyle(.secondary)
+                Text(i.name + (i.date.map { " · " + $0.fmt14(.medium, .none) } ?? "")).font(.caption).fg14(.secondary)
             }
             Spacer()
             statusBadge(i.status)
@@ -177,7 +177,8 @@ private struct SubmissionDetail: View {
     let item: Submissions.Item
     let admin: Bool
     var changed: () async -> Void
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var secret = Keychain.get("ab.subs.secret") ?? ""
     @State private var busy = false
     @State private var error: String?
@@ -185,39 +186,39 @@ private struct SubmissionDetail: View {
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack { KindTile(kind: item.kind, size: 46); Spacer(); statusBadge(item.status) }
                     BiText(text: item.title, font: .title3.weight(.bold))
-                    Text("by \(item.name)").foregroundStyle(.secondary)
-                    if let d = item.date { Text(d.formatted(date: .complete, time: .omitted)).font(.caption).foregroundStyle(.secondary) }
+                    Text("by \(item.name)").fg14(.secondary)
+                    if let d = item.date { Text(d.fmt14(.full, .none)).font(.caption).fg14(.secondary) }
                 }
                 .padding(.vertical, 4)
             }
-            if let n = item.notes, !n.isEmpty { Section("Notes") { BiText(text: n) } }
-            Section("Files") {
+            if let n = item.notes, !n.isEmpty { Section14("Notes") { BiText(text: n) } }
+            Section14("Files") {
                 if let u = item.primaryUrl { linkRow(item.title, u, item.platform) }
                 ForEach(item.backupLinks ?? [], id: \.self) { l in linkRow(l.label ?? "Backup", l.url, l.platform) }
             }
-            Section {
-                Button(role: .destructive) { Moderation.report(ReportTarget(kind: "file", targetId: item.primaryUrl ?? item.id, name: item.title)) } label: {
+            Section14 {
+                Button() { Moderation.report(ReportTarget(kind: "file", targetId: item.primaryUrl ?? item.id, name: item.title)) } label: {
                     Label("Report this file", systemImage: "flag")
                 }
             }
             if admin {
-                Section {
+                Section14 {
                     SecureField("Admin secret", text: $secret)
-                    Button(role: .destructive) { confirm = true } label: { Label(busy ? "Deleting…" : "Delete submission", systemImage: "trash") }
+                    Button() { confirm = true } label: { Label(busy ? "Deleting…" : "Delete submission", systemImage: "trash") }
                         .disabled(secret.isEmpty || busy)
                 } header: { Text("Admin") } footer: { Text("Uses the ADMIN_SECRET of the submissions script. It's kept in this phone's keychain.") }
-                if let error { Text(error).foregroundStyle(.red) }
+                if let error { Text(error).fg14(.red) }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Submission")
         .navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog("Delete this submission?", isPresented: $confirm, titleVisibility: .visible) {
-            Button("Delete", role: .destructive) { Task { await delete() } }
+        .confirmationDialog14("Delete this submission?", isPresented: $confirm, titleVisibility: .visible) {
+            Button("Delete") { Task { await delete() } }
         }
     }
 
@@ -227,7 +228,7 @@ private struct SubmissionDetail: View {
                 KindTile(kind: AB.kind(url, title), size: 30)
                 VStack(alignment: .leading) {
                     BiText(text: title)
-                    Text(platform ?? URL(string: url)?.host ?? "").font(.caption).foregroundStyle(.secondary)
+                    Text(platform ?? URL(string: url)?.host ?? "").font(.caption).fg14(.secondary)
                 }
             }
         }
@@ -248,7 +249,8 @@ private struct SubmissionDetail: View {
 
 private struct SubmitPresentationSheet: View {
     var done: () async -> Void
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var account = AccountStore.shared
     @AppStorage("ab.subs.name") private var name = ""
     @State private var title = ""
@@ -283,44 +285,44 @@ private struct SubmitPresentationSheet: View {
         ABStack {
             Form {
                 if sent {
-                    Section {
+                    Section14 {
                         VStack(spacing: 10) {
-                            Image(systemName: "checkmark.circle.fill").font(.system(size: 56)).foregroundStyle(.green)
+                            Image(systemName: "checkmark.circle.fill").font(.system(size: 56)).fg14(.green)
                             Text("Submitted!").font(.title2.weight(.bold))
-                            Text("The team reviews it before it goes on the campus display screen.").multilineTextAlignment(.center).foregroundStyle(.secondary)
+                            Text("The team reviews it before it goes on the campus display screen.").multilineTextAlignment(.center).fg14(.secondary)
                         }
                         .frame(maxWidth: .infinity).padding(.vertical, 20)
                     }
                 } else {
-                    Section {
+                    Section14 {
                         TextField("Your name", text: $name).textContentType(.name)
                         TextField("Presentation title", text: $title)
                     } header: { Text("About it") }
-                    Section {
+                    Section14 {
                         if let d = fileData {
                             HStack(spacing: 12) {
                                 KindTile(kind: AB.kind("", fileName))
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(fileName).lineLimit(2)
-                                    Text(ByteCountFormatter.string(fromByteCount: Int64(d.count), countStyle: .file)).font(.caption).foregroundStyle(.secondary)
+                                    Text(ByteCountFormatter.string(fromByteCount: Int64(d.count), countStyle: .file)).font(.caption).fg14(.secondary)
                                 }
                                 Spacer()
                                 if !busy {
-                                    Button { fileData = nil; fileName = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary) }
-                                        .buttonStyle(.borderless)
+                                    Button { fileData = nil; fileName = "" } label: { Image(systemName: "xmark.circle.fill").fg14(.secondary) }
+                                        .buttonStyle(BorderlessButtonStyle())
                                 }
                             }
                             if let progress {
-                                ProgressView(value: progress).tint(.abAccent)
-                                Text(String(format: L("Uploading… %d%%"), Int(progress * 100))).font(.caption).foregroundStyle(.secondary)
+                                ProgressView(value: progress).tint14(.abAccent)
+                                Text(String(format: L("Uploading… %d%%"), Int(progress * 100))).font(.caption).fg14(.secondary)
                             }
                         } else {
                             Button { showImporter = true } label: { Label("Choose a file", systemImage: "doc.badge.plus") }
                             Button { showPhotos = true } label: { Label("Choose a photo", systemImage: "photo") }
                         }
                     } header: { Text("The file") } footer: { Text("PDF, PowerPoint, Word, images or video, up to 25 MB. It uploads right from the app.") }
-                    Section("Notes (optional)") { TextField("Anything the team should know", text: $notes) }
-                    if let error { Section { Text(error).foregroundStyle(.red) } }
+                    Section14("Notes (optional)") { TextField("Anything the team should know", text: $notes) }
+                    if let error { Section14 { Text(error).fg14(.red) } }
                 }
             }
             .navigationTitle("Submit a file").navigationBarTitleDisplayMode(.inline)

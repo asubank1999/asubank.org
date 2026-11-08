@@ -76,7 +76,7 @@ final class SitePages: ObservableObject {
         if pages.isEmpty, let data = await Task.detached(priority: .userInitiated, operation: { try? Data(contentsOf: file) }).value { await apply(data) }
         var req = URLRequest(url: url)
         req.cachePolicy = .reloadIgnoringLocalCacheData
-        if let (data, resp) = try? await URLSession.shared.data(for: req),
+        if let (data, resp) = try? await URLSession.shared.data14(for: req),
            (resp as? HTTPURLResponse)?.statusCode == 200, await apply(data) {
             Task.detached(priority: .utility) { try? data.write(to: file, options: .atomic) }
         }
@@ -244,9 +244,9 @@ struct SiteLinkRowButton<Label: View>: View {
         case .push(let r):
             RouteLink(r) { label() }
         case .tab(let t):
-            Button { app.tab = t; Haptics.tap() } label: { label() }.tint(.primary)
+            Button { app.tab = t; Haptics.tap() } label: { label() }.tint14(.primary)
         case .external(let u):
-            Button { openURL(u) } label: { label() }.tint(.primary)
+            Button { openURL(u) } label: { label() }.tint14(.primary)
         case nil:
             label()
         }
@@ -273,11 +273,11 @@ struct BiText: View {
         let ar = isArabic(shown)
         let t = Text(verbatim: shown)
             .font(font)
-            .foregroundStyle(color)
+            .fg14(color)
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
             .environment(\.layoutDirection, ar ? .rightToLeft : .leftToRight)
-        if selectable { t.textSelection(.enabled) } else { t }
+        if selectable { t } else { t }
     }
 }
 
@@ -317,11 +317,11 @@ struct NativePageScreen: View {
                     Text("English").tag(false)
                     Text("العربية").tag(true)
                 }
-                .pickerStyle(.segmented)
+                .pickerStyle(SegmentedPickerStyle())
                 .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             }
             ForEach(sections) { sec in
-                Section {
+                Section14 {
                     ForEach(Array(sec.blocks.enumerated()), id: \.offset) { _, b in block(b) }
                 } header: {
                     if let t = sec.title {
@@ -334,10 +334,10 @@ struct NativePageScreen: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle(page.t)
         .navigationBarTitleDisplayMode(page.t.count > 24 ? .inline : .large)
-        .refreshable { await pages.load() }
+        .refreshable14 { await pages.load() }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if let url = AB.absolute(path) {
@@ -353,7 +353,7 @@ struct NativePageScreen: View {
     @ViewBuilder private func block(_ b: PageBlock) -> some View {
         if let h = b.head {
             VStack(alignment: .leading, spacing: 6) {
-                if let e = h.eyebrow { Text(e.uppercased()).font(.caption.weight(.bold)).foregroundStyle(Color.abAccent) }
+                if let e = h.eyebrow { Text(e.uppercased()).font(.caption.weight(.bold)).fg14(Color.abAccent) }
                 if let s = h.sub { BiText(text: s, font: .body, color: .secondary) }
                 if let a = h.ar, AppLanguage.code != "ar" || h.sub == nil { BiText(text: a, font: .subheadline, color: .secondary) }
             }
@@ -373,7 +373,7 @@ struct NativePageScreen: View {
         } else if let t = b.table {
             ForEach(Array(t.r.enumerated()), id: \.offset) { _, row in tableRow(row, head: t.h) }
         } else if let img = b.img, let url = AB.absolute(img) {
-            AsyncImage(url: url) { phase in
+            AsyncImage14(url: url) { phase in
                 if let i = phase.image {
                     i.resizable().scaledToFit().clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 } else {
@@ -392,7 +392,7 @@ struct NativePageScreen: View {
                 } label: {
                     BiText(text: q, font: .body.weight(.semibold))
                 }
-                .tint(.abAccent)
+                .tint14(.abAccent)
             }
         }
     }
@@ -412,7 +412,7 @@ struct NativePageScreen: View {
                 if let s = l.s { BiText(text: s, font: .footnote, color: .secondary) }
             }
             if let u = l.u, case .external = SiteRouter.target(u, title: l.t) {
-                Image(systemName: "arrow.up.right").font(.footnote).foregroundStyle(.tertiary)
+                Image(systemName: "arrow.up.right").font(.footnote).fg14(Color.tertiary14)
             }
         }
         .padding(.vertical, 2)
@@ -431,7 +431,7 @@ struct NativePageScreen: View {
                 ForEach(Array(row.enumerated()), id: \.offset) { i, cell in
                     if !cell.isEmpty {
                         HStack(alignment: .firstTextBaseline) {
-                            Text(head[i]).font(.caption).foregroundStyle(.secondary)
+                            Text(head[i]).font(.caption).fg14(.secondary)
                             Spacer(minLength: 12)
                             Text(cell).font(i == 0 ? .body.weight(.semibold) : .body).multilineTextAlignment(.trailing)
                         }
@@ -451,7 +451,7 @@ struct SubjectsDirectory: View {
     var body: some View {
         List {
             ForEach(library.categories, id: \.name) { cat in
-                Section(cat.name) {
+                Section14(cat.name) {
                     ForEach(cat.subjects) { s in
                         RouteLink(Route.subject(s)) {
                             HStack(spacing: 12) {
@@ -459,7 +459,7 @@ struct SubjectsDirectory: View {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(s.t)
                                     Text([AppLanguage.code == "ar" ? nil : s.ar, s.n.map { String(format: L("%d items"), $0) }].compactMap { $0 }.joined(separator: " · "))
-                                        .font(.footnote).foregroundStyle(.secondary)
+                                        .font(.footnote).fg14(.secondary)
                                 }
                             }
                         }
@@ -467,7 +467,7 @@ struct SubjectsDirectory: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("All subjects")
     }
 }

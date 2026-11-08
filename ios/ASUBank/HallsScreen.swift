@@ -77,47 +77,47 @@ private let roomColor = Color(UIColor(hex: 0x1f8a3e))
 
 struct HallsScreen: View {
     @State private var number = ""
-    @FocusState private var focused: Bool
+    @State private var focused: Bool = false
 
     var body: some View {
         List {
-            Section {
+            Section14 {
                 VStack(alignment: .leading, spacing: 14) {
                     Text("Find a hall").font(.title3.weight(.bold))
                     Text("Type the number written on the door or in your timetable.")
-                        .font(.subheadline).foregroundStyle(.secondary)
+                        .font(.subheadline).fg14(.secondary)
                     HStack {
-                        Image(systemName: "number").foregroundStyle(.secondary)
+                        Image(systemName: "number").fg14(.secondary)
                         TextField("e.g. 1206", text: $number)
                             .keyboardType(.numberPad)
-                            .font(.title2.monospacedDigit().weight(.semibold))
-                            .focused($focused)
+                            .font(.title2.monoDigit14().weight(.semibold))
+                            .focused14($focused)
                             .onChange(of: number) { v in
                                 let digits = String(v.filter(\.isNumber).prefix(5))
                                 if digits != v { number = digits }
                                 if Halls.decode(digits) != nil { Haptics.tap() }
                             }
                         if !number.isEmpty {
-                            Button { number = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary) }
-                                .buttonStyle(.plain)
+                            Button { number = "" } label: { Image(systemName: "xmark.circle.fill").fg14(.secondary) }
+                                .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding(12)
-                    .background(Color.abBackground, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .bgIn14(Color.abBackground, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
 
                     if let d = Halls.decode(number) {
                         HallResult(d: d, digits: number)
                             .transition(.opacity.combined(with: .move(edge: .top)))
                     } else if !number.isEmpty {
                         Text(number.count < 4 ? "Keep typing: hall numbers have 4 digits (5 for buildings 10 and 21)." : "That doesn't look like a hall number.")
-                            .font(.footnote).foregroundStyle(.secondary)
+                            .font(.footnote).fg14(.secondary)
                     }
                 }
                 .padding(.vertical, 6)
                 .animation(.spring(response: 0.35, dampingFraction: 0.85), value: Halls.decode(number) != nil)
             }
 
-            Section {
+            Section14 {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(spacing: 2) {
                         Digit(text: "1", color: buildingColor)
@@ -129,9 +129,9 @@ struct HallsScreen: View {
                     Legend(color: floorColor, title: "Floor", detail: "2 = 2nd floor")
                     Legend(color: roomColor, title: "Room", detail: "06 = room 06 on that floor")
                     Text("Buildings 10 and 21 use two digits, so their halls have 5 digits: 21105 = Dentistry, 1st floor, room 05.")
-                        .font(.footnote).foregroundStyle(.secondary)
+                        .font(.footnote).fg14(.secondary)
                     Text("الرقم الأول للمبنى، ثم الطابق، ثم رقم القاعة. مثال: 1206 = كلية تكنولوجيا المعلومات، الطابق الثاني، القاعة 06")
-                        .font(.footnote).foregroundStyle(.secondary)
+                        .font(.footnote).fg14(.secondary)
                         .multilineTextAlignment(.trailing)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .environment(\.layoutDirection, .rightToLeft)
@@ -141,27 +141,27 @@ struct HallsScreen: View {
                 Text("How to read a hall number")
             }
 
-            Section {
+            Section14 {
                 ForEach(Halls.buildings) { b in
                     Button {
                         if b.code.allSatisfy(\.isNumber) { number = b.code; focused = true }
                     } label: {
                         HStack(spacing: 12) {
                             Text(b.code)
-                                .font(.headline.monospacedDigit())
-                                .foregroundStyle(.white)
+                                .font(.headline.monoDigit14())
+                                .fg14(.white)
                                 .frame(minWidth: 34, minHeight: 34)
                                 .padding(.horizontal, b.code.count > 2 ? 4 : 0)
-                                .background(buildingColor.abGradient, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                                .bgIn14(buildingColor.abGradient, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(b.name).foregroundStyle(.primary)
-                                Text(b.ar).font(.footnote).foregroundStyle(.secondary)
+                                Text(b.name).fg14(.primary)
+                                Text(b.ar).font(.footnote).fg14(.secondary)
                             }
                             Spacer()
-                            Image(systemName: b.symbol).foregroundStyle(.secondary)
+                            Image(systemName: b.symbol).fg14(.secondary)
                         }
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(PlainButtonStyle())
                 }
             } header: {
                 Text("Building numbers")
@@ -173,7 +173,7 @@ struct HallsScreen: View {
         .navigationBarTitleDisplayMode(.large)
         .dismissKeyboardOnScroll()
         .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Spacer()
                 Button("Done") { focused = false }
             }
@@ -201,7 +201,7 @@ private struct HallResult: View {
             ResultRow(color: roomColor, symbol: "number.square", title: "Room \(d.room)", detail: "القاعة \(d.room)")
         }
         .padding(14)
-        .background(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .bgIn14(Color.abAccentSoft, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }
 
@@ -214,12 +214,12 @@ private struct ResultRow: View {
         HStack(spacing: 12) {
             Image(systemName: symbol)
                 .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(.white)
+                .fg14(.white)
                 .frame(width: 32, height: 32)
-                .background(color.abGradient, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .bgIn14(color.abGradient, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
             VStack(alignment: .leading, spacing: 1) {
                 Text(title).font(.body.weight(.semibold))
-                Text(detail).font(.footnote).foregroundStyle(.secondary)
+                Text(detail).font(.footnote).fg14(.secondary)
             }
         }
     }
@@ -230,10 +230,10 @@ private struct Digit: View {
     let color: Color
     var body: some View {
         Text(text)
-            .font(.system(size: 34, weight: .bold, design: .rounded).monospacedDigit())
-            .foregroundStyle(color)
+            .font(.system(size: 34, weight: .bold, design: .rounded).monoDigit14())
+            .fg14(color)
             .padding(.horizontal, 10).padding(.vertical, 4)
-            .background(color.opacity(0.13), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .bgIn14(color.opacity(0.13), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
 
@@ -245,7 +245,7 @@ private struct Legend: View {
         HStack(spacing: 10) {
             Circle().fill(color).frame(width: 10, height: 10)
             Text(title).font(.subheadline.weight(.semibold))
-            Text(detail).font(.subheadline).foregroundStyle(.secondary)
+            Text(detail).font(.subheadline).fg14(.secondary)
         }
     }
 }

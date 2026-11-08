@@ -43,38 +43,38 @@ struct CalendarScreen: View {
     var body: some View {
         List {
             if let n = next, query.isEmpty {
-                Section {
+                Section14 {
                     VStack(alignment: .trailing, spacing: 10) {
                         HStack {
-                            Text("NEXT UP").font(.caption.weight(.bold)).foregroundStyle(.white.opacity(0.85))
+                            Text("NEXT UP").font(.caption.weight(.bold)).fg14(.white.opacity(0.85))
                             Spacer()
                             Text(countdown(n.date)).font(.caption.weight(.bold))
                                 .padding(.horizontal, 10).padding(.vertical, 4)
-                                .background(.white.opacity(0.2), in: Capsule())
-                                .foregroundStyle(.white)
+                                .bgIn14(.white.opacity(0.2), in: Capsule())
+                                .fg14(.white)
                         }
                         .environment(\.layoutDirection, .leftToRight)
                         Text(n.e.n)
-                            .font(.title3.weight(.bold)).foregroundStyle(.white)
+                            .font(.title3.weight(.bold)).fg14(.white)
                             .multilineTextAlignment(.trailing)
                             .frame(maxWidth: .infinity, alignment: .trailing)
-                        Text(n.date.formatted(date: .complete, time: .omitted))
-                            .font(.subheadline).foregroundStyle(.white.opacity(0.85))
+                        Text(n.date.fmt14(.full, .none))
+                            .font(.subheadline).fg14(.white.opacity(0.85))
                     }
                     .padding(16)
                     .background(
-                        LinearGradient(colors: [Color(UIColor(hex: 0x8C1D40)), Color(UIColor(hex: 0x5a0f28))], startPoint: .topLeading, endPoint: .bottomTrailing),
+                        LinearGradient(gradient: Gradient(colors: [Color(UIColor(hex: 0x8C1D40)), Color(UIColor(hex: 0x5a0f28))]), startPoint: .topLeading, endPoint: .bottomTrailing),
                         in: RoundedRectangle(cornerRadius: 18, style: .continuous)
                     )
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
                 }
             }
-            Section {
-                Toggle("Show past events", isOn: $showPast.animation()).tint(.abAccent)
+            Section14 {
+                Toggle("Show past events", isOn: $showPast.animation()).tint14(.abAccent)
             }
             ForEach(months, id: \.key) { m in
-                Section(m.key) {
+                Section14(m.key) {
                     ForEach(m.items) { d in row(d) }
                 }
             }
@@ -83,8 +83,8 @@ struct CalendarScreen: View {
                     .listRowBackground(Color.clear)
             }
         }
-        .listStyle(.insetGrouped)
-        .searchable(text: $query, prompt: "Search events")
+        .listStyle(InsetGroupedListStyle())
+        .searchable14(text: $query, prompt: "Search events")
         .navigationTitle(title.count > 24 ? "Academic calendar" : title)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
@@ -101,13 +101,13 @@ struct CalendarScreen: View {
         let isToday = Calendar.current.isDate(d.date, inSameDayAs: today)
         return HStack(alignment: .top, spacing: 12) {
             VStack(spacing: 0) {
-                Text(d.date.formatted(.dateTime.month(.abbreviated)).uppercased())
-                    .font(.system(size: 11, weight: .bold)).foregroundStyle(isToday ? .white : Color.abAccent)
-                Text(d.date.formatted(.dateTime.day()))
-                    .font(.system(size: 22, weight: .bold)).foregroundStyle(isToday ? .white : .primary)
+                Text(d.date.fmtT14("MMM").uppercased())
+                    .font(.system(size: 11, weight: .bold)).fg14(isToday ? .white : Color.abAccent)
+                Text(d.date.fmtT14("d"))
+                    .font(.system(size: 22, weight: .bold)).fg14(isToday ? .white : .primary)
             }
             .frame(width: 50, height: 52)
-            .background(isToday ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.abAccentSoft), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .bgIn14(isToday ? AnyStyle14(Color.abFill) : AnyStyle14(Color.abAccentSoft), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             VStack(alignment: .trailing, spacing: 4) {
                 Text(d.e.n)
                     .font(.body.weight(.medium))
@@ -116,10 +116,10 @@ struct CalendarScreen: View {
                 HStack(spacing: 6) {
                     Text(isToday ? "Today" : countdown(d.date))
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(past ? Color.secondary : Color.abAccent)
+                        .fg14(past ? Color.secondary : Color.abAccent)
                     Spacer()
                     Text([d.e.day, (d.e.w ?? 0) > 0 ? "Week \(d.e.w!)" : nil].compactMap { $0 }.joined(separator: " · "))
-                        .font(.caption).foregroundStyle(.secondary)
+                        .font(.caption).fg14(.secondary)
                 }
                 .environment(\.layoutDirection, .leftToRight)
             }

@@ -53,7 +53,7 @@ enum Moderation {
         var top = root
         while let p = top.presentedViewController { top = p }
         weak var shown: UIViewController?
-        let host = UIHostingController(rootView: ReportSheet(target: target, onClose: { shown?.dismiss(animated: true) }).tint(Color.abAccent))
+        let host = UIHostingController(rootView: ReportSheet(target: target, onClose: { shown?.dismiss(animated: true) }).tint14(Color.abAccent))
         shown = host
         top.present(host, animated: true)
     }
@@ -69,7 +69,7 @@ struct StudyFileNotice: View {
     static let ownerMail = "mailto:necro144@yahoo.com?subject=" + "UniHub file removal request".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
 
     var body: some View {
-        Section {
+        Section14 {
             VStack(alignment: .leading, spacing: 8) {
                 Label("Before you report a study file", systemImage: "info.circle.fill").font(.headline)
                 Text("Most study files here come from the university itself or were shared by students, through links that were already public. The collection was reviewed and approved by one of the university's deanships.")
@@ -89,7 +89,8 @@ struct StudyFileNotice: View {
 struct ReportSheet: View {
     let target: ReportTarget
     var onClose: (() -> Void)? = nil
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var account = AccountStore.shared
     @State private var reason = ""
     @State private var details = ""
@@ -103,35 +104,35 @@ struct ReportSheet: View {
         ABStack {
             Form {
                 if sent {
-                    Section {
+                    Section14 {
                         Label("Thank you. Our team will review your report.", systemImage: "checkmark.seal.fill")
-                        if let reference { Text(String(format: L("Reference: %@"), reference)).font(.body.monospaced()).textSelection(.enabled) }
+                        if let reference { Text(String(format: L("Reference: %@"), reference)).font(.body.monospaced()) }
                     }
                 } else {
                     if target.kind == "file" { StudyFileNotice() }
-                    if !target.name.isEmpty { Section("Reporting") { Text(target.name).lineLimit(3) } }
-                    Section("What's wrong?") {
+                    if !target.name.isEmpty { Section14("Reporting") { Text(target.name).lineLimit(3) } }
+                    Section14("What's wrong?") {
                         ForEach(Moderation.reasons.filter { $0.id != "bug" && $0.id != "account" }, id: \.id) { r in
                             Button { reason = r.id } label: {
                                 HStack {
                                     Text(L(r.label)).foregroundColor(.primary)
                                     Spacer()
-                                    if reason == r.id { Image(systemName: "checkmark").foregroundStyle(Color.abAccent) }
+                                    if reason == r.id { Image(systemName: "checkmark").fg14(Color.abAccent) }
                                 }
                             }
                         }
                     }
-                    Section("Details (optional)") {
+                    Section14("Details (optional)") {
                         TextEditor(text: $details).frame(minHeight: 80)
                     }
                     if !account.signedIn {
-                        Section("Your email or phone (optional)") {
+                        Section14("Your email or phone (optional)") {
                             TextField("So we can reply to you", text: $contact)
-                                .textInputAutocapitalization(.never)
+                                .autocapitalization(.none)
                         }
                     }
-                    if let error { Section { Text(error).foregroundStyle(.red) } }
-                    Section {
+                    if let error { Section14 { Text(error).fg14(.red) } }
+                    Section14 {
                         Button { Task { await send() } } label: {
                             HStack { Text("Send report"); if busy { Spacer(); ABDots() } }
                         }
@@ -174,24 +175,24 @@ struct ModerationDialogs: ViewModifier {
     func body(content: Content) -> some View {
         content
             .sheet(item: $report) { ReportSheet(target: $0) }
-            .confirmationDialog(
+            .confirmationDialog14(
                 String(format: L("Block %@?"), block?.name ?? ""),
                 isPresented: Binding(get: { block != nil }, set: { if !$0 { block = nil } }),
                 titleVisibility: .visible
             ) {
-                Button("Block", role: .destructive) {
+                Button("Block") {
                     guard let b = block else { return }
                     Task {
                         do { try await Moderation.setBlocked(b.userId, true); blocked(b.userId) }
                         catch { self.error = error.localizedDescription }
                     }
                 }
-                Button("Cancel", role: .cancel) {}
+                Button("Cancel") {}
             } message: {
                 Text("You won't see their messages or get notifications from them. You can undo this in your account.")
             }
-            .alert("Couldn't block", isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
-                Button("OK", role: .cancel) {}
+            .alert14("Couldn't block", isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
+                Button("OK") {}
             } message: { Text(error ?? "") }
     }
 }
@@ -208,20 +209,20 @@ struct CommunityRulesGate: ViewModifier {
             .sheet(isPresented: Binding(get: { onScreen && !accepted }, set: { _ in })) {
             ABStack {
                 List {
-                    Section {
+                    Section14 {
                         ForEach(Moderation.rules, id: \.self) { Label(L($0), systemImage: "checkmark.shield") }
                     } footer: {
                         Text("To report something, press and hold a message or open a profile.")
                     }
-                    Section {
+                    Section14 {
                         Button { accepted = true } label: { Text("I agree").frame(maxWidth: .infinity).font(.headline) }
                     }
                 }
-                .listStyle(.insetGrouped)
+                .listStyle(InsetGroupedListStyle())
                 .navigationTitle("Community rules")
                 .navigationBarTitleDisplayMode(.inline)
             }
-            .interactiveDismissDisabled()
+            .noDismiss14()
         }
     }
 }
@@ -234,14 +235,14 @@ struct BlockedScreen: View {
 
     var body: some View {
         List {
-            if let error { Text(error).foregroundStyle(.red) }
+            if let error { Text(error).fg14(.red) }
             if loading { ABDots() }
-            else if people.isEmpty && error == nil { Text("You haven't blocked anyone.").foregroundStyle(.secondary) }
+            else if people.isEmpty && error == nil { Text("You haven't blocked anyone.").fg14(.secondary) }
             ForEach(Array(people.enumerated()), id: \.offset) { _, p in
                 HStack {
                     VStack(alignment: .leading) {
                         Text(p["displayName"] as? String ?? "")
-                        Text("@\(p["username"] as? String ?? "")").font(.caption).foregroundStyle(.secondary)
+                        Text("@\(p["username"] as? String ?? "")").font(.caption).fg14(.secondary)
                     }
                     Spacer()
                     Button("Unblock") {
@@ -250,12 +251,12 @@ struct BlockedScreen: View {
                             catch { self.error = error.localizedDescription }
                         }
                     }
-                    .buttonStyle(.borderless)
+                    .buttonStyle(BorderlessButtonStyle())
                 }
             }
         }
         .navigationTitle("Blocked people")
-        .task { await load() }
+        .task14 { await load() }
     }
 
     private func load() async {
@@ -279,16 +280,16 @@ struct AdminReportsScreen: View {
                 Text("Open").tag(false)
                 Text("All").tag(true)
             }
-            .pickerStyle(.segmented)
-            if let error { Text(error).foregroundStyle(.red) }
+            .pickerStyle(SegmentedPickerStyle())
+            if let error { Text(error).fg14(.red) }
             if loading { HStack { Spacer(); ABDots(); Spacer() } }
-            else if reports.isEmpty && error == nil { Text("Nothing to review.").foregroundStyle(.secondary) }
+            else if reports.isEmpty && error == nil { Text("Nothing to review.").fg14(.secondary) }
             ForEach(Array(reports.enumerated()), id: \.offset) { _, r in row(r) }
         }
         .navigationTitle("Reports")
         .sheet(item: $replying) { ReportReplySheet(reportId: $0.id) { await load() } }
-        .task(id: showAll) { await load() }
-        .refreshable { await load() }
+        .task14(id: showAll) { await load() }
+        .refreshable14 { await load() }
     }
 
     private func row(_ r: [String: Any]) -> some View {
@@ -299,22 +300,22 @@ struct AdminReportsScreen: View {
         return VStack(alignment: .leading, spacing: 5) {
             Text(L(label)).font(.body.weight(.semibold))
             if let n = r["targetName"] as? String, !n.isEmpty { Text(n).font(.subheadline) }
-            if let t = r["targetUser"] as? String, !t.isEmpty { Text("@\(t)").font(.caption).foregroundStyle(.secondary) }
+            if let t = r["targetUser"] as? String, !t.isEmpty { Text("@\(t)").font(.caption).fg14(.secondary) }
             if let d = r["details"] as? String, !d.isEmpty { Text(d).font(.caption) }
-            if let p = r["place"] as? String, !p.isEmpty { Text(p).font(.caption).foregroundStyle(.secondary) }
+            if let p = r["place"] as? String, !p.isEmpty { Text(p).font(.caption).fg14(.secondary) }
             if let e = r["evidence"] as? String, let url = URL(string: e), !e.isEmpty {
                 Link(destination: url) { Label("Open the screenshot", systemImage: "photo") }.font(.subheadline)
             }
             if let t = r["reply"] as? String, !t.isEmpty { Label(t, systemImage: "bubble.left.fill").font(.caption) }
             Text("\(r["reporterName"] as? String ?? "") · \(r["contact"] as? String ?? "") · \(r["created"] as? String ?? "")")
-                .font(.caption2).foregroundStyle(.tertiary)
+                .font(.caption2).fg14(Color.tertiary14)
             HStack(spacing: 14) {
                 if status == "open" {
                     Button("Done") { Task { await set(r, "done") } }
                     Button("Dismiss") { Task { await set(r, "dismissed") } }
                     Button("Reply") { replying = ReportReply(id: r["id"] as? String ?? "") }
                     if kind == "post" {
-                        Button("Delete post", role: .destructive) {
+                        Button("Delete post") {
                             Task {
                                 do {
                                     _ = try await AccountStore.shared.call("postDelete", ["id": r["targetId"] as? String ?? ""])
@@ -324,7 +325,7 @@ struct AdminReportsScreen: View {
                         }
                     }
                     if kind == "comment" || kind == "story" {
-                        Button("Delete", role: .destructive) {
+                        Button("Delete") {
                             Task {
                                 do {
                                     _ = try await AccountStore.shared.call(kind == "story" ? "storyDelete" : "commentDelete", ["id": r["targetId"] as? String ?? ""])
@@ -334,7 +335,7 @@ struct AdminReportsScreen: View {
                         }
                     }
                     if kind == "message" {
-                        Button("Delete message", role: .destructive) {
+                        Button("Delete message") {
                             Task {
                                 do {
                                     _ = try await AccountStore.shared.call("deleteMessage", ["id": r["targetId"] as? String ?? ""])
@@ -344,10 +345,10 @@ struct AdminReportsScreen: View {
                         }
                     }
                 } else {
-                    Text(L(status == "done" ? "Handled" : "Dismissed")).font(.caption).foregroundStyle(.secondary)
+                    Text(L(status == "done" ? "Handled" : "Dismissed")).font(.caption).fg14(.secondary)
                 }
             }
-            .buttonStyle(.borderless).font(.subheadline)
+            .buttonStyle(BorderlessButtonStyle()).font(.subheadline)
         }
         .padding(.vertical, 2)
     }
@@ -379,8 +380,8 @@ struct AdminReportsScreen: View {
 struct StoreNoticeView: View {
     var body: some View {
         VStack(spacing: 12) {
-            Image(systemName: "bag").font(.system(size: 44)).foregroundStyle(.secondary)
-            Text("This service isn't available in this version of the app.").multilineTextAlignment(.center).foregroundStyle(.secondary)
+            Image(systemName: "bag").font(.system(size: 44)).fg14(.secondary)
+            Text("This service isn't available in this version of the app.").multilineTextAlignment(.center).fg14(.secondary)
         }
         .padding(32)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -397,7 +398,8 @@ struct ReportReply: Identifiable {
 struct ReportReplySheet: View {
     let reportId: String
     var sent: () async -> Void
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var text = ""
     @State private var busy = false
     @State private var error: String?
@@ -405,8 +407,8 @@ struct ReportReplySheet: View {
     var body: some View {
         ABStack {
             Form {
-                Section("Reply") { TextEditor(text: $text).frame(minHeight: 120) }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
+                Section14("Reply") { TextEditor(text: $text).frame(minHeight: 120) }
+                if let error { Section14 { Text(error).fg14(.red) } }
             }
             .navigationTitle("Reply")
             .navigationBarTitleDisplayMode(.inline)

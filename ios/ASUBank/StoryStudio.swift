@@ -59,7 +59,7 @@ struct StoryBackground: View {
     let bg2: String
     var body: some View {
         if bg2.isEmpty { Color(hexString: bg) } else {
-            LinearGradient(colors: [Color(hexString: bg), Color(hexString: bg2)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            LinearGradient(gradient: Gradient(colors: [Color(hexString: bg), Color(hexString: bg2)]), startPoint: .topLeading, endPoint: .bottomTrailing)
         }
     }
 }
@@ -115,26 +115,26 @@ struct StoryTextView: View {
         let t = Text(text).font(style.uiFont(size))
         switch style.effect {
         case "none":
-            t.foregroundStyle(color)
+            t.fg14(color)
         case "outline":
             let edge: Color = style.color == "#000000" ? .white : .black
-            t.foregroundStyle(color)
+            t.fg14(color)
                 .shadow(color: edge, radius: 0, x: 1.5, y: 1.5).shadow(color: edge, radius: 0, x: -1.5, y: -1.5)
                 .shadow(color: edge, radius: 0, x: 1.5, y: -1.5).shadow(color: edge, radius: 0, x: -1.5, y: 1.5)
         case "neon":
-            t.foregroundStyle(.white).shadow(color: color, radius: 3).shadow(color: color, radius: 9).shadow(color: color, radius: 18)
+            t.fg14(.white).shadow(color: color, radius: 3).shadow(color: color, radius: 9).shadow(color: color, radius: 18)
         case "box":
-            t.foregroundStyle(style.color == "#000000" ? Color.white : .black)
+            t.fg14(style.color == "#000000" ? Color.white : .black)
                 .padding(.horizontal, 12).padding(.vertical, 6)
-                .background(color, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .bgIn14(color, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
         case "retro":
-            t.foregroundStyle(color).shadow(color: Color(hexString: "#FF375F"), radius: 0, x: 3, y: 3).shadow(color: Color(hexString: "#64D2FF"), radius: 0, x: 6, y: 6)
+            t.fg14(color).shadow(color: Color(hexString: "#FF375F"), radius: 0, x: 3, y: 3).shadow(color: Color(hexString: "#64D2FF"), radius: 0, x: 6, y: 6)
         case "rainbow":
-            t.foregroundStyle(Color(hexString: "#FF375F")).hueRotation(.degrees(hue))
+            t.fg14(Color(hexString: "#FF375F")).hueRotation(.degrees(hue))
         case "glow":
-            t.foregroundStyle(color).shadow(color: .white.opacity(0.9), radius: 12)
+            t.fg14(color).shadow(color: .white.opacity(0.9), radius: 12)
         default:
-            t.foregroundStyle(color).shadow(color: .black.opacity(0.7), radius: 4)
+            t.fg14(color).shadow(color: .black.opacity(0.7), radius: 4)
         }
     }
 }
@@ -170,7 +170,8 @@ struct LoopingVideo: UIViewRepresentable {
 struct ComposeStorySheet: View {
     var media: StoryMedia?
     var posted: () async -> Void
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @AppStorage("ab.audience") private var audience = "public"
     @State private var text = ""
     @State private var photo: UIImage?
@@ -182,7 +183,7 @@ struct ComposeStorySheet: View {
     @State private var style = StoryStyle()
     @State private var tool = 0
     @State private var muted = false
-    @FocusState private var typing: Bool
+    @State private var typing: Bool = false
 
     init(media: StoryMedia? = nil, posted: @escaping () async -> Void) {
         self.media = media
@@ -243,8 +244,8 @@ struct ComposeStorySheet: View {
 
     private func round(_ symbol: String, _ label: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Image(systemName: symbol).font(.headline).foregroundStyle(.white).frame(width: 40, height: 40)
-                .background(.black.opacity(0.45), in: Circle())
+            Image(systemName: symbol).font(.headline).fg14(.white).frame(width: 40, height: 40)
+                .bgIn14(.black.opacity(0.45), in: Circle())
         }
         .accessibilityLabel(Text(label))
     }
@@ -263,18 +264,18 @@ struct ComposeStorySheet: View {
     private var panel: some View {
         VStack(spacing: 10) {
             TextField("Write something", text: $text)
-                .focused($typing)
+                .focused14($typing)
                 .padding(.horizontal, 16).padding(.vertical, 11)
-                .background(.white.opacity(0.14), in: Capsule())
-                .foregroundStyle(.white)
+                .bgIn14(.white.opacity(0.14), in: Capsule())
+                .fg14(.white)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 6) {
                     ForEach(tools.indices, id: \.self) { i in
                         Button { withAnimation(.easeOut(duration: 0.15)) { tool = i } } label: {
                             Text(tools[i]).font(.footnote.weight(.semibold))
-                                .foregroundStyle(tool == i ? Color.black : Color.white)
+                                .fg14(tool == i ? Color.black : Color.white)
                                 .padding(.horizontal, 13).padding(.vertical, 7)
-                                .background(tool == i ? Color.white : Color.white.opacity(0.14), in: Capsule())
+                                .bgIn14(tool == i ? Color.white : Color.white.opacity(0.14), in: Capsule())
                         }
                     }
                     Divider().frame(height: 18).overlay(Color.white.opacity(0.3))
@@ -290,23 +291,23 @@ struct ComposeStorySheet: View {
                         Label("Friends only", systemImage: "person.2").tag("friends")
                     }
                 } label: {
-                    Image(systemName: Social.audienceSymbol(audience)).font(.headline).foregroundStyle(.white)
-                        .frame(width: 46, height: 46).background(.white.opacity(0.14), in: Circle())
+                    Image(systemName: Social.audienceSymbol(audience)).font(.headline).fg14(.white)
+                        .frame(width: 46, height: 46).bgIn14(.white.opacity(0.14), in: Circle())
                 }
                 .accessibilityLabel(Text("Who can see this"))
                 Button { post() } label: {
-                    Label("Share story", systemImage: "paperplane.fill").font(.headline).foregroundStyle(.white)
+                    Label("Share story", systemImage: "paperplane.fill").font(.headline).fg14(.white)
                         .frame(maxWidth: .infinity).frame(height: 46)
-                        .background(Color.abFill.abGradient, in: Capsule())
+                        .bgIn14(Color.abFill.abGradient, in: Capsule())
                         .opacity(canPost ? 1 : 0.45)
                 }
                 .disabled(!canPost)
             }
             Text("Your story disappears after 24 hours and is deleted from our database after 2 days.")
-                .font(.caption2).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.center)
+                .font(.caption2).fg14(.white.opacity(0.65)).multilineTextAlignment(.center)
         }
         .padding(14)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .bgIn14(Color.mat14, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
         .padding(.horizontal, 8).padding(.bottom, 6)
     }
 
@@ -316,8 +317,8 @@ struct ComposeStorySheet: View {
             Haptics.tap()
         } label: {
             Image(systemName: style.align == "left" ? "text.alignleft" : style.align == "right" ? "text.alignright" : "text.aligncenter")
-                .font(.subheadline).foregroundStyle(.white).frame(width: 34, height: 32)
-                .background(Color.white.opacity(0.14), in: Capsule())
+                .font(.subheadline).fg14(.white).frame(width: 34, height: 32)
+                .bgIn14(Color.white.opacity(0.14), in: Capsule())
         }
         .accessibilityLabel(Text("Text alignment"))
     }
@@ -325,9 +326,9 @@ struct ComposeStorySheet: View {
     private func chip(_ name: String, on: Bool, action: @escaping () -> Void) -> some View {
         Button { action(); Haptics.tap() } label: {
             Text(LocalizedStringKey(name)).font(.footnote.weight(.semibold))
-                .foregroundStyle(on ? Color.black : Color.white)
+                .fg14(on ? Color.black : Color.white)
                 .padding(.horizontal, 14).frame(height: 38)
-                .background(on ? Color.white : Color.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .bgIn14(on ? Color.white : Color.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
     }
 
@@ -346,9 +347,9 @@ struct ComposeStorySheet: View {
                 ForEach(StoryStyle.fonts, id: \.id) { f in
                     Button { style.font = f.id; Haptics.tap() } label: {
                         Text(LocalizedStringKey(f.name)).font(styleFont(f.id))
-                            .foregroundStyle(style.font == f.id ? Color.black : Color.white)
+                            .fg14(style.font == f.id ? Color.black : Color.white)
                             .padding(.horizontal, 14).frame(height: 38)
-                            .background(style.font == f.id ? Color.white : Color.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .bgIn14(style.font == f.id ? Color.white : Color.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                     }
                 }
             case 2:
@@ -406,7 +407,8 @@ struct ComposeStorySheet: View {
 /// Who saw a story, with the exact date and time
 struct StoryViewersSheet: View {
     let storyId: String
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var viewers: [Viewer] = []
     @State private var loaded = false
     @State private var error: String?
@@ -421,9 +423,9 @@ struct StoryViewersSheet: View {
         ABStack {
             List {
                 if !loaded {
-                    ForEach(0..<5, id: \.self) { _ in SkeletonRow().listRowSeparator(.hidden) }
+                    ForEach(0..<5, id: \.self) { _ in SkeletonRow().listRowSepHidden14() }
                 } else if let error {
-                    Text(error).foregroundStyle(.red)
+                    Text(error).fg14(.red)
                 } else if viewers.isEmpty {
                     EmptyState(symbol: "eye", title: "No views yet", text: "People who see your story show up here.").listRowBackground(Color.clear)
                 }
@@ -434,18 +436,18 @@ struct StoryViewersSheet: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(v.user.displayName).font(.body.weight(.semibold)).lineLimit(1)
                                 if let d = Disappear.date(v.at) {
-                                    Text(d.formatted(date: .long, time: .standard)).font(.caption).foregroundStyle(.secondary)
+                                    Text(d.fmt14(.long, .medium)).font(.caption).fg14(.secondary)
                                 }
                             }
                         }
                     }
                 }
             }
-            .listStyle(.plain)
+            .listStyle(PlainListStyle())
             .navigationTitle("Viewers")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
-            .task {
+            .task14 {
                 do {
                     let r = try await AccountStore.shared.call("storyViewers", ["id": storyId])
                     withAnimation { viewers = decode([Viewer].self, r["viewers"]) ?? [] }

@@ -225,7 +225,8 @@ private struct CameraPreview: UIViewRepresentable {
 struct StoryCameraScreen: View {
     /// nil means a text story
     var done: (StoryMedia?) -> Void
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @StateObject private var model = StoryCameraModel()
     @State private var videoMode = false
     @State private var picking = false
@@ -235,14 +236,14 @@ struct StoryCameraScreen: View {
             Color.black.ignoresSafeArea()
             if model.blocked {
                 VStack(spacing: 12) {
-                    Image(systemName: "camera.fill").font(.system(size: 44)).foregroundStyle(.white.opacity(0.7))
-                    Text("UniHub can't use the camera.").font(.headline).foregroundStyle(.white)
-                    Text("You can allow it in Settings, or pick from your photos.").font(.subheadline).foregroundStyle(.white.opacity(0.75))
+                    Image(systemName: "camera.fill").font(.system(size: 44)).fg14(.white.opacity(0.7))
+                    Text("UniHub can't use the camera.").font(.headline).fg14(.white)
+                    Text("You can allow it in Settings, or pick from your photos.").font(.subheadline).fg14(.white.opacity(0.75))
                         .multilineTextAlignment(.center).padding(.horizontal, 30)
                     Button("Open Settings") {
                         if let u = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(u) }
                     }
-                    .buttonStyle(.borderedProminent).tint(.abFill)
+                    .prominentButton14().tint14(.abFill)
                 }
             } else {
                 CameraPreview(session: model.session).ignoresSafeArea()
@@ -253,11 +254,11 @@ struct StoryCameraScreen: View {
                     Spacer()
                     if model.recording {
                         Text(String(format: "%02d / %02d", model.seconds, Int(StoryVideo.maxSeconds)))
-                            .font(.subheadline.weight(.bold)).foregroundStyle(.white)
-                            .padding(.horizontal, 12).padding(.vertical, 6).background(Color.red, in: Capsule())
+                            .font(.subheadline.weight(.bold)).fg14(.white)
+                            .padding(.horizontal, 12).padding(.vertical, 6).bgIn14(Color.red, in: Capsule())
                     } else if videoMode && model.sixty {
-                        Text("60 FPS").font(.caption.weight(.bold)).foregroundStyle(.white)
-                            .padding(.horizontal, 10).padding(.vertical, 6).background(.black.opacity(0.45), in: Capsule())
+                        Text("60 FPS").font(.caption.weight(.bold)).fg14(.white)
+                            .padding(.horizontal, 10).padding(.vertical, 6).bgIn14(.black.opacity(0.45), in: Capsule())
                     }
                     Spacer()
                     Button { model.flip(); Haptics.tap() } label: { circle("arrow.triangle.2.circlepath.camera") }
@@ -289,8 +290,8 @@ struct StoryCameraScreen: View {
                     .accessibilityLabel(Text(videoMode ? "Record" : "Take photo"))
                     Spacer()
                     Button { done(nil); dismiss() } label: {
-                        Text("Aa").font(.headline).foregroundStyle(.white).frame(width: 46, height: 46)
-                            .background(.black.opacity(0.45), in: Circle())
+                        Text("Aa").font(.headline).fg14(.white).frame(width: 46, height: 46)
+                            .bgIn14(.black.opacity(0.45), in: Circle())
                     }
                     .accessibilityLabel(Text("Write a text story"))
                 }
@@ -320,14 +321,14 @@ struct StoryCameraScreen: View {
     }
 
     private func circle(_ symbol: String) -> some View {
-        Image(systemName: symbol).font(.headline).foregroundStyle(.white).frame(width: 46, height: 46)
-            .background(.black.opacity(0.45), in: Circle())
+        Image(systemName: symbol).font(.headline).fg14(.white).frame(width: 46, height: 46)
+            .bgIn14(.black.opacity(0.45), in: Circle())
     }
 
     private func modeLabel(_ title: LocalizedStringKey, on: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(title).font(.subheadline.weight(.bold)).foregroundStyle(on ? Color.yellow : Color.white)
-                .padding(.horizontal, 12).padding(.vertical, 6).background(.black.opacity(0.35), in: Capsule())
+            Text(title).font(.subheadline.weight(.bold)).fg14(on ? Color.yellow : Color.white)
+                .padding(.horizontal, 12).padding(.vertical, 6).bgIn14(.black.opacity(0.35), in: Capsule())
         }
     }
 }
@@ -335,8 +336,8 @@ struct StoryCameraScreen: View {
 /// Picks one photo or video from the library
 struct StoryMediaPicker: UIViewControllerRepresentable {
     var picked: (StoryMedia) -> Void
-    @Environment(\.dismiss) private var dismiss
-
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var c = PHPickerConfiguration()
         c.filter = .any(of: [.images, .videos])
@@ -411,13 +412,13 @@ struct StoryVideoView: View {
             if let player {
                 PlayerLayer(player: player)
             } else if failed {
-                Image(systemName: "exclamationmark.triangle").font(.largeTitle).foregroundStyle(.white.opacity(0.7))
+                Image(systemName: "exclamationmark.triangle").font(.largeTitle).fg14(.white.opacity(0.7))
             } else {
-                ABDots().tint(.white)
+                ABDots().tint14(.white)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .task(id: url) {
+        .task14(id: url) {
             player?.pause()
             player = nil
             failed = false
@@ -428,7 +429,7 @@ struct StoryVideoView: View {
             }
             try? AVAudioSession.sharedInstance().setCategory(.playback)
             let asset = AVURLAsset(url: file)
-            let length = (try? await asset.load(.duration))?.seconds ?? 6
+            let length = (Optional(asset.duration))?.seconds ?? 6
             let item = AVPlayerItem(asset: asset)
             let p = AVPlayer(playerItem: item)
             p.actionAtItemEnd = .pause

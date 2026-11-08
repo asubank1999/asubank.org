@@ -53,13 +53,13 @@ struct MaterialRow: View {
                         if m.tag == "warn" { Badge(text: "CLOSED", color: .orange) }
                         Text([k.name, meta ?? (showSource ? m.s : nil)].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · "))
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .fg14(.secondary)
                             .lineLimit(1)
                     }
                 }
                 Spacer(minLength: 0)
                 if saved.isSaved(m.u) {
-                    Image(systemName: "star.fill").font(.caption).foregroundStyle(Color.abGold)
+                    Image(systemName: "star.fill").font(.caption).fg14(Color.abGold)
                 }
             }
             .padding(.vertical, 2)
@@ -73,10 +73,10 @@ struct MaterialRow: View {
                 Button { UIPasteboard.general.url = url } label: { Label("Copy link", systemImage: "link") }
             }
             if saved.recent.contains(where: { $0.u == m.u }) {
-                Button(role: .destructive) { saved.removeRecent(m.u); Haptics.tap() } label: { Label("Remove from Continue", systemImage: "minus.circle") }
+                Button() { saved.removeRecent(m.u); Haptics.tap() } label: { Label("Remove from Continue", systemImage: "minus.circle") }
             }
             if k != .page {
-                Button(role: .destructive) {
+                Button() {
                     Task { @MainActor in
                         // once the menu has closed
                         try? await Task.sleep(nanoseconds: 350_000_000)
@@ -87,7 +87,7 @@ struct MaterialRow: View {
                 }
             }
             if AccountStore.shared.isAdmin, k != .page, AB.driveId(m.u) != nil {
-                Button(role: .destructive) {
+                Button() {
                     Task { @MainActor in
                         // once the menu has closed
                         try? await Task.sleep(nanoseconds: 350_000_000)
@@ -98,8 +98,8 @@ struct MaterialRow: View {
                 }
             }
         }
-        .confirmationDialog(L(k == .folder ? "Remove from UniHub?" : "Delete from Drive?"), isPresented: $confirmDelete, titleVisibility: .visible) {
-            Button(L(k == .folder ? "Remove from UniHub" : "Delete from Drive"), role: .destructive) {
+        .confirmationDialog14(L(k == .folder ? "Remove from UniHub?" : "Delete from Drive?"), isPresented: $confirmDelete, titleVisibility: .visible) {
+            Button(L(k == .folder ? "Remove from UniHub" : "Delete from Drive")) {
                 Task {
                     do { try await AdminUploads.delete(m.u); Haptics.success() }
                     catch { deleteError = error.localizedDescription; Haptics.error() }
@@ -108,14 +108,14 @@ struct MaterialRow: View {
         } message: {
             Text(L(k == .folder ? "It disappears from UniHub for everyone. The folder itself stays in Drive." : "It moves to the Drive trash and disappears from UniHub for everyone. A file owned by another Drive account is only removed from UniHub."))
         }
-        .alert("Couldn't delete", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
-            Button("OK", role: .cancel) {}
+        .alert14("Couldn't delete", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
+            Button("OK") {}
         } message: { Text(deleteError ?? "") }
-        .swipeActions(edge: .leading) {
+        .swipeActions14(edge: .leading) {
             Button { saved.toggle(m); Haptics.tap() } label: {
                 Label("Save", systemImage: saved.isSaved(m.u) ? "star.slash.fill" : "star.fill")
             }
-            .tint(.abGold)
+            .tint14(.abGold)
         }
     }
 }
@@ -177,15 +177,15 @@ struct WebView: View {
                 .onAppear { model.onSiteLink = onSiteLink }
             if model.progress < 1 {
                 ProgressView(value: model.progress)
-                    .progressViewStyle(.linear)
-                    .tint(.abAccent)
+                    .progressViewStyle(LinearProgressViewStyle())
+                    .tint14(.abAccent)
                     .transition(.opacity)
             }
             if let err = model.error {
                 VStack(spacing: 12) {
-                    Image(systemName: "wifi.exclamationmark").font(.largeTitle).foregroundStyle(.secondary)
-                    Text(err).multilineTextAlignment(.center).foregroundStyle(.secondary)
-                    Button("Try again") { model.reload() }.buttonStyle(.borderedProminent).tint(.abFill)
+                    Image(systemName: "wifi.exclamationmark").font(.largeTitle).fg14(.secondary)
+                    Text(err).multilineTextAlignment(.center).fg14(.secondary)
+                    Button("Try again") { model.reload() }.prominentButton14().tint14(.abFill)
                 }
                 .padding(32)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -344,14 +344,14 @@ struct Card: View {
                 Spacer()
                 if let badge { Badge(text: badge) }
             }
-            Text(title).font(.subheadline.weight(.semibold)).foregroundStyle(.primary).lineLimit(2).multilineTextAlignment(.leading)
+            Text(title).font(.subheadline.weight(.semibold)).fg14(.primary).lineLimit(2).multilineTextAlignment(.leading)
             if let subtitle {
-                Text(subtitle).font(.caption).foregroundStyle(.secondary).lineLimit(2).multilineTextAlignment(.leading)
+                Text(subtitle).font(.caption).fg14(.secondary).lineLimit(2).multilineTextAlignment(.leading)
             }
         }
         .frame(maxWidth: .infinity, minHeight: 92, alignment: .topLeading)
         .padding(14)
-        .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }
@@ -373,7 +373,7 @@ struct SectionHeader: View {
         HStack(alignment: .firstTextBaseline) {
             Text(title).font(.title3.weight(.bold))
             Spacer()
-            if let arabic { Text(arabic).font(.footnote).foregroundStyle(.secondary) }
+            if let arabic { Text(arabic).font(.footnote).fg14(.secondary) }
         }
         .padding(.horizontal, 20)
         .padding(.top, 26)
@@ -387,9 +387,9 @@ struct EmptyState: View {
     let text: String
     var body: some View {
         VStack(spacing: 10) {
-            Image(systemName: symbol).font(.system(size: 44)).foregroundStyle(Color.abAccent.opacity(0.8))
+            Image(systemName: symbol).font(.system(size: 44)).fg14(Color.abAccent.opacity(0.8))
             Text(title).font(.headline)
-            Text(text).font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+            Text(text).font(.subheadline).fg14(.secondary).multilineTextAlignment(.center)
         }
         .padding(40)
         .frame(maxWidth: .infinity)

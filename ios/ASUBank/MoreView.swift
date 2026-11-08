@@ -16,14 +16,14 @@ struct MoreView: View {
     var body: some View {
         ABStack {
             List {
-                Section {
+                Section14 {
                     if let u = account.user {
                         NavigationLink { AccountScreen() } label: {
                             HStack(spacing: 12) {
                                 Avatar(name: u.displayName, color: u.color, size: 40, admin: u.isAdmin, photo: u.avatar)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(u.displayName).font(.body.weight(.semibold))
-                                    Text("@\(u.username)" + (u.isAdmin ? " · Admin" : "")).font(.caption).foregroundStyle(.secondary)
+                                    Text("@\(u.username)" + (u.isAdmin ? " · Admin" : "")).font(.caption).fg14(.secondary)
                                 }
                             }
                         }
@@ -48,7 +48,7 @@ struct MoreView: View {
                         HStack {
                             Label("Language", systemImage: "globe")
                             Spacer()
-                            Text(LocalizedStringKey(AppLanguage.choices.first { $0.code == AppLanguage.choice }?.name ?? "")).foregroundStyle(.secondary)
+                            Text(LocalizedStringKey(AppLanguage.choices.first { $0.code == AppLanguage.choice }?.name ?? "")).fg14(.secondary)
                         }
                     }
                     Button { app.uploadShown = true } label: { Label("Upload files", systemImage: "arrow.up.circle") }
@@ -69,21 +69,21 @@ struct MoreView: View {
                     RouteLink(Route.page("/upload/student_submissions_board", "Submissions")) { Label("Student submissions", systemImage: "rectangle.stack") }
                 } header: { Text("You") }
 
-                Section("Calendars & schedules") { ForEach(Links.schedules) { SiteLinkRow(link: $0) } }
+                Section14("Calendars & schedules") { ForEach(Links.schedules) { SiteLinkRow(link: $0) } }
 
-                Section("All subjects") {
+                Section14("All subjects") {
                     RouteLink(Route.page("/banks/subjects", "All subjects")) { Label("Subjects directory", systemImage: "square.grid.2x2") }
                     RouteLink(Route.page("/app/coverage", "Materials by college")) { Label("Materials by college", systemImage: "chart.bar") }
                     RouteLink(Route.page("/guides/latest", "Latest uploads")) { Label("Latest uploads", systemImage: "sparkles") }
                     RouteLink(Route.page("/requests/student_request_portal", "Request a material")) { Label("Request a material", systemImage: "tray.and.arrow.down") }
                     RouteLink(Route.page("/guides/links", "ASU resources")) { Label("ASU resources (Useful gate)", systemImage: "square.grid.3x3.fill") }
                 }
-                Section("New students") { ForEach(Links.newHere) { SiteLinkRow(link: $0) } }
-                Section("Community & services") { ForEach(Links.community) { SiteLinkRow(link: $0) } }
-                Section("Help") { ForEach(Links.help.filter { $0.title != "Support UniHub" }) { SiteLinkRow(link: $0) } }
+                Section14("New students") { ForEach(Links.newHere) { SiteLinkRow(link: $0) } }
+                Section14("Community & services") { ForEach(Links.community) { SiteLinkRow(link: $0) } }
+                Section14("Help") { ForEach(Links.help.filter { $0.title != "Support UniHub" }) { SiteLinkRow(link: $0) } }
 
                 if config.donate {
-                    Section {
+                    Section14 {
                         Button { openURL(URL(string: "https://www.paypal.com/paypalme/necro144")!) } label: {
                             row("creditcard.fill", .blue, "Donate with PayPal", "paypal.me/necro144", external: true)
                         }
@@ -100,11 +100,11 @@ struct MoreView: View {
                     }
                 }
 
-                Section {
+                Section14 {
                     sizeRow("App", "app.badge", sizes?.app)
                     sizeRow("Documents & data", "internaldrive", sizes?.data)
                     sizeRow("Cache", "archivebox", sizes?.cache)
-                    Button(role: .destructive) { confirmClear = true } label: {
+                    Button() { confirmClear = true } label: {
                         HStack {
                             Label("Clear cache", systemImage: "trash")
                             Spacer()
@@ -116,18 +116,18 @@ struct MoreView: View {
                     Text("Clearing the cache frees space and reloads pages and the materials list from asubank.org. Your saved materials and settings stay.")
                 }
 
-                Section("About") {
+                Section14("About") {
                     HStack {
                         Label("Version", systemImage: "info.circle")
                         Spacer()
-                        Text("\(AppConfig.current) (\(AppConfig.build))").foregroundStyle(.secondary)
+                        Text("\(AppConfig.current) (\(AppConfig.build))").fg14(.secondary)
                     }
                     Button { Task { await config.check(force: true); if !config.updateAvailable { Haptics.success() } } } label: {
                         HStack {
                             Label(config.updateAvailable ? "Update to \(config.latest ?? "")" : "Check for updates", systemImage: "arrow.down.app")
                             Spacer()
                             if config.checking { ABDots() }
-                            else if config.latest != nil && !config.updateAvailable { Text("Up to date").foregroundStyle(.secondary) }
+                            else if config.latest != nil && !config.updateAvailable { Text("Up to date").fg14(.secondary) }
                         }
                     }
                     RouteLink(Route.page("/app/whatsnew", "What's New")) { Label("What's New", systemImage: "sparkles") }
@@ -138,7 +138,7 @@ struct MoreView: View {
                     NavigationLink { ReportCenterScreen() } label: { Label("Report a problem", systemImage: "exclamationmark.bubble") }
                 }
 
-                Section {
+                Section14 {
                     Button { openURL(AB.site) } label: { Label("Open asubank.org in Safari", systemImage: "safari") }
                     ShareButton(item: AB.site, message: "UniHub — summaries, past papers and test banks for ASU students") {
                         Label("Share UniHub", systemImage: "square.and.arrow.up")
@@ -151,14 +151,14 @@ struct MoreView: View {
                     Text("UniHub \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "") · \(library.items.count) materials in \(library.subjects.count) subjects.\nPeer-verified study materials by Applied Science University students, for ASU students.")
                 }
             }
-            .listStyle(.insetGrouped)
+            .listStyle(InsetGroupedListStyle())
             .navigationTitle("More")
-            .task { if sizes == nil { sizes = await AppStorageInfo.measure() } }
+            .task14 { if sizes == nil { sizes = await AppStorageInfo.measure() } }
             .sheet(isPresented: $showTerms) { WelcomeTermsView { showTerms = false } }
             // These belong on the List. On a Section, SwiftUI repeats them on every row, which froze this screen's navigation.
             .sheet(item: $reportingProblem) { ReportSheet(target: $0) }
-            .confirmationDialog("Clear the cache?", isPresented: $confirmClear, titleVisibility: .visible) {
-                Button("Clear cache", role: .destructive) {
+            .confirmationDialog14("Clear the cache?", isPresented: $confirmClear, titleVisibility: .visible) {
+                Button("Clear cache") {
                     clearing = true
                     Task {
                         await AppStorageInfo.clear()
@@ -179,20 +179,20 @@ struct MoreView: View {
         HStack {
             Label(title, systemImage: symbol)
             Spacer()
-            if let bytes { Text(ByteCountFormatter.string(fromByteCount: bytes, countStyle: .file)).foregroundStyle(.secondary) }
+            if let bytes { Text(ByteCountFormatter.string(fromByteCount: bytes, countStyle: .file)).fg14(.secondary) }
             else { ABDots() }
         }
     }
 
     private func row(_ symbol: String, _ color: Color, _ title: String, _ sub: String, external: Bool = false) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: symbol).foregroundStyle(.white).frame(width: 30, height: 30)
-                .background(color, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+            Image(systemName: symbol).fg14(.white).frame(width: 30, height: 30)
+                .bgIn14(color, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).foregroundStyle(.primary)
-                Text(sub).font(.footnote).foregroundStyle(.secondary)
+                Text(title).fg14(.primary)
+                Text(sub).font(.footnote).fg14(.secondary)
             }
-            if external { Spacer(); Image(systemName: "arrow.up.right").font(.footnote).foregroundStyle(.tertiary) }
+            if external { Spacer(); Image(systemName: "arrow.up.right").font(.footnote).fg14(Color.tertiary14) }
         }
     }
 }

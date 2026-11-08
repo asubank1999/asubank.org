@@ -65,29 +65,29 @@ struct AbsenceScreen: View {
     var body: some View {
         List {
             if store.list.isEmpty {
-                Section {
+                Section14 {
                     EmptyState(symbol: "calendar.badge.minus", title: L("Track your absences"),
                                text: L("Add a subject, then tap + each time you miss a lecture. We warn you before you reach the limit."))
                         .listRowBackground(Color.clear)
                 }
             } else {
-                Section {
+                Section14 {
                     ForEach(store.list) { row($0) }
                 } footer: {
                     Text(L("Most universities in Jordan allow about 15% of a subject's lectures. Check your own university's rule and set the limit to match."))
                 }
             }
             if !missing.isEmpty {
-                Section("From My lectures") {
+                Section14("From My lectures") {
                     ForEach(missing, id: \.self) { n in
                         Button {
                             store.save(AbsenceSubject(name: n, limit: store.suggestedLimit(n)))
                         } label: {
                             HStack {
-                                Image(systemName: "plus.circle.fill").foregroundStyle(Color.abAccent)
+                                Image(systemName: "plus.circle.fill").fg14(Color.abAccent)
                                 VStack(alignment: .leading) {
-                                    Text(n).foregroundStyle(.primary)
-                                    Text(String(format: L("Limit %d absences"), store.suggestedLimit(n))).font(.caption).foregroundStyle(.secondary)
+                                    Text(n).fg14(.primary)
+                                    Text(String(format: L("Limit %d absences"), store.suggestedLimit(n))).font(.caption).fg14(.secondary)
                                 }
                             }
                         }
@@ -95,7 +95,7 @@ struct AbsenceScreen: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Absence tracker")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -115,41 +115,42 @@ struct AbsenceScreen: View {
             HStack {
                 Button { editing = s } label: {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(s.name).font(.body.weight(.semibold)).foregroundStyle(.primary).lineLimit(1)
-                        Text(status).font(.caption).foregroundStyle(color)
+                        Text(s.name).font(.body.weight(.semibold)).fg14(.primary).lineLimit(1)
+                        Text(status).font(.caption).fg14(color)
                     }
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PlainButtonStyle())
                 Spacer()
                 Button { store.bump(s.id, -1); Haptics.tap() } label: { Image(systemName: "minus.circle").font(.title2) }
-                    .buttonStyle(.borderless).disabled(s.missed == 0).accessibilityLabel(Text("Remove one"))
-                Text("\(s.missed)/\(s.limit)").font(.body.weight(.bold)).monospacedDigit().frame(minWidth: 48)
+                    .buttonStyle(BorderlessButtonStyle()).disabled(s.missed == 0).accessibilityLabel(Text("Remove one"))
+                Text("\(s.missed)/\(s.limit)").font(.body.weight(.bold)).monoDigit14().frame(minWidth: 48)
                     .environment(\.layoutDirection, .leftToRight)
                 Button { store.bump(s.id, 1); Haptics.tap() } label: { Image(systemName: "plus.circle.fill").font(.title2) }
-                    .buttonStyle(.borderless).tint(Color.abAccent).accessibilityLabel(Text("Add one"))
+                    .buttonStyle(BorderlessButtonStyle()).tint14(Color.abAccent).accessibilityLabel(Text("Add one"))
             }
-            ProgressView(value: min(1, Double(s.missed) / Double(max(1, s.limit)))).tint(color)
+            ProgressView(value: min(1, Double(s.missed) / Double(max(1, s.limit)))).tint14(color)
         }
         .padding(.vertical, 4)
-        .swipeActions { Button(role: .destructive) { store.remove(s.id) } label: { Label("Delete", systemImage: "trash") } }
+        .swipeActions14 { Button() { store.remove(s.id) } label: { Label("Delete", systemImage: "trash") } }
     }
 }
 
 private struct AbsenceEditor: View {
     @State var item: AbsenceSubject
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var store = AbsenceStore.shared
 
     var body: some View {
         ABStack {
             Form {
-                Section {
+                Section14 {
                     TextField("Subject", text: $item.name)
                     Stepper(String(format: L("Allowed absences: %d"), item.limit), value: $item.limit, in: 1...60)
                     Stepper(String(format: L("Missed so far: %d"), item.missed), value: $item.missed, in: 0...99)
                 }
                 if store.list.contains(where: { $0.id == item.id }) {
-                    Section { Button("Delete", role: .destructive) { store.remove(item.id); dismiss() } }
+                    Section14 { Button("Delete") { store.remove(item.id); dismiss() } }
                 }
             }
             .navigationTitle(item.name.isEmpty ? L("Add a subject") : item.name)
@@ -182,7 +183,7 @@ struct FinalMarkScreen: View {
         let h = num(have), o = num(outOf), f = num(finalW)
         let ok = h != nil && o != nil && f != nil && o! > 0 && f! > 0 && h! <= o!
         return List {
-            Section {
+            Section14 {
                 field("Marks so far", $have)
                 field("Out of", $outOf)
                 field("The final is out of", $finalW)
@@ -192,19 +193,19 @@ struct FinalMarkScreen: View {
             if let h, let o, let f, ok {
                 let total = o + f
                 let goals = Array(Set([50.0, 60, 70, 80, 90].map { $0 * total / 100 } + [num(target)].compactMap { $0 })).sorted()
-                Section {
+                Section14 {
                     ForEach(goals, id: \.self) { g in
                         let n = g - h
                         HStack {
                             Text(String(format: L("To get %@"), fmt(g)) + (g == num(target) ? "  ⭐" : ""))
                             Spacer()
                             if n <= 0 {
-                                Text("Already reached").bold().foregroundStyle(.green)
+                                Text("Already reached").bold().fg14(.green)
                             } else if n > f {
-                                Text("Not possible").bold().foregroundStyle(.red)
+                                Text("Not possible").bold().fg14(.red)
                             } else {
                                 Text("\(fmt((n * 2).rounded(.up) / 2)) / \(fmt(f))").bold()
-                                    .foregroundStyle(n / f > 0.8 ? Color.orange : Color.primary)
+                                    .fg14(n / f > 0.8 ? Color.orange : Color.primary)
                                     .environment(\.layoutDirection, .leftToRight)
                             }
                         }
@@ -213,15 +214,15 @@ struct FinalMarkScreen: View {
                     Text(String(format: L("The total is out of %@."), fmt(total)))
                 }
             } else if let h, let o, h > o {
-                Section { Text("Your marks so far can't be more than the total.").foregroundStyle(.red) }
+                Section14 { Text("Your marks so far can't be more than the total.").fg14(.red) }
             }
-            Section {
+            Section14 {
                 field("Goal total", $target)
             } header: { Text("Your own goal") } footer: {
                 Text("Usually 50 is the pass mark out of 100. Check your grading scale.")
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Final mark calculator")
     }
 
@@ -274,26 +275,26 @@ struct FlashcardsScreen: View {
     var body: some View {
         List {
             if store.decks.isEmpty {
-                Section {
+                Section14 {
                     EmptyState(symbol: "rectangle.on.rectangle.angled", title: L("Make your own flashcards"),
                                text: L("Make a deck for a subject, write a question on the front and the answer on the back, then test yourself."))
                         .listRowBackground(Color.clear)
                 }
             } else {
-                Section {
+                Section14 {
                     ForEach(store.decks) { d in
                         NavigationLink { DeckScreen(deckID: d.id) } label: {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(d.name)
-                                Text(String(format: L("%d cards"), d.cards.count)).font(.caption).foregroundStyle(.secondary)
+                                Text(String(format: L("%d cards"), d.cards.count)).font(.caption).fg14(.secondary)
                             }
                         }
-                        .swipeActions { Button(role: .destructive) { store.remove(d.id) } label: { Label("Delete", systemImage: "trash") } }
+                        .swipeActions14 { Button() { store.remove(d.id) } label: { Label("Delete", systemImage: "trash") } }
                     }
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Flashcards")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -306,8 +307,8 @@ struct FlashcardsScreen: View {
 
 private struct DeckNameSheet: View {
     @State var deck: FlashDeck
-    @Environment(\.dismiss) private var dismiss
-
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     var body: some View {
         ABStack {
             Form { TextField("Deck name, e.g. Biochemistry", text: $deck.name) }
@@ -337,29 +338,29 @@ private struct DeckScreen: View {
     var body: some View {
         let d = store.deck(deckID) ?? FlashDeck(name: "")
         List {
-            Section {
+            Section14 {
                 HStack(spacing: 10) {
                     Button { studying = true } label: { Label("Study", systemImage: "play.fill").frame(maxWidth: .infinity) }
-                        .buttonStyle(.borderedProminent).tint(.abFill).disabled(d.cards.isEmpty)
+                        .prominentButton14().tint14(.abFill).disabled(d.cards.isEmpty)
                     Button { editing = Flashcard(front: "", back: "") } label: { Label("Add a card", systemImage: "plus").frame(maxWidth: .infinity) }
-                        .buttonStyle(.bordered)
+                        .borderedButton14()
                 }
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             }
             if d.cards.isEmpty {
-                Section { EmptyState(symbol: "rectangle.on.rectangle.angled", title: L("No cards yet"), text: L("Add your first card.")).listRowBackground(Color.clear) }
+                Section14 { EmptyState(symbol: "rectangle.on.rectangle.angled", title: L("No cards yet"), text: L("Add your first card.")).listRowBackground(Color.clear) }
             } else {
-                Section {
+                Section14 {
                     ForEach(d.cards) { c in
                         Button { editing = c } label: {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(c.front).foregroundStyle(.primary)
-                                Text(c.back).font(.caption).foregroundStyle(.secondary).lineLimit(2)
+                                Text(c.front).fg14(.primary)
+                                Text(c.back).font(.caption).fg14(.secondary).lineLimit(2)
                             }
                         }
-                        .swipeActions {
-                            Button(role: .destructive) {
+                        .swipeActions14 {
+                            Button() {
                                 var n = d; n.cards.removeAll { $0.id == c.id }; store.save(n)
                             } label: { Label("Delete", systemImage: "trash") }
                         }
@@ -367,7 +368,7 @@ private struct DeckScreen: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle(d.name)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -383,7 +384,8 @@ private struct DeckScreen: View {
 private struct CardEditor: View {
     let deckID: String
     @State var card: Flashcard
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @ObservedObject private var store = FlashcardStore.shared
     @State private var added = 0
 
@@ -392,9 +394,9 @@ private struct CardEditor: View {
     var body: some View {
         ABStack {
             Form {
-                Section("Front (question)") { TextEditor(text: $card.front).frame(minHeight: 70) }
-                Section("Back (answer)") { TextEditor(text: $card.back).frame(minHeight: 70) }
-                if added > 0 { Section { Text(String(format: L("%d cards added"), added)).foregroundStyle(.secondary) } }
+                Section14("Front (question)") { TextEditor(text: $card.front).frame(minHeight: 70) }
+                Section14("Back (answer)") { TextEditor(text: $card.back).frame(minHeight: 70) }
+                if added > 0 { Section14 { Text(String(format: L("%d cards added"), added)).fg14(.secondary) } }
             }
             .navigationTitle(exists ? L("Edit card") : L("Add a card"))
             .navigationBarTitleDisplayMode(.inline)
@@ -424,7 +426,8 @@ private struct CardEditor: View {
 /// One round through the cards; the ones marked "Again" come back until all are known
 private struct StudyCardsView: View {
     let deck: FlashDeck
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode14
+    private func dismiss() { presentationMode14.wrappedValue.dismiss() }
     @State private var queue: [Flashcard] = []
     @State private var again: [Flashcard] = []
     @State private var flipped = false
@@ -439,18 +442,18 @@ private struct StudyCardsView: View {
                     Spacer()
                     Text("🎉").font(.system(size: 56))
                     Text("You know every card!").font(.title2.bold())
-                    Text(String(format: L("%d cards in %d rounds"), deck.cards.count, round)).foregroundStyle(.secondary)
-                    Button("Study again") { restart() }.buttonStyle(.borderedProminent).tint(.abFill)
-                    Button("Done") { dismiss() }.buttonStyle(.bordered)
+                    Text(String(format: L("%d cards in %d rounds"), deck.cards.count, round)).fg14(.secondary)
+                    Button("Study again") { restart() }.prominentButton14().tint14(.abFill)
+                    Button("Done") { dismiss() }.borderedButton14()
                     Spacer()
                 } else if let c = queue.first {
                     Text(String(format: L("Round %d · %d left · %d known"), round, queue.count + again.count, known))
-                        .font(.caption).foregroundStyle(.secondary)
+                        .font(.caption).fg14(.secondary)
                     ZStack {
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
                             .fill(flipped ? Color.abAccentSoft : Color.abSurface)
                         VStack(spacing: 10) {
-                            Text(LocalizedStringKey(flipped ? "Answer" : "Question")).font(.caption.weight(.semibold)).foregroundStyle(Color.abAccent)
+                            Text(LocalizedStringKey(flipped ? "Answer" : "Question")).font(.caption.weight(.semibold)).fg14(Color.abAccent)
                             Text(flipped ? c.back : c.front).font(.title3.weight(.medium)).multilineTextAlignment(.center)
                         }
                         .padding(24)
@@ -461,12 +464,12 @@ private struct StudyCardsView: View {
                     .onTapGesture { withAnimation(.easeInOut(duration: 0.35)) { flipped.toggle() } }
                     if flipped {
                         HStack(spacing: 12) {
-                            Button { next(false) } label: { Text("Again").frame(maxWidth: .infinity) }.buttonStyle(.bordered)
-                            Button { next(true) } label: { Text("Knew it").frame(maxWidth: .infinity) }.buttonStyle(.borderedProminent).tint(.green)
+                            Button { next(false) } label: { Text("Again").frame(maxWidth: .infinity) }.borderedButton14()
+                            Button { next(true) } label: { Text("Knew it").frame(maxWidth: .infinity) }.prominentButton14().tint14(.green)
                         }
-                        .controlSize(.large)
+                        
                     } else {
-                        Text("Tap the card to see the answer").foregroundStyle(.secondary)
+                        Text("Tap the card to see the answer").fg14(.secondary)
                     }
                 }
             }
@@ -552,7 +555,7 @@ struct StudyStatsScreen: View {
         fmt.locale = AppLanguage.locale
 
         return List {
-            Section {
+            Section14 {
                 HStack(spacing: 10) {
                     tile("🔥", String(format: L("%d days"), log.streak), "Streak")
                     tile("⏱️", "\(todayMin)/\(log.goal)", "Minutes today")
@@ -561,17 +564,17 @@ struct StudyStatsScreen: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             }
-            Section("Last 7 days") {
+            Section14("Last 7 days") {
                 HStack(alignment: .bottom, spacing: 8) {
                     ForEach(week, id: \.self) { d in
                         let m = log.minutes(d)
                         VStack(spacing: 4) {
                             Spacer(minLength: 0)
-                            if m > 0 { Text("\(m)").font(.caption2).foregroundStyle(.secondary) }
+                            if m > 0 { Text("\(m)").font(.caption2).fg14(.secondary) }
                             RoundedRectangle(cornerRadius: 6, style: .continuous)
                                 .fill(m >= log.goal ? Color.green : Color.abAccent.opacity(m > 0 ? 0.8 : 0.15))
                                 .frame(height: max(4, CGFloat(m) / CGFloat(max(1, top)) * 100))
-                            Text(fmt.string(from: d)).font(.caption2).foregroundStyle(.secondary)
+                            Text(fmt.string(from: d)).font(.caption2).fg14(.secondary)
                         }
                         .frame(maxWidth: .infinity)
                     }
@@ -579,25 +582,25 @@ struct StudyStatsScreen: View {
                 .frame(height: 150)
                 .padding(.vertical, 6)
             }
-            Section {
+            Section14 {
                 Stepper(String(format: L("Daily goal: %d minutes"), log.goal), value: $log.goal, in: 15...600, step: 15)
                 NavigationLink { FocusTimerScreen() } label: { Label("Focus timer", systemImage: "timer") }
             } footer: {
                 Text("Minutes count when a focus timer session ends. Green days reached your goal.")
             }
             if !bySubject.isEmpty {
-                Section("This week by subject") {
+                Section14("This week by subject") {
                     ForEach(bySubject, id: \.key) { e in
                         HStack {
                             Text(e.key == "General" ? L("General") : e.key).lineLimit(1)
                             Spacer()
-                            Text(String(format: L("%d min"), e.value)).foregroundStyle(.secondary)
+                            Text(String(format: L("%d min"), e.value)).fg14(.secondary)
                         }
                     }
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("Study stats")
     }
 
@@ -605,11 +608,11 @@ struct StudyStatsScreen: View {
         VStack(spacing: 2) {
             Text(emoji).font(.title3)
             Text(value).font(.headline).lineLimit(1).minimumScaleFactor(0.7)
-            Text(label).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+            Text(label).font(.caption2).fg14(.secondary).lineLimit(1)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 14)
-        .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }
 
@@ -626,8 +629,8 @@ struct HomeStudyCard: View {
                     Text(streak > 0 ? "🔥" : "📚").font(.system(size: 28))
                     VStack(alignment: .leading, spacing: 2) {
                         Text(streak > 0 ? String(format: L("%d-day study streak"), streak) : L("Start a new streak today"))
-                            .font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
-                        Text(String(format: L("%d of %d minutes today"), today, log.goal)).font(.caption).foregroundStyle(.secondary)
+                            .font(.subheadline.weight(.semibold)).fg14(.primary)
+                        Text(String(format: L("%d of %d minutes today"), today, log.goal)).font(.caption).fg14(.secondary)
                     }
                     Spacer(minLength: 4)
                     ZStack {
@@ -639,7 +642,7 @@ struct HomeStudyCard: View {
                     .frame(width: 32, height: 32)
                 }
                 .padding(14)
-                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
             .buttonStyle(PressStyle())
             .padding(.horizontal, 16)

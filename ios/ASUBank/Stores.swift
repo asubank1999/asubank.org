@@ -81,7 +81,7 @@ final class Library: ObservableObject {
         do {
             var req = URLRequest(url: AB.catalogURL)
             req.cachePolicy = .reloadIgnoringLocalCacheData
-            let (data, resp) = try await URLSession.shared.data(for: req)
+            let (data, resp) = try await URLSession.shared.data14(for: req)
             guard (resp as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
             if await apply(data) {
                 let file = cacheFile
@@ -220,7 +220,7 @@ enum DriveSearch {
             .init(name: "search", value: q), .init(name: "sort", value: "date"), .init(name: "order", value: "desc"),
             .init(name: "t", value: String(Int(Date().timeIntervalSince1970)))
         ]
-        let (data, _) = try await URLSession.shared.data(from: c.url!)
+        let (data, _) = try await URLSession.shared.data14(from: c.url!)
         let r = try JSONDecoder().decode(Reply.self, from: data)
         guard r.success == true, let files = r.files else { throw URLError(.cannotParseResponse) }
         return files.filter { DriveLinks.shared.isBroken($0.url) == nil }.map { f in

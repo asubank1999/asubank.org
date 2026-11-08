@@ -56,7 +56,7 @@ enum StorySave {
     /// A photo story, stamped in its bottom right corner
     static func savePhoto(_ url: URL, username: String) async throws {
         guard await allowed() else { throw Failure.denied }
-        guard let (data, _) = try? await URLSession.shared.data(from: url), let image = UIImage(data: data) else { throw Failure.download }
+        guard let (data, _) = try? await URLSession.shared.data14(from: url), let image = UIImage(data: data) else { throw Failure.download }
         let size = image.size
         let mark = watermark(width: max(160, size.width * 0.36), username: username)
         let pad = size.width * 0.04
@@ -73,8 +73,8 @@ enum StorySave {
         guard let file = await StoryVideo.local(remote) else { throw Failure.download }
         let asset = AVURLAsset(url: file)
         guard let track = try? await asset.loadTracks(withMediaType: .video).first,
-              let natural = try? await track.load(.naturalSize),
-              let transform = try? await track.load(.preferredTransform) else { throw Failure.export }
+              let natural = Optional(track.naturalSize),
+              let transform = Optional(track.preferredTransform) else { throw Failure.export }
         let shown = natural.applying(transform)
         let width = abs(shown.width)
         let mark = watermark(width: max(160, width * 0.36), username: username)

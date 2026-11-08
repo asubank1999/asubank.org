@@ -36,13 +36,13 @@ private struct MatcherIntro: View {
             VStack(spacing: 18) {
                 Image(systemName: "person.2.fill")
                     .font(.system(size: 38, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .fg14(.white)
                     .frame(width: 84, height: 84)
-                    .background(Color(UIColor(hex: 0x0a84ff)), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .bgIn14(Color(UIColor(hex: 0x0a84ff)), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                     .padding(.top, 20)
                 Text("Find study buddies").font(.largeTitle.weight(.bold)).multilineTextAlignment(.center)
                 Text("Get matched with classmates who take the same courses and are free at the same times.")
-                    .multilineTextAlignment(.center).foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center).fg14(.secondary)
                 VStack(alignment: .leading, spacing: 16) {
                     Point(symbol: "list.bullet.rectangle.fill", title: "1. Fill your profile", text: "Your courses, topics and when you're free. Takes about a minute.")
                     Point(symbol: "arrow.triangle.2.circlepath", title: "2. We match you", text: "When a classmate is at least 50% similar to you, you're matched.")
@@ -50,13 +50,13 @@ private struct MatcherIntro: View {
                     Point(symbol: "lock.fill", title: "Private until matched", text: "Your details are only shared with students you match with.")
                 }
                 .padding(18)
-                .background(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .bgIn14(Color.abSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 Button(action: onContinue) {
                     Text("Continue").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abFill)
+                .prominentButton14().tint14(.abFill)
                 Text("ابحث عن زملاء دراسة يدرسون نفس المواد ومتفرغين بنفس الأوقات")
-                    .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    .font(.footnote).fg14(.secondary).multilineTextAlignment(.center)
             }
             .padding(20)
         }
@@ -70,10 +70,10 @@ private struct Point: View {
     let text: String
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
-            Image(systemName: symbol).font(.title3).foregroundStyle(Color.abAccent).frame(width: 28)
+            Image(systemName: symbol).font(.title3).fg14(Color.abAccent).frame(width: 28)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.headline)
-                Text(text).font(.subheadline).foregroundStyle(.secondary)
+                Text(text).font(.subheadline).fg14(.secondary)
             }
         }
     }
@@ -120,10 +120,10 @@ private struct MatcherForm: View {
 
     var body: some View {
         Form {
-            Section {
+            Section14 {
                 TextField("Full name", text: $name).textContentType(.name)
                 TextField("Email (your matches are sent here)", text: $email)
-                    .keyboardType(.emailAddress).textContentType(.emailAddress).textInputAutocapitalization(.never).disableAutocorrection(true)
+                    .keyboardType(.emailAddress).textContentType(.emailAddress).autocapitalization(.none).disableAutocorrection(true)
                 TextField("Phone, e.g. 079 123 4567", text: $phone).keyboardType(.phonePad).textContentType(.telephoneNumber)
                 Picker("Gender", selection: $gender) {
                     Text("Choose").tag("")
@@ -132,7 +132,7 @@ private struct MatcherForm: View {
                 }
             } header: { Text("About you") } footer: { Text("Shared only with students you match with.") }
 
-            Section("Your studies") {
+            Section14("Your studies") {
                 TextField("Major, e.g. Computer Science", text: $major)
                 Picker("Year", selection: $year) {
                     Text("Choose").tag("")
@@ -140,20 +140,20 @@ private struct MatcherForm: View {
                 }
             }
 
-            Section {
+            Section14 {
                 TagField(placeholder: "Add a course, e.g. Calculus 1", text: $courseText, tags: $courses)
                 ForEach(suggestions, id: \.self) { s in
                     Button { courses.append(s); courseText = ""; Haptics.tap() } label: {
-                        Label(s, systemImage: "plus.circle").foregroundStyle(Color.abAccent)
+                        Label(s, systemImage: "plus.circle").fg14(Color.abAccent)
                     }
                 }
             } header: { Text("Courses") } footer: { Text("Type a course and tap Add. Add all the courses you want study buddies for.") }
 
-            Section {
+            Section14 {
                 TagField(placeholder: "Add a topic, e.g. Integrals, Midterm review", text: $topicText, tags: $topics)
             } header: { Text("Study topics") }
 
-            Section {
+            Section14 {
                 VStack(alignment: .leading, spacing: 10) {
                     ForEach(Matcher.days, id: \.self) { d in
                         HStack(spacing: 6) {
@@ -171,22 +171,22 @@ private struct MatcherForm: View {
                 .padding(.vertical, 4)
             } header: { Text("When are you free?") } footer: { Text("\(free.count) selected") }
 
-            Section("Preferences") {
+            Section14("Preferences") {
                 Picker("Study place", selection: $location) { ForEach(Matcher.locations, id: \.self) { Text($0).tag($0) } }
                 Picker("Contact me by", selection: $contact) { ForEach(Matcher.contacts, id: \.self) { Text($0).tag($0) } }
             }
 
-            Section {
+            Section14 {
                 Button(action: submit) {
                     HStack {
                         Spacer()
-                        if sending { ABDots().tint(.white) }
+                        if sending { ABDots().tint14(.white) }
                         Text(sending ? "Finding matches…" : "Find my study buddies").font(.headline)
                         Spacer()
                     }
                     .padding(.vertical, 6)
                 }
-                .buttonStyle(.borderedProminent).tint(.abFill)
+                .prominentButton14().tint14(.abFill)
                 .disabled(sending)
                 .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             } footer: {
@@ -196,8 +196,8 @@ private struct MatcherForm: View {
             }
         }
         .dismissKeyboardOnScroll()
-        .alert(result?.title ?? "", isPresented: Binding(get: { result != nil }, set: { if !$0 { result = nil } })) {
-            Button("OK", role: .cancel) {}
+        .alert14(result?.title ?? "", isPresented: Binding(get: { result != nil }, set: { if !$0 { result = nil } })) {
+            Button("OK") {}
         } message: { Text(result?.text ?? "") }
     }
 
@@ -244,7 +244,7 @@ private struct TagField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                TextField(placeholder, text: $text).onSubmit(add).submitLabel(.done)
+                TextField(placeholder, text: $text).onSubmit14(add)
                 Button("Add", action: add).disabled(text.trimmingCharacters(in: .whitespaces).isEmpty)
             }
             if !tags.isEmpty {
@@ -276,10 +276,10 @@ struct FlowChips: View {
                             Image(systemName: "xmark").font(.caption2.weight(.bold))
                         }
                         .padding(.horizontal, 10).padding(.vertical, 6)
-                        .foregroundStyle(Color.abAccent)
-                        .background(Color.abAccentSoft, in: Capsule())
+                        .fg14(Color.abAccent)
+                        .bgIn14(Color.abAccentSoft, in: Capsule())
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
         }
@@ -297,9 +297,9 @@ private struct TimeChip: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
                 .frame(maxWidth: .infinity, minHeight: 32)
-                .foregroundStyle(on ? Color.white : Color.primary)
-                .background(on ? AnyShapeStyle(Color.abFill) : AnyShapeStyle(Color.secondary.opacity(0.12)), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                .fg14(on ? Color.white : Color.primary)
+                .bgIn14(on ? AnyStyle14(Color.abFill) : AnyStyle14(Color.secondary.opacity(0.12)), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PlainButtonStyle())
     }
 }

@@ -25,7 +25,7 @@ enum AccountsAPI {
         req.setValue("text/plain;charset=utf-8", forHTTPHeaderField: "Content-Type")
         req.httpBody = try JSONSerialization.data(withJSONObject: body)
         let data: Data
-        do { (data, _) = try await URLSession.shared.data(for: req) } catch {
+        do { (data, _) = try await URLSession.shared.data14(for: req) } catch {
             throw Failure(message: "Couldn't reach UniHub. Check your connection and try again.")
         }
         guard let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {

@@ -12,7 +12,7 @@ enum FeedbackAPI {
         req.httpMethod = "POST"
         req.setValue("text/plain;charset=utf-8", forHTTPHeaderField: "Content-Type")
         req.httpBody = try JSONSerialization.data(withJSONObject: body)
-        let (data, _) = try await URLSession.shared.data(for: req)
+        let (data, _) = try await URLSession.shared.data14(for: req)
         let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
         if obj["ok"] as? Bool == false { throw AccountsAPI.Failure(message: obj["error"] as? String ?? L("Something went wrong.")) }
         return obj
@@ -44,30 +44,30 @@ struct ServiceRatingScreen: View {
     var body: some View {
         Form {
             if done {
-                Section {
+                Section14 {
                     VStack(spacing: 10) {
                         Text("💚").font(.system(size: 60))
                         Text("Thank you!").font(.title2.weight(.bold))
-                        Text("Your rating helps us make UniHub better for everyone.").multilineTextAlignment(.center).foregroundStyle(.secondary)
+                        Text("Your rating helps us make UniHub better for everyone.").multilineTextAlignment(.center).fg14(.secondary)
                         Button("Rate again") { withAnimation { done = false; answers = [:]; suggestion = ""; rating = 7 } }.padding(.top, 6)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 24)
                 }
             } else {
-                Section {
+                Section14 {
                     VStack(spacing: 6) {
                         Text(face).font(.system(size: 54))
-                        Text("\(Int(rating)) / 10").font(.title.weight(.bold)).monospacedDigit()
-                        Slider(value: $rating, in: 1...10, step: 1).tint(.abAccent)
+                        Text("\(Int(rating)) / 10").font(.title.weight(.bold)).monoDigit14()
+                        Slider(value: $rating, in: 1...10, step: 1).tint14(.abAccent)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 6)
                 } header: { Text("How would you rate UniHub?") }
-                Section {
+                Section14 {
                     ForEach(Self.questions.indices, id: \.self) { i in
                         HStack {
                             VStack(alignment: .leading, spacing: 1) {
                                 Text(LocalizedStringKey(Self.questions[i].0)).font(.subheadline.weight(.semibold))
-                                Text(Self.questions[i].1).font(.caption).foregroundStyle(.secondary)
+                                Text(Self.questions[i].1).font(.caption).fg14(.secondary)
                             }
                             Spacer()
                             choice(i, true, "hand.thumbsup.fill", .green)
@@ -75,15 +75,15 @@ struct ServiceRatingScreen: View {
                         }
                     }
                 } header: { Text("Quick questions") } footer: { Text(String(format: L("%d of %d answered"), answers.count, Self.questions.count)) }
-                Section("Anything we should add or fix?") {
+                Section14("Anything we should add or fix?") {
                     TextEditor(text: $suggestion).frame(minHeight: 90)
                 }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
-                Section {
+                if let error { Section14 { Text(error).fg14(.red) } }
+                Section14 {
                     Button { Task { await submit() } } label: {
                         HStack { Spacer(); if busy { ABDots() }; Text("Send rating").font(.headline); Spacer() }.padding(.vertical, 4)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abFill)
+                    .prominentButton14().tint14(.abFill)
                     .disabled(busy || answers.count < Self.questions.count)
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
@@ -97,10 +97,10 @@ struct ServiceRatingScreen: View {
         Button { withAnimation(.spring(response: 0.25)) { answers[i] = v }; Haptics.tap() } label: {
             Image(systemName: icon).font(.body)
                 .frame(width: 38, height: 34)
-                .foregroundStyle(answers[i] == v ? .white : c)
-                .background(answers[i] == v ? c : c.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .fg14(answers[i] == v ? .white : c)
+                .bgIn14(answers[i] == v ? c : c.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PlainButtonStyle())
         .accessibilityLabel(Text(v ? "Yes" : "No"))
     }
 
@@ -144,26 +144,26 @@ struct VotingScreen: View {
         Form {
             resultsSection
             if voted {
-                Section {
-                    Label("Thanks, your vote is in!", systemImage: "checkmark.seal.fill").foregroundStyle(.green)
+                Section14 {
+                    Label("Thanks, your vote is in!", systemImage: "checkmark.seal.fill").fg14(.green)
                     Button("Vote again") { withAnimation { voted = false } }
                 }
             } else {
-                Section("Should we open the Discord gaming community?") {
+                Section14("Should we open the Discord gaming community?") {
                     HStack(spacing: 10) {
                         big("YES", L("Open it"), "✅", .green)
                         big("NO", L("Don't open"), "❌", .red)
                     }
                     .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
                 }
-                Section("Would you personally be interested in joining?") {
+                Section14("Would you personally be interested in joining?") {
                     Picker("", selection: $interested) {
                         Text("Yes").tag(Optional(true))
                         Text("No").tag(Optional(false))
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(SegmentedPickerStyle())
                 }
-                Section {
+                Section14 {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 8)], spacing: 8) {
                         ForEach(Self.games, id: \.0) { g in
                             let on = picked.contains(g.0)
@@ -172,22 +172,22 @@ struct VotingScreen: View {
                             } label: {
                                 HStack(spacing: 6) { Text(g.1); Text(g.0).font(.caption.weight(.semibold)).lineLimit(1) ; Spacer(minLength: 0) }
                                     .padding(.horizontal, 10).padding(.vertical, 9)
-                                    .foregroundStyle(on ? .white : .primary)
-                                    .background(on ? Color.abAccent : Color(UIColor.tertiarySystemFill), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                    .fg14(on ? .white : .primary)
+                                    .bgIn14(on ? Color.abAccent : Color(UIColor.tertiarySystemFill), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding(.vertical, 4)
                     TextField("Another game?", text: $other)
                 } header: { Text("Which games would you play?") } footer: { Text(String(format: L("%d picked"), picked.count)) }
-                Section("Ideas for the community (optional)") { TextEditor(text: $suggestion).frame(minHeight: 80) }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
-                Section {
+                Section14("Ideas for the community (optional)") { TextEditor(text: $suggestion).frame(minHeight: 80) }
+                if let error { Section14 { Text(error).fg14(.red) } }
+                Section14 {
                     Button { Task { await submit() } } label: {
                         HStack { Spacer(); if busy { ABDots() }; Text("Send my vote").font(.headline); Spacer() }.padding(.vertical, 4)
                     }
-                    .buttonStyle(.borderedProminent).tint(.abFill)
+                    .prominentButton14().tint14(.abFill)
                     .disabled(busy || vote == nil)
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
@@ -195,15 +195,15 @@ struct VotingScreen: View {
         }
         .navigationTitle("Discord community vote")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await load() }
-        .refreshable { await load() }
+        .task14 { await load() }
+        .refreshable14 { await load() }
     }
 
     @ViewBuilder private var resultsSection: some View {
         let total = (stats["totalVotes"] as? NSNumber)?.intValue ?? 0
         let yes = (stats["yesPercent"] as? NSNumber)?.doubleValue ?? 0
         let top = (stats["topGames"] as? [[String: Any]]) ?? []
-        Section {
+        Section14 {
             if total == 0 && stats.isEmpty {
                 HStack { Spacer(); ABDots(); Spacer() }
             } else {
@@ -211,7 +211,7 @@ struct VotingScreen: View {
                     HStack {
                         Text(String(format: L("%d votes"), total)).font(.headline)
                         Spacer()
-                        Text(String(format: L("%d interested"), (stats["interestedCount"] as? NSNumber)?.intValue ?? 0)).font(.caption).foregroundStyle(.secondary)
+                        Text(String(format: L("%d interested"), (stats["interestedCount"] as? NSNumber)?.intValue ?? 0)).font(.caption).fg14(.secondary)
                     }
                     GeometryReader { g in
                         HStack(spacing: 0) {
@@ -227,12 +227,12 @@ struct VotingScreen: View {
                         Text("❌ \(Int((100 - yes).rounded()))%").font(.caption.weight(.semibold))
                     }
                     if !top.isEmpty {
-                        Text("Most wanted games").font(.caption.weight(.bold)).foregroundStyle(.secondary).padding(.top, 4)
+                        Text("Most wanted games").font(.caption.weight(.bold)).fg14(.secondary).padding(.top, 4)
                         ForEach(Array(top.prefix(5).enumerated()), id: \.offset) { _, g in
                             HStack {
                                 Text(g["name"] as? String ?? "")
                                 Spacer()
-                                Text("\((g["count"] as? NSNumber)?.intValue ?? 0)").foregroundStyle(.secondary).monospacedDigit()
+                                Text("\((g["count"] as? NSNumber)?.intValue ?? 0)").fg14(.secondary).monoDigit14()
                             }
                             .font(.subheadline)
                         }
@@ -247,16 +247,16 @@ struct VotingScreen: View {
         Button { withAnimation(.spring(response: 0.25)) { vote = v }; Haptics.tap() } label: {
             VStack(spacing: 4) { Text(emoji).font(.title); Text(label).font(.subheadline.weight(.bold)) }
                 .frame(maxWidth: .infinity).padding(.vertical, 14)
-                .foregroundStyle(vote == v ? .white : c)
-                .background(vote == v ? c : c.opacity(0.12), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .fg14(vote == v ? .white : c)
+                .bgIn14(vote == v ? c : c.opacity(0.12), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PlainButtonStyle())
     }
 
     private func load() async {
         var req = URLRequest(url: FeedbackAPI.voting, timeoutInterval: 30)
         req.httpMethod = "GET"
-        if let res = try? await URLSession.shared.data(for: req),
+        if let res = try? await URLSession.shared.data14(for: req),
            let o = (try? JSONSerialization.jsonObject(with: res.0)) as? [String: Any], let s = o["stats"] as? [String: Any] { stats = s }
     }
 
