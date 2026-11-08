@@ -333,7 +333,7 @@ private struct RateSheet: View {
                                             .font(.system(size: 18, weight: .bold, design: .rounded))
                                             .frame(maxWidth: .infinity, minHeight: 46)
                                             .fg14(n <= score ? Color.white : Color.primary)
-                                            .background(n <= score ? Ratings.color(Double(score)) : Color.secondary.opacity(0.12),
+                                            .bgIn14(n <= score ? Ratings.color(Double(score)) : Color.secondary.opacity(0.12),
                                                         in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                                             .scaleEffect(n == score ? 1.08 : 1)
                                     }
