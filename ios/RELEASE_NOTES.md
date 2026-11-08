@@ -3,6 +3,12 @@
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
 UniHub is free and student-run. It is not made by or affiliated with the university.
 
+### What's new in 1.19.1
+- Upload screen: choose Quick upload for any file, or Structured submission for formal files with full details
+- The Notifications tab now lists every notification your phone showed, including lecture reminders and messages
+- Share a video: pick the subject from a list and paste the link with one tap
+- Fixed sharing a video, which was refused with "Choose a subject."
+
 ### What's new in 1.19.0
 - Save stories to your phone. Saved photos and videos carry the UniHub watermark
 - Story videos can be up to 30 seconds and now play to the very end

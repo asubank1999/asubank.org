@@ -1,5 +1,14 @@
 [
  {
+  "version": "1.19.1",
+  "changes": [
+   "Upload screen: choose Quick upload for any file, or Structured submission for formal files with full details",
+   "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages",
+   "Share a video: pick the subject from a list and paste the link with one tap",
+   "Fixed sharing a video, which was refused with \"Choose a subject.\""
+  ]
+ },
+ {
   "version": "1.19.0",
   "changes": [
    "Save stories to your phone. Saved photos and videos carry the UniHub watermark",

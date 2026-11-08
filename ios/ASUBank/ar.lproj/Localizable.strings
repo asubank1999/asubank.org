@@ -881,7 +881,9 @@
 "First year" = "السنة الأولى";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
+"Fixed a crash when adding a lecture" = "إصلاح توقف التطبيق عند إضافة محاضرة";
 "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder)." = "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder).";
+"Fixed sharing a video, which was refused with \"Choose a subject.\"" = "إصلاح مشاركة الفيديو التي كانت تُرفض برسالة \"اختر المادة.\"";
 "Fixed the WhatsApp button on profiles with a local 07 number" = "إصلاح زر واتساب في الملفات ذات الرقم المحلي 07";
 "Fixed the chat screen and message bar bouncing while a conversation opens" = "إصلاح اهتزاز شاشة المحادثة وشريط الرسائل عند فتح المحادثة";
 "Fixed the star and online dot on profile photos" = "Fixed the star and online dot on profile photos";
@@ -1865,6 +1867,7 @@
 "Share a YouTube video" = "مشاركة فيديو من يوتيوب";
 "Share a YouTube video from the Upload screen" = "شارك فيديو يوتيوب من شاشة الرفع";
 "Share a video" = "مشاركة فيديو";
+"Share a video: pick the subject from a list and paste the link with one tap" = "مشاركة فيديو: اختر المادة من قائمة والصق الرابط بلمسة واحدة";
 "Share academic resources relevant to the cohort/group (notes, past exams, study guides)." = "مشاركة المصادر الأكاديمية المتعلقة بالدفعة أو المجموعة (ملاحظات، امتحانات سابقة، أدلة دراسة).";
 "Share file" = "مشاركة الملف";
 "Share honest, anonymous feedback on instructors." = "شارك رأيك الصادق دون كشف هويتك عن المدرسين.";
@@ -2104,6 +2107,7 @@
 "That video is too big. Keep it short." = "هذا الفيديو كبير جداً. اجعله قصيراً.";
 "The About text now says how UniHub is supported: ads on the website, sponsors and donations" = "صفحة «حول» توضّح الآن كيف يُدعم UniHub: الإعلانات على الموقع والرعاة والتبرعات";
 "The Chat tab opens on Messages first; Rooms are one tap away" = "تبويب الدردشة يفتح على الرسائل أولاً، والغرف بلمسة واحدة";
+"The Notifications tab now lists every notification your phone showed, including lecture reminders and messages" = "تبويب الإشعارات يعرض الآن كل إشعار ظهر على هاتفك، ومنها تذكيرات المحاضرات والرسائل";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "يتطوع مشرفو المجموعات بوقتهم لتنظيم المجتمع وإدارته. لا يضمن المشرفون دقة أي مادة يشاركها الأعضاء أو اكتمالها أو موثوقيتها، وليسوا مسؤولين عن النصائح أو الآراء أو المحتوى الذي ينشره الآخرون.";
 "The app closes so the new colors load cleanly. Tap its icon to open it again." = "سيُغلق التطبيق لتظهر الألوان الجديدة بشكل سليم. اضغط على أيقونته لفتحه من جديد.";
@@ -2307,6 +2311,7 @@
 "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team." = "ارفع مواد، ساعد في ترتيبها، أو أبلغ عن روابط معطلة. راسل ASU-Requests وانضم للفريق.";
 "Upload more" = "رفع المزيد";
 "Upload rules" = "قواعد الرفع";
+"Upload screen: choose Quick upload for any file, or Structured submission for formal files with full details" = "شاشة الرفع: اختر الرفع السريع لأي ملف، أو الإرسال المنظم للملفات الرسمية بتفاصيلها الكاملة";
 "Upload type" = "نوع الرفع";
 "Upload your presentations" = "ارفع عروضك التقديمية";
 "Uploaded" = "تم الرفع";

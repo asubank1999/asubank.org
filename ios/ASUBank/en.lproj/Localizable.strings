@@ -881,7 +881,9 @@
 "First year" = "First year";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
+"Fixed a crash when adding a lecture" = "Fixed a crash when adding a lecture";
 "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder)." = "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder).";
+"Fixed sharing a video, which was refused with \"Choose a subject.\"" = "Fixed sharing a video, which was refused with \"Choose a subject.\"";
 "Fixed the WhatsApp button on profiles with a local 07 number" = "Fixed the WhatsApp button on profiles with a local 07 number";
 "Fixed the chat screen and message bar bouncing while a conversation opens" = "Fixed the chat screen and message bar bouncing while a conversation opens";
 "Fixed the star and online dot on profile photos" = "Fixed the star and online dot on profile photos";
@@ -1865,6 +1867,7 @@
 "Share a YouTube video" = "Share a YouTube video";
 "Share a YouTube video from the Upload screen" = "Share a YouTube video from the Upload screen";
 "Share a video" = "Share a video";
+"Share a video: pick the subject from a list and paste the link with one tap" = "Share a video: pick the subject from a list and paste the link with one tap";
 "Share academic resources relevant to the cohort/group (notes, past exams, study guides)." = "Share academic resources relevant to the cohort/group (notes, past exams, study guides).";
 "Share file" = "Share file";
 "Share honest, anonymous feedback on instructors." = "Share honest, anonymous feedback on instructors.";
@@ -2104,6 +2107,7 @@
 "That video is too big. Keep it short." = "That video is too big. Keep it short.";
 "The About text now says how UniHub is supported: ads on the website, sponsors and donations" = "The About text now says how UniHub is supported: ads on the website, sponsors and donations";
 "The Chat tab opens on Messages first; Rooms are one tap away" = "The Chat tab opens on Messages first; Rooms are one tap away";
+"The Notifications tab now lists every notification your phone showed, including lecture reminders and messages" = "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.";
 "The app closes so the new colors load cleanly. Tap its icon to open it again." = "The app closes so the new colors load cleanly. Tap its icon to open it again.";
@@ -2307,6 +2311,7 @@
 "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team." = "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team.";
 "Upload more" = "Upload more";
 "Upload rules" = "Upload rules";
+"Upload screen: choose Quick upload for any file, or Structured submission for formal files with full details" = "Upload screen: choose Quick upload for any file, or Structured submission for formal files with full details";
 "Upload type" = "Upload type";
 "Upload your presentations" = "Upload your presentations";
 "Uploaded" = "Uploaded";

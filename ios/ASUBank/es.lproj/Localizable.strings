@@ -881,7 +881,9 @@
 "First year" = "Primer año";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
+"Fixed a crash when adding a lecture" = "Se corrigió un cierre inesperado al añadir una clase";
 "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder)." = "Fixed files that showed \"No preview available\" (Google Drive shortcuts now open the real file or folder).";
+"Fixed sharing a video, which was refused with \"Choose a subject.\"" = "Se corrigió compartir un video, que se rechazaba con \"Elige una materia.\"";
 "Fixed the WhatsApp button on profiles with a local 07 number" = "Arreglado el botón de WhatsApp en perfiles con un número local 07";
 "Fixed the chat screen and message bar bouncing while a conversation opens" = "Corregido el rebote de la pantalla de chat y la barra de mensajes al abrir una conversación";
 "Fixed the star and online dot on profile photos" = "Fixed the star and online dot on profile photos";
@@ -1865,6 +1867,7 @@
 "Share a YouTube video" = "Compartir un video de YouTube";
 "Share a YouTube video from the Upload screen" = "Comparte un video de YouTube desde la pantalla Subir";
 "Share a video" = "Compartir un video";
+"Share a video: pick the subject from a list and paste the link with one tap" = "Compartir un video: elige la materia de una lista y pega el enlace con un toque";
 "Share academic resources relevant to the cohort/group (notes, past exams, study guides)." = "Share academic resources relevant to the cohort/group (notes, past exams, study guides).";
 "Share file" = "Compartir archivo";
 "Share honest, anonymous feedback on instructors." = "Share honest, anonymous feedback on instructors.";
@@ -2104,6 +2107,7 @@
 "That video is too big. Keep it short." = "Ese vídeo es demasiado grande. Que sea corto.";
 "The About text now says how UniHub is supported: ads on the website, sponsors and donations" = "El texto de Acerca de ahora explica cómo se apoya UniHub: anuncios en el sitio web, patrocinadores y donaciones";
 "The Chat tab opens on Messages first; Rooms are one tap away" = "La pestaña Chat abre primero Mensajes; las salas están a un toque";
+"The Notifications tab now lists every notification your phone showed, including lecture reminders and messages" = "La pestaña Notificaciones ahora muestra todas las notificaciones que mostró tu teléfono, incluidos recordatorios de clases y mensajes";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.";
 "The app closes so the new colors load cleanly. Tap its icon to open it again." = "La app se cierra para que los nuevos colores carguen bien. Toca su icono para abrirla de nuevo.";
@@ -2307,6 +2311,7 @@
 "Upload materials, help sort them, or report broken links. Message ASU-Requests and join the team." = "Sube materiales, ayuda a ordenarlos o informa enlaces rotos. Escribe a ASU-Requests y únete al equipo.";
 "Upload more" = "Subir más";
 "Upload rules" = "Normas de subida";
+"Upload screen: choose Quick upload for any file, or Structured submission for formal files with full details" = "Pantalla de subida: elige Subida rápida para cualquier archivo, o Envío estructurado para archivos formales con todos los detalles";
 "Upload type" = "Tipo de subida";
 "Upload your presentations" = "Upload your presentations";
 "Uploaded" = "Subido";
