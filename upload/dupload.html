@@ -16,7 +16,8 @@
     <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
     <link rel="stylesheet" href="/assets/app/app.css?v=5">
     <script src="/assets/app/app.js?v=5" defer></script>
-    <script src="/assets/app/upload-page.js?v=1" defer></script>
+    <script src="/assets/app/smart-name.js?v=2" defer></script>
+    <script src="/assets/app/upload-page.js?v=2" defer></script>
     <style>
         .up-grid { display: grid; gap: 0 28px; }
         @media (min-width: 960px) { .up-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; } }
@@ -36,6 +37,16 @@
         .queue .ab-row { align-items: flex-start; padding-top: 12px; padding-bottom: 12px; }
         .queue .ab-row-text { padding-top: 2px; }
         .queue .st { font-size: 13px; margin-top: 4px; color: var(--ab-label-2); }
+        .queue .nm { width: 100%; font: inherit; font-size: 16px; font-weight: 600; color: var(--ab-label); background: var(--ab-fill, rgba(120,120,128,.12)); border: 0; border-radius: 8px; padding: 6px 8px; margin: -2px 0 0 -2px; box-sizing: border-box; }
+        .queue .nm:focus { outline: 2px solid var(--ab-blue); }
+        .queue .was { font-size: 12px; color: var(--ab-label-2); margin-top: 3px; word-break: break-all; }
+        .smart { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px 14px; background: var(--ab-surface); border-radius: var(--ab-radius); box-shadow: var(--ab-shadow); font-size: 14px; color: var(--ab-label-2); }
+        .smart b { color: var(--ab-label); font-weight: 600; }
+        .smart .grow { flex: 1; min-width: 0; }
+        .smart input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--ab-blue); }
+        .smart-tip { margin-top: 8px; padding: 10px 14px; border-radius: var(--ab-radius); background: rgba(0,122,255,.1); font-size: 14px; display: flex; gap: 10px; align-items: center; }
+        .smart-tip .grow { flex: 1; }
+        .smart-tip button { font: inherit; font-weight: 600; color: var(--ab-blue); background: none; border: 0; padding: 4px 6px; cursor: pointer; }
         .queue .st.ok { color: var(--ab-green); } .queue .st.err { color: var(--ab-red); }
         .queue .ab-icon-btn { font-size: 18px; text-decoration: none; }
         .q-info { font-size: 13px; color: var(--ab-label-2); font-weight: 400; }
@@ -116,7 +127,7 @@
                             <div class="links"><a href="/guides/latest">Latest uploads</a><button type="button" id="moreBtn">Upload more</button></div>
                         </div>
                     </div>
-                    <p class="ab-foot">Files are named like “[Subject] [Final 2025] name.pdf” so other students can find them.</p>
+                    <p class="ab-foot">The smart uploader reads your file in your browser and suggests a clear name; you can change it before uploading. Files are saved like “[Subject] [Final 2025] name.pdf” so other students can find them.</p>
                 </section>
             </div>
 

@@ -14,15 +14,30 @@ document.addEventListener('DOMContentLoaded', function () {
     var agree = $('agree'), work = $('work'), drop = $('drop'), input = $('fileInput'), queue = $('queue');
     var subject = $('mSubject'), kind = $('mKind'), year = $('mYear'), title = $('mTitle'), note = $('mNote');
     var startBtn = $('startBtn'), clearBtn = $('clearBtn'), problem = $('problem'), done = $('done');
-    var files = [], busy = false, uploaded = [];
+    var files = [], busy = false, uploaded = [], items = null, touched = {};
 
     // ---------- remembered choices ----------
     function get(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
     function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
     try { agree.checked = sessionStorage.getItem('ab.uploadAgree') === '1'; } catch (e) {}
+    // ---------- smart uploader bar ----------
+    var smartOn = get('ab.up.smart') !== '0';
+    var bar = AB.el('<div class="smart"><span aria-hidden="true">✨</span><div class="grow"><b>Smart uploader</b><br>Suggests a clear name, subject, type and year from what is inside your file.</div>' +
+        '<input type="checkbox" id="smartOn" aria-label="Smart uploader"></div>');
+    var tip = AB.el('<div class="smart-tip" hidden><span aria-hidden="true">💡</span><div class="grow"></div><button type="button">Use</button></div>');
+    queue.parentNode.insertBefore(bar, queue);
+    queue.parentNode.insertBefore(tip, queue.nextSibling);
+    bar.querySelector('input').checked = smartOn;
+    bar.querySelector('input').addEventListener('change', function () {
+        smartOn = this.checked; set('ab.up.smart', smartOn ? '1' : '0');
+        if (smartOn) files.forEach(function (x) { if (x.state === 'ready' && !x.smart) x.smart = 'wait'; });
+        else tip.hidden = true;
+        render(); runSmart();
+    });
     var wanted = new URLSearchParams(location.search).get('subject') || get('ab.up.subject');
 
     AB.index().then(function (d) {
+        items = d.items;
         d.subjects.forEach(function (s) { if (s.c !== 'Archive') subject.appendChild(new Option(s.t, s.t)); });
         if (wanted && Array.prototype.some.call(subject.options, function (o) { return o.value === wanted; })) subject.value = wanted;
         update();
@@ -39,19 +54,23 @@ document.addEventListener('DOMContentLoaded', function () {
         if (f.size === 0) return 'Empty file';
         return '';
     }
+    var batchNo = 0;
     function add(list) {
         if (!agree.checked) { AB.toast('Tick “I agree” first'); agree.focus(); return; }
         Array.prototype.forEach.call(list, function (f) {
             if (files.some(function (x) { return x.f.name === f.name && x.f.size === f.size && x.state !== 'ok'; })) return;
             var err = check(f);
-            files.push({ f: f, state: err ? 'bad' : 'ready', msg: err, pct: 0 });
+            files.push({ f: f, state: err ? 'bad' : 'ready', msg: err, pct: 0, name: '', smart: !err && smartOn ? 'wait' : '', batch: batchNo });
         });
+        batchNo++;
+        runSmart();
         done.hidden = true;
         render(); update();
     }
     function render() {
         queue.hidden = !files.length;
         clearBtn.hidden = !files.length || busy;
+        var fe = document.activeElement, fi = fe && fe.getAttribute ? fe.getAttribute('data-nm') : null, sel = fi !== null ? [fe.selectionStart, fe.selectionEnd] : null;
         queue.innerHTML = '';
         files.forEach(function (x, i) {
             var k = AB.kind('', x.f.name);
@@ -67,12 +86,85 @@ document.addEventListener('DOMContentLoaded', function () {
             var li = AB.el('<li><div class="ab-row">' + AB.tile(k === 'link' ? 'file' : k) +
                 '<div class="ab-row-text"><div class="ab-row-title"></div><div class="st ' + cls + '">' + AB.esc(st) + '</div>' +
                 '<div class="ab-progress' + (cls === 'ok' ? ' done' : cls === 'err' ? ' err' : '') + '"><i style="width:' + bar + '%"></i></div></div>' + btn + '</div></li>');
-            li.querySelector('.ab-row-title').textContent = x.f.name;
+            var t = li.querySelector('.ab-row-title');
+            if (x.state === 'ready' || x.state === 'err') {
+                t.innerHTML = '<input class="nm" dir="auto" maxlength="120" aria-label="File name" data-nm="' + i + '">';
+                var inp = t.firstChild;
+                inp.value = x.name || baseName(x.f.name);
+                inp.placeholder = baseName(x.f.name);
+                var was = AB.el('<div class="was"></div>');
+                was.textContent = x.smart === 'busy' || x.smart === 'wait' ? '✨ Reading the file to suggest a name…'
+                    : x.smart === 'done' && x.name && x.name !== baseName(x.f.name) && !x.edited ? '✨ Suggested name · was ' + x.f.name
+                    : x.edited ? 'Was ' + x.f.name : '';
+                if (was.textContent) t.appendChild(was);
+            } else t.textContent = outName(x);
             queue.appendChild(li);
         });
+        if (fi !== null) { var back = queue.querySelector('[data-nm="' + fi + '"]'); if (back) { back.focus(); try { back.setSelectionRange(sel[0], sel[1]); } catch (e) {} } }
         var total = files.filter(function (x) { return x.state === 'ready'; }).reduce(function (a, x) { return a + x.f.size; }, 0);
         $('qInfo').textContent = total ? fmt(total) + ' to upload' : '';
     }
+
+    // ---------- smart names ----------
+    function ext(n) { return (n.match(/\.[^.]+$/) || [''])[0]; }
+    function baseName(n) { return n.replace(/\.[^.]+$/, ''); }
+    function outName(x) {
+        var n = (x.name || '').replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim();
+        return n ? n + ext(x.f.name).toLowerCase() : x.f.name;
+    }
+    function isPhoto(x) { return /\.(jpe?g|png|webp|heic)$/i.test(x.f.name); }
+    var running = false;
+    function runSmart() {
+        if (running || !smartOn || !window.SmartName) return;
+        var x = files.filter(function (f) { return f.smart === 'wait' && f.state === 'ready'; })[0];
+        if (!x) return;
+        // photos added together are pages of one thing: read the first one, number the rest
+        var group = isPhoto(x) ? files.filter(function (f) { return f.batch === x.batch && isPhoto(f) && f.state === 'ready' && f.smart === 'wait'; }) : [x];
+        running = true;
+        group.forEach(function (f) { f.smart = 'busy'; });
+        render();
+        SmartName.analyze(x.f, items).then(function (info) {
+            fillFields(info);
+            group.forEach(function (f, n) {
+                f.smart = 'done';
+                if (f.edited) return;
+                var nm = info.name || (isPhoto(f) ? [subject.value && subject.value.length < 30 ? subject.value : '', kind.value, year.value].filter(Boolean).join(' ') : '');
+                if (nm && group.length > 1) nm += ' - page ' + (n + 1);
+                if (nm) f.name = nm;
+            });
+        }, function () { group.forEach(function (f) { f.smart = 'done'; }); }).then(function () {
+            running = false; render(); update(); runSmart();
+        });
+    }
+    function hasOption(sel, v) { return v && Array.prototype.some.call(sel.options, function (o) { return o.value === v; }); }
+    function fillFields(info) {
+        var differs = [];
+        [[subject, info.bank, 'subject'], [kind, info.kind, 'type'], [year, info.year, 'year']].forEach(function (f) {
+            var sel = f[0], v = f[1];
+            if (!hasOption(sel, v) || sel.value === v) return;
+            if (!sel.value && !touched[sel.id]) { sel.value = v; flash(sel); }
+            else differs.push([sel, v, f[2]]);
+        });
+        if (title && !title.value.trim() && info.name && !touched.mTitle) { title.value = info.name; flash(title); }
+        if (differs.length) {
+            tip.querySelector('.grow').textContent = 'This file looks like ' + differs.map(function (d) { return d[2] + ' “' + d[1] + '”'; }).join(', ') + '.';
+            tip.hidden = false;
+            tip.querySelector('button').onclick = function () {
+                differs.forEach(function (d) { d[0].value = d[1]; set('ab.up.' + d[0].id.slice(1).toLowerCase(), d[1]); flash(d[0]); });
+                tip.hidden = true; update();
+            };
+        }
+    }
+    function flash(el) {
+        var row = el.closest('.ab-field') || el;
+        row.style.transition = 'background-color .6s'; row.style.backgroundColor = 'rgba(0,122,255,.14)';
+        setTimeout(function () { row.style.backgroundColor = ''; }, 1400);
+    }
+    queue.addEventListener('input', function (e) {
+        var i = e.target.getAttribute && e.target.getAttribute('data-nm');
+        if (i === null || !files[+i]) return;
+        files[+i].name = e.target.value; files[+i].edited = true;
+    });
 
     // what still stops the upload, shown under the button
     function blocker() {
@@ -100,8 +192,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try { sessionStorage.setItem('ab.uploadAgree', agree.checked ? '1' : '0'); } catch (e) {}
         update();
     });
-    [subject, kind, year].forEach(function (s) { s.addEventListener('change', function () { set('ab.up.' + s.id.slice(1).toLowerCase(), s.value); update(); }); });
-    if (title) title.addEventListener('input', update);
+    [subject, kind, year].forEach(function (s) { s.addEventListener('change', function () { touched[s.id] = 1; set('ab.up.' + s.id.slice(1).toLowerCase(), s.value); update(); }); });
+    if (title) title.addEventListener('input', function () { touched.mTitle = 1; update(); });
     queue.addEventListener('click', function (e) {
         var rm = e.target.closest('[data-rm]'), rt = e.target.closest('[data-retry]');
         if (busy) return;
@@ -121,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var list = e.clipboardData && e.clipboardData.files;
         if (list && list.length && !/^(INPUT|TEXTAREA)$/.test((e.target || {}).tagName || '')) { e.preventDefault(); add(list); }
     });
-    clearBtn.addEventListener('click', function () { if (!busy) { files = []; render(); update(); } });
+    clearBtn.addEventListener('click', function () { if (!busy) { files = []; tip.hidden = true; render(); update(); } });
 
     // ---------- sending ----------
     function toBase64(file) {
@@ -151,12 +243,12 @@ document.addEventListener('DOMContentLoaded', function () {
             return fetch(UPLOAD_API, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ name: x.f.name, mimeType: x.f.type, data: b64, subject: subject.value, kind: kind.value, year: year.value, note: noteText() })
+                body: JSON.stringify({ name: outName(x), mimeType: x.f.type, data: b64, subject: subject.value, kind: kind.value, year: year.value, note: noteText() })
             }).then(function (r) {
                 return r.json().catch(function () { return { error: 'Upload failed (' + r.status + ')' }; });
             }, function () { throw new Error('Network error. Check your connection and try again.'); });
         }).then(function (d) {
-            if (d && d.success) { x.state = 'ok'; x.url = d.url; uploaded.push({ name: d.name || x.f.name, url: d.url }); }
+            if (d && d.success) { x.state = 'ok'; x.url = d.url; uploaded.push({ name: d.name || outName(x), url: d.url }); }
             else { x.state = 'err'; x.msg = (d && d.error) || 'Upload failed'; }
         }).catch(function (err) { x.state = 'err'; x.msg = err.message; }).then(function () { clearInterval(tick); render(); });
     }
