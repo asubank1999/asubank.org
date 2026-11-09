@@ -31,7 +31,7 @@ Students share the materials and students run the app. **UniHub isn't made by or
 | | Download | How to install |
 |---|---|---|
 | 🤖 **Android app (v1.20.0)** | **[⬇️ Download for Android (APK)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.20.0/UniHub-1.20.0.apk)** | Open the link on your phone, tap the downloaded file, then allow "Install unknown apps" if Android asks. Android 8 or newer. |
-| 🍎 **iPhone app (v1.19.1)** | **[⬇️ Download for iPhone (IPA)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.19.1/UniHub-1.19.1-unsigned.ipa)** | Install it with [Sideloadly](https://sideloadly.io) or AltStore on a computer (they sign it with your Apple ID). iOS 15 or newer. |
+| 🍎 **iPhone app (v1.20.0)** | **[⬇️ Download for iPhone (IPA)](https://github.com/asubank1999/asubank.org/releases/download/android-v1.20.0/UniHub-1.20.0-unsigned.ipa)** | Install it with [Sideloadly](https://sideloadly.io) or AltStore on a computer (they sign it with your Apple ID). iOS 15 or newer. |
 | 🍎 **iPhone app for iOS 14 (v1.19.1, test build)** | **[⬇️ Download for iOS 14 (IPA)](https://github.com/asubank1999/asubank.org/releases/download/ios14-v1.19.1/UniHub-1.19.1-iOS14-unsigned.ipa)** | Only for iPhones still on iOS 14. Install it the same way. A few iOS 15 extras are missing: pull to refresh, swipe actions (long-press a row instead). |
 | 🌐 **Website** | **[asubank.org](https://asubank.org)** | Works on any phone or computer, nothing to install. |
 

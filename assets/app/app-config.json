@@ -1,15 +1,15 @@
 {
   "share": "https://asubank.org/",
   "ios": {
-    "latest": "1.19.1",
+    "latest": "1.20.0",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.19.1",
-    "notes": "New: choose Quick upload or Structured submission on the Upload screen, every notification your phone showed in the Notifications tab, and an easier Share a video. Fixed sharing a video, and a crash when adding a lecture on Android."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.20.0",
+    "notes": "New study tools: absence tracker, final mark calculator, flashcards, and study streak and stats. The Feed opens much faster, and Load more only shows when there are more posts."
   },
   "android": {
-    "latest": "1.19.1",
+    "latest": "1.20.0",
     "minimum": "1.0.0",
-    "notes": "New: choose Quick upload or Structured submission on the Upload screen, every notification your phone showed in the Notifications tab, and an easier Share a video. Fixed sharing a video, and a crash when adding a lecture on Android."
+    "notes": "New study tools: absence tracker, final mark calculator, flashcards, and study streak and stats. The Feed opens much faster, and Load more only shows when there are more posts."
   },
   "donate": true
 }
