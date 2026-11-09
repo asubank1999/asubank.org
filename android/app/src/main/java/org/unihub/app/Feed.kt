@@ -248,22 +248,34 @@ fun FeedScreen(back: Boolean = false) {
     var draft by remember { mutableStateOf<StoryDraft?>(null) }
     var viewing by remember { mutableStateOf<Int?>(null) }
 
+    val storiesAction = if (me == null) "publicStories" else "stories"
     suspend fun loadStories() {
-        runCatching { groups = Account.call(if (Account.user.value == null) "publicStories" else "stories")["groups"].decodeAs<List<StoryGroup>>().orEmpty() }
+        runCatching { groups = Account.callSaving(storiesAction, tag = "feed")["groups"].decodeAs<List<StoryGroup>>().orEmpty() }
+    }
+    fun show(r: kotlinx.serialization.json.JsonObject) {
+        val list = r["posts"].decodeAs<List<FeedPost>>().orEmpty()
+        posts = list
+        more = list.size >= 25
+        loaded = true
     }
     suspend fun load() {
-        if (posts.isEmpty()) Account.saved(action, feedScope)?.let { posts = it["posts"].decodeAs<List<FeedPost>>().orEmpty() }
+        val asked = feedScope
+        if (posts.isEmpty()) Account.saved(action, asked)?.let { show(it) }
         try {
-            val list = Account.callSaving(action, mapOf("scope" to feedScope), feedScope)["posts"].decodeAs<List<FeedPost>>().orEmpty()
-            posts = list
-            more = list.size >= 25
+            val r = Account.callSaving(action, mapOf("scope" to asked), asked)
+            show(r)
+            FeedPrefetch.fresh[asked] = System.currentTimeMillis()
             error = null
-        } catch (e: ApiError) { error = e.message }
+        } catch (e: ApiError) { if (posts.isEmpty()) error = e.message }
         loaded = true
     }
     LaunchedEffect(me?.id, feedScope) {
-        posts = emptyList()
-        loaded = false
+        // the saved copy shows at once; the server is asked again only if it is older than 30 seconds
+        val kept = Account.saved(action, feedScope)
+        if (kept != null) show(kept) else { posts = emptyList(); loaded = false }
+        if (groups.isEmpty()) Account.saved(storiesAction, "feed")?.let { groups = it["groups"].decodeAs<List<StoryGroup>>().orEmpty() }
+        val at = FeedPrefetch.fresh[feedScope] ?: 0L
+        if (posts.isNotEmpty() && System.currentTimeMillis() - at < 30_000) return@LaunchedEffect
         launch { loadStories() }
         load()
     }
@@ -842,4 +854,16 @@ fun CommentsDialog(post: FeedPost, changed: (Int) -> Unit, onClose: () -> Unit) 
 fun heroBrush(light: Long): Brush {
     val c = Color(light)
     return Brush.linearGradient(listOf(c, Color(c.red * 0.62f, c.green * 0.62f, c.blue * 0.62f)))
+}
+
+/** Asks for the feed and the stories as soon as the app opens, so the Feed tab already has fresh saved answers */
+object FeedPrefetch {
+    /** When each feed tab last came from the server */
+    val fresh = java.util.concurrent.ConcurrentHashMap<String, Long>()
+    fun run(scope: kotlinx.coroutines.CoroutineScope) {
+        val signed = Account.user.value != null
+        val tab = if (signed) Saved.prefs.getString("ab.feed.scope", "friends") ?: "friends" else "guest"
+        scope.launch { runCatching { Account.callSaving(if (signed) "feedAll" else "publicFeed", mapOf("scope" to tab), tab); fresh[tab] = System.currentTimeMillis() } }
+        scope.launch { runCatching { Account.callSaving(if (signed) "stories" else "publicStories", tag = "feed") } }
+    }
 }

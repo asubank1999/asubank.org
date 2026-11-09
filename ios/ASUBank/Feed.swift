@@ -342,7 +342,7 @@ struct FeedScreen: View {
     @State private var posts: [FeedPost] = []
     @State private var groups: [StoryGroup] = []
     @State private var loaded = false
-    @State private var more = true
+    @State private var more = false
     @State private var loadingMore = false
     @State private var error: String?
     @State private var composing = false
@@ -459,8 +459,10 @@ struct FeedScreen: View {
         .refreshable { await load() }
         .task { await extras.load() }
         .task(id: scope) {
-            posts = []
-            loaded = false
+            // the saved copy shows at once; the server is asked again only if it is older than 30 seconds
+            if let r = account.saved(account.signedIn ? "feedAll" : "publicFeed", tag: scope) { show(r) } else { posts = []; loaded = false }
+            if groups.isEmpty, let r = account.saved(storiesAction, tag: "feed") { groups = decode([StoryGroup].self, r["groups"]) ?? [] }
+            if !posts.isEmpty, let at = FeedFresh.at[scope], Date().timeIntervalSince(at) < 30 { return }
             await load()
         }
         .sheet(isPresented: $composing) { ComposePostSheet { await load() } }
@@ -503,17 +505,27 @@ struct FeedScreen: View {
         }
     }
 
+    private var storiesAction: String { account.signedIn ? "stories" : "publicStories" }
+
+    private func show(_ r: [String: Any]) {
+        let list = decode([FeedPost].self, r["posts"]) ?? []
+        posts = list
+        more = list.count >= 25
+        loaded = true
+    }
+
     private func load() async {
         Task { await loadStories() }
         let action = account.signedIn ? "feedAll" : "publicFeed"
-        if posts.isEmpty, let r = account.saved(action, tag: scope) { posts = decode([FeedPost].self, r["posts"]) ?? [] }
+        let asked = scope
+        if posts.isEmpty, let r = account.saved(action, tag: asked) { show(r) }
         do {
-            let r = try await account.callSaving(action, ["scope": scope], tag: scope)
-            let list = decode([FeedPost].self, r["posts"]) ?? []
-            posts = list
-            more = list.count >= 25
+            let r = try await account.callSaving(action, ["scope": asked], tag: asked)
+            guard asked == scope else { return }   // the tab changed while waiting
+            show(r)
+            FeedFresh.at[asked] = Date()
             error = nil
-        } catch { self.error = error.localizedDescription }
+        } catch { if posts.isEmpty { self.error = error.localizedDescription } }
         loaded = true
     }
 
@@ -530,7 +542,23 @@ struct FeedScreen: View {
     }
 
     private func loadStories() async {
-        if let r = try? await account.call(account.signedIn ? "stories" : "publicStories") { groups = decode([StoryGroup].self, r["groups"]) ?? [] }
+        if let r = try? await account.callSaving(storiesAction, tag: "feed") { groups = decode([StoryGroup].self, r["groups"]) ?? [] }
+    }
+}
+
+/// When each feed tab last came from the server, so switching tabs doesn't wait on it every time
+@MainActor enum FeedFresh { static var at: [String: Date] = [:] }
+
+/// Asks for the feed and the stories as soon as the app opens, so the Feed tab already has fresh saved answers
+@MainActor enum FeedPrefetch {
+    static func run() {
+        let account = AccountStore.shared
+        let signed = account.signedIn
+        let scope = signed ? (UserDefaults.standard.string(forKey: "ab.feed.scope") ?? "friends") : "guest"
+        Task {
+            if (try? await account.callSaving(signed ? "feedAll" : "publicFeed", ["scope": scope], tag: scope)) != nil { FeedFresh.at[scope] = Date() }
+        }
+        Task { _ = try? await account.callSaving(signed ? "stories" : "publicStories", tag: "feed") }
     }
 }
 

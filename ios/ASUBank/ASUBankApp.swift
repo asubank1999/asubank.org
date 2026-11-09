@@ -48,6 +48,7 @@ struct ASUBankApp: App {
                     try? await Task.sleep(nanoseconds: 600_000_000)
                     withAnimation(.easeOut(duration: 0.35)) { splash = false }
                 }
+                .task { FeedPrefetch.run() }
                 .task {
                     await AccountStore.shared.refresh()
                     if AccountStore.shared.signedIn {

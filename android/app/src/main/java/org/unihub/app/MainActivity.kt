@@ -127,6 +127,14 @@ class AppActivity : ComponentActivity() {
         HomePrefs.init()
         Lectures.init()
         Lectures.schedule(applicationContext)
+        // photos stay on the phone (Drive sends no-cache headers), so the feed doesn't download them again at every start
+        coil.Coil.setImageLoader(
+            coil.ImageLoader.Builder(applicationContext)
+                .respectCacheHeaders(false)
+                .diskCache { coil.disk.DiskCache.Builder().directory(cacheDir.resolve("image_cache")).maxSizeBytes(120L * 1024 * 1024).build() }
+                .build()
+        )
+        FeedPrefetch.run(kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main))
         intent?.getStringExtra("openTab")?.let { ChatNotifier.pendingTab.value = it; splashDone = true }
         intent?.getStringExtra("openRoom")?.let { ChatNotifier.pendingRoom.value = it }
         // CI screenshots: --es startTab search --es startQuery calculus --ez acceptTerms true

@@ -62,7 +62,32 @@ final class PhotoCache {
     static let shared = PhotoCache()
     private let images = NSCache<NSString, UIImage>()
     private var running: [String: Task<UIImage?, Never>] = [:]
-    init() { images.countLimit = 150 }
+    init() {
+        images.countLimit = 150
+        try? FileManager.default.createDirectory(at: PhotoCache.folder, withIntermediateDirectories: true)
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 20) { PhotoCache.trim() }
+    }
+
+    nonisolated static var folder: URL { FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("photos", isDirectory: true) }
+
+    nonisolated static func diskFile(_ key: String) -> URL {
+        var h: UInt64 = 1469598103934665603   // FNV-1a: a stable name for the address
+        for b in key.utf8 { h = (h ^ UInt64(b)) &* 1099511628211 }
+        return folder.appendingPathComponent(String(h, radix: 16))
+    }
+
+    /// Keeps the folder under about 80 MB, oldest first
+    nonisolated static func trim() {
+        let fm = FileManager.default, keys: [URLResourceKey] = [.contentModificationDateKey, .fileSizeKey]
+        guard let files = try? fm.contentsOfDirectory(at: folder, includingPropertiesForKeys: keys) else { return }
+        var list = files.compactMap { u -> (URL, Date, Int)? in
+            guard let v = try? u.resourceValues(forKeys: Set(keys)) else { return nil }
+            return (u, v.contentModificationDate ?? .distantPast, v.fileSize ?? 0)
+        }
+        var total = list.reduce(0) { $0 + $1.2 }
+        list.sort { $0.1 < $1.1 }
+        for f in list where total > 80_000_000 { try? fm.removeItem(at: f.0); total -= f.2 }
+    }
 
     func cached(_ url: URL) -> UIImage? { images.object(forKey: url.absoluteString as NSString) }
 
@@ -71,8 +96,17 @@ final class PhotoCache {
         if let i = images.object(forKey: key as NSString) { return i }
         if let t = running[key] { return await t.value }
         let side = pixelSize * UIScreen.main.scale
+        let file = PhotoCache.diskFile(key)
         let t = Task.detached(priority: .utility) { () -> UIImage? in
-            guard let (data, _) = try? await URLSession.shared.data(from: url) else { return nil }
+            // photos are kept on the phone for a week, so the feed doesn't download them again at every start
+            var data = try? Data(contentsOf: file)
+            if let d = data, let at = (try? file.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate,
+               Date().timeIntervalSince(at) > 7 * 86400 || d.isEmpty { data = nil }
+            if data == nil, let (d, r) = try? await URLSession.shared.data(from: url), (r as? HTTPURLResponse)?.statusCode ?? 200 < 400, !d.isEmpty {
+                data = d
+                try? d.write(to: file, options: .atomic)
+            }
+            guard let data else { return nil }
             let opts: [CFString: Any] = [kCGImageSourceCreateThumbnailFromImageAlways: true, kCGImageSourceCreateThumbnailWithTransform: true,
                                          kCGImageSourceShouldCacheImmediately: true, kCGImageSourceThumbnailMaxPixelSize: max(side, 180)]
             guard let src = CGImageSourceCreateWithData(data as CFData, nil),
