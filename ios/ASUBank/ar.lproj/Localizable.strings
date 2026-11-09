@@ -911,6 +911,7 @@
 "Final" = "نهائي";
 "Final Exam Timings with Countdown" = "مواعيد الامتحانات النهائية مع العد التنازلي";
 "Final mark calculator" = "حاسبة علامة الفاينل";
+"Final mark calculator: see what you need in the final to pass or reach your goal" = "حاسبة العلامة النهائية: اعرف كم تحتاج في الفاينل لتنجح أو تصل إلى هدفك";
 "Find" = "بحث";
 "Find a hall" = "ابحث عن قاعة";
 "Find a subject" = "ابحث عن مادة";
@@ -929,6 +930,7 @@
 "First Year" = "السنة الأولى";
 "First name" = "الاسم الأول";
 "First year" = "السنة الأولى";
+"Fixed \"Load more\" showing in the Feed when there were no more posts" = "تم إصلاح ظهور زر \"تحميل المزيد\" في المنشورات عندما لا توجد منشورات أخرى";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
 "Fixed a crash when adding a lecture" = "إصلاح توقف التطبيق عند إضافة محاضرة";
@@ -943,6 +945,7 @@
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "إصلاحات: صور شخصية أوضح، وصف المتصلين يعرض المتصلين فقط";
 "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "إصلاحات: صور شخصية أوضح، ولم تعد الصور مائلة على أندرويد، وصف المتصلين يعرض المتصلين فقط";
 "Flashcards" = "بطاقات المراجعة";
+"Flashcards: make your own decks and study them in rounds" = "البطاقات التعليمية: اصنع مجموعاتك وراجعها على جولات";
 "Flexible" = "مرن";
 "Float" = "Float";
 "Floor" = "الطابق";
@@ -2088,7 +2091,9 @@
 "Study plans" = "الخطط الدراسية";
 "Study resources" = "مصادر الدراسة";
 "Study stats" = "إحصائيات الدراسة";
+"Study streak and stats: the focus timer counts your study time per subject" = "سلسلة الدراسة والإحصائيات: مؤقت التركيز يحسب وقت دراستك لكل مادة";
 "Study together" = "الدراسة معاً";
+"Study tools: an absence tracker for each subject, with a warning before you reach the limit" = "أدوات الدراسة: متابعة الغياب لكل مادة، مع تنبيه قبل الوصول إلى الحد";
 "Study topics" = "مواضيع الدراسة";
 "Studying" = "تدرس";
 "Subject" = "مادة";
@@ -2195,6 +2200,7 @@
 "That video is too big. Keep it short." = "هذا الفيديو كبير جداً. اجعله قصيراً.";
 "The About text now says how UniHub is supported: ads on the website, sponsors and donations" = "صفحة «حول» توضّح الآن كيف يُدعم UniHub: الإعلانات على الموقع والرعاة والتبرعات";
 "The Chat tab opens on Messages first; Rooms are one tap away" = "تبويب الدردشة يفتح على الرسائل أولاً، والغرف بلمسة واحدة";
+"The Feed opens much faster and keeps photos on your phone" = "صفحة المنشورات تفتح أسرع بكثير وتحفظ الصور على هاتفك";
 "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages" = "تبويب الإشعارات يعرض الآن كل إشعار ظهر على هاتفك، ومنها تذكيرات المحاضرات والرسائل";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "يتطوع مشرفو المجموعات بوقتهم لتنظيم المجتمع وإدارته. لا يضمن المشرفون دقة أي مادة يشاركها الأعضاء أو اكتمالها أو موثوقيتها، وليسوا مسؤولين عن النصائح أو الآراء أو المحتوى الذي ينشره الآخرون.";

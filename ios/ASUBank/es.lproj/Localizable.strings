@@ -911,6 +911,7 @@
 "Final" = "Final";
 "Final Exam Timings with Countdown" = "Final Exam Timings with Countdown";
 "Final mark calculator" = "Calculadora de nota final";
+"Final mark calculator: see what you need in the final to pass or reach your goal" = "Calculadora de nota final: mira lo que necesitas en el final para aprobar o llegar a tu meta";
 "Find" = "Buscar";
 "Find a hall" = "Buscar un aula";
 "Find a subject" = "Buscar una materia";
@@ -929,6 +930,7 @@
 "First Year" = "First Year";
 "First name" = "Nombre";
 "First year" = "Primer año";
+"Fixed \"Load more\" showing in the Feed when there were no more posts" = "Se corrigió que \"Cargar más\" apareciera en el Feed cuando no había más publicaciones";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
 "Fixed a crash when adding a lecture" = "Se corrigió un cierre inesperado al añadir una clase";
@@ -943,6 +945,7 @@
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "Correcciones: fotos de perfil más nítidas y la fila de conectados solo muestra a quien está en línea";
 "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "Correcciones: fotos de perfil más nítidas, las fotos ya no salen de lado en Android y la fila de conectados solo muestra a quien está en línea";
 "Flashcards" = "Tarjetas de estudio";
+"Flashcards: make your own decks and study them in rounds" = "Tarjetas de estudio: crea tus propios mazos y estúdialos por rondas";
 "Flexible" = "Flexible";
 "Float" = "Float";
 "Floor" = "Planta";
@@ -2088,7 +2091,9 @@
 "Study plans" = "Study plans";
 "Study resources" = "Recursos de estudio";
 "Study stats" = "Estadísticas de estudio";
+"Study streak and stats: the focus timer counts your study time per subject" = "Racha y estadísticas de estudio: el temporizador cuenta tu tiempo de estudio por asignatura";
 "Study together" = "Estudiar juntos";
+"Study tools: an absence tracker for each subject, with a warning before you reach the limit" = "Herramientas de estudio: control de faltas por asignatura, con aviso antes de llegar al límite";
 "Study topics" = "Temas de estudio";
 "Studying" = "Estudiando";
 "Subject" = "Materia";
@@ -2195,6 +2200,7 @@
 "That video is too big. Keep it short." = "Ese vídeo es demasiado grande. Que sea corto.";
 "The About text now says how UniHub is supported: ads on the website, sponsors and donations" = "El texto de Acerca de ahora explica cómo se apoya UniHub: anuncios en el sitio web, patrocinadores y donaciones";
 "The Chat tab opens on Messages first; Rooms are one tap away" = "La pestaña Chat abre primero Mensajes; las salas están a un toque";
+"The Feed opens much faster and keeps photos on your phone" = "El Feed se abre mucho más rápido y guarda las fotos en tu teléfono";
 "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages" = "La pestaña Notificaciones ahora muestra todas las notificaciones que mostró tu teléfono, incluidos recordatorios de clases y mensajes";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.";

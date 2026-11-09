@@ -4901,6 +4901,10 @@
   "ar": "حاسبة علامة الفاينل",
   "es": "Calculadora de nota final"
  },
+ "Final mark calculator: see what you need in the final to pass or reach your goal": {
+  "ar": "حاسبة العلامة النهائية: اعرف كم تحتاج في الفاينل لتنجح أو تصل إلى هدفك",
+  "es": "Calculadora de nota final: mira lo que necesitas en el final para aprobar o llegar a tu meta"
+ },
  "Find": {
   "ar": "بحث",
   "es": "Buscar"
@@ -4958,6 +4962,10 @@
   "ar": "السنة الأولى",
   "es": "Primer año"
  },
+ "Fixed \"Load more\" showing in the Feed when there were no more posts": {
+  "ar": "تم إصلاح ظهور زر \"تحميل المزيد\" في المنشورات عندما لا توجد منشورات أخرى",
+  "es": "Se corrigió que \"Cargar más\" apareciera en el Feed cuando no había más publicaciones"
+ },
  "Fixed Google Drive folders that looked empty: every file inside a folder now shows up": {},
  "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.": {},
  "Fixed a crash when adding a lecture": {
@@ -4998,6 +5006,10 @@
  "Flashcards": {
   "ar": "بطاقات المراجعة",
   "es": "Tarjetas de estudio"
+ },
+ "Flashcards: make your own decks and study them in rounds": {
+  "ar": "البطاقات التعليمية: اصنع مجموعاتك وراجعها على جولات",
+  "es": "Tarjetas de estudio: crea tus propios mazos y estúdialos por rondas"
  },
  "Flexible": {
   "ar": "مرن",
@@ -8901,9 +8913,17 @@
   "ar": "إحصائيات الدراسة",
   "es": "Estadísticas de estudio"
  },
+ "Study streak and stats: the focus timer counts your study time per subject": {
+  "ar": "سلسلة الدراسة والإحصائيات: مؤقت التركيز يحسب وقت دراستك لكل مادة",
+  "es": "Racha y estadísticas de estudio: el temporizador cuenta tu tiempo de estudio por asignatura"
+ },
  "Study together": {
   "ar": "الدراسة معاً",
   "es": "Estudiar juntos"
+ },
+ "Study tools: an absence tracker for each subject, with a warning before you reach the limit": {
+  "ar": "أدوات الدراسة: متابعة الغياب لكل مادة، مع تنبيه قبل الوصول إلى الحد",
+  "es": "Herramientas de estudio: control de faltas por asignatura, con aviso antes de llegar al límite"
  },
  "Study topics": {
   "ar": "مواضيع الدراسة",
@@ -9280,6 +9300,10 @@
  "The Chat tab opens on Messages first; Rooms are one tap away": {
   "ar": "تبويب الدردشة يفتح على الرسائل أولاً، والغرف بلمسة واحدة",
   "es": "La pestaña Chat abre primero Mensajes; las salas están a un toque"
+ },
+ "The Feed opens much faster and keeps photos on your phone": {
+  "ar": "صفحة المنشورات تفتح أسرع بكثير وتحفظ الصور على هاتفك",
+  "es": "El Feed se abre mucho más rápido y guarda las fotos en tu teléfono"
  },
  "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages": {
   "ar": "تبويب الإشعارات يعرض الآن كل إشعار ظهر على هاتفك، ومنها تذكيرات المحاضرات والرسائل",

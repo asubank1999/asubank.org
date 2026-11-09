@@ -3,6 +3,14 @@
 Summaries, past papers and test banks for Applied Science Private University students, in a native iOS app.
 UniHub is free and student-run. It is not made by or affiliated with the university.
 
+### What's new in 1.20.0
+- Study tools: an absence tracker for each subject, with a warning before you reach the limit
+- Final mark calculator: see what you need in the final to pass or reach your goal
+- Flashcards: make your own decks and study them in rounds
+- Study streak and stats: the focus timer counts your study time per subject
+- The Feed opens much faster and keeps photos on your phone
+- Fixed "Load more" showing in the Feed when there were no more posts
+
 ### What's new in 1.19.1
 - Upload screen: choose Quick upload for any file, or Structured submission for formal files with full details
 - The Notifications tab now lists every notification your phone showed, including lecture reminders and messages

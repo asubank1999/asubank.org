@@ -911,6 +911,7 @@
 "Final" = "Final";
 "Final Exam Timings with Countdown" = "Final Exam Timings with Countdown";
 "Final mark calculator" = "Final mark calculator";
+"Final mark calculator: see what you need in the final to pass or reach your goal" = "Final mark calculator: see what you need in the final to pass or reach your goal";
 "Find" = "Find";
 "Find a hall" = "Find a hall";
 "Find a subject" = "Find a subject";
@@ -929,6 +930,7 @@
 "First Year" = "First Year";
 "First name" = "First name";
 "First year" = "First year";
+"Fixed \"Load more\" showing in the Feed when there were no more posts" = "Fixed \"Load more\" showing in the Feed when there were no more posts";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up" = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up";
 "Fixed Google Drive folders that looked empty: every file inside a folder now shows up." = "Fixed Google Drive folders that looked empty: every file inside a folder now shows up.";
 "Fixed a crash when adding a lecture" = "Fixed a crash when adding a lecture";
@@ -943,6 +945,7 @@
 "Fixes: sharper profile photos, and the online row shows only people who are online" = "Fixes: sharper profile photos, and the online row shows only people who are online";
 "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online" = "Fixes: sharper profile photos, photos no longer sideways on Android, and the online row shows only people who are online";
 "Flashcards" = "Flashcards";
+"Flashcards: make your own decks and study them in rounds" = "Flashcards: make your own decks and study them in rounds";
 "Flexible" = "Flexible";
 "Float" = "Float";
 "Floor" = "Floor";
@@ -2088,7 +2091,9 @@
 "Study plans" = "Study plans";
 "Study resources" = "Study resources";
 "Study stats" = "Study stats";
+"Study streak and stats: the focus timer counts your study time per subject" = "Study streak and stats: the focus timer counts your study time per subject";
 "Study together" = "Study together";
+"Study tools: an absence tracker for each subject, with a warning before you reach the limit" = "Study tools: an absence tracker for each subject, with a warning before you reach the limit";
 "Study topics" = "Study topics";
 "Studying" = "Studying";
 "Subject" = "Subject";
@@ -2195,6 +2200,7 @@
 "That video is too big. Keep it short." = "That video is too big. Keep it short.";
 "The About text now says how UniHub is supported: ads on the website, sponsors and donations" = "The About text now says how UniHub is supported: ads on the website, sponsors and donations";
 "The Chat tab opens on Messages first; Rooms are one tap away" = "The Chat tab opens on Messages first; Rooms are one tap away";
+"The Feed opens much faster and keeps photos on your phone" = "The Feed opens much faster and keeps photos on your phone";
 "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages" = "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.";
