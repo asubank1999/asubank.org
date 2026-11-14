@@ -272,7 +272,7 @@ function hashPassword(pw, salt) {
 }
 
 /** Current scheme: salted, HASH_ROUNDS rounds of HMAC-SHA256 (PBKDF2-style), stored as "v2$<rounds>$<hash>". */
-var HASH_ROUNDS = 3000;
+var HASH_ROUNDS = 300;   // Apps Script needs about 1-4 ms per round; 300 keeps sign-in as fast as before (3000 took 4.7 s)
 function hashPasswordV2(pw, salt, rounds) {
   var h = String(pw);
   for (var i = 0; i < rounds; i++) {
@@ -1204,7 +1204,7 @@ var ACTIONS = {
     }
     var u = findUser(b.login);
     if (!checkPassword(u, b.password)) fail('Wrong username or password.');
-    if (!/^v2\$/.test(String(u.hash || ''))) { var up = newPasswordHash(b.password); update('Users', u._row, up); u.salt = up.salt; u.hash = up.hash; }
+    if (HASH_ROUNDS > 300 && !/^v2\$/.test(String(u.hash || ''))) { var up = newPasswordHash(b.password); update('Users', u._row, up); u.salt = up.salt; u.hash = up.hash; }
     if (truthy(u.banned)) fail('This account is banned' + (u.banReason ? ': ' + u.banReason : '.'));
     CacheService.getScriptCache().remove(key);
     if (isAdminIdentity(u) && u.role !== 'admin') { update('Users', u._row, { role: 'admin' }); u.role = 'admin'; }
