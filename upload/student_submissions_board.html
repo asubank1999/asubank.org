@@ -1040,8 +1040,14 @@ function loadSubmissions() {
     const script = document.createElement('script');
     script.src = API_URL + '?action=list&callback=' + callbackName;
     script.onerror = function() {
-        delete window[callbackName];
         document.head.removeChild(script);
+        // Browsers signed in to several Google accounts get a broken /u/1/ redirect; ask again without cookies
+        fetch(script.src, { credentials: 'omit' }).then(r => r.text()).then(t => {
+            window[callbackName](JSON.parse(t.slice(t.indexOf('(') + 1, t.lastIndexOf(')'))));
+        }).catch(showNetworkError);
+    };
+    function showNetworkError() {
+        delete window[callbackName];
         refreshBtn.classList.remove('spin');
         document.getElementById('errorBanner').style.display = 'flex';
         document.getElementById('errorMessage').textContent = 'Network error. Please check your connection and API URL.';
