@@ -97,7 +97,9 @@ function doPost(e) {
     if (!fn) return out({ ok: false, error: 'Unknown action.' });
     return out(fn(body));
   } catch (err) {
-    return out({ ok: false, error: err.userMessage || ('Something went wrong: ' + err.message) });
+    if (err.userMessage) return out({ ok: false, error: err.userMessage });
+    console.error('action ' + body.action + ' failed: ' + (err && err.stack || err));
+    return out({ ok: false, error: 'Something went wrong. Please try again.' });
   }
 }
 
@@ -208,6 +210,19 @@ function log(admin, action, target, detail) {
   append('Log', { time: new Date().toISOString(), adminId: admin.id, action: action, target: target || '', detail: detail || '' });
 }
 
+/** Something that looks like an attack (repeated wrong passwords, wrong admin codes): logged, and the owner is emailed at most once an hour */
+function securityEvent(action, target) {
+  try { log({ id: 'security' }, action, String(target || '').slice(0, 60), ''); } catch (e) {}
+  var c = CacheService.getScriptCache();
+  if (c.get('secmail')) return;
+  c.put('secmail', '1', 3600);
+  try {
+    MailApp.sendEmail(OWNER_EMAIL, 'UniHub security alert: ' + action,
+      'UniHub noticed: ' + action + ' (' + String(target || '').slice(0, 60) + ') at ' + new Date().toISOString() +
+      '.\n\nThe account is locked for 15 minutes automatically. More events this hour are in the admin log only.');
+  } catch (e) {}
+}
+
 function truthy(v) { return v === true || v === 'TRUE' || v === 'true'; }
 
 // MARK: - moderation
@@ -247,12 +262,51 @@ function blockedIds(u) { return String((u && u.blocked) || '').split(',').filter
 
 function norm(s) { return String(s || '').trim().toLowerCase(); }
 
+/** Old scheme (300 rounds). Kept only to check passwords saved before 2026-11-14; they are upgraded at the next sign-in. */
 function hashPassword(pw, salt) {
   var h = String(pw);
   for (var i = 0; i < 300; i++) {
     h = Utilities.base64Encode(Utilities.computeHmacSha256Signature(h, salt + ':' + i));
   }
   return h;
+}
+
+/** Current scheme: salted, HASH_ROUNDS rounds of HMAC-SHA256 (PBKDF2-style), stored as "v2$<rounds>$<hash>". */
+var HASH_ROUNDS = 3000;
+function hashPasswordV2(pw, salt, rounds) {
+  var h = String(pw);
+  for (var i = 0; i < rounds; i++) {
+    h = Utilities.base64Encode(Utilities.computeHmacSha256Signature(h, salt + ':' + i));
+  }
+  return 'v2$' + rounds + '$' + h;
+}
+
+/** A new salt and hash for a password: { salt, hash } */
+function newPasswordHash(pw) {
+  var salt = Utilities.getUuid() + Utilities.getUuid();
+  return { salt: salt, hash: hashPasswordV2(pw, salt, HASH_ROUNDS) };
+}
+
+/** Comparison that takes the same time whether the first or the last character differs */
+function sameText(a, b) {
+  a = String(a); b = String(b);
+  var diff = a.length ^ b.length;
+  for (var i = 0; i < Math.max(a.length, b.length); i++) diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  return diff === 0;
+}
+
+/** True when pw is this user's password (either scheme) */
+function checkPassword(u, pw) {
+  if (!u) return false;
+  var stored = String(u.hash || '');
+  var m = /^v2\$(\d+)\$/.exec(stored);
+  return sameText(m ? hashPasswordV2(pw, u.salt, Number(m[1])) : hashPassword(pw, u.salt), stored);
+}
+
+/** Run from the editor to see how long one sign-in check takes with HASH_ROUNDS */
+function benchHash() {
+  var t0 = Date.now(); hashPasswordV2('benchmark-password', Utilities.getUuid(), HASH_ROUNDS);
+  Logger.log(HASH_ROUNDS + ' rounds took ' + (Date.now() - t0) + ' ms');
 }
 
 function newId() { return Utilities.getUuid().replace(/-/g, '').slice(0, 16); }
@@ -304,6 +358,24 @@ function validPhone(s) { return !s || /^\+?[0-9 ]{7,18}$/.test(s); }
 /** Sex is 'male' or 'female'; empty means not chosen yet (accounts made before 1.18, or older apps) */
 function cleanGender(g) { g = String(g || '').trim().toLowerCase(); return g === 'male' || g === 'female' ? g : ''; }
 function validPassword(s) { return String(s || '').length >= 6 && String(s).length <= 100; }
+
+/** The first bytes of the file must match its type, so a program renamed to .pdf is refused. Text-like files only must not be programs. */
+var SIGNATURES = {
+  pdf: ['25504446'], jpg: ['ffd8ff'], jpeg: ['ffd8ff'], png: ['89504e47'], webp: ['52494646'],
+  docx: ['504b0304'], pptx: ['504b0304'], xlsx: ['504b0304'], zip: ['504b0304', '504b0506'],
+  doc: ['d0cf11e0'], ppt: ['d0cf11e0'], xls: ['d0cf11e0'], rar: ['52617221'], '7z': ['377abcaf'],
+  webm: ['1a45dfa3'], mp3: ['494433', 'fffb', 'fff3', 'fff2']
+};
+var PROGRAMS = ['4d5a', '7f454c46', '2321', 'cafebabe', 'feedface', 'feedfacf', 'cefaedfe', 'cffaedfe'];
+function fileLooksRight(name, bytes) {
+  var hex = '';
+  for (var i = 0; i < Math.min(12, bytes.length); i++) hex += ('0' + ((bytes[i] + 256) % 256).toString(16)).slice(-2);
+  if (PROGRAMS.some(function (p) { return hex.indexOf(p) === 0; })) return false;
+  var ext = String(name).split('.').pop().toLowerCase();
+  if (['mp4', 'mov', 'm4v', 'm4a', 'heic'].indexOf(ext) >= 0) return hex.slice(8, 16) === '66747970'; // "ftyp" box
+  var sig = SIGNATURES[ext];
+  return !sig || sig.some(function (p) { return hex.indexOf(p) === 0; });
+}
 
 function tooMany(key, max) {
   var c = CacheService.getScriptCache();
@@ -928,6 +1000,19 @@ var ACTIONS = {
     return { ok: true, username: u.username, created: u.created, current: TERMS_VERSION, accepted: list };
   },
 
+  /** Admins: the whole proof log, newest first, so nobody has to be looked up one by one. `source` is ios, android or web. */
+  adminTermsAll: function (b) {
+    auth(b, { admin: true });
+    var map = usersById();
+    var list = rows('TermsLog').map(function (r) {
+      var u = r.userId ? map[r.userId] : null;
+      return { id: String(r.id), at: r.time instanceof Date ? r.time.toISOString() : String(r.time), version: String(r.version), source: String(r.source || ''), appVersion: String(r.appVersion || ''),
+               username: u ? String(u.username) : String(r.username || ''), name: u ? String(u.displayName || '') : '' };
+    });
+    list.sort(function (x, y) { return y.at.localeCompare(x.at); });
+    return { ok: true, current: TERMS_VERSION, total: list.length, records: list.slice(0, 2000) };
+  },
+
   /** How many students are online. Public, and only a number: the list itself needs an account. */
   onlineCount: function () {
     var p = presence(), now = Date.now();
@@ -1058,7 +1143,8 @@ var ACTIONS = {
   adminCode: function (b) {
     if (!isAdminIdentity(b)) fail('No code is needed for this account.');
     if (tooMany('code', 5)) fail('Too many codes. Try again in 15 minutes.');
-    var code = String(Math.floor(100000 + Math.random() * 900000));
+    var code = String(100000 + parseInt(Utilities.getUuid().replace(/-/g, '').slice(0, 12), 16) % 900000);
+    CacheService.getScriptCache().remove('codefail');
     CacheService.getScriptCache().put('code', code, 900);
     MailApp.sendEmail(OWNER_EMAIL, 'UniHub admin code: ' + code,
       'Someone is creating the UniHub admin account (' + (b.username || '') + ').\n\nYour code: ' + code +
@@ -1077,12 +1163,15 @@ var ACTIONS = {
     if (!validUniId(uniId)) fail('University IDs are numbers only, like 202112345.');
     var gender = cleanGender(b.gender);
     if (b.gender !== undefined && !gender) fail('Choose male or female.');
-    if (tooMany('reg:' + (b.device || 'x'), 6)) fail('Too many sign-ups. Try again later.');
+    if (tooMany('reg:' + (b.device || 'x'), 6) || tooMany('reg:all', 40)) fail('Too many sign-ups. Try again later.');
     var admin = isAdminIdentity({ username: username, email: email, uniId: uniId });
     if (admin) {
       var code = CacheService.getScriptCache().get('code');
       if (!b.code) return { ok: false, needCode: true, error: 'This account needs the admin code. Tap "Send code".' };
-      if (!code || String(b.code).trim() !== code) fail('That code is wrong or expired.');
+      if (!code || !sameText(String(b.code).trim(), code)) {
+        if (tooMany('codefail', 5)) { CacheService.getScriptCache().remove('code'); securityEvent('adminCodeLocked', username); }
+        fail('That code is wrong or expired.');
+      }
       CacheService.getScriptCache().remove('code');
     }
     return withLock(function () {
@@ -1091,11 +1180,11 @@ var ACTIONS = {
       if (taken('username', username)) fail('That username is taken.');
       if (taken('email', email)) fail('An account already uses that email.');
       if (taken('uniId', uniId)) fail('An account already uses that university ID.');
-      var salt = Utilities.getUuid();
+      var pwh = newPasswordHash(b.password);
       var early = isEarlySupporter(new Date());
       var startBadges = (admin ? ['founder'] : []).concat(early ? ['early_supporter'] : []);
-      var u = { id: newId(), username: username, email: email, uniId: uniId ? "'" + uniId : '', displayName: displayName, salt: salt,
-                hash: hashPassword(b.password, salt), role: admin ? 'admin' : 'user', banned: false, banReason: '',
+      var u = { id: newId(), username: username, email: email, uniId: uniId ? "'" + uniId : '', displayName: displayName, salt: pwh.salt,
+                hash: pwh.hash, role: admin ? 'admin' : 'user', banned: false, banReason: '',
                 created: new Date().toISOString(), lastSeen: new Date().toISOString(), color: COLORS[all.length % COLORS.length], mustReset: false,
                 avatar: '', phone: '', showPhone: false, bio: '', badges: startBadges.join(','),
                 gender: gender, showGender: !!(gender && b.showGender) };
@@ -1109,9 +1198,13 @@ var ACTIONS = {
 
   login: function (b) {
     var key = 'login:' + norm(b.login);
-    if (tooMany(key, 8)) fail('Too many tries. Wait 15 minutes and try again.');
+    if (tooMany(key, 8)) {
+      if (Number(CacheService.getScriptCache().get(key)) === 9) securityEvent('loginLocked', norm(b.login));
+      fail('Too many tries. Wait 15 minutes and try again.');
+    }
     var u = findUser(b.login);
-    if (!u || hashPassword(b.password, u.salt) !== u.hash) fail('Wrong username or password.');
+    if (!checkPassword(u, b.password)) fail('Wrong username or password.');
+    if (!/^v2\$/.test(String(u.hash || ''))) { var up = newPasswordHash(b.password); update('Users', u._row, up); u.salt = up.salt; u.hash = up.hash; }
     if (truthy(u.banned)) fail('This account is banned' + (u.banReason ? ': ' + u.banReason : '.'));
     CacheService.getScriptCache().remove(key);
     if (isAdminIdentity(u) && u.role !== 'admin') { update('Users', u._row, { role: 'admin' }); u.role = 'admin'; }
@@ -1230,10 +1323,12 @@ var ACTIONS = {
   changePassword: function (b) {
     var s = auth(b);
     var u = userById(s.id);
-    if (hashPassword(b.old, u.salt) !== u.hash) fail('Your current password is wrong.');
+    if (tooMany('pw:' + s.id, 8)) fail('Too many tries. Wait 15 minutes and try again.');
+    if (!checkPassword(u, b.old)) fail('Your current password is wrong.');
     if (!validPassword(b.password)) fail('Passwords need at least 6 characters.');
-    var salt = Utilities.getUuid();
-    update('Users', u._row, { salt: salt, hash: hashPassword(b.password, salt), mustReset: false });
+    var pwh = newPasswordHash(b.password);
+    update('Users', u._row, { salt: pwh.salt, hash: pwh.hash, mustReset: false });
+    log({ id: s.id }, 'changePassword', s.username, '');
     dropUserSessions(u.id, b.token);
     return { ok: true };
   },
@@ -1241,7 +1336,8 @@ var ACTIONS = {
   deleteAccount: function (b) {
     var s = auth(b);
     var u = userById(s.id);
-    if (hashPassword(b.password, u.salt) !== u.hash) fail('Wrong password.');
+    if (tooMany('pw:' + s.id, 8)) fail('Too many tries. Wait 15 minutes and try again.');
+    if (!checkPassword(u, b.password)) fail('Wrong password.');
     return withLock(function () {
       dropUserSessions(u.id);
       removeAvatarFile(u.avatar);
@@ -1576,7 +1672,9 @@ var ACTIONS = {
     if (data.length < 8) fail('This file is empty.');
     if (data.length > 34000000) fail('Bigger than 25 MB.');
     if (tooMany(me ? 'subfile:' + me.id : 'subfile:guest', me ? 15 : 60)) fail('Too many uploads. Try again later.');
-    var blob = Utilities.newBlob(Utilities.base64Decode(data), String(b.type || 'application/octet-stream'), name);
+    var bytes = Utilities.base64Decode(data);
+    if (!fileLooksRight(name, bytes)) fail('This file is not what its name says.');
+    var blob = Utilities.newBlob(bytes, String(b.type || 'application/octet-stream'), name);
     var f = submissionFolder().createFile(blob);
     f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     return { ok: true, url: 'https://drive.google.com/file/d/' + f.getId() + '/view' };
@@ -2245,8 +2343,8 @@ var ACTIONS = {
     var u = userById(b.userId);
     if (!u) fail('User not found.');
     var temp = Utilities.getUuid().replace(/-/g, '').slice(0, 8);
-    var salt = Utilities.getUuid();
-    update('Users', u._row, { salt: salt, hash: hashPassword(temp, salt), mustReset: true });
+    var pwh = newPasswordHash(temp);
+    update('Users', u._row, { salt: pwh.salt, hash: pwh.hash, mustReset: true });
     dropUserSessions(u.id);
     log(a, 'resetPassword', u.username, '');
     return { ok: true, password: temp };

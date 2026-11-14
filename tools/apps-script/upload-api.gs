@@ -19,6 +19,33 @@
 var FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
 var MAX_BYTES = 25 * 1024 * 1024;
 var ALLOWED = /\.(pdf|docx?|pptx?|xlsx?|txt|jpe?g|png|heic|webp|zip|rar|7z|csv|mp4|mov|m4v|webm|mp3|m4a)$/i;
+var MAX_APP_BYTES = 2 * 1024 * 1024 * 1024;   // the apps' big uploads (resumable): 2 GB each
+var MAX_PER_HOUR = 300;                        // uploads started per hour, all users together
+
+/** The first bytes of the file must match its type, so a program renamed to .pdf is refused. Text-like files only must not be programs. */
+var SIGNATURES = {
+  pdf: ['25504446'], jpg: ['ffd8ff'], jpeg: ['ffd8ff'], png: ['89504e47'], webp: ['52494646'],
+  docx: ['504b0304'], pptx: ['504b0304'], xlsx: ['504b0304'], zip: ['504b0304', '504b0506'],
+  doc: ['d0cf11e0'], ppt: ['d0cf11e0'], xls: ['d0cf11e0'], rar: ['52617221'], '7z': ['377abcaf'],
+  webm: ['1a45dfa3'], mp3: ['494433', 'fffb', 'fff3', 'fff2']
+};
+var PROGRAMS = ['4d5a', '7f454c46', '2321', 'cafebabe', 'feedface', 'feedfacf', 'cefaedfe', 'cffaedfe'];
+function fileLooksRight(name, bytes) {
+  var hex = '';
+  for (var i = 0; i < Math.min(12, bytes.length); i++) hex += ('0' + ((bytes[i] + 256) % 256).toString(16)).slice(-2);
+  if (PROGRAMS.some(function (p) { return hex.indexOf(p) === 0; })) return false;
+  var ext = String(name).split('.').pop().toLowerCase();
+  if (['mp4', 'mov', 'm4v', 'm4a', 'heic'].indexOf(ext) >= 0) return hex.slice(8, 16) === '66747970'; // "ftyp" box
+  var sig = SIGNATURES[ext];
+  return !sig || sig.some(function (p) { return hex.indexOf(p) === 0; });
+}
+
+/** Counts uploads in the last hour; true once there were too many */
+function tooManyUploads() {
+  var c = CacheService.getScriptCache(), k = 'up:' + new Date().toISOString().slice(0, 13), n = Number(c.get(k) || 0) + 1;
+  c.put(k, String(n), 3700);
+  return n > MAX_PER_HOUR;
+}
 
 /** "[Subject] [Final 2025] original name.pdf" keeps the Drive folder sorted and searchable */
 function taggedName(body, name) {
@@ -36,6 +63,8 @@ function startUpload(body) {
   if (!name || !ALLOWED.test(name)) return reply({ success: false, error: 'This file type is not accepted.' });
   var size = Number(body.size) || 0;
   if (size <= 0) return reply({ success: false, error: 'The file is empty.' });
+  if (size > MAX_APP_BYTES) return reply({ success: false, error: 'Files must be 2 GB or smaller.' });
+  if (tooManyUploads()) return reply({ success: false, error: 'Too many uploads right now. Please try again in an hour.' });
   var mime = String(body.mimeType || 'application/octet-stream');
   var meta = { name: taggedName(body, name), mimeType: mime, parents: [FOLDER_ID] };
   if (body.note) meta.description = String(body.note).slice(0, 500);
@@ -58,6 +87,8 @@ function doPost(e) {
     var bytes = Utilities.base64Decode(String(body.data || ''));
     if (!bytes.length) return reply({ success: false, error: 'The file is empty.' });
     if (bytes.length > MAX_BYTES) return reply({ success: false, error: 'Files must be 25 MB or smaller.' });
+    if (!fileLooksRight(name, bytes)) return reply({ success: false, error: 'This file is not what its name says. Only real documents, photos and videos are accepted.' });
+    if (tooManyUploads()) return reply({ success: false, error: 'Too many uploads right now. Please try again in an hour.' });
 
     var finalName = taggedName(body, name);
 
@@ -66,7 +97,8 @@ function doPost(e) {
     if (body.note) file.setDescription(String(body.note).slice(0, 500));
     return reply({ success: true, id: file.getId(), url: file.getUrl(), name: finalName });
   } catch (err) {
-    return reply({ success: false, error: 'Upload failed: ' + err.message });
+    console.error('upload failed: ' + (err && err.stack || err));
+    return reply({ success: false, error: 'Upload failed. Please try again.' });
   }
 }
 
