@@ -435,6 +435,7 @@
         .badge-approved { background: #78BE20; }
         .badge-pending { background: #FFC627; }
         .badge-review { background: #00A3E0; }
+        .badge-done { background: #6B4FBB; }
 
         .student-name {
             font-weight: 700;
@@ -610,6 +611,12 @@
         body.dark-mode .status-approved { color: #78BE20; }
         body.dark-mode .status-pending { color: #FFC627; }
         body.dark-mode .status-review { color: #00A3E0; }
+        .status-done {
+            background: rgba(107, 79, 187, 0.12);
+            color: #5a3fa8;
+            border: 1px solid rgba(107, 79, 187, 0.3);
+        }
+        body.dark-mode .status-done { color: #b9a5f0; }
 
         .date-text {
             font-size: 0.7rem;
@@ -889,6 +896,7 @@
         </div>
         <div class="stats-container">
             <div class="stat-card"><span class="stat-number" id="statTotal">–</span><span class="stat-label">Total</span></div>
+            <div class="stat-card"><span class="stat-number" id="statDone">–</span><span class="stat-label">Done</span></div>
             <div class="stat-card"><span class="stat-number" id="statApproved">–</span><span class="stat-label">Approved</span></div>
             <div class="stat-card"><span class="stat-number" id="statPending">–</span><span class="stat-label">Pending</span></div>
             <div class="stat-card"><span class="stat-number" id="statReview">–</span><span class="stat-label">Review</span></div>
@@ -902,6 +910,7 @@
 
     <div class="filter-bar">
         <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All <span class="filter-count" id="countAll">–</span></button>
+        <button class="filter-btn" data-filter="done" onclick="setFilter('done', this)">🏁 Done <span class="filter-count" id="countDone">–</span></button>
         <button class="filter-btn" data-filter="approved" onclick="setFilter('approved', this)">✅ Approved <span class="filter-count" id="countApproved">–</span></button>
         <button class="filter-btn" data-filter="pending" onclick="setFilter('pending', this)">⏳ Pending <span class="filter-count" id="countPending">–</span></button>
         <button class="filter-btn" data-filter="review" onclick="setFilter('review', this)">🔍 In Review <span class="filter-count" id="countReview">–</span></button>
@@ -1002,7 +1011,8 @@ function getFileStyle(fileType) {
 // Get status style
 function getStatusStyle(status) {
     const statuses = {
-        approved: { class: 'status-approved', label: '✅ Approved', badge: 'badge-approved', icon: '✓' },
+        done: { class: 'status-done', label: '🏁 DONE', badge: 'badge-done', icon: '✓' },
+        approved: { class: 'status-approved', label: '✅ APPROVED', badge: 'badge-approved', icon: '✓' },
         pending: { class: 'status-pending', label: '⏳ Pending', badge: 'badge-pending', icon: '' },
         review: { class: 'status-review', label: '🔍 In Review', badge: 'badge-review', icon: '' }
     };
@@ -1062,16 +1072,19 @@ function renderSubmissions() {
     // Update counts
     const counts = {
         all: allSubmissions.length,
+        done: allSubmissions.filter(s => s.status === 'done').length,
         approved: allSubmissions.filter(s => s.status === 'approved').length,
         pending: allSubmissions.filter(s => s.status === 'pending').length,
         review: allSubmissions.filter(s => s.status === 'review').length
     };
     
     document.getElementById('statTotal').textContent = counts.all;
+    document.getElementById('statDone').textContent = counts.done;
     document.getElementById('statApproved').textContent = counts.approved;
     document.getElementById('statPending').textContent = counts.pending;
     document.getElementById('statReview').textContent = counts.review;
     document.getElementById('countAll').textContent = counts.all;
+    document.getElementById('countDone').textContent = counts.done;
     document.getElementById('countApproved').textContent = counts.approved;
     document.getElementById('countPending').textContent = counts.pending;
     document.getElementById('countReview').textContent = counts.review;
