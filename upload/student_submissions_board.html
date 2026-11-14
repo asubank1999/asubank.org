@@ -1026,6 +1026,9 @@ function loadSubmissions() {
         
         if (response && response.success) {
             allSubmissions = response.data || [];
+            // Newest first; rows from the same day keep the newest-added on top
+            allSubmissions = allSubmissions.map((s, i) => ({ s, i, t: Date.parse(String(s.submittedDate || '').replace(/\s*\(.*\)\s*$/, '')) || 0 }))
+                .sort((x, y) => (y.t - x.t) || (y.i - x.i)).map(x => x.s);
             renderSubmissions();
         } else {
             document.getElementById('errorBanner').style.display = 'flex';
