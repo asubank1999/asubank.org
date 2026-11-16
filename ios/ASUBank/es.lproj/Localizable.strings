@@ -502,6 +502,7 @@
 "Chat rooms" = "Salas de chat";
 "Chat rooms (add, lock, archive)" = "Salas de chat (añadir, bloquear, archivar)";
 "Chat with students, synced with asubank.org" = "Chatea con estudiantes, sincronizado con asubank.org";
+"Chats and private messages open faster" = "Los chats y los mensajes privados se abren más rápido";
 "Chats and rooms open at once, and new messages follow" = "Los chats y salas se abren al instante, y los mensajes nuevos llegan después";
 "Cheating or a rule of the university" = "Trampa o una norma de la universidad";
 "Check for updates" = "Buscar actualizaciones";
@@ -1746,6 +1747,7 @@
 "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous." = "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous.";
 "Reach the exact audience you need" = "Reach the exact audience you need";
 "React to a story with an emoji or send a reply" = "Reacciona a una historia con un emoji o envía una respuesta";
+"React to any message with an emoji: double-tap for ❤️ or hold to choose" = "Reacciona a cualquier mensaje con un emoji: toca dos veces para ❤️ o mantén pulsado para elegir";
 "Read public posts and stories without an account, also on the website" = "Lee publicaciones e historias públicas sin cuenta, también en la web";
 "Read the full Terms of Service" = "Leer los Términos del servicio completos";
 "Read the terms" = "Leer los términos";
@@ -2060,6 +2062,7 @@
 "Storage" = "Almacenamiento";
 "Stored on" = "Guardado en";
 "Stories: share a photo or text for 24 hours" = "Historias: comparte una foto o un texto durante 24 horas";
+"Story reactions and replies now read naturally, like \"You reacted to her story\" and \"Sara replied to your story\"" = "Las reacciones y respuestas a historias ahora se leen con naturalidad, como \"Reaccionaste a su historia\" y \"Sara respondió a tu historia\"";
 "Story videos can be up to 30 seconds and now play to the very end" = "Los vídeos de las historias duran hasta 30 segundos y ahora se reproducen hasta el final";
 "Strangers" = "Desconocidos";
 "Streak" = "Racha";
@@ -2138,6 +2141,7 @@
 "Support" = "Soporte";
 "Support UniHub" = "Apoya UniHub";
 "Swap" = "Cambio";
+"Swipe left or right to move between tabs" = "Desliza a la izquierda o a la derecha para cambiar de pestaña";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Desliza de lado en el Feed para abrir la cámara y crear una historia con foto o vídeo, a 60 FPS si tu teléfono puede";
 "Swipe the Feed sideways to slide into the camera" = "Desliza el Feed de lado para pasar a la cámara";
 "Switch camera" = "Cambiar de cámara";
@@ -2152,6 +2156,7 @@
 "Talk with other ASU students, ask for help and share materials. Chat is only for signed-in students." = "Talk with other ASU students, ask for help and share materials. Chat is only for signed-in students.";
 "Tall" = "Tall";
 "Tap a building to start typing one of its halls." = "Toca un edificio para empezar a escribir una de sus aulas.";
+"Tap a name in a chat to open their profile" = "Toca un nombre en un chat para abrir su perfil";
 "Tap a score" = "Toca una puntuación";
 "Tap a teacher to add your rating. Averages are out of 10." = "Toca un profesor para añadir tu valoración. Las medias son sobre 10.";
 "Tap someone to unblock them." = "Tap someone to unblock them.";

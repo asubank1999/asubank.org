@@ -502,6 +502,7 @@
 "Chat rooms" = "غرف الدردشة";
 "Chat rooms (add, lock, archive)" = "غرف الدردشة (إضافة، قفل، أرشفة)";
 "Chat with students, synced with asubank.org" = "دردش مع الطلاب، متزامن مع asubank.org";
+"Chats and private messages open faster" = "المحادثات والرسائل الخاصة تفتح بشكل أسرع";
 "Chats and rooms open at once, and new messages follow" = "المحادثات والغرف تفتح فوراً، والرسائل الجديدة تتبعها";
 "Cheating or a rule of the university" = "غش أو مخالفة لأنظمة الجامعة";
 "Check for updates" = "البحث عن تحديثات";
@@ -1746,6 +1747,7 @@
 "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous." = "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous.";
 "Reach the exact audience you need" = "صل إلى الجمهور الذي تحتاجه تمامًا";
 "React to a story with an emoji or send a reply" = "تفاعل مع القصة بإيموجي أو أرسل رداً";
+"React to any message with an emoji: double-tap for ❤️ or hold to choose" = "تفاعل مع أي رسالة بإيموجي: انقر مرتين لـ ❤️ أو اضغط مطولاً للاختيار";
 "Read public posts and stories without an account, also on the website" = "اقرأ المنشورات والقصص العامة بدون حساب، وعلى الموقع أيضاً";
 "Read the full Terms of Service" = "اقرأ شروط الخدمة كاملة";
 "Read the terms" = "اقرأ الشروط";
@@ -2060,6 +2062,7 @@
 "Storage" = "التخزين";
 "Stored on" = "محفوظ على";
 "Stories: share a photo or text for 24 hours" = "القصص: شارك صورة أو نصاً لمدة 24 ساعة";
+"Story reactions and replies now read naturally, like \"You reacted to her story\" and \"Sara replied to your story\"" = "التفاعلات والردود على القصص أصبحت أوضح، مثل \"تفاعلت مع قصتها\" و\"ردّت سارة على قصتك\"";
 "Story videos can be up to 30 seconds and now play to the very end" = "فيديوهات القصص حتى 30 ثانية وتعمل الآن حتى النهاية";
 "Strangers" = "الغرباء";
 "Streak" = "السلسلة";
@@ -2138,6 +2141,7 @@
 "Support" = "الدعم";
 "Support UniHub" = "ادعم UniHub";
 "Swap" = "تبديل";
+"Swipe left or right to move between tabs" = "اسحب يميناً أو يساراً للتنقل بين التبويبات";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "اسحب جانباً في آخر المنشورات لفتح الكاميرا لقصة بصورة أو فيديو، بسرعة 60 إطاراً إن كان هاتفك يدعمها";
 "Swipe the Feed sideways to slide into the camera" = "اسحب الأخبار جانباً للانتقال إلى الكاميرا";
 "Switch camera" = "تبديل الكاميرا";
@@ -2152,6 +2156,7 @@
 "Talk with other ASU students, ask for help and share materials. Chat is only for signed-in students." = "تحدث مع طلاب ASU الآخرين واطلب المساعدة وشارك المواد. الدردشة للطلاب المسجلين فقط.";
 "Tall" = "Tall";
 "Tap a building to start typing one of its halls." = "اضغط على مبنى لبدء كتابة إحدى قاعاته.";
+"Tap a name in a chat to open their profile" = "انقر على الاسم في المحادثة لفتح الملف الشخصي";
 "Tap a score" = "اضغط على درجة";
 "Tap a teacher to add your rating. Averages are out of 10." = "اضغط على دكتور لإضافة تقييمك. المعدلات من 10.";
 "Tap someone to unblock them." = "اضغط على شخص لإلغاء حظره.";

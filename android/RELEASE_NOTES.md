@@ -1,5 +1,12 @@
 **UniHub for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.21.0
+- React to any message with an emoji: double-tap for ❤️ or hold to choose
+- Story reactions and replies now read naturally, like "You reacted to her story" and "Sara replied to your story"
+- Tap a name in a chat to open their profile
+- Swipe left or right to move between tabs
+- Chats and private messages open faster
+
 ### What's new in 1.20.0
 - Study tools: an absence tracker for each subject, with a warning before you reach the limit
 - Final mark calculator: see what you need in the final to pass or reach your goal

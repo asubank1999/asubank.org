@@ -11170,5 +11170,25 @@
  "%s replied to your story": {
   "ar": "ردّ %s على قصتك",
   "es": "%s respondió a tu historia"
+ },
+ "React to any message with an emoji: double-tap for ❤️ or hold to choose": {
+  "ar": "تفاعل مع أي رسالة بإيموجي: انقر مرتين لـ ❤️ أو اضغط مطولاً للاختيار",
+  "es": "Reacciona a cualquier mensaje con un emoji: toca dos veces para ❤️ o mantén pulsado para elegir"
+ },
+ "Story reactions and replies now read naturally, like \"You reacted to her story\" and \"Sara replied to your story\"": {
+  "ar": "التفاعلات والردود على القصص أصبحت أوضح، مثل \"تفاعلت مع قصتها\" و\"ردّت سارة على قصتك\"",
+  "es": "Las reacciones y respuestas a historias ahora se leen con naturalidad, como \"Reaccionaste a su historia\" y \"Sara respondió a tu historia\""
+ },
+ "Tap a name in a chat to open their profile": {
+  "ar": "انقر على الاسم في المحادثة لفتح الملف الشخصي",
+  "es": "Toca un nombre en un chat para abrir su perfil"
+ },
+ "Swipe left or right to move between tabs": {
+  "ar": "اسحب يميناً أو يساراً للتنقل بين التبويبات",
+  "es": "Desliza a la izquierda o a la derecha para cambiar de pestaña"
+ },
+ "Chats and private messages open faster": {
+  "ar": "المحادثات والرسائل الخاصة تفتح بشكل أسرع",
+  "es": "Los chats y los mensajes privados se abren más rápido"
  }
 }

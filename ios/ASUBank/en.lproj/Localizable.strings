@@ -502,6 +502,7 @@
 "Chat rooms" = "Chat rooms";
 "Chat rooms (add, lock, archive)" = "Chat rooms (add, lock, archive)";
 "Chat with students, synced with asubank.org" = "Chat with students, synced with asubank.org";
+"Chats and private messages open faster" = "Chats and private messages open faster";
 "Chats and rooms open at once, and new messages follow" = "Chats and rooms open at once, and new messages follow";
 "Cheating or a rule of the university" = "Cheating or a rule of the university";
 "Check for updates" = "Check for updates";
@@ -1746,6 +1747,7 @@
 "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous." = "Rate your teachers, now fully native: search every rated teacher, sort by top rated or most votes, see averages out of 10 with color bars, and rate anyone in a few taps. Still 100% anonymous.";
 "Reach the exact audience you need" = "Reach the exact audience you need";
 "React to a story with an emoji or send a reply" = "React to a story with an emoji or send a reply";
+"React to any message with an emoji: double-tap for ❤️ or hold to choose" = "React to any message with an emoji: double-tap for ❤️ or hold to choose";
 "Read public posts and stories without an account, also on the website" = "Read public posts and stories without an account, also on the website";
 "Read the full Terms of Service" = "Read the full Terms of Service";
 "Read the terms" = "Read the terms";
@@ -2060,6 +2062,7 @@
 "Storage" = "Storage";
 "Stored on" = "Stored on";
 "Stories: share a photo or text for 24 hours" = "Stories: share a photo or text for 24 hours";
+"Story reactions and replies now read naturally, like \"You reacted to her story\" and \"Sara replied to your story\"" = "Story reactions and replies now read naturally, like \"You reacted to her story\" and \"Sara replied to your story\"";
 "Story videos can be up to 30 seconds and now play to the very end" = "Story videos can be up to 30 seconds and now play to the very end";
 "Strangers" = "Strangers";
 "Streak" = "Streak";
@@ -2138,6 +2141,7 @@
 "Support" = "Support";
 "Support UniHub" = "Support UniHub";
 "Swap" = "Swap";
+"Swipe left or right to move between tabs" = "Swipe left or right to move between tabs";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can";
 "Swipe the Feed sideways to slide into the camera" = "Swipe the Feed sideways to slide into the camera";
 "Switch camera" = "Switch camera";
@@ -2152,6 +2156,7 @@
 "Talk with other ASU students, ask for help and share materials. Chat is only for signed-in students." = "Talk with other ASU students, ask for help and share materials. Chat is only for signed-in students.";
 "Tall" = "Tall";
 "Tap a building to start typing one of its halls." = "Tap a building to start typing one of its halls.";
+"Tap a name in a chat to open their profile" = "Tap a name in a chat to open their profile";
 "Tap a score" = "Tap a score";
 "Tap a teacher to add your rating. Averages are out of 10." = "Tap a teacher to add your rating. Averages are out of 10.";
 "Tap someone to unblock them." = "Tap someone to unblock them.";
