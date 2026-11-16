@@ -1,15 +1,15 @@
 {
   "share": "https://asubank.org/",
   "ios": {
-    "latest": "1.20.0",
+    "latest": "1.21.0",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.20.0",
-    "notes": "New study tools: absence tracker, final mark calculator, flashcards, and study streak and stats. The Feed opens much faster, and Load more only shows when there are more posts."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.21.0",
+    "notes": "React to any message with an emoji, story reactions and replies that read naturally, tap a name in a chat to open the profile, swipe between tabs, and faster chats."
   },
   "android": {
-    "latest": "1.20.0",
+    "latest": "1.21.0",
     "minimum": "1.0.0",
-    "notes": "New study tools: absence tracker, final mark calculator, flashcards, and study streak and stats. The Feed opens much faster, and Load more only shows when there are more posts."
+    "notes": "React to any message with an emoji, story reactions and replies that read naturally, tap a name in a chat to open the profile, swipe between tabs, and faster chats."
   },
   "donate": true
 }
