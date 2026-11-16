@@ -406,3 +406,17 @@ html.dark .acc-msg.mine .acc-bubble { color: #fff; }
 html.dark .acc-msg.mine .acc-voice-btn { background: rgba(0,0,0,.25); }
 .acc-voice-btn { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; line-height: 38px; padding: 0; }
 .acc-voice small.bad { color: #ff6b6b; opacity: 1; }
+
+/* message reactions and story lines (2026-11-16) */
+.acc-msg { flex-wrap: wrap; }
+.acc-reacts { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 4px; margin: 2px 0 0 36px; }
+.acc-msg.mine .acc-reacts { justify-content: flex-end; margin: 2px 6px 0 0; }
+.acc-react { display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(127,127,127,.25); border-radius: 999px; padding: 1px 7px; font-size: 13px; background: var(--ab-surface,#fff); color: inherit; cursor: pointer; }
+.acc-react.mine { border-color: var(--ab-accent,#8c1d40); background: var(--ab-accent-soft,#f7dce5); }
+.acc-react small { font-size: 11px; font-weight: 600; }
+.acc-react-pick { display: inline-flex; flex-wrap: wrap; gap: 0; }
+.acc-msg-actions .acc-react-pick button { background: transparent; font-size: 17px; padding: 2px 3px; }
+.acc-msg-actions .acc-react-pick button.on { background: rgba(127,127,127,.22); }
+.acc-story-line { flex-basis: 100%; font-size: 12px; color: var(--ab-label-2,#5e5e66); margin: 4px 6px 2px; }
+.acc-msg.mine .acc-story-line { text-align: end; }
+.acc-bubble.acc-big-emoji .acc-text { font-size: 40px; line-height: 1.15; }

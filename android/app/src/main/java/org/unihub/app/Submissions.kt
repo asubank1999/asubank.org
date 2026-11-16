@@ -111,6 +111,7 @@ object Submissions {
 
 @Composable
 private fun StatusBadge(s: String?) = when (s) {
+    "done" -> Badge("DONE", Color(0xFF6B4FBB))
     "approved" -> Badge("APPROVED", Brand.green)
     "pending" -> Badge("PENDING", Brand.orange)
     "review" -> Badge("IN REVIEW", Color(0xFF0A84FF))
@@ -144,7 +145,7 @@ fun SubmissionsScreen(admin: Boolean = false) {
                     listOf(
                         Triple(items.size, "Total", accent),
                         Triple(items.count { it.status == "approved" }, "Approved", Brand.green),
-                        Triple(items.count { it.status != "approved" }, "Waiting", Brand.orange),
+                        Triple(items.count { it.status != "approved" && it.status != "done" }, "Waiting", Brand.orange),
                     ).forEach { (n, l, c) ->
                         Surface(shape = RoundedCornerShape(14.dp), color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.weight(1f)) {
                             Column(Modifier.padding(12.dp)) {

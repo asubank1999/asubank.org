@@ -285,7 +285,7 @@ fun FeedScreen(back: Boolean = false) {
     draft?.let { d -> ComposeStoryDialog(d.media, { draft = null }) { scope.launch { loadStories() } } }
     viewing?.let { start -> StoryViewer(groups, start) { viewing = null; scope.launch { loadStories() } } }
 
-    SlideToCamera(enabled = me != null, open = { camera = true }) {
+    SlideToCamera(enabled = me != null && back, open = { camera = true }) {
     Screen("Feed", back = back, large = true, actions = {
         OnlineButton()
         if (me != null) IconButton(onClick = { camera = true }) { Icon(Icons.Filled.PhotoCamera, tr("Add story")) }
@@ -865,5 +865,7 @@ object FeedPrefetch {
         val tab = if (signed) Saved.prefs.getString("ab.feed.scope", "friends") ?: "friends" else "guest"
         scope.launch { runCatching { Account.callSaving(if (signed) "feedAll" else "publicFeed", mapOf("scope" to tab), tab); fresh[tab] = System.currentTimeMillis() } }
         scope.launch { runCatching { Account.callSaving(if (signed) "stories" else "publicStories", tag = "feed") } }
+        // the Chat tab opens on a fresh list of private chats
+        if (signed) scope.launch { runCatching { Account.callSaving("dmList") } }
     }
 }

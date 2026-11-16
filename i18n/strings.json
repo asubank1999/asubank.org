@@ -4691,6 +4691,10 @@
   "es": "Cada imagen, una historia. Rellena tus datos y mira el precio al instante. El fotógrafo revisa tu solicitud y envía la factura final."
  },
  "Every material opens natively: PDFs in a built-in PDF reader, slides, documents and sheets in Quick Look, and Google Drive folders as native lists you can browse and search.": {},
+ "Every record": {
+  "ar": "كل السجلات",
+  "es": "Todos los registros"
+ },
  "Every teacher shows an average out of 10 and how many students voted.": {
   "ar": "يظهر لكل مدرس متوسط من 10 وعدد المصوتين."
  },
@@ -5302,6 +5306,10 @@
  "Guest": {
   "ar": "ضيف",
   "es": "Invitado"
+ },
+ "Guest (not signed in)": {
+  "ar": "زائر (بدون حساب)",
+  "es": "Invitado (sin cuenta)"
  },
  "Guidelines": {
   "ar": "الإرشادات",
@@ -7357,6 +7365,10 @@
   "ar": "امتحانات المستوى"
  },
  "Plain": {},
+ "Platform": {
+  "ar": "المنصة",
+  "es": "Plataforma"
+ },
  "Play video": {},
  "Play voice message": {},
  "Please choose a PDF up to 15 MB.": {
@@ -8518,6 +8530,10 @@
  "Show it on my profile": {
   "ar": "أظهره في ملفي الشخصي",
   "es": "Mostrarlo en mi perfil"
+ },
+ "Show more": {
+  "ar": "عرض المزيد",
+  "es": "Mostrar más"
  },
  "Show my number on my profile": {
   "ar": "أظهر رقمي في ملفي الشخصي",
@@ -11110,5 +11126,49 @@
  },
  "🧮 GPA & Term Average Calculator": {
   "ar": "🧮 حساب المعدل والمعدل الفصلي"
+ },
+ "her story": {
+  "ar": "قصتها",
+  "es": "su historia"
+ },
+ "his story": {
+  "ar": "قصته",
+  "es": "su historia"
+ },
+ "their story": {
+  "ar": "قصتهم",
+  "es": "su historia"
+ },
+ "You reacted %@ to %@": {
+  "ar": "تفاعلت بـ %@ مع %@",
+  "es": "Reaccionaste %@ a %@"
+ },
+ "You reacted %s to %s": {
+  "ar": "تفاعلت بـ %s مع %s",
+  "es": "Reaccionaste %s a %s"
+ },
+ "You replied to %@": {
+  "ar": "رددت على %@",
+  "es": "Respondiste a %@"
+ },
+ "You replied to %s": {
+  "ar": "رددت على %s",
+  "es": "Respondiste a %s"
+ },
+ "%@ reacted %@ to your story": {
+  "ar": "تفاعل %@ بـ %@ مع قصتك",
+  "es": "%@ reaccionó %@ a tu historia"
+ },
+ "%s reacted %s to your story": {
+  "ar": "تفاعل %s بـ %s مع قصتك",
+  "es": "%s reaccionó %s a tu historia"
+ },
+ "%@ replied to your story": {
+  "ar": "ردّ %@ على قصتك",
+  "es": "%@ respondió a tu historia"
+ },
+ "%s replied to your story": {
+  "ar": "ردّ %s على قصتك",
+  "es": "%s respondió a tu historia"
  }
 }

@@ -151,6 +151,7 @@ struct ChatMessage: Codable, Identifiable, Hashable {
     var expires: String?
     var pending: Bool?
     var localFile: URL?
+    var reactions: [String: String]?
 
     var date: Date { ISO8601DateFormatter.ab.date(from: created) ?? Date() }
     var preview: String {
@@ -382,18 +383,45 @@ enum ReplyCache {
         FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("ab-replies", isDirectory: true)
     }
 
+    /// Answers already read or written in this run: no file read and no JSON parsing the second time
+    private static var memory: [String: [String: Any]] = [:]
+    private static let lock = NSLock()
+    private static let disk = DispatchQueue(label: "ab.replies", qos: .utility)
+
     static func read(_ name: String) -> [String: Any]? {
-        guard let d = try? Data(contentsOf: dir.appendingPathComponent(name)) else { return nil }
-        return (try? JSONSerialization.jsonObject(with: d)) as? [String: Any]
+        lock.lock()
+        let kept = memory[name]
+        lock.unlock()
+        if let kept { return kept }
+        guard let d = try? Data(contentsOf: dir.appendingPathComponent(name)),
+              let r = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any] else { return nil }
+        lock.lock()
+        memory[name] = r
+        lock.unlock()
+        return r
     }
 
     static func write(_ name: String, _ reply: [String: Any]) {
-        guard JSONSerialization.isValidJSONObject(reply), let d = try? JSONSerialization.data(withJSONObject: reply) else { return }
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        try? d.write(to: dir.appendingPathComponent(name), options: [.atomic, .completeFileProtection])
+        guard JSONSerialization.isValidJSONObject(reply) else { return }
+        lock.lock()
+        memory[name] = reply
+        lock.unlock()
+        let folder = dir
+        // turning it into a file is the slow part: off the main thread, one write at a time
+        disk.async {
+            guard let d = try? JSONSerialization.data(withJSONObject: reply) else { return }
+            try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            try? d.write(to: folder.appendingPathComponent(name), options: [.atomic, .completeFileProtection])
+        }
     }
 
-    static func clear() { try? FileManager.default.removeItem(at: dir) }
+    static func clear() {
+        lock.lock()
+        memory.removeAll()
+        lock.unlock()
+        let folder = dir
+        disk.async { try? FileManager.default.removeItem(at: folder) }
+    }
 }
 
 extension AccountStore {
@@ -530,7 +558,7 @@ final class ChatNotifier: ObservableObject {
             c.title = e.replyToUserId == me && me != nil ? String(format: L("%@ replied to you"), who) : String(format: L("New message from %@"), who)
         }
         c.subtitle = e.type == "upload" ? "" : (e.roomName ?? "")
-        c.body = e.text
+        c.body = e.type == "dm" ? StoryNote.preview(e.text, sentByMe: false, otherName: who, otherGender: nil) : e.text
         switch e.type {
         case "friend_request": c.body = String(format: L("%@ wants to be your friend"), who)
         case "friend_accept": c.body = String(format: L("%@ accepted your friend request"), who)

@@ -78,7 +78,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
@@ -304,8 +308,26 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>, startScreen: Str
             val tabRoutes = remember { allTabs.map { it.route }.toSet() + Routes.UPLOAD }
             fun AnimatedContentTransitionScope<NavBackStackEntry>.betweenTabs() =
                 initialState.destination.route in tabRoutes && targetState.destination.route in tabRoutes
+            // Swipe left or right on a tab's first screen to move to the next or previous tab. Rows that scroll sideways
+            // take their own swipes first, and pushed screens are not tabs, so nothing else changes.
+            val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+            val barRoutes = barTabs.map { it.route }
+            val swipeTabs = Modifier.pointerInput(barRoutes, route, rtl) {
+                val need = 72.dp.toPx()
+                var total = 0f
+                detectHorizontalDragGestures(
+                    onDragStart = { total = 0f },
+                    onDragEnd = {
+                        val i = route?.let { barRoutes.indexOf(it) } ?: -1
+                        if (i >= 0 && kotlin.math.abs(total) > need) {
+                            val step = if ((total < 0f) != rtl) 1 else -1
+                            barRoutes.getOrNull(i + step)?.let { lastTab = it; nav.openTab(it) }
+                        }
+                    },
+                ) { _, d -> total += d }
+            }
             NavHost(
-                nav, startDestination = Routes.HOME, modifier = Modifier.padding(pad),
+                nav, startDestination = Routes.HOME, modifier = Modifier.padding(pad).then(swipeTabs),
                 // tabs cross-fade; pushed screens slide in like iOS
                 enterTransition = { if (betweenTabs()) fadeIn(tween(180)) else slideInHorizontally(tween(320, easing = FastOutSlowInEasing)) { it / 3 } + fadeIn(tween(260)) },
                 exitTransition = { if (betweenTabs()) fadeOut(tween(140)) else slideOutHorizontally(tween(320, easing = FastOutSlowInEasing)) { -it / 8 } + fadeOut(tween(260)) },

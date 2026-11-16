@@ -18,6 +18,7 @@ struct DMMessage: Decodable, Identifiable, Equatable {
     var expires: String?
     var pending: Bool?
     var localFile: URL?
+    var reactions: [String: String]?
 
     var date: Date { Social.date(created) }
     var preview: String {
@@ -94,7 +95,7 @@ struct DMConversationRows: View {
                                     Text(Social.ago(c.last.created)).font(.caption).foregroundStyle(c.unread > 0 ? Color.abAccent : .secondary)
                                 }
                                 HStack {
-                                    Text(c.last.preview).font(.subheadline).foregroundStyle(c.unread > 0 ? .primary : .secondary).lineLimit(1)
+                                    Text(StoryNote.preview(c.last.preview, sentByMe: c.last.from == AccountStore.shared.user?.id, otherName: c.user.displayName, otherGender: c.user.gender)).font(.subheadline).foregroundStyle(c.unread > 0 ? .primary : .secondary).lineLimit(1)
                                     Spacer()
                                     if c.unread > 0 {
                                         Text("\(c.unread)").font(.caption2.weight(.bold)).foregroundStyle(.white)
@@ -286,6 +287,9 @@ final class DMThreadModel: ObservableObject {
             let have = Set(list.map(\.id))
             list += new.filter { !have.contains($0.id) && !gone.contains($0.id) && !Disappear.expired($0.expires) }
             list += kept.filter { $0.pending == true }
+            for (id, rx) in Reactions.changes(r["reactions"]) {
+                if let i = list.firstIndex(where: { $0.id == id }) { list[i].reactions = rx }
+            }
             if list != messages { withAnimation(.easeOut(duration: 0.2)) { messages = list } }
             if let u = decode(ABUser.self, r["user"]) { user = u }
             if let c = r["canSend"] as? Bool { canSend = c }
@@ -326,6 +330,21 @@ final class DMThreadModel: ObservableObject {
         }
     }
 
+    /// Shows at once; the server's answer settles it
+    func react(_ m: DMMessage, _ emoji: String) async {
+        guard m.pending != true, let me = AccountStore.shared.user?.id, let i = messages.firstIndex(where: { $0.id == m.id }) else { return }
+        let before = messages[i].reactions
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { messages[i].reactions = Reactions.toggled(before, me: me, emoji: emoji) }
+        Haptics.tap()
+        do {
+            let r = try await AccountStore.shared.call("dmReact", ["id": m.id, "emoji": emoji])
+            if let j = messages.firstIndex(where: { $0.id == m.id }) { messages[j].reactions = (r["reactions"] as? [String: String]) ?? [:] }
+        } catch {
+            if let j = messages.firstIndex(where: { $0.id == m.id }) { messages[j].reactions = before }
+            self.error = error.localizedDescription
+        }
+    }
+
     /// Gone at once for me; the other person's phone removes it on its next check
     func delete(_ m: DMMessage) async {
         let before = messages
@@ -351,6 +370,7 @@ struct DMThreadScreen: View {
     @State private var reporting: ReportTarget?
     @State private var blocking: BlockTarget?
     @State private var opening: String?
+    @State private var showProfile = false
     @FocusState private var focused: Bool
 
     init(userId: String, name: String, color: String, photo: String? = nil) {
@@ -404,7 +424,8 @@ struct DMThreadScreen: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                NavigationLink { ProfileScreen(userId: userId, fallbackName: name, fallbackColor: color) } label: {
+                // a NavigationLink inside the toolbar doesn't open on iOS 15/16, so the header pushes the profile itself
+                Button { showProfile = true } label: {
                     HStack(spacing: 8) {
                         Avatar(name: name, color: color, size: 32, photo: model.user?.avatar ?? photo, online: model.user?.online, peek: false)
                         VStack(alignment: .leading, spacing: 0) {
@@ -419,19 +440,35 @@ struct DMThreadScreen: View {
                 .buttonStyle(.plain)
             }
         }
+        .push(isPresented: $showProfile) { ProfileScreen(userId: userId, fallbackName: name, fallbackColor: color) }
         .onAppear { model.start() }
         .onDisappear { model.stop() }
         .sheet(item: $preview) { FilePreview(url: $0.url).ignoresSafeArea() }
         .modifier(ModerationDialogs(report: $reporting, block: $blocking, blocked: { _ in }))
     }
 
+    private var otherName: String { model.user?.displayName ?? name }
+
     @ViewBuilder private func bubble(_ m: DMMessage, joinedAbove: Bool, joinedBelow: Bool) -> some View {
         let mine = m.from == account.user?.id
+        let story = StoryNote.parse(m.text)
+        VStack(spacing: 2) {
+        if let story {
+            Text(StoryNote.line(story, sentByMe: mine, otherName: otherName, otherGender: model.user?.gender))
+                .font(.caption).foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: mine ? .trailing : .leading)
+                .padding(.horizontal, 6).padding(.top, 6)
+        }
         HStack(alignment: .bottom, spacing: 8) {
             if mine { Spacer(minLength: 56) }
             VStack(alignment: .trailing, spacing: 4) {
                 if m.hasFile == true { attachment(m, mine: mine) }
-                if !m.text.isEmpty {
+                if case .reaction(let e)? = story {
+                    Text(e).font(.system(size: 44))
+                } else if case .reply(let t)? = story {
+                    Text(t).font(.body).foregroundStyle(mine ? .white : .primary).textSelection(.enabled)
+                        .multilineTextAlignment(.leading)
+                } else if !m.text.isEmpty {
                     Text(m.text).font(.body).foregroundStyle(mine ? .white : .primary).textSelection(.enabled)
                         .multilineTextAlignment(.leading)
                 }
@@ -444,7 +481,11 @@ struct DMThreadScreen: View {
             .padding(.horizontal, 12).padding(.vertical, 8)
             .chatBubble(mine: mine, joinedAbove: joinedAbove, joinedBelow: joinedBelow)
             .opacity(m.pending == true ? 0.72 : 1)
+            .onTapGesture(count: 2) { if m.pending != true { Task { await model.react(m, "❤️") } } }
             .contextMenu {
+                if m.pending != true {
+                    ReactionMenu(current: account.user.flatMap { m.reactions?[$0.id] }) { e in Task { await model.react(m, e) } }
+                }
                 if !m.text.isEmpty { Button { UIPasteboard.general.string = m.text } label: { Label("Copy", systemImage: "doc.on.doc") } }
                 if mine {
                     if m.pending != true {
@@ -458,6 +499,8 @@ struct DMThreadScreen: View {
                 }
             }
             if !mine { Spacer(minLength: 56) }
+        }
+        ReactionChips(reactions: m.reactions, me: account.user?.id, mine: mine) { e in Task { await model.react(m, e) } }
         }
         .padding(.top, joinedAbove ? 1 : 6)
     }

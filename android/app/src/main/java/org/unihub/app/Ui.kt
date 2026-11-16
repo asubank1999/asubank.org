@@ -306,9 +306,11 @@ fun Screen(
     back: Boolean = true,
     large: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
+    onTitleClick: (() -> Unit)? = null,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val nav = LocalNav.current
+    val titleMod = if (onTitleClick != null) Modifier.clickable { onTitleClick() } else Modifier
     val behavior = if (large) TopAppBarDefaults.exitUntilCollapsedScrollBehavior() else TopAppBarDefaults.pinnedScrollBehavior()
     val colors = TopAppBarDefaults.topAppBarColors(
         containerColor = MaterialTheme.colorScheme.background,
@@ -322,8 +324,8 @@ fun Screen(
         containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            if (large) LargeTopAppBar(title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) }, navigationIcon = navIcon, actions = actions, colors = colors, scrollBehavior = behavior)
-            else TopAppBar(title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) }, navigationIcon = navIcon, actions = actions, colors = colors, scrollBehavior = behavior)
+            if (large) LargeTopAppBar(title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = titleMod) }, navigationIcon = navIcon, actions = actions, colors = colors, scrollBehavior = behavior)
+            else TopAppBar(title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = titleMod) }, navigationIcon = navIcon, actions = actions, colors = colors, scrollBehavior = behavior)
         },
         content = content,
     )

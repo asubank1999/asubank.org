@@ -347,6 +347,9 @@ final class RoomModel: ObservableObject {
             let have = Set(list.map(\.id))
             list += new.filter { !have.contains($0.id) && !blocked.contains($0.userId) && !Disappear.expired($0.expires) }
             list += kept.filter { $0.pending == true }
+            for (id, rx) in Reactions.changes(r["reactions"]) {
+                if let i = list.firstIndex(where: { $0.id == id }) { list[i].reactions = rx }
+            }
             if list != messages { withAnimation(.easeOut(duration: 0.2)) { messages = list } }
             if let p = decode([String: ChatPerson].self, r["people"]) { people.merge(p) { _, n in n } }
             if let rm = decode(ChatRoom.self, r["room"]), rm != room { room = rm }
@@ -400,6 +403,21 @@ final class RoomModel: ObservableObject {
             }
             return true
         } catch { self.error = error.localizedDescription; return false }
+    }
+
+    /// Shows at once; the server's answer settles it
+    func react(_ m: ChatMessage, _ emoji: String) async {
+        guard m.pending != true, let me = AccountStore.shared.user?.id, let i = messages.firstIndex(where: { $0.id == m.id }) else { return }
+        let before = messages[i].reactions
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { messages[i].reactions = Reactions.toggled(before, me: me, emoji: emoji) }
+        Haptics.tap()
+        do {
+            let r = try await AccountStore.shared.call("react", ["id": m.id, "emoji": emoji])
+            if let j = messages.firstIndex(where: { $0.id == m.id }) { messages[j].reactions = (r["reactions"] as? [String: String]) ?? [:] }
+        } catch {
+            if let j = messages.firstIndex(where: { $0.id == m.id }) { messages[j].reactions = before }
+            self.error = error.localizedDescription
+        }
     }
 
     /// Gone at once here; everyone else's phone removes it on its next check
@@ -556,7 +574,7 @@ struct ChatRoomView: View {
             VStack(alignment: mine ? .trailing : .leading, spacing: 3) {
                 if !mine && !grouped {
                     HStack(spacing: 4) {
-                        Text(m.displayName).font(.caption.weight(.semibold)).foregroundStyle(Color(hexString: m.color))
+                        Button { profile = m } label: { Text(m.displayName).font(.caption.weight(.semibold)).foregroundStyle(Color(hexString: m.color)) }.buttonStyle(.plain)
                         if m.role == "admin" { Image(systemName: "checkmark.seal.fill").font(.caption2).foregroundStyle(Color.abGold) }
                         BadgeRow(badges: person?.badges ?? [], compact: true)
                     }
@@ -591,7 +609,11 @@ struct ChatRoomView: View {
                 .padding(.horizontal, 12).padding(.vertical, 8)
                 .chatBubble(mine: mine, joinedAbove: grouped, joinedBelow: joinedBelow)
                 .opacity(m.pending == true ? 0.72 : 1)
+                .onTapGesture(count: 2) { if m.pending != true { Task { await model.react(m, "❤️") } } }
                 .contextMenu {
+                    if m.pending != true {
+                        ReactionMenu(current: account.user.flatMap { m.reactions?[$0.id] }) { e in Task { await model.react(m, e) } }
+                    }
                     if canPost { Button { editing = nil; replyTo = m; focused = true } label: { Label("Reply", systemImage: "arrowshape.turn.up.left") } }
                     if !m.text.isEmpty { Button { UIPasteboard.general.string = m.text } label: { Label("Copy", systemImage: "doc.on.doc") } }
                     if mine && !m.text.isEmpty {
@@ -614,6 +636,7 @@ struct ChatRoomView: View {
                         Button(role: .destructive) { banTarget = m } label: { Label("Ban @\(m.username)", systemImage: "hand.raised.fill") }
                     }
                 }
+                ReactionChips(reactions: m.reactions, me: account.user?.id, mine: mine) { e in Task { await model.react(m, e) } }
             }
             if !mine { Spacer(minLength: 50) }
         }

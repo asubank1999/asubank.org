@@ -166,6 +166,7 @@ struct SubmissionsScreen: View {
 
 @ViewBuilder func statusBadge(_ s: String?) -> some View {
     switch s ?? "" {
+    case "done": Badge(text: "DONE", color: .purple)
     case "approved": Badge(text: "APPROVED", color: .green)
     case "pending": Badge(text: "PENDING", color: .orange)
     case "review": Badge(text: "IN REVIEW", color: .blue)

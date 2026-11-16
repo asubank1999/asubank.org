@@ -299,6 +299,10 @@ fun ChatRoomScreen(roomId: String) {
                 val i = messages.indexOfFirst { it.id == e.str("id") }
                 if (i >= 0 && messages[i].text != e.str("text")) messages[i] = messages[i].copy(text = e.str("text") ?: messages[i].text, edited = e.str("edited"))
             }
+            Reactions.changes(r["reactions"]).forEach { (id, rx) ->
+                val i = messages.indexOfFirst { it.id == id }
+                if (i >= 0 && messages[i].reactions != rx) messages[i] = messages[i].copy(reactions = rx)
+            }
             val have = messages.map { it.id }.toSet()
             val blocked = Account.user.value?.blocked.orEmpty()
             messages.removeAll { it.userId in blocked }
@@ -358,6 +362,24 @@ fun ChatRoomScreen(roomId: String) {
                 messages.removeAll { it.id == temp.id }
                 error = e.message
                 if (body.isNotEmpty() && text.isEmpty()) text = body
+            }
+        }
+    }
+
+    /** Shows at once; the server's answer settles it */
+    fun react(m: ChatMessage, emoji: String) {
+        val myId = user?.id ?: return
+        if (m.pending) return
+        val i = messages.indexOfFirst { it.id == m.id }.takeIf { it >= 0 } ?: return
+        val before = messages[i].reactions
+        messages[i] = messages[i].copy(reactions = Reactions.toggled(before, myId, emoji))
+        scope.launch {
+            try {
+                val rx = Reactions.map(Account.call("react", mapOf("id" to m.id, "emoji" to emoji))["reactions"])
+                messages.indexOfFirst { it.id == m.id }.takeIf { it >= 0 }?.let { messages[it] = messages[it].copy(reactions = rx) }
+            } catch (e: Exception) {
+                messages.indexOfFirst { it.id == m.id }.takeIf { it >= 0 }?.let { messages[it] = messages[it].copy(reactions = before) }
+                error = e.message
             }
         }
     }
@@ -422,13 +444,15 @@ fun ChatRoomScreen(roomId: String) {
                         val next = messages.getOrNull(i + 1)
                         val joinedBelow = next != null && next.userId == m.userId && next.instant.atZone(ZoneId.systemDefault()).toLocalDate() == day
                         val reply = m.replyTo?.let { id -> messages.firstOrNull { it.id == id } }
-                        Box(Modifier.animateItem()) {
+                        Column(Modifier.animateItem().fillMaxWidth(), horizontalAlignment = if (mine) Alignment.End else Alignment.Start) {
+                        Box {
                             Bubble(
                                 m, mine, grouped, joinedBelow, reply, people[m.userId], pinned?.id == m.id,
-                                Modifier.combinedClickable(onClick = {}, onLongClick = { menuFor = m.id }),
+                                Modifier.combinedClickable(onClick = {}, onLongClick = { menuFor = m.id }, onDoubleClick = { react(m, "❤️") }),
                                 onAvatar = { nav.navigate("profile/${m.userId}") },
                             )
                             DropdownMenu(expanded = menuFor == m.id, onDismissRequest = { menuFor = null }) {
+                                if (!m.pending) ReactionPickerRow(user?.id?.let { m.reactions[it] }) { e -> menuFor = null; react(m, e) }
                                 if (canPost) DropdownMenuItem(text = { Text("Reply") }, leadingIcon = { Icon(Icons.AutoMirrored.Filled.Reply, null) }, onClick = { editing = null; replyTo = m; menuFor = null })
                                 if (m.text.isNotEmpty()) DropdownMenuItem(text = { Text("Copy") }, leadingIcon = { Icon(Icons.Filled.ContentCopy, null) }, onClick = {
                                     (ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("Message", m.text))
@@ -462,6 +486,8 @@ fun ChatRoomScreen(roomId: String) {
                                 })
                                 if (admin && !mine) DropdownMenuItem(text = { Text(tr("Ban @%s").format(m.username)) }, leadingIcon = { Icon(Icons.Filled.Block, null) }, onClick = { banTarget = m; menuFor = null })
                             }
+                        }
+                        ReactionChips(m.reactions, user?.id, Modifier.padding(start = if (mine) 0.dp else 46.dp, end = if (mine) 10.dp else 0.dp)) { e -> react(m, e) }
                         }
                     }
                     item { Spacer(Modifier.height(8.dp)) }
@@ -552,7 +578,7 @@ private fun Bubble(
                 Modifier.horizontalScroll(rememberScrollState()),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Text(m.displayName.ifEmpty { m.username }, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = hexColor(m.color))
+                Text(m.displayName.ifEmpty { m.username }, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = hexColor(m.color), modifier = Modifier.clickable(onClick = onAvatar))
                 if (admin) Text(tr("ADMIN"), fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color.Black,
                     modifier = Modifier.clip(CircleShape).background(Brand.gold).padding(horizontal = 5.dp, vertical = 1.dp))
                 BadgeRow(person?.badges.orEmpty(), compact = true)

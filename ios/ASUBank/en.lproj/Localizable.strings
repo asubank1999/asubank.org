@@ -7,7 +7,9 @@
 "%@ in 10 minutes" = "%@ in 10 minutes";
 "%@ needs your notes" = "%@ needs your notes";
 "%@ poked you" = "%@ poked you";
+"%@ reacted %@ to your story" = "%@ reacted %@ to your story";
 "%@ replied to you" = "%@ replied to you";
+"%@ replied to your story" = "%@ replied to your story";
 "%@ wants to be your friend" = "%@ wants to be your friend";
 "%@ wants to get coffee with you" = "%@ wants to get coffee with you";
 "%@ wants to meet you" = "%@ wants to meet you";
@@ -846,6 +848,7 @@
 "Event" = "Event";
 "Every frame, a story. Fill in your details and see the price as you go. The photographer reviews your request and sends the final invoice." = "Every frame, a story. Fill in your details and see the price as you go. The photographer reviews your request and sends the final invoice.";
 "Every material opens natively: PDFs in a built-in PDF reader, slides, documents and sheets in Quick Look, and Google Drive folders as native lists you can browse and search." = "Every material opens natively: PDFs in a built-in PDF reader, slides, documents and sheets in Quick Look, and Google Drive folders as native lists you can browse and search.";
+"Every record" = "Every record";
 "Every teacher shows an average out of 10 and how many students voted." = "Every teacher shows an average out of 10 and how many students voted.";
 "Every year and doctor in one place." = "Every year and doctor in one place.";
 "Everyone" = "Everyone";
@@ -1040,6 +1043,7 @@
 "Groups are run by students, not by UniHub. Be kind and follow each group's rules. Long-press a group to copy its link." = "Groups are run by students, not by UniHub. Be kind and follow each group's rules. Long-press a group to copy its link.";
 "Groups for courses, clubs and interests" = "Groups for courses, clubs and interests";
 "Guest" = "Guest";
+"Guest (not signed in)" = "Guest (not signed in)";
 "Guidelines" = "Guidelines";
 "Gymnasium" = "Gymnasium";
 "Hall" = "Hall";
@@ -1642,6 +1646,7 @@
 "Placement Tests" = "Placement Tests";
 "Placement tests" = "Placement tests";
 "Plain" = "Plain";
+"Platform" = "Platform";
 "Play video" = "Play video";
 "Play voice message" = "Play voice message";
 "Please choose a PDF up to 15 MB." = "Please choose a PDF up to 15 MB.";
@@ -1982,6 +1987,7 @@
 "Show %@ more" = "Show %@ more";
 "Show Continue on Home" = "Show Continue on Home";
 "Show it on my profile" = "Show it on my profile";
+"Show more" = "Show more";
 "Show my number on my profile" = "Show my number on my profile";
 "Show password" = "Show password";
 "Show past events" = "Show past events";
@@ -2606,7 +2612,9 @@
 "You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU." = "You joined UniHub in its early days, so your profile now has the Early supporter badge. Thank you for helping students at ASU.";
 "You know every card!" = "You know every card!";
 "You pay the second half only if your ad is accepted." = "You pay the second half only if your ad is accepted.";
+"You reacted %@ to %@" = "You reacted %@ to %@";
 "You read the terms" = "You read the terms";
+"You replied to %@" = "You replied to %@";
 "You won't see their messages or get notifications from them. You can undo this in your account." = "You won't see their messages or get notifications from them. You can undo this in your account.";
 "You'll stay signed in here; other devices are signed out." = "You'll stay signed in here; other devices are signed out.";
 "You're browsing as a guest" = "You're browsing as a guest";
@@ -2666,6 +2674,8 @@
 "e.g. Dr. Ahmad Malik" = "e.g. Dr. Ahmad Malik";
 "edited" = "edited";
 "for details." = "for details.";
+"her story" = "her story";
+"his story" = "his story";
 "iPhone: changing the app icon is fixed, and if iOS refuses, the message now says why" = "iPhone: changing the app icon is fixed, and if iOS refuses, the message now says why";
 "iPhone: fixed rows and buttons that greyed when tapped but wouldn't open, on iOS 15 and 16" = "iPhone: fixed rows and buttons that greyed when tapped but wouldn't open, on iOS 15 and 16";
 "iPhones don't let apps use your own ringtones, so these sounds come with UniHub." = "iPhones don't let apps use your own ringtones, so these sounds come with UniHub.";
@@ -2677,6 +2687,7 @@
 "paypal.me/necro144 · cards and PayPal balance" = "paypal.me/necro144 · cards and PayPal balance";
 "test bank" = "test bank";
 "the latest version" = "the latest version";
+"their story" = "their story";
 "© 2023 Student Advertisement Service. All rights reserved." = "© 2023 Student Advertisement Service. All rights reserved.";
 "سُلّم التقديرات | UniHub" = "سُلّم التقديرات | UniHub";
 "“%@” moves to the Drive trash and disappears from UniHub." = "“%@” moves to the Drive trash and disappears from UniHub.";

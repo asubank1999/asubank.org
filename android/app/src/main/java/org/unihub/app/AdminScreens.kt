@@ -370,7 +370,8 @@ fun AdminLogScreen() {
     var log by remember { mutableStateOf<List<JsonObject>>(emptyList()) }
     var error by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
-        try { log = (Account.call("adminLog")["log"] as? JsonArray).objects() } catch (e: ApiError) { error = e.message }
+        Account.saved("adminLog")?.let { log = (it["log"] as? JsonArray).objects() }
+        try { log = (Account.callSaving("adminLog")["log"] as? JsonArray).objects() } catch (e: ApiError) { if (log.isEmpty()) error = e.message }
     }
     Screen("Admin activity") { pad ->
         LazyColumn(Modifier.padding(pad).fillMaxSize()) {

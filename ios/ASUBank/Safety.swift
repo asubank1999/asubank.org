@@ -331,6 +331,41 @@ struct AdminTermsScreen: View {
     @State private var people: [ABUser] = []
     @State private var peopleLoaded = false
 
+    /// One line of the whole log (server action adminTermsAll)
+    private struct LogRow: Decodable, Identifiable {
+        var id: String
+        var at: String
+        var version: String?
+        var source: String?
+        var appVersion: String?
+        var username: String?
+        var name: String?
+        /// ios, android or web
+        var platform: String {
+            let s = (source ?? "").lowercased()
+            return s == "ios" || s == "android" ? s : "web"
+        }
+    }
+    @State private var all: [LogRow] = []
+    @State private var platform = "all"
+    @State private var logLimit = 100
+
+    private var shownLog: [LogRow] { platform == "all" ? all : all.filter { $0.platform == platform } }
+    private func total(_ p: String) -> Int { all.filter { $0.platform == p }.count }
+    private func symbol(_ p: String) -> String { p == "ios" ? "iphone" : p == "android" ? "a.circle" : "globe" }
+    private func person(_ r: LogRow) -> String {
+        let u = r.username ?? "", n = r.name ?? ""
+        if u.isEmpty { return L("Guest (not signed in)") }
+        return n.isEmpty || n == u ? "@" + u : n + "  @" + u
+    }
+    private func details(_ r: LogRow) -> String {
+        let day = String(r.at.prefix(16)).replacingOccurrences(of: "T", with: " ")
+        let app = r.platform == "ios" ? "iPhone" : r.platform == "android" ? "Android" : "Web"
+        let build: String = (r.appVersion ?? "").isEmpty ? app : app + " " + (r.appVersion ?? "")
+        let parts: [String] = [day, build, r.version ?? ""]
+        return parts.filter { !$0.isEmpty }.joined(separator: " · ")
+    }
+
     /// everyone, or the people the search box matches
     private var shown: [ABUser] {
         let q = query.trimmingCharacters(in: .whitespaces).lowercased()
@@ -360,6 +395,29 @@ struct AdminTermsScreen: View {
                     }
                 }
             }
+            if !all.isEmpty {
+                Section {
+                    Picker("Platform", selection: $platform) {
+                        Text(verbatim: L("All") + " \(all.count)").tag("all")
+                        Text(verbatim: "iPhone \(total("ios"))").tag("ios")
+                        Text(verbatim: "Android \(total("android"))").tag("android")
+                        Text(verbatim: "Web \(total("web"))").tag("web")
+                    }
+                    .pickerStyle(.segmented)
+                    ForEach(Array(shownLog.prefix(logLimit))) { r in
+                        HStack(spacing: 10) {
+                            Image(systemName: symbol(r.platform)).foregroundStyle(Color.abAccent).frame(width: 24)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(verbatim: person(r)).lineLimit(1)
+                                Text(verbatim: details(r)).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                            }
+                        }
+                    }
+                    if shownLog.count > logLimit {
+                        Button { logLimit += 200 } label: { Text("Show more") }
+                    }
+                } header: { Text("Every record") }
+            }
             Section(people.isEmpty ? "" : String(format: L("Everyone (%d)"), shown.count)) {
                 if !peopleLoaded {
                     ForEach(0..<5, id: \.self) { _ in SkeletonRow() }
@@ -385,7 +443,14 @@ struct AdminTermsScreen: View {
         .listStyle(.insetGrouped)
         .navigationTitle("Terms records")
         .task { await loadPeople() }
-        .refreshable { await loadPeople() }
+        .task { await loadAll() }
+        .refreshable { await loadAll(); await loadPeople() }
+    }
+
+    /// The whole log in one call. An older server doesn't know the action: then this part just stays hidden.
+    private func loadAll() async {
+        if all.isEmpty, let r = account.saved("adminTermsAll") { all = decode([LogRow].self, r["records"]) ?? [] }
+        if let r = try? await account.callSaving("adminTermsAll") { all = decode([LogRow].self, r["records"]) ?? all }
     }
 
     private func loadPeople() async {

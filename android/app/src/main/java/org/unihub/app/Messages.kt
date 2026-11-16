@@ -80,6 +80,7 @@ data class DmMessage(
     val expires: String? = null,
     val pending: Boolean = false,
     val local: String? = null,
+    val reactions: Map<String, String> = emptyMap(),
 ) {
     val instant: Instant get() = created?.let { runCatching { Instant.parse(it) }.getOrNull() } ?: Instant.now()
     val day: LocalDate get() = instant.atZone(ZoneId.systemDefault()).toLocalDate()
@@ -226,7 +227,7 @@ fun DmConversations() {
                         }
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                c.last.preview, Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                                StoryNote.preview(c.last.preview, c.last.from == Account.user.value?.id, c.user.name, c.user.gender), Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis,
                                 color = if (c.unread > 0) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             if (c.unread > 0) Text(
@@ -331,6 +332,10 @@ fun DmThreadScreen(userId: String) {
             val new = r["messages"].decodeAs<List<DmMessage>>().orEmpty().filter { it.id !in have && it.id !in gone && !Disappear.expired(it.expires) }
             // what is still on its way stays last
             if (new.isNotEmpty()) messages.addAll(messages.indexOfFirst { it.pending }.takeIf { it >= 0 } ?: messages.size, new)
+            Reactions.changes(r["reactions"]).forEach { (id, rx) ->
+                val i = messages.indexOfFirst { it.id == id }
+                if (i >= 0 && messages[i].reactions != rx) messages[i] = messages[i].copy(reactions = rx)
+            }
             r["user"].decodeAs<AbUser>()?.let { other = it }
             if (r.containsKey("canSend")) canSend = r.bool("canSend")
             r.str("seenUpTo")?.let { seenUpTo = it }
@@ -367,6 +372,24 @@ fun DmThreadScreen(userId: String) {
         }
     }
 
+    /** Shows at once; the server's answer settles it */
+    fun react(m: DmMessage, emoji: String) {
+        val myId = me?.id ?: return
+        if (m.pending) return
+        val i = messages.indexOfFirst { it.id == m.id }.takeIf { it >= 0 } ?: return
+        val before = messages[i].reactions
+        messages[i] = messages[i].copy(reactions = Reactions.toggled(before, myId, emoji))
+        scope.launch {
+            try {
+                val rx = Reactions.map(Account.call("dmReact", mapOf("id" to m.id, "emoji" to emoji))["reactions"])
+                messages.indexOfFirst { it.id == m.id }.takeIf { it >= 0 }?.let { messages[it] = messages[it].copy(reactions = rx) }
+            } catch (e: Exception) {
+                messages.indexOfFirst { it.id == m.id }.takeIf { it >= 0 }?.let { messages[it] = messages[it].copy(reactions = before) }
+                error = e.message
+            }
+        }
+    }
+
     fun open(m: DmMessage) {
         opening = m.id
         scope.launch {
@@ -396,7 +419,7 @@ fun DmThreadScreen(userId: String) {
     val lastSeenMine = if (seenUpTo.isEmpty()) null else messages.lastOrNull { it.from == me?.id && (it.created ?: "") <= seenUpTo }?.id
     val name = other?.name ?: ""
 
-    Screen(name, actions = {
+    Screen(name, onTitleClick = { nav.navigate("profile/$userId") }, actions = {
         other?.let { u ->
             IconButton(onClick = { nav.navigate("profile/${u.id}") }) { Avatar(u.name, u.color, 32.dp, photo = u.avatar, online = u.online, hold = false) }
         }
@@ -418,12 +441,17 @@ fun DmThreadScreen(userId: String) {
                         val mine = m.from == me?.id
                         val above = prev?.from == m.from && prev.day == m.day
                         val below = next?.from == m.from && next.day == m.day
+                        val story = StoryNote.parse(m.text)
                         Column(Modifier.animateItem().fillMaxWidth().padding(top = if (above) 1.dp else 6.dp), horizontalAlignment = if (mine) Alignment.End else Alignment.Start) {
+                            if (story != null) androidx.compose.material3.Text(
+                                StoryNote.line(story, mine, name, other?.gender), style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            )
                             Box {
                                 Column(
                                     Modifier.widthIn(max = 290.dp).chatBubble(mine, above, below)
                                         .graphicsLayer { alpha = if (m.pending) 0.72f else 1f }
-                                        .combinedClickable(onClick = { if (m.hasFile && !m.pending && m.fileType in setOf("pdf", "docx")) open(m) }, onLongClick = { menuFor = m.id })
+                                        .combinedClickable(onClick = { if (m.hasFile && !m.pending && m.fileType in setOf("pdf", "docx")) open(m) }, onLongClick = { menuFor = m.id }, onDoubleClick = { react(m, "❤️") })
                                         .padding(horizontal = 12.dp, vertical = 8.dp),
                                     verticalArrangement = Arrangement.spacedBy(4.dp),
                                 ) {
@@ -442,7 +470,11 @@ fun DmThreadScreen(userId: String) {
                                             if (opening == m.id) ABDots(Modifier.size(18.dp), strokeWidth = 2.dp, color = fg)
                                         }
                                     }
-                                    if (m.text.isNotEmpty()) Text(m.text, color = fg, style = MaterialTheme.typography.bodyLarge)
+                                    when (story) {
+                                        is StoryNote.Kind.Reaction -> androidx.compose.material3.Text(story.emoji, fontSize = 40.sp)
+                                        is StoryNote.Kind.Reply -> androidx.compose.material3.Text(story.text, color = fg, style = MaterialTheme.typography.bodyLarge)
+                                        null -> if (m.text.isNotEmpty()) Text(m.text, color = fg, style = MaterialTheme.typography.bodyLarge)
+                                    }
                                     Row(Modifier.align(Alignment.End), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                         ExpiryTag(m.expires, fg.copy(alpha = 0.7f))
                                         if (m.pending) Icon(Icons.Filled.Schedule, null, Modifier.size(11.dp), tint = fg.copy(alpha = 0.7f))
@@ -450,6 +482,7 @@ fun DmThreadScreen(userId: String) {
                                     }
                                 }
                                 DropdownMenu(menuFor == m.id, { menuFor = null }) {
+                                    if (!m.pending) ReactionPickerRow(me?.id?.let { m.reactions[it] }) { e -> menuFor = null; react(m, e) }
                                     if (m.text.isNotEmpty()) DropdownMenuItem(text = { Text("Copy") }, leadingIcon = { Icon(Icons.Filled.ContentCopy, null) }, onClick = {
                                         (ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("Message", m.text))
                                         menuFor = null
@@ -475,6 +508,7 @@ fun DmThreadScreen(userId: String) {
                                     }
                                 }
                             }
+                            ReactionChips(m.reactions, me?.id) { e -> react(m, e) }
                             if (m.id == lastSeenMine) Text("Seen", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(end = 6.dp, top = 2.dp))
                         }
                     }

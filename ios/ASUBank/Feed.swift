@@ -149,7 +149,7 @@ struct FeedTab: View {
     var body: some View {
         ZStack {
             if slide != 0 { CameraPeek(progress: min(1, abs(slide) / max(1, UIScreen.main.bounds.width))) }
-            ABStack { FeedScreen(swipeCamera: true, slide: $slide) }
+            ABStack { FeedScreen(swipeCamera: false, slide: $slide) }
                 .clipShape(RoundedRectangle(cornerRadius: slide == 0 ? 0 : 24, style: .continuous))
                 .shadow(color: .black.opacity(slide == 0 ? 0 : 0.35), radius: 18)
                 .offset(x: slide)
@@ -559,6 +559,8 @@ struct FeedScreen: View {
             if (try? await account.callSaving(signed ? "feedAll" : "publicFeed", ["scope": scope], tag: scope)) != nil { FeedFresh.at[scope] = Date() }
         }
         Task { _ = try? await account.callSaving(signed ? "stories" : "publicStories", tag: "feed") }
+        // the Chat tab opens on a fresh list of private chats
+        if signed { Task { _ = try? await account.callSaving("dmList") } }
     }
 }
 

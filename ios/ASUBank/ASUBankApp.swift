@@ -93,6 +93,13 @@ struct RootView: View {
 
     private var middleTabs: [AppTab] { TabBarPrefs.chosen(chosenTabs, admin: account.isAdmin) }
 
+    /// Swiping sideways walks through the tab bar in its own order
+    private func swipe(_ step: Int) {
+        let all: [AppTab] = [.home] + middleTabs + [.more]
+        guard accepted, let i = all.firstIndex(of: app.tab), all.indices.contains(i + step) else { return }
+        app.tab = all[i + step]
+    }
+
     @ViewBuilder private func screen(_ t: AppTab) -> some View {
         switch t {
         case .feed: FeedTab()
@@ -130,6 +137,7 @@ struct RootView: View {
                 .tabItem { Label("More", systemImage: "ellipsis.circle.fill") }
                 .tag(AppTab.more)
         }
+        .background(TabSwipe(move: swipe))
         .onChange(of: app.tab) { t in
             // Upload opens as a sheet over the tab you were on; admins find Saved under More
             if t == .upload { app.tab = lastTab; app.uploadShown = true; return }

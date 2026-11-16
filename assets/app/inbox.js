@@ -69,6 +69,21 @@
         return m.fileType === 'voice' ? '🎤 Voice message' : m.fileType === 'video' ? '🎬 Video' : m.fileType === 'photo' ? '📷 Photo' : m.fileName ? '📄 ' + m.fileName : '';
     }
     function preview(m) { return m ? (m.text || mediaLabel(m)) : ''; }
+
+    // Story reactions and replies arrive as private messages ("😂 Reacted to your story", "↩️ Replied to your story: hi"),
+    // so each person reads them from their own side: "You reacted 😂 to her story" / "Sara replied to your story".
+    function storyNote(text, sentByMe, otherName, otherGender) {
+        text = text || '';
+        var R = '↩️ Replied to your story: ', X = ' Reacted to your story', k = null;
+        if (text.indexOf(R) === 0) k = { reply: text.slice(R.length) };
+        else if (text.length > X.length && text.slice(-X.length) === X) { var e = text.slice(0, -X.length).trim(); if (e && e.length <= 8) k = { emoji: e }; }
+        if (!k) return null;
+        var their = otherGender === 'female' ? 'her story' : otherGender === 'male' ? 'his story' : 'their story';
+        k.line = k.emoji ? (sentByMe ? 'You reacted ' + k.emoji + ' to ' + their : otherName + ' reacted ' + k.emoji + ' to your story')
+            : (sentByMe ? 'You replied to ' + their : otherName + ' replied to your story');
+        k.preview = k.emoji ? k.line : k.line + ': ' + k.reply;
+        return k;
+    }
     function ago(iso) {
         var s = (Date.now() - new Date(iso).getTime()) / 1000;
         if (!iso || isNaN(s)) return '';
@@ -229,7 +244,7 @@
                 avatar(c.user),
                 h('span', { class: 'abx-t' },
                     h('span', { class: 'abx-top' }, h('b', { text: nameOf(c.user) }), h('small', { text: ago(c.last && c.last.created) })),
-                    h('span', { class: 'abx-top' }, h('small', { class: 'abx-pre', text: preview(c.last) }), c.unread ? h('em', { text: String(c.unread) }) : null)));
+                    h('span', { class: 'abx-top' }, h('small', { class: 'abx-pre', text: (function (s) { return s ? s.preview : preview(c.last); })(storyNote(c.last && c.last.text, !!(c.last && me && c.last.from === me.id), nameOf(c.user), c.user.gender)) }), c.unread ? h('em', { text: String(c.unread) }) : null)));
         }));
     }
     function listRooms(rooms) {
@@ -311,9 +326,12 @@
                 var who = isDm ? null : (people[m.userId] || { displayName: m.displayName, color: m.color, avatar: m.avatar });
                 var grouped = prev && (isDm ? prev.from === m.from : prev.userId === m.userId) && (new Date(m.created) - new Date(prev.created) < 300000);
                 var label = mediaLabel(m);
+                var sn = isDm ? storyNote(m.text, own, v.name || '', v.gender) : null;
                 var bubble = h('div', { class: 'abx-bubble' + (m.pending ? ' pending' : '') },
                     !own && !isDm && !grouped ? h('b', { class: 'abx-from', style: 'color:' + color(who && who.color), text: nameOf(who) || m.username || '' }) : null,
-                    m.text ? h('span', { class: 'abx-text', text: m.text }) : null,
+                    sn ? h('small', { class: 'abx-story', text: sn.line }) : null,
+                    sn ? h('span', { class: 'abx-text', style: sn.emoji ? 'font-size:34px;line-height:1.15' : '', text: sn.emoji || sn.reply })
+                        : m.text ? h('span', { class: 'abx-text', text: m.text }) : null,
                     m.fileType === 'voice' && !m.pending ? voicePlayer(isDm, m)
                         : m.fileType === 'photo' && !m.pending ? photoInPanel(isDm, m)
                         : m.hasFile || label ? h('a', { class: 'abx-file', href: full, text: (label || '📎 File') + ' · open' }) : null,
@@ -355,6 +373,7 @@
             var f = isDm ? { userId: v.id } : { room: v.id };
             if (last) f.after = last;
             call(isDm ? 'dmThread' : 'chat', f).then(function (r) {
+                if (isDm && r.user) v.gender = r.user.gender;
                 if (seq !== viewSeq) return;
                 var changed = first;
                 if (isDm && r.user) {

@@ -341,7 +341,8 @@ struct AdminLogScreen: View {
         }
         .navigationTitle("Admin activity")
         .task {
-            do { log = (try await AccountStore.shared.call("adminLog")["log"] as? [[String: Any]]) ?? [] } catch { self.error = error.localizedDescription }
+            if log.isEmpty, let r = AccountStore.shared.saved("adminLog") { log = (r["log"] as? [[String: Any]]) ?? [] }
+            do { log = (try await AccountStore.shared.callSaving("adminLog")["log"] as? [[String: Any]]) ?? [] } catch { if log.isEmpty { self.error = error.localizedDescription } }
         }
     }
 }

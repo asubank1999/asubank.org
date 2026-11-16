@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 13;
+var SCHEMA = 14;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -68,7 +68,7 @@ var SHEETS = {
   Users: ['id', 'username', 'email', 'uniId', 'displayName', 'salt', 'hash', 'role', 'banned', 'banReason', 'created', 'lastSeen', 'color', 'mustReset',
           'avatar', 'phone', 'showPhone', 'bio', 'badges', 'major', 'college', 'blocked', 'year', 'interests', 'cover', 'gender', 'showGender'],
   Sessions: ['token', 'userId', 'created', 'lastUsed', 'platform'],
-  Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited', 'fileId', 'fileName', 'fileType', 'fileSize', 'duration', 'expires'],
+  Messages: ['id', 'room', 'userId', 'username', 'displayName', 'role', 'text', 'created', 'deleted', 'replyTo', 'color', 'edited', 'fileId', 'fileName', 'fileType', 'fileSize', 'duration', 'expires', 'reactions'],
   Rooms: ['id', 'name', 'emoji', 'about', 'adminOnly', 'locked', 'archived', 'pinned', 'order', 'created'],
   Log: ['time', 'adminId', 'action', 'target', 'detail'],
   Reports: ['id', 'created', 'reporterId', 'reporterName', 'contact', 'kind', 'targetId', 'targetName', 'targetUser', 'reason', 'details', 'status', 'resolvedBy', 'resolvedAt', 'reply', 'evidence', 'anonymous', 'place'],
@@ -78,7 +78,7 @@ var SHEETS = {
   Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes', 'image', 'audience', 'video', 'voiceId', 'duration', 'expires'],
   Comments: ['id', 'postId', 'userId', 'text', 'created', 'deleted'],
   Stories: ['id', 'userId', 'image', 'text', 'bg', 'created', 'views', 'audience', 'video', 'seenLog', 'style'],
-  DMs: ['id', 'pair', 'from', 'to', 'text', 'created', 'deleted', 'fileId', 'fileName', 'fileType', 'fileSize', 'read', 'duration', 'expires'],
+  DMs: ['id', 'pair', 'from', 'to', 'text', 'created', 'deleted', 'fileId', 'fileName', 'fileType', 'fileSize', 'read', 'duration', 'expires', 'reactions'],
   Suggestions: ['id', 'created', 'userId', 'username', 'note', 'contact', 'status', 'resolvedBy', 'resolvedAt'],
   DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed'],
   TermsLog: ['id', 'time', 'userId', 'username', 'version', 'source', 'appVersion', 'device', 'acceptedAt'],
@@ -532,7 +532,32 @@ function publicMessage(m) {
   return { id: m.id, room: m.room, userId: m.userId, username: m.username, displayName: m.displayName || m.username,
            role: m.role || 'user', text: m.text, created: m.created, replyTo: m.replyTo || '', color: m.color || '#8C1D40',
            edited: m.edited ? String(m.edited) : '', fileName: String(m.fileName || ''), fileType: String(m.fileType || ''), fileSize: Number(m.fileSize) || 0,
-           hasFile: !!m.fileId || !!m.hasFile, duration: Number(m.duration) || 0, expires: isoOrEmpty(m.expires) };
+           hasFile: !!m.fileId || !!m.hasFile, duration: Number(m.duration) || 0, expires: isoOrEmpty(m.expires), reactions: reactionsOf(m.reactions) };
+}
+
+/** Message reactions as { userId: emoji }, one per person */
+function reactionsOf(v) {
+  if (v && typeof v === 'object') return v;
+  try { var o = JSON.parse(String(v || '{}')); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; }
+}
+
+var REACTIONS = ['❤️', '😂', '😮', '😢', '👍', '🙏', '🔥', '👏'];
+
+/** Sets (or with emoji '' clears) my reaction; returns the new map */
+function setReaction(map, userId, emoji) {
+  map = reactionsOf(map);
+  var e = String(emoji || '');
+  if (e && REACTIONS.indexOf(e) < 0) fail('Pick one of the reactions.');
+  if (!e || map[userId] === e) delete map[userId]; else map[userId] = e;
+  return map;
+}
+
+/** Recent reaction changes, so phones that only ask for new messages still see them */
+function noteReaction(key, id, map) {
+  var c = CacheService.getScriptCache();
+  var list = JSON.parse(c.get(key) || '[]').filter(function (x) { return x.id !== id; });
+  list.push({ id: id, reactions: map });
+  c.put(key, JSON.stringify(list.slice(-100)), 21600);
 }
 
 function isoOrEmpty(v) {
@@ -746,7 +771,8 @@ function dmAllowed(s, t) {
 
 function dmPublic(m) {
   return { id: m.id, from: m.from, to: m.to, text: String(m.text || ''), created: new Date(m.created).toISOString(), fileName: String(m.fileName || ''),
-           fileType: String(m.fileType || ''), fileSize: Number(m.fileSize) || 0, hasFile: !!m.fileId || !!m.hasFile, duration: Number(m.duration) || 0, expires: isoOrEmpty(m.expires) };
+           fileType: String(m.fileType || ''), fileSize: Number(m.fileSize) || 0, hasFile: !!m.fileId || !!m.hasFile, duration: Number(m.duration) || 0, expires: isoOrEmpty(m.expires),
+           reactions: reactionsOf(m.reactions) };
 }
 
 function mediaLabel(type) { return type === 'voice' ? '🎤 Voice message' : type === 'video' ? '🎬 Video' : type === 'photo' ? '📷 Photo' : ''; }
@@ -776,7 +802,10 @@ function dmCached(pair) {
 function dmStore(pair, list) {
   var j = JSON.stringify(list);
   while (j.length > 95000 && list.length > 10) { list = list.slice(10); j = JSON.stringify(list); }
-  CacheService.getScriptCache().put('dm:' + pair, j, 21600);
+  var c = CacheService.getScriptCache();
+  c.put('dm:' + pair, j, 21600);
+  // both people's chat lists changed
+  c.removeAll(pair.split(':').map(function (id) { return 'dml:' + id; }));
 }
 
 /** Checks what kind of file this really is. Private chats take PDF, photos and Word (DOCX) files only. */
@@ -1372,6 +1401,7 @@ var ACTIONS = {
     var pinned = null;
     if (room.pinned) pinned = roomMessages(room.id).filter(function (m) { return m.id === room.pinned; })[0] || null;
     return { ok: true, room: room, messages: list, deleted: gone ? JSON.parse(gone) : [], edited: edits, pinned: pinned,
+             reactions: JSON.parse(c.get('x:' + room.id) || '[]'),
              people: peopleFor(Object.keys(ids)), latest: latestMeta() };
   },
 
@@ -1423,6 +1453,21 @@ var ACTIONS = {
       edits.push({ id: m.id, text: text, edited: when });
       c.put('e:' + m.room, JSON.stringify(edits.slice(-100)), 21600);
       return { ok: true };
+    });
+  },
+
+  /** React to a room message ({ id, emoji }); the same emoji again, or '', takes it back */
+  react: function (b) {
+    var u = auth(b);
+    if (u.role !== 'admin' && tooMany('react:' + u.id, 60)) fail('Slow down a little.');
+    return withLock(function () {
+      var m = rows('Messages').filter(function (x) { return x.id === b.id; })[0];
+      if (!m || truthy(m.deleted) || !alive(m)) fail('Message not found.');
+      var map = setReaction(m.reactions, u.id, b.emoji);
+      update('Messages', m._row, { reactions: JSON.stringify(map) });
+      putRoom(m.room, roomMessages(m.room).map(function (x) { if (x.id === m.id) x.reactions = map; return x; }));
+      noteReaction('x:' + m.room, m.id, map);
+      return { ok: true, reactions: map };
     });
   },
 
@@ -1960,6 +2005,9 @@ var ACTIONS = {
   /** My private conversations, newest first */
   dmList: function (b) {
     var s = auth(b);
+    // The answer is kept for 45 seconds: every new message, delete, reaction or read clears it (dmStore, dmThread)
+    var lc = CacheService.getScriptCache(), hit = lc.get('dml:' + s.id);
+    if (hit) return JSON.parse(hit);
     try { purgeExpired(); } catch (e) {}
     var map = usersById(), mine = blockedIds(map[s.id]), found = {};
     rows('DMs').forEach(function (m) {
@@ -1977,7 +2025,10 @@ var ACTIONS = {
       list.push({ user: publicUser(u, false), last: dmPublic(g.last), unread: g.unread });
     });
     list.sort(function (x, y) { return String(y.last.created).localeCompare(String(x.last.created)); });
-    return { ok: true, conversations: list, unread: unread };
+    var res = { ok: true, conversations: list, unread: unread };
+    var j = JSON.stringify(res);
+    if (j.length < 95000) lc.put('dml:' + s.id, j, 45);
+    return res;
   },
 
   /** One conversation. With `after`, only what is new. Opening it marks the other person's messages as read. */
@@ -2000,11 +2051,13 @@ var ACTIONS = {
         });
       });
       c.put(unreadKey, '0', 21600);
+      c.remove('dml:' + s.id);
     }
     var lastFromThem = null;
     all.forEach(function (m) { if (m.from === t.id) lastFromThem = m; });
     if (lastFromThem) c.put('dmr:' + pair + ':' + s.id, String(lastFromThem.created), 21600);
-    var o = { ok: true, messages: list, deleted: JSON.parse(c.get('dmd:' + pair) || '[]'), seenUpTo: c.get('dmr:' + pair + ':' + t.id) || '' };
+    var o = { ok: true, messages: list, deleted: JSON.parse(c.get('dmd:' + pair) || '[]'), seenUpTo: c.get('dmr:' + pair + ':' + t.id) || '',
+              reactions: JSON.parse(c.get('dmx:' + pair) || '[]') };
     if (!b.after) { o.user = publicUser(t, false); o.canSend = dmAllowed(s, t); }
     return o;
   },
@@ -2063,6 +2116,28 @@ var ACTIONS = {
     } else fail('File not found.');
     var blob = DriveApp.getFileById(fileId).getBlob();
     return { ok: true, data: Utilities.base64Encode(blob.getBytes()), name: String(name), type: String(type) };
+  },
+
+  /** React to a private message ({ id, emoji }); only the two people in the chat can */
+  dmReact: function (b) {
+    var s = auth(b);
+    if (s.role !== 'admin' && tooMany('react:' + s.id, 60)) fail('Slow down a little.');
+    var res = withLock(function () {
+      var m = rows('DMs').filter(function (x) { return x.id === b.id; })[0];
+      if (!m || truthy(m.deleted) || !alive(m) || (m.from !== s.id && m.to !== s.id)) fail('Message not found.');
+      var had = reactionsOf(m.reactions)[s.id];
+      var map = setReaction(m.reactions, s.id, b.emoji);
+      update('DMs', m._row, { reactions: JSON.stringify(map) });
+      dmStore(m.pair, dmCached(m.pair).map(function (x) { if (x.id === m.id) x.reactions = map; return x; }));
+      noteReaction('dmx:' + m.pair, m.id, map);
+      return { m: m, map: map, added: map[s.id] && map[s.id] !== had };
+    });
+    var other = res.m.from === s.id ? res.m.to : res.m.from;
+    if (res.added && other !== s.id) {
+      var what = String(res.m.text || mediaLabel(res.m.fileType) || res.m.fileName || '').slice(0, 60);
+      try { privateEvent({ toUserId: other }, 'dm', s, 'Reacted ' + res.map[s.id] + (what ? ' to: ' + what : ' to your message')); } catch (e) {}
+    }
+    return { ok: true, reactions: res.map };
   },
 
   dmDelete: function (b) {

@@ -422,6 +422,54 @@
     }
     var localSeq = 0;
 
+    // Story reactions and replies arrive as private messages ("😂 Reacted to your story", "↩️ Replied to your story: hi"),
+    // so each person reads them from their own side: "You reacted 😂 to her story" / "Sara replied to your story".
+    function storyNote(text, sentByMe, otherName, otherGender) {
+        text = text || '';
+        var R = '↩️ Replied to your story: ', X = ' Reacted to your story', k = null;
+        if (text.indexOf(R) === 0) k = { reply: text.slice(R.length) };
+        else if (text.length > X.length && text.slice(-X.length) === X) { var e = text.slice(0, -X.length).trim(); if (e && e.length <= 8) k = { emoji: e }; }
+        if (!k) return null;
+        var their = otherGender === 'female' ? 'her story' : otherGender === 'male' ? 'his story' : 'their story';
+        k.line = k.emoji ? (sentByMe ? 'You reacted ' + k.emoji + ' to ' + their : otherName + ' reacted ' + k.emoji + ' to your story')
+            : (sentByMe ? 'You replied to ' + their : otherName + ' replied to your story');
+        k.preview = k.emoji ? k.line : k.line + ': ' + k.reply;
+        return k;
+    }
+
+    // ---- message reactions (rooms and private chats); one per person, the same emoji again takes it back
+    var REACTIONS = ['❤️', '😂', '😮', '😢', '👍', '🙏', '🔥', '👏'];
+    function reactionChips(m, tap) {
+        var map = m.reactions || {}, counts = {}, order = [];
+        Object.keys(map).forEach(function (k) { var e = map[k]; if (!counts[e]) { counts[e] = 0; order.push(e); } counts[e]++; });
+        if (!order.length) return null;
+        order.sort(function (a, b) { var i = REACTIONS.indexOf(a), j = REACTIONS.indexOf(b); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); });
+        return h('div', { class: 'acc-reacts' }, order.map(function (e) {
+            return h('button', { type: 'button', class: 'acc-react' + (user && map[user.id] === e ? ' mine' : ''), onclick: function () { tap(e); },
+                'aria-label': e + ' ' + counts[e] }, e, counts[e] > 1 ? h('small', { text: String(counts[e]) }) : null);
+        }));
+    }
+    function reactionPicker(m, tap) {
+        var mineE = (m.reactions || {})[user.id];
+        return h('span', { class: 'acc-react-pick' }, REACTIONS.map(function (e) {
+            return h('button', { type: 'button', class: mineE === e ? 'on' : '', 'aria-label': 'React ' + e, text: e, onclick: function () { tap(e); } });
+        }));
+    }
+    // shows at once, the server's answer settles it
+    function reactTo(action, m, emoji, redraw, fail) {
+        var before = m.reactions || {}, next = {};
+        Object.keys(before).forEach(function (k) { next[k] = before[k]; });
+        if (next[user.id] === emoji) delete next[user.id]; else next[user.id] = emoji;
+        m.reactions = next; redraw();
+        call(action, { id: m.id, emoji: emoji }).then(function (r) { m.reactions = r.reactions || {}; redraw(); })
+            .catch(function (e) { m.reactions = before; redraw(); fail(e); });
+    }
+    function applyReactions(list, byId) {
+        var changed = false;
+        (list || []).forEach(function (x) { var m = byId[x.id]; if (m && JSON.stringify(m.reactions || {}) !== JSON.stringify(x.reactions || {})) { m.reactions = x.reactions || {}; changed = true; } });
+        return changed;
+    }
+
     // the row in a chat: attach, timer, message box, and the microphone or send button
     function chatRow(opts) {
         var input = opts.input, send = opts.send;
@@ -677,7 +725,8 @@
                 return;
             }
             dmBox.appendChild(h('div', { class: 'acc-card acc-rooms' }, list.map(function (c) {
-                var preview = previewOf(c.last);
+                var sn = storyNote(c.last && c.last.text, c.last && c.last.from === user.id, nameOf(c.user), c.user.gender);
+                var preview = sn ? sn.preview : previewOf(c.last);
                 return h('a', { class: 'acc-room' + (c.unread ? ' unread' : ''), href: '#@dm/' + encodeURIComponent(c.user.id) },
                     avatar(nameOf(c.user), c.user.color, 50, c.user.role === 'admin', c.user.avatar, c.user.online == null ? null : !!c.user.online),
                     h('span', { class: 'acc-room-t' },
@@ -887,7 +936,9 @@
             var grouped = prev && prev.userId === m.userId && new Date(prev.created).toDateString() === new Date(m.created).toDateString();
             var reply = m.replyTo && byId[m.replyTo];
             var who = function () { showProfile(m.userId, nameOf(m)); };
+            var react = function (e) { reactTo('react', m, e, render, function (x) { showErr(err, x); }); };
             var actions = m.pending ? null : h('span', { class: 'acc-msg-actions' },
+                reactionPicker(m, react),
                 h('button', { type: 'button', text: 'Reply', onclick: function () { setReply(m); input.focus(); } }),
                 mine && m.text ? h('button', { type: 'button', text: 'Edit', onclick: function () { setReply(m, true); input.value = m.text; bar.tidy(); input.focus(); } }) : null,
                 isAdmin() ? h('button', { type: 'button', text: pinned && pinned.id === m.id ? 'Unpin' : 'Pin', onclick: function () { pin(pinned && pinned.id === m.id ? null : m); } }) : null,
@@ -914,7 +965,8 @@
                     m.hasFile ? mediaOf(m, m.local ? function () { return Promise.resolve(m.local); } : roomOrPostMedia('room', m.id, m.fileName)) : null,
                     m.text ? h('div', { class: 'acc-text', text: m.text }) : null,
                     h('div', { class: 'acc-time', text: (m.pending ? '🕓 ' : '') + (m.expires ? leftText(m.expires) + ' · ' : '') + (pinned && pinned.id === m.id ? '📌 ' : '') + (m.edited ? 'edited · ' : '') + fmtTime(m.created) }),
-                    actions));
+                    actions),
+                m.pending ? null : reactionChips(m, react));
         }
 
         function render() {
@@ -971,6 +1023,7 @@
                 var n = msgs.length;
                 add(r.messages || []);
                 if (applyEdits(r.edited)) changed = true;
+                if (applyReactions(r.reactions, byId)) changed = true;
                 if (changed && msgs.length === n) render();
                 if (!msgs.length) render();
                 showErr(err, null);
@@ -1024,7 +1077,7 @@
         clear();
         var msgs = [], byId = {}, last = null, seenUpTo = '', other = null, urls = {}, seenIds = {}, forceBottom = false;
         var hash = '#@dm/' + encodeURIComponent(userId);
-        var title = h('h1', { class: 'acc-room-title', text: '' });
+        var title = h('h1', { class: 'acc-room-title', text: '', role: 'button', tabindex: '0', style: 'cursor:pointer', onclick: function () { showProfile(userId); } });
         var status = h('small', { class: 'acc-muted' });
         var face = h('button', { type: 'button', class: 'acc-av-btn', 'aria-label': 'Open the profile', onclick: function () { showProfile(userId); } });
         var feed = h('div', { class: 'acc-feed', 'aria-live': 'polite' });
@@ -1098,7 +1151,10 @@
         function bubble(m, prev, next) {
             var mine = m.from === user.id;
             var same = function (o) { return o && o.from === m.from && new Date(o.created).toDateString() === new Date(m.created).toDateString(); };
+            var react = function (e) { reactTo('dmReact', m, e, render, function (x) { showErr(err, x); }); };
+            var sn = storyNote(m.text, mine, other ? nameOf(other) : '', other && other.gender);
             var actions = m.pending ? null : h('span', { class: 'acc-msg-actions' },
+                reactionPicker(m, react),
                 mine ? h('button', { type: 'button', text: 'Delete for everyone', onclick: function () {
                     if (!window.confirm('Delete this message for everyone?')) return;
                     // gone at once for me; the other person's screen removes it on its next check
@@ -1106,12 +1162,14 @@
                     call('dmDelete', { id: m.id }).catch(function (e) { byId[m.id] = m; msgs.push(m); msgs.sort(function (a, b) { return a.created < b.created ? -1 : 1; }); render(); showErr(err, e); });
                 } }) : h('button', { type: 'button', text: 'Report', onclick: function () { reportSheet('dm', m.id, (m.text || m.fileName || '').slice(0, 120)); } }),
                 (!mine && other && other.role !== 'admin') ? h('button', { type: 'button', text: 'Block', onclick: function () { blockPerson(userId, nameOf(other), function () { location.hash = '@messages'; }); } }) : null);
-            return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (same(prev) ? ' grouped' : '') + (same(next) ? ' below' : '') + (m.pending ? ' pending' : ''), 'data-id': m.id },
-                h('div', { class: 'acc-bubble', onclick: toggleActions },
+            return h('div', { class: 'acc-msg' + (mine ? ' mine' : '') + (same(prev) && !sn ? ' grouped' : '') + (same(next) ? ' below' : '') + (m.pending ? ' pending' : '') + (sn ? ' story' : ''), 'data-id': m.id },
+                sn ? h('div', { class: 'acc-story-line', text: sn.line }) : null,
+                h('div', { class: 'acc-bubble' + (sn && sn.emoji ? ' acc-big-emoji' : ''), onclick: toggleActions },
                     m.hasFile ? attachment(m) : null,
-                    m.text ? h('div', { class: 'acc-text', text: m.text }) : null,
+                    sn ? h('div', { class: 'acc-text', text: sn.emoji || sn.reply }) : m.text ? h('div', { class: 'acc-text', text: m.text }) : null,
                     h('div', { class: 'acc-time', text: (m.pending ? '🕓 ' : '') + (m.expires ? leftText(m.expires) + ' · ' : '') + fmtTime(m.created) }),
-                    actions));
+                    actions),
+                m.pending ? null : reactionChips(m, react));
         }
         function render() {
             var atBottom = forceBottom || feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80;
@@ -1168,7 +1226,8 @@
                 seenUpTo = r.seenUpTo || seenUpTo;
                 remove(r.deleted);
                 var added = add(r.messages || []);
-                if ((seenChanged && !added) || first) render();
+                var reacted = applyReactions(r.reactions, byId);
+                if (((seenChanged || reacted) && !added) || first) render();
                 first = false;
                 showErr(err, null);
             }).catch(function (e) { showErr(err, e); })

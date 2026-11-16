@@ -218,6 +218,7 @@ data class ChatMessage(
     val expires: String? = null,
     val pending: Boolean = false,
     val local: String? = null,
+    val reactions: Map<String, String> = emptyMap(),
 ) {
     val instant: Instant get() = runCatching { Instant.parse(created) }.getOrDefault(Instant.now())
     val preview: String get() = text.ifEmpty {
@@ -521,6 +522,7 @@ object ChatNotifier {
             "friend_accept" -> trf("%s accepted your friend request", who)
             "poke" -> Social.pokeText(e.kind ?: "poke", who, e.text)
             "group_request" -> trf("%s asked to add: %s", who, e.text)
+            "dm" -> StoryNote.preview(e.text, false, who, null)
             else -> e.text
         }
         val n = NotificationCompat.Builder(ctx, channel)
@@ -569,11 +571,26 @@ suspend fun adminDeleteUpload(url: String) {
  */
 object ReplyCache {
     private val dir get() = java.io.File(Disk.ctx.cacheDir, "replies")
-    fun read(name: String): JsonObject? = runCatching {
-        java.io.File(dir, name).takeIf { it.exists() }?.readText()?.let { json.parseToJsonElement(it) as? JsonObject }
-    }.getOrNull()
-    fun write(name: String, r: JsonObject) { runCatching { dir.mkdirs(); java.io.File(dir, name).writeText(r.toString()) } }
-    fun clear() { runCatching { dir.deleteRecursively() } }
+    /** Answers already read or written in this run: no file read and no parsing the second time */
+    private val memory = java.util.concurrent.ConcurrentHashMap<String, JsonObject>()
+    private val disk = java.util.concurrent.Executors.newSingleThreadExecutor()
+    fun read(name: String): JsonObject? {
+        memory[name]?.let { return it }
+        val r = runCatching {
+            java.io.File(dir, name).takeIf { it.exists() }?.readText()?.let { json.parseToJsonElement(it) as? JsonObject }
+        }.getOrNull() ?: return null
+        memory[name] = r
+        return r
+    }
+    fun write(name: String, r: JsonObject) {
+        memory[name] = r
+        // turning it into a file is the slow part: one write at a time, off the screen's thread
+        disk.execute { runCatching { dir.mkdirs(); java.io.File(dir, name).writeText(r.toString()) } }
+    }
+    fun clear() {
+        memory.clear()
+        disk.execute { runCatching { dir.deleteRecursively() } }
+    }
 }
 
 fun JsonArray?.objects(): List<JsonObject> = this?.mapNotNull { it as? JsonObject } ?: emptyList()

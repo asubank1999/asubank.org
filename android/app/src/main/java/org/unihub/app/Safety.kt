@@ -20,6 +20,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.PhoneIphone
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
@@ -378,6 +381,16 @@ fun AdminTermsScreen() {
             busy = false
         }
     }
+    // the whole log in one call (server action adminTermsAll). An older server doesn't know it: then this part stays hidden.
+    var all by remember { mutableStateOf<List<JsonObject>>(emptyList()) }
+    var platform by remember { mutableStateOf("all") }
+    var logLimit by remember { mutableStateOf(100) }
+    LaunchedEffect(Unit) {
+        Account.saved("adminTermsAll")?.let { all = (it["records"] as? JsonArray).objects() }
+        runCatching { Account.callSaving("adminTermsAll") }.getOrNull()?.let { all = (it["records"] as? JsonArray).objects() }
+    }
+    fun platformOf(r: JsonObject): String = when (r.str("source")?.lowercase()) { "ios" -> "ios"; "android" -> "android"; else -> "web" }
+    val shownLog = if (platform == "all") all else all.filter { platformOf(it) == platform }
     val q = query.trim().lowercase()
     val shown = if (q.isEmpty()) people else people.filter { u -> listOf(u.username, u.name, u.email.orEmpty(), u.uniId.orEmpty()).any { it.lowercase().contains(q) } }
     Screen("Terms records") { pad ->
@@ -401,6 +414,36 @@ fun AdminTermsScreen() {
                             ListRow(r.str("at") ?: "", listOfNotNull(r.str("version"), r.str("source"), r.str("appVersion")).joinToString(" · "))
                         }
                     }
+                }
+            }
+            if (all.isNotEmpty()) {
+                item {
+                    Column(Modifier.padding(horizontal = 16.dp, vertical = 6.dp)) {
+                        Text(tr("Every record"), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        androidx.compose.foundation.lazy.LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf("all" to tr("All"), "ios" to "iPhone", "android" to "Android", "web" to "Web").forEach { (id, label) ->
+                                item {
+                                    val n = if (id == "all") all.size else all.count { platformOf(it) == id }
+                                    androidx.compose.material3.FilterChip(selected = platform == id, onClick = { platform = id; logLimit = 100 }, label = { Text("$label $n") })
+                                }
+                            }
+                        }
+                    }
+                }
+                val rowsShown = shownLog.take(logLimit)
+                items(rowsShown.size) { i ->
+                    val r = rowsShown[i]
+                    val p = platformOf(r)
+                    val u = r.str("username").orEmpty()
+                    val n = r.str("name").orEmpty()
+                    val person = if (u.isEmpty()) tr("Guest (not signed in)") else if (n.isEmpty() || n == u) "@$u" else "$n  @$u"
+                    val app = when (p) { "ios" -> "iPhone"; "android" -> "Android"; else -> "Web" }
+                    val details = listOf(r.str("at").orEmpty().take(16).replace('T', ' '), listOf(app, r.str("appVersion").orEmpty()).filter { it.isNotEmpty() }.joinToString(" "), r.str("version").orEmpty())
+                        .filter { it.isNotEmpty() }.joinToString(" · ")
+                    ListRow(person, details, icon = when (p) { "ios" -> Icons.Filled.PhoneIphone; "android" -> Icons.Filled.Android; else -> Icons.Filled.Language })
+                }
+                if (shownLog.size > logLimit) item {
+                    androidx.compose.material3.TextButton(onClick = { logLimit += 200 }, modifier = Modifier.fillMaxWidth()) { Text(tr("Show more")) }
                 }
             }
             item {
