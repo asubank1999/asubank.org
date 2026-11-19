@@ -19,7 +19,7 @@
 var ADMINS = ['alan144', 'necro144@yahoo.com', '202120132'];
 var OWNER_EMAIL = 'necro144@yahoo.com';
 var UPLOAD_FOLDER_ID = '1ubxr47KfFwm7ocn0ikCpJLp79-dxe8aB';
-var SCHEMA = 14;
+var SCHEMA = 15;
 /** The rooms the Rooms sheet starts with; after that admins manage rooms from the apps */
 var DEFAULT_ROOMS = [
   { id: 'general', name: 'General', emoji: '💬', about: 'Say hi, ask anything about ASU' },
@@ -77,13 +77,14 @@ var SHEETS = {
   Pokes: ['id', 'from', 'to', 'kind', 'place', 'created', 'read'],
   Posts: ['id', 'userId', 'text', 'created', 'deleted', 'likes', 'image', 'audience', 'video', 'voiceId', 'duration', 'expires'],
   Comments: ['id', 'postId', 'userId', 'text', 'created', 'deleted'],
-  Stories: ['id', 'userId', 'image', 'text', 'bg', 'created', 'views', 'audience', 'video', 'seenLog', 'style'],
+  Stories: ['id', 'userId', 'image', 'text', 'bg', 'created', 'views', 'audience', 'video', 'seenLog', 'style', 'voiceId', 'duration'],
   DMs: ['id', 'pair', 'from', 'to', 'text', 'created', 'deleted', 'fileId', 'fileName', 'fileType', 'fileSize', 'read', 'duration', 'expires', 'reactions'],
   Suggestions: ['id', 'created', 'userId', 'username', 'note', 'contact', 'status', 'resolvedBy', 'resolvedAt'],
   DeletedFiles: ['id', 'name', 'time', 'adminId', 'trashed'],
   TermsLog: ['id', 'time', 'userId', 'username', 'version', 'source', 'appVersion', 'device', 'acceptedAt'],
   VideoLinks: ['id', 'userId', 'url', 'title', 'subject', 'page', 'category', 'created'],
-  Swaps: ['id', 'userId', 'have', 'want', 'section', 'note', 'fullName', 'studentId', 'major', 'phone', 'email', 'status', 'created']
+  Swaps: ['id', 'userId', 'have', 'want', 'section', 'note', 'fullName', 'studentId', 'major', 'phone', 'email', 'status', 'created'],
+  Activity: ['time', 'userId', 'username', 'kind', 'source', 'appVersion', 'device', 'detail']
 };
 
 // MARK: - entry points
@@ -95,8 +96,13 @@ function doPost(e) {
     ensureSchema();
     var fn = ACTIONS[body.action];
     if (!fn) return out({ ok: false, error: 'Unknown action.' });
-    return out(fn(body));
+    var kind = TRACKED[body.action];
+    var who = kind ? whoFor(body) : null;   // looked up first, so sign-out and account deletion still know who it was
+    var res = fn(body);
+    if (kind) noteActivity(kind, body, res, who);
+    return out(res);
   } catch (err) {
+    if (body.action === 'login' && err.userMessage) noteActivity('sign-in failed', body, null, null, String(body.login || '').slice(0, 40));
     if (err.userMessage) return out({ ok: false, error: err.userMessage });
     console.error('action ' + body.action + ' failed: ' + (err && err.stack || err));
     return out({ ok: false, error: 'Something went wrong. Please try again.' });
@@ -204,6 +210,49 @@ function withLock(fn) {
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try { return fn(); } finally { lock.releaseLock(); }
+}
+
+// MARK: - activity log (admins: who uses UniHub, from where, and what they did; never message text)
+
+var TRACKED = {
+  register: 'signed up', login: 'signed in', logout: 'signed out', hello: 'opened UniHub',
+  updateProfile: 'edited profile', setAvatar: 'changed photo', setCover: 'changed cover', changePassword: 'changed password',
+  deleteAccount: 'deleted account', postCreate: 'posted', storyCreate: 'added a story', commentAdd: 'commented',
+  report: 'sent a report', termsAccept: 'accepted the terms', linkAdd: 'shared a video', swapAdd: 'added a subject swap',
+  friendRequest: 'sent a friend request', suggest: 'sent a suggestion'
+};
+
+/** The signed-in person of a request without failing (null for guests) */
+function whoFor(b) {
+  try {
+    var t = String(b.token || '');
+    if (t.length < 30) return null;
+    var cached = CacheService.getScriptCache().get('s:' + t);
+    if (cached) return JSON.parse(cached);
+    var s = rows('Sessions').filter(function (x) { return x.token === t; })[0];
+    if (!s) return null;
+    var u = userById(s.userId);
+    return u ? { id: u.id, username: u.username, platform: s.platform } : null;
+  } catch (e) { return null; }
+}
+
+function noteActivity(kind, b, res, who, detail) {
+  try {
+    if (res && (res.ok === false || res.skip)) return;
+    var u = who || (res && res.user) || null;
+    var src = String(b.source || b.platform || (who && who.platform) || '').toLowerCase().slice(0, 12);
+    if (!detail) {
+      if (b.action === 'hello') detail = [b.lang, b.screen].filter(String).join(' · ');
+      else if (b.action === 'report') detail = String(b.kind || '');
+      else if (b.action === 'postCreate') detail = b.video ? 'video' : (b.image || b.photo) ? 'photo' : 'text';
+      else if (b.action === 'storyCreate') detail = b.video ? 'video' : b.image ? 'photo' : 'text';
+      else if (b.action === 'termsAccept') detail = 'version ' + String(b.version || '');
+    }
+    append('Activity', { time: new Date().toISOString(), userId: u ? u.id : '', username: u ? String(u.username || '') : 'guest', kind: kind,
+                         source: src, appVersion: String(b.appVersion || '').slice(0, 20), device: String(b.device || '').slice(0, 60), detail: String(detail || '').slice(0, 80) });
+    var sh = sheet('Activity');
+    if (sh.getLastRow() > 40000) sh.deleteRows(2, 10000);   // keeps the newest 30,000
+  } catch (e) {}
 }
 
 function log(admin, action, target, detail) {
@@ -908,6 +957,7 @@ function purgeStories(force) {
     rows('Stories').filter(function (r) { return now - new Date(r.created).getTime() > STORY_KEPT_MS; }).reverse().forEach(function (r) {
       removeAvatarFile(r.image);
       removeAvatarFile(r.video);
+      if (r.voiceId) { try { DriveApp.getFileById(r.voiceId).setTrashed(true); } catch (e) {} }
       sheet('Stories').deleteRow(r._row);
       n++;
     });
@@ -1027,6 +1077,36 @@ var ACTIONS = {
     log(a, 'terms lookup', u.username, '');
     var list = rows('TermsLog').filter(function (r) { return r.userId === u.id; }).map(function (r) { return { at: r.time, version: String(r.version), source: r.source, appVersion: String(r.appVersion), device: r.device }; });
     return { ok: true, username: u.username, created: u.created, current: TERMS_VERSION, accepted: list };
+  },
+
+  /** The apps and the website say hello when they open (at most every 30 minutes per device), for the activity log */
+  hello: function (b) {
+    var t = String(b.token || '');
+    var key = 'hi:' + (t.length >= 30 ? t.slice(0, 40) : String(b.device || 'x').slice(0, 60) + String(b.source || ''));
+    var c = CacheService.getScriptCache();
+    if (c.get(key)) return { ok: true, skip: true };
+    c.put(key, '1', 1800);
+    return { ok: true };
+  },
+
+  /** Admins: the newest 3,000 activity records, newest first, with display names */
+  adminActivity: function (b) {
+    auth(b, { admin: true });
+    var map = usersById();
+    var sh = sheet('Activity');
+    var n = Math.max(0, sh.getLastRow() - 1);
+    var take = Math.min(n, 3000);
+    var head = SHEETS.Activity;
+    var raw = take > 0 ? sh.getRange(sh.getLastRow() - take + 1, 1, take, head.length).getValues() : [];
+    var records = raw.map(function (r) {
+      var o = {};
+      head.forEach(function (h, j) { o[h] = r[j] instanceof Date ? r[j].toISOString() : String(r[j]); });
+      var u = o.userId ? map[o.userId] : null;
+      o.name = u ? String(u.displayName || '') : '';
+      if (u) o.username = String(u.username);
+      return o;
+    }).reverse();
+    return { ok: true, total: n, records: records };
   },
 
   /** Admins: the whole proof log, newest first, so nobody has to be looked up one by one. `source` is ios, android or web. */
@@ -2044,7 +2124,8 @@ var ACTIONS = {
       list = i >= 0 ? all.slice(i + 1) : all.slice(-60);
     } else list = all.slice(-60);
     var unreadKey = 'dmu:' + s.id + ':' + t.id;
-    if (c.get(unreadKey) !== '0') {
+    // `peek` (the apps loading chats ahead) reads without marking anything read or seen
+    if (!b.peek && c.get(unreadKey) !== '0') {
       withLock(function () {
         rows('DMs').forEach(function (m) {
           if (m.pair === pair && m.to === s.id && !truthy(m.read)) update('DMs', m._row, { read: true });
@@ -2055,7 +2136,7 @@ var ACTIONS = {
     }
     var lastFromThem = null;
     all.forEach(function (m) { if (m.from === t.id) lastFromThem = m; });
-    if (lastFromThem) c.put('dmr:' + pair + ':' + s.id, String(lastFromThem.created), 21600);
+    if (lastFromThem && !b.peek) c.put('dmr:' + pair + ':' + s.id, String(lastFromThem.created), 21600);
     var o = { ok: true, messages: list, deleted: JSON.parse(c.get('dmd:' + pair) || '[]'), seenUpTo: c.get('dmr:' + pair + ':' + t.id) || '',
               reactions: JSON.parse(c.get('dmx:' + pair) || '[]') };
     if (!b.after) { o.user = publicUser(t, false); o.canSend = dmAllowed(s, t); }
@@ -2113,6 +2194,14 @@ var ACTIONS = {
         if (p.audience === 'friends' && p.userId !== s.id && s.role !== 'admin' && !friendIds(s.id)[p.userId]) fail('File not found.');
       }
       fileId = p.voiceId; name = 'voice.m4a'; type = 'voice';
+    } else if (b.scope === 'story') {
+      var st = rows('Stories').filter(function (x) { return x.id === b.id; })[0];
+      if (!st || !st.voiceId) fail('File not found.');
+      if (st.audience !== 'public') {
+        var me = auth(b);
+        if (st.audience === 'friends' && st.userId !== me.id && me.role !== 'admin' && !friendIds(me.id)[st.userId]) fail('File not found.');
+      }
+      fileId = st.voiceId; name = 'voice.m4a'; type = 'voice';
     } else fail('File not found.');
     var blob = DriveApp.getFileById(fileId).getBlob();
     return { ok: true, data: Utilities.base64Encode(blob.getBytes()), name: String(name), type: String(type) };
@@ -2206,7 +2295,8 @@ var ACTIONS = {
       if (r.audience !== 'public' || !u || truthy(u.banned) || now - new Date(r.created).getTime() > STORY_SHOWN_MS) return;
       var g = groups[r.userId] || (groups[r.userId] = { user: guestUser(u), stories: [], seen: false, newest: '' });
       var when = new Date(r.created).toISOString();
-      g.stories.push({ id: r.id, image: String(r.image || ''), video: String(r.video || ''), text: String(r.text || ''), bg: String(r.bg || ''), audience: 'public', created: when, seen: false, style: String(r.style || '') });
+      g.stories.push({ id: r.id, image: String(r.image || ''), video: String(r.video || ''), text: String(r.text || ''), bg: String(r.bg || ''), audience: 'public', created: when, seen: false, style: String(r.style || ''),
+                       hasVoice: !!r.voiceId, duration: Number(r.duration) || 0 });
       if (when > g.newest) g.newest = when;
     });
     var list = Object.keys(groups).map(function (k) { return groups[k]; });
@@ -2275,7 +2365,8 @@ var ACTIONS = {
       var views = String(r.views || '').split(',').filter(String);
       var g = groups[r.userId] || (groups[r.userId] = { user: publicUser(u, false), stories: [], seen: true, newest: '' });
       var seen = r.userId === s.id || views.indexOf(s.id) >= 0;
-      var o = { id: r.id, image: String(r.image || ''), video: String(r.video || ''), audience: audienceOf(r), text: String(r.text || ''), bg: String(r.bg || ''), created: new Date(r.created).toISOString(), seen: seen, style: String(r.style || '') };
+      var o = { id: r.id, image: String(r.image || ''), video: String(r.video || ''), audience: audienceOf(r), text: String(r.text || ''), bg: String(r.bg || ''), created: new Date(r.created).toISOString(), seen: seen, style: String(r.style || ''),
+                hasVoice: !!r.voiceId, duration: Number(r.duration) || 0 };
       if (r.userId === s.id) o.views = views.length;
       g.stories.push(o);
       if (!seen) g.seen = false;
@@ -2294,9 +2385,10 @@ var ACTIONS = {
   storyCreate: function (b) {
     var s = auth(b);
     var text = String(b.text || '').trim().slice(0, 300);
-    if (!text && !b.image && !b.video) fail('Add a photo or some text first.');
+    if (!text && !b.image && !b.video && !b.file) fail('Add a photo or some text first.');
     assertClean(text);
     if (tooMany('story:' + s.id, 15)) fail('Too many stories. Try again later.');
+    var voice = b.file ? saveChatFile(b, ['voice']) : {};
     var image = b.image ? savePhoto(namedFolder('STORY_FOLDER', 'ASU Bank Stories'), b.image, s.id + '-' + Date.now(), 2500000, 1280) : '';
     var video = b.video ? saveVideo(namedFolder('STORY_FOLDER', 'ASU Bank Stories'), b.video, s.id + '-' + Date.now()) : '';
     var bg = /^#[0-9a-fA-F]{6}$/.test(String(b.bg || '')) ? String(b.bg) : '#8C1D40';
@@ -2307,7 +2399,8 @@ var ACTIONS = {
       style = JSON.stringify(st);
     }
     return withLock(function () {
-      var r = { id: newId(), userId: s.id, image: image, text: cell(text), bg: bg, created: new Date().toISOString(), views: '', audience: audienceOf(b), video: video, seenLog: '', style: style };
+      var r = { id: newId(), userId: s.id, image: image, text: cell(text), bg: bg, created: new Date().toISOString(), views: '', audience: audienceOf(b), video: video, seenLog: '', style: style,
+                voiceId: voice.fileId || '', duration: voice.duration || 0 };
       append('Stories', r);
       return { ok: true, id: r.id };
     });
@@ -2336,6 +2429,7 @@ var ACTIONS = {
       if (r.userId !== s.id && s.role !== 'admin') fail('You can only delete your own stories.');
       removeAvatarFile(r.image);
       removeAvatarFile(r.video);
+      if (r.voiceId) { try { DriveApp.getFileById(r.voiceId).setTrashed(true); } catch (e) {} }
       sheet('Stories').deleteRow(r._row);
       if (r.userId !== s.id) log(s, 'deleteStory', r.userId, '');
       return { ok: true };

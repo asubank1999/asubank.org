@@ -420,3 +420,16 @@ html.dark .acc-msg.mine .acc-voice-btn { background: rgba(0,0,0,.25); }
 .acc-story-line { flex-basis: 100%; font-size: 12px; color: var(--ab-label-2,#5e5e66); margin: 4px 6px 2px; }
 .acc-msg.mine .acc-story-line { text-align: end; }
 .acc-bubble.acc-big-emoji .acc-text { font-size: 40px; line-height: 1.15; }
+/* profile photo that opens "Edit profile" (1.22.0) */
+.acc-face { position: relative; display: inline-block; border: 0; padding: 0; background: none; cursor: pointer; border-radius: 50%; }
+.acc-face-pen { position: absolute; right: 2px; bottom: 2px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; background: var(--ab-accent,#8C1D40); color: #fff; box-shadow: 0 0 0 3px var(--ab-surface,#fff); }
+.acc-face:focus-visible { outline: 3px solid var(--ab-accent,#8C1D40); outline-offset: 3px; }
+.acc-small { font-size: 14px; }
+.acc-edit { display: grid; gap: 10px; }
+.acc-edit-h { margin: 10px 0 0; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--ab-muted,#777); }
+.acc-edit-pic { display: flex; align-items: center; gap: 14px; padding: 10px; border-radius: 16px; background: var(--ab-fill,rgba(127,127,127,.1)); }
+.acc-edit-pic.cover { flex-direction: column; align-items: stretch; }
+.acc-edit-cover { height: 110px; border-radius: 12px; overflow: hidden; display: grid; place-items: center; background: rgba(127,127,127,.15); color: var(--ab-muted,#777); font-size: 14px; }
+.acc-edit-cover img { width: 100%; height: 100%; object-fit: cover; }
+.acc-edit-pic-btns { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ab-btn.sm { padding: 7px 14px; font-size: 14px; min-height: 0; }

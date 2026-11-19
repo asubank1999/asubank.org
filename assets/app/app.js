@@ -566,9 +566,11 @@
         if (r && !r.querySelector('.ab-acc-chip')) {
             var u = null; try { u = localStorage.getItem('ab.acc.token') && JSON.parse(localStorage.getItem('ab.acc.user') || 'null'); } catch (e) {}
             var c = doc.createElement('a'); c.className = 'ab-acc-chip';
-            c.href = u ? '/chat/' : '/account/';
+            c.href = u ? '/account/#edit' : '/account/';
+            // signed in: the photo opens "Edit profile" (in place when accounts.js is on the page)
+            if (u) c.addEventListener('click', function (e) { if (window.ABEditProfile) { e.preventDefault(); window.ABEditProfile(); } });
             c.textContent = u ? ((u.displayName || u.username || '?').charAt(0).toUpperCase()) : 'Sign in';
-            c.setAttribute('aria-label', u ? 'Student chat (signed in as @' + u.username + ')' : 'Sign in to UniHub');
+            c.setAttribute('aria-label', u ? 'Edit profile (signed in as @' + u.username + ')' : 'Sign in to UniHub');
             c.setAttribute('style', u ? 'display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#fff;font-weight:700;text-decoration:none;background:' + (/^#[0-9a-fA-F]{3,8}$/.test(u.color || '') ? u.color : '#8C1D40')
                 : 'font-weight:600;font-size:15px;text-decoration:none;color:var(--ab-accent);white-space:nowrap');
             // the profile photo over the letter; if it can't load, the letter stays

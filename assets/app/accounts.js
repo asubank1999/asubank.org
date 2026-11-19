@@ -16,11 +16,33 @@
     try { user = token ? JSON.parse(get('ab.acc.user') || 'null') : null; } catch (e) { user = null; }
 
     // ---- API: POST text/plain JSON (no CORS preflight)
+    // Reading actions are safe to ask twice; anything that changes data is sent once only.
+    var READS = /^(me|rooms|online|friends|searchUsers|chat|dmThread|dmList|comments|storyViewers|swapList|termsStatus|mediaFile|dmFile|feed|stories|profile|user|events|people|posts|linksList|deletedFiles|notifications)$/;
+    function apiPost(body, wait) {
+        var ctl = window.AbortController ? new AbortController() : null;
+        var timer = ctl ? setTimeout(function () { ctl.abort(); }, wait) : 0;
+        return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined })
+            .then(function (r) { return r.text(); })
+            .then(function (t) {
+                clearTimeout(timer);
+                // a busy server sometimes answers with an HTML page instead of JSON
+                try { return JSON.parse(t); } catch (e) { var x = new Error('busy'); x.busy = true; throw x; }
+            }, function (e) { clearTimeout(timer); var x = new Error('net'); x.busy = true; throw x; });
+    }
+    function apiSend(body) {
+        var again = READS.test(body.action);
+        return apiPost(body, again ? 20000 : 45000).catch(function (e) {
+            if (!again || !e.busy) throw e;
+            return new Promise(function (ok) { setTimeout(ok, 1200); }).then(function () { return apiPost(body, 25000); });
+        }).catch(function (e) {
+            if (e.busy) throw new Error("Couldn't reach UniHub. Check your connection and try again.");
+            throw e;
+        });
+    }
     function call(action, fields) {
         var body = Object.assign({ action: action }, fields || {});
         if (token) body.token = token;
-        return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
-            .then(function (r) { return r.json(); }, function () { throw new Error("Couldn't reach UniHub. Check your connection and try again."); })
+        return apiSend(body)
             .then(function (o) {
                 if (o && o.ok) return o;
                 var m = (o && o.error) || 'Something went wrong.';
@@ -604,56 +626,116 @@
         root.appendChild(signInForm(after));
     }
 
+    // ---- the "Edit profile" sheet (from the profile photo on /account/, the Edit profile button, or the photo in the top bar)
+    var YEARS = ['First year', 'Second year', 'Third year', 'Fourth year', 'Fifth year', 'Graduate', 'Alumni'];
+    function coverData(file) {
+        return new Promise(function (ok, bad) {
+            var img = new Image(), url = URL.createObjectURL(file);
+            img.onload = function () {
+                var w = Math.min(1280, img.width), hh = Math.round(img.height * w / img.width);
+                var c = document.createElement('canvas'); c.width = w; c.height = hh;
+                c.getContext('2d').drawImage(img, 0, 0, w, hh);
+                URL.revokeObjectURL(url);
+                ok(c.toDataURL('image/jpeg', .85).split(',')[1]);
+            };
+            img.onerror = function () { URL.revokeObjectURL(url); bad(new Error("That file isn't a photo we can read.")); };
+            img.src = url;
+        });
+    }
+    function editProfile() {
+        if (!token || !user) { location.href = '/account/'; return; }
+        var u = user, s = sheet('Edit profile'), err = errBox();
+        function picture(kind) {
+            var isCover = kind === 'cover', has = isCover ? u.cover : u.avatar;
+            var input = h('input', { type: 'file', accept: 'image/*', hidden: true });
+            var status = h('span', { class: 'acc-muted acc-small' });
+            var preview = isCover
+                ? h('div', { class: 'acc-edit-cover' }, has ? h('img', { src: has, alt: '', referrerpolicy: 'no-referrer' }) : h('span', { text: 'No cover photo' }))
+                : avatar(nameOf(u), u.color, 72, isAdmin(), u.avatar, true);
+            input.onchange = function () {
+                var f = input.files && input.files[0]; if (!f) return;
+                status.textContent = 'Uploading…';
+                (isCover ? coverData(f) : photoData(f))
+                    .then(function (d) { return call(isCover ? 'setCover' : 'setAvatar', { data: d, type: 'image/jpeg' }); })
+                    .then(function (r) { adopt(r); s.close(); editProfile(); accountRefresh(); })
+                    .catch(function (e) { status.textContent = ''; showErr(err, e); });
+            };
+            return h('div', { class: 'acc-edit-pic' + (isCover ? ' cover' : '') }, preview,
+                h('div', { class: 'acc-edit-pic-btns' },
+                    h('button', { type: 'button', class: 'ab-btn tinted sm', text: has ? (isCover ? 'Change cover' : 'Change photo') : (isCover ? 'Add a cover' : 'Add a photo'), onclick: function () { input.click(); } }),
+                    has ? h('button', { type: 'button', class: 'ab-btn gray sm', text: 'Remove', onclick: function () {
+                        status.textContent = 'Removing…';
+                        call(isCover ? 'setCover' : 'setAvatar', { remove: true }).then(function (r) { adopt(r); s.close(); editProfile(); accountRefresh(); })
+                            .catch(function (e) { status.textContent = ''; showErr(err, e); });
+                    } }) : null, status, input));
+        }
+        var dn = field('Display name', 'text', u.displayName);
+        var bio = h('textarea', { rows: 3, maxlength: 160, placeholder: 'A line about you: major, year, what you can help with' }); bio.value = u.bio || '';
+        var college = h('select', null, h('option', { value: '', text: 'Not set' }), COLLEGES.map(function (c) { return h('option', { value: c, text: c }); }));
+        college.value = u.college || '';
+        var major = field('Your major', 'text', u.major);
+        var year = h('select', null, h('option', { value: '', text: 'Not set' }), YEARS.map(function (y) { return h('option', { value: y, text: y }); }));
+        year.value = u.year || '';
+        var interests = field('Interests (optional)', 'text', u.interests, 'Like programming, design, football');
+        var em = field('University email (optional)', 'email', u.email), uid = field('University ID (optional)', 'text', u.uniId);
+        var ph = field('Phone number (optional)', 'tel', u.phone, 'Like +962 79 123 4567');
+        var showPh = h('input', { type: 'checkbox' }); showPh.checked = !!u.showPhone;
+        var sex = genderField(u.gender, u.showGender);
+        var save = h('button', { type: 'submit', class: 'ab-btn', text: 'Save' });
+        s.box.appendChild(h('form', { class: 'acc-edit', onsubmit: function (ev) {
+            ev.preventDefault();
+            if (!sex.value()) { showErr(err, new Error('Choose male or female.')); return; }
+            busy(save, true, 'Save');
+            call('updateProfile', { displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(),
+                phone: ph.input.value.trim(), showPhone: showPh.checked, bio: bio.value.trim(), major: major.input.value.trim(), college: college.value,
+                year: year.value, interests: interests.input.value.trim(), gender: sex.value(), showGender: sex.shown() })
+                .then(function (r) { adopt(r); s.close(); accountRefresh(); })
+                .catch(function (e) { showErr(err, e); busy(save, false, 'Save'); });
+        } },
+            picture('photo'), picture('cover'),
+            h('h3', { class: 'acc-edit-h', text: 'About you' }), dn.el, h('label', { class: 'acc-field' }, h('span', { text: 'Bio' }), bio),
+            h('label', { class: 'acc-field' }, h('span', { text: 'College' }), college), major.el,
+            h('label', { class: 'acc-field' }, h('span', { text: 'Year' }), year), interests.el,
+            h('h3', { class: 'acc-edit-h', text: 'Private details' }), em.el, uid.el, ph.el,
+            h('label', { class: 'acc-check' }, showPh, ' Show my phone number on my profile'), sex.el, err, save));
+    }
+    // the account page shows the new details after an edit; other pages only update the photo in the top bar
+    window.ABEditProfile = function () { editProfile(); };
+    function accountRefresh() {
+        if (/^\/account\/?(index(\.html)?)?$/.test(location.pathname)) accountView();
+        var chip = document.querySelector('.ab-acc-chip img');
+        if (chip && user && user.avatar) chip.src = user.avatar;
+    }
+
     // ---- /account/
     function accountView() {
         if (!token || !user) return needSignIn('Account', 'Sign in to chat with other students. Your account works on the website and in the apps.', accountView);
         clear();
         var u = user;
         var err = errBox();
-        var pick = h('input', { type: 'file', accept: 'image/*', hidden: true, onchange: function () {
-            var f = pick.files && pick.files[0]; if (!f) return;
-            photoBtn.disabled = true; photoBtn.textContent = 'Uploading…';
-            photoData(f).then(function (d) { return call('setAvatar', { data: d, type: 'image/jpeg' }); })
-                .then(function (r) { adopt(r); accountView(); })
-                .catch(function (e) { showErr(err, e); photoBtn.disabled = false; photoBtn.textContent = 'Change photo'; });
-        } });
-        var photoBtn = h('button', { type: 'button', class: 'ab-btn tinted', text: u.avatar ? 'Change photo' : 'Add a photo', onclick: function () { pick.click(); } });
-        root.appendChild(h('div', { class: 'acc-profile' }, avatar(nameOf(u), u.color, 96, isAdmin(), u.avatar, true),
+        // The profile, like the apps: cover, photo (tap it to edit), name. Everything else is edited in one sheet.
+        var face = h('button', { type: 'button', class: 'acc-face', 'aria-label': 'Edit profile', onclick: function () { editProfile(); } },
+            avatar(nameOf(u), u.color, 96, isAdmin(), u.avatar, true), h('span', { class: 'acc-face-pen', 'aria-hidden': 'true', text: '✎' }));
+        root.appendChild(h('div', { class: 'acc-profile' },
+            u.cover ? h('div', { class: 'acc-cover' }, h('img', { src: u.cover, alt: '', referrerpolicy: 'no-referrer' })) : null,
+            h('div', { class: u.cover ? 'acc-cover-av' : '' }, face),
             h('h1', { text: nameOf(u) }), h('p', { class: 'acc-muted', text: '@' + u.username + (isAdmin() ? ' · Admin' : '') }),
             badgeRow(u.badges), u.bio ? h('p', { class: 'acc-bio', text: u.bio }) : null,
-            h('div', { class: 'acc-actions acc-center-row' }, photoBtn, pick,
-                u.avatar ? h('button', { type: 'button', class: 'ab-btn gray', text: 'Remove photo', onclick: function () {
-                    call('setAvatar', { remove: true }).then(function (r) { adopt(r); accountView(); }).catch(function (e) { showErr(err, e); });
-                } }) : null)));
-        var dn = field('Display name', 'text', u.displayName), em = field('University email (optional)', 'email', u.email), uid = field('University ID (optional)', 'text', u.uniId);
-        var major = field('Your major', 'text', u.major);
-        var college = h('select', null, h('option', { value: '', text: 'Not set' }), COLLEGES.map(function (c) { return h('option', { value: c, text: c }); }));
-        college.value = u.college || '';
-        var ph = field('Phone number (optional)', 'tel', u.phone, 'Like +962 79 123 4567');
-        var showPh = h('input', { type: 'checkbox' }); showPh.checked = !!u.showPhone;
-        var bio = h('textarea', { rows: 2, maxlength: 160, placeholder: 'A line about you: major, year, what you can help with' }); bio.value = u.bio || '';
-        var sex = genderField(u.gender, u.showGender);
+            [u.college, u.major, u.year].filter(Boolean).length ? h('p', { class: 'acc-muted acc-small', text: [u.college, u.major, u.year].filter(Boolean).join(' · ') }) : null,
+            h('div', { class: 'acc-actions acc-center-row' },
+                h('button', { type: 'button', class: 'ab-btn', text: 'Edit profile', onclick: function () { editProfile(); } }),
+                h('a', { class: 'ab-btn tinted', href: '/feed/#@' + u.id, text: 'View my profile', onclick: function (e) { e.preventDefault(); showProfile(u.id, u); } }))));
+        if (location.hash === '#edit') { try { history.replaceState(null, '', location.pathname); } catch (e) {} setTimeout(editProfile, 0); }
         if (!u.gender) {
             var ask = genderField('', false), askBtn = h('button', { type: 'submit', class: 'ab-btn', text: 'Save' }), askErr = errBox();
-            root.insertBefore(h('form', { class: 'acc-card acc-ask', onsubmit: function (ev) {
+            root.appendChild(h('form', { class: 'acc-card acc-ask', onsubmit: function (ev) {
                 ev.preventDefault();
                 if (!ask.value()) { showErr(askErr, new Error('Choose male or female.')); return; }
                 busy(askBtn, true, 'Save');
                 call('updateProfile', { gender: ask.value(), showGender: ask.shown() }).then(function (r) { adopt(r); accountView(); })
                     .catch(function (e) { showErr(askErr, e); busy(askBtn, false, 'Save'); });
-            } }, h('h2', { text: 'One quick thing' }), h('p', { class: 'acc-muted', text: 'UniHub now asks every account for its sex. Choose yours to keep going.' }), ask.el, askErr, askBtn), root.firstChild);
+            } }, h('h2', { text: 'One quick thing' }), h('p', { class: 'acc-muted', text: 'UniHub now asks every account for its sex. Choose yours to keep going.' }), ask.el, askErr, askBtn));
         }
-        var save = h('button', { type: 'submit', class: 'ab-btn', text: 'Save profile' });
-        root.appendChild(h('form', { class: 'acc-card', onsubmit: function (ev) {
-            ev.preventDefault();
-            if (!sex.value()) { showErr(err, new Error('Choose male or female.')); return; }
-            busy(save, true, 'Save profile');
-            call('updateProfile', { displayName: dn.input.value.trim(), email: em.input.value.trim(), uniId: uid.input.value.trim(),
-                phone: ph.input.value.trim(), showPhone: showPh.checked, bio: bio.value.trim(), major: major.input.value.trim(), college: college.value, gender: sex.value(), showGender: sex.shown() })
-                .then(function (r) { adopt(r); showErr(err, null); save.textContent = 'Saved ✓'; save.disabled = false; })
-                .catch(function (e) { showErr(err, e); busy(save, false, 'Save profile'); });
-        } }, h('h2', { text: 'Profile' }), dn.el, h('label', { class: 'acc-field' }, h('span', { text: 'About you' }), bio), h('label', { class: 'acc-field' }, h('span', { text: 'College' }), college), major.el, em.el, uid.el, ph.el,
-            h('label', { class: 'acc-check' }, showPh, ' Show my phone number on my profile'), sex.el, save));
 
         var old = field('Current password', 'password'), nw = field('New password', 'password', '', 'At least 6 characters');
         nw.input.autocomplete = 'new-password';

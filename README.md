@@ -53,7 +53,7 @@ The apps aren't in the App Store or Google Play yet. They tell you when a new ve
 ### 🗓️ Campus life
 
 - **My lectures:** add subject, hall and time, and get a reminder 10 minutes before
-- **Calendars and schedules:** academic dates, exams and timetables
+- **Calendars and schedules:** academic dates, exams and timetables; the Home card counts the days to the next date live
 - **Hall finder:** type the number on a door to see the building, floor and room
 - **Teacher ratings:** see and give ratings out of 10
 - **Subject swap:** trade a registered subject with another student
@@ -64,8 +64,8 @@ The apps aren't in the App Store or Google Play yet. They tell you when a new ve
 ### 💬 Community
 
 - **Feed:** posts with photos, video and voice, with likes and comments
-- **Stories:** photo, video or text for 24 hours, with a choice of who sees them and a list of who viewed them
-- **Chat rooms and private messages:** files, voice notes, disappearing media and delete for everyone
+- **Stories:** photo, video, text or voice for 24 hours: record with the camera or pick from your photos, add a voice recording, choose who sees them and see who viewed them
+- **Chat rooms and private messages:** files, voice notes, reactions, disappearing media and delete for everyone; chats open instantly from the last saved copy
 - **Friends and profiles:** cover photos, badges, interests and pokes
 - **Who's online**, reachable from Home, Feed, Friends and Chat
 
@@ -73,7 +73,7 @@ The apps aren't in the App Store or Google Play yet. They tell you when a new ve
 
 - **Customize:** choose what Home shows, text size and the first screen
 - **Themes:** light, dark, pitch black and many color themes, plus accent colors and app icons (where the phone allows it)
-- **Tabs and notifications:** pick your tabs, sounds and which alerts you get
+- **Tabs and notifications:** pick your tabs, swipe between them, and choose sounds and which alerts you get
 - **Languages:** English and Arabic, with Spanish in progress
 
 ### 🛡️ Safety and privacy
@@ -83,6 +83,7 @@ The apps aren't in the App Store or Google Play yet. They tell you when a new ve
 - **Moderation:** a team reviews reports, and chat filters abusive words
 - **You control your account:** university email and ID are optional, and you can delete your account
 - **Clear rules:** you see the terms before you sign up, with a dated record of when you accepted them
+- **Admin activity log:** admins see sign-ups, sign-ins, app opens, posts and reports by day and platform, to keep the community safe
 
 ## Website and apps
 
@@ -92,8 +93,9 @@ The same account works everywhere.
 |---|---|---|---|
 | Materials, search, guides | ✅ | ✅ | ✅ |
 | Accounts, feed, chat, messages | ✅ | ✅ | ✅ |
+| Edit your profile: photo, cover, name and details | ✅ | ✅ | ✅ |
 | Subject swap, reports | | ✅ | ✅ |
-| Adding stories, pokes | | ✅ | ✅ |
+| Adding stories (photo, video, text, voice), pokes | | ✅ | ✅ |
 | Story camera, 30-second video stories, swipe to camera | | ✅ | ✅ |
 | Save stories to your phone with the UniHub watermark | | ✅ | ✅ |
 | Phone notifications for messages, replies, friends and new uploads | | ✅ | ✅ |

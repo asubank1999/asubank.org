@@ -2,7 +2,7 @@
    - pages: network first (always fresh), cached copy when offline, offline page as last resort
    - app files, icons, images, materials index: served from cache instantly, refreshed in the background
    - other sites (Drive, Apps Script, analytics) are never cached */
-const VERSION = 'unihub-v19';
+const VERSION = 'unihub-v21';
 const PAGES = VERSION + '-pages';
 const ASSETS = VERSION + '-assets';
 
@@ -13,8 +13,8 @@ const CORE = [
     '/guides/saved',
     '/upload/uploadmethod',
     '/banks/subjects',
-    '/assets/app/app.css?v=4',
-    '/assets/app/app.js?v=4',
+    '/assets/app/app.css?v=5',
+    '/assets/app/app.js?v=6',
     '/assets/app/materials.json',
     '/assets/img/ASU_Jordan_logo-removebg-preview.png',
     '/icons/icon-192x192.png',
@@ -67,7 +67,7 @@ self.addEventListener('fetch', event => {
     // Pages
     if (req.mode === 'navigate') {
         event.respondWith((async () => {
-            try {
+            const net = (async () => {
                 const preload = await event.preloadResponse;
                 const res = preload || await fetch(req);
                 if (res && res.ok) {
@@ -75,8 +75,15 @@ self.addEventListener('fetch', event => {
                     caches.open(PAGES).then(c => c.put(req, copy)).then(() => trim(PAGES, 80));
                 }
                 return res;
+            })();
+            event.waitUntil(net.catch(() => {}));
+            const saved = await caches.match(req, { ignoreSearch: true });
+            try {
+                if (!saved) return await net;
+                // a slow connection: show the saved copy after 3 s; the fresh one is saved for next time
+                return await Promise.race([net, new Promise(ok => setTimeout(() => ok(saved), 3000))]);
             } catch (e) {
-                return (await caches.match(req, { ignoreSearch: true })) || caches.match('/offline.html');
+                return saved || caches.match('/offline.html');
             }
         })());
         return;

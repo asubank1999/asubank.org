@@ -48,8 +48,17 @@
     <script>try{var d=localStorage.getItem('darkMode');if(d==='enabled'||(d===null&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
     <link rel="preload" href="/assets/app/materials.json" as="fetch" crossorigin>
     <link rel="stylesheet" href="/assets/app/app.css?v=5">
-    <script src="/assets/app/app.js?v=5" defer></script>
+    <script src="/assets/app/app.js?v=6" defer></script>
     <style>
+        /* a smaller welcome box, closer to the apps' Home */
+        .ab-hero { padding: 16px 16px 14px; }
+        .ab-hero h1 { font-size: 21px; line-height: 1.2; }
+        .ab-hero p { font-size: 14px; margin-top: 4px; }
+        .ab-hero .ab-search { margin-top: 12px; }
+        .ab-hero .ab-btn-row { margin-top: 10px; }
+        .ab-hero::after { width: 120px; height: 120px; }
+        @media (max-width: 699px) { .ab-hero p:not(.hero-ar) { display: none; } }
+        @media (min-width: 700px) { .ab-hero { padding: 22px 24px 20px; } .ab-hero h1 { font-size: 28px; } }
         .steps { counter-reset: step; }
         .steps .ab-row-main::before {
             counter-increment: step; content: counter(step); flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
@@ -109,14 +118,6 @@
 
         <section id="weatherCard" aria-label="Weather on campus" hidden></section>
 
-        <div class="ab-notice" id="adminNotice" role="note" style="margin-top:14px">
-            <span aria-hidden="true">📢</span>
-            <div>
-                <p><strong>Note from the admin:</strong> this service may become available to paid users only. Your donations help us keep the site running and improve it. For more information, contact us through the WhatsApp community.</p>
-                <p lang="ar" dir="rtl">يرجى العلم بأن هذه الخدمة قد تصبح متاحة للمستخدمين المدفوعين فقط. نحتاج إلى تبرعاتكم ودعمكم لمساعدتنا على الاستمرار في تقديم خدماتنا وتطويرها. لمزيد من المعلومات، يرجى التواصل معنا عبر مجتمع الواتساب.</p>
-            </div>
-            <button type="button" class="ab-icon-btn" id="noticeClose" aria-label="Hide this note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-        </div>
 
         <!-- Personal shelves (filled from this device) -->
         <div id="shelves" hidden>
@@ -303,11 +304,6 @@
         }
         modeBtn.addEventListener('click', function () { AB.setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark'); });
         document.addEventListener('ab:theme', syncMode); syncMode();
-
-        // ===== Admin note: stays until dismissed, remembered per version =====
-        var KEY = 'noticeDismissed', VERSION = 'paid-users-2026', notice = $('adminNotice');
-        try { if (localStorage.getItem(KEY) === VERSION) notice.hidden = true; } catch (e) {}
-        $('noticeClose').addEventListener('click', function () { notice.hidden = true; try { localStorage.setItem(KEY, VERSION); } catch (e) {} });
 
         // ===== Continue / Saved shelves =====
         function shelf(boxId, listId, items) {

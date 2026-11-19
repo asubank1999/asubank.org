@@ -23,10 +23,32 @@
     if (/ASUBankApp/.test(navigator.userAgent) || (window.webkit && window.webkit.messageHandlers)) return;
     if (/^\/chat(\/|$)/.test(location.pathname)) return;
 
+    // Reading actions are safe to ask twice; anything that changes data is sent once only.
+    var READS = /^(me|rooms|online|friends|searchUsers|chat|dmThread|dmList|comments|storyViewers|swapList|termsStatus|mediaFile|dmFile|feed|stories|profile|user|events|people|posts|linksList|deletedFiles|notifications)$/;
+    function apiPost(body, wait) {
+        var ctl = window.AbortController ? new AbortController() : null;
+        var timer = ctl ? setTimeout(function () { ctl.abort(); }, wait) : 0;
+        return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined })
+            .then(function (r) { return r.text(); })
+            .then(function (t) {
+                clearTimeout(timer);
+                // a busy server sometimes answers with an HTML page instead of JSON
+                try { return JSON.parse(t); } catch (e) { var x = new Error('busy'); x.busy = true; throw x; }
+            }, function (e) { clearTimeout(timer); var x = new Error('net'); x.busy = true; throw x; });
+    }
+    function apiSend(body) {
+        var again = READS.test(body.action);
+        return apiPost(body, again ? 20000 : 45000).catch(function (e) {
+            if (!again || !e.busy) throw e;
+            return new Promise(function (ok) { setTimeout(ok, 1200); }).then(function () { return apiPost(body, 25000); });
+        }).catch(function (e) {
+            if (e.busy) throw new Error("Couldn't reach UniHub. Check your connection and try again.");
+            throw e;
+        });
+    }
     function call(action, fields) {
         var body = Object.assign({ action: action, token: token }, fields || {});
-        return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
-            .then(function (r) { return r.json(); }, function () { throw new Error("Couldn't reach UniHub. Check your connection."); })
+        return apiSend(body)
             .then(function (o) {
                 if (o && o.ok) return o;
                 var m = (o && o.error) || 'Something went wrong.';
