@@ -173,7 +173,7 @@
             if (agree.checked && !UPLOAD_API && !$('embed').querySelector('iframe')) {
                 $('embedMsg').innerHTML = '<span class="ab-spinner"></span>';
                 var fr = document.createElement('iframe');
-                fr.title = 'UniHub uploader'; fr.src = EMBED_URL;
+                fr.title = 'UniHub uploader'; fr.credentialless = true; fr.src = EMBED_URL;
                 fr.addEventListener('load', function () { var m = $('embedMsg'); if (m) m.remove(); });
                 $('embed').appendChild(fr);
             }

@@ -948,17 +948,19 @@ function submitForm() {
     };
     
     const encodedData = encodeURIComponent(JSON.stringify(payload));
+    // fetch without Google cookies (a <script> tag sends them, and browsers signed in to several Google accounts then fail)
     const script = document.createElement('script');
-    script.src = `${API_URL}?action=submit&data=${encodedData}&callback=${callbackName}`;
-    script.onerror = function() {
-        delete window[callbackName];
-        document.head.removeChild(script);
-        alert('❌ Network error. Please check:\n1. API URL is correct\n2. Script is deployed\n3. Internet connection');
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '📤 Submit File';
-    };
-    
     document.head.appendChild(script);
+    fetch(`${API_URL}?action=submit&data=${encodedData}&callback=${callbackName}`, { credentials: 'omit' })
+        .then(r => r.text())
+        .then(t => window[callbackName](JSON.parse(t.slice(t.indexOf('(') + 1, t.lastIndexOf(')')))))
+        .catch(function() {
+            delete window[callbackName];
+            if (script.parentNode) document.head.removeChild(script);
+            alert('❌ Network error. Please check your internet connection and try again.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '📤 Submit File';
+        });
 }
 
 function resetForm() {

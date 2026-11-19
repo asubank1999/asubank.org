@@ -302,6 +302,8 @@
         AB.recent.add(it);
         var body = el('<div style="position:relative;flex:1;display:flex;flex-direction:column"><div class="ab-empty" style="position:absolute;inset:0;display:grid;place-items:center"><span class="ab-spinner"></span></div></div>');
         var fr = doc.createElement('iframe');
+        // no Google cookies: browsers signed in to several Google accounts otherwise get "Sorry, unable to open the file"
+        fr.credentialless = true;
         fr.src = src; fr.title = 'Preview: ' + it.t; fr.allow = 'autoplay; fullscreen'; fr.setAttribute('allowfullscreen', '');
         fr.style.position = 'relative'; fr.addEventListener('load', function () { body.firstElementChild.remove(); });
         body.appendChild(fr);

@@ -249,16 +249,18 @@
                 resolve(data);
             };
             
+            // fetch without Google cookies (a <script> tag sends them, and browsers signed in to several Google accounts then fail)
             const script = document.createElement('script');
             const separator = url.includes('?') ? '&' : '?';
-            script.src = url + separator + 'callback=' + callbackName;
-            script.onerror = () => {
-                delete window[callbackName];
-                document.head.removeChild(script);
-                reject(new Error('Network request failed'));
-            };
-            
             document.head.appendChild(script);
+            fetch(url + separator + 'callback=' + callbackName, { credentials: 'omit' })
+                .then(r => r.text())
+                .then(t => { if (window[callbackName]) window[callbackName](JSON.parse(t.slice(t.indexOf('(') + 1, t.lastIndexOf(')')))); })
+                .catch(() => {
+                    delete window[callbackName];
+                    if (script.parentNode) document.head.removeChild(script);
+                    reject(new Error('Network request failed'));
+                });
             
             // Timeout after 15 seconds
             setTimeout(() => {
