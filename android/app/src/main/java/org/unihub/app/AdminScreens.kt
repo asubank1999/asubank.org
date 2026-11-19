@@ -1,6 +1,7 @@
 package org.unihub.app
 
 import androidx.compose.material.icons.filled.Policy
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.AddComment
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Flag
@@ -132,7 +133,7 @@ fun AdminTab() {
                     Divider()
                     ListRow("Reports", icon = Icons.Filled.Flag) { nav.navigate("adminReports") }
                     Divider()
-                    ListRow("Activity log", "Who uses UniHub, from where, and what they did", icon = Icons.Filled.QueryStats) { nav.navigate("adminActivity") }
+                    ListRow("Activity log", "Who uses UniHub, from where, and what they did", icon = Icons.Filled.BarChart) { nav.navigate("adminActivity") }
                     Divider()
                     ListRow("Terms records", icon = Icons.Filled.Policy) { nav.navigate("adminTerms") }
                     Divider()
