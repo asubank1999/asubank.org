@@ -1,15 +1,15 @@
 {
   "share": "https://asubank.org/",
   "ios": {
-    "latest": "1.21.0",
+    "latest": "1.22.0",
     "minimum": "1.0.0",
-    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.21.0",
-    "notes": "React to any message with an emoji, story reactions and replies that read naturally, tap a name in a chat to open the profile, swipe between tabs, and faster chats."
+    "store": "https://github.com/asubank1999/asubank.org/releases/tag/android-v1.22.0",
+    "notes": "Faster chats, stories and Feed, tabs that slide with your finger, voice stories, a camera menu, faster video import, a live calendar countdown and an Activity log for admins."
   },
   "android": {
-    "latest": "1.21.0",
+    "latest": "1.22.0",
     "minimum": "1.0.0",
-    "notes": "React to any message with an emoji, story reactions and replies that read naturally, tap a name in a chat to open the profile, swipe between tabs, and faster chats."
+    "notes": "Faster chats, stories and Feed, tabs that slide with your finger, voice stories, a camera menu, faster video import, a live calendar countdown and an Activity log for admins."
   },
   "donate": true
 }
