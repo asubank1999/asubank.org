@@ -1,5 +1,14 @@
 **UniHub for Android** — the native app for [asubank.org](https://asubank.org).
 
+### What's new in 1.22.0
+- Chats, stories and the Feed load faster, and slow connections retry by themselves
+- Swiping between tabs now slides the page with your finger
+- The camera button offers Camera, Photos and videos, Voice story and Text story
+- Record your voice on a story
+- Videos from your library are ready for stories much faster
+- The calendar card on Home counts down live and shows the next week too
+- Admins: a new Activity log with sign-ups, sign-ins, app opens and more, by day and platform
+
 ### What's new in 1.21.0
 - React to any message with an emoji: double-tap for ❤️ or hold to choose
 - Story reactions and replies now read naturally, like "You reacted to her story" and "Sara replied to your story"

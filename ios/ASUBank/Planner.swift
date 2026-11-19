@@ -48,8 +48,8 @@ final class PlannerStore: ObservableObject {
         kind == "exam" ? "graduationcap.fill" : kind == "assignment" ? "doc.text.fill" : "checkmark.circle.fill"
     }
 
-    static func dueText(_ date: Date) -> String {
-        let days = Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: Calendar.current.startOfDay(for: date)).day ?? 0
+    static func dueText(_ date: Date, from now: Date = Date()) -> String {
+        let days = Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: now), to: Calendar.current.startOfDay(for: date)).day ?? 0
         if days < 0 { return L("Overdue") }
         if days == 0 { return L("Today") }
         if days == 1 { return L("Tomorrow") }
@@ -266,28 +266,40 @@ struct HomeCalendarCard: View {
     @EnvironmentObject private var pages: SitePages
     private let path = "/schedules/calendar27"
 
-    private var next: (name: String, date: Date)? {
-        let today = Calendar.current.startOfDay(for: Date())
-        return pages.page(path)?.cal?
-            .filter { !$0.n.hasPrefix("الأسبوع") }
-            .compactMap { e in AB.date(e.d).map { (name: e.n, date: $0) } }
+    /// Worked out again for every day: the next important date and the next week that starts.
+    private func next(_ now: Date) -> (event: (name: String, date: Date)?, week: (name: String, date: Date)?) {
+        let today = Calendar.current.startOfDay(for: now)
+        let all = (pages.page(path)?.cal ?? [])
+            .compactMap { e in AB.date(e.d).map { (name: e.n, date: $0, week: e.n.hasPrefix("الأسبوع")) } }
             .filter { $0.date >= today }
-            .min { $0.date < $1.date }
+            .sorted { $0.date < $1.date }
+        let event = all.first { !$0.week }.map { (name: $0.name, date: $0.date) }
+        let week = all.first { $0.week }.map { (name: $0.name, date: $0.date) }
+        return (event, week)
     }
 
     var body: some View {
-        RouteLink(Route.page(path, "")) {
+        // re-checked every 30 minutes, so the count stays right when the app stays open overnight
+        TimelineView(.periodic(from: .now, by: 1800)) { tl in card(tl.date) }
+    }
+
+    private func card(_ now: Date) -> some View {
+        let n = next(now)
+        return RouteLink(Route.page(path, "")) {
             HStack(spacing: 12) {
                 Image(systemName: "calendar").font(.title3.weight(.semibold)).foregroundStyle(.white)
                     .frame(width: 44, height: 44).background(Color.abFill.abGradient, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 VStack(alignment: .leading, spacing: 2) {
                     Text("University calendar").font(.caption).foregroundStyle(.secondary)
-                    Text(next?.name ?? L("See this year's important dates")).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
+                    Text(n.event?.name ?? L("See this year's important dates")).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
                         .lineLimit(2).multilineTextAlignment(.leading)
+                    if let w = n.week, n.event.map({ w.date < $0.date }) ?? true {
+                        Text("\(w.name) · \(PlannerStore.dueText(w.date, from: now))").font(.caption).foregroundStyle(.secondary)
+                    }
                 }
                 Spacer(minLength: 4)
-                if let n = next {
-                    Text(PlannerStore.dueText(n.date)).font(.caption.weight(.bold)).foregroundStyle(Color.abAccent)
+                if let e = n.event {
+                    Text(PlannerStore.dueText(e.date, from: now)).font(.caption.weight(.bold)).foregroundStyle(Color.abAccent)
                         .padding(.horizontal, 9).padding(.vertical, 4).background(Color.abAccentSoft, in: Capsule())
                 }
             }

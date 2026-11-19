@@ -189,8 +189,17 @@ private fun LoopingVideo(uri: Uri, muted: Boolean, modifier: Modifier = Modifier
 }
 
 @Composable
-fun ComposeStoryDialog(media: StoryMedia?, onClose: () -> Unit, posted: () -> Unit) {
+fun ComposeStoryDialog(media: StoryMedia?, onClose: () -> Unit, voiceStart: Boolean = false, posted: () -> Unit) {
     val ctx = LocalContext.current
+    var voice by remember { mutableStateOf<Pair<java.io.File, Int>?>(null) }
+    var micError by remember { mutableStateOf<String?>(null) }
+    val rec = rememberVoiceRecorder { f, s -> voice = f to s }
+    fun startRec() { micError = if (rec.start()) null else tr("Couldn't start the recording.") }
+    val askMic = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
+        if (ok) startRec() else micError = tr("UniHub can't use the microphone. You can allow it in Settings.")
+    }
+    fun record() { if (hasMic(ctx)) startRec() else askMic.launch(android.Manifest.permission.RECORD_AUDIO) }
+    LaunchedEffect(Unit) { if (voiceStart) record() }
     var text by remember { mutableStateOf("") }
     var photo by remember { mutableStateOf((media as? StoryMedia.Photo)?.uri) }
     var video by remember { mutableStateOf((media as? StoryMedia.Video)?.uri) }
@@ -204,7 +213,7 @@ fun ComposeStoryDialog(media: StoryMedia?, onClose: () -> Unit, posted: () -> Un
     val pickPhoto = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri -> if (uri != null) { photo = uri; video = null } }
     val pickVideo = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri -> if (uri != null) { video = uri; photo = null } }
     val hasMedia = photo != null || video != null
-    val canPost = hasMedia || text.isNotBlank()
+    val canPost = !rec.recording && (hasMedia || voice != null || text.isNotBlank())
     val tools = (if (hasMedia) emptyList<String>() else listOf("Background")) + listOf("Font", "Effect", "Color", "Motion")
     val current = tool.takeIf { it in tools } ?: tools.first()
 
@@ -215,10 +224,17 @@ fun ComposeStoryDialog(media: StoryMedia?, onClose: () -> Unit, posted: () -> Un
         val who = audience
         val shot = photo
         val clip = video
+        val sound = voice
         BackgroundJobs.add(tr("Posting your story…"), done = posted) {
             val fields = mutableMapOf<String, Any?>("text" to words, "bg" to b, "audience" to who, "style" to look)
+            if (sound != null) {
+                fields["file"] = withContext(Dispatchers.IO) { android.util.Base64.encodeToString(sound.first.readBytes(), android.util.Base64.NO_WRAP) }
+                fields["fileName"] = "voice.m4a"
+                fields["duration"] = sound.second
+            }
             if (clip != null) {
-                fields["video"] = StoryVideo.base64(ctx, clip) ?: throw ApiError(tr("That video is too big. Keep it short."))
+                val ready = StoryVideo.fit(ctx, clip) ?: throw ApiError(tr("That video is too big. Keep it short."))
+                fields["video"] = StoryVideo.base64(ctx, ready) ?: throw ApiError(tr("That video is too big. Keep it short."))
                 val still: Bitmap? = withContext(Dispatchers.IO) { StoryVideo.poster(ctx, clip) }
                 still?.let { fields["image"] = withContext(Dispatchers.IO) { PhotoTools.base64(it) } }
             } else if (shot != null) {
@@ -266,11 +282,41 @@ fun ComposeStoryDialog(media: StoryMedia?, onClose: () -> Unit, posted: () -> Un
                             DropdownMenuItem(text = { Text("Video") }, leadingIcon = { Icon(Icons.Filled.Videocam, null) }, onClick = { pickMenu = false; pickVideo.launch("video/*") })
                         }
                     }
+                    round(if (rec.recording) Icons.Filled.Stop else if (voice != null) Icons.Filled.MicOff else Icons.Filled.Mic,
+                        if (rec.recording) "Stop recording" else if (voice != null) "Remove voice" else "Record voice") {
+                        when {
+                            rec.recording -> rec.stop()?.let { voice = it }
+                            voice != null -> voice = null
+                            else -> record()
+                        }
+                    }
                     if (hasMedia) round(Icons.Filled.Delete, if (v != null) "Remove video" else "Remove photo") { photo = null; video = null }
                 }
                 Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
                     if (text.isNotEmpty()) StoryTextView(text, style, size = 30)
-                    else if (!hasMedia) StoryTextView(tr("Write something"), style.copy(anim = "none"), Modifier.graphicsLayer { alpha = 0.55f }, 30)
+                    else if (!hasMedia) StoryTextView(tr(if (voice != null || rec.recording) "Voice story" else "Write something"), style.copy(anim = "none"), Modifier.graphicsLayer { alpha = 0.55f }, 30)
+                }
+                // recording now, the recorded voice, or why the microphone can't be used
+                val sound = voice
+                when {
+                    rec.recording -> Row(
+                        Modifier.padding(horizontal = 14.dp, vertical = 6.dp).fillMaxWidth().clip(RoundedCornerShape(50)).background(Color.Black.copy(alpha = 0.5f))
+                            .padding(horizontal = 16.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Box(Modifier.size(10.dp).clip(CircleShape).background(Color.Red))
+                        Text(voiceTime(rec.seconds), color = Color.White)
+                        Box(Modifier.height(6.dp).width((18 + 90 * rec.level).dp).clip(RoundedCornerShape(50)).background(Color.White.copy(alpha = 0.85f)))
+                        Spacer(Modifier.weight(1f))
+                        Text(tr("Cancel"), color = Color.White.copy(alpha = 0.8f), modifier = Modifier.clickable { rec.cancel() })
+                        Text(tr("Done"), color = Color.White, fontWeight = FontWeight.Bold, modifier = Modifier.clickable { rec.stop()?.let { voice = it } })
+                    }
+                    sound != null -> Box(
+                        Modifier.padding(horizontal = 14.dp, vertical = 6.dp).clip(RoundedCornerShape(50)).background(Color.Black.copy(alpha = 0.45f))
+                            .padding(horizontal = 14.dp, vertical = 8.dp),
+                    ) { VoiceBubble(sound.first.name, sound.second, mine = true, local = sound.first.path) { sound.first } }
+                    micError != null -> Text(micError.orEmpty(), color = Color.White, modifier = Modifier.padding(14.dp).clip(RoundedCornerShape(12.dp))
+                        .background(Color.Black.copy(alpha = 0.5f)).padding(10.dp))
                 }
                 Surface(Modifier.padding(8.dp), shape = RoundedCornerShape(24.dp), color = Color(0xE61C1C20)) {
                     Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {

@@ -52,6 +52,9 @@ class ApiError(message: String, val needCode: Boolean = false) : Exception(messa
 object AccountsApi {
     const val URL = "https://script.google.com/macros/s/AKfycbzXDE0Km2mxL_gAJFqspZeaADtugupeLN0YQlkEbXnrCkSTKBfImW_lLCKF8_SMI0i_/exec"
 
+    /** Actions that only read: safe to ask a second time when the first try fails. */
+    private val reads = setOf("me", "rooms", "online", "friends", "searchUsers", "chat", "dmThread", "dmList", "comments", "storyViewers", "swapList", "termsStatus", "mediaFile", "dmFile", "feed", "stories", "profile", "user", "events", "people", "posts", "linksList", "deletedFiles", "notifications", "groupsApproved")
+
     /** POSTs {action, ...fields} as text/plain JSON and returns the reply when ok */
     suspend fun call(action: String, fields: Map<String, Any?> = emptyMap(), token: String? = null): JsonObject = withContext(Dispatchers.IO) {
         val body = buildJsonObject {
@@ -71,12 +74,25 @@ object AccountsApi {
             .build()
         // videos and files take longer than the usual calls
         val long = "video" in fields || "file" in fields || action == "dmFile" || action == "mediaFile"
-        val http = if (long) Net.http.newBuilder().writeTimeout(5, java.util.concurrent.TimeUnit.MINUTES).readTimeout(5, java.util.concurrent.TimeUnit.MINUTES).build() else Net.http
-        val text = try {
-            http.newCall(req).execute().use { it.body?.string() }
-        } catch (e: Exception) { null } ?: throw ApiError("Couldn't reach UniHub. Check your connection and try again.")
-        val o = runCatching { json.parseToJsonElement(text) as JsonObject }.getOrNull()
-            ?: throw ApiError("The server sent something unexpected. Try again.")
+        val read = action in reads && !long
+        val http = when {
+            long -> Net.http.newBuilder().writeTimeout(5, java.util.concurrent.TimeUnit.MINUTES).readTimeout(5, java.util.concurrent.TimeUnit.MINUTES).build()
+            read -> Net.http.newBuilder().readTimeout(25, java.util.concurrent.TimeUnit.SECONDS).build()
+            else -> Net.http
+        }
+        var o: JsonObject? = null
+        var reached = false
+        // a read that fails (no answer, or a busy server's HTML page) is asked once more
+        for (attempt in 0 until if (read) 2 else 1) {
+            if (attempt > 0) kotlinx.coroutines.delay(1200)
+            val text = try { http.newCall(req).execute().use { it.body?.string() } } catch (e: Exception) { null }
+            if (text != null) {
+                reached = true
+                o = runCatching { json.parseToJsonElement(text) as JsonObject }.getOrNull()
+                if (o != null) break
+            }
+        }
+        if (o == null) throw ApiError(if (reached) "The server sent something unexpected. Try again." else "Couldn't reach UniHub. Check your connection and try again.")
         if (o.bool("ok")) return@withContext o
         throw ApiError(o.str("error") ?: "Something went wrong.", o.bool("needCode"))
     }

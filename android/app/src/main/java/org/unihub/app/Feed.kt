@@ -81,6 +81,8 @@ data class StoryItem(
     val seen: Boolean = false,
     val views: Int? = null,
     val style: String = "",
+    val hasVoice: Boolean = false,
+    val duration: Int = 0,
 )
 
 @Serializable
@@ -247,6 +249,21 @@ fun FeedScreen(back: Boolean = false) {
     var camera by remember { mutableStateOf(false) }
     var draft by remember { mutableStateOf<StoryDraft?>(null) }
     var viewing by remember { mutableStateOf<Int?>(null) }
+    var storyMenu by remember { mutableStateOf(false) }
+    var fitting by remember { mutableStateOf(false) }
+    val feedCtx = LocalContext.current
+    val library = rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        if (feedCtx.contentResolver.getType(uri)?.startsWith("video") == true) {
+            fitting = true
+            scope.launch {
+                val ready = StoryVideo.fit(feedCtx, uri)
+                fitting = false
+                if (ready == null) android.widget.Toast.makeText(feedCtx, tr("That video is too big. Keep it short."), android.widget.Toast.LENGTH_LONG).show()
+                else draft = StoryDraft(StoryMedia.Video(ready))
+            }
+        } else draft = StoryDraft(StoryMedia.Photo(uri))
+    }
 
     val storiesAction = if (me == null) "publicStories" else "stories"
     suspend fun loadStories() {
@@ -282,13 +299,27 @@ fun FeedScreen(back: Boolean = false) {
 
     if (composing) ComposePostDialog({ composing = false }) { scope.launch { load() } }
     if (camera) StoryCameraDialog({ camera = false }) { media -> camera = false; draft = StoryDraft(media) }
-    draft?.let { d -> ComposeStoryDialog(d.media, { draft = null }) { scope.launch { loadStories() } } }
+    draft?.let { d -> ComposeStoryDialog(d.media, { draft = null }, voiceStart = d.voice) { scope.launch { loadStories() } } }
     viewing?.let { start -> StoryViewer(groups, start) { viewing = null; scope.launch { loadStories() } } }
 
     SlideToCamera(enabled = me != null && back, open = { camera = true }) {
     Screen("Feed", back = back, large = true, actions = {
         OnlineButton()
-        if (me != null) IconButton(onClick = { camera = true }) { Icon(Icons.Filled.PhotoCamera, tr("Add story")) }
+        if (me != null) Box {
+            IconButton(onClick = { storyMenu = true }, enabled = !fitting) {
+                if (fitting) ABDots(Modifier.size(22.dp)) else Icon(Icons.Filled.PhotoCamera, tr("Add story"))
+            }
+            androidx.compose.material3.DropdownMenu(storyMenu, { storyMenu = false }) {
+                androidx.compose.material3.DropdownMenuItem(text = { Text(tr("Camera")) }, leadingIcon = { Icon(Icons.Filled.PhotoCamera, null) },
+                    onClick = { storyMenu = false; camera = true })
+                androidx.compose.material3.DropdownMenuItem(text = { Text(tr("Photos and videos")) }, leadingIcon = { Icon(Icons.Filled.PhotoLibrary, null) },
+                    onClick = { storyMenu = false; library.launch(androidx.activity.result.PickVisualMediaRequest(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageAndVideo)) })
+                androidx.compose.material3.DropdownMenuItem(text = { Text(tr("Voice story")) }, leadingIcon = { Icon(Icons.Filled.Mic, null) },
+                    onClick = { storyMenu = false; draft = StoryDraft(null, voice = true) })
+                androidx.compose.material3.DropdownMenuItem(text = { Text(tr("Text story")) }, leadingIcon = { Icon(Icons.Filled.TextFields, null) },
+                    onClick = { storyMenu = false; draft = StoryDraft(null) })
+            }
+        }
     }) { pad ->
         Box(Modifier.padding(pad)) {
             LazyColumn {
@@ -577,6 +608,24 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
         else progress = 0f
     }
 
+    // the next three stories load while this one shows, so moving on is instant
+    val aheadCtx = LocalContext.current
+    LaunchedEffect(g, s) {
+        val next = mutableListOf<StoryItem>()
+        var gi = g
+        var si = s + 1
+        while (next.size < 3 && gi in groups.indices) {
+            val list = groups[gi].stories
+            if (si in list.indices) { next += list[si]; si++ } else { gi++; si = 0 }
+        }
+        for (item in next) {
+            if (item.video.isNotEmpty()) StoryVideo.local(aheadCtx, item.video)
+            else if (item.image.isNotEmpty()) PhotoTools.large(item.image).let { url ->
+                coil.Coil.imageLoader(aheadCtx).enqueue(coil.request.ImageRequest.Builder(aheadCtx).data(url).build())
+            }
+        }
+    }
+
     LaunchedEffect(g, s, story?.id) {
         progress = 0f
         videoLength = null
@@ -597,7 +646,9 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
                 if (at != null) progress = (at / length).toFloat().coerceAtMost(1f)
                 else if (!stopped()) { progress += 0.05f / length.toFloat(); if (progress >= 1f) break }   // the video could not play
             } else {
-                if (!stopped()) progress += 0.05f / 6f
+                // a voice story lasts as long as its voice
+                val length = if (item.hasVoice) maxOf(6f, item.duration + 0.6f) else 6f
+                if (!stopped()) progress += 0.05f / length
                 if (progress >= 1f) break
             }
         }
@@ -618,6 +669,7 @@ private fun StoryViewer(groups: List<StoryGroup>, start: Int, onClose: () -> Uni
                             onPlayed = { videoPlayed = it }, onEnd = { videoEnded = true }) { videoLength = it }
                     }
                     if (item.text.isNotEmpty()) StoryTextView(item.text, look, Modifier.align(Alignment.Center))
+                    if (item.hasVoice) key(item.id) { StoryVoice(item.id, paused || typing || saving || reporting != null || menu || viewersOf != null) }
                 }
             }
             // left side goes back, right side goes on, holding pauses
@@ -865,7 +917,13 @@ object FeedPrefetch {
         val tab = if (signed) Saved.prefs.getString("ab.feed.scope", "friends") ?: "friends" else "guest"
         scope.launch { runCatching { Account.callSaving(if (signed) "feedAll" else "publicFeed", mapOf("scope" to tab), tab); fresh[tab] = System.currentTimeMillis() } }
         scope.launch { runCatching { Account.callSaving(if (signed) "stories" else "publicStories", tag = "feed") } }
-        // the Chat tab opens on a fresh list of private chats
-        if (signed) scope.launch { runCatching { Account.callSaving("dmList") } }
+        // the Chat tab opens on a fresh list of private chats, and the four newest chats are loaded ahead
+        // (`peek`: nothing is marked read or seen until the chat is really opened)
+        if (signed) scope.launch {
+            val r = runCatching { Account.callSaving("dmList") }.getOrNull() ?: return@launch
+            r["conversations"].decodeAs<List<DmConversation>>().orEmpty().take(4).forEach { c ->
+                runCatching { Account.callSaving("dmThread", mapOf("userId" to c.user.id, "peek" to true), c.user.id) }
+            }
+        }
     }
 }

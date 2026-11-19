@@ -62,6 +62,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.Request
@@ -77,7 +78,8 @@ sealed class StoryMedia {
     data class Video(val uri: Uri) : StoryMedia()
 }
 
-class StoryDraft(val media: StoryMedia?)
+/** voice = the story editor opens with the microphone already recording */
+class StoryDraft(val media: StoryMedia?, val voice: Boolean = false)
 
 object StoryVideo {
     const val MAX_SECONDS = 30
@@ -97,6 +99,44 @@ object StoryVideo {
             if (scale >= 1f) frame else Bitmap.createScaledBitmap(frame, (frame.width * scale).toInt(), (frame.height * scale).toInt(), true)
         } finally { r.release() }
     }.getOrNull()
+
+    /** Length in ms, or 0 when unknown */
+    fun durationMs(ctx: Context, uri: Uri): Long = runCatching {
+        val r = MediaMetadataRetriever()
+        try { r.setDataSource(ctx, uri); r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull() ?: 0L } finally { r.release() }
+    }.getOrDefault(0L)
+
+    /** A library video that is too big or too long, made 720p and cut to 30 s. The same uri when it already fits; null when it can't be made. */
+    @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+    suspend fun fit(ctx: Context, uri: Uri): Uri? {
+        val size = withContext(Dispatchers.IO) { runCatching { ctx.contentResolver.openAssetFileDescriptor(uri, "r")?.use { it.length } }.getOrNull() ?: 0L }
+        val ms = withContext(Dispatchers.IO) { durationMs(ctx, uri) }
+        if (size in 1..MAX_BYTES && ms <= MAX_SECONDS * 1000L + 500) return uri
+        val out = newFile(ctx, "mp4")
+        val clip = androidx.media3.common.MediaItem.Builder().setUri(uri)
+            .setClippingConfiguration(androidx.media3.common.MediaItem.ClippingConfiguration.Builder().setEndPositionMs(MAX_SECONDS * 1000L).build())
+            .build()
+        val item = androidx.media3.transformer.EditedMediaItem.Builder(clip)
+            .setEffects(androidx.media3.transformer.Effects(listOf(), listOf<androidx.media3.common.Effect>(androidx.media3.effect.Presentation.createForHeight(720))))
+            .build()
+        // Transformer runs on the main thread and calls back there
+        val ok = withContext(Dispatchers.Main) {
+            suspendCancellableCoroutine { cont ->
+                val t = androidx.media3.transformer.Transformer.Builder(ctx)
+                    .setVideoMimeType(androidx.media3.common.MimeTypes.VIDEO_H264)
+                    .setAudioMimeType(androidx.media3.common.MimeTypes.AUDIO_AAC)
+                    .addListener(object : androidx.media3.transformer.Transformer.Listener {
+                        override fun onCompleted(composition: androidx.media3.transformer.Composition, exportResult: androidx.media3.transformer.ExportResult) { if (cont.isActive) cont.resume(true) }
+                        override fun onError(composition: androidx.media3.transformer.Composition, exportResult: androidx.media3.transformer.ExportResult, exportException: androidx.media3.transformer.ExportException) { if (cont.isActive) cont.resume(false) }
+                    })
+                    .build()
+                t.start(item, out.path)
+                cont.invokeOnCancellation { runCatching { t.cancel() } }
+            }
+        }
+        if (!ok || out.length() == 0L || out.length() > MAX_BYTES) { out.delete(); return null }
+        return Uri.fromFile(out)
+    }
 
     /** The video's bytes as base64, or null when it's over the limit or can't be read */
     suspend fun base64(ctx: Context, uri: Uri): String? = withContext(Dispatchers.IO) {
@@ -163,12 +203,18 @@ fun StoryCameraDialog(onClose: () -> Unit, done: (StoryMedia?) -> Unit) {
         granted = r[Manifest.permission.CAMERA] == true
         asked = true
     }
+    val fitScope = rememberCoroutineScope()
     val pick = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             if (ctx.contentResolver.getType(uri)?.startsWith("video") == true) {
-                val size = runCatching { ctx.contentResolver.openAssetFileDescriptor(uri, "r")?.use { it.length } }.getOrNull() ?: 0L
-                if (size > StoryVideo.MAX_BYTES) Toast.makeText(ctx, tr("That video is too big. Keep it short."), Toast.LENGTH_LONG).show()
-                else done(StoryMedia.Video(uri))
+                // big or long library videos are made smaller here instead of being refused
+                busy = true
+                fitScope.launch {
+                    val fitted = StoryVideo.fit(ctx, uri)
+                    busy = false
+                    if (fitted == null) Toast.makeText(ctx, tr("That video is too big. Keep it short."), Toast.LENGTH_LONG).show()
+                    else done(StoryMedia.Video(fitted))
+                }
             } else done(StoryMedia.Photo(uri))
         }
     }

@@ -132,6 +132,8 @@ fun AdminTab() {
                     Divider()
                     ListRow("Reports", icon = Icons.Filled.Flag) { nav.navigate("adminReports") }
                     Divider()
+                    ListRow("Activity log", "Who uses UniHub, from where, and what they did", icon = Icons.Filled.QueryStats) { nav.navigate("adminActivity") }
+                    Divider()
                     ListRow("Terms records", icon = Icons.Filled.Policy) { nav.navigate("adminTerms") }
                     Divider()
                     ListRow("Users", "Ban, reset passwords, make admins", icon = Icons.Filled.People) { nav.navigate("adminUsers") }

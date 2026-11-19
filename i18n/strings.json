@@ -11190,5 +11190,157 @@
  "Chats and private messages open faster": {
   "ar": "المحادثات والرسائل الخاصة تفتح بشكل أسرع",
   "es": "Los chats y los mensajes privados se abren más rápido"
+ },
+ "%d records": {
+  "ar": "%d سجل",
+  "es": "%d registros"
+ },
+ "Activity log": {
+  "ar": "سجل النشاط",
+  "es": "Registro de actividad"
+ },
+ "Android": {
+  "ar": "أندرويد",
+  "es": "Android"
+ },
+ "App opens": {
+  "ar": "مرات فتح التطبيق",
+  "es": "Aperturas de la app"
+ },
+ "At a glance": {
+  "ar": "نظرة سريعة",
+  "es": "De un vistazo"
+ },
+ "Camera": {
+  "ar": "الكاميرا",
+  "es": "Cámara"
+ },
+ "Comment": {
+  "ar": "تعليق",
+  "es": "Comentario"
+ },
+ "DONE": {
+  "ar": "منجز",
+  "es": "HECHO"
+ },
+ "Everything": {
+  "ar": "الكل",
+  "es": "Todo"
+ },
+ "Failed sign-ins": {
+  "ar": "محاولات دخول فاشلة",
+  "es": "Inicios de sesión fallidos"
+ },
+ "Joined %@": {
+  "ar": "انضم %@",
+  "es": "Se unió %@"
+ },
+ "Loading voice…": {
+  "ar": "جارٍ تحميل الصوت…",
+  "es": "Cargando audio…"
+ },
+ "New accounts": {
+  "ar": "حسابات جديدة",
+  "es": "Cuentas nuevas"
+ },
+ "Nothing matches.": {
+  "ar": "لا توجد نتائج.",
+  "es": "No hay coincidencias."
+ },
+ "People are counted once, however often they open UniHub. Guests are not counted as people.": {
+  "ar": "يُحسب كل شخص مرة واحدة مهما فتح UniHub. الزوار لا يُحسبون.",
+  "es": "Cada persona se cuenta una vez, aunque abra UniHub muchas veces. Los invitados no se cuentan."
+ },
+ "Photos and videos": {
+  "ar": "الصور والفيديوهات",
+  "es": "Fotos y videos"
+ },
+ "Posts and stories": {
+  "ar": "المنشورات والقصص",
+  "es": "Publicaciones e historias"
+ },
+ "Profile changes": {
+  "ar": "تعديلات الملف الشخصي",
+  "es": "Cambios de perfil"
+ },
+ "Search a name, username or phone model": {
+  "ar": "ابحث باسم أو اسم مستخدم أو نوع هاتف",
+  "es": "Busca un nombre, usuario o modelo de teléfono"
+ },
+ "Sign-ins": {
+  "ar": "تسجيلات الدخول",
+  "es": "Inicios de sesión"
+ },
+ "The activity log needs the newest server. Try again later.": {
+  "ar": "سجل النشاط يحتاج أحدث نسخة من الخادم. حاول لاحقاً.",
+  "es": "El registro de actividad necesita el servidor más reciente. Inténtalo más tarde."
+ },
+ "The swap": {
+  "ar": "التبديل",
+  "es": "El intercambio"
+ },
+ "The total is out of %@.": {
+  "ar": "المجموع من %@.",
+  "es": "El total es sobre %@."
+ },
+ "To get %@": {
+  "ar": "للحصول على %@",
+  "es": "Para obtener %@"
+ },
+ "Voice story": {
+  "ar": "قصة صوتية",
+  "es": "Historia de voz"
+ },
+ "Web": {
+  "ar": "الويب",
+  "es": "Web"
+ },
+ "Who uses UniHub, from where, and what they did": {
+  "ar": "من يستخدم UniHub، ومن أين، وماذا فعل",
+  "es": "Quién usa UniHub, desde dónde y qué hizo"
+ },
+ "app opens today": {
+  "ar": "مرة فُتح التطبيق اليوم",
+  "es": "aperturas hoy"
+ },
+ "new today": {
+  "ar": "جديد اليوم",
+  "es": "nuevos hoy"
+ },
+ "people this week": {
+  "ar": "شخص هذا الأسبوع",
+  "es": "personas esta semana"
+ },
+ "people today": {
+  "ar": "شخص اليوم",
+  "es": "personas hoy"
+ },
+ "Chats, stories and the Feed load faster, and slow connections retry by themselves": {
+  "ar": "المحادثات والقصص والمنشورات تفتح أسرع، والاتصال البطيء يعيد المحاولة تلقائياً",
+  "es": "Los chats, las historias y el Feed cargan más rápido, y las conexiones lentas reintentan solas"
+ },
+ "Swiping between tabs now slides the page with your finger": {
+  "ar": "السحب بين التبويبات يحرّك الصفحة مع إصبعك",
+  "es": "Al deslizar entre pestañas, la página se mueve con tu dedo"
+ },
+ "The camera button offers Camera, Photos and videos, Voice story and Text story": {
+  "ar": "زر الكاميرا يعرض: الكاميرا، الصور والفيديوهات، قصة صوتية، قصة نصية",
+  "es": "El botón de la cámara ofrece Cámara, Fotos y videos, Historia de voz e Historia de texto"
+ },
+ "Record your voice on a story": {
+  "ar": "سجّل صوتك على القصة",
+  "es": "Graba tu voz en una historia"
+ },
+ "Videos from your library are ready for stories much faster": {
+  "ar": "الفيديوهات من مكتبتك تجهز للقصص بسرعة أكبر",
+  "es": "Los videos de tu galería están listos para historias mucho más rápido"
+ },
+ "The calendar card on Home counts down live and shows the next week too": {
+  "ar": "بطاقة التقويم في الرئيسية تعدّ الأيام مباشرة وتعرض الأسبوع القادم أيضاً",
+  "es": "La tarjeta del calendario en Inicio cuenta los días en vivo y muestra también la próxima semana"
+ },
+ "Admins: a new Activity log with sign-ups, sign-ins, app opens and more, by day and platform": {
+  "ar": "للمشرفين: سجل نشاط جديد يعرض التسجيلات والدخول وفتح التطبيق وغيرها حسب اليوم والمنصة",
+  "es": "Administradores: un nuevo Registro de actividad con altas, inicios de sesión, aperturas y más, por día y plataforma"
  }
 }

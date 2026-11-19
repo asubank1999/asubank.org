@@ -182,11 +182,16 @@ struct ComposeStorySheet: View {
     @State private var style = StoryStyle()
     @State private var tool = 0
     @State private var muted = false
+    @State private var voice: (url: URL, seconds: Int)?
+    @State private var micError: String?
+    @StateObject private var rec = VoiceRecorder()
+    private let startVoice: Bool
     @FocusState private var typing: Bool
 
-    init(media: StoryMedia? = nil, posted: @escaping () async -> Void) {
+    init(media: StoryMedia? = nil, voice: Bool = false, posted: @escaping () async -> Void) {
         self.media = media
         self.posted = posted
+        self.startVoice = voice
         switch media {
         case .photo(let image):
             _photo = State(initialValue: image)
@@ -200,7 +205,7 @@ struct ComposeStorySheet: View {
     }
 
     private var hasMedia: Bool { photo != nil || video != nil }
-    private var canPost: Bool { hasMedia || !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+    private var canPost: Bool { !rec.recording && (hasMedia || voice != nil || !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) }
     private var tools: [LocalizedStringKey] { hasMedia ? ["Font", "Effect", "Color", "Motion"] : ["Background", "Font", "Effect", "Color", "Motion"] }
     private var toolOffset: Int { hasMedia ? 1 : 0 }
 
@@ -211,14 +216,18 @@ struct ComposeStorySheet: View {
             VStack(spacing: 0) {
                 topBar
                 Spacer()
-                StoryTextView(text: text.isEmpty && !hasMedia ? L("Write something") : text, style: style, size: 30)
+                StoryTextView(text: text.isEmpty && !hasMedia ? L(voice != nil || rec.recording ? "Voice story" : "Write something") : text, style: style, size: 30)
                     .opacity(text.isEmpty && !hasMedia ? 0.55 : 1)
                     .allowsHitTesting(false)
                 Spacer()
+                voiceBar
                 panel
             }
         }
         .preferredColorScheme(.dark)
+        .task { if startVoice { await record() } }
+        .onReceive(rec.$finished) { f in if let f { voice = (f.0, f.1) } }
+        .onDisappear { if rec.recording { rec.cancel() } }
         .sheet(isPresented: $picking) {
             StoryMediaPicker { m in
                 switch m {
@@ -254,6 +263,11 @@ struct ComposeStorySheet: View {
             round("xmark", "Cancel") { dismiss() }
             Spacer()
             if video != nil { round(muted ? "speaker.slash.fill" : "speaker.wave.2.fill", "Sound") { muted.toggle() } }
+            round(rec.recording ? "stop.fill" : voice != nil ? "mic.slash" : "mic", rec.recording ? "Stop recording" : voice != nil ? "Remove voice" : "Record voice") {
+                if rec.recording { if let f = rec.stop() { voice = (f.0, f.1) } }
+                else if voice != nil { voice = nil }
+                else { Task { await record() } }
+            }
             round(hasMedia ? "photo.badge.arrow.down" : "photo", hasMedia ? "Change photo" : "Add a photo") { picking = true }
             if hasMedia { round("trash", video != nil ? "Remove video" : "Remove photo") { photo = nil; video = nil; poster = nil; tool = 0 } }
         }
@@ -308,6 +322,36 @@ struct ComposeStorySheet: View {
         .padding(14)
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
         .padding(.horizontal, 8).padding(.bottom, 6)
+    }
+
+    private func record() async {
+        micError = nil
+        if !(await rec.start()) { micError = L("UniHub can't use the microphone. You can allow it in Settings.") }
+    }
+
+    /// Recording now, the recorded voice, or why the microphone can't be used
+    @ViewBuilder private var voiceBar: some View {
+        if rec.recording {
+            HStack(spacing: 10) {
+                Circle().fill(.red).frame(width: 10, height: 10)
+                Text(VoiceBubble.time(rec.seconds)).monospacedDigit().foregroundStyle(.white)
+                Capsule().fill(.white.opacity(0.85)).frame(width: 18 + 90 * rec.level, height: 6).animation(.linear(duration: 0.1), value: rec.level)
+                Spacer()
+                Button(L("Cancel")) { rec.cancel() }.foregroundStyle(.white.opacity(0.8))
+                Button(L("Done")) { if let f = rec.stop() { voice = (f.0, f.1) } }.font(.headline).foregroundStyle(.white)
+            }
+            .padding(.horizontal, 16).padding(.vertical, 10)
+            .background(.black.opacity(0.5), in: Capsule())
+            .padding(.horizontal, 14).padding(.bottom, 8)
+        } else if let voice {
+            VoiceBubble(id: voice.url.lastPathComponent, duration: voice.seconds, localFile: voice.url) { voice.url }
+                .padding(.horizontal, 14).padding(.vertical, 8)
+                .background(.black.opacity(0.45), in: Capsule())
+                .padding(.bottom, 8)
+        } else if let micError {
+            Text(micError).font(.footnote).foregroundStyle(.white).padding(10)
+                .background(.black.opacity(0.5), in: RoundedRectangle(cornerRadius: 12)).padding(.bottom, 8)
+        }
     }
 
     private var alignButton: some View {
@@ -382,8 +426,15 @@ struct ComposeStorySheet: View {
         let clip = video
         let still = poster
         let camera = fromCamera
+        let sound = voice
         BackgroundJobs.shared.add(title: L("Posting your story…"), done: posted) {
             var fields: [String: Any] = ["text": words, "bg": background, "audience": who, "style": look]
+            if let sound {
+                guard let bytes = try? Data(contentsOf: sound.url) else { throw AccountsAPI.Failure(message: L("Couldn't send this file.")) }
+                fields["file"] = bytes.base64EncodedString()
+                fields["fileName"] = "voice.m4a"
+                fields["duration"] = sound.seconds
+            }
             if let clip {
                 guard let ready = await StoryVideo.prepare(clip, fromCamera: camera), let bytes = try? Data(contentsOf: ready) else {
                     throw AccountsAPI.Failure(message: L("That video is too big. Keep it short."))

@@ -88,6 +88,9 @@
 "%d picked" = "%d elegidos";
 "%lld picked" = "%lld elegidos";
 "%@ picked" = "%@ elegidos";
+"%d records" = "%d registros";
+"%lld records" = "%lld registros";
+"%@ records" = "%@ registros";
 "%d selected" = "%d seleccionados";
 "%lld selected" = "%lld seleccionados";
 "%@ selected" = "%@ seleccionados";
@@ -217,6 +220,7 @@
 "Actions" = "Acciones";
 "Active this week" = "Activos esta semana";
 "Active today" = "Activos hoy";
+"Activity log" = "Registro de actividad";
 "Add" = "Añadir";
 "Add a backup link" = "Añadir un enlace de respaldo";
 "Add a card" = "Añadir tarjeta";
@@ -264,6 +268,7 @@
 "Admins may warn, mute, remove, or block any member who violates these Terms, at their sole discretion, without prior notice. Content shared in the group may be removed or reported if it violates these Terms or applicable law." = "Los administradores pueden advertir, silenciar, eliminar o bloquear a cualquier miembro que viole estos Términos, a su exclusivo criterio, sin previo aviso. El contenido compartido en el grupo puede eliminarse o denunciarse si viola estos Términos o la ley aplicable.";
 "Admins only" = "Solo admins";
 "Admins reserve the right to keep their personal information (phone number visibility, identity, contact details) private and are not obligated to disclose it beyond what WhatsApp itself displays." = "Los administradores se reservan el derecho de mantener privada su información personal (visibilidad del número de teléfono, identidad, detalles de contacto) y no están obligados a revelarla más allá de lo que muestra WhatsApp.";
+"Admins: a new Activity log with sign-ups, sign-ins, app opens and more, by day and platform" = "Administradores: un nuevo Registro de actividad con altas, inicios de sesión, aperturas y más, por día y plataforma";
 "Admins: delete any file from Drive by holding it, and it stays gone after a refresh" = "Admins: delete any file from Drive by holding it, and it stays gone after a refresh";
 "Admins: terms records list everyone, no typing needed" = "Administradores: los registros de términos muestran a todos, sin escribir";
 "Admissions & Registration" = "Admisiones y registro";
@@ -320,6 +325,7 @@
 "Anatomy and Physiology 2" = "Anatomía y Fisiología 2";
 "Anatomy midterm" = "Anatomía de mitad de período";
 "And" = "Y";
+"Android" = "Android";
 "Android checks about every 15 minutes, right when you open the app, and every few seconds while it's open." = "Android revisa cada 15 minutos aprox., al abrir la app y cada pocos segundos mientras está abierta.";
 "Android: neater official links, including the alumni platform" = "Android: neater official links, including the alumni platform";
 "Announcement" = "Anuncio";
@@ -342,6 +348,7 @@
 "Anything we should add or fix?" = "¿Algo que debamos añadir o arreglar?";
 "App" = "App";
 "App icon" = "Icono de la app";
+"App opens" = "Aperturas de la app";
 "Appearance" = "Apariencia";
 "Applied Science Private University — Student & Parent Login" = "Universidad Privada de Ciencias Aplicadas — Inicio de sesión para estudiantes y padres";
 "Applied Science University's official platform for keeping in touch with its graduates." = "La plataforma oficial de la Universidad de Ciencias Aplicadas para mantener el contacto con sus egresados.";
@@ -370,6 +377,7 @@
 "Ask to meet" = "Pedir verse";
 "Ask your college's WhatsApp group" = "Pregunta en el grupo de WhatsApp de tu facultad";
 "Assignment" = "Asignación";
+"At a glance" = "De un vistazo";
 "At least 6 characters" = "Al menos 6 caracteres";
 "At the limit: don't miss another lecture" = "En el límite: no faltes a otra clase";
 "Attach a file" = "Adjuntar un archivo";
@@ -470,6 +478,7 @@
 "Calendar, schedules, FAQs and every asubank.org page as native screens" = "Calendar, schedules, FAQs and every asubank.org page as native screens";
 "Calendars & schedules" = "Calendarios y horarios";
 "Call 911" = "Llamar al 911";
+"Camera" = "Cámara";
 "Campus & study" = "Campus y estudio";
 "Campus Cafe" = "Cafetería del campus";
 "Campus Life & Facilities" = "Vida e instalaciones del campus";
@@ -504,6 +513,7 @@
 "Chat with students, synced with asubank.org" = "Chatea con estudiantes, sincronizado con asubank.org";
 "Chats and private messages open faster" = "Los chats y los mensajes privados se abren más rápido";
 "Chats and rooms open at once, and new messages follow" = "Los chats y salas se abren al instante, y los mensajes nuevos llegan después";
+"Chats, stories and the Feed load faster, and slow connections retry by themselves" = "Los chats, las historias y el Feed cargan más rápido, y las conexiones lentas reintentan solas";
 "Cheating or a rule of the university" = "Trampa o una norma de la universidad";
 "Check for updates" = "Buscar actualizaciones";
 "Check your connection and try again." = "Revisa tu conexión e inténtalo de nuevo.";
@@ -583,6 +593,7 @@
 "Combinations Example" = "Ejemplo de combinaciones";
 "Coming soon to revolutionize student advertising!" = "¡Próximamente para revolucionar la publicidad estudiantil!";
 "Coming up" = "Próximamente";
+"Comment" = "Comentario";
 "Comments" = "Comentarios";
 "Communication Skills Bank" = "Banco de Habilidades Comunicativas";
 "Community" = "Comunidad";
@@ -685,6 +696,7 @@
 "Customize" = "Personalizar";
 "Customize tab bar" = "Personalizar la barra de pestañas";
 "Cyber security 🫀" = "Cyber security 🫀";
+"DONE" = "HECHO";
 "Daily goal: %d minutes" = "Meta diaria: %d minutos";
 "Daily goal: %lld minutes" = "Meta diaria: %lld minutos";
 "Daily goal: %@ minutes" = "Meta diaria: %@ minutos";
@@ -857,6 +869,7 @@
 "Everyone (%lld)" = "Todos (%lld)";
 "Everyone (%@)" = "Todos (%@)";
 "Everyone, also guests" = "Todos, también invitados";
+"Everything" = "Todo";
 "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive." = "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive.";
 "Everything students uploaded, updated live." = "Everything students uploaded, updated live.";
 "Everything you have coming up." = "Todo lo que tienes por delante.";
@@ -881,6 +894,7 @@
 "Faculties & Courses" = "Faculties & Courses";
 "Faculty course lists" = "Listas de cursos por facultad";
 "Fade" = "Fade";
+"Failed sign-ins" = "Inicios de sesión fallidos";
 "Fair and safe" = "Justo y seguro";
 "False" = "False";
 "False reports made to harm someone break the community rules." = "Los reportes falsos hechos para perjudicar a alguien incumplen las normas de la comunidad.";
@@ -1178,7 +1192,7 @@
 "Join your college's WhatsApp groups, buses and study resources." = "Join your college's WhatsApp groups, buses and study resources.";
 "Join your virtual classes and meetings via Microsoft Teams" = "Join your virtual classes and meetings via Microsoft Teams";
 "Joined" = "Se unió";
-"Joined %@" = "Se unió en %@";
+"Joined %@" = "Se unió %@";
 "Jordan's emergency number: ambulance, fire and police" = "Número de emergencias de Jordania: ambulancia, bomberos y policía";
 "Junior" = "Junior";
 "Just now" = "Ahora";
@@ -1241,6 +1255,7 @@
 "Loading ratings…" = "Cargando valoraciones…";
 "Loading submissions…" = "Loading submissions…";
 "Loading the newest files…" = "Loading the newest files…";
+"Loading voice…" = "Cargando audio…";
 "Loading…" = "Loading…";
 "Loads fast" = "Carga rápido";
 "Location" = "Lugar";
@@ -1374,6 +1389,7 @@
 "New Student Guide | Applied Science Private University" = "New Student Guide | Applied Science Private University";
 "New Thanks list, Student ads and Support UniHub screens" = "New Thanks list, Student ads and Support UniHub screens";
 "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan)." = "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan).";
+"New accounts" = "Cuentas nuevas";
 "New chat messages" = "Mensajes nuevos del chat";
 "New cumulative" = "Nuevo acumulado";
 "New deck" = "Nuevo mazo";
@@ -1474,6 +1490,7 @@
 "Nothing listed yet." = "Aún no hay nada.";
 "Nothing matches these filters." = "Nothing matches these filters.";
 "Nothing matches “%@”." = "Nada coincide con “%@”.";
+"Nothing matches." = "No hay coincidencias.";
 "Nothing new" = "Nada nuevo";
 "Nothing new." = "Nada nuevo.";
 "Nothing opened yet" = "Nothing opened yet";
@@ -1602,6 +1619,7 @@
 "Peer-verified study materials by Applied Science University students, for ASU students." = "Materiales revisados por estudiantes de la Universidad de Ciencias Aplicadas, para estudiantes de ASU.";
 "Peer-verified study materials curated by Applied Science University students, for ASU students." = "Materiales de estudio verificados por estudiantes de la Applied Science University, para estudiantes de ASU.";
 "Pending" = "Pendiente";
+"People are counted once, however often they open UniHub. Guests are not counted as people." = "Cada persona se cuenta una vez, aunque abra UniHub muchas veces. Los invitados no se cuentan.";
 "People from your college and major show up here. Add them to your profile to see more." = "Aquí aparecen personas de tu facultad y carrera. Añádelas a tu perfil para ver más.";
 "People who helped UniHub" = "Personas que ayudaron a UniHub";
 "People who helped UniHub." = "People who helped UniHub.";
@@ -1626,6 +1644,7 @@
 "Photo" = "Foto";
 "Photos" = "Fotos";
 "Photos and editing" = "Fotos y edición";
+"Photos and videos" = "Fotos y videos";
 "Photos to edit" = "Fotos para editar";
 "Photoshop and paid tools: skin retouching, compositing and advanced grading. 3 JD a photo as a base price; complex edits may cost more." = "Photoshop y herramientas de pago: retoque de piel, composición y color avanzado. 3 JD por foto como base; las ediciones complejas pueden costar más.";
 "Physics lab" = "Physics lab";
@@ -1676,6 +1695,7 @@
 "Posting your story…" = "Publicando tu historia…";
 "Posting…" = "Publicando…";
 "Posts" = "Publicaciones";
+"Posts and stories" = "Publicaciones e historias";
 "Posts can have a voice message or a video too" = "Las publicaciones también pueden llevar un mensaje de voz o un video";
 "Posts shared with everyone show up here. Anyone can read them, also without an account." = "Aquí aparecen las publicaciones compartidas con todos. Cualquiera puede leerlas, también sin cuenta.";
 "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between." = "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between.";
@@ -1706,6 +1726,7 @@
 "Product / Commercial" = "Producto / Comercial";
 "Professor-specific materials" = "Materiales de un profesor concreto";
 "Profile" = "Perfil";
+"Profile changes" = "Cambios de perfil";
 "Profile photo" = "Foto de perfil";
 "Profile saved" = "Perfil guardado";
 "Profiles open faster, with a loading preview" = "Los perfiles se abren más rápido, con una vista previa mientras cargan";
@@ -1761,6 +1782,7 @@
 "Recent uploads" = "Recent uploads";
 "Recently opened" = "Abiertos recientemente";
 "Record a voice message" = "Grabar un mensaje de voz";
+"Record your voice on a story" = "Graba tu voz en una historia";
 "Reference" = "Referencia";
 "Reference: %@" = "Referencia: %@";
 "Refresh" = "Actualizar";
@@ -1882,6 +1904,7 @@
 "Search UniHub" = "Buscar en UniHub";
 "Search UniHub first" = "Busca primero en UniHub";
 "Search UniHub first, it may already be there" = "Busca primero en UniHub, puede que ya esté";
+"Search a name, username or phone model" = "Busca un nombre, usuario o modelo de teléfono";
 "Search banner" = "Banner de búsqueda";
 "Search events" = "Buscar eventos";
 "Search every material, plus the shared Google Drive, from one search box" = "Search every material, plus the shared Google Drive, from one search box";
@@ -2014,6 +2037,7 @@
 "Sign out" = "Cerrar sesión";
 "Sign out of UniHub?" = "¿Cerrar sesión en UniHub?";
 "Sign out?" = "¿Cerrar sesión?";
+"Sign-ins" = "Inicios de sesión";
 "Signed in as @%@" = "Sesión iniciada como @%@";
 "Signed-in students can see these when they open your swap. Add a phone number or an email." = "Los estudiantes con sesión iniciada pueden verlos al abrir tu intercambio. Añade un teléfono o un correo.";
 "Simple Pricing" = "Simple Pricing";
@@ -2144,6 +2168,7 @@
 "Swipe left or right to move between tabs" = "Desliza a la izquierda o a la derecha para cambiar de pestaña";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Desliza de lado en el Feed para abrir la cámara y crear una historia con foto o vídeo, a 60 FPS si tu teléfono puede";
 "Swipe the Feed sideways to slide into the camera" = "Desliza el Feed de lado para pasar a la cámara";
+"Swiping between tabs now slides the page with your finger" = "Al deslizar entre pestañas, la página se mueve con tu dedo";
 "Switch camera" = "Cambiar de cámara";
 "System language" = "Idioma del sistema";
 "System language follows your iPhone's settings. Material names and files stay as they were uploaded." = "El idioma del sistema sigue los ajustes de tu iPhone. Los nombres de materiales y archivos se quedan como se subieron.";
@@ -2214,10 +2239,13 @@
 "The Feed opens much faster and keeps photos on your phone" = "El Feed se abre mucho más rápido y guarda las fotos en tu teléfono";
 "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages" = "La pestaña Notificaciones ahora muestra todas las notificaciones que mostró tu teléfono, incluidos recordatorios de clases y mensajes";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
+"The activity log needs the newest server. Try again later." = "El registro de actividad necesita el servidor más reciente. Inténtalo más tarde.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.";
 "The app closes so the new colors load cleanly. Tap its icon to open it again." = "La app se cierra para que los nuevos colores carguen bien. Toca su icono para abrirla de nuevo.";
 "The app restarts so the new colors load cleanly." = "La app se reinicia para que los nuevos colores carguen bien.";
 "The apps have no analytics. The website uses Google Analytics to count visits." = "The apps have no analytics. The website uses Google Analytics to count visits.";
+"The calendar card on Home counts down live and shows the next week too" = "La tarjeta del calendario en Inicio cuenta los días en vivo y muestra también la próxima semana";
+"The camera button offers Camera, Photos and videos, Voice story and Text story" = "El botón de la cámara ofrece Cámara, Fotos y videos, Historia de voz e Historia de texto";
 "The camera is off" = "La cámara está desactivada";
 "The end time must be after the start time." = "La hora de fin debe ser posterior a la de inicio.";
 "The file" = "El archivo";
@@ -2238,6 +2266,7 @@
 "The server didn't answer. Try again." = "The server didn't answer. Try again.";
 "The server sent something unexpected. Try again." = "The server sent something unexpected. Try again.";
 "The submissions server sent something unexpected." = "The submissions server sent something unexpected.";
+"The swap" = "El intercambio";
 "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them" = "La barra de pestañas ahora es Inicio, Publicaciones, Chat, Buscar y Más. Si ya cambiaste tus pestañas, se quedan como las pusiste";
 "The team reviews it before it goes on the campus display screen." = "El equipo lo revisa antes de mostrarlo en la pantalla del campus.";
 "The total is out of %@." = "El total es sobre %@.";
@@ -2294,7 +2323,7 @@
 "Title, e.g. Calculus 1 Midterm 2025" = "Título, p. ej. Cálculo 1 parcial 2025";
 "To" = "Hasta";
 "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information." = "To benefit from this service, you must have a working email address. Once a match is found (50%+ compatibility), both you and your match will receive an email with further instructions and contact information.";
-"To get %@" = "Para llegar a %@";
+"To get %@" = "Para obtener %@";
 "To remove a file or anything else, report it or email us." = "To remove a file or anything else, report it or email us.";
 "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed." = "To report a file that breaks the rules or your copyright, send its link on WhatsApp and it will be removed.";
 "To report something, press and hold a message or open a profile." = "To report something, press and hold a message or open a profile.";
@@ -2467,6 +2496,7 @@
 "Vibration" = "Vibración";
 "Video" = "Vídeo";
 "Videos" = "Vídeos";
+"Videos from your library are ready for stories much faster" = "Los videos de tu galería están listos para historias mucho más rápido";
 "Videos in stories no longer show small" = "Los videos en las historias ya no se ven pequeños";
 "Videos students shared" = "Videos que compartieron los estudiantes";
 "View File" = "View File";
@@ -2481,6 +2511,7 @@
 "Violence or threats" = "Violence or threats";
 "Violet" = "Violeta";
 "Voice message" = "Mensaje de voz";
+"Voice story" = "Historia de voz";
 "Vote" = "Votar";
 "Vote again" = "Votar de nuevo";
 "Waiting" = "Waiting";
@@ -2503,6 +2534,7 @@
 "We're building a dedicated platform for students to advertise their services,\nproducts, and talents to the university community. Affordable, targeted, and effective\nadvertising tailored specifically for the student market." = "We're building a dedicated platform for students to advertise their services,\nproducts, and talents to the university community. Affordable, targeted, and effective\nadvertising tailored specifically for the student market.";
 "Weather" = "Clima";
 "Weather is back at the top of Home, and the banner and search box are smaller" = "El tiempo vuelve arriba en Inicio, y el banner y el buscador son más pequeños";
+"Web" = "Web";
 "Wednesday" = "Wednesday";
 "Week %d" = "Semana %d";
 "Week %lld" = "Semana %lld";
@@ -2565,6 +2597,7 @@
 "Who can see this" = "Quién puede ver esto";
 "Who is online" = "Quién está en línea";
 "Who or what: a name, username, file or link" = "Quién o qué: un nombre, usuario, archivo o enlace";
+"Who uses UniHub, from where, and what they did" = "Quién usa UniHub, desde dónde y qué hizo";
 "Who we are" = "Who we are";
 "Who's online" = "Quién está en línea";
 "Who's online is now on Home, Feed, Friends and Chat, with a clearer box" = "Quién está en línea ahora aparece en Inicio, Feed, Amigos y Chat, con un cuadro más claro";
@@ -2672,6 +2705,7 @@
 "Zero tolerance" = "Zero tolerance";
 "__dm" = "__dm";
 "admins post" = "solo admins";
+"app opens today" = "aperturas hoy";
 "application/pdf" = "application/pdf";
 "archived" = "archivada";
 "asubank.org links shared with you open straight in the app." = "asubank.org links shared with you open straight in the app.";
@@ -2687,9 +2721,12 @@
 "just now" = "ahora mismo";
 "link" = "link";
 "necro144@yahoo.com · fastest reply" = "necro144@yahoo.com · respuesta más rápida";
+"new today" = "nuevos hoy";
 "no connection" = "no connection";
 "paypal.me/necro144" = "paypal.me/necro144";
 "paypal.me/necro144 · cards and PayPal balance" = "paypal.me/necro144 · cards and PayPal balance";
+"people this week" = "personas esta semana";
+"people today" = "personas hoy";
 "test bank" = "test bank";
 "the latest version" = "the latest version";
 "their story" = "su historia";

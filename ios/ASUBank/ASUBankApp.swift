@@ -50,6 +50,11 @@ struct ASUBankApp: App {
                 }
                 .task { FeedPrefetch.run() }
                 .task {
+                    // after the sign-in check, so the activity log knows who opened the app
+                    try? await Task.sleep(nanoseconds: 2_500_000_000)
+                    Hello.send()
+                }
+                .task {
                     await AccountStore.shared.refresh()
                     if AccountStore.shared.signedIn {
                         ChatNotifier.shared.start()
@@ -94,6 +99,12 @@ struct RootView: View {
     private var middleTabs: [AppTab] { TabBarPrefs.chosen(chosenTabs, admin: account.isAdmin) }
 
     /// Swiping sideways walks through the tab bar in its own order
+    private func canSwipe(_ step: Int) -> Bool {
+        let all: [AppTab] = [.home] + middleTabs + [.more]
+        guard accepted, let i = all.firstIndex(of: app.tab) else { return false }
+        return all.indices.contains(i + step)
+    }
+
     private func swipe(_ step: Int) {
         let all: [AppTab] = [.home] + middleTabs + [.more]
         guard accepted, let i = all.firstIndex(of: app.tab), all.indices.contains(i + step) else { return }
@@ -137,7 +148,7 @@ struct RootView: View {
                 .tabItem { Label("More", systemImage: "ellipsis.circle.fill") }
                 .tag(AppTab.more)
         }
-        .background(TabSwipe(move: swipe))
+        .background(TabSwipe(move: swipe, can: canSwipe))
         .onChange(of: app.tab) { t in
             // Upload opens as a sheet over the tab you were on; admins find Saved under More
             if t == .upload { app.tab = lastTab; app.uploadShown = true; return }

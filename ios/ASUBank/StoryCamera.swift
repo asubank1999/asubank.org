@@ -13,6 +13,41 @@ enum StoryMedia {
 struct StoryDraft: Identifiable {
     let id = UUID()
     var media: StoryMedia?
+    /// opens the story editor with the microphone already recording
+    var voice = false
+}
+
+/// The voice of a story: loads once, plays with the story, pauses when the story is held
+struct StoryVoice: View {
+    let id: String
+    let paused: Bool
+    @StateObject private var player = VoicePlayer()
+    @State private var file: URL?
+
+    var body: some View {
+        VStack {
+            Spacer()
+            HStack(spacing: 8) {
+                Image(systemName: player.playing ? "waveform" : "mic.fill")
+                Text(file == nil ? L("Loading voice…") : L("Voice story")).font(.footnote.weight(.semibold))
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 14).padding(.vertical, 8)
+            .background(.black.opacity(0.45), in: Capsule())
+            .padding(.bottom, 140)
+        }
+        .allowsHitTesting(false)
+        .task {
+            guard let f = try? await MediaFiles.local(scope: "story", id: id, name: "voice.m4a") else { return }
+            file = f
+            if !paused { _ = player.toggle(f) }
+        }
+        .onChange(of: paused) { now in
+            guard let file else { return }
+            if now { if player.playing { player.pause() } } else if !player.playing { _ = player.toggle(file) }
+        }
+        .onDisappear { player.pause() }
+    }
 }
 
 enum StoryVideo {
@@ -29,10 +64,19 @@ enum StoryVideo {
 
     /// An MP4 of at most 30 seconds that fits the upload limit. Camera videos are already small, so they are only rewrapped and keep their 60 FPS.
     static func prepare(_ url: URL, fromCamera: Bool) async -> URL? {
-        let presets = fromCamera
+        let asset = AVURLAsset(url: url)
+        // A library video that is already H.264 and small enough is only rewrapped (a second instead of a full re-encode).
+        var quick = fromCamera
+        if !quick, let track = asset.tracks(withMediaType: .video).first,
+           let format = track.formatDescriptions.first.map({ $0 as! CMFormatDescription }),
+           CMFormatDescriptionGetMediaSubType(format) == kCMVideoCodecType_H264 {
+            let size = Double((try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0) ?? 0)
+            let seconds = max(asset.duration.seconds, 1)
+            quick = size * min(1, maxSeconds / seconds) < Double(maxBytes) * 0.95
+        }
+        let presets = quick
             ? [AVAssetExportPresetPassthrough, AVAssetExportPreset1280x720, AVAssetExportPreset960x540]
             : [AVAssetExportPreset1280x720, AVAssetExportPreset960x540, AVAssetExportPresetMediumQuality]
-        let asset = AVURLAsset(url: url)
         for preset in presets {
             guard let e = AVAssetExportSession(asset: asset, presetName: preset) else { continue }
             let out = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
@@ -341,6 +385,8 @@ struct StoryMediaPicker: UIViewControllerRepresentable {
         var c = PHPickerConfiguration()
         c.filter = .any(of: [.images, .videos])
         c.selectionLimit = 1
+        // hand over the video as it is: the default converts every library video first, which took long
+        c.preferredAssetRepresentationMode = .current
         let p = PHPickerViewController(configuration: c)
         p.delegate = context.coordinator
         return p

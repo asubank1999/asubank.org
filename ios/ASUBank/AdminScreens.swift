@@ -54,6 +54,7 @@ struct AdminTab: View {
                             }
                         }
                         NavigationLink { AdminReportsScreen() } label: { Label("Reports", systemImage: "flag") }
+                        NavigationLink { ActivityLogScreen() } label: { Label("Activity log", systemImage: "chart.bar.doc.horizontal") }
                         NavigationLink { AdminTermsScreen() } label: { Label("Terms records", systemImage: "doc.text.magnifyingglass") }
                         NavigationLink { AdminUsersScreen() } label: { Label("Users", systemImage: "person.2") }
                         Button { announcing = true } label: { Label("Send an announcement", systemImage: "megaphone") }

@@ -326,6 +326,33 @@ fun VoiceBubble(id: String, duration: Int, mine: Boolean = false, local: String?
     }
 }
 
+/** The voice of a story: loads once, plays with the story, pauses while the story is held */
+@Composable
+fun StoryVoice(id: String, paused: Boolean) {
+    val ctx = LocalContext.current
+    var player by remember(id) { mutableStateOf<MediaPlayer?>(null) }
+    LaunchedEffect(id) {
+        val f = runCatching { MediaFiles.local(ctx, "story", id, "voice.m4a") }.getOrNull() ?: return@LaunchedEffect
+        player = runCatching { withContext(Dispatchers.IO) { openVoice(f.path) } }.getOrNull()
+        VoiceNow.stop?.invoke()
+        if (!paused) runCatching { player?.start() }
+    }
+    LaunchedEffect(paused, player) {
+        val p = player ?: return@LaunchedEffect
+        runCatching { if (paused) { if (p.isPlaying) p.pause() } else if (!p.isPlaying) p.start() }
+    }
+    DisposableEffect(id) { onDispose { runCatching { player?.release() }; player = null } }
+    Box(Modifier.fillMaxSize().padding(bottom = 150.dp), contentAlignment = Alignment.BottomCenter) {
+        Row(
+            Modifier.clip(RoundedCornerShape(50)).background(Color.Black.copy(alpha = 0.45f)).padding(horizontal = 14.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Icon(if (player == null) Icons.Filled.Mic else Icons.Filled.GraphicEq, null, tint = Color.White, modifier = Modifier.size(18.dp))
+            androidx.compose.material3.Text(tr(if (player == null) "Loading voice…" else "Voice story"), color = Color.White, fontSize = 13.sp)
+        }
+    }
+}
+
 /** A photo loads with the chat. A video comes down only when it's tapped, so a chat doesn't use up mobile data. */
 @Composable
 fun ChatMediaTile(type: String, local: String? = null, fetch: suspend () -> File) {

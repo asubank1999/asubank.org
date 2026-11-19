@@ -7,6 +7,8 @@ import UIKit
 struct TabSwipe: UIViewRepresentable {
     /// +1 for the next tab, -1 for the previous one
     var move: (Int) -> Void
+    /// whether there is a tab that way
+    var can: (Int) -> Bool = { _ in true }
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -17,7 +19,7 @@ struct TabSwipe: UIViewRepresentable {
         return v
     }
 
-    func updateUIView(_ uiView: Probe, context: Context) { context.coordinator.move = move }
+    func updateUIView(_ uiView: Probe, context: Context) { context.coordinator.move = move; context.coordinator.can = can }
 
     static func dismantleUIView(_ uiView: Probe, coordinator: Coordinator) { coordinator.detach() }
 
@@ -32,6 +34,9 @@ struct TabSwipe: UIViewRepresentable {
 
     final class Coordinator: NSObject, UIGestureRecognizerDelegate {
         var move: (Int) -> Void = { _ in }
+        var can: (Int) -> Bool = { _ in true }
+        /// the page being dragged (the selected tab's view; the tab bar stays where it is)
+        private weak var page: UIView?
         private weak var window: UIWindow?
         private weak var pan: UIPanGestureRecognizer?
         /// The list the swipe started on, to see afterwards whether one of its rows was swiped open
@@ -59,18 +64,74 @@ struct TabSwipe: UIViewRepresentable {
             window = nil
         }
 
-        @objc private func panned(_ g: UIPanGestureRecognizer) {
-            if g.state == .began { rowSwiped = false }
-            if g.state == .changed, !rowSwiped, let l = list, Self.rowSwipedOpen(in: l, depth: 0) { rowSwiped = true }
-            guard g.state == .ended, let w = window else { return }
-            let t = g.translation(in: w), v = g.velocity(in: w)
-            // clearly sideways, and either far enough or a flick
-            guard abs(t.x) > 70, abs(t.x) > abs(t.y) * 2 else { return }
-            guard abs(t.x) > w.bounds.width * 0.3 || abs(v.x) > 250 else { return }
-            if rowSwiped { return }
-            if let l = list, Self.rowSwipedOpen(in: l, depth: 0) { return }
+        private func tabs() -> UITabBarController? {
+            func find(_ vc: UIViewController?) -> UITabBarController? {
+                guard let vc else { return nil }
+                if let t = vc as? UITabBarController { return t }
+                for c in vc.children { if let t = find(c) { return t } }
+                return nil
+            }
+            return find(window?.rootViewController)
+        }
+
+        private func step(_ dx: CGFloat) -> Int {
             let rtl = UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft
-            move((t.x < 0) != rtl ? 1 : -1)
+            return (dx < 0) != rtl ? 1 : -1
+        }
+
+        private func show(_ v: UIView, _ x: CGFloat, width: CGFloat) {
+            v.transform = CGAffineTransform(translationX: x, y: 0)
+            v.alpha = 1 - min(0.3, abs(x) / max(width, 1) * 0.35)
+        }
+
+        private func settle() {
+            guard let p = page else { return }
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
+                p.transform = .identity
+                p.alpha = 1
+            }
+        }
+
+        /// Like Instagram: the page follows the finger, and past a quarter of the screen (or a flick) it slides away
+        /// while the next tab slides in from the other side. Without a tab on that side it only stretches a little.
+        @objc private func panned(_ g: UIPanGestureRecognizer) {
+            guard let w = window else { return }
+            let t = g.translation(in: w), v = g.velocity(in: w)
+            switch g.state {
+            case .began:
+                rowSwiped = false
+                page = tabs()?.selectedViewController?.view
+            case .changed:
+                if !rowSwiped, let l = list, Self.rowSwipedOpen(in: l, depth: 0) { rowSwiped = true; settle() }
+                guard !rowSwiped, let p = page, abs(t.x) > abs(t.y) else { return }
+                show(p, can(step(t.x)) ? t.x : t.x * 0.2, width: w.bounds.width)
+            case .ended:
+                let far = abs(t.x) > 70 && abs(t.x) > abs(t.y) * 2 && (abs(t.x) > w.bounds.width * 0.25 || abs(v.x) > 250)
+                let open = rowSwiped || (list.map { Self.rowSwipedOpen(in: $0, depth: 0) } ?? false)
+                let s = step(t.x)
+                guard far, !open, can(s), let p = page else { settle(); return }
+                let sign: CGFloat = t.x < 0 ? -1 : 1
+                let width = w.bounds.width
+                UIView.animate(withDuration: 0.15, delay: 0, options: [.curveEaseIn]) {
+                    self.show(p, sign * width, width: width)
+                } completion: { _ in
+                    p.transform = .identity
+                    p.alpha = 1
+                    self.move(s)
+                    DispatchQueue.main.async {
+                        guard let next = self.tabs()?.selectedViewController?.view else { return }
+                        self.show(next, -sign * width * 0.4, width: width)
+                        UIView.animate(withDuration: 0.32, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
+                            next.transform = .identity
+                            next.alpha = 1
+                        }
+                    }
+                }
+            case .cancelled, .failed:
+                settle()
+            default:
+                break
+            }
         }
 
         /// UIKit adds a "swipe action pull view" to a list while one of its rows shows its actions

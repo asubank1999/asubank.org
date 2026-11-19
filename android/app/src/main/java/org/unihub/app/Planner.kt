@@ -257,11 +257,15 @@ fun HomeCalendarCard() {
     val nav = LocalNav.current
     val pages by Pages.pages.collectAsState()
     val path = "/schedules/calendar27"
-    val next = remember(pages) {
-        val today = LocalDate.now()
-        pages[path]?.cal?.filter { !it.n.startsWith("الأسبوع") }?.mapNotNull { e -> runCatching { LocalDate.parse(e.d.take(10)) }.getOrNull()?.let { e to it } }
-            ?.filter { !it.second.isBefore(today) }?.minByOrNull { it.second }
+    // today's date, checked again every 30 minutes so the count is right after midnight
+    var today by remember { mutableStateOf(LocalDate.now()) }
+    LaunchedEffect(Unit) { while (true) { kotlinx.coroutines.delay(30 * 60_000L); today = LocalDate.now() } }
+    val upcoming = remember(pages, today) {
+        pages[path]?.cal.orEmpty().mapNotNull { e -> runCatching { LocalDate.parse(e.d.take(10)) }.getOrNull()?.let { e to it } }
+            .filter { !it.second.isBefore(today) }.sortedBy { it.second }
     }
+    val next = upcoming.firstOrNull { !it.first.n.startsWith("الأسبوع") }
+    val week = upcoming.firstOrNull { it.first.n.startsWith("الأسبوع") }?.takeIf { w -> next == null || w.second.isBefore(next.second) }
     Row(
         Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 8.dp).clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surfaceContainer).clickable { nav.openPage(path, "") }.padding(14.dp),
@@ -273,6 +277,7 @@ fun HomeCalendarCard() {
         Column(Modifier.weight(1f)) {
             Text(tr("University calendar"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(next?.first?.n ?: tr("See this year's important dates"), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, maxLines = 2)
+            week?.let { Text(it.first.n + " · " + Planner.dueText(it.second.toString()), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         }
         next?.let {
             Text(

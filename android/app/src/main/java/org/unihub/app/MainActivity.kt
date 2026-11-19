@@ -77,6 +77,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.ui.input.pointer.pointerInput
@@ -139,6 +140,7 @@ class AppActivity : ComponentActivity() {
                 .build()
         )
         FeedPrefetch.run(kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main))
+        if (savedInstanceState == null) Hello.send(kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main))
         intent?.getStringExtra("openTab")?.let { ChatNotifier.pendingTab.value = it; splashDone = true }
         intent?.getStringExtra("openRoom")?.let { ChatNotifier.pendingRoom.value = it }
         // CI screenshots: --es startTab search --es startQuery calculus --ez acceptTerms true
@@ -306,31 +308,62 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>, startScreen: Str
             },
         ) { pad ->
             val tabRoutes = remember { allTabs.map { it.route }.toSet() + Routes.UPLOAD }
+            var swipedTab by remember { mutableStateOf(false) }
             fun AnimatedContentTransitionScope<NavBackStackEntry>.betweenTabs() =
                 initialState.destination.route in tabRoutes && targetState.destination.route in tabRoutes
             // Swipe left or right on a tab's first screen to move to the next or previous tab. Rows that scroll sideways
             // take their own swipes first, and pushed screens are not tabs, so nothing else changes.
             val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
             val barRoutes = barTabs.map { it.route }
+            // Like Instagram: the page follows the finger, and past a quarter of the screen (or a flick) it slides away
+            // while the next tab slides in from the other side. Without a tab on that side it only stretches a little.
+            val slideScope = rememberCoroutineScope()
+            val dragX = remember { androidx.compose.animation.core.Animatable(0f) }
             val swipeTabs = Modifier.pointerInput(barRoutes, route, rtl) {
-                val need = 72.dp.toPx()
+                val width = size.width.toFloat().coerceAtLeast(1f)
                 var total = 0f
+                var started = 0L
+                fun neighbour(dx: Float): String? {
+                    val i = route?.let { barRoutes.indexOf(it) } ?: -1
+                    if (i < 0) return null
+                    return barRoutes.getOrNull(i + if ((dx < 0f) != rtl) 1 else -1)
+                }
+                fun settle() { slideScope.launch { dragX.animateTo(0f, androidx.compose.animation.core.spring(dampingRatio = 0.85f, stiffness = 500f)) } }
                 detectHorizontalDragGestures(
-                    onDragStart = { total = 0f },
+                    onDragStart = { total = 0f; started = System.currentTimeMillis() },
+                    onDragCancel = { settle() },
                     onDragEnd = {
-                        val i = route?.let { barRoutes.indexOf(it) } ?: -1
-                        if (i >= 0 && kotlin.math.abs(total) > need) {
-                            val step = if ((total < 0f) != rtl) 1 else -1
-                            barRoutes.getOrNull(i + step)?.let { lastTab = it; nav.openTab(it) }
-                        }
+                        val next = neighbour(total)
+                        val fast = kotlin.math.abs(total) / maxOf(1L, System.currentTimeMillis() - started) > 0.6f
+                        if (next != null && (kotlin.math.abs(total) > width * 0.25f || (fast && kotlin.math.abs(total) > 40.dp.toPx()))) {
+                            val sign = if (total < 0f) -1f else 1f
+                            slideScope.launch {
+                                dragX.animateTo(sign * width, tween(150))
+                                lastTab = next
+                                swipedTab = true
+                                nav.openTab(next)
+                                dragX.snapTo(-sign * width * 0.4f)
+                                dragX.animateTo(0f, androidx.compose.animation.core.spring(dampingRatio = 0.9f, stiffness = 420f))
+                                swipedTab = false
+                            }
+                        } else settle()
                     },
-                ) { _, d -> total += d }
+                ) { change, d ->
+                    if (route !in barRoutes) return@detectHorizontalDragGestures
+                    total += d
+                    change.consume()
+                    val shown = if (neighbour(total) == null) total * 0.2f else total
+                    slideScope.launch { dragX.snapTo(shown) }
+                }
+            }.graphicsLayer {
+                translationX = dragX.value
+                alpha = 1f - minOf(0.3f, kotlin.math.abs(dragX.value) / size.width.coerceAtLeast(1f) * 0.35f)
             }
             NavHost(
                 nav, startDestination = Routes.HOME, modifier = Modifier.padding(pad).then(swipeTabs),
                 // tabs cross-fade; pushed screens slide in like iOS
-                enterTransition = { if (betweenTabs()) fadeIn(tween(180)) else slideInHorizontally(tween(320, easing = FastOutSlowInEasing)) { it / 3 } + fadeIn(tween(260)) },
-                exitTransition = { if (betweenTabs()) fadeOut(tween(140)) else slideOutHorizontally(tween(320, easing = FastOutSlowInEasing)) { -it / 8 } + fadeOut(tween(260)) },
+                enterTransition = { if (betweenTabs()) (if (swipedTab) androidx.compose.animation.EnterTransition.None else fadeIn(tween(180))) else slideInHorizontally(tween(320, easing = FastOutSlowInEasing)) { it / 3 } + fadeIn(tween(260)) },
+                exitTransition = { if (betweenTabs()) (if (swipedTab) androidx.compose.animation.ExitTransition.None else fadeOut(tween(140))) else slideOutHorizontally(tween(320, easing = FastOutSlowInEasing)) { -it / 8 } + fadeOut(tween(260)) },
                 popEnterTransition = { if (betweenTabs()) fadeIn(tween(180)) else slideInHorizontally(tween(320, easing = FastOutSlowInEasing)) { -it / 8 } + fadeIn(tween(260)) },
                 popExitTransition = { if (betweenTabs()) fadeOut(tween(140)) else slideOutHorizontally(tween(320, easing = FastOutSlowInEasing)) { it / 3 } + fadeOut(tween(220)) },
             ) {
@@ -380,6 +413,7 @@ fun App(startTab: String?, incoming: MutableStateFlow<String?>, startScreen: Str
                 composable("report") { ReportCenterScreen() }
                 composable("myReports") { MyReportsScreen() }
                 composable("adminTerms") { AdminTermsScreen() }
+                composable("adminActivity") { ActivityLogScreen() }
                 composable("shareVideo") { ShareVideoScreen() }
                 composable("submissions?admin={admin}", listOf(navArgument("admin") { defaultValue = "" })) { e ->
                     SubmissionsScreen(admin = e.arguments?.getString("admin") == "1" && user?.isAdmin == true)

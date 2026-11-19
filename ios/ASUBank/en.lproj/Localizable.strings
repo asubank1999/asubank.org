@@ -88,6 +88,9 @@
 "%d picked" = "%d picked";
 "%lld picked" = "%lld picked";
 "%@ picked" = "%@ picked";
+"%d records" = "%d records";
+"%lld records" = "%lld records";
+"%@ records" = "%@ records";
 "%d selected" = "%d selected";
 "%lld selected" = "%lld selected";
 "%@ selected" = "%@ selected";
@@ -217,6 +220,7 @@
 "Actions" = "Actions";
 "Active this week" = "Active this week";
 "Active today" = "Active today";
+"Activity log" = "Activity log";
 "Add" = "Add";
 "Add a backup link" = "Add a backup link";
 "Add a card" = "Add a card";
@@ -264,6 +268,7 @@
 "Admins may warn, mute, remove, or block any member who violates these Terms, at their sole discretion, without prior notice. Content shared in the group may be removed or reported if it violates these Terms or applicable law." = "Admins may warn, mute, remove, or block any member who violates these Terms, at their sole discretion, without prior notice. Content shared in the group may be removed or reported if it violates these Terms or applicable law.";
 "Admins only" = "Admins only";
 "Admins reserve the right to keep their personal information (phone number visibility, identity, contact details) private and are not obligated to disclose it beyond what WhatsApp itself displays." = "Admins reserve the right to keep their personal information (phone number visibility, identity, contact details) private and are not obligated to disclose it beyond what WhatsApp itself displays.";
+"Admins: a new Activity log with sign-ups, sign-ins, app opens and more, by day and platform" = "Admins: a new Activity log with sign-ups, sign-ins, app opens and more, by day and platform";
 "Admins: delete any file from Drive by holding it, and it stays gone after a refresh" = "Admins: delete any file from Drive by holding it, and it stays gone after a refresh";
 "Admins: terms records list everyone, no typing needed" = "Admins: terms records list everyone, no typing needed";
 "Admissions & Registration" = "Admissions & Registration";
@@ -320,6 +325,7 @@
 "Anatomy and Physiology 2" = "Anatomy and Physiology 2";
 "Anatomy midterm" = "Anatomy midterm";
 "And" = "And";
+"Android" = "Android";
 "Android checks about every 15 minutes, right when you open the app, and every few seconds while it's open." = "Android checks about every 15 minutes, right when you open the app, and every few seconds while it's open.";
 "Android: neater official links, including the alumni platform" = "Android: neater official links, including the alumni platform";
 "Announcement" = "Announcement";
@@ -342,6 +348,7 @@
 "Anything we should add or fix?" = "Anything we should add or fix?";
 "App" = "App";
 "App icon" = "App icon";
+"App opens" = "App opens";
 "Appearance" = "Appearance";
 "Applied Science Private University — Student & Parent Login" = "Applied Science Private University — Student & Parent Login";
 "Applied Science University's official platform for keeping in touch with its graduates." = "Applied Science University's official platform for keeping in touch with its graduates.";
@@ -370,6 +377,7 @@
 "Ask to meet" = "Ask to meet";
 "Ask your college's WhatsApp group" = "Ask your college's WhatsApp group";
 "Assignment" = "Assignment";
+"At a glance" = "At a glance";
 "At least 6 characters" = "At least 6 characters";
 "At the limit: don't miss another lecture" = "At the limit: don't miss another lecture";
 "Attach a file" = "Attach a file";
@@ -470,6 +478,7 @@
 "Calendar, schedules, FAQs and every asubank.org page as native screens" = "Calendar, schedules, FAQs and every asubank.org page as native screens";
 "Calendars & schedules" = "Calendars & schedules";
 "Call 911" = "Call 911";
+"Camera" = "Camera";
 "Campus & study" = "Campus & study";
 "Campus Cafe" = "Campus Cafe";
 "Campus Life & Facilities" = "Campus Life & Facilities";
@@ -504,6 +513,7 @@
 "Chat with students, synced with asubank.org" = "Chat with students, synced with asubank.org";
 "Chats and private messages open faster" = "Chats and private messages open faster";
 "Chats and rooms open at once, and new messages follow" = "Chats and rooms open at once, and new messages follow";
+"Chats, stories and the Feed load faster, and slow connections retry by themselves" = "Chats, stories and the Feed load faster, and slow connections retry by themselves";
 "Cheating or a rule of the university" = "Cheating or a rule of the university";
 "Check for updates" = "Check for updates";
 "Check your connection and try again." = "Check your connection and try again.";
@@ -583,6 +593,7 @@
 "Combinations Example" = "Combinations Example";
 "Coming soon to revolutionize student advertising!" = "Coming soon to revolutionize student advertising!";
 "Coming up" = "Coming up";
+"Comment" = "Comment";
 "Comments" = "Comments";
 "Communication Skills Bank" = "Communication Skills Bank";
 "Community" = "Community";
@@ -685,6 +696,7 @@
 "Customize" = "Customize";
 "Customize tab bar" = "Customize tab bar";
 "Cyber security 🫀" = "Cyber security 🫀";
+"DONE" = "DONE";
 "Daily goal: %d minutes" = "Daily goal: %d minutes";
 "Daily goal: %lld minutes" = "Daily goal: %lld minutes";
 "Daily goal: %@ minutes" = "Daily goal: %@ minutes";
@@ -857,6 +869,7 @@
 "Everyone (%lld)" = "Everyone (%lld)";
 "Everyone (%@)" = "Everyone (%@)";
 "Everyone, also guests" = "Everyone, also guests";
+"Everything" = "Everything";
 "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive." = "Everything on UniHub is searchable from one box: subject pages and the shared Google Drive.";
 "Everything students uploaded, updated live." = "Everything students uploaded, updated live.";
 "Everything you have coming up." = "Everything you have coming up.";
@@ -881,6 +894,7 @@
 "Faculties & Courses" = "Faculties & Courses";
 "Faculty course lists" = "Faculty course lists";
 "Fade" = "Fade";
+"Failed sign-ins" = "Failed sign-ins";
 "Fair and safe" = "Fair and safe";
 "False" = "False";
 "False reports made to harm someone break the community rules." = "False reports made to harm someone break the community rules.";
@@ -1241,6 +1255,7 @@
 "Loading ratings…" = "Loading ratings…";
 "Loading submissions…" = "Loading submissions…";
 "Loading the newest files…" = "Loading the newest files…";
+"Loading voice…" = "Loading voice…";
 "Loading…" = "Loading…";
 "Loads fast" = "Loads fast";
 "Location" = "Location";
@@ -1374,6 +1389,7 @@
 "New Student Guide | Applied Science Private University" = "New Student Guide | Applied Science Private University";
 "New Thanks list, Student ads and Support UniHub screens" = "New Thanks list, Student ads and Support UniHub screens";
 "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan)." = "New Thanks list, Student ads and Support UniHub screens. CliQ now uses the alias ALANQ99 (Bank of Jordan).";
+"New accounts" = "New accounts";
 "New chat messages" = "New chat messages";
 "New cumulative" = "New cumulative";
 "New deck" = "New deck";
@@ -1474,6 +1490,7 @@
 "Nothing listed yet." = "Nothing listed yet.";
 "Nothing matches these filters." = "Nothing matches these filters.";
 "Nothing matches “%@”." = "Nothing matches “%@”.";
+"Nothing matches." = "Nothing matches.";
 "Nothing new" = "Nothing new";
 "Nothing new." = "Nothing new.";
 "Nothing opened yet" = "Nothing opened yet";
@@ -1602,6 +1619,7 @@
 "Peer-verified study materials by Applied Science University students, for ASU students." = "Peer-verified study materials by Applied Science University students, for ASU students.";
 "Peer-verified study materials curated by Applied Science University students, for ASU students." = "Peer-verified study materials curated by Applied Science University students, for ASU students.";
 "Pending" = "Pending";
+"People are counted once, however often they open UniHub. Guests are not counted as people." = "People are counted once, however often they open UniHub. Guests are not counted as people.";
 "People from your college and major show up here. Add them to your profile to see more." = "People from your college and major show up here. Add them to your profile to see more.";
 "People who helped UniHub" = "People who helped UniHub";
 "People who helped UniHub." = "People who helped UniHub.";
@@ -1626,6 +1644,7 @@
 "Photo" = "Photo";
 "Photos" = "Photos";
 "Photos and editing" = "Photos and editing";
+"Photos and videos" = "Photos and videos";
 "Photos to edit" = "Photos to edit";
 "Photoshop and paid tools: skin retouching, compositing and advanced grading. 3 JD a photo as a base price; complex edits may cost more." = "Photoshop and paid tools: skin retouching, compositing and advanced grading. 3 JD a photo as a base price; complex edits may cost more.";
 "Physics lab" = "Physics lab";
@@ -1676,6 +1695,7 @@
 "Posting your story…" = "Posting your story…";
 "Posting…" = "Posting…";
 "Posts" = "Posts";
+"Posts and stories" = "Posts and stories";
 "Posts can have a voice message or a video too" = "Posts can have a voice message or a video too";
 "Posts shared with everyone show up here. Anyone can read them, also without an account." = "Posts shared with everyone show up here. Anyone can read them, also without an account.";
 "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between." = "Practical guide for new students in Amman, Jordan. Tuition, majors, e-services, and everything in between.";
@@ -1706,6 +1726,7 @@
 "Product / Commercial" = "Product / Commercial";
 "Professor-specific materials" = "Professor-specific materials";
 "Profile" = "Profile";
+"Profile changes" = "Profile changes";
 "Profile photo" = "Profile photo";
 "Profile saved" = "Profile saved";
 "Profiles open faster, with a loading preview" = "Profiles open faster, with a loading preview";
@@ -1761,6 +1782,7 @@
 "Recent uploads" = "Recent uploads";
 "Recently opened" = "Recently opened";
 "Record a voice message" = "Record a voice message";
+"Record your voice on a story" = "Record your voice on a story";
 "Reference" = "Reference";
 "Reference: %@" = "Reference: %@";
 "Refresh" = "Refresh";
@@ -1882,6 +1904,7 @@
 "Search UniHub" = "Search UniHub";
 "Search UniHub first" = "Search UniHub first";
 "Search UniHub first, it may already be there" = "Search UniHub first, it may already be there";
+"Search a name, username or phone model" = "Search a name, username or phone model";
 "Search banner" = "Search banner";
 "Search events" = "Search events";
 "Search every material, plus the shared Google Drive, from one search box" = "Search every material, plus the shared Google Drive, from one search box";
@@ -2014,6 +2037,7 @@
 "Sign out" = "Sign out";
 "Sign out of UniHub?" = "Sign out of UniHub?";
 "Sign out?" = "Sign out?";
+"Sign-ins" = "Sign-ins";
 "Signed in as @%@" = "Signed in as @%@";
 "Signed-in students can see these when they open your swap. Add a phone number or an email." = "Signed-in students can see these when they open your swap. Add a phone number or an email.";
 "Simple Pricing" = "Simple Pricing";
@@ -2144,6 +2168,7 @@
 "Swipe left or right to move between tabs" = "Swipe left or right to move between tabs";
 "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can" = "Swipe sideways on the Feed to open the camera for a photo or video story, at 60 FPS when your phone can";
 "Swipe the Feed sideways to slide into the camera" = "Swipe the Feed sideways to slide into the camera";
+"Swiping between tabs now slides the page with your finger" = "Swiping between tabs now slides the page with your finger";
 "Switch camera" = "Switch camera";
 "System language" = "System language";
 "System language follows your iPhone's settings. Material names and files stay as they were uploaded." = "System language follows your iPhone's settings. Material names and files stay as they were uploaded.";
@@ -2214,10 +2239,13 @@
 "The Feed opens much faster and keeps photos on your phone" = "The Feed opens much faster and keeps photos on your phone";
 "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages" = "The Notifications tab now lists every notification your phone showed, including lecture reminders and messages";
 "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere." = "The UniHub logo greets you for a moment when the app opens. Upload is now a sheet you can open from anywhere.";
+"The activity log needs the newest server. Try again later." = "The activity log needs the newest server. Try again later.";
 "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants." = "The admin(s) of these groups volunteer their time to organize and moderate the community. Admins do not guarantee the accuracy, completeness, or reliability of any material shared by members, and are not responsible for advice, opinions, or content posted by other participants.";
 "The app closes so the new colors load cleanly. Tap its icon to open it again." = "The app closes so the new colors load cleanly. Tap its icon to open it again.";
 "The app restarts so the new colors load cleanly." = "The app restarts so the new colors load cleanly.";
 "The apps have no analytics. The website uses Google Analytics to count visits." = "The apps have no analytics. The website uses Google Analytics to count visits.";
+"The calendar card on Home counts down live and shows the next week too" = "The calendar card on Home counts down live and shows the next week too";
+"The camera button offers Camera, Photos and videos, Voice story and Text story" = "The camera button offers Camera, Photos and videos, Voice story and Text story";
 "The camera is off" = "The camera is off";
 "The end time must be after the start time." = "The end time must be after the start time.";
 "The file" = "The file";
@@ -2238,6 +2266,7 @@
 "The server didn't answer. Try again." = "The server didn't answer. Try again.";
 "The server sent something unexpected. Try again." = "The server sent something unexpected. Try again.";
 "The submissions server sent something unexpected." = "The submissions server sent something unexpected.";
+"The swap" = "The swap";
 "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them" = "The tab bar is now Home, Feed, Chat, Search and More. If you changed your tabs before, they stay as you set them";
 "The team reviews it before it goes on the campus display screen." = "The team reviews it before it goes on the campus display screen.";
 "The total is out of %@." = "The total is out of %@.";
@@ -2467,6 +2496,7 @@
 "Vibration" = "Vibration";
 "Video" = "Video";
 "Videos" = "Videos";
+"Videos from your library are ready for stories much faster" = "Videos from your library are ready for stories much faster";
 "Videos in stories no longer show small" = "Videos in stories no longer show small";
 "Videos students shared" = "Videos students shared";
 "View File" = "View File";
@@ -2481,6 +2511,7 @@
 "Violence or threats" = "Violence or threats";
 "Violet" = "Violet";
 "Voice message" = "Voice message";
+"Voice story" = "Voice story";
 "Vote" = "Vote";
 "Vote again" = "Vote again";
 "Waiting" = "Waiting";
@@ -2503,6 +2534,7 @@
 "We're building a dedicated platform for students to advertise their services,\nproducts, and talents to the university community. Affordable, targeted, and effective\nadvertising tailored specifically for the student market." = "We're building a dedicated platform for students to advertise their services,\nproducts, and talents to the university community. Affordable, targeted, and effective\nadvertising tailored specifically for the student market.";
 "Weather" = "Weather";
 "Weather is back at the top of Home, and the banner and search box are smaller" = "Weather is back at the top of Home, and the banner and search box are smaller";
+"Web" = "Web";
 "Wednesday" = "Wednesday";
 "Week %d" = "Week %d";
 "Week %lld" = "Week %lld";
@@ -2565,6 +2597,7 @@
 "Who can see this" = "Who can see this";
 "Who is online" = "Who is online";
 "Who or what: a name, username, file or link" = "Who or what: a name, username, file or link";
+"Who uses UniHub, from where, and what they did" = "Who uses UniHub, from where, and what they did";
 "Who we are" = "Who we are";
 "Who's online" = "Who's online";
 "Who's online is now on Home, Feed, Friends and Chat, with a clearer box" = "Who's online is now on Home, Feed, Friends and Chat, with a clearer box";
@@ -2672,6 +2705,7 @@
 "Zero tolerance" = "Zero tolerance";
 "__dm" = "__dm";
 "admins post" = "admins post";
+"app opens today" = "app opens today";
 "application/pdf" = "application/pdf";
 "archived" = "archived";
 "asubank.org links shared with you open straight in the app." = "asubank.org links shared with you open straight in the app.";
@@ -2687,9 +2721,12 @@
 "just now" = "just now";
 "link" = "link";
 "necro144@yahoo.com · fastest reply" = "necro144@yahoo.com · fastest reply";
+"new today" = "new today";
 "no connection" = "no connection";
 "paypal.me/necro144" = "paypal.me/necro144";
 "paypal.me/necro144 · cards and PayPal balance" = "paypal.me/necro144 · cards and PayPal balance";
+"people this week" = "people this week";
+"people today" = "people today";
 "test bank" = "test bank";
 "the latest version" = "the latest version";
 "their story" = "their story";

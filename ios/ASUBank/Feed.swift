@@ -14,6 +14,8 @@ struct StoryItem: Decodable, Identifiable, Hashable {
     var seen: Bool?
     var views: Int?
     var style: String?
+    var hasVoice: Bool?
+    var duration: Int?
 }
 
 struct StoryGroup: Decodable, Identifiable {
@@ -349,6 +351,7 @@ struct FeedScreen: View {
     @State private var camera = false
     @State private var pendingDraft: StoryDraft?
     @State private var draft: StoryDraft?
+    @State private var library = false
     @State private var viewing: StoryStart?
     @ObservedObject private var extras = FeedExtras.shared
 
@@ -452,7 +455,13 @@ struct FeedScreen: View {
             ToolbarItem(placement: .navigationBarLeading) { OnlineButton() }
             ToolbarItem(placement: .primaryAction) {
                 if account.signedIn {
-                    Button { camera = true } label: { Image(systemName: "camera.fill") }.accessibilityLabel(Text("Add story"))
+                    Menu {
+                        Button { camera = true } label: { Label("Camera", systemImage: "camera") }
+                        Button { library = true } label: { Label("Photos and videos", systemImage: "photo.on.rectangle") }
+                        Button { draft = StoryDraft(media: nil, voice: true) } label: { Label("Voice story", systemImage: "mic") }
+                        Button { draft = StoryDraft(media: nil) } label: { Label("Text story", systemImage: "textformat") }
+                    } label: { Image(systemName: "camera.fill") }
+                    .accessibilityLabel(Text("Add story"))
                 }
             }
         }
@@ -471,7 +480,12 @@ struct FeedScreen: View {
         }) {
             StoryCameraScreen { media in pendingDraft = StoryDraft(media: media) }
         }
-        .sheet(item: $draft) { d in ComposeStorySheet(media: d.media) { await loadStories() } }
+        .sheet(item: $draft) { d in ComposeStorySheet(media: d.media, voice: d.voice) { await loadStories() } }
+        .sheet(isPresented: $library, onDismiss: {
+            if let d = pendingDraft { pendingDraft = nil; draft = d }
+        }) {
+            StoryMediaPicker { media in pendingDraft = StoryDraft(media: media) }.ignoresSafeArea()
+        }
         .fullScreenCover(item: $viewing, onDismiss: { Task { await loadStories() } }) { start in
             StoryViewer(groups: groups, startGroup: start.index)
         }
@@ -559,8 +573,15 @@ struct FeedScreen: View {
             if (try? await account.callSaving(signed ? "feedAll" : "publicFeed", ["scope": scope], tag: scope)) != nil { FeedFresh.at[scope] = Date() }
         }
         Task { _ = try? await account.callSaving(signed ? "stories" : "publicStories", tag: "feed") }
-        // the Chat tab opens on a fresh list of private chats
-        if signed { Task { _ = try? await account.callSaving("dmList") } }
+        // the Chat tab opens on a fresh list of private chats, and the four newest chats are loaded ahead
+        // (`peek`: nothing is marked read or seen until the chat is really opened)
+        if signed {
+            Task {
+                guard let r = try? await account.callSaving("dmList") else { return }
+                let top = (decode([DMConversation].self, r["conversations"]) ?? []).prefix(4)
+                for c in top { _ = try? await account.callSaving("dmThread", ["userId": c.user.id, "peek": true], tag: c.user.id) }
+            }
+        }
     }
 }
 
@@ -711,6 +732,25 @@ struct StoryViewer: View {
         .sheet(item: $reporting, onDismiss: { paused = false }) { ReportSheet(target: $0) }
         .sheet(item: $viewersOf, onDismiss: { paused = false }) { StoryViewersSheet(storyId: $0.id) }
         .task(id: "\(g)-\(s)-\(story?.id ?? "")") { await run() }
+        .task(id: "ahead-\(g)-\(s)") { await loadAhead() }
+    }
+
+    /// The next three stories load while this one shows, so moving on is instant.
+    private func loadAhead() async {
+        var next: [StoryItem] = []
+        var gi = g, si = s + 1
+        while next.count < 3, groups.indices.contains(gi) {
+            let list = groups[gi].stories
+            if list.indices.contains(si) { next.append(list[si]); si += 1 } else { gi += 1; si = 0 }
+        }
+        for item in next {
+            if Task.isCancelled { return }
+            if let v = item.video, !v.isEmpty, let url = URL(string: v) {
+                _ = await StoryVideo.local(url)
+            } else if let i = item.image, !i.isEmpty, let url = PhotoTools.large(i) {
+                _ = await PhotoCache.shared.load(url, pixelSize: 800)
+            }
+        }
     }
 
     @ViewBuilder private func page(_ item: StoryItem) -> some View {
@@ -724,6 +764,9 @@ struct StoryViewer: View {
             }
             if let t = item.text, !t.isEmpty {
                 StoryTextView(text: t, style: StoryStyle(json: item.style)).id(item.id)
+            }
+            if item.hasVoice == true {
+                StoryVoice(id: item.id, paused: paused).id(item.id)
             }
         }
     }
@@ -842,7 +885,8 @@ struct StoryViewer: View {
                 if let at = videoPlayed { progress = min(1, at / length) }
                 else if !paused { progress += 0.05 / length; if progress >= 1 { break } }   // the video could not play
             } else {
-                if !paused { progress += 0.05 / Self.seconds }
+                let length = story.hasVoice == true ? max(Self.seconds, Double(story.duration ?? 0) + 0.6) : Self.seconds
+                if !paused { progress += 0.05 / length }
                 if progress >= 1 { break }
             }
         }

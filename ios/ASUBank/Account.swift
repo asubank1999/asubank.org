@@ -15,21 +15,36 @@ enum AccountsAPI {
         var errorDescription: String? { message }
     }
 
+    /// Actions that only read: safe to ask a second time when the first try fails.
+    static let reads: Set<String> = ["me", "rooms", "online", "friends", "searchUsers", "chat", "dmThread", "dmList", "comments", "storyViewers", "swapList", "termsStatus", "mediaFile", "dmFile", "feed", "stories", "profile", "user", "events", "people", "posts", "linksList", "deletedFiles", "notifications", "groupsApproved"]
+
     /// POSTs {action, ...fields} as text/plain JSON (no CORS preflight) and returns the reply when ok
     static func call(_ action: String, _ fields: [String: Any] = [:], token: String? = nil) async throws -> [String: Any] {
         var body = fields
         body["action"] = action
         if let token { body["token"] = token }
-        var req = URLRequest(url: url, timeoutInterval: fields["video"] != nil || fields["file"] != nil || action == "dmFile" ? 180 : 40)
+        let big = fields["video"] != nil || fields["file"] != nil || action == "dmFile"
+        let read = reads.contains(action) && !big
+        var req = URLRequest(url: url, timeoutInterval: big ? 180 : (read ? 20 : 40))
         req.httpMethod = "POST"
         req.setValue("text/plain;charset=utf-8", forHTTPHeaderField: "Content-Type")
         req.httpBody = try JSONSerialization.data(withJSONObject: body)
-        let data: Data
-        do { (data, _) = try await URLSession.shared.data(for: req) } catch {
-            throw Failure(message: "Couldn't reach UniHub. Check your connection and try again.")
+        var obj: [String: Any]?
+        var reached = false
+        // a read that fails (no answer, or a busy server's HTML page) is asked once more
+        for attempt in 0..<(read ? 2 : 1) {
+            if attempt > 0 {
+                try? await Task.sleep(nanoseconds: 1_200_000_000)
+                req.timeoutInterval = 25
+            }
+            if let answer = try? await URLSession.shared.data(for: req) {
+                reached = true
+                obj = (try? JSONSerialization.jsonObject(with: answer.0)) as? [String: Any]
+                if obj != nil { break }
+            }
         }
-        guard let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {
-            throw Failure(message: "The server sent something unexpected. Try again.")
+        guard let obj else {
+            throw Failure(message: reached ? "The server sent something unexpected. Try again." : "Couldn't reach UniHub. Check your connection and try again.")
         }
         if obj["ok"] as? Bool == true { return obj }
         throw Failure(message: obj["error"] as? String ?? "Something went wrong.", needCode: obj["needCode"] as? Bool == true)
